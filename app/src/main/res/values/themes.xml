@@ -2,11 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.MilkLedger" parent="Theme.Material3.DayNight.NoActionBar">
 
+
+
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorSecondary">@color/md_theme_secondary</item>
         <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
 
         <item name="materialButtonStyle">@style/Button.Filled</item>
