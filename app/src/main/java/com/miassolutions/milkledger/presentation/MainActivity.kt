@@ -12,6 +12,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.miassolutions.milkledger.R
@@ -53,7 +54,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
             binding.drawerLayout
         )
 
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+//        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
         // Hook up drawer nav view with nav controller
         binding.navigationView.setupWithNavController(navController)
@@ -63,6 +65,30 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
         binding.bottomNavigationView.setupWithNavController(navController)
 
 
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.settingsFragment -> {
+                    // Close the drawer first
+                    binding.drawerLayout.closeDrawers()
+                    // Navigate to settings without clearing back stack
+                    navController.navigate(R.id.settingsFragment)
+                    true
+                }
+                else -> {
+                    // Let the default NavigationUI handle other items
+                    val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+                    if (handled) binding.drawerLayout.closeDrawers()
+                    handled
+                }
+            }
+        }
+
+
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
 
