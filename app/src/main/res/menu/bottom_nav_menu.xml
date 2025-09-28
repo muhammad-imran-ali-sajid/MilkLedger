@@ -3,20 +3,20 @@
     <item
         android:id="@+id/purchaseFragment"
         android:icon="@drawable/ic_sales"
-        android:title="Purchase" />
+        android:title="@string/purchase" />
 
     <item
         android:id="@+id/salesFragment"
         android:icon="@drawable/ic_sales"
-        android:title="Sales" />
+        android:title="@string/sales" />
 
     <item
         android:id="@+id/othersFragment"
         android:icon="@drawable/ic_sales"
-        android:title="Others" />
+        android:title="@string/others" />
 
     <item
         android:id="@+id/statsFragment"
         android:icon="@drawable/ic_sales"
-        android:title="Stats" />
+        android:title="@string/stats" />
 </menu>

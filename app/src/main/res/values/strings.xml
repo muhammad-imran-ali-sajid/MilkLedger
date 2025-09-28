@@ -7,4 +7,10 @@
     <string name="error">Error</string>
     <string name="loading">Loading…</string>
     <string name="settings">Settings</string>
+    <string name="purchase">Purchase</string>
+    <string name="sales">Sales</string>
+    <string name="others">Others</string>
+    <string name="stats">Stats</string>
+    <string name="backup_restore">Backup/Restore</string>
+    <string name="logout">Logout</string>
 </resources>

@@ -26,7 +26,7 @@
         app:defaultNavHost="true"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:navGraph="@navigation/nav_graph" />
+        app:navGraph="@navigation/main_nav_graph" />
 
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
