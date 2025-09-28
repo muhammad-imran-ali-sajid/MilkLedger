@@ -11,6 +11,7 @@
     <!-- Main content -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
+        android:fitsSystemWindows="true"
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -47,6 +48,7 @@
                 android:layout_gravity="bottom"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:labelVisibilityMode="labeled"
                 app:layout_constraintStart_toStartOf="parent"
                 app:menu="@menu/menu_bottom_nav" />
 

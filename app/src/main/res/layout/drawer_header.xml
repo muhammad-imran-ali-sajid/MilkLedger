@@ -2,22 +2,31 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="200dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@drawable/drawer_header_background">
 
     <!-- Profile Picture -->
-    <ImageView
-        android:id="@+id/imageViewProfile"
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_person_add"
-        android:scaleType="centerCrop"
-        android:background="@drawable/circle_background"
-        android:padding="8dp"
-         />
+        app:strokeColor="@color/divider"
+        app:strokeWidth="2dp"
+        app:cardCornerRadius="50dp">
+        <ImageView
+            android:id="@+id/imageViewProfile"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/img_profile_a"
+            android:scaleType="centerCrop"
+            android:padding="8dp"
+            />
+    </com.google.android.material.card.MaterialCardView>
+
 
     <!-- User/App Name -->
     <TextView

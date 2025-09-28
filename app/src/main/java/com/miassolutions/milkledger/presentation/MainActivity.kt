@@ -50,7 +50,13 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
 
         // Configure top-level destinations (so back button shows hamburger instead of up arrow)
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.settingsFragment),
+            setOf(
+                R.id.settingsFragment,
+                R.id.purchaseFragment,
+                R.id.salesFragment,
+                R.id.statsFragment,
+                R.id.expensesFragment
+            ),
             binding.drawerLayout
         )
 
@@ -77,11 +83,11 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
 
     // Ensure navController handles Up navigation with drawer support
     override fun onSupportNavigateUp(): Boolean {
-        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
+        return NavigationUI.navigateUp(
+            navController,
+            appBarConfiguration
+        ) || super.onSupportNavigateUp()
     }
-
-
-
 
 
     private fun windowsInsets() {
