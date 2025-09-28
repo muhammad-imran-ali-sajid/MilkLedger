@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Brand -->
+    <color name="md_theme_primary">#4CAF50</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_secondary">#FFC107</color>
+    <color name="md_theme_onSecondary">#000000</color>
+
+    <!-- Neutral surfaces -->
+    <color name="md_theme_background">#FFFFFF</color>
+    <color name="md_theme_onBackground">#212121</color>
+    <color name="md_theme_surface">#F5F5F5</color>
+    <color name="md_theme_onSurface">#212121</color>
+
+    <!-- Status -->
+    <color name="success">#4CAF50</color>
+    <color name="error">#F44336</color>
+    <color name="warning">#FF9800</color>
+    <color name="info">#2196F3</color>
+
+    <!-- Divider -->
+    <color name="divider">#E0E0E0</color>
 </resources>

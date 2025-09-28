@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Buttons -->
+    <style name="Button.Filled" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/md_theme_primary</item>
+        <item name="android:textColor">@color/md_theme_onPrimary</item>
+    </style>
+
+    <style name="Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/md_theme_primary</item>
+    </style>
+
+    <style name="Button.Tonal" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:textColor">@color/md_theme_onSecondary</item>
+    </style>
+
+    <!-- Cards -->
+    <style name="Card.Filled" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">@dimen/corner_medium</item>
+        <item name="cardElevation">@dimen/elevation_low</item>
+    </style>
+
+    <style name="Card.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardCornerRadius">@dimen/corner_large</item>
+    </style>
+
+    <!-- Inputs -->
+    <style name="TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">@dimen/corner_medium</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/corner_medium</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/corner_medium</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/corner_medium</item>
+    </style>
+
+</resources>
