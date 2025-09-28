@@ -46,7 +46,7 @@ abstract class BaseFragment<VB : ViewBinding>(
         setupViews()
         setupObservers()
         setupListeners()
-        setupMenu()
+        setupMenuProvider()
     }
 
     override fun onDestroyView() {
@@ -54,10 +54,29 @@ abstract class BaseFragment<VB : ViewBinding>(
         _binding = null
     }
 
-    // -------- Menu (Fragment-specific) --------
-    protected open fun setupMenu() {
-        // Override in child fragments when needed
+    // -------- Menu (auto-injected) --------
+    protected open fun getMenuResId(): Int? = null
+
+    protected open fun onMenuItemSelected(item: MenuItem): Boolean = false
+
+    private fun setupMenuProvider() {
+        val menuHost: MenuHost = requireActivity()
+        val menuRes = getMenuResId()
+
+        if (menuRes != null) {
+            menuHost.addMenuProvider(object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuInflater.inflate(menuRes, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return this@BaseFragment.onMenuItemSelected(menuItem) ||
+                            requireActivity().onOptionsItemSelected(menuItem)
+                }
+            }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+        }
     }
+
 
     protected open fun setupViews() {}
     protected open fun setupObservers() {}
@@ -67,7 +86,7 @@ abstract class BaseFragment<VB : ViewBinding>(
         Snackbar.make(requireView(), message, duration).show()
     }
 
-    private fun showToast(message: String) {
+    protected fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 

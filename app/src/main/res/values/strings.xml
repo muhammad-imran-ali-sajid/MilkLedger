@@ -13,4 +13,9 @@
     <string name="stats">Stats</string>
     <string name="backup_restore">Backup/Restore</string>
     <string name="logout">Logout</string>
+    <string name="add_supplier">Add Supplier</string>
+    <string name="add_customer">Add Customer</string>
+    <string name="add_category">New Category</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
 </resources>

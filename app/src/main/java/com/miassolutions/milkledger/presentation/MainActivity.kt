@@ -2,15 +2,22 @@ package com.miassolutions.milkledger.presentation
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BottomNavOwner
@@ -24,6 +31,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
     }
 
     private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,33 +48,45 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
 
         navController = navHost.findNavController()
 
+        // Configure top-level destinations (so back button shows hamburger instead of up arrow)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.settingsFragment),
+            binding.drawerLayout
+        )
+
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        // Hook up drawer nav view with nav controller
+        binding.navigationView.setupWithNavController(navController)
+
 
         // Hook up bottom nav with nav controller
         binding.bottomNavigationView.setupWithNavController(navController)
 
+        // Optional: Toggle for hamburger animation
+        val toggle = ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        binding.drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.global_menu, menu)
-        return true
+    // Ensure navController handles Up navigation with drawer support
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.settingsFragment -> {
-                navController.navigate(R.id.settingsFragment)
-                true
-            }
 
-            else -> super.onOptionsItemSelected(item)
-        }
 
-    }
+
 
     private fun windowsInsets() {
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawerLayout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
