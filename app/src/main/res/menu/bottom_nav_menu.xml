@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/purchaseFragment"
+        android:icon="@drawable/ic_sales"
+        android:title="Purchase" />
+
+    <item
+        android:id="@+id/salesFragment"
+        android:icon="@drawable/ic_sales"
+        android:title="Sales" />
+
+    <item
+        android:id="@+id/othersFragment"
+        android:icon="@drawable/ic_sales"
+        android:title="Others" />
+
+    <item
+        android:id="@+id/statsFragment"
+        android:icon="@drawable/ic_sales"
+        android:title="Stats" />
+</menu>

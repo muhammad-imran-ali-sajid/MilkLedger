@@ -32,9 +32,16 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
+        }
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
+
 }
 
 dependencies {
@@ -65,7 +72,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
     //data store
-    implementation ("androidx.datastore:datastore-preferences:1.1.5")
+    implementation("androidx.datastore:datastore-preferences:1.1.5")
 
     //hilt
     implementation("com.google.dagger:hilt-android:2.57.1")
