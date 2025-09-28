@@ -8,23 +8,23 @@
     <fragment
         android:id="@+id/purchaseFragment"
         android:name="com.miassolutions.milkledger.presentation.purchase.PurchaseFragment"
-        android:label="PurchaseFragment"
+        android:label="Purchases"
         tools:layout="@layout/fragment_purchases" />
     <fragment
         android:id="@+id/expensesFragment"
         tools:layout="@layout/fragment_expenses"
         android:name="com.miassolutions.milkledger.presentation.expenses.ExpensesFragment"
-        android:label="ExpensesFragment" />
+        android:label="Expenses" />
     <fragment
         android:id="@+id/salesFragment"
         tools:layout="@layout/fragment_sales"
         android:name="com.miassolutions.milkledger.presentation.sales.SalesFragment"
-        android:label="SalesFragment" />
+        android:label="Sales" />
     <fragment
         android:id="@+id/settingsFragment"
         tools:layout="@layout/fragment_settings"
         android:name="com.miassolutions.milkledger.presentation.settings.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="Settings" />
     <fragment
         android:id="@+id/statsFragment"
         tools:layout="@layout/fragment_stats"
