@@ -8,12 +8,12 @@
     <dimen name="spacing_xl">32dp</dimen>
 
     <!-- Font sizes -->
-    <dimen name="text_xs">12sp</dimen>
-    <dimen name="text_s">14sp</dimen>
-    <dimen name="text_m">16sp</dimen>
-    <dimen name="text_l">18sp</dimen>
-    <dimen name="text_xl">20sp</dimen>
-    <dimen name="text_xxl">24sp</dimen>
+    <dimen name="sp_headline_large">24sp</dimen>
+    <dimen name="sp_headline_medium">20sp</dimen>
+    <dimen name="sp_title">18sp</dimen>
+    <dimen name="sp_body">16sp</dimen>
+    <dimen name="sp_caption">14sp</dimen>
+    <dimen name="sp_button">16sp</dimen>
 
     <!-- Corner radius -->
     <dimen name="corner_small">4dp</dimen>

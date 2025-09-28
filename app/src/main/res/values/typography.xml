@@ -1,9 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Text.Headline1" parent="TextAppearance.Material3.DisplaySmall"/>
-    <style name="Text.Headline2" parent="TextAppearance.Material3.HeadlineMedium"/>
-    <style name="Text.Title" parent="TextAppearance.Material3.TitleMedium"/>
-    <style name="Text.Body" parent="TextAppearance.Material3.BodyMedium"/>
-    <style name="Text.Caption" parent="TextAppearance.Material3.LabelSmall"/>
+    <!-- Headlines -->
+    <style name="Text.H1" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textSize">@dimen/sp_headline_large</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <style name="Text.H2" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+        <item name="android:textSize">@dimen/sp_headline_medium</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <!-- Subheadings -->
+    <style name="Text.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:textSize">@dimen/sp_title</item>
+    </style>
+
+    <!-- Body text -->
+    <style name="Text.Body" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:fontFamily">@font/inter</item>
+        <item name="android:textSize">@dimen/sp_body</item>
+    </style>
+
+    <!-- Captions / labels -->
+    <style name="Text.Caption" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:textSize">@dimen/sp_caption</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="Text.Button" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:fontFamily">@font/inter_semibold</item>
+        <item name="android:textSize">@dimen/sp_button</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
 </resources>

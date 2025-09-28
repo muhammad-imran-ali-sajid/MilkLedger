@@ -9,6 +9,16 @@
         <item name="android:statusBarColor">?attr/colorPrimary</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
 
+        <item name="materialButtonStyle">@style/Button.Filled</item>
+
+        <item name="textAppearanceHeadlineLarge">@style/Text.H1</item>
+        <item name="textAppearanceHeadlineMedium">@style/Text.H2</item>
+        <item name="textAppearanceTitleMedium">@style/Text.Title</item>
+        <item name="textAppearanceBodyLarge">@style/Text.Body</item>
+        <item name="textAppearanceLabelMedium">@style/Text.Caption</item>
+        <item name="textAppearanceLabelLarge">@style/Text.Button</item>
+
+
     </style>
 
     <style name="Theme.MilkLedger" parent="Base.Theme.MilkLedger" />
