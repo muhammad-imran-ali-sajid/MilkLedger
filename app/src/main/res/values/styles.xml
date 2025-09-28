@@ -37,4 +37,11 @@
         <item name="boxCornerRadiusBottomEnd">@dimen/corner_medium</item>
     </style>
 
+
+
+
+    <style name="NavActiveIndicator" parent="">
+        <item name="android:background">@drawable/bg_circle</item> <!-- background color -->
+    </style>
+
 </resources>

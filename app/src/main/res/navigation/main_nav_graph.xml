@@ -27,7 +27,7 @@
         android:label="Settings" />
     <fragment
         android:id="@+id/statsFragment"
-        tools:layout="@layout/fragment_stats"
         android:name="com.miassolutions.milkledger.presentation.stats.StatsFragment"
-        android:label="StatsFragment" />
+        android:label="@string/stats"
+        tools:layout="@layout/fragment_stats" />
 </navigation>

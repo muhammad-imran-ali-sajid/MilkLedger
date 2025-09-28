@@ -19,7 +19,9 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BottomNavOwner
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
 
     private val binding by lazy {
@@ -54,8 +56,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
             binding.drawerLayout
         )
 
-        setupActionBarWithNavController(navController, appBarConfiguration)
-//        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+//        setupActionBarWithNavController(navController, appBarConfiguration)
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
 
         // Hook up drawer nav view with nav controller
         binding.navigationView.setupWithNavController(navController)
@@ -87,9 +89,9 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
 
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
+//    override fun onSupportNavigateUp(): Boolean {
+//        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+//    }
 
 
     private fun windowsInsets() {
