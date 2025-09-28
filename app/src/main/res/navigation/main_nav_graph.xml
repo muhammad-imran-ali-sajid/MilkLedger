@@ -9,5 +9,25 @@
         android:id="@+id/purchaseFragment"
         android:name="com.miassolutions.milkledger.presentation.purchase.PurchaseFragment"
         android:label="PurchaseFragment"
-        tools:layout="@layout/fragment_purchase" />
+        tools:layout="@layout/fragment_purchases" />
+    <fragment
+        android:id="@+id/expensesFragment"
+        tools:layout="@layout/fragment_expenses"
+        android:name="com.miassolutions.milkledger.presentation.expenses.ExpensesFragment"
+        android:label="ExpensesFragment" />
+    <fragment
+        android:id="@+id/salesFragment"
+        tools:layout="@layout/fragment_sales"
+        android:name="com.miassolutions.milkledger.presentation.sales.SalesFragment"
+        android:label="SalesFragment" />
+    <fragment
+        android:id="@+id/settingsFragment"
+        tools:layout="@layout/fragment_settings"
+        android:name="com.miassolutions.milkledger.presentation.settings.SettingsFragment"
+        android:label="SettingsFragment" />
+    <fragment
+        android:id="@+id/statsFragment"
+        tools:layout="@layout/fragment_stats"
+        android:name="com.miassolutions.milkledger.presentation.stats.StatsFragment"
+        android:label="StatsFragment" />
 </navigation>

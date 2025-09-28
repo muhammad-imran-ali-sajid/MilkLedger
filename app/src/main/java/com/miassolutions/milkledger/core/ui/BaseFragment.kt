@@ -2,10 +2,15 @@ package com.miassolutions.milkledger.core.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
+import com.miassolutions.milkledger.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
@@ -40,11 +46,17 @@ abstract class BaseFragment<VB : ViewBinding>(
         setupViews()
         setupObservers()
         setupListeners()
+        setupMenu()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    // -------- Menu (Fragment-specific) --------
+    protected open fun setupMenu() {
+        // Override in child fragments when needed
     }
 
     protected open fun setupViews() {}
@@ -69,6 +81,8 @@ abstract class BaseFragment<VB : ViewBinding>(
             }
         }
     }
+
+
 
     protected fun SharedFlow<UiEvent>.collectEvent() {
         viewLifecycleOwner.lifecycleScope.launch {

@@ -1,13 +1,13 @@
-package com.miassolutions.milkledger.presentation.purchase
+package com.miassolutions.milkledger.presentation.expenses
 
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 
-class PurchaseFragment : BaseFragment<FragmentPurchasesBinding>(FragmentPurchasesBinding::inflate) {
+class ExpensesFragment : BaseFragment<FragmentPurchasesBinding>(FragmentPurchasesBinding::inflate) {
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.purchases))
+        setToolbarTitle(getString(R.string.expenses))
         showBottomNav(true)
     }
 }

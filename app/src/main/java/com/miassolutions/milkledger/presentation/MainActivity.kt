@@ -1,11 +1,14 @@
 package com.miassolutions.milkledger.presentation
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -20,6 +23,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private lateinit var navController: NavController
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,14 +35,32 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
 
         setSupportActionBar(binding.toolbar)
 
-        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHost =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
 
-        val navController = navHost.findNavController()
+        navController = navHost.findNavController()
 
 
         // Hook up bottom nav with nav controller
         binding.bottomNavigationView.setupWithNavController(navController)
 
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.global_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.settingsFragment -> {
+                navController.navigate(R.id.settingsFragment)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
 
     }
 

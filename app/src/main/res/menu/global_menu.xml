@@ -5,16 +5,19 @@
     <item
         android:id="@+id/action_backup_restore"
         android:title="@string/backup_restore"
+        android:orderInCategory="101"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/settingsFragment"
         android:title="@string/settings"
+        android:orderInCategory="100"
         android:icon="@drawable/ic_settings"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_logout"
         android:title="@string/logout"
+        android:orderInCategory="102"
         app:showAsAction="never" />
 </menu>
