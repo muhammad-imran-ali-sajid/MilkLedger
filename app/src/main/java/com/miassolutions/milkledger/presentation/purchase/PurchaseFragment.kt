@@ -23,12 +23,15 @@ class PurchaseFragment : BaseFragment<FragmentPurchasesBinding>(FragmentPurchase
                 FormBottomSheetFragment(
                     formLayoutRes = R.layout.form_customer
                 ) { result ->
+                    val name = result["etName"] ?: ""
+
                     // Handle success data
                     // result is a Map<String, String>
                     println("Form data: $result")
                 }.show(parentFragmentManager, "CustomerForm")
                 true
             }
+
             else -> false
         }
     }

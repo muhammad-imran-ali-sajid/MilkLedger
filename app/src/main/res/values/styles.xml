@@ -44,4 +44,8 @@
         <item name="android:background">@drawable/bg_circle</item> <!-- background color -->
     </style>
 
+    <style name="BottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:minHeight">48dp</item>
+    </style>
+
 </resources>

@@ -5,14 +5,13 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:openDrawer="start"
     tools:context=".presentation.MainActivity">
 
     <!-- Main content -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:fitsSystemWindows="true"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -34,21 +33,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:defaultNavHost="true"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:navGraph="@navigation/main_nav_graph" />
 
             <!-- Bottom Navigation -->
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottomNavigationView"
+                style="@style/BottomNavigationStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                app:itemIconSize="24dp"
+                app:labelVisibilityMode="unlabeled"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:labelVisibilityMode="labeled"
                 app:layout_constraintStart_toStartOf="parent"
                 app:menu="@menu/menu_bottom_nav" />
 
@@ -62,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:menu="@menu/menu_global"
-        app:headerLayout="@layout/drawer_header" />
+        app:headerLayout="@layout/drawer_header"
+        app:menu="@menu/menu_global" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
