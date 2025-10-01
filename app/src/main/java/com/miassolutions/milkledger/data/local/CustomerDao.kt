@@ -1,0 +1,28 @@
+package com.miassolutions.milkledger.data.local
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
+
+@Dao
+interface CustomerDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCustomer(customer: CustomerEntity)
+
+//    @Update
+//    suspend fun updateCustomer(customer: CustomerEntity)
+//
+//    @Delete
+//    suspend fun deleteCustomer(customer: CustomerEntity)
+
+    @Query("SELECT * FROM customer_table ORDER BY customerName ASC")
+    fun getAllCustomers(): Flow<List<CustomerEntity>>
+
+    @Query("SELECT * FROM customer_table WHERE customerId = :id LIMIT 1")
+    fun getCustomerById(id: String): Flow<CustomerEntity?>
+}

@@ -1,26 +1,26 @@
-package com.miassolutions.milkledger.core.ui
+package com.miassolutions.milkledger.core.ui.forms
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.miassolutions.milkledger.databinding.CustomerFormLayoutBinding
+import com.miassolutions.milkledger.databinding.SupplierFormLayoutBinding
 import com.miassolutions.milkledger.domain.model.Customer
 
-class CustomerFormBottomSheetFragment(
+class SupplierFormBottomSheetFragment(
     private val customer: Customer? = null,
     private val onSave: (Customer) -> Unit
 ) : BottomSheetDialogFragment() {
 
-    private var _binding: CustomerFormLayoutBinding? = null
+    private var _binding: SupplierFormLayoutBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = CustomerFormLayoutBinding.inflate(inflater, container, false)
+        _binding = SupplierFormLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -33,7 +33,7 @@ class CustomerFormBottomSheetFragment(
         binding.btnSave.setOnClickListener {
             val name = binding.etName.text.toString().trim()
             val phone = binding.etPhone.text.toString().trim()
-            val email = binding.etEmail.text.toString().trim()
+            val email = binding.etRate.text.toString().trim()
 
             if (name.isEmpty()) {
                 binding.nameLayout.error = "Name is required"
@@ -57,7 +57,7 @@ class CustomerFormBottomSheetFragment(
         if (customer != null) {
             binding.etName.setText(customer.name)
             binding.etPhone.setText(customer.phone)
-            binding.etEmail.setText(customer.email)
+            binding.etRate.setText(customer.email)
             binding.btnSave.text = "Update"
         } else {
             binding.btnSave.text = "Save"

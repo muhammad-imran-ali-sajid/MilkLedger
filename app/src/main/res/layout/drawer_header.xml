@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="Shahid Afzal Gilani"
+        android:text="Shahid Afzaal Gilani"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
