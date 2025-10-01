@@ -12,6 +12,8 @@
     <color name="md_theme_surface">#1E1E1E</color>
     <color name="md_theme_onSurface">#E0E0E0</color>
 
+    <color name="icon_color">#ffffff</color>
+
     <!-- Status -->
     <color name="success">#81C784</color> <!-- softer green -->
     <color name="error">#CF6679</color>  <!-- Material dark error -->

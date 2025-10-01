@@ -13,17 +13,8 @@ class ExpensesFragment : BaseFragment<FragmentPurchasesBinding>(FragmentPurchase
 
     }
 
-    override fun getMenuResId(): Int? = R.menu.menu_expenses
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_add_category -> {
-                showToast("Expense Category")
-                true
-            }
-            else -> false
-        }
-    }
+
 
 
 }

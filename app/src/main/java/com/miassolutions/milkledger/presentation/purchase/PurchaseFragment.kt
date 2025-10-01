@@ -15,19 +15,5 @@ class PurchaseFragment : BaseFragment<FragmentPurchasesBinding>(FragmentPurchase
         showBottomNav(true)
     }
 
-    override fun getMenuResId(): Int? = R.menu.menu_purchases
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_add_supplier -> {
-                CustomerFormBottomSheetFragment(customer = null){ newCustomer ->
-                    showToast(newCustomer.name)
-
-                }.show(parentFragmentManager, null)
-                true
-            }
-
-            else -> false
-        }
-    }
 }

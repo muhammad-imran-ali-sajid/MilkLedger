@@ -12,6 +12,8 @@
     <color name="md_theme_surface">#F5F5F5</color>
     <color name="md_theme_onSurface">#212121</color>
 
+    <color name="icon_color">#000000</color>
+
     <!-- Status -->
     <color name="success">#4CAF50</color>
     <color name="error">#F44336</color>
