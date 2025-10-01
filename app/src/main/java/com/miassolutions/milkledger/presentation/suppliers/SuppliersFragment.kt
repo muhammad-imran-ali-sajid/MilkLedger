@@ -9,8 +9,8 @@ import com.miassolutions.milkledger.databinding.FragmentSuppliersBinding
 class SuppliersFragment : BaseFragment<FragmentSuppliersBinding>(FragmentSuppliersBinding::inflate) {
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.expenses))
-        showBottomNav(true)
+        setToolbarTitle(getString(R.string.suppliers))
+        showBottomNav(false)
 
     }
 

@@ -68,30 +68,52 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
 
 
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.settingsFragment -> {
-                    // Close the drawer first
-                    binding.drawerLayout.closeDrawers()
-                    // Navigate to settings without clearing back stack
-                    navController.navigate(R.id.settingsFragment)
-                    true
+            binding.drawerLayout.closeDrawers()
+
+            val destinationId = when (menuItem.itemId) {
+                R.id.settingsFragment -> R.id.settingsFragment
+                R.id.customersFragment -> R.id.customersFragment
+                R.id.suppliersFragment -> R.id.suppliersFragment
+                else -> null
+            }
+
+            destinationId?.let {
+                if (navController.currentDestination?.id != it) {
+                    navController.navigate(it)
                 }
-                else -> {
-                    // Let the default NavigationUI handle other items
-                    val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
-                    if (handled) binding.drawerLayout.closeDrawers()
-                    handled
-                }
+                true
+            } ?: run {
+                // Fallback for other items
+                val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+                if (handled) binding.drawerLayout.closeDrawers()
+                handled
             }
         }
+
+
+//        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.settingsFragment -> {
+//                    // Close the drawer first
+//                    binding.drawerLayout.closeDrawers()
+//                    // Navigate to settings without clearing back stack
+//                    navController.navigate(R.id.settingsFragment)
+//                    true
+//                }
+//                else -> {
+//                    // Let the default NavigationUI handle other items
+//                    val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+//                    if (handled) binding.drawerLayout.closeDrawers()
+//                    handled
+//                }
+//            }
+//        }
 
 
 
     }
 
-//    override fun onSupportNavigateUp(): Boolean {
-//        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-//    }
+
 
 
     private fun windowsInsets() {

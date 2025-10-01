@@ -6,11 +6,12 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomersBinding
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 
-class CustomersFragment : BaseFragment<FragmentCustomersBinding>(FragmentCustomersBinding::inflate) {
+class CustomersFragment :
+    BaseFragment<FragmentCustomersBinding>(FragmentCustomersBinding::inflate) {
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.expenses))
-        showBottomNav(true)
+        setToolbarTitle(getString(R.string.customers))
+        showBottomNav(false)
 
     }
 
@@ -22,6 +23,7 @@ class CustomersFragment : BaseFragment<FragmentCustomersBinding>(FragmentCustome
                 showToast("Expense Category")
                 true
             }
+
             else -> false
         }
     }

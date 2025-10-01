@@ -30,4 +30,22 @@
         android:name="com.miassolutions.milkledger.presentation.stats.StatsFragment"
         android:label="@string/stats"
         tools:layout="@layout/fragment_stats" />
+    <fragment
+        android:id="@+id/customersFragment"
+        tools:layout="@layout/fragment_customers"
+        android:name="com.miassolutions.milkledger.presentation.customers.CustomersFragment"
+        android:label="CustomersFragment" />
+    <dialog
+        android:id="@+id/supplierFormBottomSheetFragment"
+        tools:layout="@layout/fragment_suppliers"
+        android:name="com.miassolutions.milkledger.core.ui.forms.SupplierFormBottomSheetFragment"
+        android:label="SupplierFormBottomSheetFragment" />
+    <dialog
+        android:id="@+id/customerFormBottomSheetFragment"
+        android:name="com.miassolutions.milkledger.core.ui.forms.CustomerFormBottomSheetFragment"
+        android:label="CustomerFormBottomSheetFragment" />
+    <fragment
+        android:id="@+id/suppliersFragment"
+        android:name="com.miassolutions.milkledger.presentation.suppliers.SuppliersFragment"
+        android:label="SuppliersFragment" />
 </navigation>
