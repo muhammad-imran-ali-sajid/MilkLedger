@@ -18,4 +18,6 @@
     <string name="add_category">New Category</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
+    <string name="customers">Customers</string>
+    <string name="suppliers">Suppliers</string>
 </resources>

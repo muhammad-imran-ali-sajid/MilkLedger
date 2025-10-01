@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Main Navigation -->
+    <group android:id="@+id/menu_group_navigation">
+        <item
+            android:id="@+id/customersFragment"
+            android:orderInCategory="100"
+            android:title="@string/customers"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/suppliersFragment"
+            android:orderInCategory="101"
+            android:title="@string/suppliers"
+            app:showAsAction="never" />
+    </group>
+
+    <!-- Tools / Settings -->
+    <group android:id="@+id/menu_group_tools">
+        <item
+            android:id="@+id/action_backup_restore"
+            android:icon="@drawable/ic_backup"
+            android:orderInCategory="200"
+            android:title="@string/backup_restore"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/settingsFragment"
+            android:icon="@drawable/ic_settings"
+            android:orderInCategory="201"
+            android:title="@string/settings"
+            app:showAsAction="never" />
+    </group>
+
+    <!-- Account -->
+    <group android:id="@+id/menu_group_account">
+        <item
+            android:id="@+id/action_logout"
+            android:orderInCategory="300"
+            android:title="@string/logout"
+            app:showAsAction="never" />
+    </group>
+
+</menu>
