@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.presentation.purchase
 import android.view.MenuItem
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.form.FormBottomSheetFragment
+import com.miassolutions.milkledger.core.ui.CustomerFormBottomSheetFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,15 +20,10 @@ class PurchaseFragment : BaseFragment<FragmentPurchasesBinding>(FragmentPurchase
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_add_supplier -> {
-                FormBottomSheetFragment(
-                    formLayoutRes = R.layout.form_customer
-                ) { result ->
-                    val name = result["etName"] ?: ""
+                CustomerFormBottomSheetFragment(customer = null){ newCustomer ->
+                    showToast(newCustomer.name)
 
-                    // Handle success data
-                    // result is a Map<String, String>
-                    println("Form data: $result")
-                }.show(parentFragmentManager, "CustomerForm")
+                }.show(parentFragmentManager, null)
                 true
             }
 
