@@ -12,19 +12,19 @@
         tools:layout="@layout/fragment_purchases" />
     <fragment
         android:id="@+id/expensesFragment"
-        tools:layout="@layout/fragment_expenses"
         android:name="com.miassolutions.milkledger.presentation.expenses.ExpensesFragment"
-        android:label="Expenses" />
+        android:label="Expenses"
+        tools:layout="@layout/fragment_expenses" />
     <fragment
         android:id="@+id/salesFragment"
-        tools:layout="@layout/fragment_sales"
         android:name="com.miassolutions.milkledger.presentation.sales.SalesFragment"
-        android:label="Sales" />
+        android:label="Sales"
+        tools:layout="@layout/fragment_sales" />
     <fragment
         android:id="@+id/settingsFragment"
-        tools:layout="@layout/fragment_settings"
         android:name="com.miassolutions.milkledger.presentation.settings.SettingsFragment"
-        android:label="Settings" />
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/statsFragment"
         android:name="com.miassolutions.milkledger.presentation.stats.StatsFragment"
@@ -32,20 +32,30 @@
         tools:layout="@layout/fragment_stats" />
     <fragment
         android:id="@+id/customersFragment"
-        tools:layout="@layout/fragment_customers"
         android:name="com.miassolutions.milkledger.presentation.customers.CustomersFragment"
-        android:label="CustomersFragment" />
+        android:label="CustomersFragment"
+        tools:layout="@layout/fragment_customers" >
+        <action
+            android:id="@+id/action_customersFragment_to_customerFormBottomSheetFragment"
+            app:destination="@id/customerFormBottomSheetFragment" />
+    </fragment>
     <dialog
         android:id="@+id/supplierFormBottomSheetFragment"
-        tools:layout="@layout/fragment_suppliers"
-        android:name="com.miassolutions.milkledger.core.ui.forms.SupplierFormBottomSheetFragment"
-        android:label="SupplierFormBottomSheetFragment" />
+        android:name="com.miassolutions.milkledger.presentation.forms.SupplierFormBottomSheetFragment"
+        android:label="SupplierFormBottomSheetFragment"
+        tools:layout="@layout/supplier_form_layout" />
     <dialog
         android:id="@+id/customerFormBottomSheetFragment"
-        android:name="com.miassolutions.milkledger.core.ui.forms.CustomerFormBottomSheetFragment"
-        android:label="CustomerFormBottomSheetFragment" />
+        android:name="com.miassolutions.milkledger.presentation.forms.CustomerFormBottomSheetFragment"
+        android:label="CustomerFormBottomSheetFragment"
+        tools:layout="@layout/customer_form_layout" />
     <fragment
         android:id="@+id/suppliersFragment"
         android:name="com.miassolutions.milkledger.presentation.suppliers.SuppliersFragment"
-        android:label="SuppliersFragment" />
+        android:label="SuppliersFragment"
+        tools:layout="@layout/fragment_suppliers" >
+        <action
+            android:id="@+id/action_suppliersFragment_to_supplierFormBottomSheetFragment"
+            app:destination="@id/supplierFormBottomSheetFragment" />
+    </fragment>
 </navigation>

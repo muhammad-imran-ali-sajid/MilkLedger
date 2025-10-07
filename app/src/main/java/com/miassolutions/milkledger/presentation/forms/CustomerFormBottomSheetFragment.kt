@@ -1,26 +1,26 @@
-package com.miassolutions.milkledger.core.ui.forms
+package com.miassolutions.milkledger.presentation.forms
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.miassolutions.milkledger.databinding.SupplierFormLayoutBinding
+import com.miassolutions.milkledger.databinding.CustomerFormLayoutBinding
 import com.miassolutions.milkledger.domain.model.Customer
 
-class SupplierFormBottomSheetFragment(
+class CustomerFormBottomSheetFragment(
     private val customer: Customer? = null,
     private val onSave: (Customer) -> Unit
 ) : BottomSheetDialogFragment() {
 
-    private var _binding: SupplierFormLayoutBinding? = null
+    private var _binding: CustomerFormLayoutBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = SupplierFormLayoutBinding.inflate(inflater, container, false)
+        _binding = CustomerFormLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
 
