@@ -14,11 +14,11 @@ interface CustomerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCustomer(customer: CustomerEntity)
 
-//    @Update
-//    suspend fun updateCustomer(customer: CustomerEntity)
-//
-//    @Delete
-//    suspend fun deleteCustomer(customer: CustomerEntity)
+    @Update
+    suspend fun updateCustomer(customer: CustomerEntity)
+
+    @Delete
+    suspend fun deleteCustomer(customer: CustomerEntity)
 
     @Query("SELECT * FROM customer_table ORDER BY customerName ASC")
     fun getAllCustomers(): Flow<List<CustomerEntity>>

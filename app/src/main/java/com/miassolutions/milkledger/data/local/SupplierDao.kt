@@ -14,11 +14,11 @@ interface SupplierDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSupplier(supplier: SupplierEntity)
 
-//    @Update
-//    suspend fun updateSupplier(supplier: SupplierEntity)
-//
-//    @Delete
-//    suspend fun deleteSupplier(supplier: SupplierEntity)
+    @Update
+    suspend fun updateSupplier(supplier: SupplierEntity)
+
+    @Delete
+    suspend fun deleteSupplier(supplier: SupplierEntity)
 
     @Query("SELECT * FROM supplier_table ORDER BY supplierName ASC")
     fun getAllSuppliers(): Flow<List<SupplierEntity>>
