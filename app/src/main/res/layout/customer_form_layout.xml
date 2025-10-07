@@ -24,10 +24,11 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/emailLayout"
+        android:id="@+id/et_rate_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Rate"
+
         app:layout_constraintTop_toBottomOf="@id/phoneLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,26 +38,9 @@
             android:id="@+id/et_rate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/phoneLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Phone"
-        app:layout_constraintTop_toBottomOf="@id/nameLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPhone"
-            android:inputType="phone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
 
 
     <com.google.android.material.button.MaterialButton

@@ -31,33 +31,47 @@ class CustomerFormBottomSheetFragment(
         setupForm()
 
         binding.btnSave.setOnClickListener {
+            // Reset errors first
+            binding.nameLayout.error = null
+            binding.etRateLayout.error = null
+
             val name = binding.etName.text.toString().trim()
-            val phone = binding.etPhone.text.toString().trim()
-            val email = binding.etRate.text.toString().trim()
+            val rateText = binding.etRate.text.toString().trim()
+
+            var isValid = true
 
             if (name.isEmpty()) {
                 binding.nameLayout.error = "Name is required"
-                return@setOnClickListener
+                isValid = false
             }
 
+            val rate = rateText.toDoubleOrNull()
+            if (rateText.isEmpty()) {
+                binding.etRateLayout.error = "Rate is required"
+                isValid = false
+            } else if (rate == null) {
+                binding.etRateLayout.error = "Rate must be a valid number"
+                isValid = false
+            }
+
+            if (!isValid) return@setOnClickListener
+
             val updatedCustomer = Customer(
-                id = customer?.id, // keep old id if editing
+                id = customer?.id, // keep old ID if editing
                 name = name,
-                phone = phone,
-                email = email
+                rate = rate // safe because we already validated it
             )
 
             onSave(updatedCustomer)
             dismiss()
         }
-
     }
+
 
     private fun setupForm() {
         if (customer != null) {
             binding.etName.setText(customer.name)
-            binding.etPhone.setText(customer.phone)
-            binding.etRate.setText(customer.email)
+            binding.etRate.setText(customer.rate.toString())
             binding.btnSave.text = "Update"
         } else {
             binding.btnSave.text = "Save"

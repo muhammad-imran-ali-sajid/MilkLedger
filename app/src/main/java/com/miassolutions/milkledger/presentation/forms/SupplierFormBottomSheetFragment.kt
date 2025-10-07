@@ -31,37 +31,13 @@ class SupplierFormBottomSheetFragment(
         setupForm()
 
         binding.btnSave.setOnClickListener {
-            val name = binding.etName.text.toString().trim()
-            val phone = binding.etPhone.text.toString().trim()
-            val email = binding.etRate.text.toString().trim()
 
-            if (name.isEmpty()) {
-                binding.nameLayout.error = "Name is required"
-                return@setOnClickListener
-            }
-
-            val updatedCustomer = Customer(
-                id = customer?.id, // keep old id if editing
-                name = name,
-                phone = phone,
-                email = email
-            )
-
-            onSave(updatedCustomer)
-            dismiss()
         }
 
     }
 
     private fun setupForm() {
-        if (customer != null) {
-            binding.etName.setText(customer.name)
-            binding.etPhone.setText(customer.phone)
-            binding.etRate.setText(customer.email)
-            binding.btnSave.text = "Update"
-        } else {
-            binding.btnSave.text = "Save"
-        }
+
     }
 
 
