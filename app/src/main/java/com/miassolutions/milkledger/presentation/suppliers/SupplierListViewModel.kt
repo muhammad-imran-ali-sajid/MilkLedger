@@ -50,7 +50,7 @@ class SupplierListViewModel @Inject constructor(
         }
     }
 
-    fun saveCustomer(supplier: Supplier) {
+    fun saveSupplier(supplier: Supplier) {
         viewModelScope.launch {
             try {
                 repository.insertSupplier(supplier.toEntity())

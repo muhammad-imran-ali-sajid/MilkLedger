@@ -17,7 +17,7 @@
     <!-- Subheadings -->
     <style name="Text.Title" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:fontFamily">@font/inter_semibold</item>
-        <item name="android:textSize">@dimen/sp_title</item>
+        <item name="android:textSize">@dimen/sp_headline_medium</item>
     </style>
 
     <!-- Body text -->

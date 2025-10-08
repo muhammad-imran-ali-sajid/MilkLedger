@@ -40,11 +40,7 @@ class CustomerListFragment :
 
     private fun setupRecyclerView() {
 
-        adapter = CustomerListAdapter {
-            showToast("$it is clicked")
-        }
-
-
+        adapter = CustomerListAdapter { showToast("$it is clicked") }
         binding.rvCustomers.adapter = adapter
     }
 

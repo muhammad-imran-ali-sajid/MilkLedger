@@ -45,7 +45,7 @@ class CustomerFormBottomSheetFragment(
                 isValid = false
             }
 
-            val rate = rateText.toDoubleOrNull()
+            val rate = rateText.toDouble()
             if (rateText.isEmpty()) {
                 binding.etRateLayout.error = "Rate is required"
                 isValid = false
@@ -59,7 +59,7 @@ class CustomerFormBottomSheetFragment(
             val updatedCustomer = Customer(
                 id = customer?.id, // keep old ID if editing
                 name = name,
-                rate = rate // safe because we already validated it
+                rate =rate // safe because we already validated it
             )
 
             onSave(updatedCustomer)

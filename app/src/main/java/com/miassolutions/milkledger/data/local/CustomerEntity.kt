@@ -9,5 +9,5 @@ data class CustomerEntity(
     @PrimaryKey
     val customerId: String = UUID.randomUUID().toString(),
     val customerName: String,
-    val customerRate: Double?,
+    val customerRate: Double,
 )
