@@ -12,6 +12,12 @@ import kotlinx.coroutines.flow.Flow
 interface CustomerDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(customers: List<CustomerEntity>)
+
+    @Query("DELETE FROM customer_table")
+    suspend fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCustomer(customer: CustomerEntity)
 
     @Update

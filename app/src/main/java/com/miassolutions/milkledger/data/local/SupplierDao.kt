@@ -12,6 +12,12 @@ import kotlinx.coroutines.flow.Flow
 interface SupplierDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(suppliers: List<SupplierEntity>)
+
+    @Query("DELETE FROM supplier_table")
+    suspend fun deleteAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSupplier(supplier: SupplierEntity)
 
     @Update

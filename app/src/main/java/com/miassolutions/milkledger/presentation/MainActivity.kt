@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
                 R.id.settingsFragment -> R.id.settingsFragment
                 R.id.customersFragment -> R.id.customersFragment
                 R.id.suppliersFragment -> R.id.suppliersFragment
+                R.id.devSettingsFragment -> R.id.devSettingsFragment
                 else -> null
             }
 

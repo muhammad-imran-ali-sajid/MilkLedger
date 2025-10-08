@@ -58,4 +58,9 @@
             android:id="@+id/action_suppliersFragment_to_supplierFormBottomSheetFragment"
             app:destination="@id/supplierFormBottomSheetFragment" />
     </fragment>
+    <fragment
+        tools:layout="@layout/fragment_dev_settings"
+        android:id="@+id/devSettingsFragment"
+        android:name="com.miassolutions.milkledger.zplayground.DevSettingsFragment"
+        android:label="DevSettingsFragment" />
 </navigation>

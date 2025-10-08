@@ -32,6 +32,14 @@
             android:orderInCategory="201"
             android:title="@string/settings"
             app:showAsAction="never" />
+
+
+        <item
+            android:id="@+id/devSettingsFragment"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:orderInCategory="202"
+            android:title="Developer Options"
+            app:showAsAction="never" />
     </group>
 
     <!-- Account -->
