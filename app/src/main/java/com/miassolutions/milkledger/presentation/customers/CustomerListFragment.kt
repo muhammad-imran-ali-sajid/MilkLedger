@@ -8,7 +8,7 @@ import com.miassolutions.milkledger.presentation.forms.CustomerFormBottomSheetFr
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CustomersFragment :
+class CustomerListFragment :
     BaseFragment<FragmentCustomersBinding>(FragmentCustomersBinding::inflate) {
 
     private val viewModel by viewModels<CustomerListViewModel>()

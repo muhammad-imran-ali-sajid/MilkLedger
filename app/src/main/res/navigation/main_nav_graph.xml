@@ -32,7 +32,7 @@
         tools:layout="@layout/fragment_stats" />
     <fragment
         android:id="@+id/customersFragment"
-        android:name="com.miassolutions.milkledger.presentation.customers.CustomersFragment"
+        android:name="com.miassolutions.milkledger.presentation.customers.CustomerListFragment"
         android:label="CustomersFragment"
         tools:layout="@layout/fragment_customers" >
         <action
@@ -51,7 +51,7 @@
         tools:layout="@layout/customer_form_layout" />
     <fragment
         android:id="@+id/suppliersFragment"
-        android:name="com.miassolutions.milkledger.presentation.suppliers.SuppliersFragment"
+        android:name="com.miassolutions.milkledger.presentation.suppliers.SupplierListFragment"
         android:label="SuppliersFragment"
         tools:layout="@layout/fragment_suppliers" >
         <action
