@@ -43,6 +43,15 @@ android {
         viewBinding = true
     }
 
+    packaging {
+        resources {
+            excludes += setOf(
+                "META-INF/INDEX.LIST",
+                "META-INF/DEPENDENCIES"
+            )
+        }
+    }
+
 }
 
 dependencies {
@@ -85,4 +94,17 @@ dependencies {
 
     // fragment for view model code generation
     implementation("androidx.fragment:fragment-ktx:1.8.9")
+
+    // DocumentFile is a wrapper class in AndroidX that helps you interact with files and folders
+    implementation("androidx.documentfile:documentfile:1.1.0")
+
+    // Required for Google Sign-In (modern)
+    implementation("com.google.android.gms:play-services-auth:21.4.0")
+
+// Official Drive REST API client (not deprecated)
+    implementation("com.google.api-client:google-api-client-android:2.8.1")
+    // Google Drive REST API client library
+    implementation("com.google.apis:google-api-services-drive:v3-rev20250220-2.0.0")
+
+    implementation("com.google.api-client:google-api-client-android:2.8.1")
 }

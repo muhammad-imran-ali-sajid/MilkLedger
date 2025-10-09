@@ -63,4 +63,9 @@
         android:id="@+id/devSettingsFragment"
         android:name="com.miassolutions.milkledger.zplayground.DevSettingsFragment"
         android:label="DevSettingsFragment" />
+    <fragment
+        android:id="@+id/driveBackupFragment"
+        tools:layout="@layout/fragment_drive_backup"
+        android:name="com.miassolutions.milkledger.zplayground.DriveBackupFragment"
+        android:label="DriveBackupFragment" />
 </navigation>

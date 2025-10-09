@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
-    private const val DB_NAME = "milk_ledger_db"
+    private const val DB_NAME = "milk_ledger.db"
 
     @Provides
     @Singleton

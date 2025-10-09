@@ -5,13 +5,13 @@
     <!-- Main Navigation -->
     <group android:id="@+id/menu_group_navigation">
         <item
-            android:id="@+id/customersFragment"
+            android:id="@+id/action_customersFragment"
             android:orderInCategory="100"
             android:title="@string/customers"
             app:showAsAction="never" />
 
         <item
-            android:id="@+id/suppliersFragment"
+            android:id="@+id/action_suppliersFragment"
             android:orderInCategory="101"
             android:title="@string/suppliers"
             app:showAsAction="never" />
@@ -20,14 +20,14 @@
     <!-- Tools / Settings -->
     <group android:id="@+id/menu_group_tools">
         <item
-            android:id="@+id/action_backup_restore"
+            android:id="@+id/action_driveBackupFragment"
             android:icon="@drawable/ic_backup"
             android:orderInCategory="200"
             android:title="@string/backup_restore"
             app:showAsAction="never" />
 
         <item
-            android:id="@+id/settingsFragment"
+            android:id="@+id/action_settingsFragment"
             android:icon="@drawable/ic_settings"
             android:orderInCategory="201"
             android:title="@string/settings"
@@ -35,7 +35,7 @@
 
 
         <item
-            android:id="@+id/devSettingsFragment"
+            android:id="@+id/action_devSettingsFragment"
             android:icon="@drawable/ic_launcher_foreground"
             android:orderInCategory="202"
             android:title="Developer Options"

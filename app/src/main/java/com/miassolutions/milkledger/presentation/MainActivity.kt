@@ -71,10 +71,11 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
             binding.drawerLayout.closeDrawers()
 
             val destinationId = when (menuItem.itemId) {
-                R.id.settingsFragment -> R.id.settingsFragment
-                R.id.customersFragment -> R.id.customersFragment
-                R.id.suppliersFragment -> R.id.suppliersFragment
-                R.id.devSettingsFragment -> R.id.devSettingsFragment
+                R.id.action_settingsFragment -> R.id.settingsFragment
+                R.id.action_customersFragment -> R.id.customersFragment
+                R.id.action_suppliersFragment -> R.id.suppliersFragment
+                R.id.action_devSettingsFragment -> R.id.devSettingsFragment
+                R.id.action_driveBackupFragment -> R.id.driveBackupFragment
                 else -> null
             }
 
@@ -91,30 +92,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
             }
         }
 
-
-//        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-//            when (menuItem.itemId) {
-//                R.id.settingsFragment -> {
-//                    // Close the drawer first
-//                    binding.drawerLayout.closeDrawers()
-//                    // Navigate to settings without clearing back stack
-//                    navController.navigate(R.id.settingsFragment)
-//                    true
-//                }
-//                else -> {
-//                    // Let the default NavigationUI handle other items
-//                    val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
-//                    if (handled) binding.drawerLayout.closeDrawers()
-//                    handled
-//                }
-//            }
-//        }
-
-
-
     }
-
-
 
 
     private fun windowsInsets() {
