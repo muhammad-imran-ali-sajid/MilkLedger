@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class PurchaseFragment :
@@ -52,7 +53,7 @@ class PurchaseFragment :
             onNotesChanged = { entryId, notes ->
                 viewModel.onEvent(PurchaseUiEvent.OnNotesChanged(entryId, notes))
             },
-            onPaidChanged = {entryId, paid ->
+            onPaidChanged = { entryId, paid ->
                 viewModel.onEvent(PurchaseUiEvent.OnPaidChanged(entryId, paid))
             }
 
@@ -83,7 +84,7 @@ class PurchaseFragment :
 
                 // Update total text
                 binding.tvGrandTotalForDate.text =
-                    getString(R.string.price_format, state.grandTotalForDate)
+                    getString(R.string.rs, state.grandTotalForDate.roundToInt())
 
                 // Update date text
                 binding.tvDate.text = getString(

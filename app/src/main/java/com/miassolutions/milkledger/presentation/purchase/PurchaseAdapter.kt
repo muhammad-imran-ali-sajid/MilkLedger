@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
+import kotlin.math.roundToInt
 
 class PurchaseAdapter(
     private val onSupplierClick: (String) -> Unit,
@@ -61,9 +62,9 @@ class PurchaseAdapter(
             currentItemId = item.purchase.purchaseId
 
             tvSupplierName.text = item.supplier.supplierName
-            tvPrice.text = "Rs. %.2f".format(item.purchase.price)
+            tvPrice.text = "${item.purchase.price.roundToInt()}"
             tvTs.text = "%.2f".format(item.purchase.ts)
-            tvBalance.text = "%.2f".format(item.purchase.paid)
+            tvBalance.text = "${item.purchase.balance.roundToInt()}"
 
             // --- safely set text without disturbing cursor ---
 

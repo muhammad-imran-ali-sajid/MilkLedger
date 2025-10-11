@@ -231,7 +231,7 @@
                     android:textStyle="bold"
                     android:nextFocusDown="@id/et_notes"
                     android:gravity="center"
-                    android:inputType="numberDecimal"
+                    android:inputType="number"
                     android:paddingVertical="6dp"
                     android:textDirection="ltr"
                     android:textSize="15sp" />

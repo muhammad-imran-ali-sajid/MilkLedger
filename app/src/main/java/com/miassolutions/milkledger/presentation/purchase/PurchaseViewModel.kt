@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -65,7 +66,7 @@ class PurchaseViewModel @Inject constructor(
     // ----------------------------------------------------------
     private fun observePurchasesForDate(date: LocalDate) {
         viewModelScope.launch {
-            repository.getPurchasesByDate(date).collect { purchases ->
+            repository.getPurchasesByDate(date).collectLatest { purchases ->
                 Log.d("PurchaseViewModel", "Loaded purchases for $date → ${purchases.size}")
                 val grandTotal = purchases.sumOf { it.purchase.price }
                 _uiState.update {
@@ -107,6 +108,7 @@ class PurchaseViewModel @Inject constructor(
                 entryId = event.entryId,
                 notes = event.notes
             )
+
             is PurchaseUiEvent.OnPaidChanged -> updateField(
                 entryId = event.entryId,
                 paid = event.paid
@@ -122,29 +124,45 @@ class PurchaseViewModel @Inject constructor(
         volume: Double? = null,
         fat: Double? = null,
         lr: Double? = null,
-        paid : Double? =null,
+        paid: Double? = null,
         notes: String? = null
     ) {
         val currentList = _uiState.value.purchasesForDate
         val updated = currentList.map { pws ->
             if (pws.purchase.purchaseId == entryId) {
+
+                // --- Calculate new field values safely ---
+                val newVolume = volume ?: pws.purchase.volume
+                val newFat = fat ?: pws.purchase.fat
+                val newLr = lr ?: pws.purchase.lr
+                val newPrice = MilkCalculationUtils.calculatePrice(
+                    rate = pws.purchase.rateUsed,
+                    volume = newVolume,
+                    fat = newFat,
+                    lr = newLr
+                )
+
+                // if user clears the paid field, treat it as 0.0
+                val enteredPaid = paid ?: 0.0
+                // avoid paying more than total
+                val newPaid = enteredPaid.coerceAtMost(newPrice)
+
+                val newBalance = newPrice - newPaid
+
                 val purchase = pws.purchase.copy(
-                    volume = volume ?: pws.purchase.volume,
-                    fat = fat ?: pws.purchase.fat,
-                    lr = lr ?: pws.purchase.lr,
-                    ts = MilkCalculationUtils.calculateTS(fat ?: pws.purchase.fat, lr ?: pws.purchase.lr),
-                    price = MilkCalculationUtils.calculatePrice(
-                        rate = pws.purchase.rateUsed,
-                        volume = volume ?: pws.purchase.volume,
-                        fat = fat ?: pws.purchase.fat,
-                        lr = lr ?: pws.purchase.lr
-                    ),
-                    paid = pws.purchase.paid,
-                    balance = pws.purchase.price - pws.purchase.paid,
+                    volume = newVolume,
+                    fat = newFat,
+                    lr = newLr,
+                    ts = MilkCalculationUtils.calculateTS(newFat, newLr, newVolume),
+                    price = newPrice,
+                    paid = newPaid,
+                    balance = newBalance,
                     notes = notes ?: pws.purchase.notes
                 )
+
                 viewModelScope.launch { repository.updatePurchase(purchase) }
                 pws.copy(purchase = purchase)
+
             } else pws
         }
 
@@ -156,6 +174,8 @@ class PurchaseViewModel @Inject constructor(
             )
         }
     }
+
+
 
     // ----------------------------------------------------------
     // 🧭 Navigation Reset
