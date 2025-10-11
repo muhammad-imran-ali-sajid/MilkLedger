@@ -11,7 +11,7 @@ import java.time.LocalDate
 interface PurchaseEntryDao {
 
     @Query("SELECT * FROM supplier_table")
-    suspend fun getAllSuppliers(): List<SupplierEntity>
+    fun getAllSuppliers(): Flow<List<SupplierEntity>>
 
     @Transaction
     @Query("SELECT * FROM purchase_entry_table WHERE date = :date")

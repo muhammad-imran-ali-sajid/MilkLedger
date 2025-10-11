@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Supplier Name"
+            android:text="عبداللہ"
             android:textColor="#111111"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -51,6 +51,7 @@
                     android:layout_marginBottom="4dp"
                     android:text="Vol (L)"
                     android:textColor="#333"
+                    android:textDirection="ltr"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
@@ -82,6 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="Fat (%)"
+                    android:textDirection="ltr"
                     android:textColor="#333"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -184,7 +186,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Amount"
+                    android:text="قیمت"
                     android:textColor="#333"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -194,7 +196,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/sale_color"
+                    android:backgroundTint="@color/purchase_color"
                     android:gravity="center"
                     android:paddingVertical="6dp"
                     android:text="Rs, 0.00"
@@ -216,7 +218,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Paid"
+                    android:text="ادائیگی"
                     android:textColor="#333"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -249,7 +251,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="Balance"
+                    android:text="بیلنس"
                     android:textColor="#333"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -259,8 +261,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="#D32F2F"
+                    android:backgroundTint="@color/sale_color"
                     android:gravity="center"
+                    android:textDirection="ltr"
                     android:paddingVertical="6dp"
                     android:text="Rs. 0.00"
                     android:textColor="#fff"
@@ -275,10 +278,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="3dp"
-            android:text="Notes"
+            android:text="نوٹ"
+            android:paddingStart="8dp"
             android:textColor="#666"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:ignore="RtlSymmetry" />
 
         <EditText
             android:id="@+id/et_notes"

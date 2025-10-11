@@ -77,18 +77,18 @@ class DevSettingsFragment : Fragment() {
         // Insert dummy customers
         customerDao.insertAll(
             listOf(
-                CustomerEntity(customerName = "Alice", customerRate = 25.5),
-                CustomerEntity(customerName = "Bob", customerRate = 30.0),
-                CustomerEntity(customerName = "Charlie", customerRate = 22.75),
+                CustomerEntity(customerName = "اکرم", customerRate = 200.0),
+                CustomerEntity(customerName = "اسلم", customerRate = 220.0),
+                CustomerEntity(customerName = "احمد", customerRate = 190.0),
             )
         )
 
         // Insert dummy suppliers
         supplierDao.insertAll(
             listOf(
-                SupplierEntity(supplierName = "Supplier X", supplierRate = 20.0),
-                SupplierEntity(supplierName = "Supplier Y", supplierRate = 18.5),
-                SupplierEntity(supplierName = "Supplier Z", supplierRate = 21.0),
+                SupplierEntity(supplierName = "اکبر", supplierRate = 170.0),
+                SupplierEntity(supplierName = "عبداللہ", supplierRate = 180.0),
+                SupplierEntity(supplierName = "کریم", supplierRate = 195.0),
             )
         )
     }

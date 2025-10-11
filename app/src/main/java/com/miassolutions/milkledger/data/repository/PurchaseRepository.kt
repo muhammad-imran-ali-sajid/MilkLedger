@@ -18,7 +18,7 @@ class PurchaseRepository @Inject constructor(
     suspend fun getPurchasesByDateOnce(date: LocalDate): List<PurchaseWithSupplier> =
         purchaseEntryDao.getPurchasesByDateOnce(date)
 
-    suspend fun getAllSuppliers(): List<SupplierEntity> =
+    fun getAllSuppliers(): Flow<List<SupplierEntity>> =
         purchaseEntryDao.getAllSuppliers()
 
     // 🧾 All purchases for reports or dashboard

@@ -26,39 +26,57 @@ class PurchaseViewModel @Inject constructor(
 
     init {
         val today = _uiState.value.currentDate
-        ensureDailyPurchasesExist(today)
-        observePurchasesForDate(_uiState.value.currentDate)
+        observeForDate(today)
+//        ensureDailyPurchasesExist(today)
+//        observePurchasesForDate(_uiState.value.currentDate)
     }
 
-    private fun ensureDailyPurchasesExist(date: LocalDate) {
+    // Call this to change date and reload everything for that date
+    fun observeForDate(date: LocalDate) {
         viewModelScope.launch {
-            // Get all suppliers
-            val allSuppliers = repository.getAllSuppliers() // we’ll add this below
-            // Get all purchases for today
-            val currentPurchases = repository.getPurchasesByDateOnce(date)
+            // Cancel any previous collection if needed
+            // Start observing suppliers and purchases for this date reactively
+            repository.getAllSuppliers().collectLatest { suppliers ->
 
-            // For suppliers missing an entry today → insert one
-            val missingSuppliers = allSuppliers.filterNot { supplier ->
-                currentPurchases.any { it.supplier.supplierId == supplier.supplierId }
-            }
+                // For the current date, get purchases once to check missing suppliers
+                val currentPurchases = repository.getPurchasesByDateOnce(date)
 
-            missingSuppliers.forEach { supplier ->
-                val newEntry = PurchaseEntryEntity(
-                    supplierId = supplier.supplierId,
-                    date = date,
-                    volume = 0.0,
-                    fat = 0.0,
-                    lr = 0.0,
-                    ts = 0.0,
-                    price = 0.0,
-                    paid = 0.0,
-                    balance = 0.0,
-                    rateUsed = supplier.supplierRate
-                )
-                repository.insertPurchase(newEntry)
+                val missingSuppliers = suppliers.filterNot { supplier ->
+                    currentPurchases.any { it.supplier.supplierId == supplier.supplierId }
+                }
+
+                // Insert missing purchases entries for the date
+                missingSuppliers.forEach { supplier ->
+                    val newEntry = PurchaseEntryEntity(
+                        supplierId = supplier.supplierId,
+                        date = date,
+                        volume = 0.0,
+                        fat = 0.0,
+                        lr = 0.0,
+                        ts = 0.0,
+                        price = 0.0,
+                        paid = 0.0,
+                        balance = 0.0,
+                        rateUsed = supplier.supplierRate
+                    )
+                    repository.insertPurchase(newEntry)
+                }
+
+                // Now observe purchases for this date reactively
+                repository.getPurchasesByDate(date).collectLatest { purchases ->
+                    val grandTotal = purchases.sumOf { it.purchase.price }
+                    _uiState.update {
+                        it.copy(
+                            currentDate = date,
+                            purchasesForDate = purchases,
+                            grandTotalForDate = grandTotal
+                        )
+                    }
+                }
             }
         }
     }
+
 
 
     // ----------------------------------------------------------
@@ -142,10 +160,8 @@ class PurchaseViewModel @Inject constructor(
                     lr = newLr
                 )
 
-                // if user clears the paid field, treat it as 0.0
-                val enteredPaid = paid ?: 0.0
-                // avoid paying more than total
-                val newPaid = enteredPaid.coerceAtMost(newPrice)
+
+                val newPaid = paid ?: 0.0
 
                 val newBalance = newPrice - newPaid
 
@@ -174,7 +190,6 @@ class PurchaseViewModel @Inject constructor(
             )
         }
     }
-
 
 
     // ----------------------------------------------------------
