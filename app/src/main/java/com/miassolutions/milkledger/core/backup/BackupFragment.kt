@@ -30,10 +30,10 @@ class BackupFragment :
         backupManager = BackupManager(requireContext(), dbFile, backupDir)
 
         binding.apply {
-            btnBackup.setOnClickListener { createBackup() }
-            btnRestorePicker.setOnClickListener { restorePicker.launch(arrayOf("*/*")) }
-            btnRestoreChoose.setOnClickListener { showBackupChooser() }
-            btnDeleteAll.setOnClickListener { confirmDeleteAll() }
+//            btnBackup.setOnClickListener { createBackup() }
+//            btnRestorePicker.setOnClickListener { restorePicker.launch(arrayOf("*/*")) }
+//            btnRestoreChoose.setOnClickListener { showBackupChooser() }
+//            btnDeleteAll.setOnClickListener { confirmDeleteAll() }
         }
     }
 

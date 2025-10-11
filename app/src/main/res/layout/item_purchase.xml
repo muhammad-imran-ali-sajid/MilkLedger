@@ -24,7 +24,7 @@
             android:layout_marginBottom="8dp">
 
             <TextView
-                android:id="@+id/tv_name"
+                android:id="@+id/tv_supplier_name"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
@@ -133,8 +133,7 @@
                 android:id="@+id/et_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:minLines="2"
+                android:inputType="textCapSentences"
                 android:textSize="16sp" />
         </com.google.android.material.textfield.TextInputLayout>
 

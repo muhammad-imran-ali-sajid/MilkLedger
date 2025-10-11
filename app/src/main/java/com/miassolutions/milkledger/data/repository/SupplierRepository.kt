@@ -9,6 +9,9 @@ import javax.inject.Inject
 class SupplierRepository @Inject constructor(
     private val supplierDao: SupplierDao
 ) {
+
+
+
     // Insert or replace a supplier
     suspend fun insertSupplier(supplier: SupplierEntity) {
         supplierDao.insertSupplier(supplier)

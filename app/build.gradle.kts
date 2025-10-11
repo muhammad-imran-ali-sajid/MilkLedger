@@ -85,8 +85,8 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.7")
 
     //hilt
-    implementation("com.google.dagger:hilt-android:2.57.1")
-    ksp("com.google.dagger:hilt-android-compiler:2.57.1")
+    implementation("com.google.dagger:hilt-android:2.57.2")
+    ksp("com.google.dagger:hilt-android-compiler:2.57.2")
 
     // Navigation Component
     implementation("androidx.navigation:navigation-fragment-ktx:2.9.5")
