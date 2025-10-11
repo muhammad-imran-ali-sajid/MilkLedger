@@ -1,8 +1,6 @@
 package com.miassolutions.milkledger.data.mapper
 
-import com.miassolutions.milkledger.data.local.CustomerEntity
-import com.miassolutions.milkledger.data.local.SupplierEntity
-import com.miassolutions.milkledger.domain.model.Customer
+import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.domain.model.Supplier
 import java.util.UUID
 

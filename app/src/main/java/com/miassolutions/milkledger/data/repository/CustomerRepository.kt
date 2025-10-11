@@ -1,8 +1,8 @@
 package com.miassolutions.milkledger.data.repository
 
 
-import com.miassolutions.milkledger.data.local.CustomerDao
-import com.miassolutions.milkledger.data.local.CustomerEntity
+import com.miassolutions.milkledger.data.local.daos.CustomerDao
+import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

@@ -2,6 +2,10 @@ package com.miassolutions.milkledger.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.miassolutions.milkledger.data.local.daos.CustomerDao
+import com.miassolutions.milkledger.data.local.daos.SupplierDao
+import com.miassolutions.milkledger.data.local.entities.CustomerEntity
+import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 
 @Database(
     entities = [CustomerEntity::class, SupplierEntity::class],

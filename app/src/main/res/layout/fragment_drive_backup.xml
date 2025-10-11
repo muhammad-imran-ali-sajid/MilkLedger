@@ -27,4 +27,28 @@
         android:text="Restore Backup"
         android:layout_marginTop="16dp"/>
 
+    <Button
+        android:id="@+id/btn_latest_backup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Restore Latest Backup" />
+
+    <Button
+        android:id="@+id/btn_choose_backup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Backup" />
+
+    <Button
+        android:id="@+id/btn_delete_all_backups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete All Backups" />
+
+    <Button
+        android:id="@+id/btn_delete_backup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose Backup To Delete" />
+
 </LinearLayout>

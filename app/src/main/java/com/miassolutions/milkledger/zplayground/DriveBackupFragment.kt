@@ -1,105 +1,155 @@
 package com.miassolutions.milkledger.zplayground
 
-
-import android.app.Activity
+import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.Scope
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.core.managers.BackupManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.Logger
 import com.miassolutions.milkledger.databinding.FragmentDriveBackupBinding
 import kotlinx.coroutines.launch
+import java.io.File
 
-class DriveBackupFragment : BaseFragment<FragmentDriveBackupBinding>(FragmentDriveBackupBinding::inflate) {
-
-
+class DriveBackupFragment :
+    BaseFragment<FragmentDriveBackupBinding>(FragmentDriveBackupBinding::inflate) {
 
     private lateinit var backupManager: BackupManager
-    private var credential: GoogleAccountCredential? = null
+    private lateinit var backupDir: File
+    private lateinit var backupFile: File
 
-    private val signInLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                try {
-                    val account = task.getResult(ApiException::class.java)
-                    if (account != null) {
-                        showToast("Signed in as ${account.email}")
-
-                        credential = GoogleAccountCredential.usingOAuth2(
-                            requireContext(),
-                            listOf("https://www.googleapis.com/auth/drive.file")
-                        ).apply {
-                            selectedAccount = account.account
-                        }
-                    }
-                } catch (e: ApiException) {
-                    showToast("Sign-in failed: ${e.message}")
-                }
+    // Launcher for selecting a backup file via SAF (if needed)
+    private val restoreFilePicker =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+            if (uri != null) {
+                restoreBackupFromUri(uri)
+            } else {
+                showToast("No file selected")
             }
         }
 
     override fun setupViews() {
-        backupManager = BackupManager(requireContext())
+        // Setup paths
+        backupFile = requireContext().getDatabasePath(DB_NAME)
+        backupDir = File(requireContext().filesDir, "backups")
 
+        backupManager = BackupManager(requireContext(), backupFile, backupDir)
+
+        // Local backup (no sign-in needed)
         binding.btnSignIn.setOnClickListener {
-            signInForDrive()
+            showToast("Sign-in not required for local backup")
         }
 
+        // Backup
         binding.btnBackup.setOnClickListener {
-            uploadBackup()
+            backupLocally()
         }
 
+        // Restore via SAF picker
         binding.btnRestore.setOnClickListener {
-            restoreBackup()
+            openRestoreFilePicker()
+        }
+
+        // Restore from internal backup list
+        binding.btnChooseBackup.setOnClickListener {
+            showBackupChooser()
+        }
+
+        binding.btnDeleteAllBackups.setOnClickListener {
+            showDeleteBackupChooser()
         }
     }
 
-    private fun signInForDrive() {
-        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .requestScopes(Scope("https://www.googleapis.com/auth/drive.file"))
-            .build()
-
-        val client = GoogleSignIn.getClient(requireContext(), signInOptions)
-        signInLauncher.launch(client.signInIntent)
-    }
-
-    private fun uploadBackup() {
-        val cred = credential
-        if (cred == null) {
-            showToast("Please sign in first")
-            return
-        }
-
+    private fun backupLocally() {
         lifecycleScope.launch {
             try {
-                backupManager.uploadToDrive(requireActivity() as Activity, cred)
-                showToast("Backup uploaded to Drive")
+                val file = backupManager.backupLocally()
+                Logger.d<DriveBackupFragment>("Backup saved: ${file.path}")
+                showToast("Backup saved: ${file.name}")
             } catch (e: Exception) {
-                showToast("Upload failed: ${e.message}")
+                showToast("Backup failed: ${e.message}")
             }
         }
     }
 
-    private fun restoreBackup() {
-        val cred = credential
-        if (cred == null) {
-            showToast("Please sign in first")
+    private fun openRestoreFilePicker() {
+        // You can restrict to your backup MIME type (e.g., application/octet-stream) if needed
+        restoreFilePicker.launch(arrayOf("*/*"))
+    }
+
+    private fun restoreBackupFromUri(uri: Uri) {
+        lifecycleScope.launch {
+            val success = backupManager.restoreFromLocal(uri)
+            if (success) {
+                showToast("Backup restored successfully")
+            } else {
+                showToast("Failed to restore backup")
+            }
+        }
+    }
+
+
+
+
+    private fun showDeleteBackupChooser() {
+        val backups = getBackupFiles()
+        if (backups.isEmpty()) {
+            showToast("No backups to delete")
             return
         }
 
+        val names = backups.map { it.name }.toTypedArray()
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Backup")
+            .setItems(names) { _, which ->
+                val selectedFile = backups[which]
+                val deleted = backupManager.deleteBackup(selectedFile)
+                showToast(if (deleted) "Deleted: ${selectedFile.name}" else "Failed to delete")
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+
+    private fun restoreBackupFromFile(file: File) {
         lifecycleScope.launch {
             try {
-                backupManager.restoreFromDrive(requireActivity() as Activity, cred)
-                showToast("Backup restored from Drive")
+                file.inputStream().channel.use { src ->
+                    backupFile.outputStream().channel.use { dst ->
+                        dst.transferFrom(src, 0, src.size())
+                    }
+                }
+                showToast("Backup restored from file: ${file.name}")
             } catch (e: Exception) {
                 showToast("Restore failed: ${e.message}")
             }
         }
+    }
+
+    private fun showBackupChooser() {
+        val backups = getBackupFiles()
+        if (backups.isEmpty()) {
+            showToast("No backups found")
+            return
+        }
+
+        val names = backups.map { it.name }.toTypedArray()
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Choose backup to restore")
+            .setItems(names) { _, which ->
+                val selectedFile = backups[which]
+                restoreBackupFromFile(selectedFile)
+            }
+            .show()
+    }
+
+    private fun getBackupFiles(): List<File> {
+        return backupDir.listFiles()
+            ?.filter { it.name.startsWith(backupFile.nameWithoutExtension) }
+            ?.sortedByDescending { it.lastModified() }
+            ?: emptyList()
     }
 }

@@ -9,8 +9,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.miassolutions.milkledger.data.local.AppDatabase
-import com.miassolutions.milkledger.data.local.CustomerEntity
-import com.miassolutions.milkledger.data.local.SupplierEntity
+import com.miassolutions.milkledger.data.local.entities.CustomerEntity
+import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.databinding.FragmentDevSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

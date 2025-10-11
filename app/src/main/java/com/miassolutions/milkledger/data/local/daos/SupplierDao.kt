@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.data.local
+package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

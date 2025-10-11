@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.core.managers
 
+
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
@@ -9,28 +10,29 @@ import com.google.api.client.http.FileContent
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
-import com.miassolutions.milkledger.core.util.Logger
-import com.miassolutions.milkledger.core.util.toFormattedString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-class BackupManager(private val context: Context) {
-
-    private val dbName = "milk_ledger.db"
-
-    // Path to the local database file
-    private val dbPath: File
-        get() = context.getDatabasePath(dbName)
-
-    // Directory to save local backups
-    private val backupDir: File
-        get() = File(context.getExternalFilesDir(null), "Backups")
+/**
+ * A reusable backup manager to upload and restore files to/from Google Drive and local storage.
+ *
+ * @param context Context for accessing file system and content resolver
+ * @param backupFile The local file to back up or restore
+ * @param backupDir Directory for storing local backups (optional)
+ * @param driveAppName App name to use for Drive API client (optional)
+ */
+class BackupManager(
+    private val context: Context,
+    private val backupFile: File,
+    private val backupDir: File? = null,
+    private val driveAppName: String = "MyApp Backup"
+) {
 
     /**
-     * Creates a Drive service instance using the given GoogleAccountCredential.
+     * Creates Drive service instance with given GoogleAccountCredential.
      */
     private fun getDriveService(credential: GoogleAccountCredential): Drive {
         return Drive.Builder(
@@ -38,126 +40,173 @@ class BackupManager(private val context: Context) {
             GsonFactory.getDefaultInstance(),
             credential
         )
-            .setApplicationName("MilkLedger Backup")
+            .setApplicationName(driveAppName)
             .build()
     }
 
     /**
-     * Uploads the local database backup file to the user's Google Drive.
+     * Uploads the backupFile to Google Drive.
      *
-     * @param activity Activity context for auth purposes if needed
-     * @param credential GoogleAccountCredential authenticated for Drive scopes
+     * @param activity Used for auth if needed
+     * @param credential Authenticated GoogleAccountCredential with proper scopes
      */
     suspend fun uploadToDrive(activity: Activity, credential: GoogleAccountCredential) =
         withContext(Dispatchers.IO) {
-            try {
-                val driveService = getDriveService(credential)
-                val localBackup = dbPath
-
-                // Prepare file metadata for Drive
-                val metadata = com.google.api.services.drive.model.File().apply {
-                    name = "milk_ledger.db"
-                    mimeType = "application/octet-stream"
-                }
-
-                val mediaContent = FileContent("application/octet-stream", localBackup)
-
-                // Execute file upload
-                val uploadedFile = driveService.files()
-                    .create(metadata, mediaContent)
-                    .setFields("id")
-                    .execute()
-
-                Logger.d("Backup uploaded to Drive. File ID: ${uploadedFile.id}", "BackupManager")
-            } catch (e: Exception) {
-                Logger.e("Upload failed: ${e.message}", "BackupManager")
-                throw e
+            if (!backupFile.exists()) {
+                throw IllegalStateException("Backup file does not exist: ${backupFile.absolutePath}")
             }
+            val driveService = getDriveService(credential)
+
+            // Prepare file metadata - keep same name and MIME
+            val metadata = com.google.api.services.drive.model.File().apply {
+                name = backupFile.name
+                mimeType = "application/octet-stream"
+            }
+
+            val mediaContent = FileContent("application/octet-stream", backupFile)
+
+            // Upload file
+            driveService.files()
+                .create(metadata, mediaContent)
+                .setFields("id")
+                .execute()
         }
 
     /**
-     * Downloads the latest backup from Google Drive and restores it locally.
+     * Restores the backup file from Google Drive by searching for a file with the same name.
      *
-     * @param activity Activity context for auth purposes if needed
-     * @param credential GoogleAccountCredential authenticated for Drive scopes
+     * @param activity Used for auth if needed
+     * @param credential Authenticated GoogleAccountCredential with proper scopes
      */
     suspend fun restoreFromDrive(activity: Activity, credential: GoogleAccountCredential) =
         withContext(Dispatchers.IO) {
-            try {
-                val driveService = getDriveService(credential)
+            val driveService = getDriveService(credential)
 
-                // Query Drive for the backup file by name
-                val result = driveService.files().list()
-                    .setQ("name='milkflow_backup.db' and trashed=false")
-                    .setSpaces("drive")
-                    .setFields("files(id, name)")
-                    .execute()
+            // Query for the file by name in Drive
+            val result = driveService.files().list()
+                .setQ("name='${backupFile.name}' and trashed=false")
+                .setSpaces("drive")
+                .setFields("files(id, name)")
+                .execute()
 
-                val file = result.files.firstOrNull()
-                    ?: throw Exception("No backup found in Drive.")
+            val file = result.files.firstOrNull()
+                ?: throw Exception("No backup file '${backupFile.name}' found in Drive.")
 
-                // Download the file and overwrite local database
-                FileOutputStream(dbPath).use { output ->
-                    driveService.files().get(file.id)
-                        .executeMediaAndDownloadTo(output)
-                }
-
-                Logger.d("Backup restored successfully from Drive.", "BackupManager")
-            } catch (e: Exception) {
-                Logger.e("Restore failed: ${e.message}", "BackupManager")
-                throw e
+            // Download and overwrite local file
+            FileOutputStream(backupFile).use { output ->
+                driveService.files().get(file.id)
+                    .executeMediaAndDownloadTo(output)
             }
         }
 
     /**
-     * Creates a local backup copy of the database file with a timestamped filename.
+     * Creates a timestamped local backup copy of backupFile in backupDir (if provided),
+     * otherwise in the same directory as backupFile.
      *
-     * @return Backup File on success, null on failure
+     * @return The backup copy file
      */
-    suspend fun backupLocally(): File? = withContext(Dispatchers.IO) {
-        try {
-            if (!backupDir.exists()) backupDir.mkdirs()
+    suspend fun backupLocally(): File = withContext(Dispatchers.IO) {
+        val destDir = backupDir ?: backupFile.parentFile
+        ?: throw IllegalStateException("No directory to save backup")
 
-            // Backup filename with timestamp prefix
-            val backupFile =
-                File(backupDir, System.currentTimeMillis().toFormattedString("milk_ledger_db_"))
+        if (!destDir.exists()) destDir.mkdirs()
 
-            // Copy DB file to backup location
-            FileInputStream(dbPath).channel.use { src ->
-                FileOutputStream(backupFile).channel.use { dst ->
-                    dst.transferFrom(src, 0, src.size())
-                }
+        val timestamp = System.currentTimeMillis()
+        val extension = backupFile.extension.takeIf { it.isNotEmpty() }?.let { ".$it" } ?: ""
+        val backupName = "${backupFile.nameWithoutExtension}_backup_$timestamp$extension"
+        val backupCopy = File(destDir, backupName)
+
+        FileInputStream(backupFile).channel.use { src ->
+            FileOutputStream(backupCopy).channel.use { dst ->
+                dst.transferFrom(src, 0, src.size())
             }
-
-            Logger.d("Local backup saved: ${backupFile.path}", "BackupManager")
-            backupFile
-        } catch (e: Exception) {
-            Logger.e("Local backup failed: ${e.message}", "BackupManager")
-            null
         }
+
+        backupCopy
     }
 
     /**
-     * Restores the database from a local Uri (e.g., picked from file picker).
+     * Restores backupFile from a local Uri (e.g. file selected by user).
      *
-     * @param uri Uri pointing to the backup file
-     * @return true if restore was successful, false otherwise
+     * @param uri Uri to the backup file
+     * @return true if success, false otherwise
      */
     suspend fun restoreFromLocal(uri: Uri): Boolean = withContext(Dispatchers.IO) {
         try {
             val docFile = DocumentFile.fromSingleUri(context, uri) ?: return@withContext false
             val inputStream = context.contentResolver.openInputStream(docFile.uri) ?: return@withContext false
 
-            FileOutputStream(dbPath).use { output ->
+            FileOutputStream(backupFile).use { output ->
                 inputStream.copyTo(output)
             }
 
             inputStream.close()
-            Logger.d("Database restored successfully from local", "BackupManager")
             true
         } catch (e: Exception) {
-            Logger.e("Local restore failed: ${e.message}", "BackupManager")
+            e.printStackTrace()
             false
         }
     }
+
+
+    suspend fun restoreLatestLocalBackup(): Boolean = withContext(Dispatchers.IO) {
+        val dir = backupDir ?: return@withContext false
+        if (!dir.exists()) return@withContext false
+
+        val latestBackup = dir.listFiles()
+            ?.filter { it.name.startsWith(backupFile.nameWithoutExtension) }
+            ?.maxByOrNull { it.lastModified() } ?: return@withContext false
+
+        try {
+            FileInputStream(latestBackup).channel.use { src ->
+                FileOutputStream(backupFile).channel.use { dst ->
+                    dst.transferFrom(src, 0, src.size())
+                }
+            }
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+
+    fun deleteAllBackups(): Boolean {
+        val files = getBackupFiles()
+        var success = true
+
+        for (file in files) {
+            if (!file.delete()) {
+                success = false // at least one failed
+            }
+        }
+
+        return success
+    }
+
+
+    private fun getBackupFiles(): List<File> {
+        return backupDir?.listFiles()
+            ?.filter { it.name.startsWith(backupFile.nameWithoutExtension) }
+            ?.sortedByDescending { it.lastModified() }
+            ?: emptyList()
+    }
+
+
+    fun deleteOldBackups(days: Int): Int {
+        val cutoff = System.currentTimeMillis() - days * 24 * 60 * 60 * 1000L
+        val oldBackups = getBackupFiles().filter { it.lastModified() < cutoff }
+
+        var deletedCount = 0
+        for (file in oldBackups) {
+            if (file.delete()) deletedCount++
+        }
+
+        return deletedCount
+    }
+
+    fun deleteBackup(file: File): Boolean {
+        return file.exists() && file.delete()
+    }
+
 }
