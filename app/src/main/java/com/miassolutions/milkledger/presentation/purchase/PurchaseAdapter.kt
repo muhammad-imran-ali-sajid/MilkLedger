@@ -56,17 +56,11 @@ class PurchaseAdapter(
         private val binding: ItemPurchaseBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        private var currentItemId: String? = null
-
         fun bind(item: PurchaseWithSupplier) = with(binding) {
-            currentItemId = item.purchase.purchaseId
-
             tvSupplierName.text = item.supplier.supplierName
             tvPrice.text = "${item.purchase.price.roundToInt()}"
             tvTs.text = "%.2f".format(item.purchase.ts)
             tvBalance.text = "${item.purchase.balance.roundToInt()}"
-
-            // --- safely set text without disturbing cursor ---
 
             if (!etVolume.hasFocus()) {
                 etVolume.safeSetText(trimTrailingZeros(item.purchase.volume))
@@ -77,20 +71,17 @@ class PurchaseAdapter(
             if (!etLr.hasFocus()) {
                 etLr.safeSetText(trimTrailingZeros(item.purchase.lr))
             }
-
             if (!etPaid.hasFocus()) {
                 etPaid.safeSetText(trimTrailingZeros(item.purchase.paid))
             }
             etNotes.safeSetText(item.purchase.notes.orEmpty())
 
-            // --- clear old watchers before adding new ones ---
             etVolume.clearTextWatchers()
             etFat.clearTextWatchers()
             etLr.clearTextWatchers()
             etPaid.clearTextWatchers()
             etNotes.clearTextWatchers()
 
-            // --- add fresh text watchers ---
             etVolume.addTextWatcher(simpleWatcher { s ->
                 if (etVolume.hasFocus()) {
                     s.toDoubleOrNull()?.let { onVolumeChanged(item.purchase.purchaseId, it) }
@@ -121,7 +112,13 @@ class PurchaseAdapter(
                 }
             })
 
-            // --- supplier click ---
+            // Select-all behavior on focus and click
+            etVolume.enableSelectAll()
+            etFat.enableSelectAll()
+            etLr.enableSelectAll()
+            etPaid.enableSelectAll()
+            etNotes.enableSelectAll()
+
             tvSupplierName.setOnClickListener {
                 onSupplierClick(item.purchase.purchaseId)
             }
@@ -138,7 +135,6 @@ private fun trimTrailingZeros(value: Double): String {
         value.toString()
     }
 }
-
 
 private fun simpleWatcher(onAfter: (String) -> Unit): TextWatcher {
     return object : TextWatcher {
@@ -174,5 +170,16 @@ private fun EditText.safeSetText(newText: String) {
             val pos = cursorPos.coerceIn(0, newText.length)
             setSelection(pos)
         }
+    }
+}
+
+private fun EditText.enableSelectAll() {
+    setOnFocusChangeListener { v, hasFocus ->
+        if (hasFocus) {
+            post { selectAll() }
+        }
+    }
+    setOnClickListener {
+        selectAll()
     }
 }

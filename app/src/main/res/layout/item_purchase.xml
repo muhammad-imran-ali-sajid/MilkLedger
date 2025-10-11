@@ -231,6 +231,7 @@
                     android:backgroundTint="@color/info"
                     android:textColor="#fff"
                     android:textStyle="bold"
+                    android:imeOptions="actionDone"
                     android:nextFocusDown="@id/et_notes"
                     android:gravity="center"
                     android:inputType="number"
