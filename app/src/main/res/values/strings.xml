@@ -25,6 +25,8 @@
     <!-- 💰 For showing total amounts -->
     <string name="price_format">Rs %.2f</string>
 
+    <item name="text_watcher_tag" type="id" />
+
     <!-- 📅 For showing formatted date like 11/10/2025 -->
     <string name="date_format">%02d/%02d/%04d</string>
 </resources>

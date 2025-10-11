@@ -56,7 +56,11 @@ class PurchaseFragment :
 
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
+            itemAnimator = null
             layoutManager = LinearLayoutManager(requireContext())
+            setRecyclerListener { holder ->
+                holder.itemView.findFocus()?.clearFocus()
+            }
             setHasFixedSize(true)
         }
     }
@@ -70,6 +74,7 @@ class PurchaseFragment :
                 Log.d("PurchaseFragment", "${state.purchasesForDate}")
 
                 // Update RecyclerView list
+                binding.rvPurchases.setItemViewCacheSize(state.purchasesForDate.size)
                 purchaseAdapter.submitList(state.purchasesForDate)
 
                 // Update total text
