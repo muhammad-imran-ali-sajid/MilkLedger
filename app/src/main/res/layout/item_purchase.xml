@@ -8,6 +8,8 @@
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
     app:cardCornerRadius="16dp"
+    android:layoutDirection="rtl"
+    android:textDirection="rtl"
     app:cardElevation="5dp"
     android:backgroundTint="@android:color/white">
 
@@ -151,16 +153,111 @@
             </LinearLayout>
         </GridLayout>
 
-        <!-- Price -->
-        <TextView
-            android:id="@+id/tv_price"
+
+        <!-- Single Row: Price, Paid (EditText), and Balance -->
+        <!-- Titles on Top, Values Below for Price, Paid, and Balance -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Price: ₹0.00"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:textColor="#1B5E20"
-            android:layout_marginBottom="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:weightSum="3">
+
+            <!-- Price -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount"
+                    android:textColor="#333"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rs, 0.00"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#fff"
+                    android:gravity="center"
+                    android:backgroundTint="@color/sale_color"
+                    android:background="@drawable/bg_edittext_readable"
+                    android:paddingVertical="6dp"/>
+            </LinearLayout>
+
+            <!-- Paid -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingHorizontal="4dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Paid"
+                    android:textColor="#333"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"/>
+
+                <EditText
+                    android:id="@+id/et_paid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textSize="15sp"
+                    android:gravity="center"
+
+                    android:background="@drawable/bg_edittext_readable"
+                    android:paddingVertical="6dp"/>
+            </LinearLayout>
+
+            <!-- Balance -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Balance"
+                    android:textColor="#333"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/tv_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rs. 0.00"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#fff"
+                    android:backgroundTint="#D32F2F"
+                    android:gravity="center"
+                    android:background="@drawable/bg_edittext_readable"
+                    android:paddingVertical="6dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
 
         <!-- Notes -->
         <TextView
