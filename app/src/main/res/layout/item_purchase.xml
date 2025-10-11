@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardCornerRadius="16dp"
+    android:backgroundTint="@android:color/white"
     android:layoutDirection="rtl"
     android:textDirection="rtl"
-    app:cardElevation="5dp"
-    android:backgroundTint="@android:color/white">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,28 +23,27 @@
             android:id="@+id/tv_supplier_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Supplier Name"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:textColor="#111111"
-            android:layout_marginBottom="8dp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <!-- Grid for Volume, Fat, LR, TS -->
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="4"
             android:alignmentMode="alignMargins"
-            android:useDefaultMargins="true"
-            >
+            android:columnCount="4"
+            android:useDefaultMargins="true">
 
             <!-- Volume -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -60,11 +58,13 @@
                     android:id="@+id/et_volume"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textSize="17sp"
+                    android:background="@drawable/bg_edittext_readable"
                     android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:layoutDirection="ltr"
                     android:paddingVertical="6dp"
-                    android:background="@drawable/bg_edittext_readable" />
+                    android:textDirection="ltr"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <!-- Fat -->
@@ -72,8 +72,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -88,11 +88,12 @@
                     android:id="@+id/et_fat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textSize="17sp"
+                    android:background="@drawable/bg_edittext_readable"
                     android:gravity="center"
+                    android:inputType="numberDecimal"
                     android:paddingVertical="6dp"
-                    android:background="@drawable/bg_edittext_readable" />
+                    android:textDirection="ltr"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <!-- LR -->
@@ -100,8 +101,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -116,11 +117,12 @@
                     android:id="@+id/et_lr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textSize="17sp"
+                    android:background="@drawable/bg_edittext_readable"
                     android:gravity="center"
+                    android:inputType="numberDecimal"
                     android:paddingVertical="6dp"
-                    android:background="@drawable/bg_edittext_readable" />
+                    android:textDirection="ltr"
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <!-- TS -->
@@ -128,9 +130,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:orientation="vertical"
+                android:gravity="center"
 
-                android:gravity="center">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -144,12 +146,12 @@
                     android:id="@+id/tv_ts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="0.00"
+                    android:gravity="center"
                     android:paddingTop="8dp"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
+                    android:text="0.00"
                     android:textColor="#111111"
-                    android:gravity="center" />
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </GridLayout>
 
@@ -159,9 +161,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:weightSum="3">
 
             <!-- Price -->
@@ -169,30 +171,30 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Amount"
                     android:textColor="#333"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Rs, 0.00"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="#fff"
-                    android:gravity="center"
-                    android:backgroundTint="@color/sale_color"
                     android:background="@drawable/bg_edittext_readable"
-                    android:paddingVertical="6dp"/>
+                    android:backgroundTint="@color/sale_color"
+                    android:gravity="center"
+                    android:paddingVertical="6dp"
+                    android:text="Rs, 0.00"
+                    android:textColor="#fff"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Paid -->
@@ -200,29 +202,32 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
                 android:gravity="center_horizontal"
+                android:orientation="vertical"
                 android:paddingHorizontal="4dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Paid"
                     android:textColor="#333"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/et_paid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textSize="15sp"
-                    android:gravity="center"
-
                     android:background="@drawable/bg_edittext_readable"
-                    android:paddingVertical="6dp"/>
+                    android:backgroundTint="@color/info"
+                    android:textColor="#fff"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:inputType="numberDecimal"
+                    android:paddingVertical="6dp"
+                    android:textDirection="ltr"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <!-- Balance -->
@@ -230,33 +235,32 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
                     android:text="Balance"
                     android:textColor="#333"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_balance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Rs. 0.00"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    android:textColor="#fff"
+                    android:background="@drawable/bg_edittext_readable"
                     android:backgroundTint="#D32F2F"
                     android:gravity="center"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:paddingVertical="6dp"/>
+                    android:paddingVertical="6dp"
+                    android:text="Rs. 0.00"
+                    android:textColor="#fff"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
-
 
 
         <!-- Notes -->
@@ -273,11 +277,11 @@
             android:id="@+id/et_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences"
-            android:textSize="17sp"
-            android:paddingStart="10dp"
-            android:paddingVertical="6dp"
             android:background="@drawable/bg_edittext_readable"
+            android:inputType="textCapSentences"
+            android:paddingVertical="6dp"
+            android:paddingStart="10dp"
+            android:textSize="17sp"
             tools:ignore="RtlSymmetry" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
