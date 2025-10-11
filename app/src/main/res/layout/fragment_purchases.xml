@@ -3,41 +3,88 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/md_theme_background">
+    android:layout_height="match_parent">
 
-
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/til_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_m"
-        android:layout_marginTop="@dimen/spacing_m"
-        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        app:cardBackgroundColor="@color/md_theme_background"
+        app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-        <TextView
-            android:id="@+id/tv_date"
-            style="@style/Text.Title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="Date : 11/10/2025"
-            android:textColor="@color/title_color" />
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:weightSum="5">
 
-        <TextView
-            android:id="@+id/tv_grand_total_for_date"
-            style="@style/Text.Title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:text="Rs. 10500"
-            android:textColor="@color/purchase_color" />
-    </LinearLayout>
+            <!-- Date Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+
+                <!-- Title -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textSize="12sp"
+                    android:textColor="@color/title_color"
+                    android:textStyle="bold"
+
+                    android:layout_marginBottom="2dp"/>
+
+                <!-- Value -->
+                <TextView
+                    android:id="@+id/tv_date"
+                    style="@style/Text.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="11/10/2025"
+                    android:textColor="@color/title_color" />
+            </LinearLayout>
+
+            <!-- Grand Total Column -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <!-- Title -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Grand Total"
+                    android:textSize="12sp"
+                    android:textColor="@color/purchase_color"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="2dp"/>
+
+                <!-- Value -->
+                <TextView
+                    android:id="@+id/tv_grand_total_for_date"
+                    style="@style/Text.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rs. 10500"
+                    android:textColor="@color/purchase_color" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_purchases"
