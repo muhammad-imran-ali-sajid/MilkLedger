@@ -51,7 +51,11 @@ class PurchaseFragment :
             },
             onNotesChanged = { entryId, notes ->
                 viewModel.onEvent(PurchaseUiEvent.OnNotesChanged(entryId, notes))
+            },
+            onPaidChanged = {entryId, paid ->
+                viewModel.onEvent(PurchaseUiEvent.OnPaidChanged(entryId, paid))
             }
+
         )
 
         binding.rvPurchases.apply {

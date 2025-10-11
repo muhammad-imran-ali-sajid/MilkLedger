@@ -16,6 +16,7 @@ class PurchaseAdapter(
     private val onVolumeChanged: (String, Double) -> Unit,
     private val onFatChanged: (String, Double) -> Unit,
     private val onLrChanged: (String, Double) -> Unit,
+    private val onPaidChanged: (String, Double) -> Unit,
     private val onNotesChanged: (String, String) -> Unit
 ) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.PurchaseViewHolder>(DiffCallback) {
 
@@ -62,6 +63,7 @@ class PurchaseAdapter(
             tvSupplierName.text = item.supplier.supplierName
             tvPrice.text = "Rs. %.2f".format(item.purchase.price)
             tvTs.text = "%.2f".format(item.purchase.ts)
+            tvBalance.text = "%.2f".format(item.purchase.paid)
 
             // --- safely set text without disturbing cursor ---
 
@@ -74,12 +76,17 @@ class PurchaseAdapter(
             if (!etLr.hasFocus()) {
                 etLr.safeSetText(trimTrailingZeros(item.purchase.lr))
             }
+
+            if (!etPaid.hasFocus()) {
+                etPaid.safeSetText(trimTrailingZeros(item.purchase.paid))
+            }
             etNotes.safeSetText(item.purchase.notes.orEmpty())
 
             // --- clear old watchers before adding new ones ---
             etVolume.clearTextWatchers()
             etFat.clearTextWatchers()
             etLr.clearTextWatchers()
+            etPaid.clearTextWatchers()
             etNotes.clearTextWatchers()
 
             // --- add fresh text watchers ---
@@ -98,6 +105,12 @@ class PurchaseAdapter(
             etLr.addTextWatcher(simpleWatcher { s ->
                 if (etLr.hasFocus()) {
                     s.toDoubleOrNull()?.let { onLrChanged(item.purchase.purchaseId, it) }
+                }
+            })
+
+            etPaid.addTextWatcher(simpleWatcher { s ->
+                if (etPaid.hasFocus()) {
+                    s.toDoubleOrNull()?.let { onPaidChanged(item.purchase.purchaseId, it) }
                 }
             })
 
@@ -131,6 +144,7 @@ private fun simpleWatcher(onAfter: (String) -> Unit): TextWatcher {
         override fun afterTextChanged(s: Editable?) {
             onAfter(s?.toString().orEmpty())
         }
+
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     }

@@ -18,5 +18,6 @@ sealed class PurchaseUiEvent {
     data class OnVolumeChanged(val entryId: String, val volume: Double) : PurchaseUiEvent()
     data class OnFatChanged(val entryId: String, val fat: Double) : PurchaseUiEvent()
     data class OnLrChanged(val entryId: String, val lr: Double) : PurchaseUiEvent()
+    data class OnPaidChanged(val entryId: String, val paid: Double) : PurchaseUiEvent()
     data class OnNotesChanged(val entryId: String, val notes: String) : PurchaseUiEvent()
 }

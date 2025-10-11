@@ -28,6 +28,8 @@ data class PurchaseEntryEntity(
     val lr: Double,
     val ts: Double,
     val price: Double,
+    val paid : Double,
+    val balance : Double,
     val rateUsed: Double,
     val notes: String? = null
 )

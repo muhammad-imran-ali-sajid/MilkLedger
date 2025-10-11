@@ -50,6 +50,8 @@ class PurchaseViewModel @Inject constructor(
                     lr = 0.0,
                     ts = 0.0,
                     price = 0.0,
+                    paid = 0.0,
+                    balance = 0.0,
                     rateUsed = supplier.supplierRate
                 )
                 repository.insertPurchase(newEntry)
@@ -105,6 +107,10 @@ class PurchaseViewModel @Inject constructor(
                 entryId = event.entryId,
                 notes = event.notes
             )
+            is PurchaseUiEvent.OnPaidChanged -> updateField(
+                entryId = event.entryId,
+                paid = event.paid
+            )
         }
     }
 
@@ -116,6 +122,7 @@ class PurchaseViewModel @Inject constructor(
         volume: Double? = null,
         fat: Double? = null,
         lr: Double? = null,
+        paid : Double? =null,
         notes: String? = null
     ) {
         val currentList = _uiState.value.purchasesForDate
@@ -132,6 +139,8 @@ class PurchaseViewModel @Inject constructor(
                         fat = fat ?: pws.purchase.fat,
                         lr = lr ?: pws.purchase.lr
                     ),
+                    paid = pws.purchase.paid,
+                    balance = pws.purchase.price - pws.purchase.paid,
                     notes = notes ?: pws.purchase.notes
                 )
                 viewModelScope.launch { repository.updatePurchase(purchase) }
