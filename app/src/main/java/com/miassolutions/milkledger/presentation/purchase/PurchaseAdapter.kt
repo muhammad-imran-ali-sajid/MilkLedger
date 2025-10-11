@@ -61,12 +61,9 @@ class PurchaseAdapter(
 
             tvSupplierName.text = item.supplier.supplierName
             tvPrice.text = "Rs. %.2f".format(item.purchase.price)
-            tvTs.text = "TS: %.2f".format(item.purchase.ts)
+            tvTs.text = "%.2f".format(item.purchase.ts)
 
             // --- safely set text without disturbing cursor ---
-//            etVolume.safeSetText(item.purchase.volume.toString())
-//            etFat.safeSetText(item.purchase.fat.toString())
-//            etLr.safeSetText(item.purchase.lr.toString())
 
             if (!etVolume.hasFocus()) {
                 etVolume.safeSetText(trimTrailingZeros(item.purchase.volume))

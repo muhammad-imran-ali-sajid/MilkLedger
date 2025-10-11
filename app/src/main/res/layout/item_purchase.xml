@@ -1,141 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_margin="12dp"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="4dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="5dp"
     android:backgroundTint="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp">
+        android:padding="14dp">
 
-        <!-- Name and Price Row -->
-        <LinearLayout
+        <!-- Supplier Name -->
+        <TextView
+            android:id="@+id/tv_supplier_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:weightSum="2"
-            android:layout_marginBottom="8dp">
+            android:text="Supplier Name"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#111111"
+            android:layout_marginBottom="8dp" />
 
-            <TextView
-                android:id="@+id/tv_supplier_name"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Name"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black" />
-
-            <TextView
-                android:id="@+id/tv_price"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Price: ₹0.00"
-                android:textSize="16sp"
-                android:textColor="@android:color/holo_green_dark"
-                android:gravity="end" />
-        </LinearLayout>
-
-        <!-- Volume and Fat Row -->
-        <LinearLayout
+        <!-- Grid for Volume, Fat, LR, TS -->
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginBottom="8dp">
+            android:columnCount="4"
+            android:alignmentMode="alignMargins"
+            android:useDefaultMargins="true"
+            >
 
-            <com.google.android.material.textfield.TextInputLayout
+            <!-- Volume -->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="Volume (L)">
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="Vol (L)"
+                    android:textColor="#333"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <EditText
                     android:id="@+id/et_volume"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:textSize="17sp"
+                    android:gravity="center"
+                    android:paddingVertical="6dp"
+                    android:background="@drawable/bg_edittext_readable" />
+            </LinearLayout>
 
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.textfield.TextInputLayout
+            <!-- Fat -->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="Fat (%)">
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="Fat (%)"
+                    android:textColor="#333"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <EditText
                     android:id="@+id/et_fat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
+                    android:textSize="17sp"
+                    android:gravity="center"
+                    android:paddingVertical="6dp"
+                    android:background="@drawable/bg_edittext_readable" />
+            </LinearLayout>
 
-        <!-- LR and TS Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginBottom="8dp">
-
-            <com.google.android.material.textfield.TextInputLayout
+            <!-- LR -->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:hint="LR">
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
+                android:gravity="center">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:text="LR"
+                    android:textColor="#333"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <EditText
                     android:id="@+id/et_lr"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
-                    android:textSize="16sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:textSize="17sp"
+                    android:gravity="center"
+                    android:paddingVertical="6dp"
+                    android:background="@drawable/bg_edittext_readable" />
+            </LinearLayout>
 
-            <Space
-                android:layout_width="8dp"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tv_ts"
+            <!-- TS -->
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="TS: 0.00"
-                android:textSize="16sp"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/black" />
-        </LinearLayout>
+                android:layout_columnWeight="1"
+                android:orientation="vertical"
 
-        <!-- Notes Full Width -->
-        <com.google.android.material.textfield.TextInputLayout
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TS"
+                    android:textColor="#333"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_ts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0.00"
+                    android:paddingTop="8dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#111111"
+                    android:gravity="center" />
+            </LinearLayout>
+        </GridLayout>
+
+        <!-- Price -->
+        <TextView
+            android:id="@+id/tv_price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Notes"
-            android:layout_marginTop="4dp">
+            android:text="Price: ₹0.00"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="#1B5E20"
+            android:layout_marginBottom="8dp" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapSentences"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+        <!-- Notes -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:text="Notes"
+            android:textColor="#666"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
+        <EditText
+            android:id="@+id/et_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences"
+            android:textSize="17sp"
+            android:paddingStart="10dp"
+            android:paddingVertical="6dp"
+            android:background="@drawable/bg_edittext_readable"
+            tools:ignore="RtlSymmetry" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>
