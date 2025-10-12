@@ -171,7 +171,7 @@ class PurchaseViewModel @Inject constructor(
                 )
 
 
-                val newPaid = paid ?: 0.0
+                val newPaid = paid ?: pws.purchase.paid
 
                 val newBalance = newPrice - newPaid
 

@@ -40,7 +40,15 @@ class PurchaseAdapter(
         override fun areItemsTheSame(
             oldItem: PurchaseWithSupplier,
             newItem: PurchaseWithSupplier
-        ) = oldItem.purchase.purchaseId == newItem.purchase.purchaseId
+        ) : Boolean {
+            return oldItem.purchase.purchaseId == newItem.purchase.purchaseId &&
+                    oldItem.purchase.volume == newItem.purchase.volume &&
+                    oldItem.purchase.fat == newItem.purchase.fat &&
+                    oldItem.purchase.lr == newItem.purchase.lr &&
+                    oldItem.purchase.paid == newItem.purchase.paid &&
+                    oldItem.purchase.notes == newItem.purchase.notes &&
+                    oldItem.supplier == newItem.supplier
+        }
 
         override fun areContentsTheSame(
             oldItem: PurchaseWithSupplier,

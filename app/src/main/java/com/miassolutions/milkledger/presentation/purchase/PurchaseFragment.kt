@@ -42,6 +42,7 @@ class PurchaseFragment :
         setToolbarTitle(getString(R.string.purchases))
         setupRecyclerView()
 
+
         binding.tvDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
             val year = currentDate.year
