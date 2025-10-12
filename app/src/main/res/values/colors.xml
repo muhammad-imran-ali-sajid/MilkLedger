@@ -26,6 +26,23 @@
     <color name="purchase_color">#F44336</color>
     <color name="title_color">#000</color>
 
+
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="grey">#eeeeee</color>
+
+
+    <color name="milk_cream">#FFF8E1</color>
+    <color name="milk_light_blue">#81D4FA</color>
+    <color name="milk_soft_green">#A5D6A7</color>
+    <color name="milk_pale_yellow">#FFF59D</color>
+    <color name="milk_light_coral">#FF8A80</color>
+    <color name="milk_light_brown">#BCAAA4</color>
+    <color name="milk_soft_purple">#CE93D8</color>
+
+
+
+
     <!-- Divider -->
     <color name="divider">#E0E0E0</color>
 </resources>

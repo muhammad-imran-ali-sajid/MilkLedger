@@ -1,13 +1,16 @@
 package com.miassolutions.milkledger.presentation.purchase
 
+import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 import kotlin.math.roundToInt
@@ -20,6 +23,13 @@ class PurchaseAdapter(
     private val onPaidChanged: (String, Double) -> Unit,
     private val onNotesChanged: (String, String) -> Unit
 ) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.PurchaseViewHolder>(DiffCallback) {
+
+    var isEditable = true
+        @SuppressLint("NotifyDataSetChanged")
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     companion object DiffCallback : DiffUtil.ItemCallback<PurchaseWithSupplier>() {
         override fun areItemsTheSame(
@@ -57,6 +67,29 @@ class PurchaseAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PurchaseWithSupplier) = with(binding) {
+
+            val enabled = isEditable
+
+            etVolume.isEnabled = enabled
+            etFat.isEnabled = enabled
+            etLr.isEnabled = enabled
+            etPaid.isEnabled = enabled
+            etNotes.isEnabled = enabled
+
+            // optionally adjust appearance for disabled state:
+            val alpha = if (enabled) 1f else 0.3f
+            etVolume.alpha = alpha
+            etFat.alpha = alpha
+            etLr.alpha = alpha
+            etPaid.alpha = alpha
+            etNotes.alpha = alpha
+
+            binding.root.setCardBackgroundColor(
+                ContextCompat.getColor(binding.root.context,
+                    if (bindingAdapterPosition % 2 == 0) R.color.white else R.color.grey
+                )
+            )
+
             tvSupplierName.text = item.supplier.supplierName
             tvPrice.text = "${item.purchase.price.roundToInt()}"
             tvTs.text = "%.3f".format(item.purchase.ts)
