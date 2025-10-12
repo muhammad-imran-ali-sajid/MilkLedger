@@ -1,9 +1,7 @@
 package com.miassolutions.milkledger.presentation
 
 import android.os.Bundle
-import android.view.View
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,17 +10,14 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.ui.BottomNavOwner
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
+class MainActivity : AppCompatActivity(), ToolbarOwner {
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -48,10 +43,10 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
         // Configure top-level destinations (so back button shows hamburger instead of up arrow)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.purchaseFragment,
-                R.id.salesFragment,
-                R.id.statsFragment,
-                R.id.expensesFragment
+                R.id.dashboardFragment,
+                R.id.action_customersFragment,
+                R.id.action_suppliersFragment,
+                R.id.action_settingsFragment
             ),
             binding.drawerLayout
         )
@@ -63,8 +58,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
         binding.navigationView.setupWithNavController(navController)
 
 
-        // Hook up bottom nav with nav controller
-        binding.bottomNavigationView.setupWithNavController(navController)
+//        // Hook up bottom nav with nav controller
+//        binding.bottomNavigationView.setupWithNavController(navController)
 
 
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -108,7 +103,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner, BottomNavOwner {
         supportActionBar?.title = title
     }
 
-    override fun setBottomNavVisibility(isVisible: Boolean) {
-        binding.bottomNavigationView.visibility = if (isVisible) View.VISIBLE else View.GONE
-    }
+//    override fun setBottomNavVisibility(isVisible: Boolean) {
+//        binding.bottomNavigationView.visibility = if (isVisible) View.VISIBLE else View.GONE
+//    }
 }

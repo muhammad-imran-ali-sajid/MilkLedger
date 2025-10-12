@@ -24,7 +24,6 @@ class PurchaseFragment :
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.purchases))
-        showBottomNav(true)
         setupRecyclerView()
     }
 

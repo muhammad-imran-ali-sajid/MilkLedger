@@ -9,7 +9,6 @@ class ExpensesFragment : BaseFragment<FragmentPurchasesBinding>(FragmentPurchase
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.expenses))
-        showBottomNav(true)
 
     }
 

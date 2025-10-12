@@ -8,6 +8,5 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>(FragmentSettingsB
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.settings))
-        showBottomNav(false)
     }
 }

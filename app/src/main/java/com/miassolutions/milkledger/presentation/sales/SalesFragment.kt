@@ -8,7 +8,6 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.sales))
-        showBottomNav(true)
     }
 
 

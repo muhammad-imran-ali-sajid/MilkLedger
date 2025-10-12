@@ -17,7 +17,6 @@ class CustomerListFragment :
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.customers))
-        showBottomNav(false)
 
         setupRecyclerView()
 

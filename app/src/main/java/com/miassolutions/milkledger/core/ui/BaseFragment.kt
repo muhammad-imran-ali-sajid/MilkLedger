@@ -122,8 +122,8 @@ abstract class BaseFragment<VB : ViewBinding>(
         (requireActivity() as? ToolbarOwner)?.setToolbarTitle(title)
     }
 
-    protected fun showBottomNav(show: Boolean) {
-        (requireActivity() as? BottomNavOwner)?.setBottomNavVisibility(show)
-    }
+//    protected fun showBottomNav(show: Boolean) {
+//        (requireActivity() as? BottomNavOwner)?.setBottomNavVisibility(show)
+//    }
 
 }

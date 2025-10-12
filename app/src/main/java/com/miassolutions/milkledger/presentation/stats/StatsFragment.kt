@@ -8,6 +8,5 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.stats))
-        showBottomNav(true)
     }
 }

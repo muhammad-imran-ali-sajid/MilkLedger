@@ -20,7 +20,6 @@ class SupplierListFragment :
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.suppliers))
-        showBottomNav(false)
 
         setupRecyclerView()
 
