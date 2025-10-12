@@ -29,11 +29,11 @@ class PurchaseViewModel @Inject constructor(
         observeForDate(date)
     }
 
-//    init {
-//        val today = _uiState.value.currentDate
-//        observeForDate(today)
-//
-//    }
+    init {
+        val today = _uiState.value.currentDate
+        observeForDate(today)
+
+    }
 
     // Call this to change date and reload everything for that date
      fun observeForDate(date: LocalDate) {
