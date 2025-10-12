@@ -58,10 +58,6 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         binding.navigationView.setupWithNavController(navController)
 
 
-//        // Hook up bottom nav with nav controller
-//        binding.bottomNavigationView.setupWithNavController(navController)
-
-
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             binding.drawerLayout.closeDrawers()
 
@@ -103,7 +99,5 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         supportActionBar?.title = title
     }
 
-//    override fun setBottomNavVisibility(isVisible: Boolean) {
-//        binding.bottomNavigationView.visibility = if (isVisible) View.VISIBLE else View.GONE
-//    }
+
 }
