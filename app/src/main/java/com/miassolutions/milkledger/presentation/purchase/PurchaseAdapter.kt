@@ -90,7 +90,6 @@ class PurchaseAdapter(
             etFat.setBackgroundResource(bgRes)
             etLr.setBackgroundResource(bgRes)
             etPaid.setBackgroundResource(bgRes)
-            etNotes.setBackgroundResource(bgRes)
 
 
             binding.root.setCardBackgroundColor(

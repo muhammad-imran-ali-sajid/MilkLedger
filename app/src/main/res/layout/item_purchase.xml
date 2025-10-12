@@ -5,18 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
-    android:layout_marginVertical="8dp"
+    android:layout_marginBottom="8dp"
     android:layoutDirection="rtl"
     android:textDirection="rtl"
     app:cardCornerRadius="16dp"
-    app:cardElevation="5dp">
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="8dp"
-        android:paddingVertical="12dp">
+        android:paddingTop="4dp"
+        android:paddingHorizontal="12dp">
 
 
         <GridLayout
@@ -178,85 +178,84 @@
         <!-- Single Row: Price, Paid (EditText), and Balance -->
         <GridLayout
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="8dp"
-        android:columnCount="6"
-        android:alignmentMode="alignMargins"
-        android:useDefaultMargins="true">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="4dp"
+            android:alignmentMode="alignMargins"
+            android:columnCount="6"
+            android:useDefaultMargins="true">
 
-        <!-- Price Label -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:text="قیمت"
-            android:textColor="#333"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            <!-- Price Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:text="قیمت"
+                android:textColor="#333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <!-- Price Value -->
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="Rs. 0.00"
-            android:textColor="@color/purchase_color"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            <!-- Price Value -->
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="Rs. 0.00"
+                android:textColor="@color/purchase_color"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-        <!-- Paid Label -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:text="ادائیگی"
-            android:textColor="#333"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            <!-- Paid Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:text="ادائیگی"
+                android:textColor="#333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <!-- Paid EditText -->
-        <EditText
-            android:id="@+id/et_paid"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_edittext_readable"
-            android:gravity="center"
-            android:hint="0.0"
-            android:imeOptions="actionNext"
-            android:nextFocusDown="@id/et_notes"
-            android:inputType="numberDecimal"
-            android:maxWidth="70dp"
-            android:minWidth="70dp"
-            android:textColor="@color/info"
-            android:textDirection="ltr"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            <!-- Paid EditText -->
+            <EditText
+                android:id="@+id/et_paid"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_edittext_readable"
+                android:gravity="center"
+                android:hint="0.0"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                android:maxWidth="70dp"
+                android:minWidth="70dp"
+                android:nextFocusDown="@id/et_notes"
+                android:textColor="@color/info"
+                android:textDirection="ltr"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-        <!-- Balance Label -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:text="بیلنس"
-            android:textColor="#333"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            <!-- Balance Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center_vertical"
+                android:text="بیلنس"
+                android:textColor="#333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-        <!-- Balance Value -->
-        <TextView
-            android:id="@+id/tv_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="Rs. 0.00"
-            android:textDirection="ltr"
-            android:textColor="@color/sale_color"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-    </GridLayout>
-
+            <!-- Balance Value -->
+            <TextView
+                android:id="@+id/tv_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="Rs. 0.00"
+                android:textColor="@color/sale_color"
+                android:textDirection="ltr"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </GridLayout>
 
 
         <!-- Notes -->
@@ -280,11 +279,9 @@
                 android:id="@+id/et_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_edittext_readable"
                 android:imeOptions="actionNext"
                 android:inputType="textCapSentences"
                 android:paddingVertical="6dp"
-
                 android:paddingStart="10dp"
                 android:textSize="17sp"
                 tools:ignore="RtlSymmetry" />
