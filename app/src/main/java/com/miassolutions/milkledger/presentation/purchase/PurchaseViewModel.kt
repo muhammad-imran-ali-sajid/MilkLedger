@@ -7,6 +7,8 @@ import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
 import com.miassolutions.milkledger.data.repositories.PurchaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +23,8 @@ import javax.inject.Inject
 class PurchaseViewModel @Inject constructor(
     private val repository: PurchaseRepository
 ) : ViewModel() {
+
+    private var updateJob: Job? = null
 
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
@@ -172,22 +176,21 @@ class PurchaseViewModel @Inject constructor(
         notes: String? = null
     ) {
         val currentList = _uiState.value.purchasesForDate
+
         val updated = currentList.map { pws ->
             if (pws.purchase.purchaseId == entryId) {
 
-                // --- Calculate new field values safely ---
                 val newVolume = volume ?: pws.purchase.volume
                 val newFat = fat ?: pws.purchase.fat
                 val newLr = lr ?: pws.purchase.lr
+                val newPaid = paid ?: pws.purchase.paid
+
                 val newPrice = MilkCalculationUtils.calculatePrice(
                     rate = pws.purchase.rateUsed,
                     volume = newVolume,
                     fat = newFat,
                     lr = newLr
                 )
-
-
-                val newPaid = paid ?: pws.purchase.paid
 
                 val newBalance = newPrice - newPaid
 
@@ -202,9 +205,14 @@ class PurchaseViewModel @Inject constructor(
                     notes = notes ?: pws.purchase.notes
                 )
 
-                viewModelScope.launch { repository.updatePurchase(purchase) }
-                pws.copy(purchase = purchase)
+                // 💡 Debounced database update
+                updateJob?.cancel()
+                updateJob = viewModelScope.launch {
+                    delay(400) // waits for user to stop typing
+                    repository.updatePurchase(purchase)
+                }
 
+                pws.copy(purchase = purchase)
             } else pws
         }
 
@@ -216,6 +224,7 @@ class PurchaseViewModel @Inject constructor(
             )
         }
     }
+
 
 
     // ----------------------------------------------------------

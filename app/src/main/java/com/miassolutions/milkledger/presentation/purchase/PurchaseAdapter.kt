@@ -40,14 +40,8 @@ class PurchaseAdapter(
         override fun areItemsTheSame(
             oldItem: PurchaseWithSupplier,
             newItem: PurchaseWithSupplier
-        ) : Boolean {
-            return oldItem.purchase.purchaseId == newItem.purchase.purchaseId &&
-                    oldItem.purchase.volume == newItem.purchase.volume &&
-                    oldItem.purchase.fat == newItem.purchase.fat &&
-                    oldItem.purchase.lr == newItem.purchase.lr &&
-                    oldItem.purchase.paid == newItem.purchase.paid &&
-                    oldItem.purchase.notes == newItem.purchase.notes &&
-                    oldItem.supplier == newItem.supplier
+        ): Boolean {
+            return oldItem.purchase.purchaseId == newItem.purchase.purchaseId
         }
 
         override fun areContentsTheSame(
@@ -100,7 +94,8 @@ class PurchaseAdapter(
 
 
             binding.root.setCardBackgroundColor(
-                ContextCompat.getColor(binding.root.context,
+                ContextCompat.getColor(
+                    binding.root.context,
                     if (bindingAdapterPosition % 2 == 0) R.color.white else R.color.grey
                 )
             )
@@ -183,7 +178,6 @@ class PurchaseAdapter(
     }
 
 
-
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         this.recyclerView = recyclerView
@@ -211,10 +205,7 @@ class PurchaseAdapter(
 }
 
 
-
 // -------------------- Extensions --------------------
-
-
 
 
 private fun trimTrailingZeros(value: Double): String {

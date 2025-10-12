@@ -220,7 +220,9 @@ class PurchaseFragment :
 
                 // Update RecyclerView list
                 binding.rvPurchases.setItemViewCacheSize(state.purchasesForDate.size)
-                purchaseAdapter.submitList(state.purchasesForDate)
+                if (purchaseAdapter.currentList !== state.purchasesForDate) {
+                    purchaseAdapter.submitList(state.purchasesForDate)
+                }
 
                 // Update total text
                 binding.tvTotalAmount.text =
