@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.presentation.purchase
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.Toast
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +25,12 @@ import kotlin.math.roundToInt
 class PurchaseFragment :
     BaseFragment<FragmentPurchasesBinding>(FragmentPurchasesBinding::inflate) {
 
+    private val prefs by lazy {
+        requireContext().getSharedPreferences(
+            "edit_text_enable_state",
+            Context.MODE_PRIVATE
+        )
+    }
     private var isEditable = true // keep track of edit mode
 
     private val viewModel: PurchaseViewModel by viewModels()
@@ -32,14 +40,25 @@ class PurchaseFragment :
         setToolbarTitle(getString(R.string.purchases))
         setupRecyclerView()
 
+        // Load previously saved state
+        isEditable = loadEditModeState()
+
+        // Apply it to the adapter immediately
+        purchaseAdapter.isEditable = isEditable
+
         binding.btnToggleEdit.setOnClickListener {
+
             if (!isEditable) {
                 showBiometricPrompt(
                     onSuccess = {
                         enableEditMode()
                     },
                     onFailure = {
-                        Toast.makeText(requireContext(), "Authentication failed. Cannot enable edit mode.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Authentication failed. Cannot enable edit mode.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 )
             } else {
@@ -48,7 +67,6 @@ class PurchaseFragment :
         }
 
     }
-
 
 
     private fun showBiometricPrompt(onSuccess: () -> Unit, onFailure: () -> Unit = {}) {
@@ -63,29 +81,46 @@ class PurchaseFragment :
                     .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
                     .build()
 
-                val biometricPrompt = BiometricPrompt(this, executor,
+                val biometricPrompt = BiometricPrompt(
+                    this, executor,
                     object : BiometricPrompt.AuthenticationCallback() {
                         override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                             super.onAuthenticationSucceeded(result)
                             onSuccess()
                         }
 
-                        override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        override fun onAuthenticationError(
+                            errorCode: Int,
+                            errString: CharSequence
+                        ) {
                             super.onAuthenticationError(errorCode, errString)
-                            Toast.makeText(requireContext(), "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Authentication error: $errString",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             onFailure()
                         }
 
                         override fun onAuthenticationFailed() {
                             super.onAuthenticationFailed()
-                            Toast.makeText(requireContext(), "Authentication failed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Authentication failed",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     })
 
                 biometricPrompt.authenticate(promptInfo)
             }
+
             else -> {
-                Toast.makeText(requireContext(), "Biometric authentication not available", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Biometric authentication not available",
+                    Toast.LENGTH_LONG
+                ).show()
                 onFailure()
             }
         }
@@ -95,15 +130,26 @@ class PurchaseFragment :
     private fun enableEditMode() {
         isEditable = true
         purchaseAdapter.isEditable = true
+        saveEditModeState(isEditable)
         Toast.makeText(requireContext(), "Edit mode enabled", Toast.LENGTH_SHORT).show()
     }
 
     private fun disableEditMode() {
         isEditable = false
         purchaseAdapter.isEditable = false
+        saveEditModeState(isEditable)
         Toast.makeText(requireContext(), "Edit mode disabled", Toast.LENGTH_SHORT).show()
     }
 
+    private fun saveEditModeState(isEditable: Boolean) {
+        prefs.edit {
+            putBoolean("edit_mode_enabled", isEditable)
+        }
+    }
+
+    private fun loadEditModeState(): Boolean {
+        return prefs.getBoolean("edit_mode_enabled", false) // default to false if not set
+    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

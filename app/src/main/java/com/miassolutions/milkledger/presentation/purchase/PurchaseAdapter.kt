@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.presentation.purchase
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -76,13 +77,15 @@ class PurchaseAdapter(
             etPaid.isEnabled = enabled
             etNotes.isEnabled = enabled
 
-            // optionally adjust appearance for disabled state:
-            val alpha = if (enabled) 1f else 0.3f
-            etVolume.alpha = alpha
-            etFat.alpha = alpha
-            etLr.alpha = alpha
-            etPaid.alpha = alpha
-            etNotes.alpha = alpha
+
+            val bgRes = if (enabled) R.drawable.bg_edit_enabled else R.drawable.bg_edit_disabled
+
+            etVolume.setBackgroundResource(bgRes)
+            etFat.setBackgroundResource(bgRes)
+            etLr.setBackgroundResource(bgRes)
+            etPaid.setBackgroundResource(bgRes)
+            etNotes.setBackgroundResource(bgRes)
+
 
             binding.root.setCardBackgroundColor(
                 ContextCompat.getColor(binding.root.context,
