@@ -77,18 +77,26 @@ class DevSettingsFragment : Fragment() {
         // Insert dummy customers
         customerDao.insertAll(
             listOf(
-                CustomerEntity(customerName = "اکرم", customerRate = 200.0),
-                CustomerEntity(customerName = "اسلم", customerRate = 220.0),
-                CustomerEntity(customerName = "احمد", customerRate = 190.0),
+                CustomerEntity(customerName = "گھر", customerRate = 170.0, sortOrder = 1),
+                CustomerEntity(customerName = "العزیز", customerRate = 180.0, sortOrder = 2),
+                CustomerEntity(customerName = "العزیز گھر", customerRate = 195.0, sortOrder = 3),
+                CustomerEntity(customerName = "بیکری", customerRate = 195.0, sortOrder = 4),
+                CustomerEntity(customerName = "بیکری گھر", customerRate = 195.0, sortOrder = 5),
             )
         )
 
         // Insert dummy suppliers
         supplierDao.insertAll(
             listOf(
-                SupplierEntity(supplierName = "اکبر", supplierRate = 170.0),
-                SupplierEntity(supplierName = "عبداللہ", supplierRate = 180.0),
-                SupplierEntity(supplierName = "کریم", supplierRate = 195.0),
+                SupplierEntity(supplierName = "ظفر عباس", supplierRate = 145.0, sortOrder = 1),
+                SupplierEntity(supplierName = "زاہد", supplierRate = 140.0, sortOrder = 2),
+                SupplierEntity(supplierName = "مظہر", supplierRate = 165.0, sortOrder = 3),
+                SupplierEntity(supplierName = "ساجد", supplierRate = 145.0, sortOrder = 4),
+                SupplierEntity(supplierName = "سیف", supplierRate = 155.0, sortOrder = 5),
+                SupplierEntity(supplierName = "پومی", supplierRate = 160.0, sortOrder = 6),
+                SupplierEntity(supplierName = "حافظ لیاقت", supplierRate = 162.50, sortOrder = 7),
+
+
             )
         )
     }

@@ -59,7 +59,7 @@ class PurchaseAdapter(
         fun bind(item: PurchaseWithSupplier) = with(binding) {
             tvSupplierName.text = item.supplier.supplierName
             tvPrice.text = "${item.purchase.price.roundToInt()}"
-            tvTs.text = "%.2f".format(item.purchase.ts)
+            tvTs.text = "%.3f".format(item.purchase.ts)
             tvBalance.text = "${item.purchase.balance.roundToInt()}"
 
             if (!etVolume.hasFocus()) {

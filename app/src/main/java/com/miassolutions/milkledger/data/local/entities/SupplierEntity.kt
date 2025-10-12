@@ -10,5 +10,6 @@ data class SupplierEntity(
     @PrimaryKey val supplierId: String = UUID.randomUUID().toString(),
     val supplierName: String,
     val supplierRate: Double,
+    val sortOrder: Int = 0,
     val createdAt: LocalDate = LocalDate.now()
 )

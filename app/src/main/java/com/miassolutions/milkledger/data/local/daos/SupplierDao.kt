@@ -27,7 +27,7 @@ interface SupplierDao {
     @Delete
     suspend fun deleteSupplier(supplier: SupplierEntity)
 
-    @Query("SELECT * FROM supplier_table ORDER BY supplierName ASC")
+    @Query("SELECT * FROM supplier_table ORDER BY sortOrder ASC")
     fun getAllSuppliers(): Flow<List<SupplierEntity>>
 
     @Query("SELECT * FROM supplier_table WHERE supplierId = :id LIMIT 1")

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -32,50 +33,56 @@ class PurchaseViewModel @Inject constructor(
     }
 
     // Call this to change date and reload everything for that date
-    fun observeForDate(date: LocalDate) {
+    private fun observeForDate(date: LocalDate) {
         viewModelScope.launch {
-            // Cancel any previous collection if needed
-            // Start observing suppliers and purchases for this date reactively
-            repository.getAllSuppliers().collectLatest { suppliers ->
+            // Collect sorted suppliers once
+            val sortedSuppliers = repository.getAllSuppliers()
+                .first() // collectLatest inside collectLatest is discouraged — use `first()` here
 
-                // For the current date, get purchases once to check missing suppliers
-                val currentPurchases = repository.getPurchasesByDateOnce(date)
+            sortedSuppliers.forEach {
+                Log.d("PurchaseViewModel", "${it.supplierName} -> ${it.sortOrder}")
+            }
 
-                val missingSuppliers = suppliers.filterNot { supplier ->
-                    currentPurchases.any { it.supplier.supplierId == supplier.supplierId }
-                }
+            // Check current purchases once
+            val currentPurchases = repository.getPurchasesByDateOnce(date)
 
-                // Insert missing purchases entries for the date
-                missingSuppliers.forEach { supplier ->
-                    val newEntry = PurchaseEntryEntity(
-                        supplierId = supplier.supplierId,
-                        date = date,
-                        volume = 0.0,
-                        fat = 0.0,
-                        lr = 0.0,
-                        ts = 0.0,
-                        price = 0.0,
-                        paid = 0.0,
-                        balance = 0.0,
-                        rateUsed = supplier.supplierRate
+            // Find missing suppliers
+            val missingSuppliers = sortedSuppliers.filterNot { supplier ->
+                currentPurchases.any { it.supplier.supplierId == supplier.supplierId }
+            }
+
+            // Insert missing purchase entries
+            missingSuppliers.forEach { supplier ->
+                val newEntry = PurchaseEntryEntity(
+                    supplierId = supplier.supplierId,
+                    date = date,
+                    volume = 0.0,
+                    fat = 0.0,
+                    lr = 0.0,
+                    ts = 0.0,
+                    price = 0.0,
+                    paid = 0.0,
+                    balance = 0.0,
+                    rateUsed = supplier.supplierRate
+                )
+                repository.insertPurchase(newEntry)
+            }
+
+            // Now observe purchases for this date reactively
+            repository.getPurchasesByDate(date).collectLatest { purchases ->
+                val grandTotal = purchases.sumOf { it.purchase.price }
+                val sortedPurchases = purchases.sortedBy { it.supplier.sortOrder }
+                _uiState.update {
+                    it.copy(
+                        currentDate = date,
+                        purchasesForDate = sortedPurchases,
+                        grandTotalForDate = grandTotal
                     )
-                    repository.insertPurchase(newEntry)
-                }
-
-                // Now observe purchases for this date reactively
-                repository.getPurchasesByDate(date).collectLatest { purchases ->
-                    val grandTotal = purchases.sumOf { it.purchase.price }
-                    _uiState.update {
-                        it.copy(
-                            currentDate = date,
-                            purchasesForDate = purchases,
-                            grandTotalForDate = grandTotal
-                        )
-                    }
                 }
             }
         }
     }
+
 
 
 

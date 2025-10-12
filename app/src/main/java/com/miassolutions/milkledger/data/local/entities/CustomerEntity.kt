@@ -10,5 +10,6 @@ data class CustomerEntity(
     @PrimaryKey val customerId: String = UUID.randomUUID().toString(),
     val customerName: String,
     val customerRate: Double,  // default rate, can be changed later
+    val sortOrder: Int = 0,
     val createdAt: LocalDate = LocalDate.now()
 )

@@ -27,7 +27,7 @@ interface CustomerDao {
     @Delete
     suspend fun deleteCustomer(customer: CustomerEntity)
 
-    @Query("SELECT * FROM customer_table ORDER BY customerName ASC")
+    @Query("SELECT * FROM customer_table ORDER BY sortOrder ASC")
     fun getAllCustomers(): Flow<List<CustomerEntity>>
 
     @Query("SELECT * FROM customer_table WHERE customerId = :id LIMIT 1")

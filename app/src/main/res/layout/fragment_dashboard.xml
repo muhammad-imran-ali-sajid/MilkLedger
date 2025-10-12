@@ -58,30 +58,7 @@
                     android:layout_marginTop="12dp"
                     android:weightSum="3">
 
-                    <!-- Profit -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tvProfitLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="منافع"
-                            android:textStyle="bold"
-                            android:textSize="14sp"
-                            android:textColor="@android:color/holo_blue_dark" />
-
-                        <TextView
-                            android:id="@+id/tvProfit"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Rs. 4,500"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black" />
-                    </LinearLayout>
 
                     <!-- Expense -->
                     <LinearLayout
@@ -129,6 +106,31 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs. 12,000"
+                            android:textSize="16sp"
+                            android:textColor="@android:color/black" />
+                    </LinearLayout>
+
+                    <!-- Profit -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvProfitLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="منافع"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/holo_blue_dark" />
+
+                        <TextView
+                            android:id="@+id/tvProfit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rs. 4,500"
                             android:textSize="16sp"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
