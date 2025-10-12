@@ -16,26 +16,47 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="14dp">
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="12dp">
 
-        <!-- Supplier Name -->
-        <TextView
-            android:id="@+id/tv_supplier_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="عبداللہ"
-            android:textColor="#111111"
-            android:textSize="18sp"
-            android:textStyle="bold" />
 
-        <!-- Grid for Volume, Fat, LR, TS -->
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alignmentMode="alignMargins"
-            android:columnCount="4"
+            android:columnCount="6"
+            android:rowOrderPreserved="false"
             android:useDefaultMargins="true">
+
+            <!-- Supplier Name (weight 2 columns) -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:gravity="start"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textColor="#333"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_supplier_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="6dp"
+                    android:gravity="start|center_vertical"
+                    android:maxLines="1"
+                    android:paddingHorizontal="4dp"
+                    android:text="عبداللہ"
+                    android:textColor="#111111"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <!-- Volume -->
             <LinearLayout
@@ -48,24 +69,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
                     android:text="Vol (L)"
                     android:textColor="#333"
-                    android:textDirection="ltr"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/et_volume"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="6dp"
                     android:background="@drawable/bg_edittext_readable"
                     android:gravity="center"
                     android:imeOptions="actionNext"
                     android:inputType="numberDecimal"
-                    android:layoutDirection="ltr"
-                    android:nextFocusForward="@id/et_fat"
-                    android:paddingVertical="6dp"
                     android:textDirection="ltr"
                     android:textSize="17sp" />
             </LinearLayout>
@@ -81,23 +98,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
                     android:text="Fat (%)"
-                    android:textDirection="ltr"
                     android:textColor="#333"
+                    android:textDirection="ltr"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/et_fat"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="6dp"
                     android:background="@drawable/bg_edittext_readable"
                     android:gravity="center"
                     android:imeOptions="actionNext"
-                    android:nextFocusForward="@id/et_lr"
                     android:inputType="numberDecimal"
-                    android:paddingVertical="6dp"
                     android:textDirection="ltr"
                     android:textSize="17sp" />
             </LinearLayout>
@@ -113,7 +128,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
                     android:text="LR"
                     android:textColor="#333"
                     android:textSize="13sp"
@@ -122,13 +136,12 @@
                 <EditText
                     android:id="@+id/et_lr"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="6dp"
                     android:background="@drawable/bg_edittext_readable"
                     android:gravity="center"
                     android:imeOptions="actionNext"
-                    android:nextFocusDown="@id/et_paid"
                     android:inputType="numberDecimal"
-                    android:paddingVertical="6dp"
                     android:textDirection="ltr"
                     android:textSize="17sp" />
             </LinearLayout>
@@ -139,7 +152,6 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:gravity="center"
-
                 android:orientation="vertical">
 
                 <TextView
@@ -153,149 +165,130 @@
                 <TextView
                     android:id="@+id/tv_ts"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="6dp"
                     android:gravity="center"
-                    android:paddingTop="8dp"
                     android:text="0.00"
                     android:textColor="#111111"
-                    android:textSize="17sp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </GridLayout>
 
 
         <!-- Single Row: Price, Paid (EditText), and Balance -->
-        <!-- Titles on Top, Values Below for Price, Paid, and Balance -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+        <GridLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:columnCount="6"
+        android:alignmentMode="alignMargins"
+        android:useDefaultMargins="true">
+
+        <!-- Price Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:text="قیمت"
+            android:textColor="#333"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-            <!-- Price -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+        <!-- Price Value -->
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="Rs. 0.00"
+            android:textColor="@color/purchase_color"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="قیمت"
-                    android:textColor="#333"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+        <!-- Paid Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="ادائیگی"
+            android:textColor="#333"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/purchase_color"
-                    android:gravity="center"
-                    android:paddingVertical="6dp"
-                    android:text="Rs, 0.00"
-                    android:textColor="#fff"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+        <!-- Paid EditText -->
+        <EditText
+            android:id="@+id/et_paid"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_edittext_readable"
+            android:gravity="center"
+            android:hint="0.0"
+            android:inputType="numberDecimal"
+            android:maxWidth="70dp"
+            android:minWidth="70dp"
+            android:textColor="@color/info"
+            android:textDirection="ltr"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
-            <!-- Paid -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingHorizontal="4dp">
+        <!-- Balance Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="بیلنس"
+            android:textColor="#333"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="ادائیگی"
-                    android:textColor="#333"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
+        <!-- Balance Value -->
+        <TextView
+            android:id="@+id/tv_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="Rs. 0.00"
+            android:textDirection="ltr"
+            android:textColor="@color/sale_color"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </GridLayout>
 
-                <EditText
-                    android:id="@+id/et_paid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/info"
-                    android:textColor="#fff"
-                    android:textStyle="bold"
-                    android:imeOptions="actionDone"
-                    android:nextFocusDown="@id/et_notes"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:paddingVertical="6dp"
-                    android:textDirection="ltr"
-                    android:textSize="15sp" />
-            </LinearLayout>
-
-            <!-- Balance -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="بیلنس"
-                    android:textColor="#333"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tv_balance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/sale_color"
-                    android:gravity="center"
-                    android:textDirection="ltr"
-                    android:paddingVertical="6dp"
-                    android:text="Rs. 0.00"
-                    android:textColor="#fff"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </LinearLayout>
 
 
         <!-- Notes -->
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:text="نوٹ"
-            android:paddingStart="8dp"
-            android:textColor="#666"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:ignore="RtlSymmetry" />
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/et_notes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_edittext_readable"
-            android:inputType="textCapSentences"
-            android:paddingVertical="6dp"
-            android:imeOptions="actionDone"
-            android:paddingStart="10dp"
-            android:textSize="17sp"
-            tools:ignore="RtlSymmetry" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingEnd="8dp"
+                android:text="نوٹ: "
+                android:textColor="#666"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/et_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_edittext_readable"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences"
+                android:paddingVertical="6dp"
+                android:paddingStart="10dp"
+                android:textSize="17sp"
+                tools:ignore="RtlSymmetry" />
+
+        </LinearLayout>
+
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>
