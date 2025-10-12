@@ -1,25 +1,22 @@
 package com.miassolutions.milkledger.presentation.purchase
 
 import android.os.Bundle
-import android.text.InputType
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.content.edit
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.managers.PasswordManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
-import com.miassolutions.milkledger.presentation.misc.EnterPasswordDialogFragment
-import com.miassolutions.milkledger.presentation.purchase.dialogs.SetPasswordDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.concurrent.Executor
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -27,46 +24,73 @@ class PurchaseFragment :
     BaseFragment<FragmentPurchasesBinding>(FragmentPurchasesBinding::inflate) {
 
     private var isEditable = true // keep track of edit mode
-    private lateinit var passwordManager: PasswordManager
 
     private val viewModel: PurchaseViewModel by viewModels()
     private lateinit var purchaseAdapter: PurchaseAdapter
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.purchases))
-        passwordManager = PasswordManager(requireContext())
         setupRecyclerView()
 
         binding.btnToggleEdit.setOnClickListener {
             if (!isEditable) {
-                if (!passwordManager.isPasswordSet()) {
-                    // Show set password dialog
-                    SetPasswordDialogFragment(passwordManager) {
+                showBiometricPrompt(
+                    onSuccess = {
                         enableEditMode()
-                    }.show(childFragmentManager, "setPassword")
-                } else {
-                    // Show enter password dialog with forgot option
-                    EnterPasswordDialogFragment(passwordManager, {
-                        enableEditMode()
-                    }, {
-                        // Forgot password clicked - clear saved password and force reset
-                        passwordManager.clearPassword()
-                        Toast.makeText(
-                            requireContext(),
-                            "Password reset. Please set a new password.",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        SetPasswordDialogFragment(passwordManager) {
-                            enableEditMode()
-                        }.show(childFragmentManager, "setPassword")
-                    }).show(childFragmentManager, "enterPassword")
-                }
+                    },
+                    onFailure = {
+                        Toast.makeText(requireContext(), "Authentication failed. Cannot enable edit mode.", Toast.LENGTH_SHORT).show()
+                    }
+                )
             } else {
                 disableEditMode()
             }
         }
 
     }
+
+
+
+    private fun showBiometricPrompt(onSuccess: () -> Unit, onFailure: () -> Unit = {}) {
+        val biometricManager = BiometricManager.from(requireContext())
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+            BiometricManager.BIOMETRIC_SUCCESS -> {
+                val executor: Executor = ContextCompat.getMainExecutor(requireContext())
+
+                val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                    .setTitle("Authenticate to reset password")
+                    .setSubtitle("Use your fingerprint or device credentials")
+                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                    .build()
+
+                val biometricPrompt = BiometricPrompt(this, executor,
+                    object : BiometricPrompt.AuthenticationCallback() {
+                        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                            super.onAuthenticationSucceeded(result)
+                            onSuccess()
+                        }
+
+                        override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                            super.onAuthenticationError(errorCode, errString)
+                            Toast.makeText(requireContext(), "Authentication error: $errString", Toast.LENGTH_SHORT).show()
+                            onFailure()
+                        }
+
+                        override fun onAuthenticationFailed() {
+                            super.onAuthenticationFailed()
+                            Toast.makeText(requireContext(), "Authentication failed", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+
+                biometricPrompt.authenticate(promptInfo)
+            }
+            else -> {
+                Toast.makeText(requireContext(), "Biometric authentication not available", Toast.LENGTH_LONG).show()
+                onFailure()
+            }
+        }
+    }
+
 
     private fun enableEditMode() {
         isEditable = true
@@ -137,7 +161,7 @@ class PurchaseFragment :
                 purchaseAdapter.submitList(state.purchasesForDate)
 
                 // Update total text
-                binding.tvGrandTotalForDate.text =
+                binding.tvTotalAmount.text =
                     getString(R.string.rs, state.grandTotalForDate.roundToInt())
 
                 // Update date text
