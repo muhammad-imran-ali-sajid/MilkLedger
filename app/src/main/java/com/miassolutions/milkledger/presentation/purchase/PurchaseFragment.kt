@@ -3,7 +3,6 @@ package com.miassolutions.milkledger.presentation.purchase
 import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.biometric.BiometricManager
@@ -15,6 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -33,8 +33,8 @@ class PurchaseFragment :
             Context.MODE_PRIVATE
         )
     }
-    private var isEditable = true // keep track of edit mode
 
+    private var isEditable = true
     private val viewModel: PurchaseViewModel by viewModels()
     private lateinit var purchaseAdapter: PurchaseAdapter
 
@@ -42,33 +42,26 @@ class PurchaseFragment :
         setToolbarTitle(getString(R.string.purchases))
         setupRecyclerView()
 
-
         binding.btnDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
-            val year = currentDate.year
-            val month = currentDate.monthValue - 1
-            val day = currentDate.dayOfMonth
-
-            DatePickerDialog(requireContext(), { _, y, m, d ->
-                val newDate = LocalDate.of(y, m + 1, d)
-                viewModel.onDateSelected(newDate)
-            }, year, month, day).show()
+            DatePickerDialog(
+                requireContext(),
+                { _, y, m, d ->
+                    viewModel.onDateSelected(LocalDate.of(y, m + 1, d))
+                },
+                currentDate.year,
+                currentDate.monthValue - 1,
+                currentDate.dayOfMonth
+            ).show()
         }
 
-
-        // Load previously saved state
         isEditable = loadEditModeState()
-
-        // Apply it to the adapter immediately
         purchaseAdapter.isEditable = isEditable
 
         binding.btnToggleEdit.setOnClickListener {
-
             if (!isEditable) {
                 showBiometricPrompt(
-                    onSuccess = {
-                        enableEditMode()
-                    },
+                    onSuccess = { enableEditMode() },
                     onFailure = {
                         Toast.makeText(
                             requireContext(),
@@ -77,158 +70,46 @@ class PurchaseFragment :
                         ).show()
                     }
                 )
-            } else {
-                disableEditMode()
-            }
-        }
-
-    }
-
-
-    private fun showBiometricPrompt(onSuccess: () -> Unit, onFailure: () -> Unit = {}) {
-        val biometricManager = BiometricManager.from(requireContext())
-        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
-            BiometricManager.BIOMETRIC_SUCCESS -> {
-                val executor: Executor = ContextCompat.getMainExecutor(requireContext())
-
-                val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                    .setTitle("Authenticate to reset password")
-                    .setSubtitle("Use your fingerprint or device credentials")
-                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
-                    .build()
-
-                val biometricPrompt = BiometricPrompt(
-                    this, executor,
-                    object : BiometricPrompt.AuthenticationCallback() {
-                        override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                            super.onAuthenticationSucceeded(result)
-                            onSuccess()
-                        }
-
-                        override fun onAuthenticationError(
-                            errorCode: Int,
-                            errString: CharSequence
-                        ) {
-                            super.onAuthenticationError(errorCode, errString)
-                            Toast.makeText(
-                                requireContext(),
-                                "Authentication error: $errString",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            onFailure()
-                        }
-
-                        override fun onAuthenticationFailed() {
-                            super.onAuthenticationFailed()
-                            Toast.makeText(
-                                requireContext(),
-                                "Authentication failed",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    })
-
-                biometricPrompt.authenticate(promptInfo)
-            }
-
-            else -> {
-                Toast.makeText(
-                    requireContext(),
-                    "Biometric authentication not available",
-                    Toast.LENGTH_LONG
-                ).show()
-                onFailure()
-            }
+            } else disableEditMode()
         }
     }
 
+    private fun setupRecyclerView() {
+        purchaseAdapter = PurchaseAdapter(
+            onItemClick = { purchaseWithSupplier ->
+                if (!isEditable) return@PurchaseAdapter
+                showEditBottomSheet(purchaseWithSupplier)
+            }
+        )
 
-    private fun enableEditMode() {
-        isEditable = true
-        purchaseAdapter.isEditable = true
-        saveEditModeState(isEditable)
-        Toast.makeText(requireContext(), "Edit mode enabled", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun disableEditMode() {
-        isEditable = false
-        purchaseAdapter.isEditable = false
-        saveEditModeState(isEditable)
-        Toast.makeText(requireContext(), "Edit mode disabled", Toast.LENGTH_SHORT).show()
-    }
-
-    private fun saveEditModeState(isEditable: Boolean) {
-        prefs.edit {
-            putBoolean("edit_mode_enabled", isEditable)
+        binding.rvPurchases.apply {
+            adapter = purchaseAdapter
+            layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = null
+            setHasFixedSize(true)
         }
     }
 
-    private fun loadEditModeState(): Boolean {
-        return prefs.getBoolean("edit_mode_enabled", false) // default to false if not set
+    private fun showEditBottomSheet(purchaseWithSupplier: PurchaseWithSupplier) {
+        val bottomSheet = PurchaseEditBottomSheet(
+            entry = purchaseWithSupplier,
+            onSave = { updatedEntry ->
+                viewModel.updatePurchaseManually(updatedEntry)
+            }
+        )
+        bottomSheet.show(parentFragmentManager, "EditPurchaseSheet")
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         observeUiState()
     }
 
-    // ----------------------------------------------------------
-    // 🧩 Setup RecyclerView
-    // ----------------------------------------------------------
-    private fun setupRecyclerView() {
-        purchaseAdapter = PurchaseAdapter(
-            onSupplierClick = { supplierId ->
-                viewModel.onEvent(PurchaseUiEvent.OnSupplierSelected(supplierId))
-            },
-            onVolumeChanged = { entryId, volume ->
-                viewModel.onEvent(PurchaseUiEvent.OnVolumeChanged(entryId, volume))
-            },
-            onFatChanged = { entryId, fat ->
-                viewModel.onEvent(PurchaseUiEvent.OnFatChanged(entryId, fat))
-            },
-            onLrChanged = { entryId, lr ->
-                viewModel.onEvent(PurchaseUiEvent.OnLrChanged(entryId, lr))
-            },
-            onNotesChanged = { entryId, notes ->
-                viewModel.onEvent(PurchaseUiEvent.OnNotesChanged(entryId, notes))
-            },
-            onPaidChanged = { entryId, paid ->
-                viewModel.onEvent(PurchaseUiEvent.OnPaidChanged(entryId, paid))
-            }
-
-        )
-
-        binding.rvPurchases.apply {
-            adapter = purchaseAdapter
-            itemAnimator = null
-            layoutManager = LinearLayoutManager(requireContext())
-            setRecyclerListener { holder ->
-                holder.itemView.findFocus()?.clearFocus()
-            }
-            setHasFixedSize(true)
-        }
-    }
-
-    // ----------------------------------------------------------
-    // 👀 Observe UI State
-    // ----------------------------------------------------------
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
-                Log.d("PurchaseFragment", "${state.purchasesForDate}")
+                purchaseAdapter.submitList(state.purchasesForDate)
 
-                // Update RecyclerView list
-                binding.rvPurchases.setItemViewCacheSize(state.purchasesForDate.size)
-                if (purchaseAdapter.currentList !== state.purchasesForDate) {
-                    purchaseAdapter.submitList(state.purchasesForDate)
-                }
-
-                // Update total text
-                binding.tvTotalAmount.text =
-                    getString(R.string.rs, state.grandTotalForDate.roundToInt())
-
-                // Update date text
                 binding.btnDate.text = getString(
                     R.string.date_format,
                     state.currentDate.dayOfMonth,
@@ -236,30 +117,76 @@ class PurchaseFragment :
                     state.currentDate.year
                 )
 
-                binding.apply {
-                    tvAvgLr.text = "%.2f".format(state.avgLr)
-                    tvAvgFat.text = "%.2f".format(state.avgFat)
-                    tvAvgPrice.text = "%.2f".format(state.avgRatePerLiter)
-                    tvTotalMilk.text = "%.2f".format(state.totalVolume)
-                }
-
-                // Handle navigation
-                state.navigateToLedgerForSupplierId?.let { supplierId ->
-                    navigateToLedger(supplierId)
-                    viewModel.onLedgerNavigated()
-                }
+                binding.tvTotalAmount.text =
+                    getString(R.string.rs, state.grandTotalForDate.roundToInt())
+                binding.tvTotalMilk.text = "%.2f".format(state.totalVolume)
+                binding.tvAvgFat.text = "%.2f".format(state.avgFat)
+                binding.tvAvgLr.text = "%.2f".format(state.avgLr)
+                binding.tvAvgPrice.text = "%.2f".format(state.avgRatePerLiter)
             }
         }
     }
 
+    private fun showBiometricPrompt(onSuccess: () -> Unit, onFailure: () -> Unit = {}) {
+        val biometricManager = BiometricManager.from(requireContext())
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+            == BiometricManager.BIOMETRIC_SUCCESS
+        ) {
+            val executor: Executor = ContextCompat.getMainExecutor(requireContext())
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Authenticate to enable edit mode")
+                .setSubtitle("Use your fingerprint or device credentials")
+                .setAllowedAuthenticators(
+                    BiometricManager.Authenticators.BIOMETRIC_STRONG or
+                            BiometricManager.Authenticators.DEVICE_CREDENTIAL
+                )
+                .build()
 
-    // ----------------------------------------------------------
-    // 🧭 Navigate to Supplier Ledger
-    // ----------------------------------------------------------
-    private fun navigateToLedger(supplierId: String) {
-        // TODO: Replace with actual navigation direction when you create the ledger screen
-        // Example if using Navigation Component:
-        // val action = PurchaseFragmentDirections.actionPurchaseFragmentToSupplierLedgerFragment(supplierId)
-        // findNavController().navigate(action)
+            val biometricPrompt = BiometricPrompt(
+                this, executor,
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        super.onAuthenticationSucceeded(result)
+                        onSuccess()
+                    }
+
+                    override fun onAuthenticationError(code: Int, errString: CharSequence) {
+                        super.onAuthenticationError(code, errString)
+                        Toast.makeText(requireContext(), errString, Toast.LENGTH_SHORT).show()
+                        onFailure()
+                    }
+                }
+            )
+
+            biometricPrompt.authenticate(promptInfo)
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Biometric authentication not available",
+                Toast.LENGTH_SHORT
+            ).show()
+            onFailure()
+        }
     }
+
+    private fun enableEditMode() {
+        isEditable = true
+        purchaseAdapter.isEditable = true
+        saveEditModeState(true)
+        Toast.makeText(requireContext(), "Edit mode enabled", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun disableEditMode() {
+        isEditable = false
+        purchaseAdapter.isEditable = false
+        saveEditModeState(false)
+        Toast.makeText(requireContext(), "Edit mode disabled", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun saveEditModeState(isEditable: Boolean) {
+        prefs.edit { putBoolean("edit_mode_enabled", isEditable) }
+    }
+
+    private fun loadEditModeState() =
+        prefs.getBoolean("edit_mode_enabled", false)
 }

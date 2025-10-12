@@ -1,10 +1,10 @@
 package com.miassolutions.milkledger.presentation.purchase
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
+import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.data.repositories.PurchaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -29,36 +29,56 @@ class PurchaseViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
 
+    init {
+        observeForDate(_uiState.value.currentDate)
+    }
+
+    fun updatePurchaseManually(updated: PurchaseEntryEntity) {
+        viewModelScope.launch {
+            // 🧮 Recalculate derived values before saving
+            val newTs = MilkCalculationUtils.calculateTS(
+                fat = updated.fat,
+                lr = updated.lr,
+                volume = updated.volume
+            )
+
+            val newPrice = MilkCalculationUtils.calculatePrice(
+                rate = updated.rateUsed,
+                volume = updated.volume,
+                fat = updated.fat,
+                lr = updated.lr
+            )
+
+            val newBalance = newPrice - updated.paid
+
+            val finalEntry = updated.copy(
+                ts = newTs,
+                price = newPrice,
+                balance = newBalance
+            )
+
+            repository.updatePurchase(finalEntry)
+        }
+    }
+
+
     fun onDateSelected(date: LocalDate) {
         observeForDate(date)
     }
 
-    init {
-        val today = _uiState.value.currentDate
-        observeForDate(today)
-
-    }
-
-    // Call this to change date and reload everything for that date
-     fun observeForDate(date: LocalDate) {
+    // ----------------------------------------------------------
+    // 🔁 Observe purchases for selected date
+    // ----------------------------------------------------------
+    fun observeForDate(date: LocalDate) {
         viewModelScope.launch {
-            // Collect sorted suppliers once
-            val sortedSuppliers = repository.getAllSuppliers()
-                .first() // collectLatest inside collectLatest is discouraged — use `first()` here
+            val sortedSuppliers = repository.getAllSuppliers().first()
+            val existingPurchases = repository.getPurchasesByDateOnce(date)
 
-            sortedSuppliers.forEach {
-                Log.d("PurchaseViewModel", "${it.supplierName} -> ${it.sortOrder}")
-            }
-
-            // Check current purchases once
-            val currentPurchases = repository.getPurchasesByDateOnce(date)
-
-            // Find missing suppliers
+            // Create missing purchase entries
             val missingSuppliers = sortedSuppliers.filterNot { supplier ->
-                currentPurchases.any { it.supplier.supplierId == supplier.supplierId }
+                existingPurchases.any { it.supplier.supplierId == supplier.supplierId }
             }
 
-            // Insert missing purchase entries
             missingSuppliers.forEach { supplier ->
                 val newEntry = PurchaseEntryEntity(
                     supplierId = supplier.supplierId,
@@ -75,30 +95,28 @@ class PurchaseViewModel @Inject constructor(
                 repository.insertPurchase(newEntry)
             }
 
-            // Now observe purchases for this date reactively
+            // Observe updates
             repository.getPurchasesByDate(date).collectLatest { purchases ->
-                val grandTotal = purchases.sumOf { it.purchase.price }
                 val sortedPurchases = purchases.sortedBy { it.supplier.sortOrder }
 
-                val totalVolume = purchases.sumOf { it.purchase.volume }
+                val totalVolume = sortedPurchases.sumOf { it.purchase.volume }
                 val avgFat = if (totalVolume > 0) {
-                    purchases.sumOf { it.purchase.fat * it.purchase.volume } / totalVolume
+                    sortedPurchases.sumOf { it.purchase.fat * it.purchase.volume } / totalVolume
                 } else 0.0
                 val avgLr = if (totalVolume > 0) {
-                    purchases.sumOf { it.purchase.lr * it.purchase.volume } / totalVolume
+                    sortedPurchases.sumOf { it.purchase.lr * it.purchase.volume } / totalVolume
                 } else 0.0
+                val grandTotal = sortedPurchases.sumOf { it.purchase.price }
+                val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
 
-                val avgRatePerLiter = if (totalVolume > 0) {
-                    purchases.sumOf { it.purchase.price } / totalVolume
-                } else 0.0
                 _uiState.update {
                     it.copy(
                         currentDate = date,
                         purchasesForDate = sortedPurchases,
-                        grandTotalForDate = grandTotal,
                         totalVolume = totalVolume,
                         avgFat = avgFat,
                         avgLr = avgLr,
+                        grandTotalForDate = grandTotal,
                         avgRatePerLiter = avgRatePerLiter
                     )
                 }
@@ -106,66 +124,17 @@ class PurchaseViewModel @Inject constructor(
         }
     }
 
-
-
-
     // ----------------------------------------------------------
-    // 🔄 Observe daily purchases
+    // ✏️ Update entry (used by BottomSheet)
     // ----------------------------------------------------------
-    private fun observePurchasesForDate(date: LocalDate) {
+    fun updatePurchaseEntry(updated: PurchaseEntryEntity) {
         viewModelScope.launch {
-            repository.getPurchasesByDate(date).collectLatest { purchases ->
-                Log.d("PurchaseViewModel", "Loaded purchases for $date → ${purchases.size}")
-                val grandTotal = purchases.sumOf { it.purchase.price }
-                _uiState.update {
-                    it.copy(
-                        purchasesForDate = purchases,
-                        grandTotalForDate = grandTotal
-                    )
-                }
-            }
+            repository.updatePurchase(updated)
         }
     }
 
     // ----------------------------------------------------------
-    // ⚡ Handle UI Events
-    // ----------------------------------------------------------
-    fun onEvent(event: PurchaseUiEvent) {
-        when (event) {
-
-            is PurchaseUiEvent.OnSupplierSelected -> {
-                _uiState.update { it.copy(navigateToLedgerForSupplierId = event.supplierId) }
-            }
-
-            is PurchaseUiEvent.OnVolumeChanged -> updateField(
-                entryId = event.entryId,
-                volume = event.volume
-            )
-
-            is PurchaseUiEvent.OnFatChanged -> updateField(
-                entryId = event.entryId,
-                fat = event.fat
-            )
-
-            is PurchaseUiEvent.OnLrChanged -> updateField(
-                entryId = event.entryId,
-                lr = event.lr
-            )
-
-            is PurchaseUiEvent.OnNotesChanged -> updateField(
-                entryId = event.entryId,
-                notes = event.notes
-            )
-
-            is PurchaseUiEvent.OnPaidChanged -> updateField(
-                entryId = event.entryId,
-                paid = event.paid
-            )
-        }
-    }
-
-    // ----------------------------------------------------------
-    // ✏️ Update entry (auto-save live)
+    // ✏️ Inline field updates (auto-save while typing)
     // ----------------------------------------------------------
     private fun updateField(
         entryId: String,
@@ -175,61 +144,90 @@ class PurchaseViewModel @Inject constructor(
         paid: Double? = null,
         notes: String? = null
     ) {
-        val currentList = _uiState.value.purchasesForDate
-
-        val updated = currentList.map { pws ->
-            if (pws.purchase.purchaseId == entryId) {
-
-                val newVolume = volume ?: pws.purchase.volume
-                val newFat = fat ?: pws.purchase.fat
-                val newLr = lr ?: pws.purchase.lr
-                val newPaid = paid ?: pws.purchase.paid
-
-                val newPrice = MilkCalculationUtils.calculatePrice(
-                    rate = pws.purchase.rateUsed,
-                    volume = newVolume,
-                    fat = newFat,
-                    lr = newLr
-                )
-
-                val newBalance = newPrice - newPaid
-
-                val purchase = pws.purchase.copy(
-                    volume = newVolume,
-                    fat = newFat,
-                    lr = newLr,
-                    ts = MilkCalculationUtils.calculateTS(newFat, newLr, newVolume),
-                    price = newPrice,
-                    paid = newPaid,
-                    balance = newBalance,
-                    notes = notes ?: pws.purchase.notes
-                )
-
-                // 💡 Debounced database update
-                updateJob?.cancel()
-                updateJob = viewModelScope.launch {
-                    delay(400) // waits for user to stop typing
-                    repository.updatePurchase(purchase)
-                }
-
-                pws.copy(purchase = purchase)
-            } else pws
+        val updatedList = _uiState.value.purchasesForDate.map { item ->
+            if (item.purchase.purchaseId == entryId) {
+                val newPurchase = recalculatePurchase(item, volume, fat, lr, paid, notes)
+                debounceUpdate(newPurchase)
+                item.copy(purchase = newPurchase)
+            } else item
         }
 
-        val newGrandTotal = updated.sumOf { it.purchase.price }
+        val newGrandTotal = updatedList.sumOf { it.purchase.price }
         _uiState.update {
             it.copy(
-                purchasesForDate = updated,
+                purchasesForDate = updatedList,
                 grandTotalForDate = newGrandTotal
             )
         }
     }
 
+    private fun recalculatePurchase(
+        item: PurchaseWithSupplier,
+        volume: Double?,
+        fat: Double?,
+        lr: Double?,
+        paid: Double?,
+        notes: String?
+    ): PurchaseEntryEntity {
+        val v = volume ?: item.purchase.volume
+        val f = fat ?: item.purchase.fat
+        val l = lr ?: item.purchase.lr
+        val p = paid ?: item.purchase.paid
 
+        val newPrice = MilkCalculationUtils.calculatePrice(
+            rate = item.purchase.rateUsed,
+            volume = v,
+            fat = f,
+            lr = l
+        )
+
+        val newBalance = newPrice - p
+
+        return item.purchase.copy(
+            volume = v,
+            fat = f,
+            lr = l,
+            ts = MilkCalculationUtils.calculateTS(f, l, v),
+            price = newPrice,
+            paid = p,
+            balance = newBalance,
+            notes = notes ?: item.purchase.notes
+        )
+    }
+
+    private fun debounceUpdate(purchase: PurchaseEntryEntity) {
+        updateJob?.cancel()
+        updateJob = viewModelScope.launch {
+            delay(400)
+            repository.updatePurchase(purchase)
+        }
+    }
 
     // ----------------------------------------------------------
-    // 🧭 Navigation Reset
+    // ⚡ Handle UI Events
     // ----------------------------------------------------------
+    fun onEvent(event: PurchaseUiEvent) {
+        when (event) {
+            is PurchaseUiEvent.OnSupplierSelected ->
+                _uiState.update { it.copy(navigateToLedgerForSupplierId = event.supplierId) }
+
+            is PurchaseUiEvent.OnVolumeChanged ->
+                updateField(event.entryId, volume = event.volume)
+
+            is PurchaseUiEvent.OnFatChanged ->
+                updateField(event.entryId, fat = event.fat)
+
+            is PurchaseUiEvent.OnLrChanged ->
+                updateField(event.entryId, lr = event.lr)
+
+            is PurchaseUiEvent.OnPaidChanged ->
+                updateField(event.entryId, paid = event.paid)
+
+            is PurchaseUiEvent.OnNotesChanged ->
+                updateField(event.entryId, notes = event.notes)
+        }
+    }
+
     fun onLedgerNavigated() {
         _uiState.update { it.copy(navigateToLedgerForSupplierId = null) }
     }

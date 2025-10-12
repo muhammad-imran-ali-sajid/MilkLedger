@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="16dp"
+    android:layoutDirection="rtl"
+    android:backgroundTint="@color/white"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Supplier Name -->
+        <TextView
+            android:id="@+id/tv_supplier_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp"
+            android:text="سپلائر کا نام"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <!-- Volume -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:weightSum="5"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="لیٹر (Volume):"
+                android:layout_weight="2"
+                android:textColor="#555555"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_volume"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@drawable/bg_edittext_readable"
+                android:inputType="numberDecimal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- Fat -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="فیٹ (%):"
+                android:textColor="#555555"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_fat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@drawable/bg_edittext_readable"
+                android:inputType="numberDecimal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- LR -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="ایل آر (LR):"
+                android:textColor="#555555"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_lr"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@drawable/bg_edittext_readable"
+                android:inputType="numberDecimal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- Paid -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="ادائیگی:"
+                android:textColor="#555555"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_paid"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@drawable/bg_edittext_readable"
+                android:inputType="numberDecimal"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- Notes -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:paddingTop="8dp"
+                android:text="نوٹس:"
+                android:textColor="#555555"
+                android:textSize="16sp" />
+
+            <EditText
+                android:id="@+id/et_notes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:background="@drawable/bg_edittext_readable"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="3"
+                android:padding="10dp" />
+        </LinearLayout>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_save"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext_readable"
+                android:backgroundTint="@color/md_theme_primary"
+                android:text="Save"
+                android:textColor="@color/white"
+
+                app:cornerRadius="8dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_edittext_readable"
+                android:backgroundTint="@color/md_theme_primary"
+                android:text="Cancel"
+                android:textColor="@color/white"
+                app:cornerRadius="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
