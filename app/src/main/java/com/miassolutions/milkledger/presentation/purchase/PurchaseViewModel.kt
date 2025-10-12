@@ -25,15 +25,18 @@ class PurchaseViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
 
-    init {
-        val today = _uiState.value.currentDate
-        observeForDate(today)
-//        ensureDailyPurchasesExist(today)
-//        observePurchasesForDate(_uiState.value.currentDate)
+    fun onDateSelected(date: LocalDate) {
+        observeForDate(date)
     }
 
+//    init {
+//        val today = _uiState.value.currentDate
+//        observeForDate(today)
+//
+//    }
+
     // Call this to change date and reload everything for that date
-    private fun observeForDate(date: LocalDate) {
+     fun observeForDate(date: LocalDate) {
         viewModelScope.launch {
             // Collect sorted suppliers once
             val sortedSuppliers = repository.getAllSuppliers()

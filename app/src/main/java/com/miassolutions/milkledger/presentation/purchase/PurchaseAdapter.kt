@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -17,6 +18,7 @@ import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 import kotlin.math.roundToInt
 
 class PurchaseAdapter(
+
     private val onSupplierClick: (String) -> Unit,
     private val onVolumeChanged: (String, Double) -> Unit,
     private val onFatChanged: (String, Double) -> Unit,
@@ -24,6 +26,8 @@ class PurchaseAdapter(
     private val onPaidChanged: (String, Double) -> Unit,
     private val onNotesChanged: (String, String) -> Unit
 ) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.PurchaseViewHolder>(DiffCallback) {
+
+    private var recyclerView: RecyclerView? = null
 
     var isEditable = true
         @SuppressLint("NotifyDataSetChanged")
@@ -64,7 +68,7 @@ class PurchaseAdapter(
     }
 
     inner class PurchaseViewHolder(
-        private val binding: ItemPurchaseBinding
+        val binding: ItemPurchaseBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PurchaseWithSupplier) = with(binding) {
@@ -158,11 +162,52 @@ class PurchaseAdapter(
             tvSupplierName.setOnClickListener {
                 onSupplierClick(item.purchase.purchaseId)
             }
+
+            etNotes.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_NEXT) {
+                    moveFocusToNextItemVolume(bindingAdapterPosition)
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+    }
+
+
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+        this.recyclerView = recyclerView
+    }
+
+    override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView)
+        this.recyclerView = null
+    }
+
+    private fun moveFocusToNextItemVolume(currentPosition: Int) {
+        val nextPosition = currentPosition + 1
+        if (nextPosition < itemCount) {
+            recyclerView?.post {
+                recyclerView?.smoothScrollToPosition(nextPosition)
+
+                recyclerView?.postDelayed({
+                    val holder = recyclerView?.findViewHolderForAdapterPosition(nextPosition)
+                            as? PurchaseViewHolder
+                    holder?.binding?.etVolume?.requestFocus()
+                }, 100)
+            }
         }
     }
 }
 
+
+
 // -------------------- Extensions --------------------
+
+
+
 
 private fun trimTrailingZeros(value: Double): String {
     return if (value == value.toLong().toDouble()) {

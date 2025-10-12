@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.presentation.purchase
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,7 @@ import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.util.concurrent.Executor
 import kotlin.math.roundToInt
 
@@ -39,6 +41,19 @@ class PurchaseFragment :
     override fun setupViews() {
         setToolbarTitle(getString(R.string.purchases))
         setupRecyclerView()
+
+        binding.tvDate.setOnClickListener {
+            val currentDate = viewModel.uiState.value.currentDate
+            val year = currentDate.year
+            val month = currentDate.monthValue - 1
+            val day = currentDate.dayOfMonth
+
+            DatePickerDialog(requireContext(), { _, y, m, d ->
+                val newDate = LocalDate.of(y, m + 1, d)
+                viewModel.onDateSelected(newDate)
+            }, year, month, day).show()
+        }
+
 
         // Load previously saved state
         isEditable = loadEditModeState()
