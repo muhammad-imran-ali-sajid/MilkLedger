@@ -1,25 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Brand -->
-    <color name="md_theme_primary">#81C784</color> <!-- lighter green -->
-    <color name="md_theme_onPrimary">#0A0A0A</color>
-    <color name="md_theme_secondary">#FFD54F</color> <!-- softer amber -->
-    <color name="md_theme_onSecondary">#0A0A0A</color>
+<!--    &lt;!&ndash; Brand &ndash;&gt;-->
+<!--    <color name="md_theme_primary">#81C784</color> &lt;!&ndash; lighter green &ndash;&gt;-->
+<!--    <color name="md_theme_onPrimary">#0A0A0A</color>-->
+<!--    <color name="md_theme_secondary">#FFD54F</color> &lt;!&ndash; softer amber &ndash;&gt;-->
+<!--    <color name="md_theme_onSecondary">#0A0A0A</color>-->
+
+<!--    &lt;!&ndash; Neutral surfaces &ndash;&gt;-->
+<!--    <color name="md_theme_background">#121212</color>-->
+<!--    <color name="md_theme_onBackground">#E0E0E0</color>-->
+<!--    <color name="md_theme_surface">#1E1E1E</color>-->
+<!--    <color name="md_theme_onSurface">#E0E0E0</color>-->
+
+<!--    <color name="icon_color">#ffffff</color>-->
+
+<!--    &lt;!&ndash; Status &ndash;&gt;-->
+<!--    <color name="success">#81C784</color> &lt;!&ndash; softer green &ndash;&gt;-->
+<!--    <color name="error">#CF6679</color>  &lt;!&ndash; Material dark error &ndash;&gt;-->
+<!--    <color name="warning">#FFB74D</color>-->
+<!--    <color name="info">#64B5F6</color>-->
+
+<!--    &lt;!&ndash; Divider &ndash;&gt;-->
+<!--    <color name="divider">#2C2C2C</color>-->
+
+    <color name="md_theme_primary">#4CAF50</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_secondary">#FFC107</color>
+    <color name="md_theme_onSecondary">#000000</color>
 
     <!-- Neutral surfaces -->
-    <color name="md_theme_background">#121212</color>
-    <color name="md_theme_onBackground">#E0E0E0</color>
-    <color name="md_theme_surface">#1E1E1E</color>
-    <color name="md_theme_onSurface">#E0E0E0</color>
+    <color name="md_theme_background">#FFFFFF</color>
+    <color name="md_theme_onBackground">#212121</color>
+    <color name="md_theme_surface">#F5F5F5</color>
+    <color name="md_theme_onSurface">#212121</color>
 
-    <color name="icon_color">#ffffff</color>
+    <color name="icon_color">#000000</color>
 
     <!-- Status -->
-    <color name="success">#81C784</color> <!-- softer green -->
-    <color name="error">#CF6679</color>  <!-- Material dark error -->
-    <color name="warning">#FFB74D</color>
-    <color name="info">#64B5F6</color>
+    <color name="success">#4CAF50</color>
+    <color name="error">#F44336</color>
+    <color name="warning">#FF9800</color>
+    <color name="info">#2196F3</color>
+
+
+    <!--    App specific colors-->
+    <color name="sale_color">#4CAF50</color>
+    <color name="purchase_color">#F44336</color>
+    <color name="title_color">#000</color>
+
+
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="light_black">#ccc</color>
+    <color name="grey">#eeeeee</color>
+
+
+    <color name="milk_cream">#FFF8E1</color>
+    <color name="milk_light_blue">#81D4FA</color>
+    <color name="milk_soft_green">#A5D6A7</color>
+    <color name="milk_pale_yellow">#FFF59D</color>
+    <color name="milk_light_coral">#FF8A80</color>
+    <color name="milk_light_brown">#BCAAA4</color>
+    <color name="milk_soft_purple">#CE93D8</color>
+
+
+
 
     <!-- Divider -->
-    <color name="divider">#2C2C2C</color>
+    <color name="divider">#E0E0E0</color>
 </resources>
