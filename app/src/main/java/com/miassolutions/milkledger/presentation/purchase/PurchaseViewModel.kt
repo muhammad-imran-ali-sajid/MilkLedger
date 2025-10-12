@@ -75,11 +75,27 @@ class PurchaseViewModel @Inject constructor(
             repository.getPurchasesByDate(date).collectLatest { purchases ->
                 val grandTotal = purchases.sumOf { it.purchase.price }
                 val sortedPurchases = purchases.sortedBy { it.supplier.sortOrder }
+
+                val totalVolume = purchases.sumOf { it.purchase.volume }
+                val avgFat = if (totalVolume > 0) {
+                    purchases.sumOf { it.purchase.fat * it.purchase.volume } / totalVolume
+                } else 0.0
+                val avgLr = if (totalVolume > 0) {
+                    purchases.sumOf { it.purchase.lr * it.purchase.volume } / totalVolume
+                } else 0.0
+
+                val avgRatePerLiter = if (totalVolume > 0) {
+                    purchases.sumOf { it.purchase.price } / totalVolume
+                } else 0.0
                 _uiState.update {
                     it.copy(
                         currentDate = date,
                         purchasesForDate = sortedPurchases,
-                        grandTotalForDate = grandTotal
+                        grandTotalForDate = grandTotal,
+                        totalVolume = totalVolume,
+                        avgFat = avgFat,
+                        avgLr = avgLr,
+                        avgRatePerLiter = avgRatePerLiter
                     )
                 }
             }

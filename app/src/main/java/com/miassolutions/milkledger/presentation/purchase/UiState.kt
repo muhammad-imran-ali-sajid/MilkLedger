@@ -9,7 +9,13 @@ data class PurchaseUiState(
     val purchasesForDate: List<PurchaseWithSupplier> = emptyList(),
     val grandTotalForDate: Double = 0.0,
     val selectedSupplierId: String? = null,
-    val navigateToLedgerForSupplierId: String? = null
+    val navigateToLedgerForSupplierId: String? = null,
+
+    // New aggregated fields
+    val totalVolume: Double = 0.0,
+    val avgFat: Double = 0.0,
+    val avgLr: Double = 0.0,
+    val avgRatePerLiter: Double = 0.0,
 )
 
 

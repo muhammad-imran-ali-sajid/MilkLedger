@@ -43,7 +43,7 @@ class PurchaseFragment :
         setupRecyclerView()
 
 
-        binding.tvDate.setOnClickListener {
+        binding.btnDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
             val year = currentDate.year
             val month = currentDate.monthValue - 1
@@ -227,12 +227,19 @@ class PurchaseFragment :
                     getString(R.string.rs, state.grandTotalForDate.roundToInt())
 
                 // Update date text
-                binding.tvDate.text = getString(
+                binding.btnDate.text = getString(
                     R.string.date_format,
                     state.currentDate.dayOfMonth,
                     state.currentDate.monthValue,
                     state.currentDate.year
                 )
+
+                binding.apply {
+                    tvAvgLr.text = "%.2f".format(state.avgLr)
+                    tvAvgFat.text = "%.2f".format(state.avgFat)
+                    tvAvgPrice.text = "%.2f".format(state.avgRatePerLiter)
+                    tvTotalMilk.text = "%.2f".format(state.totalVolume)
+                }
 
                 // Handle navigation
                 state.navigateToLedgerForSupplierId?.let { supplierId ->
