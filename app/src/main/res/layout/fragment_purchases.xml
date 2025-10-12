@@ -33,7 +33,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_date"
                     android:layout_width="0dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:text="📅 Date: 12/10/2025"
@@ -43,7 +43,7 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnToggleEdit"
                     android:layout_width="wrap_content"
-                    android:layout_height="36dp"
+                    android:layout_height="wrap_content"
                     android:backgroundTint="#E0F2F1"
                     android:paddingHorizontal="16dp"
                     android:text="Edit"
@@ -70,7 +70,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🥛 Total Milk"
+                        android:text="🥛 Milk"
                         android:textColor="#444444"
                         android:textSize="14sp"
                         android:textStyle="bold" />
