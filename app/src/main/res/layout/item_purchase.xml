@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="6"
+
             android:orientation="horizontal"
             android:paddingBottom="8dp">
 
@@ -73,7 +74,7 @@
                     android:id="@+id/tvVolume"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3.5L"
+                    tools:text="3.5"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -98,7 +99,7 @@
                     android:id="@+id/tvFat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4.5%"
+                    tools:text="4.5"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -123,7 +124,7 @@
                     android:id="@+id/tvLr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="28.1"
+                    tools:text="28.1"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -132,6 +133,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
+
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center">
@@ -148,7 +150,7 @@
                     android:id="@+id/tvTs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="8.4"
+                    tools:text="8.4"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -236,6 +238,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="10000"
+                    android:textDirection="ltr"
                     android:textColor="@android:color/holo_red_dark"
                     android:textSize="16sp"
                     android:textStyle="bold" />

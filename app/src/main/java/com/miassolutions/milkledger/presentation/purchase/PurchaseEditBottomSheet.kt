@@ -1,14 +1,20 @@
 package com.miassolutions.milkledger.presentation.purchase
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class PurchaseEditBottomSheet(
@@ -36,12 +42,42 @@ class PurchaseEditBottomSheet(
             // Show supplier info
             tvSupplierName.text = supplier.supplierName
 
+            // Apply to all EditTexts
+            autoSelectOnFocus(etVolume)
+            autoSelectOnFocus(etFat)
+            autoSelectOnFocus(etLr)
+            autoSelectOnFocus(etPaid)
+            autoSelectOnFocus(etNotes)
+
             // Fill fields
             etVolume.setText(purchase.volume.toString())
             etFat.setText(purchase.fat.toString())
             etLr.setText(purchase.lr.toString())
             etPaid.setText(purchase.paid.toString())
+            tvBalance.text = purchase.balance.roundToInt().toString()
             etNotes.setText(purchase.notes ?: "")
+
+            // Recalculate price initially
+            recalculatePrice()
+            recalculateTS()
+            recalculateBalance()
+
+
+            val textChangedListener: (CharSequence?, Int, Int, Int) -> Unit = { _, _, _, _ ->
+                recalculatePrice()
+                recalculateTS()
+                recalculateBalance()
+            }
+
+            etVolume.doOnTextChanged(textChangedListener)
+            etFat.doOnTextChanged(textChangedListener)
+            etLr.doOnTextChanged(textChangedListener)
+
+            // Add this only once to watch changes on etPaid
+            etPaid.doOnTextChanged { _, _, _, _ ->
+                recalculateBalance()
+            }
+
 
             // Save button
             btnSave.setOnClickListener {
@@ -58,6 +94,39 @@ class PurchaseEditBottomSheet(
             }
 
             btnCancel.setOnClickListener { dismiss() }
+        }
+    }
+
+    private fun recalculateBalance() {
+        val price = binding.tvPrice.text.toString().toDoubleOrNull() ?: 0.0
+        val paid = binding.etPaid.text.toString().toDoubleOrNull() ?: 0.0
+        val balance = price - paid
+        binding.tvBalance.text = "%.2f".format(balance)
+    }
+
+    private fun recalculateTS() {
+        val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
+        val fat = binding.etFat.text.toString().toDoubleOrNull() ?: 0.0
+        val lr = binding.etLr.text.toString().toDoubleOrNull() ?: 0.0
+        val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
+        binding.tvTs.text = "%.2f".format(ts)
+    }
+
+    private fun recalculatePrice() {
+        val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
+        val fat = binding.etFat.text.toString().toDoubleOrNull() ?: 0.0
+        val lr = binding.etLr.text.toString().toDoubleOrNull() ?: 0.0
+        val rate = entry.supplier.supplierRate
+
+        val price = MilkCalculationUtils.calculatePrice(volume, fat, lr, rate)
+        binding.tvPrice.text = "%.2f".format(price)
+
+    }
+
+    private fun autoSelectOnFocus(editText: EditText) {
+        editText.setSelectAllOnFocus(true)
+        editText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) (v as EditText).selectAll()
         }
     }
 

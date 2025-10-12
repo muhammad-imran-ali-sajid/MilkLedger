@@ -36,6 +36,9 @@ class PurchaseAdapter(
         fun bind(item: PurchaseWithSupplier) {
             binding.tvName.text = item.supplier.supplierName
             binding.tvFat.text = "%.2f".format(item.purchase.fat)
+            binding.tvVolume.text = "%.2f".format(item.purchase.volume)
+            binding.tvLr.text = "%.2f".format(item.purchase.lr)
+            binding.tvTs.text = "%.2f".format(item.purchase.ts)
             binding.tvNotes.text = item.purchase.notes
             binding.tvPrice.text = item.purchase.price.roundToInt().toString()
             binding.tvPaid.text = item.purchase.paid.roundToInt().toString()
