@@ -1,24 +1,24 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.MilkLedger" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.MilkLedger" parent="Theme.Material3.Light.NoActionBar">
 
 
 
-        <item name="colorPrimary">@color/md_theme_primary</item>
-        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
-        <item name="colorSecondary">@color/md_theme_secondary</item>
-        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">?attr/colorSurface</item>
+<!--        <item name="colorPrimary">@color/md_theme_primary</item>-->
+<!--        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>-->
+<!--        <item name="colorSecondary">@color/md_theme_secondary</item>-->
+<!--        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>-->
+<!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+<!--        <item name="android:navigationBarColor">?attr/colorSurface</item>-->
 
-        <item name="materialButtonStyle">@style/Button.Filled</item>
+<!--        <item name="materialButtonStyle">@style/Button.Filled</item>-->
 
-        <item name="textAppearanceHeadlineLarge">@style/Text.H1</item>
-        <item name="textAppearanceHeadlineMedium">@style/Text.H2</item>
-        <item name="textAppearanceTitleMedium">@style/Text.Title</item>
-        <item name="textAppearanceBodyLarge">@style/Text.Body</item>
-        <item name="textAppearanceLabelMedium">@style/Text.Caption</item>
-        <item name="textAppearanceLabelLarge">@style/Text.Button</item>
+<!--        <item name="textAppearanceHeadlineLarge">@style/Text.H1</item>-->
+<!--        <item name="textAppearanceHeadlineMedium">@style/Text.H2</item>-->
+<!--        <item name="textAppearanceTitleMedium">@style/Text.Title</item>-->
+<!--        <item name="textAppearanceBodyLarge">@style/Text.Body</item>-->
+<!--        <item name="textAppearanceLabelMedium">@style/Text.Caption</item>-->
+<!--        <item name="textAppearanceLabelLarge">@style/Text.Button</item>-->
 
 
     </style>
