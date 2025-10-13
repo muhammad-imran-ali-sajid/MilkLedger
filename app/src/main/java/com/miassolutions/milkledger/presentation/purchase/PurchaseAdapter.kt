@@ -1,7 +1,9 @@
 package com.miassolutions.milkledger.presentation.purchase
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -33,17 +35,34 @@ class PurchaseAdapter(
         private val onItemClick: (PurchaseWithSupplier) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: PurchaseWithSupplier) {
-            binding.tvName.text = item.supplier.supplierName
-            binding.tvFat.text = "%.1f".format(item.purchase.fat)
-            binding.tvVolume.text = "%.1f".format(item.purchase.volume)
-            binding.tvLr.text = "%.1f".format(item.purchase.lr)
-            binding.tvTs.text = "%.1f".format(item.purchase.ts)
-            binding.tvNotes.text = item.purchase.notes
-            binding.tvPrice.text = item.purchase.price.roundToInt().toString()
-            binding.tvPaid.text = item.purchase.paid.roundToInt().toString()
-            binding.tvBalance.text = item.purchase.balance.roundToInt().toString()
-            binding.root.setOnClickListener { onItemClick(item) }
+        fun bind(item: PurchaseWithSupplier) = with(binding) {
+            tvName.text = item.supplier.supplierName
+            tvFat.text = "%.1f".format(item.purchase.fat)
+            tvVolume.text = "%.1f".format(item.purchase.volume)
+            tvLr.text = "%.1f".format(item.purchase.lr)
+            tvTs.text = "%.1f".format(item.purchase.ts)
+            tvNotes.text = item.purchase.notes
+            tvPrice.text = item.purchase.price.roundToInt().toString()
+            tvPaid.text = item.purchase.paid.roundToInt().toString()
+
+
+            // Change color based on balance
+            val balance = item.purchase.balance
+            val color = when {
+                balance < 0 -> Color.RED
+                balance == 0.0 -> "#000000".toColorInt()
+                else -> "#4CAF50".toColorInt() // Material green 500
+            }
+            // Format balance text with + sign if positive
+            val balanceText = when {
+                balance > 0 -> "+${balance.roundToInt()}"
+                else -> balance.roundToInt().toString()
+            }
+
+            tvBalance.text = balanceText
+            tvBalance.setTextColor(color)
+
+            root.setOnClickListener { onItemClick(item) }
         }
     }
 

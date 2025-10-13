@@ -58,20 +58,23 @@ class PurchaseFragment :
         isEditable = loadEditModeState()
         purchaseAdapter.isEditable = isEditable
 
-        binding.btnToggleEdit.setOnClickListener {
-            if (!isEditable) {
+        binding.switchEditMode.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+//                binding.switchEditMode.text = "Edit Mode: ON"
                 showBiometricPrompt(
                     onSuccess = { enableEditMode() },
                     onFailure = {
-                        Toast.makeText(
-                            requireContext(),
-                            "Authentication failed. Cannot enable edit mode.",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        showToast("Authentication failed. Cannot enable edit mode.")
+
                     }
                 )
-            } else disableEditMode()
+
+            } else {
+//                binding.switchEditMode.text = "Edit Mode: OFF"
+                disableEditMode()
+            }
         }
+
     }
 
     private fun setupRecyclerView() {

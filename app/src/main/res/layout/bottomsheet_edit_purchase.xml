@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    android:layoutDirection="rtl"
     android:backgroundTint="@color/white"
+    android:layoutDirection="rtl"
+
     app:cardCornerRadius="16dp"
     app:cardElevation="6dp">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
+        android:id="@+id/scrollView"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -38,8 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
-                android:weightSum="5"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="5">
 
                 <TextView
                     android:layout_width="0dp"
@@ -74,7 +75,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="فیٹ (%):"
+                    android:text="فیٹ (FAT):"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -133,8 +134,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:text="ٹی ایس (TS):"
-                    android:textDirection="rtl"
                     android:textColor="#555555"
+                    android:textDirection="rtl"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -144,10 +145,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="#4C81D4FA"
+                    android:backgroundTint="@color/textview_bg_tint"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
-                    android:textDirection="ltr" />
+                    android:text="111"
+                    android:textColor="@color/textview_text_color"
+                    android:textDirection="ltr"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -162,7 +167,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="قیمت:"
+                    android:text="قیمت (Price):"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -173,10 +178,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="#81D4FA4C"
+                    android:backgroundTint="@color/textview_bg_tint"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
-                    android:textDirection="ltr" />
+                    android:textColor="@color/textview_text_color"
+                    android:textDirection="ltr"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Paid -->
@@ -192,7 +200,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="ادائیگی:"
+                    android:text="ادائیگی (Payment):"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -202,6 +210,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
+                    android:imeOptions="actionDone"
                     android:background="@drawable/bg_edittext_readable"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
@@ -220,7 +229,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="بیلنس:"
+                    android:text="بیلنس (Balance):"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -230,11 +239,14 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:textDirection="ltr"
-                    android:backgroundTint="#4500796B"
                     android:background="@drawable/bg_edittext_readable"
+                    android:backgroundTint="@color/textview_bg_tint"
                     android:inputType="numberDecimal"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:textColor="@color/textview_text_color"
+                    android:textDirection="ltr"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <!-- Notes -->
@@ -251,7 +263,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:paddingTop="8dp"
-                    android:text="نوٹس:"
+                    android:text="نوٹس (Notes):"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -262,8 +274,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:background="@drawable/bg_edittext_readable"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:minLines="3"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences"
                     android:padding="10dp" />
             </LinearLayout>
 
@@ -280,10 +292,11 @@
                     android:id="@+id/btn_save"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
                     android:layout_weight="1"
                     android:background="@drawable/bg_edittext_readable"
                     android:backgroundTint="@color/md_theme_primary"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:text="Save"
                     android:textColor="@color/white"
                     app:cornerRadius="8dp" />

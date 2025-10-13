@@ -1,12 +1,17 @@
 package com.miassolutions.milkledger.presentation.purchase
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
@@ -15,6 +20,7 @@ import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
+import androidx.core.graphics.toColorInt
 
 @AndroidEntryPoint
 class PurchaseEditBottomSheet(
@@ -79,6 +85,21 @@ class PurchaseEditBottomSheet(
             }
 
 
+            etPaid.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+
+                    // Hide the keyboard
+                    val imm =
+                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(etNotes.windowToken, 0)
+
+                    true
+                } else {
+                    false
+                }
+            }
+
+
             // Save button
             btnSave.setOnClickListener {
                 val updatedPurchase = purchase.copy(
@@ -100,8 +121,24 @@ class PurchaseEditBottomSheet(
     private fun recalculateBalance() {
         val price = binding.tvPrice.text.toString().toDoubleOrNull() ?: 0.0
         val paid = binding.etPaid.text.toString().toDoubleOrNull() ?: 0.0
-        val balance = price - paid
+        val balance = paid - price
+
         binding.tvBalance.text = "%.2f".format(balance)
+
+        val color = when {
+            balance < 0 -> Color.RED
+            balance == 0.0 -> "#000000".toColorInt()
+            else -> "#4CAF50".toColorInt() // Material green 500
+        }
+
+        // Format balance text with + sign if positive
+        val balanceText = when {
+            balance > 0 -> "+${balance.roundToInt()}"
+            else -> balance.roundToInt().toString()
+        }
+
+        binding.tvBalance.text = balanceText
+        binding.tvBalance.setTextColor(color)
     }
 
     private fun recalculateTS() {

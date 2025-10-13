@@ -49,7 +49,7 @@ class PurchaseViewModel @Inject constructor(
                 lr = updated.lr
             )
 
-            val newBalance = newPrice - updated.paid
+            val newBalance =  updated.paid - newPrice
 
             val finalEntry = updated.copy(
                 ts = newTs,

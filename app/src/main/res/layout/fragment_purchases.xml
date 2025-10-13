@@ -40,15 +40,15 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnToggleEdit"
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchEditMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="#E0F2F1"
-                    android:paddingHorizontal="16dp"
-                    android:text="Edit"
-                    android:textColor="#00796B"
-                    android:textSize="12sp" />
+                    android:text="Edit Mode"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"
+                    android:layout_margin="16dp" />
+
             </LinearLayout>
 
             <!-- Row 1: Milk, Fat, LR -->
@@ -59,30 +59,7 @@
                 android:orientation="horizontal"
                 android:weightSum="3">
 
-                <!-- Milk -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🥛 Milk"
-                        android:textColor="#444444"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_total_milk"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="124.5"
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
-                </LinearLayout>
 
                 <!-- Fat -->
                 <LinearLayout
@@ -93,6 +70,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="🧈 Avg Fat"
@@ -102,6 +80,7 @@
 
                     <TextView
                         android:id="@+id/tv_avg_fat"
+                        style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="4.3"
@@ -118,6 +97,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="🧪 Avg LR"
@@ -127,9 +107,38 @@
 
                     <TextView
                         android:id="@+id/tv_avg_lr"
+                        style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="28.1"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
+                <!-- Milk -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Text.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🥛 Milk"
+                        android:textColor="#444444"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_total_milk"
+                        style="@style/Text.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="124.5"
                         android:textColor="#000000"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -148,30 +157,7 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <!-- Total Amount -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💰 Total Amount"
-                        android:textColor="#444444"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_total_amount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rs. 10500"
-                        android:textColor="#000000"
-                        android:textSize="16sp" />
-                </LinearLayout>
 
                 <!-- Avg Rate -->
                 <LinearLayout
@@ -182,6 +168,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="💸 Avg Rate/L"
@@ -191,9 +178,37 @@
 
                     <TextView
                         android:id="@+id/tv_avg_price"
+                        style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rs. 84.3"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <!-- Total Amount -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/Text.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💰 Total Amount"
+                        android:textColor="#444444"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tv_total_amount"
+                        style="@style/Text.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rs. 10500"
                         android:textColor="#000000"
                         android:textSize="16sp" />
                 </LinearLayout>

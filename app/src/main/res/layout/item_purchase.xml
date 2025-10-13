@@ -239,7 +239,6 @@
                     android:layout_height="wrap_content"
                     android:text="10000"
                     android:textDirection="ltr"
-                    android:textColor="@android:color/holo_red_dark"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
