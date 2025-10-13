@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "218670424677",
+    "project_id": "milk-ledger-55f0f",
+    "storage_bucket": "milk-ledger-55f0f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218670424677:android:623e73efa5e6126ffe1c8c",
+        "android_client_info": {
+          "package_name": "com.miassolutions.milkledger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlXEgFr8SzE2H4SWHPFIqBHiQcVnh_Sjs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

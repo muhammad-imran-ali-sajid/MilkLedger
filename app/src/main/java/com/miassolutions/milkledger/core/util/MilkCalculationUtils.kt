@@ -11,8 +11,13 @@ object MilkCalculationUtils {
     }
 
     // Price formula using rate snapshot
-    fun calculatePrice(volume: Double, fat: Double, lr: Double, rate: Double): Double {
-        val ts = calculateTS(fat, lr, volume)
-        return rate * ts
+    fun calculatePrice(volume: Double, fat: Double?, lr: Double?, rate: Double): Double {
+        return if (fat == null || lr == null || (fat == 0.0 && lr == 0.0)) {
+            // Flat price calculation when fat and lr are not provided
+            volume * rate
+        } else {
+            val ts = calculateTS(fat, lr, volume)
+            rate * ts
+        }
     }
 }
