@@ -1,0 +1,15 @@
+<!-- res/drawable/track_custom.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <solid android:color="#A5D6A7" /> <!-- Light green when ON -->
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="16dp" />
+            <solid android:color="#CFD8DC" /> <!-- Light gray when OFF -->
+        </shape>
+    </item>
+</selector>

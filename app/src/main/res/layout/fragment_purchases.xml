@@ -40,12 +40,13 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switchEditMode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Edit Mode"
                     android:textSize="14sp"
+                    app:track="@drawable/toggle_track"
                     android:textColor="@color/black"
                     android:layout_margin="16dp" />
 
