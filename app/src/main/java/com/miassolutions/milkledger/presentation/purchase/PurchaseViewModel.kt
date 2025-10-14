@@ -63,18 +63,23 @@ class PurchaseViewModel @Inject constructor(
 
 
     fun onDateSelected(date: LocalDate) {
-        observeForDate(date)
+        if (date != _uiState.value.currentDate) {
+            observeForDate(date)
+        }
     }
+
 
     // ----------------------------------------------------------
     // 🔁 Observe purchases for selected date
     // ----------------------------------------------------------
+    private var purchasesJob: Job? = null
+
     fun observeForDate(date: LocalDate) {
-        viewModelScope.launch {
+        purchasesJob?.cancel()
+        purchasesJob = viewModelScope.launch {
             val sortedSuppliers = repository.getAllSuppliers().first()
             val existingPurchases = repository.getPurchasesByDateOnce(date)
 
-            // Create missing purchase entries
             val missingSuppliers = sortedSuppliers.filterNot { supplier ->
                 existingPurchases.any { it.supplier.supplierId == supplier.supplierId }
             }
@@ -95,7 +100,6 @@ class PurchaseViewModel @Inject constructor(
                 repository.insertPurchase(newEntry)
             }
 
-            // Observe updates
             repository.getPurchasesByDate(date).collectLatest { purchases ->
                 val sortedPurchases = purchases.sortedBy { it.supplier.sortOrder }
 
@@ -123,6 +127,7 @@ class PurchaseViewModel @Inject constructor(
             }
         }
     }
+
 
     // ----------------------------------------------------------
     // ✏️ Update entry (used by BottomSheet)

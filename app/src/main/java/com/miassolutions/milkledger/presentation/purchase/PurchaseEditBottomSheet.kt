@@ -85,7 +85,7 @@ class PurchaseEditBottomSheet(
             }
 
 
-            etPaid.setOnEditorActionListener { v, actionId, event ->
+            etPaid.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
                     // Hide the keyboard

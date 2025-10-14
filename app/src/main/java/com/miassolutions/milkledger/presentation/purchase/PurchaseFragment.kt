@@ -12,6 +12,7 @@ import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
@@ -19,7 +20,10 @@ import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
+import java.util.Calendar
 import java.util.concurrent.Executor
 import kotlin.math.roundToInt
 
@@ -44,16 +48,30 @@ class PurchaseFragment :
 
         binding.btnDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
-            DatePickerDialog(
-                requireContext(),
-                { _, y, m, d ->
-                    viewModel.onDateSelected(LocalDate.of(y, m + 1, d))
-                },
-                currentDate.year,
-                currentDate.monthValue - 1,
-                currentDate.dayOfMonth
-            ).show()
+
+            // Convert LocalDate to milliseconds for MaterialDatePicker
+            val calendar = Calendar.getInstance().apply {
+                set(Calendar.YEAR, currentDate.year)
+                set(Calendar.MONTH, currentDate.monthValue - 1)
+                set(Calendar.DAY_OF_MONTH, currentDate.dayOfMonth)
+            }
+
+            val datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select Purchase Date")
+                .setSelection(calendar.timeInMillis)
+                .build()
+
+            datePicker.addOnPositiveButtonClickListener { selectedDateInMillis ->
+                val selectedDate = Instant.ofEpochMilli(selectedDateInMillis)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
+
+                viewModel.onDateSelected(selectedDate)
+            }
+
+            datePicker.show(parentFragmentManager, "MaterialDatePicker")
         }
+
 
         isEditable = loadEditModeState()
         purchaseAdapter.isEditable = isEditable

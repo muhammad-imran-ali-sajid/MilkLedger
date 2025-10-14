@@ -295,8 +295,6 @@
                     android:layout_weight="1"
                     android:background="@drawable/bg_edittext_readable"
                     android:backgroundTint="@color/md_theme_primary"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:text="Save"
                     android:textColor="@color/white"
                     app:cornerRadius="8dp" />
