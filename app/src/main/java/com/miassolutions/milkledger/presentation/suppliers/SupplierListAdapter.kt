@@ -7,9 +7,7 @@ import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.databinding.ItemSupplierBinding
 import com.miassolutions.milkledger.domain.model.Supplier
 
-class SupplierListAdapter(
-
-) : BaseListAdapter<Supplier, ItemSupplierBinding>(
+class SupplierListAdapter() : BaseListAdapter<Supplier, ItemSupplierBinding>(
     inflate = ItemSupplierBinding::inflate,
     diffCallback = GenericDiffCallback(
         areItemsSame = { old, new -> old.id == new.id },

@@ -24,10 +24,10 @@ data class SalesEntryEntity(
     val customerId: String,
     val date: LocalDate = LocalDate.now(),   // ledger date
     val volume: Double,
-    val fat: Double,
-    val lr: Double,
-    val ts: Double,
+    val deduction: Double,
     val price: Double,
+    val paid : Double,
+    val balance : Double,
     val rateUsed: Double,                    // snapshot of rate at entry time
     val notes: String? = null
 )
