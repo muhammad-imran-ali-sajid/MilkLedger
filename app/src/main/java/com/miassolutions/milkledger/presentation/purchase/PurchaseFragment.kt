@@ -1,8 +1,8 @@
 package com.miassolutions.milkledger.presentation.purchase
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.biometric.BiometricManager
@@ -13,6 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
@@ -21,7 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.concurrent.Executor
@@ -30,6 +30,8 @@ import kotlin.math.roundToInt
 @AndroidEntryPoint
 class PurchaseFragment :
     BaseFragment<FragmentPurchasesBinding>(FragmentPurchasesBinding::inflate) {
+
+    override fun getMenuResId(): Int? = R.menu.purchase_menu
 
     private val prefs by lazy {
         requireContext().getSharedPreferences(
@@ -46,10 +48,8 @@ class PurchaseFragment :
         setToolbarTitle(getString(R.string.purchases))
         setupRecyclerView()
 
-        binding.btnDate.setOnClickListener {
+        binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
-
-            // Convert LocalDate to milliseconds for MaterialDatePicker
             val calendar = Calendar.getInstance().apply {
                 set(Calendar.YEAR, currentDate.year)
                 set(Calendar.MONTH, currentDate.monthValue - 1)
@@ -57,7 +57,7 @@ class PurchaseFragment :
             }
 
             val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Purchase Date")
+                .setTitleText("Select Date")
                 .setSelection(calendar.timeInMillis)
                 .build()
 
@@ -70,6 +70,18 @@ class PurchaseFragment :
             }
 
             datePicker.show(parentFragmentManager, "MaterialDatePicker")
+        }
+
+        binding.btnPrevDate.setOnClickListener {
+            val currentDate = viewModel.uiState.value.currentDate
+            val previousDate = currentDate.minusDays(1)
+            viewModel.onDateSelected(previousDate)
+        }
+
+        binding.btnNextDate.setOnClickListener {
+            val currentDate = viewModel.uiState.value.currentDate
+            val nextDate = currentDate.plusDays(1)
+            viewModel.onDateSelected(nextDate)
         }
 
 
@@ -94,6 +106,33 @@ class PurchaseFragment :
         }
 
     }
+
+    override fun onMenuItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.action_edit_mode) {
+            val switch = item.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
+
+            switch?.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    showBiometricPrompt(
+                        onSuccess = { enableEditMode() },
+                        onFailure = {
+                            switch.isChecked = false
+                            showToast("Authentication failed.")
+                        }
+                    )
+                } else {
+                    disableEditMode()
+                }
+            }
+
+            // Optionally sync switch with current state
+            switch?.isChecked = loadEditModeState()
+
+            return true
+        }
+        return false
+    }
+
 
     private fun setupRecyclerView() {
         purchaseAdapter = PurchaseAdapter(
@@ -131,7 +170,7 @@ class PurchaseFragment :
             viewModel.uiState.collectLatest { state ->
                 purchaseAdapter.submitList(state.purchasesForDate)
 
-                binding.btnDate.text = getString(
+                binding.tvSelectedDate.text = getString(
                     R.string.date_format,
                     state.currentDate.dayOfMonth,
                     state.currentDate.monthValue,

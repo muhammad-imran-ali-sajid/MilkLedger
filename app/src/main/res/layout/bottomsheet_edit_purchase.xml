@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
     android:backgroundTint="@color/white"
-    android:layoutDirection="rtl"
 
     app:cardCornerRadius="16dp"
     app:cardElevation="6dp">
@@ -46,7 +45,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="لیٹر (Volume):"
+                    android:text="Volume"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -59,7 +58,7 @@
                     android:background="@drawable/bg_edittext_readable"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
-                    android:textDirection="ltr" />
+                     />
             </LinearLayout>
 
             <!-- Fat -->
@@ -75,7 +74,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="فیٹ (FAT):"
+                    android:text="FAT"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -104,7 +103,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="ایل آر (LR):"
+                    android:text="LR"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -133,9 +132,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="ٹی ایس (TS):"
+                    android:text="TS"
                     android:textColor="#555555"
-                    android:textDirection="rtl"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -167,7 +165,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="قیمت (Price):"
+                    android:text="Price"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -200,7 +198,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="ادائیگی (Payment):"
+                    android:text="Payment"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -210,8 +208,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
-                    android:imeOptions="actionDone"
                     android:background="@drawable/bg_edittext_readable"
+                    android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
                     android:textDirection="ltr" />
@@ -229,7 +227,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="بیلنس (Balance):"
+                    android:text="Balance"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -263,7 +261,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:paddingTop="8dp"
-                    android:text="نوٹس (Notes):"
+                    android:text="Notes"
                     android:textColor="#555555"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -276,7 +274,8 @@
                     android:background="@drawable/bg_edittext_readable"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:textDirection="ltr" />
             </LinearLayout>
 
             <!-- Buttons -->
@@ -288,26 +287,29 @@
                 android:orientation="horizontal">
 
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_save"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/md_theme_primary"
-                    android:text="Save"
-                    android:textColor="@color/white"
-                    app:cornerRadius="8dp" />
+
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_cancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
+
                     android:layout_weight="1"
                     android:background="@drawable/bg_edittext_readable"
                     android:backgroundTint="@color/md_theme_primary"
                     android:text="Cancel"
+                    android:textColor="@color/white"
+                    app:cornerRadius="8dp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_save"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_edittext_readable"
+                    android:backgroundTint="@color/md_theme_primary"
+                    android:text="Save"
                     android:textColor="@color/white"
                     app:cornerRadius="8dp" />
 

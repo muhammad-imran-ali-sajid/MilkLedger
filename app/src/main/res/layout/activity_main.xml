@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
-    android:background="@drawable/bg_app"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_app"
     android:layoutDirection="rtl"
     tools:context=".presentation.MainActivity">
 
@@ -17,8 +17,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:fitsSystemWindows="true"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true">
 
             <!-- Toolbar -->
             <com.google.android.material.appbar.MaterialToolbar
@@ -27,7 +27,11 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:titleCentered="true"
+                tools:title="Milk App"
+                app:titleTextAppearance="@style/Text.H1"
+                app:titleTextColor="@color/black" />
 
             <!-- NavHost for Fragments -->
             <androidx.fragment.app.FragmentContainerView
@@ -42,19 +46,19 @@
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:navGraph="@navigation/main_nav_graph" />
 
-<!--            &lt;!&ndash; Bottom Navigation &ndash;&gt;-->
-<!--            <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--                android:id="@+id/bottomNavigationView"-->
-<!--                style="@style/BottomNavigationStyle"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="bottom"-->
-<!--                app:itemIconSize="24dp"-->
-<!--                app:labelVisibilityMode="unlabeled"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:menu="@menu/menu_bottom_nav" />-->
+            <!--            &lt;!&ndash; Bottom Navigation &ndash;&gt;-->
+            <!--            <com.google.android.material.bottomnavigation.BottomNavigationView-->
+            <!--                android:id="@+id/bottomNavigationView"-->
+            <!--                style="@style/BottomNavigationStyle"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_gravity="bottom"-->
+            <!--                app:itemIconSize="24dp"-->
+            <!--                app:labelVisibilityMode="unlabeled"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:menu="@menu/menu_bottom_nav" />-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
