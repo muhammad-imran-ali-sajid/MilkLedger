@@ -18,10 +18,10 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         val dummySalesList = listOf(
             SalesEntryEntity(
                 saleId = UUID.randomUUID().toString(),
-                customerId = "CUST001",
+                customerId = "بیکری",
                 date = LocalDate.now(),
                 volume = 10.5,
-                deduction = 0.5,
+                deduction = 1.5,
                 price = 4200.0,
                 paid = 4200.0,
                 balance = 0.0,
@@ -30,10 +30,10 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             ),
             SalesEntryEntity(
                 saleId = UUID.randomUUID().toString(),
-                customerId = "CUST002",
+                customerId = "العزیز",
                 date = LocalDate.now().minusDays(1),
                 volume = 8.0,
-                deduction = 0.3,
+                deduction = 1.3,
                 price = 3200.0,
                 paid = 3000.0,
                 balance = 200.0,
@@ -42,7 +42,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             ),
             SalesEntryEntity(
                 saleId = UUID.randomUUID().toString(),
-                customerId = "CUST003",
+                customerId = "گھر",
                 date = LocalDate.now().minusDays(2),
                 volume = 12.0,
                 deduction = 0.0,
