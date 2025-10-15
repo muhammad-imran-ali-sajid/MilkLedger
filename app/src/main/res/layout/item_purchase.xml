@@ -27,14 +27,14 @@
             android:layout_height="0dp"
             android:layout_weight="2"
             android:orientation="vertical"
-
-            android:gravity="center">
+            android:layout_marginBottom="8dp"
+            android:paddingStart="16dp"
+            android:gravity="start">
 
             <TextView
                 style="@style/TextTitleUrdu"
                 android:id="@+id/tvName"
                 android:textColor="#fff"
-
                 android:text="Ali" />
         </LinearLayout>
 
@@ -193,7 +193,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_marginBottom="3dp"
-            app:dividerColor="@color/black"
+            app:dividerColor="#eee"
              android:layout_height="1dp"/>
         <!-- Notes Row -->
         <TextView
