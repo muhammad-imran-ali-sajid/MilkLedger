@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:layoutDirection="rtl"
+    android:padding="12dp"
     >
 
     <LinearLayout
@@ -24,7 +23,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
+                android:padding="8dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -36,7 +35,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="بتاریخ :"
+                        android:text="Date: "
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/black" />
@@ -65,13 +64,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvTotalExpenseLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="خرچ"
+                            android:text="Purchases"
                             android:textStyle="bold"
                             android:textSize="14sp"
                             android:textColor="@android:color/holo_red_dark" />
@@ -90,13 +90,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvTotalIncomeLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="آمدن"
+                            android:text="Sales"
                             android:textStyle="bold"
                             android:textSize="14sp"
                             android:textColor="@android:color/holo_green_dark" />
@@ -115,13 +116,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="center"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/tvProfitLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="منافع"
+                            android:text="Profit"
+
                             android:textStyle="bold"
                             android:textSize="14sp"
                             android:textColor="@android:color/holo_blue_dark" />
@@ -177,7 +180,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="خرید"
+                        android:text="Purchase"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -207,13 +210,14 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:contentDescription="Sales"
-                        android:src="@drawable/ic_sales" />
+                        android:src="@drawable/ic_sales"
+                        card_view:tint="#212121" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="فروخت"
+                        android:text="Sales"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -252,7 +256,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="اخراجات"
+                        android:text="Expenses"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -288,7 +292,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="اعداد و شمار"
+                        android:text="Statistics"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -325,7 +329,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="سپلائر ہسٹری"
+                        android:text="History"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -355,13 +359,13 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:contentDescription="Customer History"
-                        android:src="@drawable/ic_history" />
+                        android:src="@android:drawable/ic_menu_edit" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="کسٹمر ہسٹری"
+                        android:text="Notes"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
