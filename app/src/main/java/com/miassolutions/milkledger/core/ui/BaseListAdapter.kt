@@ -45,7 +45,7 @@ abstract class BaseListAdapter<T, VB : ViewBinding>(
         }
     }
 
-    class BaseViewHolder<VB : ViewBinding>(val binding: VB) :
+   class BaseViewHolder<VB : ViewBinding>(val binding: VB) :
         RecyclerView.ViewHolder(binding.root)
 }
 

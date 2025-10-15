@@ -39,7 +39,14 @@ class CustomerListFragment :
 
     private fun setupRecyclerView() {
 
-        adapter = CustomerListAdapter { showToast("$it is clicked") }
+        adapter = CustomerListAdapter { customer ->
+            CustomerFormBottomSheetFragment(
+                customer = customer,
+                onSave = { updatedCustomer ->
+                    viewModel.saveCustomer(updatedCustomer)
+                }
+            ).show(parentFragmentManager, null)
+        }
         binding.rvCustomers.adapter = adapter
     }
 

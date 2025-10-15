@@ -39,7 +39,14 @@ class SupplierListFragment :
     }
 
     private fun setupRecyclerView() {
-        adapter = SupplierListAdapter()
+        adapter = SupplierListAdapter { supplier ->
+            SupplierFormBottomSheetFragment(
+                supplier = supplier,
+                onSave = { updatedCustomer ->
+                    viewModel.saveSupplier(updatedCustomer)
+                }
+            ).show(parentFragmentManager, null)
+        }
         binding.rvSupplier.adapter = adapter
     }
 

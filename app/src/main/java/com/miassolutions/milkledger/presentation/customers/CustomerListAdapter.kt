@@ -20,7 +20,8 @@ class CustomerListAdapter(
 ) {
     override fun bind(binding: ItemCustomerBinding, item: Customer, position: Int) = with(binding) {
         tvCustomerName.text = item.name
-        tvCustomerRate.text = item.rate.let { "Rs%.2f".format(it) }
+        tvCustomerRate.text = item.rate.let { "Rs %.2f".format(it) }
+
     }
 
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup): ItemCustomerBinding =
