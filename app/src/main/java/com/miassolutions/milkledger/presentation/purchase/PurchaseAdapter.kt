@@ -66,8 +66,10 @@ class PurchaseAdapter(
 
             if (item.purchase.notes.isNullOrBlank()) {
                 tvNotes.hide()
+                divider.hide()
             } else {
                 tvNotes.show()
+                divider.show()
                 tvNotes.text = "نوٹ: ${item.purchase.notes}"
             }
             tvPrice.text = item.purchase.price.roundToInt().toString()

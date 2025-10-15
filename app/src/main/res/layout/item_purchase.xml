@@ -10,6 +10,7 @@
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
+    android:backgroundTint="#263238"
     app:cardCornerRadius="12dp"
     app:cardElevation="8dp"
     >
@@ -20,32 +21,35 @@
         android:orientation="vertical"
         android:padding="8dp">
 
+        <!-- Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="vertical"
+
+            android:gravity="center">
+
+            <TextView
+                style="@style/TextTitleUrdu"
+                android:id="@+id/tvName"
+                android:textColor="#fff"
+
+                android:text="Ali" />
+        </LinearLayout>
+
+
+
         <!-- Row 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="6"
-            android:paddingBottom="8dp">
+            android:weightSum="4"
+            android:layout_marginBottom="4dp"
+            >
 
-            <!-- Name -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:orientation="vertical"
-                android:paddingStart="8dp"
-                android:gravity="start">
 
-                <TextView
-                    style="@style/TextLabel"
-                    android:text="Name" />
-
-                <TextView
-                    style="@style/TextTitleUrdu"
-                    android:id="@+id/tvName"
-                    android:text="Ali" />
-            </LinearLayout>
 
             <!-- Volume -->
             <LinearLayout
@@ -126,7 +130,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="3"
-            android:paddingBottom="8dp">
+            >
 
             <!-- Price -->
             <LinearLayout
@@ -185,10 +189,18 @@
             </LinearLayout>
         </LinearLayout>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="3dp"
+            app:dividerColor="@color/black"
+             android:layout_height="1dp"/>
         <!-- Notes Row -->
         <TextView
             android:id="@+id/tvNotes"
-            style="@style/TextNote"
+            style="@style/TextTitleUrdu"
+            android:textSize="16sp"
+
             tools:text="نوٹ: کوئی بات نہیں لکھی گئی" />
 
     </LinearLayout>

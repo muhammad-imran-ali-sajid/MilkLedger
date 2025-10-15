@@ -98,17 +98,51 @@ class PurchaseEditBottomSheet(
 
             // Save button
             btnSave.setOnClickListener {
+                val volumeText = etVolume.text.toString()
+                val fatText = etFat.text.toString()
+                val lrText = etLr.text.toString()
+
+                val volume = volumeText.toDoubleOrNull()
+                val fat = fatText.toDoubleOrNull()
+                val lr = lrText.toDoubleOrNull()
+
+                // Mandatory check: volume must not be null or zero
+                if (volume == null || volume <= 0) {
+                    etVolume.error = "Volume is required and must be greater than 0"
+                    etVolume.requestFocus()
+                    return@setOnClickListener
+                }
+
+                // Optional check: fat range validation
+                if (fatText.isNotEmpty()) {
+                    if (fat == null || fat < 3.0 || fat > 7.0) {
+                        etFat.error = "Fat must be between 3.0 and 7.0"
+                        etFat.requestFocus()
+                        return@setOnClickListener
+                    }
+                }
+
+                // Optional check: LR range validation
+                if (lrText.isNotEmpty()) {
+                    if (lr == null || lr < 15.0 || lr > 32.0) {
+                        etLr.error = "LR must be between 15.0 and 32.0"
+                        etLr.requestFocus()
+                        return@setOnClickListener
+                    }
+                }
+
                 val updatedPurchase = purchase.copy(
-                    volume = etVolume.text.toString().toDoubleOrNull() ?: 0.0,
-                    fat = etFat.text.toString().toDoubleOrNull() ?: 0.0,
-                    lr = etLr.text.toString().toDoubleOrNull() ?: 0.0,
+                    volume = volume,
+                    fat = fat ?: 0.0,
+                    lr = lr ?: 0.0,
                     paid = etPaid.text.toString().toDoubleOrNull() ?: 0.0,
                     notes = etNotes.text.toString()
                 )
-//                val updatedEntry = entry.copy(purchase = updatedPurchase)
+
                 onSave(updatedPurchase)
                 dismiss()
             }
+
 
             btnCancel.setOnClickListener { dismiss() }
         }
