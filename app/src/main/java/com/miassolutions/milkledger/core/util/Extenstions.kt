@@ -1,34 +1,18 @@
 package com.miassolutions.milkledger.core.util
 
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.EditText
-import com.miassolutions.milkledger.R
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import android.view.View
 
-fun Long.toFormattedString(prefix: String = "db_"): String {
-    val formatter = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-    val formattedDate = formatter.format(Date(this))
-    return "$prefix$formattedDate"
+
+fun Double.toRoundedStr(): String {
+    return "%.1f".format(this)
 }
 
-
-
-
-fun EditText.clearTextWatchers() {
-    val watchers = this.tag as? MutableList<TextWatcher> ?: mutableListOf()
-    watchers.forEach { removeTextChangedListener(it) }
-    watchers.clear()
-    this.tag = watchers
+fun View.hide(){
+    this.visibility = View.GONE
 }
 
-fun EditText.addTextWatcher(watcher: TextWatcher) {
-    val watchers = (this.tag as? MutableList<TextWatcher>) ?: mutableListOf()
-    watchers.add(watcher)
-    this.tag = watchers
-    addTextChangedListener(watcher)
+fun View.show(){
+    this.visibility = View.VISIBLE
 }
 
 

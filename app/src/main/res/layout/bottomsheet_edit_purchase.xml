@@ -28,6 +28,9 @@
                 android:paddingVertical="12dp"
                 android:text="سپلائر کا نام"
                 android:textAlignment="center"
+                style="@style/TextTitleUrdu"
+                android:backgroundTint="@color/textview_bg_tint"
+                android:background="@drawable/bg_edittext_readable"
                 android:textColor="@android:color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />

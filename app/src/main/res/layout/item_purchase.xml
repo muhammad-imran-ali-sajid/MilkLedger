@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginVertical="6dp"
+    android:layout_marginVertical="4dp"
     android:layout_marginHorizontal="8dp"
-    app:cardCornerRadius="12dp"
     android:layoutDirection="rtl"
-    app:cardElevation="4dp"
-    app:cardBackgroundColor="@color/milk_cream"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="8dp"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,145 +20,107 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <!-- Row 1: Labels Above Values -->
+        <!-- Row 1 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="6"
-
             android:orientation="horizontal"
+            android:weightSum="6"
             android:paddingBottom="8dp">
 
             <!-- Name -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="2"
                 android:layout_height="wrap_content"
+                android:layout_weight="2"
                 android:orientation="vertical"
                 android:paddingStart="8dp"
                 android:gravity="start">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Name"
-                    android:textColor="#555555"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    style="@style/TextLabel"
+                    android:text="Name" />
 
                 <TextView
+                    style="@style/TextTitleUrdu"
                     android:id="@+id/tvName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ali"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:text="Ali" />
             </LinearLayout>
 
             <!-- Volume -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Milk"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="#555555" />
+                    style="@style/TextLabel"
+                    android:text="Milk" />
 
                 <TextView
+                    style="@style/TextValue"
                     android:id="@+id/tvVolume"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="3.5"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    tools:text="3.5" />
             </LinearLayout>
 
             <!-- Fat -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Fat"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="#555555" />
+                    style="@style/TextLabel"
+                    android:text="Fat" />
 
                 <TextView
+                    style="@style/TextValue"
                     android:id="@+id/tvFat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="4.5"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    tools:text="4.5" />
             </LinearLayout>
 
             <!-- LR -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="LR"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="#555555" />
+                    style="@style/TextLabel"
+                    android:text="LR" />
 
                 <TextView
+                    style="@style/TextValue"
                     android:id="@+id/tvLr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="28.1"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    tools:text="28.1" />
             </LinearLayout>
 
             <!-- TS -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
-
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="TS"
-                    android:textSize="14sp"
-                    android:textColor="#555555"
-                    android:textStyle="bold" />
+                    style="@style/TextLabel"
+                    android:text="TS" />
 
                 <TextView
+                    style="@style/TextValue"
                     android:id="@+id/tvTs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    tools:text="8.4"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    tools:text="8.4" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Row 2: قیمت، ادائیگی، بیلنس -->
+        <!-- Row 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -169,95 +131,65 @@
             <!-- Price -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="قیمت"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/TextTitleUrdu"
+                    android:text="قیمت" />
 
                 <TextView
+                    style="@style/TextValue"
                     android:id="@+id/tvPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10000"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:text="10000" />
             </LinearLayout>
 
             <!-- Paid -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ادائیگی"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/TextTitleUrdu"
+                    android:text="ادائیگی" />
 
                 <TextView
+                    style="@style/TextValue"
                     android:id="@+id/tvPaid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="10000"
-                    android:textColor="@color/success"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/success" />
             </LinearLayout>
 
             <!-- Balance -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="بیلنس"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-
-                    android:textStyle="bold" />
+                    style="@style/TextTitleUrdu"
+                    android:text="بیلنس" />
 
                 <TextView
+                    style="@style/TextValue"
                     android:id="@+id/tvBalance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="10000"
-                    android:textDirection="ltr"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textDirection="ltr" />
             </LinearLayout>
         </LinearLayout>
 
-
-        <!-- Row 3: نوٹ -->
+        <!-- Notes Row -->
         <TextView
             android:id="@+id/tvNotes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:paddingTop="4dp"
-            tools:text="نوٹ: کوئی بات نہیں لکھی گئی"
-            android:textColor="#444444"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            style="@style/TextNote"
+            tools:text="نوٹ: کوئی بات نہیں لکھی گئی" />
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

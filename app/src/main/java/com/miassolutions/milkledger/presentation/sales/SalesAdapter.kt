@@ -4,23 +4,26 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
-import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
+import com.miassolutions.milkledger.core.util.hide
+import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.ItemSalesEntryBinding
 
 class SalesEntryAdapter(
-    onItemClick: ((SalesEntryEntity) -> Unit)? = null
-) : BaseListAdapter<SalesEntryEntity, ItemSalesEntryBinding>(
-    diffCallback = object : DiffUtil.ItemCallback<SalesEntryEntity>() {
+    onItemClick: ((SaleWithCustomer) -> Unit)? = null
+) : BaseListAdapter<SaleWithCustomer, ItemSalesEntryBinding>(
+    diffCallback = object : DiffUtil.ItemCallback<SaleWithCustomer>() {
         override fun areItemsTheSame(
-            oldItem: SalesEntryEntity,
-            newItem: SalesEntryEntity
+            oldItem: SaleWithCustomer,
+            newItem: SaleWithCustomer
         ): Boolean {
-            return oldItem.saleId == newItem.saleId
+            return oldItem.customer.customerId == newItem.customer.customerId
         }
 
         override fun areContentsTheSame(
-            oldItem: SalesEntryEntity,
-            newItem: SalesEntryEntity
+            oldItem: SaleWithCustomer,
+            newItem: SaleWithCustomer
         ): Boolean {
             return oldItem == newItem
         }
@@ -33,18 +36,26 @@ class SalesEntryAdapter(
         return ItemSalesEntryBinding.inflate(inflater, parent, false)
     }
 
-    override fun bind(binding: ItemSalesEntryBinding, item: SalesEntryEntity, position: Int) {
+    override fun bind(binding: ItemSalesEntryBinding, item: SaleWithCustomer, position: Int) {
         binding.apply {
             tvCustomerName.text =
-                item.customerId  // You should replace this with actual customer name lookup
-            tvVolume.text = item.volume.toString()
-            tvDeduction.text = item.deduction.toString()
-            tvTotal.text = item.price.toString()
-            tvPrice.text = item.price.toString()
-            tvPaid.text = item.price.toString() // Assuming full payment for simplicity
+                item.customer.customerName  // You should replace this with actual customer name lookup
+            tvVolume.text = item.sale.volume.toRoundedStr()
+            tvDeduction.text = item.sale.deduction.toRoundedStr()
+            tvTotal.text = item.sale.price.toRoundedStr()
+            tvPrice.text = item.sale.price.toRoundedStr()
+            tvPaid.text = item.sale.price.toRoundedStr() // Assuming full payment for simplicity
             tvBalance.text = "0" // Placeholder, compute if needed
-            tvNotes.text =
-                if (item.notes.isNullOrBlank()) "نوٹ: کچھ نہیں لکھا گیا" else "نوٹ: ${item.notes}"
+
+            if (item.sale.notes.isNullOrBlank()) {
+                tvNotes.hide()
+            } else {
+                tvNotes.show()
+                tvNotes.text = "نوٹ: ${item.sale.notes}"
+            }
+
         }
     }
+
+
 }

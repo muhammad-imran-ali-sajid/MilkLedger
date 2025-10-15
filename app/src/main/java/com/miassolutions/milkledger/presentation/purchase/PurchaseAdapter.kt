@@ -7,6 +7,9 @@ import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.util.hide
+import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 import kotlin.math.roundToInt
@@ -37,11 +40,16 @@ class PurchaseAdapter(
 
         fun bind(item: PurchaseWithSupplier) = with(binding) {
             tvName.text = item.supplier.supplierName
-            tvFat.text = "%.1f".format(item.purchase.fat)
-            tvVolume.text = "%.1f".format(item.purchase.volume)
-            tvLr.text = "%.1f".format(item.purchase.lr)
-            tvTs.text = "%.1f".format(item.purchase.ts)
-            tvNotes.text = item.purchase.notes
+            tvFat.text = item.purchase.fat.toRoundedStr()
+            tvVolume.text = item.purchase.volume.toRoundedStr()
+            tvLr.text = item.purchase.lr.toRoundedStr()
+            tvTs.text = item.purchase.ts.toRoundedStr()
+            if (item.purchase.notes.isNullOrBlank()) {
+                tvNotes.hide()
+            } else {
+                tvNotes.show()
+                tvNotes.text = "نوٹ: ${item.purchase.notes}"
+            }
             tvPrice.text = item.purchase.price.roundToInt().toString()
             tvPaid.text = item.purchase.paid.roundToInt().toString()
 
@@ -62,6 +70,11 @@ class PurchaseAdapter(
             tvBalance.text = balanceText
             tvBalance.setTextColor(color)
 
+            if (bindingAdapterPosition % 2 == 0) {
+                root.setCardBackgroundColor("#dedede".toColorInt())
+            } else {
+                root.setCardBackgroundColor("#ffffff".toColorInt())
+            }
             root.setOnClickListener { onItemClick(item) }
         }
     }
