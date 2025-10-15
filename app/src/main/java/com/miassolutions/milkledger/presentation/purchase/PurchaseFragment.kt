@@ -16,6 +16,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -109,7 +110,8 @@ class PurchaseFragment :
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_edit_mode) {
-            val switch = item.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
+            val switch =
+                item.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
 
             switch?.setOnCheckedChangeListener { _, isChecked ->
                 if (isChecked) {
@@ -179,10 +181,10 @@ class PurchaseFragment :
 
                 binding.tvTotalAmount.text =
                     getString(R.string.rs, state.grandTotalForDate.roundToInt())
-                binding.tvTotalMilk.text = "%.2f".format(state.totalVolume)
-                binding.tvAvgFat.text = "%.2f".format(state.avgFat)
-                binding.tvAvgLr.text = "%.2f".format(state.avgLr)
-                binding.tvAvgPrice.text = "%.2f".format(state.avgRatePerLiter)
+                binding.tvTotalMilk.text = state.totalVolume.toRoundedStr()
+                binding.tvAvgFat.text = state.avgFat.toRoundedStr()
+                binding.tvAvgLr.text = state.avgLr.toRoundedStr()
+                binding.tvAvgPrice.text = state.avgRatePerLiter.toRoundedStr()
             }
         }
     }
