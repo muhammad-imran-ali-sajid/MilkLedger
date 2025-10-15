@@ -54,7 +54,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_volume"
+                    android:id="@+id/etVolume"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -83,7 +83,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_fat"
+                    android:id="@+id/etDeduction"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
@@ -111,11 +111,12 @@
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/et_lr"
+                <TextView
+                    android:id="@+id/tvNetMilk"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
+                    android:backgroundTint="@color/textview_bg_tint"
                     android:background="@drawable/bg_edittext_readable"
                     android:inputType="numberDecimal"
                     android:padding="10dp"

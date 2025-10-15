@@ -25,6 +25,7 @@ data class SalesEntryEntity(
     val date: LocalDate = LocalDate.now(),   // ledger date
     val volume: Double,
     val deduction: Double,
+    val netMilk: Double,
     val price: Double,
     val paid : Double,
     val balance : Double,
