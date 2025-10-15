@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -38,6 +39,7 @@ class SalesEditBottomSheet(
         setupInitialData()
         setupRecalculation()
         setupSaveButton()
+        autoSelection()
         binding.btnCancel.setOnClickListener { dismiss() }
 
 
@@ -66,6 +68,20 @@ class SalesEditBottomSheet(
 
             // Initial calculation
             recalculateAll()
+        }
+    }
+
+    private fun autoSelection() = with(binding) {
+        autoSelectOnFocus(etVolume)
+        autoSelectOnFocus(etDeduction)
+        autoSelectOnFocus(etPayment)
+        autoSelectOnFocus(etNotes)
+    }
+
+    private fun autoSelectOnFocus(editText: EditText) {
+        editText.setSelectAllOnFocus(true)
+        editText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) (v as EditText).selectAll()
         }
     }
 

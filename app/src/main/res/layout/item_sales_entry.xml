@@ -27,7 +27,8 @@
             android:layout_height="wrap_content"
             android:text="ظفر عباس"
             android:paddingStart="16dp"
-            style="@style/TextValue" />
+            android:layout_marginBottom="8dp"
+            style="@style/TextTitleUrdu" />
 
         <!-- Row 1: Labels and Values -->
         <LinearLayout
