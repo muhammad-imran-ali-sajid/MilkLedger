@@ -143,13 +143,13 @@
                         style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="گرینڈ ٹوٹل"
+                        android:text="Net Milk"
                         android:textColor="#444444"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_avg_fat"
+                        android:id="@+id/tvTotalNetMilk"
                         style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -170,13 +170,13 @@
                         style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="کاٹ"
+                        android:text="Deduction"
                         android:textColor="#444444"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_avg_lr"
+                        android:id="@+id/tvDeduction"
                         style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -198,13 +198,13 @@
                         style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="🥛 توٹل"
+                        android:text="🥛Total Milk"
                         android:textColor="#444444"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_total_milk"
+                        android:id="@+id/tvTotalMilk"
                         style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -241,7 +241,7 @@
                         style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💸 اوسط قیمت"
+                        android:text="💸 Avg Amount"
                         android:textColor="#444444"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -268,7 +268,7 @@
                         style="@style/Text.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="💰 ٹوٹل قیمت"
+                        android:text="💰 Total Amount"
                         android:textColor="#444444"
                         android:textSize="14sp"
                         android:textStyle="bold" />

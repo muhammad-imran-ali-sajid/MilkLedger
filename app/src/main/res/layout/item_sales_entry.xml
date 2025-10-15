@@ -50,7 +50,7 @@
                     style="@style/TextLabel" />
 
                 <TextView
-                    android:id="@+id/tvVolume"
+                    android:id="@+id/tvMilk"
                     tools:text="40.0"
                     style="@style/TextValue" />
             </LinearLayout>
@@ -86,7 +86,7 @@
                     style="@style/TextLabel" />
 
                 <TextView
-                    android:id="@+id/tvTotal"
+                    android:id="@+id/tvNetMilk"
                     tools:text="38.0"
                     style="@style/TextValue" />
             </LinearLayout>
@@ -131,7 +131,7 @@
                     style="@style/TextTitleUrdu" />
 
                 <TextView
-                    android:id="@+id/tvPaid"
+                    android:id="@+id/tvPayment"
                     android:text="10000"
                     style="@style/TextValue" />
             </LinearLayout>

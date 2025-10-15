@@ -1,24 +1,17 @@
 package com.miassolutions.milkledger.presentation.sales
 
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
-import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
-import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding
 import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
 import kotlin.math.roundToInt
 
@@ -41,121 +34,111 @@ class SalesEditBottomSheet(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val sale = entry.sale
-        val customer = entry.customer
 
+        setupInitialData()
+        setupRecalculation()
+        setupSaveButton()
+        binding.btnCancel.setOnClickListener { dismiss() }
+
+
+    }
+
+    private fun setupRecalculation() {
+        val watcher: (CharSequence?, Int, Int, Int) -> Unit = { _, _, _, _ ->
+            recalculateAll()
+        }
+
+        binding.etVolume.doOnTextChanged(watcher)
+        binding.etDeduction.doOnTextChanged(watcher)
+        binding.etPayment.doOnTextChanged(watcher)
+    }
+
+    private fun setupInitialData() {
         binding.apply {
-            // Show supplier info
-            tvSupplierName.text = customer.customerName
+            tvCustomerName.text = entry.customer.customerName
+            etVolume.setText(entry.sale.volume.toString())
+            etDeduction.setText(entry.sale.deduction.toString())
+            etPayment.setText(entry.sale.paid.toString())
+            etNotes.setText(entry.sale.notes ?: "")
 
-            // Apply to all EditTexts
-            autoSelectOnFocus(etVolume)
-            autoSelectOnFocus(etPaid)
-            autoSelectOnFocus(etNotes)
+//            val rate = entry.customer.customerRate
+//            tvRate.text = "Rate: Rs. ${rate.toRoundedStr()}"
 
-            // Fill fields
-            sale.apply {
-                etVolume.setText(volume.toString())
-                etDeduction.setText(deduction.toString())
-                tvNetMilk.text = netMilk.toString()
-                tvPrice.text = price.toString()
-                etPaid.setText(paid.toString())
-                tvBalance.text = balance.roundToInt().toString()
-                etNotes.setText(notes ?: "")
-            }
-
-
-            // Recalculate price initially
-            recalculateBalance()
-
-
-            val textChangedListener: (CharSequence?, Int, Int, Int) -> Unit = { _, _, _, _ ->
-                recalculateBalance()
-            }
-
-            etVolume.doOnTextChanged(textChangedListener)
-            etDeduction.doOnTextChanged(textChangedListener)
-
-            // Add this only once to watch changes on etPaid
-            etPaid.doOnTextChanged { _, _, _, _ ->
-                recalculateBalance()
-            }
-
-
-            etPaid.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-
-                    // Hide the keyboard
-                    val imm =
-                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(etNotes.windowToken, 0)
-
-                    true
-                } else {
-                    false
-                }
-            }
-
-
-            // Save button
-            btnSave.setOnClickListener {
-                val volumeText = etVolume.text.toString()
-
-                val volume = volumeText.toDoubleOrNull()
-
-                // Mandatory check: volume must not be null or zero
-                if (volume == null || volume <= 0) {
-                    etVolume.error = "Volume is required and must be greater than 0"
-                    etVolume.requestFocus()
-                    return@setOnClickListener
-                }
-
-
-                val updatedPurchase = sale.copy(
-                    volume = volume,
-                    paid = etPaid.text.toString().toDoubleOrNull() ?: 0.0,
-                    notes = etNotes.text.toString()
-                )
-
-                onSave(updatedPurchase)
-                dismiss()
-            }
-
-
-            btnCancel.setOnClickListener { dismiss() }
+            // Initial calculation
+            recalculateAll()
         }
     }
 
-    private fun recalculateBalance() {
-        val price = binding.tvPrice.text.toString().toDoubleOrNull() ?: 0.0
-        val paid = binding.etPaid.text.toString().toDoubleOrNull() ?: 0.0
+    private fun setupSaveButton() {
+        binding.btnSave.setOnClickListener {
+            val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
+            if (volume <= 0) {
+                binding.etVolume.error = "Volume must be greater than 0"
+                binding.etVolume.requestFocus()
+                return@setOnClickListener
+            }
+
+            val deduction = binding.etDeduction.text.toString().toDoubleOrNull() ?: 0.0
+            val paid = binding.etPayment.text.toString().toDoubleOrNull() ?: 0.0
+            val rate = entry.customer.customerRate
+            val netMilk = (volume - deduction).coerceAtLeast(0.0)
+
+            val price = MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate)
+            val balance = price - paid
+
+            val updated = entry.sale.copy(
+                volume = volume,
+                deduction = deduction,
+                netMilk = netMilk,
+                price = price,
+                paid = paid,
+                balance = balance,
+                notes = binding.etNotes.text.toString()
+            )
+
+            onSave(updated)
+            dismiss()
+
+
+        }
+    }
+
+
+    private fun recalculateAll() {
+        val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
+        val deduction = binding.etDeduction.text.toString().toDoubleOrNull() ?: 0.0
+        val paid = binding.etPayment.text.toString().toDoubleOrNull() ?: 0.0
+        val rate = entry.customer.customerRate
+
+        // 1️⃣ Net Milk
+        val netMilk = (volume - deduction).coerceAtLeast(0.0)
+        binding.tvNetMilk.text = "${netMilk.toRoundedStr()} L"
+
+        // 2️⃣ Price
+        val price = MilkCalculationUtils.calculateCustomerPrice(
+            volume = volume,
+            deduction = deduction,
+            rate = rate
+        )
+        binding.tvPrice.text = "${price.toRoundedStr()}"
+
+        // 3️⃣ Balance
         val balance = price - paid
-
-        binding.tvBalance.text = balance.toRoundedStr()
-
         val color = when {
             balance < 0 -> Color.RED
             balance == 0.0 -> "#000000".toColorInt()
-            else -> "#4CAF50".toColorInt() // Material green 500
+            else -> "#4CAF50".toColorInt()
         }
 
-        // Format balance text with + sign if positive
-        val balanceText = when {
-            balance > 0 -> "+${balance.roundToInt()}"
-            else -> balance.roundToInt().toString()
-        }
+        val balanceText = if (balance > 0)
+            "+${balance.roundToInt()}"
+        else
+            balance.roundToInt().toString()
 
-        binding.tvBalance.text = balanceText
+        binding.tvBalance.text = "$balanceText"
         binding.tvBalance.setTextColor(color)
     }
 
-
-    private fun autoSelectOnFocus(editText: EditText) {
-        editText.setSelectAllOnFocus(true)
-        editText.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) (v as EditText).selectAll()
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

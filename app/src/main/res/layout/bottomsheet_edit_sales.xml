@@ -22,7 +22,7 @@
 
             <!-- Supplier Name -->
             <TextView
-                android:id="@+id/tv_supplier_name"
+                android:id="@+id/tv_customer_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="12dp"
@@ -176,7 +176,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/et_paid"
+                    android:id="@+id/etPayment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"

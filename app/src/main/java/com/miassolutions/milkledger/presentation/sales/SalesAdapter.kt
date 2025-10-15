@@ -40,11 +40,11 @@ class SalesEntryAdapter(
         binding.apply {
             tvCustomerName.text =
                 item.customer.customerName  // You should replace this with actual customer name lookup
-            tvVolume.text = item.sale.volume.toRoundedStr()
+            tvMilk.text = item.sale.volume.toRoundedStr()
             tvDeduction.text = item.sale.deduction.toRoundedStr()
-            tvTotal.text = item.sale.price.toRoundedStr()
+            tvNetMilk.text = item.sale.netMilk.toRoundedStr()
             tvPrice.text = item.sale.price.toRoundedStr()
-            tvPaid.text = item.sale.price.toRoundedStr() // Assuming full payment for simplicity
+            tvPayment.text = item.sale.price.toRoundedStr() // Assuming full payment for simplicity
             tvBalance.text = "0" // Placeholder, compute if needed
 
             if (item.sale.notes.isNullOrBlank()) {

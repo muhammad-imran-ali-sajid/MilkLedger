@@ -18,8 +18,4 @@ data class SalesUiState(
 
 sealed class  SalesUiEvent {
     data class OnCustomerSelected(val supplierId: String) : SalesUiEvent()
-    data class OnVolumeChanged(val entryId: String, val volume: Double) : SalesUiEvent()
-    data class OnDeductionChanged(val entryId: String, val deduction: Double) : SalesUiEvent()
-    data class OnPaidChanged(val entryId: String, val paid: Double) : SalesUiEvent()
-    data class OnNotesChanged(val entryId: String, val notes: String) : SalesUiEvent()
 }

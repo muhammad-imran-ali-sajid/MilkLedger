@@ -24,7 +24,6 @@ class PurchaseViewModel @Inject constructor(
     private val repository: PurchaseRepository
 ) : ViewModel() {
 
-    private var updateJob: Job? = null
 
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
@@ -49,7 +48,7 @@ class PurchaseViewModel @Inject constructor(
                 lr = updated.lr
             )
 
-            val newBalance =  updated.paid - newPrice
+            val newBalance = updated.paid - newPrice
 
             val finalEntry = updated.copy(
                 ts = newTs,
@@ -129,84 +128,6 @@ class PurchaseViewModel @Inject constructor(
     }
 
 
-    // ----------------------------------------------------------
-    // ✏️ Update entry (used by BottomSheet)
-    // ----------------------------------------------------------
-    fun updatePurchaseEntry(updated: PurchaseEntryEntity) {
-        viewModelScope.launch {
-            repository.updatePurchase(updated)
-        }
-    }
-
-    // ----------------------------------------------------------
-    // ✏️ Inline field updates (auto-save while typing)
-    // ----------------------------------------------------------
-    private fun updateField(
-        entryId: String,
-        volume: Double? = null,
-        fat: Double? = null,
-        lr: Double? = null,
-        paid: Double? = null,
-        notes: String? = null
-    ) {
-        val updatedList = _uiState.value.purchasesForDate.map { item ->
-            if (item.purchase.purchaseId == entryId) {
-                val newPurchase = recalculatePurchase(item, volume, fat, lr, paid, notes)
-                debounceUpdate(newPurchase)
-                item.copy(purchase = newPurchase)
-            } else item
-        }
-
-        val newGrandTotal = updatedList.sumOf { it.purchase.price }
-        _uiState.update {
-            it.copy(
-                purchasesForDate = updatedList,
-                grandTotalForDate = newGrandTotal
-            )
-        }
-    }
-
-    private fun recalculatePurchase(
-        item: PurchaseWithSupplier,
-        volume: Double?,
-        fat: Double?,
-        lr: Double?,
-        paid: Double?,
-        notes: String?
-    ): PurchaseEntryEntity {
-        val v = volume ?: item.purchase.volume
-        val f = fat ?: item.purchase.fat
-        val l = lr ?: item.purchase.lr
-        val p = paid ?: item.purchase.paid
-
-        val newPrice = MilkCalculationUtils.calculatePrice(
-            rate = item.purchase.rateUsed,
-            volume = v,
-            fat = f,
-            lr = l
-        )
-
-        val newBalance = newPrice - p
-
-        return item.purchase.copy(
-            volume = v,
-            fat = f,
-            lr = l,
-            ts = MilkCalculationUtils.calculateTS(f, l, v),
-            price = newPrice,
-            paid = p,
-            balance = newBalance,
-            notes = notes ?: item.purchase.notes
-        )
-    }
-
-    private fun debounceUpdate(purchase: PurchaseEntryEntity) {
-        updateJob?.cancel()
-        updateJob = viewModelScope.launch {
-            delay(400)
-            repository.updatePurchase(purchase)
-        }
-    }
 
     // ----------------------------------------------------------
     // ⚡ Handle UI Events
@@ -216,20 +137,6 @@ class PurchaseViewModel @Inject constructor(
             is PurchaseUiEvent.OnSupplierSelected ->
                 _uiState.update { it.copy(navigateToLedgerForSupplierId = event.supplierId) }
 
-            is PurchaseUiEvent.OnVolumeChanged ->
-                updateField(event.entryId, volume = event.volume)
-
-            is PurchaseUiEvent.OnFatChanged ->
-                updateField(event.entryId, fat = event.fat)
-
-            is PurchaseUiEvent.OnLrChanged ->
-                updateField(event.entryId, lr = event.lr)
-
-            is PurchaseUiEvent.OnPaidChanged ->
-                updateField(event.entryId, paid = event.paid)
-
-            is PurchaseUiEvent.OnNotesChanged ->
-                updateField(event.entryId, notes = event.notes)
         }
     }
 

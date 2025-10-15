@@ -22,7 +22,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         setToolbarTitle(getString(R.string.sales))
 
         setupSalesRV()
-        viewModel.loadSalesForDate(LocalDate.now())
+
 
 
     }
@@ -65,7 +65,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         SalesEditBottomSheet(
             entry = saleWithCustomer,
             onSave = { salesEntryEntity ->
-                viewModel.insertOrUpdateSale(salesEntryEntity)
+                viewModel.updateSaleManually(salesEntryEntity)
 
             }
         ).show(parentFragmentManager, "SaleEditBottomSheet")

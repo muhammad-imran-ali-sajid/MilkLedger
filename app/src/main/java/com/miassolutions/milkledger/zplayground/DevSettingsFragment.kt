@@ -77,11 +77,11 @@ class DevSettingsFragment : Fragment() {
         // Insert dummy customers
         customerDao.insertAll(
             listOf(
-                CustomerEntity(customerName = "گھر", customerRate = 170.0, sortOrder = 1),
-                CustomerEntity(customerName = "العزیز", customerRate = 180.0, sortOrder = 2),
-                CustomerEntity(customerName = "العزیز گھر", customerRate = 195.0, sortOrder = 3),
-                CustomerEntity(customerName = "بیکری", customerRate = 195.0, sortOrder = 4),
-                CustomerEntity(customerName = "بیکری گھر", customerRate = 195.0, sortOrder = 5),
+                CustomerEntity(customerName = "گھر", customerRate = 100.0, sortOrder = 1),
+                CustomerEntity(customerName = "العزیز", customerRate = 50.0, sortOrder = 2),
+                CustomerEntity(customerName = "العزیز گھر", customerRate = 200.0, sortOrder = 3),
+                CustomerEntity(customerName = "بیکری", customerRate = 150.0, sortOrder = 4),
+                CustomerEntity(customerName = "بیکری گھر", customerRate = 131.0, sortOrder = 5),
             )
         )
 

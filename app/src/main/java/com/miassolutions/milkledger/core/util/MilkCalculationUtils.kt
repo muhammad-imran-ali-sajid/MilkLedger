@@ -27,4 +27,9 @@ object MilkCalculationUtils {
             rate * ts
         }
     }
+
+
+    fun calculateCustomerPrice(volume: Double, deduction: Double, rate: Double): Double {
+        return (volume - deduction) * rate
+    }
 }
