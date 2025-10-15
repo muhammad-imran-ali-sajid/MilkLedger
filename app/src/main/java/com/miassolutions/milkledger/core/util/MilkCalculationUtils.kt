@@ -5,9 +5,16 @@ object MilkCalculationUtils {
 
     // Total Solids formula (example)
     fun calculateTS(fat: Double, lr: Double, volume: Double): Double {
-        val snf = 0.72 + (lr * 0.25) + (fat * 0.22)
-        val ts = ((snf + fat) * volume) / 13.0
-        return ts
+
+        return if (fat == 0.0 && lr == 0.0) {
+            0.0
+        } else {
+            val snf = 0.72 + (lr * 0.25) + (fat * 0.22)
+            val ts = ((snf + fat) * volume) / 13.0
+            return ts
+        }
+
+
     }
 
     // Price formula using rate snapshot

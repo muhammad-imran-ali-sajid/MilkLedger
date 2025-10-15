@@ -40,10 +40,30 @@ class PurchaseAdapter(
 
         fun bind(item: PurchaseWithSupplier) = with(binding) {
             tvName.text = item.supplier.supplierName
-            tvFat.text = item.purchase.fat.toRoundedStr()
+
             tvVolume.text = item.purchase.volume.toRoundedStr()
-            tvLr.text = item.purchase.lr.toRoundedStr()
-            tvTs.text = item.purchase.ts.toRoundedStr()
+
+            if (item.purchase.fat == 0.0) {
+                tvFat.text = "NA"
+            } else {
+                tvFat.text = item.purchase.fat.toRoundedStr()
+            }
+
+
+            if (item.purchase.lr == 0.0) {
+                tvLr.text = "NA"
+            } else {
+                tvLr.text = item.purchase.lr.toRoundedStr()
+            }
+
+
+            if (item.purchase.ts == 0.0) {
+                tvTs.text = "NA"
+            } else {
+                tvTs.text = item.purchase.ts.toRoundedStr()
+            }
+
+
             if (item.purchase.notes.isNullOrBlank()) {
                 tvNotes.hide()
             } else {

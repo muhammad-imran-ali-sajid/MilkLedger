@@ -3,26 +3,22 @@ package com.miassolutions.milkledger.presentation.purchase
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding
-import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.roundToInt
-import androidx.core.graphics.toColorInt
 
-@AndroidEntryPoint
+
 class PurchaseEditBottomSheet(
     private val entry: PurchaseWithSupplier,
     private val onSave: (PurchaseEntryEntity) -> Unit
