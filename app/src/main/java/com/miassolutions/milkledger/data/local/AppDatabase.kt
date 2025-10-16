@@ -4,10 +4,12 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
+import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseEntryDao
 import com.miassolutions.milkledger.data.local.daos.SalesEntryDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
@@ -17,7 +19,8 @@ import com.miassolutions.milkledger.data.local.entities.SupplierEntity
         CustomerEntity::class,
         SupplierEntity::class,
         PurchaseEntryEntity::class,
-        SalesEntryEntity::class
+        SalesEntryEntity::class,
+        ExpensesEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -29,4 +32,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun supplierDao(): SupplierDao
     abstract fun purchaseEntryDao(): PurchaseEntryDao
     abstract fun salesEntryDao(): SalesEntryDao
+    abstract fun expensesDao() : ExpensesDao
 }

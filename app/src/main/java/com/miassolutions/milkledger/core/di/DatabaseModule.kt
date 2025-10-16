@@ -5,9 +5,11 @@ import androidx.room.Room
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
+import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseEntryDao
 import com.miassolutions.milkledger.data.local.daos.SalesEntryDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,4 +44,8 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideSalesDao(db: AppDatabase): SalesEntryDao = db.salesEntryDao()
+
+    @Singleton
+    @Provides
+    fun providesExpensesDao(db: AppDatabase): ExpensesDao = db.expensesDao()
 }
