@@ -10,7 +10,7 @@ data class ExpensesEntity(
     @PrimaryKey
     val expenseId: String = UUID.randomUUID().toString(),
     val date: LocalDate = LocalDate.now(),
-    val expenseName: String,
-    val expense: Double,
-    val expenseNote: String
+    val expenseTitle: String,
+    val expenseAmount: Double,
+    val expenseNote: String?
 )

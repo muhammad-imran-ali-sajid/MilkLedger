@@ -6,7 +6,8 @@ import java.time.LocalDate
 data class ExpensesUiState(
     val currentDate: LocalDate = LocalDate.now(),
     val expensesList: List<ExpensesEntity> = emptyList(),
-    val todayTotalExpenses: Double = 0.0
+    val todayTotalExpenses: Double = 0.0,
+    val todayAvgExpenses: Double = 0.0
 )
 
 sealed class ExpensesUiEvent {
