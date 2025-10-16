@@ -1,47 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_date_header"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_gradient_top_bar"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="4dp"
+    android:weightSum="8">
 
-    <LinearLayout
-        android:id="@+id/layout_date_header"
-        android:layout_width="match_parent"
+
+    <ImageButton
+        android:id="@+id/btn_prev_date"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_gradient_top_bar"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="4dp"
-        android:weightSum="8">
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:src="@drawable/ic_arrow" />
 
-        <ImageButton
-            android:id="@+id/btn_prev_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow"
-            android:padding="8dp"
-            />
+    <TextView
+        android:id="@+id/tv_selected_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="📅 12/10/2025"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_selected_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="6"
-            android:gravity="center"
-            android:text="📅 12/10/2025"
-            android:textStyle="bold"
-            android:textSize="14sp"
-            android:textColor="@color/black"
-            android:padding="8dp" />
+    <ImageButton
+        android:id="@+id/btn_next_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"
+        android:rotation="180"
+        android:src="@drawable/ic_arrow" />
+</LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btn_next_date"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:rotation="180"
-            android:src="@drawable/ic_arrow"
-            android:padding="8dp"
-             />
-    </LinearLayout>
-</merge>
