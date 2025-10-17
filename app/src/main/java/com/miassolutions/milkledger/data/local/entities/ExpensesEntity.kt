@@ -5,12 +5,12 @@ import androidx.room.PrimaryKey
 import java.time.LocalDate
 import java.util.UUID
 
-@Entity
+@Entity (tableName = "expense_table")
 data class ExpensesEntity(
     @PrimaryKey
     val expenseId: String = UUID.randomUUID().toString(),
     val date: LocalDate = LocalDate.now(),
     val expenseTitle: String,
     val expenseAmount: Double,
-    val expenseNote: String?
+    val expenseNote: String? = null
 )

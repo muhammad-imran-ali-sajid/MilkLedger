@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp"
-    >
+    android:padding="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,47 +15,46 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            android:layout_marginBottom="16dp">
+            app:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Date: "
+                        android:textColor="@android:color/black"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvTodayDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12/10/2025"
+                        android:textColor="@android:color/black"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/black" />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
                     android:weightSum="3">
-
 
 
                     <!-- Expense -->
@@ -72,17 +70,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Purchases"
-                            android:textStyle="bold"
+                            android:textColor="@android:color/holo_red_dark"
                             android:textSize="14sp"
-                            android:textColor="@android:color/holo_red_dark" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tvTotalExpense"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs. 7,500"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <!-- Income -->
@@ -98,17 +96,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sales"
-                            android:textStyle="bold"
+                            android:textColor="@android:color/holo_green_dark"
                             android:textSize="14sp"
-                            android:textColor="@android:color/holo_green_dark" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tvTotalIncome"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs. 12,000"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
                     </LinearLayout>
 
                     <!-- Profit -->
@@ -125,17 +123,17 @@
                             android:layout_height="wrap_content"
                             android:text="Profit"
 
-                            android:textStyle="bold"
+                            android:textColor="@android:color/holo_blue_dark"
                             android:textSize="14sp"
-                            android:textColor="@android:color/holo_blue_dark" />
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tvProfit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs. 4,500"
-                            android:textSize="16sp"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -145,9 +143,8 @@
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2"
             android:alignmentMode="alignMargins"
-            >
+            android:columnCount="2">
 
             <!-- Purchases -->
             <com.google.android.material.card.MaterialCardView
@@ -223,7 +220,6 @@
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
 
 
             <!-- Expenses -->
@@ -374,5 +370,13 @@
 
 
         </GridLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnChangeDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="Change Date (Dev)" />
     </LinearLayout>
 </ScrollView>

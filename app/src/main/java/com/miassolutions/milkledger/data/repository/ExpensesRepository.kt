@@ -13,7 +13,8 @@ class ExpensesRepository @Inject constructor(
     private val expensesDao: ExpensesDao
 ) {
 
-    fun getAllExpensesForDate(date: LocalDate): Flow<List<ExpensesEntity>> = expensesDao.getAllExpenses(date)
+    fun getAllExpensesForDate(date: LocalDate): Flow<List<ExpensesEntity>> =
+        expensesDao.getAllExpenses(date)
 
     suspend fun insertExpense(expense: ExpensesEntity) {
         expensesDao.insertExpense(expense)
@@ -30,4 +31,7 @@ class ExpensesRepository @Inject constructor(
     suspend fun getExpenseById(id: String): ExpensesEntity? {
         return expensesDao.getExpenseById(id)
     }
+
+    suspend fun expenseExistsForTitleAndDate(title: String, date: LocalDate) =
+        expensesDao.expenseExistsForTitleAndDate(title, date)
 }

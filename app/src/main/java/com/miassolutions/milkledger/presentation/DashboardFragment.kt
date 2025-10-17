@@ -1,6 +1,8 @@
 package com.miassolutions.milkledger.presentation
 
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -46,6 +48,10 @@ class DashboardFragment :
 
         binding.cardSupplierHistory.setOnClickListener {
             navigateTo(R.id.suppliersFragment)
+        }
+
+        binding.btnChangeDate.setOnClickListener {
+            startActivity(Intent(Settings.ACTION_DATE_SETTINGS))
         }
     }
 

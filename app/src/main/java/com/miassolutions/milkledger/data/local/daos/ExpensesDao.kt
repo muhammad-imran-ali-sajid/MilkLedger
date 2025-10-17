@@ -17,9 +17,13 @@ interface ExpensesDao {
     @Delete
     suspend fun deleteExpense(expense: ExpensesEntity)
 
-    @Query("SELECT * FROM ExpensesEntity WHERE date = :date")
+    @Query("SELECT * FROM expense_table WHERE date = :date")
     fun getAllExpenses(date : LocalDate): Flow<List<ExpensesEntity>>
 
-    @Query("SELECT * FROM ExpensesEntity WHERE expenseId = :id LIMIT 1")
+    @Query("SELECT * FROM expense_table WHERE expenseId = :id LIMIT 1")
     suspend fun getExpenseById(id: String): ExpensesEntity?
+
+    @Query("SELECT EXISTS(SELECT 1 FROM expense_table WHERE expenseTitle = :title AND date = :date LIMIT 1)")
+    suspend fun expenseExistsForTitleAndDate(title: String, date: LocalDate): Boolean
+
 }

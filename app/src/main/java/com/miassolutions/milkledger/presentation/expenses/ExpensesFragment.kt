@@ -1,12 +1,11 @@
 package com.miassolutions.milkledger.presentation.expenses
 
-import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -88,9 +87,12 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
             adapter.submitList(state.expensesList)
 
+            binding.apply {
+                tvTotalExpense.text = state.todayTotalExpenses.toRoundedStr()
+                tvAvgExpenses.text = state.todayAvgExpenses.toRoundedStr()
+            }
 
-//            binding.tvTotalExpense.text = getString(R.string.total_expenses, state.todayTotalExpenses)
-//            binding.tvAvgExpenses.text = getString(R.string.avg_expenses, state.todayAvgExpenses)
+
         }
     }
 
@@ -103,10 +105,5 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
             viewModel.onEvent(ExpensesUiEvent.PrevDate)
         }
 
-
-        // (Optional) Add floating action button click or other interactions
-//        binding.fabAddExpense.setOnClickListener {
-//            showToast("Add Expense Clicked") // or navigate to AddExpenseBottomSheet
-//        }
     }
 }

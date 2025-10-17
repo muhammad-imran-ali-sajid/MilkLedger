@@ -5,6 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.util.hide
+import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.ItemExpensesBinding
 
@@ -26,13 +28,22 @@ class ExpensesAdapter(
     inner class ExpenseViewHolder(private val binding: ItemExpensesBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ExpensesEntity) {
-            binding.tvExpenseTitle.text = item.expenseTitle
-            binding.tvExpenseAmount.text = item.expenseAmount.toString()
-            binding.tvExpenseNote.text = item.expenseNote
+        fun bind(item: ExpensesEntity) = with(binding) {
+            tvExpenseTitle.text = item.expenseTitle
+            tvExpenseAmount.text = item.expenseAmount.toString()
 
-            binding.root.setOnClickListener { onClick(item) }
-            binding.root.setOnLongClickListener {
+            if (item.expenseNote.isNullOrEmpty()) {
+                tvExpenseNote.hide()
+                divider.hide()
+            } else {
+                tvExpenseNote.show()
+                divider.show()
+                tvExpenseNote.text = "Note: ${item.expenseNote}"
+            }
+
+
+            root.setOnClickListener { onClick(item) }
+            root.setOnLongClickListener {
                 onLongClick(item)
                 true
             }
