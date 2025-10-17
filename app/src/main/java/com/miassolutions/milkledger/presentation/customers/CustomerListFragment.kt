@@ -63,48 +63,43 @@ class CustomerListFragment :
 
     private fun showEditDeleteDialog(customer: Customer?) {
         val options = arrayOf("Edit", "Delete")
+
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Select Action")
             .setItems(options) { dialog, which ->
                 when (which) {
-                    0 -> {
-
-                        if (customer == null) {
-                            CustomerFormBottomSheetFragment(
-                                customer = null,
-                                onSave = { updatedCustomer ->
-                                    viewModel.saveCustomer(updatedCustomer)
-                                }
-                            ).show(parentFragmentManager, null)
-                        } else {
-                            CustomerFormBottomSheetFragment(
-                                customer = customer,
-                                onSave = { updatedCustomer ->
-                                    viewModel.saveCustomer(updatedCustomer)
-                                }
-                            ).show(parentFragmentManager, null)
-                        }
-
-                    }
-
-                    1 -> { // Delete
-                        MaterialAlertDialogBuilder(requireContext())
-                            .setTitle("Delete Customer")
-                            .setMessage("Are you sure you want to delete ${customer?.name}?")
-                            .setPositiveButton("Delete") { d, _ ->
-                                customer?.let {
-                                    viewModel.deleteCustomer(it)
-                                }
-                                d.dismiss()
-                            }
-                            .setNegativeButton("Cancel", null)
-                            .show()
-                    }
+                    0 -> handleEditCustomer(customer)
+                    1 -> confirmDeleteCustomer(customer)
                 }
                 dialog.dismiss()
             }
             .show()
     }
+
+    private fun handleEditCustomer(customer: Customer?) {
+        val fragment = CustomerFormBottomSheetFragment(
+            customer = customer,
+            onSave = { updatedCustomer ->
+                viewModel.saveCustomer(updatedCustomer)
+            }
+        )
+        fragment.show(parentFragmentManager, null)
+    }
+
+    private fun confirmDeleteCustomer(customer: Customer?) {
+        if (customer == null) return
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Delete Customer")
+            .setMessage("This will erase all records. Are you sure you want to delete ${customer.name}?")
+            .setPositiveButton("Delete") { dialog, _ ->
+                viewModel.deleteCustomer(customer)
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 
 
 }

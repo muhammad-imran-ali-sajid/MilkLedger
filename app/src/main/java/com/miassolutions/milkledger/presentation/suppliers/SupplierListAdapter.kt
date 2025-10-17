@@ -9,10 +9,10 @@ import com.miassolutions.milkledger.databinding.ItemSupplierBinding
 import com.miassolutions.milkledger.domain.model.Supplier
 
 class SupplierListAdapter(
-    onItemClick: (Supplier) -> Unit
+    onItemLongClick: (Supplier) -> Boolean
 ) : BaseListAdapter<Supplier, ItemSupplierBinding>(
     inflate = ItemSupplierBinding::inflate,
-    onItemClick = onItemClick,
+    onItemLongClick = onItemLongClick,
     diffCallback = GenericDiffCallback(
         areItemsSame = { old, new -> old.id == new.id },
         areContentsSame = { old, new -> old == new }

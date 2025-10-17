@@ -44,7 +44,7 @@ class SupplierListViewModel @Inject constructor(
         }
     }
 
-    fun onAddCustomerClick() {
+    fun onAddSupplierClick() {
         viewModelScope.launch {
             _uiEvent.emit(SupplierUiEvent.ShowSupplierForm)
         }
@@ -54,9 +54,21 @@ class SupplierListViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 repository.insertSupplier(supplier.toEntity())
-                _uiEvent.emit(SupplierUiEvent.ShowMessage("Customer saved"))
+                _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier saved"))
             } catch (e: Exception) {
-                _uiEvent.emit(SupplierUiEvent.ShowMessage("Error saving customer"))
+                _uiEvent.emit(SupplierUiEvent.ShowMessage("Error saving supplier"))
+            }
+        }
+    }
+
+
+    fun deleteSupplier(supplier: Supplier) {
+        viewModelScope.launch {
+            try {
+                repository.deleteSupplier(supplier.toEntity())
+                _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier deleted"))
+            } catch (e: Exception) {
+                _uiEvent.emit(SupplierUiEvent.ShowMessage("Error deleting supplier"))
             }
         }
     }
