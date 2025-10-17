@@ -71,7 +71,7 @@
     <fragment
         android:id="@+id/dashboardFragment"
         tools:layout="@layout/fragment_dashboard"
-        android:name="com.miassolutions.milkledger.presentation.DashboardFragment"
+        android:name="com.miassolutions.milkledger.presentation.dashboard.DashboardFragment"
         android:label="DashboardFragment" >
         <action
             android:id="@+id/action_dashboardFragment_to_purchaseFragment"

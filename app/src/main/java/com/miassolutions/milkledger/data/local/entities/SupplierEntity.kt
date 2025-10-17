@@ -11,5 +11,6 @@ data class SupplierEntity(
     val supplierName: String,
     val supplierRate: Double,
     val sortOrder: Int = 0,
-    val createdAt: LocalDate = LocalDate.now()
+    val createdAt: LocalDate = LocalDate.now(),
+    val isDefault: Boolean = false
 )

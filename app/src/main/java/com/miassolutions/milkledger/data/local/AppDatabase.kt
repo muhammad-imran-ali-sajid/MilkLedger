@@ -6,6 +6,7 @@ import androidx.room.TypeConverters
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseEntryDao
+import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesEntryDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
@@ -32,5 +33,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun supplierDao(): SupplierDao
     abstract fun purchaseEntryDao(): PurchaseEntryDao
     abstract fun salesEntryDao(): SalesEntryDao
-    abstract fun expensesDao() : ExpensesDao
+    abstract fun expensesDao(): ExpensesDao
+    abstract fun reportsDao(): ReportsDao
 }

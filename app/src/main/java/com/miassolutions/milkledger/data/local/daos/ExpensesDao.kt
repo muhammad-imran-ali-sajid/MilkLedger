@@ -9,6 +9,9 @@ import java.time.LocalDate
 interface ExpensesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(expenses: List<ExpensesEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExpense(expense: ExpensesEntity)
 
     @Update

@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.room.Room
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.data.local.AppDatabase
+import com.miassolutions.milkledger.data.local.StaticDataCallback
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseEntryDao
+import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesEntryDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
@@ -24,9 +26,13 @@ object DatabaseModule {
 
     @Provides
     @Singleton
-    fun provideDatabase(@ApplicationContext appContext: Context): AppDatabase =
+    fun provideDatabase(
+        @ApplicationContext appContext: Context,
+        callback: StaticDataCallback
+    ): AppDatabase =
         Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
             .fallbackToDestructiveMigration(true) //todo
+            .addCallback(callback)
             .build()
 
     @Singleton
@@ -48,4 +54,8 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun providesExpensesDao(db: AppDatabase): ExpensesDao = db.expensesDao()
+
+    @Singleton
+    @Provides
+    fun providesReportsDao(db: AppDatabase): ReportsDao = db.reportsDao()
 }
