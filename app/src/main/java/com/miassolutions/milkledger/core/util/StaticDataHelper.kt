@@ -94,9 +94,9 @@ class StaticDataHelper @Inject constructor(private val database: AppDatabase) {
         val expenseTypes = listOf(
             ExpensesEntity(expenseTitle = "Fuel", isDefault = true),
             ExpensesEntity(expenseTitle = "Wages", isDefault = true),
-            ExpensesEntity(expenseTitle = "Transport", isDefault = true),
             ExpensesEntity(expenseTitle = "Maintenance", isDefault = true),
-            ExpensesEntity(expenseTitle = "Miscellaneous", isDefault = true)
+            ExpensesEntity(expenseTitle = "Miscellaneous", isDefault = true),
+
         )
 
         customerDao.insertAll(customers)

@@ -23,23 +23,23 @@ class ExpenseViewModel @Inject constructor(
         loadExpensesForDate(_uiState.value.currentDate)
     }
 
-    private val staticTitles = listOf("Fuel", "Wages")
-
-    private suspend fun ensureStaticExpensesForDate(date: LocalDate) {
-        staticTitles.forEach { title ->
-            val exists = repository.expenseExistsForTitleAndDate(title, date)
-            if (!exists) {
-                repository.insertExpense(
-                    ExpensesEntity(
-                        expenseTitle = title,
-                        expenseAmount = 0.0,
-                        date = date,
-
-                    )
-                )
-            }
-        }
-    }
+//    private val staticTitles = listOf("Fuel", "Wages")
+//
+//    private suspend fun ensureStaticExpensesForDate(date: LocalDate) {
+//        staticTitles.forEach { title ->
+//            val exists = repository.expenseExistsForTitleAndDate(title, date)
+//            if (!exists) {
+//                repository.insertExpense(
+//                    ExpensesEntity(
+//                        expenseTitle = title,
+//                        expenseAmount = 0.0,
+//                        date = date,
+//
+//                    )
+//                )
+//            }
+//        }
+//    }
 
 
     fun onEvent(event: ExpensesUiEvent) {
@@ -53,7 +53,7 @@ class ExpenseViewModel @Inject constructor(
                 _uiState.update { it.copy(currentDate = nextDate) }
                 loadExpensesForDate(nextDate)
                 viewModelScope.launch {
-                    ensureStaticExpensesForDate(_uiState.value.currentDate)
+//                    ensureStaticExpensesForDate(_uiState.value.currentDate)
                 }
             }
 
@@ -62,7 +62,7 @@ class ExpenseViewModel @Inject constructor(
                 _uiState.update { it.copy(currentDate = prevDate) }
                 loadExpensesForDate(prevDate)
                 viewModelScope.launch {
-                    ensureStaticExpensesForDate(_uiState.value.currentDate)
+//                    ensureStaticExpensesForDate(_uiState.value.currentDate)
                 }
             }
         }
