@@ -46,6 +46,8 @@ class CustomerListViewModel @Inject constructor(
         }
     }
 
+
+
     fun saveCustomer(customer: Customer) {
         viewModelScope.launch {
             try {
@@ -53,6 +55,17 @@ class CustomerListViewModel @Inject constructor(
                 _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer saved"))
             } catch (e: Exception) {
                 _uiEvent.emit(CustomerUiEvent.ShowMessage("Error saving customer"))
+            }
+        }
+    }
+
+    fun deleteCustomer(customer: Customer){
+        viewModelScope.launch {
+            try {
+                repository.deleteCustomer(customer.toEntity())
+                _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer deleted"))
+            } catch (e:Exception){
+                _uiEvent.emit(CustomerUiEvent.ShowMessage("Error deleting customer"))
             }
         }
     }

@@ -9,10 +9,10 @@ import com.miassolutions.milkledger.domain.model.Customer
 
 
 class CustomerListAdapter(
-    onItemClick: (Customer) -> Unit
+    onItemLongClick: (Customer) -> Boolean
 ) : BaseListAdapter<Customer, ItemCustomerBinding>(
     inflate = ItemCustomerBinding::inflate,
-    onItemClick = onItemClick,
+    onItemLongClick = onItemLongClick,
     diffCallback = GenericDiffCallback(
         areItemsSame = { old, new -> old.id == new.id },
         areContentsSame = { old, new -> old == new }

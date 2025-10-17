@@ -95,7 +95,7 @@ class StaticDataHelper @Inject constructor(private val database: AppDatabase) {
             ExpensesEntity(expenseTitle = "Fuel", isDefault = true),
             ExpensesEntity(expenseTitle = "Wages", isDefault = true),
             ExpensesEntity(expenseTitle = "Maintenance", isDefault = true),
-            ExpensesEntity(expenseTitle = "Miscellaneous", isDefault = true),
+            ExpensesEntity(expenseTitle = "Others", isDefault = true),
 
         )
 
