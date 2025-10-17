@@ -10,7 +10,6 @@
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:backgroundTint="#263238"
     app:cardCornerRadius="12dp"
     app:cardElevation="8dp"
     >
@@ -34,7 +33,6 @@
             <TextView
                 style="@style/TextTitleUrdu"
                 android:id="@+id/tvName"
-                android:textColor="#fff"
                 android:text="Ali" />
         </LinearLayout>
 
@@ -61,11 +59,12 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Milk" />
+                    android:text="Milk"
+/>
 
                 <TextView
-                    style="@style/TextValue"
                     android:id="@+id/tvVolume"
+                    style="@style/TextValue"
                     tools:text="3.5" />
             </LinearLayout>
 
@@ -79,11 +78,13 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Fat" />
+                    android:text="Fat"
+                    />
 
                 <TextView
-                    style="@style/TextValue"
                     android:id="@+id/tvFat"
+                    style="@style/TextValue"
+
                     tools:text="4.5" />
             </LinearLayout>
 
@@ -97,11 +98,12 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="LR" />
+                    android:text="LR"
+              />
 
                 <TextView
-                    style="@style/TextValue"
                     android:id="@+id/tvLr"
+                    style="@style/TextValue"
                     tools:text="28.1" />
             </LinearLayout>
 
@@ -115,11 +117,12 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="TS" />
+                    android:text="TS"
+                     />
 
                 <TextView
-                    style="@style/TextValue"
                     android:id="@+id/tvTs"
+                    style="@style/TextValue"
                     tools:text="8.4" />
             </LinearLayout>
         </LinearLayout>
@@ -145,9 +148,10 @@
                     android:text="قیمت" />
 
                 <TextView
-                    style="@style/TextValue"
                     android:id="@+id/tvPrice"
-                    android:text="10000" />
+                    style="@style/TextValue"
+                    android:text="10000"
+                   />
             </LinearLayout>
 
             <!-- Paid -->
@@ -182,9 +186,10 @@
                     android:text="بیلنس" />
 
                 <TextView
-                    style="@style/TextValue"
                     android:id="@+id/tvBalance"
+                    style="@style/TextValue"
                     android:text="10000"
+
                     android:textDirection="ltr" />
             </LinearLayout>
         </LinearLayout>

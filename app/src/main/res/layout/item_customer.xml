@@ -7,14 +7,12 @@
     android:gravity="center_vertical"
     android:weightSum="5"
     android:background="@drawable/bg_card"
-    android:backgroundTint="#212121"
     android:orientation="horizontal"
     android:padding="16dp">
 
     <TextView
         android:id="@+id/tv_customer_rate"
         style="@style/Text.Body"
-        android:textColor="@color/white"
         android:layout_width="0dp"
         android:layout_weight="2"
         android:layout_height="wrap_content"

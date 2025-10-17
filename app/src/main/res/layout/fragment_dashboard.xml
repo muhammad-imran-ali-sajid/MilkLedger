@@ -17,11 +17,13 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="12dp"
+
             app:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/card_gradient1"
                 android:orientation="vertical"
                 android:padding="8dp">
 
@@ -83,7 +85,6 @@
                             android:textSize="16sp" />
                     </LinearLayout>
 
-                    <!-- Income -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -101,7 +102,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/tvTotalIncome"
+                            android:id="@+id/tvTotalSales"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs. 12,000"
@@ -157,12 +158,14 @@
                 android:layout_marginBottom="4dp"
                 android:clickable="true"
                 android:focusable="true"
+
                 android:foreground="?android:attr/selectableItemBackground"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:background="@drawable/card_gradient2"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical">
@@ -201,6 +204,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:background="@drawable/card_gradient3"
                     android:orientation="vertical">
 
                     <ImageView
