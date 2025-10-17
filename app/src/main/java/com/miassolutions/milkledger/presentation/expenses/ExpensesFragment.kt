@@ -1,12 +1,13 @@
 package com.miassolutions.milkledger.presentation.expenses
 
+import android.util.Log
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
@@ -21,15 +22,41 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     override fun setupViews() {
         setToolbarTitle(getString(R.string.expenses))
 
-        adapter = ExpensesAdapter { selectedExpense ->
-            viewModel.onEvent(ExpensesUiEvent.OnExpenseSelected(selectedExpense.expenseId))
-        }
 
-        binding.rvExpenses.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvExpenses.adapter = adapter
-
+        setupRecyclerView()
 
     }
+
+    private fun setupRecyclerView() {
+        adapter =
+            ExpensesAdapter(onClick = ::showBottomSheet, onLongClick = ::onConfirmDeleteDialog)
+
+
+        binding.rvExpenses.adapter = adapter
+    }
+
+    private fun showBottomSheet(entry: ExpensesEntity) {
+
+        ExpenseEditBottomSheet(
+            entry = entry,
+            onSave = { viewModel.updateExpense(it) },
+            isNewExpense = false
+        ).show(parentFragmentManager, null)
+    }
+
+    private fun onConfirmDeleteDialog(entry: ExpensesEntity) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Delete Expense")
+            .setMessage("Are you sure to delete this expense?")
+            .setNeutralButton("Yes") { d, _ ->
+                viewModel.deleteExpense(entry)
+                showToast("Expense deleted")
+                d.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
         return when {
@@ -40,8 +67,10 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
                         expenseAmount = 0.0,
                         expenseNote = ""
                     ),
-                    onSave = {},
-                    isNewExpense = false
+                    onSave = {
+                        viewModel.insertExpense(it)
+                    },
+                    isNewExpense = true
                 ).show(parentFragmentManager, null)
                 true
             }
@@ -59,6 +88,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
             adapter.submitList(state.expensesList)
 
+
 //            binding.tvTotalExpense.text = getString(R.string.total_expenses, state.todayTotalExpenses)
 //            binding.tvAvgExpenses.text = getString(R.string.avg_expenses, state.todayAvgExpenses)
         }
@@ -72,6 +102,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
         dateHeader.btnPrevDate.setOnClickListener {
             viewModel.onEvent(ExpensesUiEvent.PrevDate)
         }
+
 
         // (Optional) Add floating action button click or other interactions
 //        binding.fabAddExpense.setOnClickListener {

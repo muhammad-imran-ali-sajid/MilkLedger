@@ -65,7 +65,14 @@ class ExpenseViewModel @Inject constructor(
     }
 
     fun updateExpense(expense: ExpensesEntity) = viewModelScope.launch {
-        repository.updateExpense(expense)
+        val updated = expense.copy(
+
+            date = expense.date,
+            expenseTitle = expense.expenseTitle,
+            expenseAmount = expense.expenseAmount,
+            expenseNote = expense.expenseNote
+        )
+        repository.updateExpense(updated)
     }
 
     fun deleteExpense(expense: ExpensesEntity) = viewModelScope.launch {

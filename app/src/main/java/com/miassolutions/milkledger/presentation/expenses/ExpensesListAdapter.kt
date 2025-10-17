@@ -9,11 +9,13 @@ import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.ItemExpensesBinding
 
 class ExpensesAdapter(
-    private val onClick: (ExpensesEntity) -> Unit
+    private val onClick: (ExpensesEntity) -> Unit,
+    private val onLongClick: (ExpensesEntity) -> Unit
 ) : ListAdapter<ExpensesEntity, ExpensesAdapter.ExpenseViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
-        val binding = ItemExpensesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemExpensesBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ExpenseViewHolder(binding)
     }
 
@@ -30,6 +32,10 @@ class ExpensesAdapter(
             binding.tvExpenseNote.text = item.expenseNote
 
             binding.root.setOnClickListener { onClick(item) }
+            binding.root.setOnLongClickListener {
+                onLongClick(item)
+                true
+            }
         }
     }
 
