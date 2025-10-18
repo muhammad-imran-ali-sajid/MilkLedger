@@ -40,7 +40,7 @@ interface SalesEntryDao {
 
     // ✅ Customer ledger (date-wise history)
     @Transaction
-    @Query("SELECT * FROM sales_entry_table WHERE customerId = :customerId ORDER BY date DESC")
+    @Query("SELECT * FROM sales_entry_table WHERE customerId = :customerId ORDER BY date ASC")
     fun getSalesForCustomer(customerId: String): Flow<List<SaleWithCustomer>>
 
     // ✅ Get sales for a specific date once (e.g. for one-time report export)

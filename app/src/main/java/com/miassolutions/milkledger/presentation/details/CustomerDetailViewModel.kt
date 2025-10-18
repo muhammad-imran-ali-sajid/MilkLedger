@@ -19,18 +19,19 @@ class CustomerDetailViewModel @Inject constructor(private val repository: SalesR
     private val _uiState = MutableStateFlow(CustomerDetailUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun onSelectedCustomerId(id: String) {
-        _uiState.update { it.copy(selectedCustomerId = id) }
-    }
-
-    init {
+    fun onSelectedCustomerId(id: String, name: String) {
+        _uiState.update { it.copy(selectedCustomerId = id, customerName = name) }
         loadDetails()
+
     }
 
 
-    fun loadDetails() {
+    private fun loadDetails() {
         viewModelScope.launch {
             val id = _uiState.value.selectedCustomerId
+
+
+
             id?.let {
 
                 val detailList = repository.getSalesForCustomer(id).first()

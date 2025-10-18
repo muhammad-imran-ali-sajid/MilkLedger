@@ -19,7 +19,7 @@ class CustomerDetailFragment :
 
     override fun setupViews() {
 
-        viewModel.onSelectedCustomerId(args.customerId)
+        viewModel.onSelectedCustomerId(args.customerId, args.customerName)
         setupRecyclerView()
 
     }
@@ -34,7 +34,7 @@ class CustomerDetailFragment :
 
             adapter.submitList(state.customerDetailList)
 
-            setToolbarTitle(state.customerName)
+
         }
     }
 
