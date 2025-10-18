@@ -20,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sort By"
+            android:id="@+id/btn_sort"
             app:icon="@drawable/ic_down_arrow"
             android:layout_marginBottom="32dp"
             app:iconGravity="end"
