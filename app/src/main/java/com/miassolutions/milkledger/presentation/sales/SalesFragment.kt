@@ -57,17 +57,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             datePicker.show(parentFragmentManager, "MaterialDatePicker")
         }
 
-        binding.btnPrevDate.setOnClickListener {
-            val currentDate = viewModel.uiState.value.currentDate
-            val previousDate = currentDate.minusDays(1)
-            viewModel.onDateSelected(previousDate)
-        }
 
-        binding.btnNextDate.setOnClickListener {
-            val currentDate = viewModel.uiState.value.currentDate
-            val nextDate = currentDate.plusDays(1)
-            viewModel.onDateSelected(nextDate)
-        }
     }
 
     private fun setupSalesRV() {
