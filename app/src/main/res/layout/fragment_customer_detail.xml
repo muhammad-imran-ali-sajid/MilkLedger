@@ -1,35 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.details.CustomerDetailFragment">
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCustomerDetail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleGroupFilter"
         tools:listitem="@layout/item_customer_detail" />
 
-
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleGroupFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:selectionRequired="true"
+        app:singleSelection="true">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDaily"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sort By"
-            android:id="@+id/btn_sort"
-            app:icon="@drawable/ic_down_arrow"
-            android:layout_marginBottom="32dp"
-            app:iconGravity="end"
-            android:layout_gravity="bottom|center_horizontal"
-            app:cornerRadius="32dp"/>
+            android:text="Daily" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnWeekly"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Weekly" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMonthly"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monthly" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
-
-
-
-</FrameLayout>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_sort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="32dp"
+        android:text="Sort By"
+        app:cornerRadius="32dp"
+        app:icon="@drawable/ic_down_arrow"
+        app:iconGravity="end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
