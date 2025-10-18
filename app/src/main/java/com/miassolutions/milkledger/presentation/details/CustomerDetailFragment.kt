@@ -6,29 +6,29 @@ import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.datesort.DatePickerHelper
+import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.filter.FilterBottomSheet
 import com.miassolutions.milkledger.core.ui.filter.FilterSharedViewModel
 import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class CustomerDetailFragment :
     BaseFragment<FragmentCustomerDetailBinding>(FragmentCustomerDetailBinding::inflate) {
 
     private val filterViewModel by activityViewModels<FilterSharedViewModel>()
-
     private val viewModel by viewModels<CustomerDetailViewModel>()
-    private lateinit var adapter: CustomerDetailListAdapter
-    private val args: CustomerDetailFragmentArgs by navArgs<CustomerDetailFragmentArgs>()
+    private val args: CustomerDetailFragmentArgs by navArgs()
 
+    private lateinit var adapter: CustomerDetailListAdapter
 
     override fun setupViews() {
-
         viewModel.onSelectedCustomerId(args.customerId, args.customerName)
         setupRecyclerView()
         setupDateRangeToggle()
-
     }
 
     private fun setupRecyclerView() {
@@ -37,44 +37,30 @@ class CustomerDetailFragment :
     }
 
     private fun setupDateRangeToggle() = with(binding) {
-
-
-        // 🔸 Auto-set date label and range when filter type changes
         toggleGroupFilter.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
 
             val rangeType = when (checkedId) {
                 R.id.btnDaily -> DateRangeType.TODAY
-                R.id.btnWeekly -> DateRangeType.THIS_WEEK
-                R.id.btnMonthly -> DateRangeType.THIS_MONTH
+                R.id.btnWeekly -> DateRangeType.WEEK
+                R.id.btnMonthly -> DateRangeType.MONTH
                 else -> DateRangeType.ALL
             }
 
-            // 🔹 Get range from helper
-            val (start, end) = com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper.getRange(rangeType)
-
-            // 🔹 Update date label according to type
-                datePickerActions.tvSelectedDate.text = when (rangeType) {
-                DateRangeType.TODAY -> start.toString()
-                DateRangeType.THIS_WEEK -> DatePickerHelper.formatRange(start, end)
-                DateRangeType.THIS_MONTH -> start.format(java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy"))
-                else -> "All Records"
-            }
-
-            // 🔹 Update viewmodel to show corresponding list
+            val (start, end) = DateRangeHelper.getRange(rangeType)
+            updateDateLabel(rangeType, start, end)
             viewModel.changeDateRange(rangeType, start, end)
         }
 
-        // 🔸 Open picker when user clicks on date
         datePickerActions.tvSelectedDate.setOnClickListener {
             when (toggleGroupFilter.checkedButtonId) {
                 R.id.btnDaily -> DatePickerHelper.pickSingleDate(this@CustomerDetailFragment) { date ->
-                    datePickerActions.tvSelectedDate.text = date.toString()
+                    updateDateLabel(DateRangeType.TODAY, date, date)
                     viewModel.setCustomDateRange(date, date)
                 }
 
                 R.id.btnWeekly -> DatePickerHelper.pickWeek(this@CustomerDetailFragment) { start, end ->
-                    datePickerActions. tvSelectedDate.text = DatePickerHelper.formatRange(start, end)
+                    updateDateLabel(DateRangeType.WEEK, start, end)
                     viewModel.setCustomDateRange(start, end)
                 }
 
@@ -83,28 +69,37 @@ class CustomerDetailFragment :
                     viewModel.setCustomDateRange(start, end)
                 }
 
-                else -> {
-                    // If no button selected, default to daily
-                    toggleGroupFilter.check(R.id.btnDaily)
-                }
+                else -> toggleGroupFilter.check(R.id.btnDaily)
             }
         }
 
-        // 🔹 When screen first opens, default to "Daily" + current date
+        // Default selection on screen load
         toggleGroupFilter.check(R.id.btnDaily)
-        val today = java.time.LocalDate.now()
-        datePickerActions.tvSelectedDate.text = today.toString()
+        val today = LocalDate.now()
+        updateDateLabel(DateRangeType.TODAY, today, today)
         viewModel.setCustomDateRange(today, today)
     }
 
+    private fun updateDateLabel(rangeType: DateRangeType, start: LocalDate?, end: LocalDate?) {
+        binding.datePickerActions.tvSelectedDate.text = when (rangeType) {
+            DateRangeType.TODAY -> start?.toString().orEmpty()
+            DateRangeType.WEEK -> if (start != null && end != null) {
+                DatePickerHelper.formatRange(start, end)
+            } else ""
+            DateRangeType.MONTH -> start?.format(DateTimeFormatter.ofPattern("MMMM yyyy")).orEmpty()
+            else -> "All Records"
+        }
+    }
 
+    override fun setupListeners() = with(binding.datePickerActions) {
+        btnPrevDate.setOnClickListener {
+            viewModel.onEvent(CustomerUiEvent.PrevButton)
+        }
 
+        btnNextDate.setOnClickListener {
+            viewModel.onEvent(CustomerUiEvent.NextButton)
+        }
 
-
-
-
-
-    override fun setupListeners() {
         binding.btnSort.setOnClickListener {
             FilterBottomSheet().show(parentFragmentManager, "FilterSheet")
         }
@@ -113,11 +108,11 @@ class CustomerDetailFragment :
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
             adapter.submitList(state.filteredList)
+            updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
         }
 
         filterViewModel.filterOptions.collectState { filter ->
             viewModel.onEvent(CustomerUiEvent.ApplyFilter(filter))
         }
     }
-
 }

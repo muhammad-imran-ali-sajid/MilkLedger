@@ -19,4 +19,6 @@ data class CustomerDetailUiState(
 sealed class CustomerUiEvent {
     data class ApplyFilter(val filter: FilterOptions) : CustomerUiEvent()
     data class ChangeDateRange(val rangeType: DateRangeType) : CustomerUiEvent()
+    data object NextButton : CustomerUiEvent()
+    data object PrevButton : CustomerUiEvent()
 }

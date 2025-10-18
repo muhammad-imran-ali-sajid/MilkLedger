@@ -27,6 +27,8 @@ class CustomerDetailViewModel @Inject constructor(
         when (event) {
             is CustomerUiEvent.ApplyFilter -> applyFilter(event.filter)
             is CustomerUiEvent.ChangeDateRange -> changeDateRange(event.rangeType)
+            is CustomerUiEvent.NextButton -> moveDateRange(forward = true)
+            is CustomerUiEvent.PrevButton -> moveDateRange(forward = false)
         }
     }
 
@@ -70,6 +72,45 @@ class CustomerDetailViewModel @Inject constructor(
         }
         filterData()
     }
+
+    private fun moveDateRange(forward: Boolean) {
+        val multiplier = if (forward) 1 else -1
+        val state = _uiState.value
+
+        val newStart: LocalDate
+        val newEnd: LocalDate
+
+        when (state.dateRangeType) {
+            DateRangeType.TODAY -> {
+                val base = state.selectedStartDate ?: LocalDate.now()
+                newStart = base.plusDays(multiplier.toLong())
+                newEnd = newStart
+            }
+
+            DateRangeType.WEEK -> {
+                val base = state.selectedStartDate ?: LocalDate.now()
+                newStart = base.plusWeeks(multiplier.toLong())
+                newEnd = newStart.plusDays(6)
+            }
+
+            DateRangeType.MONTH -> {
+                val base = state.selectedStartDate ?: LocalDate.now().withDayOfMonth(1)
+                newStart = base.plusMonths(multiplier.toLong())
+                newEnd = newStart.withDayOfMonth(newStart.lengthOfMonth())
+            }
+
+            else -> return // Don't support CUSTOM or UNKNOWN range for prev/next
+        }
+
+        _uiState.update {
+            it.copy(
+                selectedStartDate = newStart,
+                selectedEndDate = newEnd
+            )
+        }
+        filterData()
+    }
+
 
     fun changeDateRange(rangeType: DateRangeType) {
         _uiState.update { it.copy(dateRangeType = rangeType) }

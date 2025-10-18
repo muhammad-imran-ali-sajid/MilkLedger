@@ -1,7 +1,10 @@
 package com.miassolutions.milkledger.core.ui.datesort
 
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.temporal.TemporalAdjusters
+
+
 
 object DateRangeHelper {
 
@@ -9,12 +12,12 @@ object DateRangeHelper {
         val today = LocalDate.now()
         return when (type) {
             DateRangeType.TODAY -> today to today
-            DateRangeType.THIS_WEEK -> {
-                val start = today.with(java.time.DayOfWeek.MONDAY)
-                val end = today.with(java.time.DayOfWeek.SUNDAY)
+            DateRangeType.WEEK -> {
+                val start = today.with(DayOfWeek.MONDAY)
+                val end = today.with(DayOfWeek.SUNDAY)
                 start to end
             }
-            DateRangeType.THIS_MONTH -> {
+            DateRangeType.MONTH -> {
                 val start = today.with(TemporalAdjusters.firstDayOfMonth())
                 val end = today.with(TemporalAdjusters.lastDayOfMonth())
                 start to end
