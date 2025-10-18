@@ -2,10 +2,13 @@ package com.miassolutions.sort_filter
 
 import android.os.Bundle
 import android.view.*
+import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.HORIZONTAL
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.sort_filter.databinding.BottomsheetDataSortBinding
 import kotlinx.coroutines.flow.collectLatest
@@ -33,10 +36,8 @@ class DataSortBottomSheet : BottomSheetDialogFragment() {
         val sortAdapter = DataSortAdapter(sorts) { id -> viewModel.onEvent(DataSortUiEvent.SortChanged(id)) }
 
         binding.rvFilter.adapter = filterAdapter
-        binding.rvFilter.layoutManager = LinearLayoutManager(requireContext())
 
         binding.rvSort.adapter = sortAdapter
-        binding.rvSort.layoutManager = LinearLayoutManager(requireContext())
 
         binding.btnApply.setOnClickListener {
             viewModel.onEvent(DataSortUiEvent.ApplyClicked)

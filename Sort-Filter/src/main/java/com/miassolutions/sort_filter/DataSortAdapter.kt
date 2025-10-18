@@ -1,5 +1,6 @@
 package com.miassolutions.sort_filter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,7 @@ class DataSortAdapter<T>(
     override fun getItemCount() = items.size
     override fun onBindViewHolder(holder: VH, position: Int) = holder.bind(items[position])
 
+    @SuppressLint("NotifyDataSetChanged")
     fun submitList(newItems: List<T>) {
         items = newItems
         notifyDataSetChanged()
