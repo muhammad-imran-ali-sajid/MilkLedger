@@ -66,6 +66,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
+    implementation(project(":Sort-Filter"))
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // Import the Firebase BoM

@@ -9,4 +9,5 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.57.2" apply false
 
     id ("androidx.navigation.safeargs.kotlin") version "2.9.5" apply false
+    alias(libs.plugins.android.library) apply false
 }

@@ -22,4 +22,12 @@
         android:src="@android:drawable/ic_input_add"
         android:id="@+id/fab_add_supplier"/>
 
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sort"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/btn_sort"/>
+
 </FrameLayout>

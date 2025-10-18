@@ -4,7 +4,9 @@ import com.miassolutions.milkledger.domain.model.Supplier
 
 data class SupplierUiState(
     val suppliers: List<Supplier> = emptyList(),
+    val displayedSuppliers: List<Supplier> = emptyList(),
     val isLoading: Boolean = false
+
 )
 
 

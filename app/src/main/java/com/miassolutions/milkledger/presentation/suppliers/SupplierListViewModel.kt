@@ -10,6 +10,8 @@ import com.miassolutions.milkledger.domain.model.Customer
 import com.miassolutions.milkledger.domain.model.Supplier
 import com.miassolutions.milkledger.presentation.customers.CustomerUiEvent
 import com.miassolutions.milkledger.presentation.customers.CustomerUiState
+import com.miassolutions.sort_filter.FilterOption
+import com.miassolutions.sort_filter.SortOption
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,15 +36,59 @@ class SupplierListViewModel @Inject constructor(
         observeSuppliers()
     }
 
+    private var allSuppliers: List<Supplier> = emptyList()
+
     private fun observeSuppliers() {
         viewModelScope.launch {
             repository.getAllSuppliers()
                 .map { list -> list.map { it.toDomain() } } // Convert to domain model
                 .collect { suppliers ->
-                    _uiState.value = _uiState.value.copy(suppliers = suppliers)
+                    allSuppliers = suppliers
+                    _uiState.value =
+                        _uiState.value.copy(
+                            suppliers = suppliers,
+                            displayedSuppliers = suppliers
+                        )
                 }
         }
     }
+
+    /**  Called from Fragment after user applies sort/filter */
+
+    fun applySortAndFilter(filters: List<FilterOption>, sorts: List<SortOption>) {
+        viewModelScope.launch {
+            var filtered = allSuppliers
+
+            // 🔹 Apply filters
+            if (filters.any { it.isSelected }) {
+                val selectedIds = filters.filter { it.isSelected }.map { it.id }
+                filtered = filtered.filter { supplier ->
+                    when {
+                        "active" in selectedIds -> supplier.rate >= 0.0
+                        "inactive" in selectedIds -> supplier.rate == 0.0
+                        else -> true
+                    }
+                }
+            }
+
+            // 🔹 Apply sorting
+            val selectedSort = sorts.find { it.isSelected }
+            val sorted = when (selectedSort?.id) {
+                "name" -> if (selectedSort.ascending)
+                    filtered.sortedBy { it.name.lowercase() }
+                else filtered.sortedByDescending { it.name.lowercase() }
+
+                "date" -> if (selectedSort.ascending)
+                    filtered.sortedBy { it.name }
+                else filtered.sortedByDescending { it.name }
+
+                else -> filtered
+            }
+
+            _uiState.value = _uiState.value.copy(displayedSuppliers = sorted)
+        }
+    }
+
 
     fun onAddSupplierClick() {
         viewModelScope.launch {
