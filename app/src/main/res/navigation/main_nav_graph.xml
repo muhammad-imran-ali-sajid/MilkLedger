@@ -19,7 +19,11 @@
         android:id="@+id/salesFragment"
         android:name="com.miassolutions.milkledger.presentation.sales.SalesFragment"
         android:label="Sales"
-        tools:layout="@layout/fragment_sales" />
+        tools:layout="@layout/fragment_sales" >
+        <action
+            android:id="@+id/action_salesFragment_to_customerDetailFragment"
+            app:destination="@id/customerDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.miassolutions.milkledger.presentation.settings.SettingsFragment"
@@ -85,5 +89,17 @@
         <action
             android:id="@+id/action_dashboardFragment_to_statsFragment"
             app:destination="@id/statsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/customerDetailFragment"
+        android:name="com.miassolutions.milkledger.presentation.details.CustomerDetailFragment"
+        android:label="{customerName}"
+        tools:layout="@layout/fragment_customer_detail" >
+        <argument
+            android:name="customerId"
+            app:argType="string" />
+        <argument
+            android:name="customerName"
+            app:argType="string" />
     </fragment>
 </navigation>

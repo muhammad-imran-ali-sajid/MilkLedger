@@ -2,12 +2,11 @@ package com.miassolutions.milkledger.presentation.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding
 
-class CustomerDetailListAdapter(diffCallback: DiffUtil.ItemCallback<CustomerDetailModel>) :
+class CustomerDetailListAdapter :
     BaseListAdapter<CustomerDetailModel, ItemCustomerDetailBinding>(
         inflate = ItemCustomerDetailBinding::inflate,
         diffCallback = GenericDiffCallback(

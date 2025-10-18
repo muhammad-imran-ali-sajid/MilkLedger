@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.sales
 
 import android.util.Log
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -27,7 +28,6 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         setToolbarTitle(getString(R.string.sales))
 
         setupSalesRV()
-
 
 
     }
@@ -72,14 +72,22 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     private fun setupSalesRV() {
 
-        adapter = SalesEntryAdapter { customer ->
-            showEditSaleBottomSheet(customer)
-
-        }
+        adapter = SalesEntryAdapter(::showEditSaleBottomSheet, ::navToDetail)
         binding.rvSales.adapter = adapter
 
 
     }
+
+    private fun navToDetail(id: String, name: String) {
+
+        findNavController().navigate(
+            SalesFragmentDirections.actionSalesFragmentToCustomerDetailFragment(
+                id,
+                name
+            )
+        )
+    }
+
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
