@@ -22,6 +22,8 @@
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/sortChipGroup"
             android:layout_width="match_parent"
+            app:singleSelection="true"
+            app:selectionRequired="false"
             android:layout_height="wrap_content">
 
             <com.google.android.material.chip.Chip
