@@ -6,16 +6,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.details.CustomerDetailFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCustomerDetail"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+    <TextView
+        android:id="@+id/tvSelectedDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:padding="8dp"
+        android:text="Select date"
+        android:textAppearance="?attr/textAppearanceBodyLarge"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggleGroupFilter"
-        tools:listitem="@layout/item_customer_detail" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+
+
 
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/toggleGroupFilter"
@@ -24,7 +32,7 @@
         android:layout_gravity="top|center_horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSelectedDate"
         app:selectionRequired="true"
         app:singleSelection="true">
 
@@ -49,6 +57,17 @@
             android:layout_height="wrap_content"
             android:text="Monthly" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCustomerDetail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggleGroupFilter"
+        tools:listitem="@layout/item_customer_detail" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_sort"

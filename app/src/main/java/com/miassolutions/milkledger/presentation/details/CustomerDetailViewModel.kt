@@ -8,7 +8,9 @@ import com.miassolutions.milkledger.core.ui.sort.FilterOptions
 import com.miassolutions.milkledger.core.ui.sort.SortOrder
 import com.miassolutions.milkledger.data.repositories.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -54,27 +56,56 @@ class CustomerDetailViewModel @Inject constructor(
         filterData()
     }
 
-    private fun changeDateRange(rangeType: DateRangeType) {
+    fun changeDateRange(
+        rangeType: DateRangeType,
+        startDate: LocalDate? = null,
+        endDate: LocalDate? = null
+    ) {
+        _uiState.update {
+            it.copy(
+                dateRangeType = rangeType,
+                selectedStartDate = startDate,
+                selectedEndDate = endDate
+            )
+        }
+        filterData()
+    }
+
+    fun changeDateRange(rangeType: DateRangeType) {
         _uiState.update { it.copy(dateRangeType = rangeType) }
         filterData()
     }
 
+    fun setCustomDateRange(start: LocalDate, end: LocalDate) {
+        _uiState.update {
+            it.copy(
+                selectedStartDate = start,
+                selectedEndDate = end
+            )
+        }
+        filterData()
+    }
+
+
+
     private fun filterData() {
         val state = _uiState.value
-        val allDetails = state.customerDetailList
-        if (allDetails.isEmpty()) return
+        var filteredList = state.customerDetailList
+        if (filteredList.isEmpty()) return
 
         viewModelScope.launch {
-            var filteredList = allDetails
-
-            // 🔹 Step 1: Apply Date Range
-            val (startDate, endDate) = DateRangeHelper.getRange(state.dateRangeType)
-            filteredList = filteredList.filter { detail ->
-                val date = detail.date
-                date in startDate..endDate
+            val (startDate, endDate) = when {
+                state.selectedStartDate != null && state.selectedEndDate != null ->
+                    state.selectedStartDate to state.selectedEndDate
+                else -> DateRangeHelper.getRange(state.dateRangeType)
             }
 
-            // 🔹 Step 2: Apply Sorting Category
+            // 🔹 Apply Date Filter
+            filteredList = filteredList.filter { detail ->
+                detail.date in startDate!!..endDate!!
+            }
+
+            // 🔹 Apply Sorting
             state.currentFilter.category?.let { category ->
                 filteredList = when (category) {
                     "Date" -> filteredList.sortedBy { it.date }
@@ -86,7 +117,6 @@ class CustomerDetailViewModel @Inject constructor(
                 }
             }
 
-            // 🔹 Step 3: Apply Sort Order
             filteredList = when (state.currentFilter.sortOrder) {
                 SortOrder.ASCENDING -> filteredList
                 SortOrder.DESCENDING -> filteredList.reversed()
@@ -96,4 +126,5 @@ class CustomerDetailViewModel @Inject constructor(
             _uiState.update { it.copy(filteredList = filteredList) }
         }
     }
+
 }

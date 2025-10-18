@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.details
 
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.sort.FilterOptions
+import java.time.LocalDate
 
 data class CustomerDetailUiState(
     val selectedCustomerId: String? = null,
@@ -9,7 +10,9 @@ data class CustomerDetailUiState(
     val customerDetailList: List<CustomerDetailModel> = emptyList(),
     val filteredList: List<CustomerDetailModel> = emptyList(), //  filtered copy
     val currentFilter: FilterOptions = FilterOptions() ,//  remember current filter
-    val dateRangeType: DateRangeType = DateRangeType.ALL
+    val dateRangeType: DateRangeType = DateRangeType.ALL,
+    val selectedStartDate: LocalDate? = null,
+    val selectedEndDate: LocalDate? = null
 )
 
 

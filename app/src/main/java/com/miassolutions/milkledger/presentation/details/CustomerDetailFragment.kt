@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.ui.datesort.DatePickerHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.filter.FilterBottomSheet
 import com.miassolutions.milkledger.core.ui.filter.FilterSharedViewModel
@@ -36,6 +37,8 @@ class CustomerDetailFragment :
     }
 
     private fun setupDateRangeToggle() = with(binding) {
+
+        // 🔸 Auto-set date label and range when filter type changes
         toggleGroupFilter.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
 
@@ -46,9 +49,58 @@ class CustomerDetailFragment :
                 else -> DateRangeType.ALL
             }
 
-            viewModel.onEvent(CustomerUiEvent.ChangeDateRange(rangeType))
+            // 🔹 Get range from helper
+            val (start, end) = com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper.getRange(rangeType)
+
+            // 🔹 Update date label according to type
+            tvSelectedDate.text = when (rangeType) {
+                DateRangeType.TODAY -> start.toString()
+                DateRangeType.THIS_WEEK -> DatePickerHelper.formatRange(start, end)
+                DateRangeType.THIS_MONTH -> start.format(java.time.format.DateTimeFormatter.ofPattern("MMMM yyyy"))
+                else -> "All Records"
+            }
+
+            // 🔹 Update viewmodel to show corresponding list
+            viewModel.changeDateRange(rangeType, start, end)
         }
+
+        // 🔸 Open picker when user clicks on date
+        tvSelectedDate.setOnClickListener {
+            when (toggleGroupFilter.checkedButtonId) {
+                R.id.btnDaily -> DatePickerHelper.pickSingleDate(this@CustomerDetailFragment) { date ->
+                    tvSelectedDate.text = date.toString()
+                    viewModel.setCustomDateRange(date, date)
+                }
+
+                R.id.btnWeekly -> DatePickerHelper.pickWeek(this@CustomerDetailFragment) { start, end ->
+                    tvSelectedDate.text = DatePickerHelper.formatRange(start, end)
+                    viewModel.setCustomDateRange(start, end)
+                }
+
+                R.id.btnMonthly -> DatePickerHelper.pickMonth(this@CustomerDetailFragment) { start, end, label ->
+                    tvSelectedDate.text = label
+                    viewModel.setCustomDateRange(start, end)
+                }
+
+                else -> {
+                    // If no button selected, default to daily
+                    toggleGroupFilter.check(R.id.btnDaily)
+                }
+            }
+        }
+
+        // 🔹 When screen first opens, default to "Daily" + current date
+        toggleGroupFilter.check(R.id.btnDaily)
+        val today = java.time.LocalDate.now()
+        tvSelectedDate.text = today.toString()
+        viewModel.setCustomDateRange(today, today)
     }
+
+
+
+
+
+
 
 
     override fun setupListeners() {
