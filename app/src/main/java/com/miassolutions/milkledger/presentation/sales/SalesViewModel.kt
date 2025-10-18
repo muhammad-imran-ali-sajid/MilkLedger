@@ -88,7 +88,7 @@ class SalesViewModel @Inject constructor(
                     paid = 0.0,
                     rateUsed = customer.customerRate,
                     balance = 0.0
-                    
+
                     )
                 repository.insertSale(newSale)
             }

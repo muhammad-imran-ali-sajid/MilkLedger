@@ -88,4 +88,12 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
+    <style name="dashboard_element_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@drawable/card_gradient2</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
 </resources>
