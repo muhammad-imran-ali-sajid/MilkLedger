@@ -29,6 +29,7 @@
 
     <color name="white">#fff</color>
     <color name="black">#000</color>
+    <color name="transparent">#00000000</color>
     <color name="light_black">#ccc</color>
     <color name="grey">#eeeeee</color>
 
