@@ -13,7 +13,7 @@ import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import kotlin.math.truncate
 
 class SalesEntryAdapter(
-    onItemClick: ((SaleWithCustomer) -> Unit)? = null,
+    private val onEditClick: (SaleWithCustomer) -> Unit,
     private val navToDetailClick: (String, String) -> Unit
 ) : BaseListAdapter<SaleWithCustomer, ItemSalesBinding>(
     diffCallback = object : DiffUtil.ItemCallback<SaleWithCustomer>() {
@@ -31,9 +31,11 @@ class SalesEntryAdapter(
             return oldItem == newItem
         }
     },
-    onItemClick = onItemClick,
+
     inflate = ItemSalesBinding::inflate
 ) {
+
+    var isEditable = false
 
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup): ItemSalesBinding {
         return ItemSalesBinding.inflate(inflater, parent, false)
@@ -63,6 +65,9 @@ class SalesEntryAdapter(
 
             }
 
+            btnEditForm.setOnClickListener {
+                onEditClick(item)
+            }
 
 
         }

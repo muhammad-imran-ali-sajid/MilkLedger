@@ -1,11 +1,14 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
 import android.util.Log
+import android.view.Menu
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
@@ -26,12 +29,53 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     private lateinit var adapter: SalesEntryAdapter
     private val viewModel by viewModels<SalesViewModel>()
+    private var isEditable = false
 
     override fun setupViews() {
 
         setupSalesRV()
 
 
+    }
+
+    override fun getMenuResId(): Int {
+        return R.menu.menu_sales
+    }
+
+    override fun onMenuCreated(menu: Menu) {
+
+        val editModeItem = menu.findItem(R.id.action_edit_mode)
+        val switch =
+            editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
+
+        switch?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                BiometricHelper.authenticate(
+                    fragment = this,
+                    title = "Authenticate to enable edit mode",
+                    subtitle = "Use your fingerprint or device credentials",
+                    onSuccess = { enableEditMode() },
+                    onFailure = {
+                        switch.isChecked = false
+                        showToast("Authentication failed.")
+                    }
+                )
+            } else {
+                disableEditMode()
+            }
+        }
+    }
+
+    private fun enableEditMode() {
+        isEditable = true
+        adapter.isEditable = true
+        showSnackbar("Edit mode enabled")
+    }
+
+    private fun disableEditMode() {
+        isEditable = false
+        adapter.isEditable = false
+        showSnackbar("Edit mode disabled")
     }
 
     private fun showSummary(
@@ -72,26 +116,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
                 initialDate = currentDate,
                 onPicked = { viewModel.onDateSelected(it) }
             )
-//            val calendar = Calendar.getInstance().apply {
-//                set(Calendar.YEAR, currentDate.year)
-//                set(Calendar.MONTH, currentDate.monthValue - 1)
-//                set(Calendar.DAY_OF_MONTH, currentDate.dayOfMonth)
-//            }
-//
-//            val datePicker = MaterialDatePicker.Builder.datePicker()
-//                .setTitleText("Select Date")
-//                .setSelection(calendar.timeInMillis)
-//                .build()
-//
-//            datePicker.addOnPositiveButtonClickListener { selectedDateInMillis ->
-//                val selectedDate = Instant.ofEpochMilli(selectedDateInMillis)
-//                    .atZone(ZoneId.systemDefault())
-//                    .toLocalDate()
-//
-//                viewModel.onDateSelected(selectedDate)
-//            }
-//
-//            datePicker.show(parentFragmentManager, "MaterialDatePicker")
+
         }
 
 
@@ -102,11 +127,9 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         adapter = SalesEntryAdapter(::showEditSaleBottomSheet, ::navToDetail)
         binding.rvSales.adapter = adapter
 
-
     }
 
     private fun navToDetail(id: String, name: String) {
-
         findNavController().navigate(
             SalesFragmentDirections.actionSalesFragmentToCustomerDetailFragment(
                 id,
@@ -141,6 +164,10 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     }
 
     private fun showEditSaleBottomSheet(saleWithCustomer: SaleWithCustomer) {
+        if (!isEditable) {
+            showSnackbar("Enable from the top menu switch")
+            return
+        }
         SalesEditBottomSheet(
             entry = saleWithCustomer,
             onSave = { salesEntryEntity ->

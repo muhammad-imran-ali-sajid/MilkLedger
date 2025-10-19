@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
@@ -104,13 +105,12 @@ class PurchaseFragment :
         val switch =
             editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
 
-        // Initialize switch state
-//        switch?.isChecked = loadEditModeState()
-
-        // Handle toggle events
         switch?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                showBiometricPrompt(
+                BiometricHelper.authenticate(
+                    fragment = this,
+                    title = "Authenticate to enable edit mode",
+                    subtitle = "Use your fingerprint or device credentials",
                     onSuccess = { enableEditMode() },
                     onFailure = {
                         switch.isChecked = false
@@ -187,66 +187,17 @@ class PurchaseFragment :
     }
 
 
-    private fun showBiometricPrompt(onSuccess: () -> Unit, onFailure: () -> Unit = {}) {
-        val biometricManager = BiometricManager.from(requireContext())
-        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
-            == BiometricManager.BIOMETRIC_SUCCESS
-        ) {
-            val executor: Executor = ContextCompat.getMainExecutor(requireContext())
-            val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Authenticate to enable edit mode")
-                .setSubtitle("Use your fingerprint or device credentials")
-                .setAllowedAuthenticators(
-                    BiometricManager.Authenticators.BIOMETRIC_STRONG or
-                            BiometricManager.Authenticators.DEVICE_CREDENTIAL
-                )
-                .build()
-
-            val biometricPrompt = BiometricPrompt(
-                this, executor,
-                object : BiometricPrompt.AuthenticationCallback() {
-                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                        super.onAuthenticationSucceeded(result)
-                        onSuccess()
-                    }
-
-                    override fun onAuthenticationError(code: Int, errString: CharSequence) {
-                        super.onAuthenticationError(code, errString)
-                        Toast.makeText(requireContext(), errString, Toast.LENGTH_SHORT).show()
-                        onFailure()
-                    }
-                }
-            )
-
-            biometricPrompt.authenticate(promptInfo)
-        } else {
-            Toast.makeText(
-                requireContext(),
-                "Biometric authentication not available",
-                Toast.LENGTH_SHORT
-            ).show()
-            onFailure()
-        }
-    }
-
     private fun enableEditMode() {
         isEditable = true
         purchaseAdapter.isEditable = true
-//        saveEditModeState(true)
-        Toast.makeText(requireContext(), "Edit mode enabled", Toast.LENGTH_SHORT).show()
+        showSnackbar("Edit mode enabled")
     }
 
     private fun disableEditMode() {
         isEditable = false
         purchaseAdapter.isEditable = false
-//        saveEditModeState(false)
-        Toast.makeText(requireContext(), "Edit mode disabled", Toast.LENGTH_SHORT).show()
+        showSnackbar("Edit mode disabled")
     }
 
-//    private fun saveEditModeState(isEditable: Boolean) {
-//        prefs.edit { putBoolean("edit_mode_enabled", isEditable) }
-//    }
-//
-//    private fun loadEditModeState() =
-//        prefs.getBoolean("edit_mode_enabled", false)
+
 }
