@@ -7,6 +7,8 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.ui.extensions.formattedDate
+import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
@@ -26,7 +28,6 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     private val viewModel by viewModels<SalesViewModel>()
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.sales))
 
         setupSalesRV()
 
@@ -66,26 +67,31 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     override fun setupListeners() {
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
-            val calendar = Calendar.getInstance().apply {
-                set(Calendar.YEAR, currentDate.year)
-                set(Calendar.MONTH, currentDate.monthValue - 1)
-                set(Calendar.DAY_OF_MONTH, currentDate.dayOfMonth)
-            }
 
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Date")
-                .setSelection(calendar.timeInMillis)
-                .build()
-
-            datePicker.addOnPositiveButtonClickListener { selectedDateInMillis ->
-                val selectedDate = Instant.ofEpochMilli(selectedDateInMillis)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-
-                viewModel.onDateSelected(selectedDate)
-            }
-
-            datePicker.show(parentFragmentManager, "MaterialDatePicker")
+            pickSingleDate(
+                initialDate = currentDate,
+                onPicked = { viewModel.onDateSelected(it) }
+            )
+//            val calendar = Calendar.getInstance().apply {
+//                set(Calendar.YEAR, currentDate.year)
+//                set(Calendar.MONTH, currentDate.monthValue - 1)
+//                set(Calendar.DAY_OF_MONTH, currentDate.dayOfMonth)
+//            }
+//
+//            val datePicker = MaterialDatePicker.Builder.datePicker()
+//                .setTitleText("Select Date")
+//                .setSelection(calendar.timeInMillis)
+//                .build()
+//
+//            datePicker.addOnPositiveButtonClickListener { selectedDateInMillis ->
+//                val selectedDate = Instant.ofEpochMilli(selectedDateInMillis)
+//                    .atZone(ZoneId.systemDefault())
+//                    .toLocalDate()
+//
+//                viewModel.onDateSelected(selectedDate)
+//            }
+//
+//            datePicker.show(parentFragmentManager, "MaterialDatePicker")
         }
 
 
@@ -118,12 +124,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             adapter.submitList(state.salesForDate)
 
             binding.apply {
-                tvSelectedDate.text = getString(
-                    R.string.date_format,
-                    state.currentDate.dayOfMonth,
-                    state.currentDate.monthValue,
-                    state.currentDate.year
-                )
+                tvSelectedDate.text = state.currentDate.formattedDate()
 
 
 

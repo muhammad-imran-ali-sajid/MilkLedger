@@ -17,7 +17,7 @@
         android:focusable="true"
         android:gravity="center"
         android:padding="8dp"
-        android:text="📅 12/10/2025"
+        android:text="12/10/2025"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
