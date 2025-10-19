@@ -1,15 +1,13 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -28,7 +26,6 @@ import java.time.Instant
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.concurrent.Executor
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class PurchaseFragment :
@@ -50,6 +47,7 @@ class PurchaseFragment :
     override fun setupViews() {
         setToolbarTitle(getString(R.string.purchases))
         setupRecyclerView()
+
 
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
@@ -81,11 +79,42 @@ class PurchaseFragment :
 
     }
 
+    private fun showSummary(
+        milkAmount: Double,
+        avgLr: Double,
+        avgFat: Double,
+        totalAmount: Double,
+        avgRate: Double
+    ) {
+        binding.apply {
+            cardSummary.setTitle("Summary")
+            val summaryView =
+                layoutInflater.inflate(R.layout.layout_purchase_summary, binding.root, false)
+            cardSummary.setContent(summaryView)
+            cardSummary.collapse()
+
+
+            // You can access child TextViews like this:
+            val tvMilkAmount = summaryView.findViewById<TextView>(R.id.tv_total_amount)
+            val tvAvgLr = summaryView.findViewById<TextView>(R.id.tv_avg_lr)
+            val tvAvgFat = summaryView.findViewById<TextView>(R.id.tv_avg_fat)
+            val tvTotalAmount = summaryView.findViewById<TextView>(R.id.tv_total_amount)
+            val tvAvgRate = summaryView.findViewById<TextView>(R.id.tv_avg_price)
+
+            tvMilkAmount.text = milkAmount.toRoundedStr()
+            tvAvgFat.text = avgFat.toRoundedStr()
+            tvAvgLr.text = avgLr.toRoundedStr()
+            tvAvgFat.text = avgFat.toRoundedStr()
+            tvAvgRate.text = avgRate.toRoundedStr()
+            tvTotalAmount.text = totalAmount.toRoundedStr()
+        }
+    }
 
 
     override fun onMenuCreated(menu: Menu) {
         val editModeItem = menu.findItem(R.id.action_edit_mode)
-        val switch = editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
+        val switch =
+            editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
 
         // Initialize switch state
 //        switch?.isChecked = loadEditModeState()
@@ -105,8 +134,6 @@ class PurchaseFragment :
             }
         }
     }
-
-
 
 
     private fun setupRecyclerView() {
@@ -160,15 +187,27 @@ class PurchaseFragment :
                     state.currentDate.year
                 )
 
-                binding.tvTotalAmount.text =
-                    getString(R.string.rs, state.grandTotalForDate.roundToInt())
-                binding.tvTotalMilk.text = state.totalVolume.toRoundedStr()
-                binding.tvAvgFat.text = state.avgFat.toRoundedStr()
-                binding.tvAvgLr.text = state.avgLr.toRoundedStr()
-                binding.tvAvgPrice.text = state.avgRatePerLiter.toRoundedStr()
+
+                showSummary(
+                    milkAmount = state.totalVolume,
+                    avgLr = state.avgLr,
+                    avgFat = state.avgFat,
+                    totalAmount = state.grandTotalForDate,
+                    avgRate = state.avgRatePerLiter
+                )
+
+
+//                binding.tvTotalAmount.text =
+//                    getString(R.string.rs, state.grandTotalForDate.roundToInt())
+//                binding.tvTotalMilk.text = state.totalVolume.toRoundedStr()
+//                binding.tvAvgFat.text = state.avgFat.toRoundedStr()
+//                binding.tvAvgLr.text = state.avgLr.toRoundedStr()
+//                binding.tvAvgPrice.text = state.avgRatePerLiter.toRoundedStr()
             }
         }
+
     }
+
 
     private fun showBiometricPrompt(onSuccess: () -> Unit, onFailure: () -> Unit = {}) {
         val biometricManager = BiometricManager.from(requireContext())
