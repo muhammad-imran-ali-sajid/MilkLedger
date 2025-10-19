@@ -41,7 +41,7 @@ class SalesEntryAdapter(
 
     override fun bind(binding: ItemSalesBinding, item: SaleWithCustomer, position: Int) {
         binding.apply {
-            tvCustomerName.text =
+            tvName.text =
                 item.customer.customerName  // You should replace this with actual customer name lookup
             tvMilk.text = item.sale.volume.toRoundedStr()
             tvDeduction.text = item.sale.deduction.toRoundedStr()
@@ -57,16 +57,13 @@ class SalesEntryAdapter(
                 tvNotes.text = "Note: ${item.sale.notes}"
             }
 
-            // 👇 Long click on customer name only
-            tvCustomerName.setOnLongClickListener {
-                Log.d("SalesEntryAdapter", "Long click detected : ${item.customer.customerId}")
+
+            btnCustomerDetail.setOnClickListener {
                 navToDetailClick(item.customer.customerId, item.customer.customerName)
-                true
+
             }
 
-            // Optional: ensure it accepts long clicks
-            tvCustomerName.isLongClickable = true
-            tvCustomerName.isClickable = true
+
 
         }
     }

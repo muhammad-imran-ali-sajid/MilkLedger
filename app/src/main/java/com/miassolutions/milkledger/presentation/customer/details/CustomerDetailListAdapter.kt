@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
+import com.miassolutions.milkledger.core.util.hide
+import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding
 
 class CustomerDetailListAdapter :
@@ -32,6 +34,14 @@ class CustomerDetailListAdapter :
         tvPrice.text = item.milkPrice.toString()
         tvPayment.text = item.payment.toString()
         tvBalance.text = item.balance.toString()
+
+        if (item.notes.isNullOrBlank()) {
+            tvNotes.hide()
+        } else {
+            tvNotes.show()
+            tvNotes.text = "Note: ${item.notes}"
+        }
+
         tvNotes.text = item.notes
     }
 

@@ -61,7 +61,7 @@ class SupplierDetailListAdapter :
             tvNotes.hide()
         } else {
 
-            tvNotes.text = " نوٹ: ${item.notes}"
+            tvNotes.text = "Note: ${item.notes}"
         }
     }
 
