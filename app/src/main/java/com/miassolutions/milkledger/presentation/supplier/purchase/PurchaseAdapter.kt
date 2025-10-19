@@ -44,21 +44,21 @@ class PurchaseAdapter(
             tvVolume.text = item.purchase.volume.toRoundedStr()
 
             if (item.purchase.fat == 0.0) {
-                tvFat.text = "NA"
+                tvFat.text = "--"
             } else {
                 tvFat.text = item.purchase.fat.toRoundedStr()
             }
 
 
             if (item.purchase.lr == 0.0) {
-                tvLr.text = "NA"
+                tvLr.text = "--"
             } else {
                 tvLr.text = item.purchase.lr.toRoundedStr()
             }
 
 
             if (item.purchase.ts == 0.0) {
-                tvTs.text = "NA"
+                tvTs.text = "--"
             } else {
                 tvTs.text = item.purchase.ts.toRoundedStr()
             }

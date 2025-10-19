@@ -18,7 +18,6 @@ import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding
 import kotlin.math.roundToInt
 
-
 class PurchaseEditBottomSheet(
     private val entry: PurchaseWithSupplier,
     private val onSave: (PurchaseEntryEntity) -> Unit
@@ -41,97 +40,66 @@ class PurchaseEditBottomSheet(
         val supplier = entry.supplier
 
         binding.apply {
-            // Show supplier info
             tvSupplierName.text = supplier.supplierName
 
-            // Apply to all EditTexts
-            autoSelectOnFocus(etVolume)
-            autoSelectOnFocus(etFat)
-            autoSelectOnFocus(etLr)
-            autoSelectOnFocus(etPaid)
-            autoSelectOnFocus(etNotes)
-
-            // Fill fields
-            etVolume.setText(purchase.volume.toString())
-            etFat.setText(purchase.fat.toString())
-            etLr.setText(purchase.lr.toString())
+            // Autofill with empty if 0
+            etVolume.setText(purchase.volume.takeIf { it != 0.0 }?.toString() ?: "")
+            etFat.setText(purchase.fat.takeIf { it != 0.0 }?.toString() ?: "")
+            etLr.setText(purchase.lr.takeIf { it != 0.0 }?.toString() ?: "")
             etPaid.setText(purchase.paid.toString())
-            tvBalance.text = purchase.balance.roundToInt().toString()
             etNotes.setText(purchase.notes ?: "")
 
-            // Recalculate price initially
-            recalculatePrice()
-            recalculateTS()
-            recalculateBalance()
+            listOf(etVolume, etFat, etLr, etPaid, etNotes).forEach { autoSelectOnFocus(it) }
 
-
-            val textChangedListener: (CharSequence?, Int, Int, Int) -> Unit = { _, _, _, _ ->
+            // 🔄 Listeners
+            val recalc = {
                 recalculatePrice()
                 recalculateTS()
                 recalculateBalance()
             }
 
-            etVolume.doOnTextChanged(textChangedListener)
-            etFat.doOnTextChanged(textChangedListener)
-            etLr.doOnTextChanged(textChangedListener)
+            etVolume.doOnTextChanged { _, _, _, _ -> recalc() }
+            etFat.doOnTextChanged { _, _, _, _ -> recalc() }
+            etLr.doOnTextChanged { _, _, _, _ -> recalc() }
+            etPaid.doOnTextChanged { _, _, _, _ -> recalculateBalance() }
 
-            // Add this only once to watch changes on etPaid
-            etPaid.doOnTextChanged { _, _, _, _ ->
-                recalculateBalance()
-            }
-
-
+            // Done action
             etPaid.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-
-                    // Hide the keyboard
-                    val imm =
-                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(etNotes.windowToken, 0)
-
                     true
-                } else {
-                    false
-                }
+                } else false
             }
 
-
-            // Save button
             btnSave.setOnClickListener {
-                val volumeText = etVolume.text.toString()
-                val fatText = etFat.text.toString()
-                val lrText = etLr.text.toString()
+                val volume = etVolume.text.toString().toDoubleOrNull()
+                val fat = etFat.text.toString().toDoubleOrNull()
+                val lr = etLr.text.toString().toDoubleOrNull()
 
-                val volume = volumeText.toDoubleOrNull()
-                val fat = fatText.toDoubleOrNull()
-                val lr = lrText.toDoubleOrNull()
-
-                // Mandatory check: volume must not be null or zero
-                if (volume == null || volume <= 0) {
-                    etVolume.error = "Volume is required and must be greater than 0"
+                if (volume == null || volume <= 0.0) {
+                    etVolume.error = "Volume required"
                     etVolume.requestFocus()
                     return@setOnClickListener
                 }
 
-                // Optional check: fat range validation
-                if (fatText.isNotEmpty()) {
-                    if (fat == null || fat < 3.0 || fat > 7.0) {
-                        etFat.error = "Fat must be between 3.0 and 7.0"
+                if (!etFat.text.isNullOrEmpty()) {
+                    if (fat == null || fat !in 3.0..7.0) {
+                        etFat.error = "Fat must be 3.0 - 7.0"
                         etFat.requestFocus()
                         return@setOnClickListener
                     }
                 }
 
-                // Optional check: LR range validation
-                if (lrText.isNotEmpty()) {
-                    if (lr == null || lr < 15.0 || lr > 32.0) {
-                        etLr.error = "LR must be between 15.0 and 32.0"
+                if (!etLr.text.isNullOrEmpty()) {
+                    if (lr == null || lr !in 15.0..32.0) {
+                        etLr.error = "LR must be 15.0 - 32.0"
                         etLr.requestFocus()
                         return@setOnClickListener
                     }
                 }
 
-                val updatedPurchase = purchase.copy(
+                val updated = purchase.copy(
                     volume = volume,
                     fat = fat ?: 0.0,
                     lr = lr ?: 0.0,
@@ -139,13 +107,49 @@ class PurchaseEditBottomSheet(
                     notes = etNotes.text.toString()
                 )
 
-                onSave(updatedPurchase)
+                onSave(updated)
                 dismiss()
             }
 
-
             btnCancel.setOnClickListener { dismiss() }
+
+            // Initial calc
+            recalc()
         }
+    }
+
+    private fun recalculatePrice() {
+        val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
+        val fat = binding.etFat.text.toString().toDoubleOrNull()
+        val lr = binding.etLr.text.toString().toDoubleOrNull()
+        val rate = entry.supplier.supplierRate
+
+        if (volume <= 0.0) {
+            binding.tvPrice.text = "0.00"
+            return
+        }
+
+        val price = if (fat != null && lr != null) {
+            MilkCalculationUtils.calculatePrice(volume, fat, lr, rate)
+        } else {
+            volume * rate
+        }
+
+        binding.tvPrice.text = "%.2f".format(price)
+    }
+
+    private fun recalculateTS() {
+        val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
+        val fat = binding.etFat.text.toString().toDoubleOrNull()
+        val lr = binding.etLr.text.toString().toDoubleOrNull()
+
+        if (fat == null || lr == null || volume <= 0.0) {
+            binding.tvTs.text = "--"
+            return
+        }
+
+        val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
+        binding.tvTs.text = "%.2f".format(ts)
     }
 
     private fun recalculateBalance() {
@@ -153,41 +157,19 @@ class PurchaseEditBottomSheet(
         val paid = binding.etPaid.text.toString().toDoubleOrNull() ?: 0.0
         val balance = paid - price
 
-        binding.tvBalance.text = "%.2f".format(balance)
-
         val color = when {
             balance < 0 -> Color.RED
             balance == 0.0 -> "#000000".toColorInt()
-            else -> "#4CAF50".toColorInt() // Material green 500
+            else -> "#4CAF50".toColorInt()
         }
 
-        // Format balance text with + sign if positive
-        val balanceText = when {
+        val text = when {
             balance > 0 -> "+${balance.roundToInt()}"
             else -> balance.roundToInt().toString()
         }
 
-        binding.tvBalance.text = balanceText
+        binding.tvBalance.text = text
         binding.tvBalance.setTextColor(color)
-    }
-
-    private fun recalculateTS() {
-        val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
-        val fat = binding.etFat.text.toString().toDoubleOrNull() ?: 0.0
-        val lr = binding.etLr.text.toString().toDoubleOrNull() ?: 0.0
-        val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
-        binding.tvTs.text = "%.2f".format(ts)
-    }
-
-    private fun recalculatePrice() {
-        val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
-        val fat = binding.etFat.text.toString().toDoubleOrNull() ?: 0.0
-        val lr = binding.etLr.text.toString().toDoubleOrNull() ?: 0.0
-        val rate = entry.supplier.supplierRate
-
-        val price = MilkCalculationUtils.calculatePrice(volume, fat, lr, rate)
-        binding.tvPrice.text = "%.2f".format(price)
-
     }
 
     private fun autoSelectOnFocus(editText: EditText) {
