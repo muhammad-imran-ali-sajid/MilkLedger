@@ -152,20 +152,16 @@
             <!-- Purchases -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPurchases"
+                style="@style/dashboard_card"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
 
+                android:layout_height="150dp"
                 android:layout_columnWeight="1"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="4dp"
-                android:clickable="true"
-                android:focusable="true"
+                android:layout_marginBottom="4dp">
 
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp">
-
-                <LinearLayout style="@style/dashboard_element_style"
+                <LinearLayout
+                    style="@style/dashboard_element_style"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
@@ -188,17 +184,14 @@
             <!-- Sales -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSales"
+                style="@style/dashboard_card"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_columnWeight="1"
-                android:layout_marginBottom="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp">
+                android:layout_marginBottom="4dp">
 
-                <LinearLayout style="@style/dashboard_element_style"
+                <LinearLayout
+                    style="@style/dashboard_element_style"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
@@ -223,18 +216,15 @@
             <!-- Expenses -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardExpenses"
+                style="@style/dashboard_card"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_columnWeight="1"
                 android:layout_marginTop="4dp"
-                android:layout_marginEnd="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp">
+                android:layout_marginEnd="8dp">
 
-                <LinearLayout style="@style/dashboard_element_style"
+                <LinearLayout
+                    style="@style/dashboard_element_style"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
@@ -257,17 +247,14 @@
             <!-- Stats -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardStats"
+                style="@style/dashboard_card"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_columnWeight="1"
-                android:layout_marginTop="4dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="6dp">
+                android:layout_marginTop="4dp">
 
-                <LinearLayout style="@style/dashboard_element_style"
+                <LinearLayout
+                    style="@style/dashboard_element_style"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
@@ -290,18 +277,15 @@
             <!-- Supplier History -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSupplierHistory"
+                style="@style/dashboard_card"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_columnWeight="1"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                android:layout_marginEnd="8dp">
 
-                <LinearLayout style="@style/dashboard_element_style"
+                <LinearLayout
+                    style="@style/dashboard_element_style"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
@@ -324,17 +308,14 @@
             <!-- Customer History -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardCustomerHistory"
+                style="@style/dashboard_card"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_columnWeight="1"
-                android:layout_marginTop="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+                android:layout_marginTop="8dp">
 
-                <LinearLayout style="@style/dashboard_element_style"
+                <LinearLayout
+                    style="@style/dashboard_element_style"
                     tools:ignore="UseCompoundDrawables">
 
                     <ImageView
