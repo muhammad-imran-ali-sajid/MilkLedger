@@ -100,31 +100,34 @@ class PurchaseFragment :
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.action_edit_mode) {
-            val switch =
-                item.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
+        return when (item.itemId) {
+            R.id.action_edit_mode -> {
+                val switch =
+                    item.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
 
-            switch?.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    showBiometricPrompt(
-                        onSuccess = { enableEditMode() },
-                        onFailure = {
-                            switch.isChecked = false
-                            showToast("Authentication failed.")
-                        }
-                    )
-                } else {
-                    disableEditMode()
+                // Initialize switch state
+                switch?.isChecked = loadEditModeState()
+
+                // Handle toggle events
+                switch?.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        showBiometricPrompt(
+                            onSuccess = { enableEditMode() },
+                            onFailure = {
+                                switch.isChecked = false
+                                showToast("Authentication failed.")
+                            }
+                        )
+                    } else {
+                        disableEditMode()
+                    }
                 }
+                true
             }
-
-            // Optionally sync switch with current state
-            switch?.isChecked = loadEditModeState()
-
-            return true
+            else -> false
         }
-        return false
     }
+
 
 
     private fun setupRecyclerView() {
