@@ -92,11 +92,7 @@ class PurchaseAdapter(
             tvBalance.text = balanceText
             tvBalance.setTextColor(color)
 
-            if (bindingAdapterPosition % 2 == 0) {
-                root.setCardBackgroundColor("#dedede".toColorInt())
-            } else {
-                root.setCardBackgroundColor("#ffffff".toColorInt())
-            }
+
             root.setOnClickListener { onItemClick(item) }
         }
     }
