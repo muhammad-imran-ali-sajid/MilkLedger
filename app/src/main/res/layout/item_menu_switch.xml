@@ -6,4 +6,4 @@
     android:layout_height="wrap_content"
     android:textColor="@android:color/white"
     android:padding="8dp"
-    android:checked="false" />
+    android:checked="true" />

@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.supplier.purchase
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -75,58 +76,36 @@ class PurchaseFragment :
         }
 
 
-
-
         isEditable = loadEditModeState()
         purchaseAdapter.isEditable = isEditable
 
-//        binding.switchEditMode.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-////                binding.switchEditMode.text = "Edit Mode: ON"
-//                showBiometricPrompt(
-//                    onSuccess = { enableEditMode() },
-//                    onFailure = {
-//                        showToast("Authentication failed. Cannot enable edit mode.")
-//
-//                    }
-//                )
-//
-//            } else {
-////                binding.switchEditMode.text = "Edit Mode: OFF"
-//                disableEditMode()
-//            }
-//        }
-
     }
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.action_edit_mode -> {
-                val switch =
-                    item.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
 
-                // Initialize switch state
-                switch?.isChecked = loadEditModeState()
 
-                // Handle toggle events
-                switch?.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        showBiometricPrompt(
-                            onSuccess = { enableEditMode() },
-                            onFailure = {
-                                switch.isChecked = false
-                                showToast("Authentication failed.")
-                            }
-                        )
-                    } else {
-                        disableEditMode()
+    override fun onMenuCreated(menu: Menu) {
+        val editModeItem = menu.findItem(R.id.action_edit_mode)
+        val switch = editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
+
+        // Initialize switch state
+        switch?.isChecked = loadEditModeState()
+
+        // Handle toggle events
+        switch?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                showBiometricPrompt(
+                    onSuccess = { enableEditMode() },
+                    onFailure = {
+                        switch.isChecked = false
+                        showToast("Authentication failed.")
                     }
-                }
-                true
+                )
+            } else {
+                disableEditMode()
             }
-            else -> false
         }
     }
+
 
 
 
@@ -150,7 +129,10 @@ class PurchaseFragment :
     }
 
     private fun showEditBottomSheet(purchaseWithSupplier: PurchaseWithSupplier) {
-//        if (!isEditable) return
+        if (!isEditable) {
+            showSnackbar("Enable from the top menu switch")
+            return
+        }
 
         val bottomSheet = PurchaseEditBottomSheet(
             entry = purchaseWithSupplier,

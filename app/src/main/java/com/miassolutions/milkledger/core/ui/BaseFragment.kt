@@ -58,6 +58,7 @@ abstract class BaseFragment<VB : ViewBinding>(
 
     // -------- Menu (auto-injected) --------
     protected open fun getMenuResId(): Int? = null
+    protected open fun onMenuCreated(menu: Menu) {}
 
     protected open fun onMenuItemSelected(item: MenuItem): Boolean = false
 
@@ -69,6 +70,7 @@ abstract class BaseFragment<VB : ViewBinding>(
             menuHost.addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(menuRes, menu)
+                    this@BaseFragment.onMenuCreated(menu)
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
@@ -91,6 +93,23 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
+    protected fun showSnackbar(
+        message: String,
+        duration: Int = Snackbar.LENGTH_SHORT,
+        actionText: String? = null,
+        onAction: (() -> Unit)? = null
+    ) {
+        val view = view ?: return  // Prevent crash if fragment view is destroyed
+        val snackbar = Snackbar.make(view, message, duration)
+
+        if (actionText != null && onAction != null) {
+            snackbar.setAction(actionText) { onAction() }
+        }
+
+        snackbar.show()
+    }
+
 
     protected fun <T> Flow<T>.collectState(
         state: Lifecycle.State = Lifecycle.State.STARTED,
