@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
 import android.util.Log
+import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -30,6 +31,36 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         setupSalesRV()
 
 
+    }
+
+    private fun showSummary(
+        milkAmount: Double,
+        deduction: Double,
+        totalNetMilk: Double,
+        totalAmount: Double,
+        avgRate: Double
+    ) {
+        binding.apply {
+            cardSalesSummary.setTitle("Summary")
+            val summaryView =
+                layoutInflater.inflate(R.layout.layout_sales_summary, binding.root, false)
+            cardSalesSummary.setContent(summaryView)
+            cardSalesSummary.collapse()
+
+
+            // You can access child TextViews like this:
+            val tvMilkAmount = summaryView.findViewById<TextView>(R.id.tv_total_milk)
+            val tvDeduction = summaryView.findViewById<TextView>(R.id.tv_deduction)
+            val tvTotalNetMilk = summaryView.findViewById<TextView>(R.id.tv_total_net_milk)
+            val tvTotalAmount = summaryView.findViewById<TextView>(R.id.tv_total_amount)
+            val tvAvgRate = summaryView.findViewById<TextView>(R.id.tv_avg_price)
+
+            tvMilkAmount.text = milkAmount.toRoundedStr()
+            tvDeduction.text = deduction.toRoundedStr()
+            tvTotalNetMilk.text = totalNetMilk.toRoundedStr()
+            tvAvgRate.text = avgRate.toRoundedStr()
+            tvTotalAmount.text = totalAmount.toRoundedStr()
+        }
     }
 
     override fun setupListeners() {
@@ -94,13 +125,15 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
                     state.currentDate.year
                 )
 
-                tvTotalAmount.text =
-                    getString(R.string.rs, state.totalAmount.roundToInt())
 
-                tvDeduction.text = state.totalDeduction.toRoundedStr()
-                tvTotalNetMilk.text = state.totalMilk.toRoundedStr()
-                tvAvgPrice.text = state.avgRatePerLiter.toRoundedStr()
-                tvTotalMilk.text = state.totalMilk.toRoundedStr()
+
+                showSummary(
+                    milkAmount = state.totalMilk,
+                    deduction = state.totalDeduction,
+                    totalNetMilk = state.grandSaleTotalForDate,
+                    totalAmount = state.totalAmount,
+                    avgRate = state.avgRatePerLiter
+                )
 
             }
         }

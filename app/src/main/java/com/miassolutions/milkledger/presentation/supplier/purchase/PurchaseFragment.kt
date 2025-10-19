@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
@@ -68,6 +69,7 @@ class PurchaseFragment :
         milkAmount: Double,
         avgLr: Double,
         avgFat: Double,
+        avgTS : Double,
         totalAmount: Double,
         avgRate: Double
     ) {
@@ -81,17 +83,18 @@ class PurchaseFragment :
 
             // You can access child TextViews like this:
             val tvMilkAmount = summaryView.findViewById<TextView>(R.id.tv_total_amount)
-            val tvAvgLr = summaryView.findViewById<TextView>(R.id.tv_avg_lr)
             val tvAvgFat = summaryView.findViewById<TextView>(R.id.tv_avg_fat)
+            val tvAvgLR = summaryView.findViewById<TextView>(R.id.tv_avg_lr)
+            val tvAvgTS = summaryView.findViewById<TextView>(R.id.tv_avg_ts)
             val tvTotalAmount = summaryView.findViewById<TextView>(R.id.tv_total_amount)
             val tvAvgRate = summaryView.findViewById<TextView>(R.id.tv_avg_price)
 
             tvMilkAmount.text = milkAmount.toRoundedStr()
-            tvAvgFat.text = avgFat.toRoundedStr()
-            tvAvgLr.text = avgLr.toRoundedStr()
-            tvAvgFat.text = avgFat.toRoundedStr()
-            tvAvgRate.text = avgRate.toRoundedStr()
-            tvTotalAmount.text = totalAmount.toRoundedStr()
+            tvAvgFat.text = avgFat.toRoundedStr("%.2f")
+            tvAvgLR.text = avgLr.toRoundedStr("%.2f")
+            tvAvgTS.text = avgTS.toRoundedStr("%.2f")
+            tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr(" %.0f")}"
+            tvAvgRate.text = "Rs. ${avgRate.toRoundedStr(" %.0f")}"
         }
     }
 
@@ -165,29 +168,19 @@ class PurchaseFragment :
             viewModel.uiState.collectLatest { state ->
                 purchaseAdapter.submitList(state.purchasesForDate)
 
-                binding.tvSelectedDate.text = getString(
-                    R.string.date_format,
-                    state.currentDate.dayOfMonth,
-                    state.currentDate.monthValue,
-                    state.currentDate.year
-                )
+                binding.tvSelectedDate.text = state.currentDate.formattedDate()
 
 
                 showSummary(
                     milkAmount = state.totalVolume,
-                    avgLr = state.avgLr,
                     avgFat = state.avgFat,
+                    avgLr = state.avgLr,
+                    avgTS = state.avgTS,
                     totalAmount = state.grandTotalForDate,
                     avgRate = state.avgRatePerLiter
                 )
 
 
-//                binding.tvTotalAmount.text =
-//                    getString(R.string.rs, state.grandTotalForDate.roundToInt())
-//                binding.tvTotalMilk.text = state.totalVolume.toRoundedStr()
-//                binding.tvAvgFat.text = state.avgFat.toRoundedStr()
-//                binding.tvAvgLr.text = state.avgLr.toRoundedStr()
-//                binding.tvAvgPrice.text = state.avgRatePerLiter.toRoundedStr()
             }
         }
 

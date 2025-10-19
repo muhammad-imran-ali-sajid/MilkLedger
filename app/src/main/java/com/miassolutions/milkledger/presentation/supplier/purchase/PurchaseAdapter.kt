@@ -46,21 +46,21 @@ class PurchaseAdapter(
             if (item.purchase.fat == 0.0) {
                 tvFat.text = "--"
             } else {
-                tvFat.text = item.purchase.fat.toRoundedStr()
+                tvFat.text = item.purchase.fat.toRoundedStr("%.2f")
             }
 
 
             if (item.purchase.lr == 0.0) {
                 tvLr.text = "--"
             } else {
-                tvLr.text = item.purchase.lr.toRoundedStr()
+                tvLr.text = item.purchase.lr.toRoundedStr("%.2f")
             }
 
 
             if (item.purchase.ts == 0.0) {
                 tvTs.text = "--"
             } else {
-                tvTs.text = item.purchase.ts.toRoundedStr()
+                tvTs.text = item.purchase.ts.toRoundedStr("%.2f")
             }
 
 

@@ -13,6 +13,7 @@ data class PurchaseUiState(
     val totalVolume: Double = 0.0,
     val avgFat: Double = 0.0,
     val avgLr: Double = 0.0,
+    val avgTS : Double = 0.0,
     val avgRatePerLiter: Double = 0.0,
 )
 

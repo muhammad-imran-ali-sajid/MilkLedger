@@ -99,13 +99,30 @@ class PurchaseViewModel @Inject constructor(
 
             repository.getPurchasesByDate(date).collectLatest { purchases ->
                 val sortedPurchases = purchases.sortedBy { it.supplier.sortOrder }
+                val validTsEntries = sortedPurchases.filter { it.purchase.ts > 0.0 }
+                val validFatEntries = sortedPurchases.filter { it.purchase.fat > 0.0 }
+                val validLREntries = sortedPurchases.filter { it.purchase.lr > 0.0 }
 
                 val totalVolume = sortedPurchases.sumOf { it.purchase.milkAmount }
-                val avgFat = if (totalVolume > 0) {
-                    sortedPurchases.sumOf { it.purchase.fat * it.purchase.milkAmount } / totalVolume
+                val avgFat = if (validFatEntries.isNotEmpty()) {
+                    val totalFatMilk =
+                        validFatEntries.sumOf { it.purchase.fat * it.purchase.milkAmount }
+                    val totalFatVolume = validFatEntries.sumOf { it.purchase.milkAmount }
+                    totalFatMilk / totalFatVolume
                 } else 0.0
-                val avgLr = if (totalVolume > 0) {
-                    sortedPurchases.sumOf { it.purchase.lr * it.purchase.milkAmount } / totalVolume
+
+                val avgLr = if (validLREntries.isNotEmpty()) {
+                    val totalLRMilk =
+                        validLREntries.sumOf { it.purchase.lr * it.purchase.milkAmount }
+                    val totalLRVolume = validFatEntries.sumOf { it.purchase.milkAmount }
+                    totalLRMilk / totalLRVolume
+                } else 0.0
+
+
+                val avgTS = if (validTsEntries.isNotEmpty()) {
+                    val totalTsMilk =
+                        validTsEntries.sumOf { it.purchase.ts  }
+                    totalTsMilk / validTsEntries.count()
                 } else 0.0
                 val grandTotal = sortedPurchases.sumOf { it.purchase.milkPrice }
                 val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
@@ -117,6 +134,7 @@ class PurchaseViewModel @Inject constructor(
                         totalVolume = totalVolume,
                         avgFat = avgFat,
                         avgLr = avgLr,
+                        avgTS = avgTS,
                         grandTotalForDate = grandTotal,
                         avgRatePerLiter = avgRatePerLiter
                     )
@@ -124,7 +142,6 @@ class PurchaseViewModel @Inject constructor(
             }
         }
     }
-
 
 
     // ----------------------------------------------------------
