@@ -73,38 +73,28 @@ class PurchaseFragment :
             datePicker.show(parentFragmentManager, "MaterialDatePicker")
         }
 
-        binding.btnPrevDate.setOnClickListener {
-            val currentDate = viewModel.uiState.value.currentDate
-            val previousDate = currentDate.minusDays(1)
-            viewModel.onDateSelected(previousDate)
-        }
 
-        binding.btnNextDate.setOnClickListener {
-            val currentDate = viewModel.uiState.value.currentDate
-            val nextDate = currentDate.plusDays(1)
-            viewModel.onDateSelected(nextDate)
-        }
 
 
         isEditable = loadEditModeState()
         purchaseAdapter.isEditable = isEditable
 
-        binding.switchEditMode.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-//                binding.switchEditMode.text = "Edit Mode: ON"
-                showBiometricPrompt(
-                    onSuccess = { enableEditMode() },
-                    onFailure = {
-                        showToast("Authentication failed. Cannot enable edit mode.")
-
-                    }
-                )
-
-            } else {
-//                binding.switchEditMode.text = "Edit Mode: OFF"
-                disableEditMode()
-            }
-        }
+//        binding.switchEditMode.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+////                binding.switchEditMode.text = "Edit Mode: ON"
+//                showBiometricPrompt(
+//                    onSuccess = { enableEditMode() },
+//                    onFailure = {
+//                        showToast("Authentication failed. Cannot enable edit mode.")
+//
+//                    }
+//                )
+//
+//            } else {
+////                binding.switchEditMode.text = "Edit Mode: OFF"
+//                disableEditMode()
+//            }
+//        }
 
     }
 
