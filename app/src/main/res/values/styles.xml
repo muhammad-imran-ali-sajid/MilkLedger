@@ -101,26 +101,34 @@
         <item name="android:focusable">true</item>
     </style>
 
-    <style name="purchase_card" parent="BaseCardStyle">
+    <style name="PurchaseCard" parent="BaseCardStyle">
         <item name="cardBackgroundColor">#E2E8EB</item>
         <item name="strokeColor">#E2E8EB</item>
 
     </style>
 
-    <style name="supplier_detail_card" parent="BaseCardStyle">
+    <style name="SupplierDetailCard" parent="BaseCardStyle">
         <item name="cardBackgroundColor">#E2E8EB</item>
         <item name="strokeColor">#E2E8EB</item>
 
     </style>
 
-    <style name="customer_detail_card" parent="BaseCardStyle">
+    <style name="CustomerDetailCard" parent="BaseCardStyle">
         <item name="cardBackgroundColor">#E2E8EB</item>
         <item name="strokeColor">#E2E8EB</item>
 
     </style>
 
-
-
+    <style name="RecyclerViewStyle">
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:clipToPadding">false</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:fadeScrollbars">true</item>
+        <item name="android:scrollbarSize">10dp</item>
+        <item name="android:scrollbarDefaultDelayBeforeFade">
+            @integer/material_motion_duration_long_2
+        </item>
+    </style>
 
 
 </resources>

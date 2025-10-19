@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginVertical="6dp"
     android:layout_marginHorizontal="8dp"
-    style="@style/purchase_card"
+    style="@style/PurchaseCard"
     >
 
     <LinearLayout
@@ -21,16 +21,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="18 Oct 2025"
-            android:paddingStart="16dp"
-            android:layout_marginBottom="8dp"
-            style="@style/TextTitleUrdu" />
+            android:paddingStart="12dp"
+            style="@style/TextLabel" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="110dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="4dp"/>
+
+
+
 
         <!-- Row 1: Labels and Values -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="8dp"
             android:weightSum="3">
 
             <!-- Volume -->
@@ -88,6 +95,10 @@
             </LinearLayout>
         </LinearLayout>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+
         <!-- Row 2: Urdu Labels -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -105,8 +116,8 @@
                 android:gravity="center">
 
                 <TextView
-                    android:text="قیمت"
-                    style="@style/TextTitleUrdu" />
+                    android:text="Price"
+                    style="@style/TextLabel" />
 
                 <TextView
                     android:id="@+id/tvPrice"
@@ -123,8 +134,8 @@
                 android:gravity="center">
 
                 <TextView
-                    android:text="ادائیگی"
-                    style="@style/TextTitleUrdu" />
+                    android:text="Payment"
+                    style="@style/TextLabel" />
 
                 <TextView
                     android:id="@+id/tvPayment"
@@ -141,8 +152,8 @@
                 android:gravity="center">
 
                 <TextView
-                    android:text="بیلنس"
-                    style="@style/TextTitleUrdu" />
+                    android:text="Balance"
+                    style="@style/TextLabel" />
 
                 <TextView
                     android:id="@+id/tvBalance"
@@ -155,7 +166,8 @@
         <!-- Notes -->
         <TextView
             android:id="@+id/tvNotes"
-            tools:text="نوٹ: کوئی بات نہیں لکھی گئی"
-            style="@style/TextTitleUrdu" />
+            tools:text="Note: no note"
+            android:layout_marginStart="12dp"
+            style="@style/TextValue" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

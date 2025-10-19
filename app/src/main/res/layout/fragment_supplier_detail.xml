@@ -66,7 +66,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggleGroupFilter"
-        tools:listitem="@layout/item_customer_detail" />
+        tools:listitem="@layout/item_supplier_detail" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
