@@ -78,13 +78,6 @@
     </style>
 
 
-    <style name="NavActiveIndicator" parent="">
-        <item name="android:background">@drawable/bg_circle</item> <!-- background color -->
-    </style>
-
-    <style name="BottomNavigationStyle" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="android:minHeight">48dp</item>
-    </style>
 
     <style name="dashboard_element_style">
         <item name="android:layout_width">match_parent</item>
@@ -93,66 +86,39 @@
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="dashboard_card">
-        <item name="android:clickable">true</item>
-        <item name="android:backgroundTint">@color/white</item>
-        <item name="strokeColor">@color/white</item>
+    <style name="BaseCardStyle">
         <item name="cardCornerRadius">12dp</item>
-        <item name="cardElevation">6dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="elevation">4dp</item>
+
+    </style>
+
+    <style name="dashboard_card" parent="BaseCardStyle">
+        <item name="cardBackgroundColor">#eee</item>
+        <item name="android:clickable">true</item>
+        <item name="strokeColor">#eee</item>
+        <item name="android:layout_margin">4dp</item>
         <item name="android:focusable">true</item>
     </style>
 
-    <style name="purchase_card">
+    <style name="purchase_card" parent="BaseCardStyle">
         <item name="cardBackgroundColor">#E2E8EB</item>
         <item name="strokeColor">#E2E8EB</item>
-        <item name="cardCornerRadius">12dp</item>
-        <item name="cardElevation">6dp</item>
+
     </style>
 
+    <style name="supplier_detail_card" parent="BaseCardStyle">
+        <item name="cardBackgroundColor">#E2E8EB</item>
+        <item name="strokeColor">#E2E8EB</item>
 
+    </style>
 
+    <style name="customer_detail_card" parent="BaseCardStyle">
+        <item name="cardBackgroundColor">#E2E8EB</item>
+        <item name="strokeColor">#E2E8EB</item>
 
+    </style>
 
-        <!-- Theme overlay for DatePicker dialogs -->
-        <style name="ThemeOverlay.MyApp.DatePicker"
-            parent="ThemeOverlay.Material3.MaterialCalendar">
-
-            <!-- Primary brand color for selected day etc. -->
-            <item name="colorPrimary">@color/md_theme_onPrimary</item>
-            <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
-
-            <!-- Surface color for calendar background -->
-            <item name="colorSurface">@color/md_theme_onSurface</item>
-            <item name="colorOnSurface">@color/md_theme_onSurface</item>
-
-            <!-- Range fill / highlight color if you use date‑range picker -->
-            <item name="rangeFillColor">@color/md_theme_primary</item>
-
-<!--            &lt;!&ndash; Header title text appearance &ndash;&gt;-->
-<!--            <item name="materialCalendarHeaderTitleTextAppearance">@style/TextAppearance.MyApp.DatePicker.HeaderTitle</item>-->
-
-<!--            &lt;!&ndash; Year selector text appearance &ndash;&gt;-->
-<!--            <item name="materialCalendarYearTextAppearance">@style/TextAppearance.MyApp.DatePicker.Year</item>-->
-
-<!--            &lt;!&ndash; Day selector text appearance &ndash;&gt;-->
-<!--            <item name="materialCalendarDayTextAppearance">@style/TextAppearance.MyApp.DatePicker.Day</item>-->
-        </style>
-
-        <!-- TextAppearance examples -->
-        <style name="TextAppearance.MyApp.DatePicker.HeaderTitle"
-            parent="TextAppearance.Material3.HeadlineSmall">
-            <item name="android:textColor">@color/md_theme_onSurface</item>
-        </style>
-
-        <style name="TextAppearance.MyApp.DatePicker.Year"
-            parent="TextAppearance.Material3.BodyLarge">
-            <item name="android:textColor">@color/md_theme_onSurface</item>
-        </style>
-
-        <style name="TextAppearance.MyApp.DatePicker.Day"
-            parent="TextAppearance.Material3.BodyMedium">
-            <item name="android:textColor">@color/md_theme_onSurface</item>
-        </style>
 
 
 
