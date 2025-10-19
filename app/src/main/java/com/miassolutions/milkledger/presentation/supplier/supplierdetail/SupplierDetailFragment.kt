@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
 import android.util.Log
+import android.view.Menu
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -31,6 +32,9 @@ class SupplierDetailFragment :
     private val filterViewModel by activityViewModels<FilterSharedViewModel>()
     private val args by navArgs<SupplierDetailFragmentArgs>()
     private lateinit var adapter: SupplierDetailListAdapter
+    override fun getMenuResId(): Int {
+        return R.menu.menu_supplier_detail
+    }
 
     override fun setupViews() {
         viewModel.onSelectedSupplierId(args.supplierId)
@@ -47,10 +51,16 @@ class SupplierDetailFragment :
             viewModel.onEvent(SupplierUiEvent.NextButton)
         }
 
-        binding.btnSort.setOnClickListener {
-            FilterBottomSheet().show(parentFragmentManager, "FilterSheet")
-        }
 
+
+    }
+
+    override fun onMenuCreated(menu: Menu) {
+        val sortMenu = menu.findItem(R.id.menu_sort_item)
+        sortMenu.setOnMenuItemClickListener {
+            FilterBottomSheet().show(parentFragmentManager, "FilterSheet")
+            true
+        }
     }
 
 

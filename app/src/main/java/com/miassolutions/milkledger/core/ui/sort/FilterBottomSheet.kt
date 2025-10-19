@@ -39,7 +39,7 @@ class FilterBottomSheet : BottomSheetDialogFragment() {
             selectedCategory = category
         }
         binding.rvCategories.adapter = adapter
-        adapter.submitList(listOf("Date", "Net Milk", "Price", "Balance", "Payment"))
+        adapter.submitList(listOf("Date", "Net Milk"))
     }
 
     private fun setupSortChips() {
