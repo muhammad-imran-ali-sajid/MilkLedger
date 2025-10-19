@@ -1,31 +1,20 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
 import androidx.fragment.app.viewModels
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.miassolutions.milkledger.R
+import androidx.navigation.fragment.navArgs
+import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
+import com.miassolutions.milkledger.databinding.SupplierFormLayoutBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class SupplierDetailFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = SupplierDetailFragment()
-    }
+@AndroidEntryPoint
+class SupplierDetailFragment :
+    BaseFragment<FragmentCustomerDetailBinding>(FragmentCustomerDetailBinding::inflate) {
 
     private val viewModel: SupplierDetailViewModel by viewModels()
+    private val args by navArgs<SupplierDetailFragmentArgs>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun setupViews() {
 
-        // TODO: Use the ViewModel
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_supplier_detail, container, false)
     }
 }

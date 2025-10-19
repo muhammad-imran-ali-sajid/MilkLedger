@@ -6,7 +6,7 @@
     android:background="@drawable/bg_gradient_top_bar"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="4dp"
+    android:paddingHorizontal="16dp"
     android:weightSum="8">
 
 
@@ -26,7 +26,7 @@
         android:layout_weight="6"
         android:gravity="center"
         android:padding="8dp"
-        android:text="📅 12/10/2025"
+        android:text="📅 12-10-2025"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold" />

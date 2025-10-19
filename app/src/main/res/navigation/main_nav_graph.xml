@@ -9,7 +9,17 @@
         android:id="@+id/purchaseFragment"
         android:name="com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseFragment"
         android:label="Purchases"
-        tools:layout="@layout/fragment_purchases" />
+        tools:layout="@layout/fragment_purchases" >
+        <action
+            android:id="@+id/action_purchaseFragment_to_supplierDetailFragment"
+            app:destination="@id/supplierDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+
+            />
+    </fragment>
     <fragment
         android:id="@+id/expensesFragment"
         android:name="com.miassolutions.milkledger.presentation.expenses.ExpensesFragment"
@@ -22,7 +32,11 @@
         tools:layout="@layout/fragment_sales" >
         <action
             android:id="@+id/action_salesFragment_to_customerDetailFragment"
-            app:destination="@id/customerDetailFragment" />
+            app:destination="@id/customerDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -100,6 +114,15 @@
             app:argType="string" />
         <argument
             android:name="customerName"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/supplierDetailFragment"
+        tools:layout="@layout/fragment_supplier_detail"
+        android:name="com.miassolutions.milkledger.presentation.supplier.supplierdetail.SupplierDetailFragment"
+        android:label="{supplierName}" >
+        <argument
+            android:name="supplierName"
             app:argType="string" />
     </fragment>
 </navigation>

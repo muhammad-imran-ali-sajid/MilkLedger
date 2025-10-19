@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -127,7 +128,7 @@ class PurchaseFragment :
 
 
     private fun setupRecyclerView() {
-        purchaseAdapter = PurchaseAdapter(::showEditBottomSheet, ::showEditBottomSheet)
+        purchaseAdapter = PurchaseAdapter(::showEditBottomSheet, ::navToSupplierDetail)
 
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
@@ -135,6 +136,14 @@ class PurchaseFragment :
             itemAnimator = null
             setHasFixedSize(true)
         }
+    }
+
+    private fun navToSupplierDetail(supplier: PurchaseWithSupplier) {
+        findNavController().navigate(
+            PurchaseFragmentDirections.actionPurchaseFragmentToSupplierDetailFragment(
+                supplier.supplier.supplierName
+            )
+        )
     }
 
     private fun showEditBottomSheet(purchaseWithSupplier: PurchaseWithSupplier) {
