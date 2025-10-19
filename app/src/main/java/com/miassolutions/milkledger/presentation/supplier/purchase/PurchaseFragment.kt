@@ -36,12 +36,12 @@ class PurchaseFragment :
 
     override fun getMenuResId(): Int? = R.menu.purchase_menu
 
-    private val prefs by lazy {
-        requireContext().getSharedPreferences(
-            "edit_text_enable_state",
-            Context.MODE_PRIVATE
-        )
-    }
+//    private val prefs by lazy {
+//        requireContext().getSharedPreferences(
+//            "edit_text_enable_state",
+//            Context.MODE_PRIVATE
+//        )
+//    }
 
     private var isEditable = true
     private val viewModel: PurchaseViewModel by viewModels()
@@ -76,7 +76,7 @@ class PurchaseFragment :
         }
 
 
-        isEditable = loadEditModeState()
+//        isEditable = loadEditModeState()
         purchaseAdapter.isEditable = isEditable
 
     }
@@ -88,7 +88,7 @@ class PurchaseFragment :
         val switch = editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
 
         // Initialize switch state
-        switch?.isChecked = loadEditModeState()
+//        switch?.isChecked = loadEditModeState()
 
         // Handle toggle events
         switch?.setOnCheckedChangeListener { _, isChecked ->
@@ -215,21 +215,21 @@ class PurchaseFragment :
     private fun enableEditMode() {
         isEditable = true
         purchaseAdapter.isEditable = true
-        saveEditModeState(true)
+//        saveEditModeState(true)
         Toast.makeText(requireContext(), "Edit mode enabled", Toast.LENGTH_SHORT).show()
     }
 
     private fun disableEditMode() {
         isEditable = false
         purchaseAdapter.isEditable = false
-        saveEditModeState(false)
+//        saveEditModeState(false)
         Toast.makeText(requireContext(), "Edit mode disabled", Toast.LENGTH_SHORT).show()
     }
 
-    private fun saveEditModeState(isEditable: Boolean) {
-        prefs.edit { putBoolean("edit_mode_enabled", isEditable) }
-    }
-
-    private fun loadEditModeState() =
-        prefs.getBoolean("edit_mode_enabled", false)
+//    private fun saveEditModeState(isEditable: Boolean) {
+//        prefs.edit { putBoolean("edit_mode_enabled", isEditable) }
+//    }
+//
+//    private fun loadEditModeState() =
+//        prefs.getBoolean("edit_mode_enabled", false)
 }
