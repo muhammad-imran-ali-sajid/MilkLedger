@@ -70,7 +70,7 @@ class PurchaseAdapter(
             } else {
                 tvNotes.show()
                 divider.show()
-                tvNotes.text = "نوٹ: ${item.purchase.notes}"
+                tvNotes.text = "Note: ${item.purchase.notes}"
             }
             tvPrice.text = item.purchase.milkPrice.roundToInt().toString()
             tvPaid.text = item.purchase.payment.roundToInt().toString()

@@ -6,15 +6,13 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="4dp"
-    android:layoutDirection="rtl"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="8dp">
+
+    style="@style/purchase_card">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#dedf"
         android:padding="8dp">
 
         <!-- Name -->
@@ -218,10 +216,9 @@
         <!-- Notes Row -->
         <TextView
             android:id="@+id/tvNotes"
-            style="@style/TextTitleUrdu"
-            android:textSize="16sp"
-
-            tools:text="نوٹ: کوئی بات نہیں لکھی گئی" />
+            style="@style/TextValue"
+            android:layout_marginStart="12dp"
+            tools:text="Note : no note" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

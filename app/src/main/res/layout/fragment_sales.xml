@@ -6,64 +6,19 @@
     android:layout_height="match_parent">
 
 
-    <!-- Date Text -->
-
-<!--    <LinearLayout-->
-<!--        android:id="@+id/top_date_bar"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="4dp"-->
-<!--        android:background="@drawable/bg_gradient_top_bar"-->
-<!--        android:gravity="center_vertical"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:padding="4dp"-->
-<!--        android:weightSum="5"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-
-<!--        &lt;!&ndash; Previous Date Button &ndash;&gt;-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/btn_prev_date"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:background="?attr/selectableItemBackgroundBorderless"-->
-<!--            android:contentDescription="Previous Date"-->
-<!--            android:padding="8dp"-->
-<!--            android:scaleType="centerInside"-->
-<!--            android:src="@drawable/ic_arrow" />-->
-
-
-<!--        &lt;!&ndash; Next Date Button &ndash;&gt;-->
-<!--        <ImageButton-->
-<!--            android:id="@+id/btn_next_date"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:background="?attr/selectableItemBackgroundBorderless"-->
-<!--            android:contentDescription="Next Date"-->
-<!--            android:padding="8dp"-->
-<!--            android:rotation="180"-->
-<!--            android:scaleType="centerInside"-->
-<!--            android:src="@drawable/ic_arrow" />-->
-<!--    </LinearLayout>-->
 
     <TextView
         android:id="@+id/tv_selected_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        style="@style/TextLabel"
+        android:background="@drawable/bg_gradient_top_bar"
         android:layout_weight="3"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center"
         android:padding="8dp"
         android:text="📅 12/10/2025"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:background="@drawable/card_gradient1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
