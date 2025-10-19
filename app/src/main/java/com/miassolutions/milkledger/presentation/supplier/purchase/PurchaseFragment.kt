@@ -127,12 +127,7 @@ class PurchaseFragment :
 
 
     private fun setupRecyclerView() {
-        purchaseAdapter = PurchaseAdapter(
-            onItemClick = { purchaseWithSupplier ->
-                if (!isEditable) return@PurchaseAdapter
-                showEditBottomSheet(purchaseWithSupplier)
-            }
-        )
+        purchaseAdapter = PurchaseAdapter(::showEditBottomSheet, ::showEditBottomSheet)
 
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
@@ -143,6 +138,8 @@ class PurchaseFragment :
     }
 
     private fun showEditBottomSheet(purchaseWithSupplier: PurchaseWithSupplier) {
+        if (!isEditable) return
+
         val bottomSheet = PurchaseEditBottomSheet(
             entry = purchaseWithSupplier,
             onSave = { updatedEntry ->

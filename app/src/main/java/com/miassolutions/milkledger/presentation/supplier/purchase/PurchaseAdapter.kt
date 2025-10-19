@@ -15,7 +15,8 @@ import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 import kotlin.math.roundToInt
 
 class PurchaseAdapter(
-    private val onItemClick: (PurchaseWithSupplier) -> Unit
+    private val onEditClick: (PurchaseWithSupplier) -> Unit,
+    private val onItemDetailClick: (PurchaseWithSupplier) -> Unit
 ) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.ViewHolder>(DiffCallback()) {
 
     var isEditable = true
@@ -26,16 +27,15 @@ class PurchaseAdapter(
             parent,
             false
         )
-        return ViewHolder(binding, onItemClick)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
 
-    class ViewHolder(
+    inner class ViewHolder(
         private val binding: ItemPurchaseBinding,
-        private val onItemClick: (PurchaseWithSupplier) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PurchaseWithSupplier) = with(binding) {
@@ -93,7 +93,8 @@ class PurchaseAdapter(
             tvBalance.setTextColor(color)
 
 
-            root.setOnClickListener { onItemClick(item) }
+            btnEditForm.setOnClickListener { onEditClick(item) }
+            btnSupplierDetail.setOnClickListener { onItemDetailClick(item) }
         }
     }
 
