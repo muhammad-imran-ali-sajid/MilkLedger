@@ -99,13 +99,21 @@ class SupplierListViewModel @Inject constructor(
     fun saveSupplier(supplier: Supplier) {
         viewModelScope.launch {
             try {
-                repository.insertSupplier(supplier.toEntity())
-                _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier saved"))
+                val existing = supplier.id?.let { repository.getSupplierById(it) }
+
+                if (existing != null) {
+                    repository.updateSupplier(supplier.toEntity())
+                    _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier updated"))
+                } else {
+                    repository.insertSupplier(supplier.toEntity())
+                    _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier saved"))
+                }
             } catch (e: Exception) {
                 _uiEvent.emit(SupplierUiEvent.ShowMessage("Error saving supplier"))
             }
         }
     }
+
 
 
     fun deleteSupplier(supplier: Supplier) {

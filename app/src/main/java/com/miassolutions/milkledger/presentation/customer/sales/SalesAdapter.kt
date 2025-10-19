@@ -54,7 +54,7 @@ class SalesEntryAdapter(
                 tvNotes.hide()
             } else {
                 tvNotes.show()
-                tvNotes.text = "نوٹ: ${item.sale.notes}"
+                tvNotes.text = "Note: ${item.sale.notes}"
             }
 
             // 👇 Long click on customer name only
