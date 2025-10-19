@@ -149,11 +149,8 @@ class CustomerDetailViewModel @Inject constructor(
             // 🔹 Apply Sorting
             state.currentFilter.category?.let { category ->
                 filteredList = when (category) {
-                    "Date" -> filteredList.sortedBy { it.date }
+                    "Name" -> filteredList.sortedBy { it.date }
                     "Net Milk" -> filteredList.sortedBy { it.netMilk }
-                    "Price" -> filteredList.sortedBy { it.milkPrice }
-                    "Balance" -> filteredList.sortedBy { it.balance }
-                    "Payment" -> filteredList.sortedBy { it.payment }
                     else -> filteredList
                 }
             }
