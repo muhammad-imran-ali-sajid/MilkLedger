@@ -36,21 +36,21 @@ class PurchaseViewModel @Inject constructor(
             val newTs = MilkCalculationUtils.calculateTS(
                 fat = updated.fat,
                 lr = updated.lr,
-                volume = updated.volume
+                volume = updated.milkAmount
             )
 
             val newPrice = MilkCalculationUtils.calculatePrice(
                 rate = updated.rateUsed,
-                volume = updated.volume,
+                volume = updated.milkAmount,
                 fat = updated.fat,
                 lr = updated.lr
             )
 
-            val newBalance = updated.paid - newPrice
+            val newBalance = updated.payment - newPrice
 
             val finalEntry = updated.copy(
                 ts = newTs,
-                price = newPrice,
+                milkPrice = newPrice,
                 balance = newBalance
             )
 
@@ -85,12 +85,12 @@ class PurchaseViewModel @Inject constructor(
                 val newEntry = PurchaseEntryEntity(
                     supplierId = supplier.supplierId,
                     date = date,
-                    volume = 0.0,
+                    milkAmount = 0.0,
                     fat = 0.0,
                     lr = 0.0,
                     ts = 0.0,
-                    price = 0.0,
-                    paid = 0.0,
+                    milkPrice = 0.0,
+                    payment = 0.0,
                     balance = 0.0,
                     rateUsed = supplier.supplierRate
                 )
@@ -100,14 +100,14 @@ class PurchaseViewModel @Inject constructor(
             repository.getPurchasesByDate(date).collectLatest { purchases ->
                 val sortedPurchases = purchases.sortedBy { it.supplier.sortOrder }
 
-                val totalVolume = sortedPurchases.sumOf { it.purchase.volume }
+                val totalVolume = sortedPurchases.sumOf { it.purchase.milkAmount }
                 val avgFat = if (totalVolume > 0) {
-                    sortedPurchases.sumOf { it.purchase.fat * it.purchase.volume } / totalVolume
+                    sortedPurchases.sumOf { it.purchase.fat * it.purchase.milkAmount } / totalVolume
                 } else 0.0
                 val avgLr = if (totalVolume > 0) {
-                    sortedPurchases.sumOf { it.purchase.lr * it.purchase.volume } / totalVolume
+                    sortedPurchases.sumOf { it.purchase.lr * it.purchase.milkAmount } / totalVolume
                 } else 0.0
-                val grandTotal = sortedPurchases.sumOf { it.purchase.price }
+                val grandTotal = sortedPurchases.sumOf { it.purchase.milkPrice }
                 val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
 
                 _uiState.update {

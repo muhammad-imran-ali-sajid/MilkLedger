@@ -22,8 +22,8 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
     private val _uiState = MutableStateFlow(SupplierDetailUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun onSelectedSupplierId(id: String, name: String) {
-        _uiState.update { it.copy(selectedSupplierId = id, supplierName = name) }
+    fun onSelectedSupplierId(id: String) {
+        _uiState.update { it.copy(selectedSupplierId = id) }
         loadDetails()
     }
 

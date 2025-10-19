@@ -28,7 +28,7 @@ interface ReportsDao {
     @Query("SELECT * FROM purchase_entry_table WHERE supplierId = :supplierId ORDER BY date DESC")
     fun getSupplierPurchaseHistory(supplierId: String): Flow<List<PurchaseEntryEntity>>
 
-    @Query("SELECT SUM(price) FROM purchase_entry_table WHERE date BETWEEN :start AND :end")
+    @Query("SELECT SUM(milkPrice) FROM purchase_entry_table WHERE date BETWEEN :start AND :end")
     fun getTotalPurchasesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
 

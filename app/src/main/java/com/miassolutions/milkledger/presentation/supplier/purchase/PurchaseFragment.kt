@@ -141,13 +141,13 @@ class PurchaseFragment :
     private fun navToSupplierDetail(supplier: PurchaseWithSupplier) {
         findNavController().navigate(
             PurchaseFragmentDirections.actionPurchaseFragmentToSupplierDetailFragment(
-                supplier.supplier.supplierName
+                supplier.supplier.supplierName, supplier.supplier.supplierId
             )
         )
     }
 
     private fun showEditBottomSheet(purchaseWithSupplier: PurchaseWithSupplier) {
-        if (!isEditable) return
+//        if (!isEditable) return
 
         val bottomSheet = PurchaseEditBottomSheet(
             entry = purchaseWithSupplier,

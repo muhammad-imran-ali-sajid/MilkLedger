@@ -43,10 +43,10 @@ class PurchaseEditBottomSheet(
             tvSupplierName.text = supplier.supplierName
 
             // Autofill with empty if 0
-            etVolume.setText(purchase.volume.takeIf { it != 0.0 }?.toString() ?: "")
+            etVolume.setText(purchase.milkAmount.takeIf { it != 0.0 }?.toString() ?: "")
             etFat.setText(purchase.fat.takeIf { it != 0.0 }?.toString() ?: "")
             etLr.setText(purchase.lr.takeIf { it != 0.0 }?.toString() ?: "")
-            etPaid.setText(purchase.paid.toString())
+            etPaid.setText(purchase.payment.toString())
             etNotes.setText(purchase.notes ?: "")
 
             listOf(etVolume, etFat, etLr, etPaid, etNotes).forEach { autoSelectOnFocus(it) }
@@ -100,10 +100,10 @@ class PurchaseEditBottomSheet(
                 }
 
                 val updated = purchase.copy(
-                    volume = volume,
+                    milkAmount = volume,
                     fat = fat ?: 0.0,
                     lr = lr ?: 0.0,
-                    paid = etPaid.text.toString().toDoubleOrNull() ?: 0.0,
+                    payment = etPaid.text.toString().toDoubleOrNull() ?: 0.0,
                     notes = etNotes.text.toString()
                 )
 

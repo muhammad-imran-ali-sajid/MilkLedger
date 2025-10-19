@@ -124,5 +124,8 @@
         <argument
             android:name="supplierName"
             app:argType="string" />
+        <argument
+            android:name="supplierId"
+            app:argType="string" />
     </fragment>
 </navigation>

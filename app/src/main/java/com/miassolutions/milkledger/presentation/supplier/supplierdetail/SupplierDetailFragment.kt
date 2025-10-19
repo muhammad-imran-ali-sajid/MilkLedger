@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
+import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -15,6 +16,12 @@ class SupplierDetailFragment :
     private val args by navArgs<SupplierDetailFragmentArgs>()
 
     override fun setupViews() {
+        viewModel.onSelectedSupplierId(args.supplierId)
+    }
 
+    override fun setupObservers() {
+        viewModel.uiState.collectState { state ->
+            Log.d("SupplierDetailFragment", "${state.supplierDetailList}")
+        }
     }
 }

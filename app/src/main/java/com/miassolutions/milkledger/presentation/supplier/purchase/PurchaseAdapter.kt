@@ -41,7 +41,7 @@ class PurchaseAdapter(
         fun bind(item: PurchaseWithSupplier) = with(binding) {
             tvName.text = item.supplier.supplierName
 
-            tvVolume.text = item.purchase.volume.toRoundedStr()
+            tvVolume.text = item.purchase.milkAmount.toRoundedStr()
 
             if (item.purchase.fat == 0.0) {
                 tvFat.text = "--"
@@ -72,8 +72,8 @@ class PurchaseAdapter(
                 divider.show()
                 tvNotes.text = "نوٹ: ${item.purchase.notes}"
             }
-            tvPrice.text = item.purchase.price.roundToInt().toString()
-            tvPaid.text = item.purchase.paid.roundToInt().toString()
+            tvPrice.text = item.purchase.milkPrice.roundToInt().toString()
+            tvPaid.text = item.purchase.payment.roundToInt().toString()
 
 
             // Change color based on balance
