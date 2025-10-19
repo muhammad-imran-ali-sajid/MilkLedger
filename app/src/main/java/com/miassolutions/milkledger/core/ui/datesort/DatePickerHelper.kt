@@ -49,7 +49,8 @@ fun Fragment.pickMonth(
         val picked = it.toLocalDate()
         val start = picked.withDayOfMonth(1)
         val end = picked.withDayOfMonth(picked.lengthOfMonth())
-        val label = start.format(DateTimeFormatter.ofPattern("MMMM yyyy"))
+        val label = start.formattedDate("MMMM yyyy")
+
         onPicked(start, end, label)
     }
     picker.show(parentFragmentManager, tag)
@@ -61,9 +62,17 @@ fun formatDateRange(start: LocalDate, end: LocalDate): String {
     else "${start.format(formatter)} → ${end.format(formatter)}"
 }
 
+fun LocalDate.formattedDate(pattern: String = "dd MMM yyyy") : String {
+    return this.format(DateTimeFormatter.ofPattern(pattern))
+}
+
 // --------- Private helpers -----------
 
-private fun buildPicker(title: String, initialDate: LocalDate, themeResId: Int?): MaterialDatePicker<Long> {
+private fun buildPicker(
+    title: String,
+    initialDate: LocalDate,
+    themeResId: Int?
+): MaterialDatePicker<Long> {
     val millis = initialDate.atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli()
 
     val builder = MaterialDatePicker.Builder.datePicker()

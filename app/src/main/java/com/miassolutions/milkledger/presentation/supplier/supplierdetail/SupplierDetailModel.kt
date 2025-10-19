@@ -7,6 +7,8 @@ data class SupplierDetailModel(
 
     val date: LocalDate,
     val milkAmount: Double,
+    val fat : Double,
+    val lr : Double,
     val ts: Double,
     val milkPrice: Double,
     val payment: Double,
@@ -19,6 +21,8 @@ data class SupplierDetailModel(
 fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = SupplierDetailModel(
     date = this.purchase.date,
     milkAmount = this.purchase.milkAmount,
+    fat = this.purchase.fat,
+    lr = this.purchase.lr,
     ts = this.purchase.ts,
     milkPrice = this.purchase.milkPrice,
     payment = this.purchase.payment,
