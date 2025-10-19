@@ -7,7 +7,6 @@ import androidx.lifecycle.lifecycleScope
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.core.managers.BackupManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.Logger
 import com.miassolutions.milkledger.databinding.FragmentDriveBackupBinding
 import kotlinx.coroutines.launch
 import java.io.File
@@ -65,7 +64,6 @@ class DriveBackupFragment :
         lifecycleScope.launch {
             try {
                 val file = backupManager.backupLocally()
-                Logger.d<DriveBackupFragment>("Backup saved: ${file.path}")
                 showToast("Backup saved: ${file.name}")
             } catch (e: Exception) {
                 showToast("Backup failed: ${e.message}")

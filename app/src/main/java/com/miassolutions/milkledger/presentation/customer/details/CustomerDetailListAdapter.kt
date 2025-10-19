@@ -1,0 +1,38 @@
+package com.miassolutions.milkledger.presentation.customer.details
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.miassolutions.milkledger.core.ui.BaseListAdapter
+import com.miassolutions.milkledger.core.ui.GenericDiffCallback
+import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding
+
+class CustomerDetailListAdapter :
+    BaseListAdapter<CustomerDetailModel, ItemCustomerDetailBinding>(
+        inflate = ItemCustomerDetailBinding::inflate,
+        diffCallback = GenericDiffCallback(
+            areItemsSame = { old, new -> old.date == new.date },
+            areContentsSame = { old, new -> old == new }
+        )) {
+    override fun createBinding(
+        inflater: LayoutInflater,
+        parent: ViewGroup
+    ): ItemCustomerDetailBinding {
+        return ItemCustomerDetailBinding.inflate(inflater, parent, false)
+    }
+
+    override fun bind(
+        binding: ItemCustomerDetailBinding,
+        item: CustomerDetailModel,
+        position: Int
+    ) = with(binding) {
+        tvDate.text = item.date.toString()
+        tvMilk.text = item.milkAmount.toString()
+        tvDeduction.text = item.deduction.toString()
+        tvNetMilk.text = item.netMilk.toString()
+        tvPrice.text = item.milkPrice.toString()
+        tvPayment.text = item.payment.toString()
+        tvBalance.text = item.balance.toString()
+        tvNotes.text = item.notes
+    }
+
+}
