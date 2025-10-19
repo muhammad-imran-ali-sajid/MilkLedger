@@ -43,7 +43,7 @@ class PurchaseFragment :
 //        )
 //    }
 
-    private var isEditable = true
+    private var isEditable = false
     private val viewModel: PurchaseViewModel by viewModels()
     private lateinit var purchaseAdapter: PurchaseAdapter
 
