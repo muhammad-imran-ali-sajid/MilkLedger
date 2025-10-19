@@ -12,19 +12,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.ZoneId
-import java.util.Calendar
 import java.util.concurrent.Executor
 
 @AndroidEntryPoint
@@ -51,26 +48,14 @@ class PurchaseFragment :
 
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
-            val calendar = Calendar.getInstance().apply {
-                set(Calendar.YEAR, currentDate.year)
-                set(Calendar.MONTH, currentDate.monthValue - 1)
-                set(Calendar.DAY_OF_MONTH, currentDate.dayOfMonth)
-            }
 
-            val datePicker = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select Date")
-                .setSelection(calendar.timeInMillis)
-                .build()
+            pickSingleDate(
 
-            datePicker.addOnPositiveButtonClickListener { selectedDateInMillis ->
-                val selectedDate = Instant.ofEpochMilli(selectedDateInMillis)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
+                initialDate = currentDate,
+                onPicked = { viewModel.onDateSelected(it) }
+            )
 
-                viewModel.onDateSelected(selectedDate)
-            }
 
-            datePicker.show(parentFragmentManager, "MaterialDatePicker")
         }
 
 

@@ -5,9 +5,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.datesort.DatePickerHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
+import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
+import com.miassolutions.milkledger.core.ui.extensions.pickMonth
+import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
+import com.miassolutions.milkledger.core.ui.extensions.pickWeek
 import com.miassolutions.milkledger.core.ui.filter.FilterBottomSheet
 import com.miassolutions.milkledger.core.ui.filter.FilterSharedViewModel
 import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
@@ -54,17 +57,17 @@ class CustomerDetailFragment :
 
         datePickerActions.tvSelectedDate.setOnClickListener {
             when (toggleGroupFilter.checkedButtonId) {
-                R.id.btnDaily -> DatePickerHelper.pickSingleDate(this@CustomerDetailFragment) { date ->
+                R.id.btnDaily -> pickSingleDate { date ->
                     updateDateLabel(DateRangeType.TODAY, date, date)
                     viewModel.setCustomDateRange(date, date)
                 }
 
-                R.id.btnWeekly -> DatePickerHelper.pickWeek(this@CustomerDetailFragment) { start, end ->
+                R.id.btnWeekly -> pickWeek { start, end ->
                     updateDateLabel(DateRangeType.WEEK, start, end)
                     viewModel.setCustomDateRange(start, end)
                 }
 
-                R.id.btnMonthly -> DatePickerHelper.pickMonth(this@CustomerDetailFragment) { start, end, label ->
+                R.id.btnMonthly -> pickMonth { start, end, label ->
                     datePickerActions.tvSelectedDate.text = label
                     viewModel.setCustomDateRange(start, end)
                 }
@@ -84,7 +87,7 @@ class CustomerDetailFragment :
         binding.datePickerActions.tvSelectedDate.text = when (rangeType) {
             DateRangeType.TODAY -> start?.toString().orEmpty()
             DateRangeType.WEEK -> if (start != null && end != null) {
-                DatePickerHelper.formatRange(start, end)
+                formatDateRange(start, end)
             } else ""
             DateRangeType.MONTH -> start?.format(DateTimeFormatter.ofPattern("MMMM yyyy")).orEmpty()
             else -> "All Records"

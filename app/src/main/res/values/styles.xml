@@ -113,4 +113,52 @@
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
+
+
+
+
+        <!-- Theme overlay for DatePicker dialogs -->
+        <style name="ThemeOverlay.MyApp.DatePicker"
+            parent="ThemeOverlay.Material3.MaterialCalendar">
+
+            <!-- Primary brand color for selected day etc. -->
+            <item name="colorPrimary">@color/md_theme_onPrimary</item>
+            <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+
+            <!-- Surface color for calendar background -->
+            <item name="colorSurface">@color/md_theme_onSurface</item>
+            <item name="colorOnSurface">@color/md_theme_onSurface</item>
+
+            <!-- Range fill / highlight color if you use date‑range picker -->
+            <item name="rangeFillColor">@color/md_theme_primary</item>
+
+<!--            &lt;!&ndash; Header title text appearance &ndash;&gt;-->
+<!--            <item name="materialCalendarHeaderTitleTextAppearance">@style/TextAppearance.MyApp.DatePicker.HeaderTitle</item>-->
+
+<!--            &lt;!&ndash; Year selector text appearance &ndash;&gt;-->
+<!--            <item name="materialCalendarYearTextAppearance">@style/TextAppearance.MyApp.DatePicker.Year</item>-->
+
+<!--            &lt;!&ndash; Day selector text appearance &ndash;&gt;-->
+<!--            <item name="materialCalendarDayTextAppearance">@style/TextAppearance.MyApp.DatePicker.Day</item>-->
+        </style>
+
+        <!-- TextAppearance examples -->
+        <style name="TextAppearance.MyApp.DatePicker.HeaderTitle"
+            parent="TextAppearance.Material3.HeadlineSmall">
+            <item name="android:textColor">@color/md_theme_onSurface</item>
+        </style>
+
+        <style name="TextAppearance.MyApp.DatePicker.Year"
+            parent="TextAppearance.Material3.BodyLarge">
+            <item name="android:textColor">@color/md_theme_onSurface</item>
+        </style>
+
+        <style name="TextAppearance.MyApp.DatePicker.Day"
+            parent="TextAppearance.Material3.BodyMedium">
+            <item name="android:textColor">@color/md_theme_onSurface</item>
+        </style>
+
+
+
+
 </resources>

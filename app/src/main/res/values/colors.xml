@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Brand -->
-    <color name="md_theme_primary">#4CAF50</color>
+    <color name="md_theme_primary">#0288D1</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
-    <color name="md_theme_secondary">#FFC107</color>
+    <color name="md_theme_secondary">#FFA000</color>
     <color name="md_theme_onSecondary">#000000</color>
 
     <!-- Neutral surfaces -->
