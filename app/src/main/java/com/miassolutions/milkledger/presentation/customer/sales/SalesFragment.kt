@@ -154,7 +154,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
                 showSummary(
                     milkAmount = state.totalMilk,
                     deduction = state.totalDeduction,
-                    totalNetMilk = state.grandSaleTotalForDate,
+                    totalNetMilk = state.totalNetMilk,
                     totalAmount = state.totalAmount,
                     avgRate = state.avgRatePerLiter
                 )

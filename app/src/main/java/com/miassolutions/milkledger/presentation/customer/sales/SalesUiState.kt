@@ -10,6 +10,7 @@ data class SalesUiState(
     val selectedCustomerId : String? = null,
     val navToLedgerForCustomerId : String? = null,
     val totalMilk : Double = 0.0,
+    val totalNetMilk : Double = 0.0,
     val totalDeduction : Double = 0.0,
     val totalAmount : Double = 0.0,
     val avgRatePerLiter : Double = 0.0

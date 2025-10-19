@@ -89,7 +89,7 @@ class SalesViewModel @Inject constructor(
                     rateUsed = customer.customerRate,
                     balance = 0.0
 
-                    )
+                )
                 repository.insertSale(newSale)
             }
 
@@ -100,6 +100,7 @@ class SalesViewModel @Inject constructor(
                 val totalMilk = sortedSales.sumOf { it.sale.volume }
                 val totalDeduction = sortedSales.sumOf { it.sale.deduction }
                 val totalAmount = sortedSales.sumOf { it.sale.price - it.sale.deduction }
+                val totalNetMilk = sortedSales.sumOf { it.sale.netMilk }
                 val grandTotal = sortedSales.sumOf { it.sale.price }
                 val avgRatePerLiter =
                     if (totalMilk > 0) grandTotal / totalMilk else 0.0
@@ -111,6 +112,7 @@ class SalesViewModel @Inject constructor(
                         totalMilk = totalMilk,
                         totalDeduction = totalDeduction,
                         totalAmount = totalAmount,
+                        totalNetMilk = totalNetMilk,
                         grandSaleTotalForDate = grandTotal,
                         avgRatePerLiter = avgRatePerLiter
                     )
