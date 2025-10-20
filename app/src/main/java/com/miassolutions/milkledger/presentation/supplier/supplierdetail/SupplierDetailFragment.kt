@@ -51,7 +51,6 @@ class SupplierDetailFragment :
         }
 
 
-
     }
 
     override fun onMenuCreated(menu: Menu) {
@@ -63,7 +62,7 @@ class SupplierDetailFragment :
                     end: LocalDate,
                     type: com.miassolutions.datesort.DateRangeType
                 ) {
-//                            updateDateLabel(CUSTOM, start, end)
+                    updateDateLabel(DateRangeType.CUSTOM, start, end)
                     viewModel.setCustomDateRange(start, end)
 //                            binding.tvTestDate.text = "Type: $type\nFrom: $start\nTo: $end"
                 }
@@ -94,47 +93,33 @@ class SupplierDetailFragment :
             }
 
             val (start, end) = DateRangeHelper.getRange(rangeType)
-            updateDateLabel(rangeType, start, end)
             viewModel.changeDateRange(rangeType, start, end)
         }
 
         datePickerActions.tvSelectedDate.setOnClickListener {
             when (toggleGroupFilter.checkedButtonId) {
                 R.id.btnDaily -> pickSingleDate { date ->
-                    updateDateLabel(DateRangeType.TODAY, date, date)
                     viewModel.setCustomDateRange(date, date)
                 }
 
                 R.id.btnWeekly -> pickWeek { start, end ->
-                    updateDateLabel(DateRangeType.WEEK, start, end)
                     viewModel.setCustomDateRange(start, end)
                 }
 
-                R.id.btnMonthly -> pickMonth { start, end, label ->
-                    datePickerActions.tvSelectedDate.text = label
+                R.id.btnMonthly -> pickMonth { start, end, _ ->
                     viewModel.setCustomDateRange(start, end)
-                }
-
-                R.id.btnCustom -> {
-
-
-
-//                    DateFilterDialog.show(parentFragmentManager) { start, end ->
-//                        updateDateLabel(DateRangeType.CUSTOM, start, end)
-//                        viewModel.setCustomDateRange(start, end)
-//                    }
                 }
 
                 else -> toggleGroupFilter.check(R.id.btnDaily)
             }
         }
 
-        // Default selection on screen load
+        // Default state
         toggleGroupFilter.check(R.id.btnDaily)
         val today = LocalDate.now()
-        updateDateLabel(DateRangeType.TODAY, today, today)
         viewModel.setCustomDateRange(today, today)
     }
+
 
     private fun updateDateLabel(rangeType: DateRangeType, start: LocalDate?, end: LocalDate?) {
         binding.datePickerActions.tvSelectedDate.text = when (rangeType) {
@@ -144,6 +129,10 @@ class SupplierDetailFragment :
             } else ""
 
             DateRangeType.MONTH -> start?.format(DateTimeFormatter.ofPattern("MMMM yyyy")).orEmpty()
+            DateRangeType.CUSTOM -> if (start != null && end != null) {
+                formatDateRange(start, end)
+            } else ""
+
             else -> "All Records"
         }
     }
@@ -151,6 +140,8 @@ class SupplierDetailFragment :
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
             adapter.submitList(state.filteredList)
+
+            // Move this here to always update the label when the state changes
             updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
         }
 
@@ -158,4 +149,5 @@ class SupplierDetailFragment :
             viewModel.onEvent(SupplierUiEvent.ApplyFilter(filter))
         }
     }
+
 }
