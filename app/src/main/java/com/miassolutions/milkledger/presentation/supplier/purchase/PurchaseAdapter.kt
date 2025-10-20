@@ -19,7 +19,7 @@ class PurchaseAdapter(
     private val onItemDetailClick: (PurchaseWithSupplier) -> Unit
 ) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.ViewHolder>(DiffCallback()) {
 
-    var isEditable = true
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemPurchaseBinding.inflate(

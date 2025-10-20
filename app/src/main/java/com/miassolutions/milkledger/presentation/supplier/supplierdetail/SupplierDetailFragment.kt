@@ -1,10 +1,12 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
-import android.util.Log
 import android.view.Menu
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.miassolutions.datesort.DateFilterBottomSheet
+import com.miassolutions.datesort.DateRangeType.*
+import com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
@@ -16,10 +18,7 @@ import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.ui.extensions.pickWeek
 import com.miassolutions.milkledger.core.ui.filter.FilterBottomSheet
 import com.miassolutions.milkledger.core.ui.filter.FilterSharedViewModel
-import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
-import com.miassolutions.milkledger.databinding.FragmentSuppliersBinding
-import com.miassolutions.milkledger.databinding.SupplierFormLayoutBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -58,7 +57,19 @@ class SupplierDetailFragment :
     override fun onMenuCreated(menu: Menu) {
         val sortMenu = menu.findItem(R.id.menu_sort_item)
         sortMenu.setOnMenuItemClickListener {
-            FilterBottomSheet().show(parentFragmentManager, "FilterSheet")
+            val sheet = DateFilterBottomSheet(object : OnDateRangeSelected {
+                override fun onDateRangeSelected(
+                    start: LocalDate,
+                    end: LocalDate,
+                    type: com.miassolutions.datesort.DateRangeType
+                ) {
+//                            updateDateLabel(CUSTOM, start, end)
+                    viewModel.setCustomDateRange(start, end)
+//                            binding.tvTestDate.text = "Type: $type\nFrom: $start\nTo: $end"
+                }
+            })
+            sheet.show(parentFragmentManager, "DateFilter")
+//            FilterBottomSheet().show(parentFragmentManager, "FilterSheet")
             true
         }
     }
@@ -102,6 +113,16 @@ class SupplierDetailFragment :
                 R.id.btnMonthly -> pickMonth { start, end, label ->
                     datePickerActions.tvSelectedDate.text = label
                     viewModel.setCustomDateRange(start, end)
+                }
+
+                R.id.btnCustom -> {
+
+
+
+//                    DateFilterDialog.show(parentFragmentManager) { start, end ->
+//                        updateDateLabel(DateRangeType.CUSTOM, start, end)
+//                        viewModel.setCustomDateRange(start, end)
+//                    }
                 }
 
                 else -> toggleGroupFilter.check(R.id.btnDaily)

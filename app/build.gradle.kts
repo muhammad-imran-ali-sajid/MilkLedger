@@ -69,6 +69,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(project(":Sort-Filter"))
+    implementation(project(":datesort"))
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 

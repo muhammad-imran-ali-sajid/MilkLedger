@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.core.util
 
 import android.view.View
+import java.time.LocalDate
 
 
 fun Double.toRoundedStr(format: String = "%.1f"): String {
@@ -14,6 +15,9 @@ fun View.hide(){
 fun View.show(){
     this.visibility = View.VISIBLE
 }
+
+
+fun LocalDate.isToday(): Boolean = this == LocalDate.now()
 
 
 

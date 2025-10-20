@@ -1,13 +1,10 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
-import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricPrompt
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,13 +15,15 @@ import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
+import com.miassolutions.milkledger.core.util.isToday
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.concurrent.Executor
+import java.time.LocalDate
+import androidx.core.content.edit
 
 @AndroidEntryPoint
 class PurchaseFragment :
@@ -32,14 +31,10 @@ class PurchaseFragment :
 
     override fun getMenuResId(): Int? = R.menu.purchase_menu
 
-//    private val prefs by lazy {
-//        requireContext().getSharedPreferences(
-//            "edit_text_enable_state",
-//            Context.MODE_PRIVATE
-//        )
-//    }
+    private var editModeSwitch: MaterialSwitch? = null
+    private var biometricRequiredForToday = false
+    private var isEditable = true
 
-    private var isEditable = false
     private val viewModel: PurchaseViewModel by viewModels()
     private lateinit var purchaseAdapter: PurchaseAdapter
 
@@ -47,86 +42,89 @@ class PurchaseFragment :
         setToolbarTitle(getString(R.string.purchases))
         setupRecyclerView()
 
-
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
-
             pickSingleDate(
-
                 initialDate = currentDate,
                 onPicked = { viewModel.onDateSelected(it) }
             )
-
-
-        }
-
-
-//        isEditable = loadEditModeState()
-        purchaseAdapter.isEditable = isEditable
-
-    }
-
-    private fun showSummary(
-        milkAmount: Double,
-        avgLr: Double,
-        avgFat: Double,
-        avgTS : Double,
-        totalAmount: Double,
-        avgRate: Double
-    ) {
-        binding.apply {
-            cardSummary.setTitle("Summary")
-            val summaryView =
-                layoutInflater.inflate(R.layout.layout_purchase_summary, binding.root, false)
-            cardSummary.setContent(summaryView)
-            cardSummary.collapse()
-
-
-            // You can access child TextViews like this:
-            val tvMilkAmount = summaryView.findViewById<TextView>(R.id.tv_total_amount)
-            val tvAvgFat = summaryView.findViewById<TextView>(R.id.tv_avg_fat)
-            val tvAvgLR = summaryView.findViewById<TextView>(R.id.tv_avg_lr)
-            val tvAvgTS = summaryView.findViewById<TextView>(R.id.tv_avg_ts)
-            val tvTotalAmount = summaryView.findViewById<TextView>(R.id.tv_total_amount)
-            val tvAvgRate = summaryView.findViewById<TextView>(R.id.tv_avg_price)
-
-            tvMilkAmount.text = milkAmount.toRoundedStr()
-            tvAvgFat.text = avgFat.toRoundedStr("%.2f")
-            tvAvgLR.text = avgLr.toRoundedStr("%.2f")
-            tvAvgTS.text = avgTS.toRoundedStr("%.2f")
-            tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr(" %.0f")}"
-            tvAvgRate.text = "Rs. ${avgRate.toRoundedStr(" %.0f")}"
         }
     }
-
 
     override fun onMenuCreated(menu: Menu) {
         val editModeItem = menu.findItem(R.id.action_edit_mode)
-        val switch =
-            editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
+        editModeSwitch = editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
 
-        switch?.setOnCheckedChangeListener { _, isChecked ->
+        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
+            val selectedDate = viewModel.uiState.value.currentDate
+            val isToday = selectedDate.isToday()
+
             if (isChecked) {
-                BiometricHelper.authenticate(
-                    fragment = this,
-                    title = "Authenticate to enable edit mode",
-                    subtitle = "Use your fingerprint or device credentials",
-                    onSuccess = { enableEditMode() },
-                    onFailure = {
-                        switch.isChecked = false
-                        showToast("Authentication failed.")
-                    }
-                )
+                showSnackbar("Edit mode enabled")
+
+                if (isToday && !biometricRequiredForToday) {
+                    setEditModeLockedForToday(false) // unlock
+                    enableEditMode()
+                } else {
+                    BiometricHelper.authenticate(
+                        fragment = this,
+                        title = "Unlock editing",
+                        subtitle = "Use fingerprint or device credentials",
+                        onSuccess = { enableEditMode() },
+                        onFailure = {
+                            editModeSwitch?.isChecked = false
+                            showToast("Authentication failed. Editing locked.")
+                        }
+                    )
+                }
+
             } else {
+                showSnackbar("Edit mode disabled")
                 disableEditMode()
+
+                if (isToday) {
+                    biometricRequiredForToday = true
+                    setEditModeLockedForToday(true) // lock for today
+                }
             }
         }
     }
 
+    private fun observeUiState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiState.collectLatest { state ->
+                purchaseAdapter.submitList(state.purchasesForDate)
+                binding.tvSelectedDate.text = state.currentDate.formattedDate()
+
+                showSummary(
+                    milkAmount = state.totalVolume,
+                    avgFat = state.avgFat,
+                    avgLr = state.avgLr,
+                    avgTS = state.avgTS,
+                    totalAmount = state.grandTotalForDate,
+                    avgRate = state.avgRatePerLiter
+                )
+
+                val isToday = state.currentDate.isToday()
+                val isLockedToday = isEditModeLockedForToday()
+
+                if (isToday) {
+                    biometricRequiredForToday = isLockedToday
+                    if (isLockedToday) {
+                        disableEditMode()
+                    } else {
+                        enableEditMode()
+                    }
+                } else {
+                    biometricRequiredForToday = true
+                    disableEditMode()
+                }
+            }
+        }
+    }
 
     private fun setupRecyclerView() {
         purchaseAdapter = PurchaseAdapter(::showEditBottomSheet, ::navToSupplierDetail)
-
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -135,10 +133,37 @@ class PurchaseFragment :
         }
     }
 
+    private fun showSummary(
+        milkAmount: Double,
+        avgLr: Double,
+        avgFat: Double,
+        avgTS: Double,
+        totalAmount: Double,
+        avgRate: Double
+    ) {
+        binding.apply {
+            cardSummary.setTitle("Summary")
+            val summaryView =
+                layoutInflater.inflate(R.layout.layout_purchase_summary, root, false)
+            cardSummary.setContent(summaryView)
+            cardSummary.collapse()
+
+            summaryView.findViewById<TextView>(R.id.tv_total_amount).text = milkAmount.toRoundedStr()
+            summaryView.findViewById<TextView>(R.id.tv_avg_fat).text = avgFat.toRoundedStr("%.2f")
+            summaryView.findViewById<TextView>(R.id.tv_avg_lr).text = avgLr.toRoundedStr("%.2f")
+            summaryView.findViewById<TextView>(R.id.tv_avg_ts).text = avgTS.toRoundedStr("%.2f")
+            summaryView.findViewById<TextView>(R.id.tv_total_amount).text =
+                "Rs. ${totalAmount.toRoundedStr(" %.0f")}"
+            summaryView.findViewById<TextView>(R.id.tv_avg_price).text =
+                "Rs. ${avgRate.toRoundedStr(" %.0f")}"
+        }
+    }
+
     private fun navToSupplierDetail(supplier: PurchaseWithSupplier) {
         findNavController().navigate(
             PurchaseFragmentDirections.actionPurchaseFragmentToSupplierDetailFragment(
-                supplier.supplier.supplierName, supplier.supplier.supplierId
+                supplier.supplier.supplierName,
+                supplier.supplier.supplierId
             )
         )
     }
@@ -158,46 +183,37 @@ class PurchaseFragment :
         bottomSheet.show(parentFragmentManager, "EditPurchaseSheet")
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        observeUiState()
-    }
-
-    private fun observeUiState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiState.collectLatest { state ->
-                purchaseAdapter.submitList(state.purchasesForDate)
-
-                binding.tvSelectedDate.text = state.currentDate.formattedDate()
-
-
-                showSummary(
-                    milkAmount = state.totalVolume,
-                    avgFat = state.avgFat,
-                    avgLr = state.avgLr,
-                    avgTS = state.avgTS,
-                    totalAmount = state.grandTotalForDate,
-                    avgRate = state.avgRatePerLiter
-                )
-
-
-            }
-        }
-
-    }
-
-
     private fun enableEditMode() {
         isEditable = true
-        purchaseAdapter.isEditable = true
-        showSnackbar("Edit mode enabled")
+        editModeSwitch?.isChecked = true
     }
 
     private fun disableEditMode() {
         isEditable = false
-        purchaseAdapter.isEditable = false
-        showSnackbar("Edit mode disabled")
+        editModeSwitch?.isChecked = false
     }
 
+    // --- SharedPreferences Helpers ---
 
+    private val prefs by lazy {
+        requireContext().getSharedPreferences("purchase_prefs", Context.MODE_PRIVATE)
+    }
+
+    private fun isEditModeLockedForToday(): Boolean {
+        val savedDate = prefs.getString("edit_mode_locked_date", null)
+        return savedDate == LocalDate.now().toString() &&
+                prefs.getBoolean("edit_mode_locked_today", false)
+    }
+
+    private fun setEditModeLockedForToday(locked: Boolean) {
+        prefs.edit {
+            putBoolean("edit_mode_locked_today", locked)
+                .putString("edit_mode_locked_date", LocalDate.now().toString())
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        observeUiState()
+    }
 }

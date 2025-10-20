@@ -5,6 +5,9 @@ import android.content.Intent
 import android.provider.Settings
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.miassolutions.datesort.DateFilterBottomSheet
+import com.miassolutions.datesort.DateRangeType
+import com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.toRoundedStr
@@ -67,9 +70,20 @@ class DashboardFragment :
             navigateTo(R.id.suppliersFragment)
         }
 
-        binding.btnChangeDate.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_DATE_SETTINGS))
+        binding.btnTestA.setOnClickListener {
+            val sheet = DateFilterBottomSheet(object : OnDateRangeSelected {
+                override fun onDateRangeSelected(
+                    start: LocalDate,
+                    end: LocalDate,
+                    type: DateRangeType
+                ) {
+                    binding.tvTestDate.text = "Type: $type\nFrom: $start\nTo: $end"
+                }
+            })
+            sheet.show(parentFragmentManager, "DateFilter")
         }
+
+
     }
 
     private fun navigateTo(destinationId: Int) {
