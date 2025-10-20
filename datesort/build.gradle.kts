@@ -1,12 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id ("kotlin-parcelize")
 }
 
 android {
-    namespace = "com.miassolutions.sort_filter"
-    compileSdk = 36
+    namespace = "com.miassolutions.datesort"
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         minSdk = 27
@@ -31,20 +32,17 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
     buildFeatures {
         viewBinding = true
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
     implementation("androidx.fragment:fragment-ktx:1.8.9")
 }
