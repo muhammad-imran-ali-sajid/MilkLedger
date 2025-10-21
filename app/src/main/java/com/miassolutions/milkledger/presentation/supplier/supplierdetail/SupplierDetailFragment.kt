@@ -38,7 +38,7 @@ class SupplierDetailFragment :
     override fun setupViews() {
         viewModel.onSelectedSupplierId(args.supplierId)
         setupRecyclerView()
-        setupDateRangeToggle()
+//        setupDateRangeToggle()
     }
 
     override fun setupListeners() = with(binding.datePickerActions) {
@@ -78,47 +78,48 @@ class SupplierDetailFragment :
         adapter = SupplierDetailListAdapter()
         binding.rvSupplierDetails.adapter = adapter
         binding.rvSupplierDetails.setHasFixedSize(true)
-        setupDateRangeToggle()
+
+//        setupDateRangeToggle()
     }
 
-    private fun setupDateRangeToggle() = with(binding) {
-        toggleGroupFilter.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (!isChecked) return@addOnButtonCheckedListener
-
-            val rangeType = when (checkedId) {
-                R.id.btnDaily -> DateRangeType.TODAY
-                R.id.btnWeekly -> DateRangeType.WEEK
-                R.id.btnMonthly -> DateRangeType.MONTH
-                else -> DateRangeType.ALL
-            }
-
-            val (start, end) = DateRangeHelper.getRange(rangeType)
-            viewModel.changeDateRange(rangeType, start, end)
-        }
-
-        datePickerActions.tvSelectedDate.setOnClickListener {
-            when (toggleGroupFilter.checkedButtonId) {
-                R.id.btnDaily -> pickSingleDate { date ->
-                    viewModel.setCustomDateRange(date, date)
-                }
-
-                R.id.btnWeekly -> pickWeek { start, end ->
-                    viewModel.setCustomDateRange(start, end)
-                }
-
-                R.id.btnMonthly -> pickMonth { start, end, _ ->
-                    viewModel.setCustomDateRange(start, end)
-                }
-
-                else -> toggleGroupFilter.check(R.id.btnDaily)
-            }
-        }
-
-        // Default state
-        toggleGroupFilter.check(R.id.btnDaily)
-        val today = LocalDate.now()
-        viewModel.setCustomDateRange(today, today)
-    }
+//    private fun setupDateRangeToggle() = with(binding) {
+//        toggleGroupFilter.addOnButtonCheckedListener { _, checkedId, isChecked ->
+//            if (!isChecked) return@addOnButtonCheckedListener
+//
+//            val rangeType = when (checkedId) {
+//                R.id.btnDaily -> DateRangeType.TODAY
+//                R.id.btnWeekly -> DateRangeType.WEEK
+//                R.id.btnMonthly -> DateRangeType.MONTH
+//                else -> DateRangeType.ALL
+//            }
+//
+//            val (start, end) = DateRangeHelper.getRange(rangeType)
+//            viewModel.changeDateRange(rangeType, start, end)
+//        }
+//
+//        datePickerActions.tvSelectedDate.setOnClickListener {
+//            when (toggleGroupFilter.checkedButtonId) {
+//                R.id.btnDaily -> pickSingleDate { date ->
+//                    viewModel.setCustomDateRange(date, date)
+//                }
+//
+//                R.id.btnWeekly -> pickWeek { start, end ->
+//                    viewModel.setCustomDateRange(start, end)
+//                }
+//
+//                R.id.btnMonthly -> pickMonth { start, end, _ ->
+//                    viewModel.setCustomDateRange(start, end)
+//                }
+//
+//                else -> toggleGroupFilter.check(R.id.btnDaily)
+//            }
+//        }
+//
+//        // Default state
+//        toggleGroupFilter.check(R.id.btnDaily)
+//        val today = LocalDate.now()
+//        viewModel.setCustomDateRange(today, today)
+//    }
 
 
     private fun updateDateLabel(rangeType: DateRangeType, start: LocalDate?, end: LocalDate?) {

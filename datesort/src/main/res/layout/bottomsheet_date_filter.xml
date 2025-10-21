@@ -2,53 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:orientation="vertical"
     android:background="#FFFFFF">
 
-    <!-- Range Selection Radio Buttons -->
-    <RadioGroup
-        android:id="@+id/radioGroup"
+    <!-- Range Selection Card -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginBottom="16dp">
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        android:layout_marginBottom="24dp"
+        android:padding="16dp">
 
-        <RadioButton
-            android:id="@+id/rbDay"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Day" />
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center">
 
-        <RadioButton
-            android:id="@+id/rbWeek"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Week" />
+            <RadioButton
+                android:id="@+id/rbDay"
+                style="@style/Widget.MaterialComponents.CompoundButton.RadioButton"
+                android:text="Day" />
 
-        <RadioButton
-            android:id="@+id/rbMonth"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Month" />
+            <RadioButton
+                android:id="@+id/rbWeek"
+                style="@style/Widget.MaterialComponents.CompoundButton.RadioButton"
+                android:text="Week"
+                android:layout_marginStart="8dp" />
 
-        <RadioButton
-            android:id="@+id/rbYear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Year" />
-    </RadioGroup>
+            <RadioButton
+                android:id="@+id/rbMonth"
+                style="@style/Widget.MaterialComponents.CompoundButton.RadioButton"
+                android:text="Month"
+                android:layout_marginStart="8dp" />
 
-    <!-- Selected Range Display -->
+            <RadioButton
+                android:id="@+id/rbYear"
+                style="@style/Widget.MaterialComponents.CompoundButton.RadioButton"
+                android:text="Year"
+                android:layout_marginStart="8dp" />
+        </RadioGroup>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Selected Range Text -->
     <TextView
         android:id="@+id/tvRange"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select range"
+        android:background="@color/cardview_dark_background"
+        android:textColor="#fff"
+        android:padding="12dp"
         android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginBottom="16dp" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="24dp" />
 
     <!-- Prev / Next Buttons -->
     <LinearLayout

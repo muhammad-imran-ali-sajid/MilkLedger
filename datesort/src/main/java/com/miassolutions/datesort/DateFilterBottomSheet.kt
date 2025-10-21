@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.miassolutions.datesort.databinding.BottomsheetDateFilterBinding
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class DateFilterBottomSheet(
@@ -26,7 +29,8 @@ class DateFilterBottomSheet(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        lifecycleScope.launchWhenStarted {
+        viewLifecycleOwner.lifecycleScope.launch {
+
             viewModel.uiState.collectLatest { state ->
                 binding.tvRange.text = state.formattedRange
             }

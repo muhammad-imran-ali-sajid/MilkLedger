@@ -15,60 +15,60 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <HorizontalScrollView
-        android:id="@+id/horizontal_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fillViewport="false"
-        android:scrollbars="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/date_picker_actions">
+<!--    <HorizontalScrollView-->
+<!--        android:id="@+id/horizontal_scroll"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:fillViewport="false"-->
+<!--        android:scrollbars="none"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/date_picker_actions">-->
 
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/toggleGroupFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/date_picker_actions"
-            app:selectionRequired="true"
-            app:singleSelection="true">
+<!--        <com.google.android.material.button.MaterialButtonToggleGroup-->
+<!--            android:id="@+id/toggleGroupFilter"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/date_picker_actions"-->
+<!--            app:selectionRequired="true"-->
+<!--            app:singleSelection="true">-->
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDaily"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Daily" />
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/btnDaily"-->
+<!--                style="@style/Widget.Material3.Button.OutlinedButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Daily" />-->
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnWeekly"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Weekly" />
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/btnWeekly"-->
+<!--                style="@style/Widget.Material3.Button.OutlinedButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Weekly" />-->
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnMonthly"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Monthly" />
-
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCustom"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Custom" />
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/btnMonthly"-->
+<!--                style="@style/Widget.Material3.Button.OutlinedButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Monthly" />-->
 
 
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/btnCustom"-->
+<!--                style="@style/Widget.Material3.Button.OutlinedButton"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Custom" />-->
 
-        </com.google.android.material.button.MaterialButtonToggleGroup>
 
-    </HorizontalScrollView>
+
+<!--        </com.google.android.material.button.MaterialButtonToggleGroup>-->
+
+<!--    </HorizontalScrollView>-->
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -85,7 +85,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll"
+        app:layout_constraintTop_toBottomOf="@+id/date_picker_actions"
         tools:listitem="@layout/item_supplier_detail" />
 
 

@@ -157,12 +157,14 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
     fun setCustomDateRange(start: LocalDate, end: LocalDate) {
         _uiState.update {
             it.copy(
+                dateRangeType = DateRangeType.CUSTOM,
                 selectedStartDate = start,
                 selectedEndDate = end
             )
         }
         filterData()
     }
+
 
 
 }

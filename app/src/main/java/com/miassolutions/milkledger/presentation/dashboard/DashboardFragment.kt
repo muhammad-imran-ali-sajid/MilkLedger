@@ -72,25 +72,25 @@ class DashboardFragment :
         }
 
         binding.btnTestA.setOnClickListener {
-            val data = PdfReceiptData(
-                title = "MilkLedger_Receipt",
-                date = LocalDate.now(),
-                partyName = "Ali Dairy Supplier",
-                recordList = listOf(
-                    RecordItem("Morning Milk", 12.5, 180.0, 2250.0),
-                    RecordItem("Evening Milk", 10.0, 180.0, 1800.0)
-                ),
-                totalAmount = 4050.0,
-                footerNote = "Thank you for your business!"
-            )
-
-// 🧾 Create + Share with logo and auto-numbering
-            PdfViewGenerator.generateAndSharePdf(
-                context = requireContext(),
-                data = data,
-                showLogo = true,
-//                logoResId = R.drawable.ic_launcher_foreground
-            )
+//            val data = PdfReceiptData(
+//                title = "MilkLedger_Receipt",
+//                date = LocalDate.now(),
+//                partyName = "Ali Dairy Supplier",
+//                recordList = listOf(
+//                    RecordItem("Morning Milk", 12.5, 180.0, 2250.0),
+//                    RecordItem("Evening Milk", 10.0, 180.0, 1800.0)
+//                ),
+//                totalAmount = 4050.0,
+//                footerNote = "Thank you for your business!"
+//            )
+//
+//// 🧾 Create + Share with logo and auto-numbering
+//            PdfViewGenerator.generateAndSharePdf(
+//                context = requireContext(),
+//                data = data,
+//                showLogo = true,
+////                logoResId = R.drawable.ic_launcher_foreground
+//            )
 
 
 
