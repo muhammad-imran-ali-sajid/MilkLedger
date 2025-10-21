@@ -1,14 +1,15 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
 
-import android.content.Intent
-import android.provider.Settings
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.miassolutions.datesort.DateFilterBottomSheet
-import com.miassolutions.datesort.DateRangeType
-import com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.PdfGenerator
+import com.miassolutions.milkledger.core.pdf.PdfReceiptData
+import com.miassolutions.milkledger.core.pdf.PdfShareHelper
+import com.miassolutions.milkledger.core.pdf.PdfViewGenerator
+import com.miassolutions.milkledger.core.pdf.RecordItem
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
@@ -71,20 +72,45 @@ class DashboardFragment :
         }
 
         binding.btnTestA.setOnClickListener {
-            val sheet = DateFilterBottomSheet(object : OnDateRangeSelected {
-                override fun onDateRangeSelected(
-                    start: LocalDate,
-                    end: LocalDate,
-                    type: DateRangeType
-                ) {
-                    binding.tvTestDate.text = "Type: $type\nFrom: $start\nTo: $end"
-                }
-            })
-            sheet.show(parentFragmentManager, "DateFilter")
+            val data = PdfReceiptData(
+                title = "MilkLedger_Receipt",
+                date = LocalDate.now(),
+                partyName = "Ali Dairy Supplier",
+                recordList = listOf(
+                    RecordItem("Morning Milk", 12.5, 180.0, 2250.0),
+                    RecordItem("Evening Milk", 10.0, 180.0, 1800.0)
+                ),
+                totalAmount = 4050.0,
+                footerNote = "Thank you for your business!"
+            )
+
+// 🧾 Create + Share with logo and auto-numbering
+            PdfViewGenerator.generateAndSharePdf(
+                context = requireContext(),
+                data = data,
+                showLogo = true,
+//                logoResId = R.drawable.ic_launcher_foreground
+            )
+
+
+
+
+//            val sheet = DateFilterBottomSheet(object : OnDateRangeSelected {
+//                override fun onDateRangeSelected(
+//                    start: LocalDate,
+//                    end: LocalDate,
+//                    type: DateRangeType
+//                ) {
+//                    binding.tvTestDate.text = "Type: $type\nFrom: $start\nTo: $end"
+//                }
+//            })
+//            sheet.show(parentFragmentManager, "DateFilter")
         }
 
 
     }
+
+
 
     private fun navigateTo(destinationId: Int) {
         findNavController().navigate(destinationId)
