@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.ui.filter
+package com.miassolutions.milkledger.core.ui.sort
 
 import androidx.lifecycle.ViewModel
 import com.miassolutions.milkledger.core.ui.sort.FilterOptions

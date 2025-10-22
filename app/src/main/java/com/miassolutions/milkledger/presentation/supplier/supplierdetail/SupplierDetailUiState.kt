@@ -19,6 +19,5 @@ data class SupplierDetailUiState(
 sealed class SupplierUiEvent {
     data class ApplyFilter(val filter: FilterOptions) : SupplierUiEvent()
     data class ChangeDateRange(val rangeType: DateRangeType) : SupplierUiEvent()
-    data object NextButton : SupplierUiEvent()
-    data object PrevButton : SupplierUiEvent()
+
 }

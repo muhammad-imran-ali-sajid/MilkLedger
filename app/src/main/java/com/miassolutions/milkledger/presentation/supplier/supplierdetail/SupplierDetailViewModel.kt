@@ -31,8 +31,6 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
         when (event) {
             is SupplierUiEvent.ApplyFilter -> applyFilter(event.filter)
             is SupplierUiEvent.ChangeDateRange -> changeDateRange(event.rangeType)
-            SupplierUiEvent.NextButton -> moveDateRange(forward = true)
-            SupplierUiEvent.PrevButton -> moveDateRange(forward = false)
         }
     }
 
@@ -95,58 +93,6 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
     }
 
 
-    fun changeDateRange(
-        rangeType: DateRangeType,
-        startDate: LocalDate? = null,
-        endDate: LocalDate? = null
-    ) {
-        _uiState.update {
-            it.copy(
-                dateRangeType = rangeType,
-                selectedStartDate = startDate,
-                selectedEndDate = endDate
-            )
-        }
-        filterData()
-    }
-
-    private fun moveDateRange(forward: Boolean) {
-        val multiplier = if (forward) 1 else -1
-        val state = _uiState.value
-
-        val newStart: LocalDate
-        val newEnd: LocalDate
-
-        when (state.dateRangeType) {
-            DateRangeType.TODAY -> {
-                val base = state.selectedStartDate ?: LocalDate.now()
-                newStart = base.plusDays(multiplier.toLong())
-                newEnd = newStart
-            }
-
-            DateRangeType.WEEK -> {
-                val base = state.selectedStartDate ?: LocalDate.now()
-                newStart = base.plusWeeks(multiplier.toLong())
-                newEnd = newStart.plusDays(6)
-            }
-
-            DateRangeType.MONTH -> {
-                val base = state.selectedStartDate ?: LocalDate.now().withDayOfMonth(1)
-                newStart = base.plusMonths(multiplier.toLong())
-                newEnd = newStart.withDayOfMonth(newStart.lengthOfMonth())
-            }
-
-            else -> return // Don't support CUSTOM or UNKNOWN range for prev/next
-        }
-
-        _uiState.update {
-            it.copy(
-                selectedStartDate = newStart,
-                selectedEndDate = newEnd
-            )
-        }
-        filterData()
-    }
 
 
     fun changeDateRange(rangeType: DateRangeType) {

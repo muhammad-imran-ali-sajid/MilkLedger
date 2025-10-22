@@ -12,7 +12,7 @@ import com.miassolutions.milkledger.core.ui.extensions.pickMonth
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.ui.extensions.pickWeek
 import com.miassolutions.milkledger.core.ui.filter.FilterBottomSheet
-import com.miassolutions.milkledger.core.ui.filter.FilterSharedViewModel
+import com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate

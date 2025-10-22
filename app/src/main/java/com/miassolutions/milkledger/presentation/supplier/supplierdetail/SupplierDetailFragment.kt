@@ -5,19 +5,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.miassolutions.datesort.DateFilterBottomSheet
-import com.miassolutions.datesort.DateRangeType.*
 import com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
-import com.miassolutions.milkledger.core.ui.extensions.pickMonth
-import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
-import com.miassolutions.milkledger.core.ui.extensions.pickWeek
-import com.miassolutions.milkledger.core.ui.filter.FilterBottomSheet
-import com.miassolutions.milkledger.core.ui.filter.FilterSharedViewModel
+import com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -38,37 +32,31 @@ class SupplierDetailFragment :
     override fun setupViews() {
         viewModel.onSelectedSupplierId(args.supplierId)
         setupRecyclerView()
-//        setupDateRangeToggle()
-    }
-
-    override fun setupListeners() = with(binding.datePickerActions) {
-        btnPrevDate.setOnClickListener {
-            viewModel.onEvent(SupplierUiEvent.PrevButton)
-        }
-
-        btnNextDate.setOnClickListener {
-            viewModel.onEvent(SupplierUiEvent.NextButton)
-        }
-
 
     }
 
-    override fun onMenuCreated(menu: Menu) {
-        val sortMenu = menu.findItem(R.id.menu_sort_item)
-        sortMenu.setOnMenuItemClickListener {
+    override fun setupListeners() {
+        binding.tvSelectedDate.setOnClickListener {
+
+
             val sheet = DateFilterBottomSheet(object : OnDateRangeSelected {
                 override fun onDateRangeSelected(
                     start: LocalDate,
                     end: LocalDate,
                     type: com.miassolutions.datesort.DateRangeType
                 ) {
-                    updateDateLabel(DateRangeType.CUSTOM, start, end)
                     viewModel.setCustomDateRange(start, end)
-//                            binding.tvTestDate.text = "Type: $type\nFrom: $start\nTo: $end"
                 }
             })
             sheet.show(parentFragmentManager, "DateFilter")
-//            FilterBottomSheet().show(parentFragmentManager, "FilterSheet")
+        }
+
+    }
+
+    override fun onMenuCreated(menu: Menu) {
+        val sortMenu = menu.findItem(R.id.menu_sort_item)
+        sortMenu.setOnMenuItemClickListener {
+           showToast("Generating pdf report...")
             true
         }
     }
@@ -79,51 +67,10 @@ class SupplierDetailFragment :
         binding.rvSupplierDetails.adapter = adapter
         binding.rvSupplierDetails.setHasFixedSize(true)
 
-//        setupDateRangeToggle()
     }
 
-//    private fun setupDateRangeToggle() = with(binding) {
-//        toggleGroupFilter.addOnButtonCheckedListener { _, checkedId, isChecked ->
-//            if (!isChecked) return@addOnButtonCheckedListener
-//
-//            val rangeType = when (checkedId) {
-//                R.id.btnDaily -> DateRangeType.TODAY
-//                R.id.btnWeekly -> DateRangeType.WEEK
-//                R.id.btnMonthly -> DateRangeType.MONTH
-//                else -> DateRangeType.ALL
-//            }
-//
-//            val (start, end) = DateRangeHelper.getRange(rangeType)
-//            viewModel.changeDateRange(rangeType, start, end)
-//        }
-//
-//        datePickerActions.tvSelectedDate.setOnClickListener {
-//            when (toggleGroupFilter.checkedButtonId) {
-//                R.id.btnDaily -> pickSingleDate { date ->
-//                    viewModel.setCustomDateRange(date, date)
-//                }
-//
-//                R.id.btnWeekly -> pickWeek { start, end ->
-//                    viewModel.setCustomDateRange(start, end)
-//                }
-//
-//                R.id.btnMonthly -> pickMonth { start, end, _ ->
-//                    viewModel.setCustomDateRange(start, end)
-//                }
-//
-//                else -> toggleGroupFilter.check(R.id.btnDaily)
-//            }
-//        }
-//
-//        // Default state
-//        toggleGroupFilter.check(R.id.btnDaily)
-//        val today = LocalDate.now()
-//        viewModel.setCustomDateRange(today, today)
-//    }
-
-
     private fun updateDateLabel(rangeType: DateRangeType, start: LocalDate?, end: LocalDate?) {
-        binding.datePickerActions.tvSelectedDate.text = when (rangeType) {
+        binding.tvSelectedDate.text = when (rangeType) {
             DateRangeType.TODAY -> start?.formattedDate().orEmpty()
             DateRangeType.WEEK -> if (start != null && end != null) {
                 formatDateRange(start, end)

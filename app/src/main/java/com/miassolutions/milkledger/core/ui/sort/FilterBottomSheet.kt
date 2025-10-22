@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.ui.sort.FilterOptions
+import com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import com.miassolutions.milkledger.core.ui.sort.SortOrder
 import com.miassolutions.milkledger.databinding.BottomsheetFilterBinding
 
