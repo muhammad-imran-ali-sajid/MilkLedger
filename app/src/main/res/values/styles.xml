@@ -2,6 +2,25 @@
 <resources>
 
 
+    <style name="TextAppearance.MilkLedger.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <!-- Increase from default 16sp to 18sp -->
+        <item name="android:textSize">@dimen/text_size_body_large_custom</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <!-- Increase from default 22sp to 24sp and make bold for emphasis -->
+        <item name="android:textSize">@dimen/text_size_title_large_custom</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <!-- Increase size and add extra weight -->
+        <item name="android:textSize">@dimen/text_size_headline_medium_custom</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+
     <!-- Style for all label TextViews -->
     <style name="TextLabel">
         <item name="android:layout_width">wrap_content</item>

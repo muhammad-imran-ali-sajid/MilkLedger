@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!--
+ Resource Qualifier: values-night
+ These colors will OVERRIDE the corresponding names in res/values/colors.xml
+ when the device is in Dark Mode (Night Theme).
+ -->
+
+    <!--
+    NOTE: In Dark Theme, the primary and secondary colors should be lighter/brighter
+    to ensure they stand out against the dark background.
+    -->
+
+    <!-- Primary Brand Color Override (Light Blue for contrast on dark surface) -->
+
+    <color name="milk_primary">#AECFEF</color>
+
+    <!-- Text/Icons ON Primary (Dark text/icons on the light primary) -->
+
+    <color name="milk_on_primary">#000000</color>
+
+    <!-- Secondary Accent Color Override (Light Green for contrast on dark surface) -->
+
+    <color name="milk_secondary">#C3E6B2</color>
+
+    <!-- Text/Icons ON Secondary (Dark text/icons on the light secondary) -->
+
+    <color name="milk_on_secondary">#000000</color>
+
+    <!-- UI Background Surfaces (Dark Theme values using the simplified names) -->
+
+    <color name="milk_surface">#121212</color>
+    <color name="milk_background">#000000</color>
+
+    <!-- Text/Icons ON Surfaces (Light gray for contrast) -->
+
+    <color name="milk_on_surface">#EAEAEA</color>
+</resources>

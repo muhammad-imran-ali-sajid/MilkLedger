@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Primary Brand Color (A strong, accessible blue) -->
+    <color name="milk_primary">#2A4D69</color>
+    <!-- Text/Icons ON Primary (Should always be white for contrast) -->
+    <color name="milk_on_primary">#FFFFFF</color>
+
+    <!-- Secondary Accent Color (A neutral green for secondary actions or completion status) -->
+    <color name="milk_secondary">#4D8B31</color>
+    <!-- Text/Icons ON Secondary -->
+    <color name="milk_on_secondary">#FFFFFF</color>
+
+    <!-- UI Background Surfaces (Near-white for light theme) -->
+    <color name="milk_surface">#F5F5F5</color>
+    <color name="milk_background">#FFFFFF</color>
+    <!-- Text/Icons ON Surfaces (Near-black for contrast) -->
+    <color name="milk_on_surface">#1F1F1F</color>
+
+
+
+
+
     <!-- Brand -->
     <color name="md_theme_primary">#0288D1</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
