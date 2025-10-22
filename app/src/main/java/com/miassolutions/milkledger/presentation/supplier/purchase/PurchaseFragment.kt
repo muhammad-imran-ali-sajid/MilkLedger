@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import androidx.core.content.edit
+import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
 
 @AndroidEntryPoint
 class PurchaseFragment :
@@ -143,19 +144,19 @@ class PurchaseFragment :
     ) {
         binding.apply {
             cardSummary.setTitle("Summary")
-            val summaryView =
-                layoutInflater.inflate(R.layout.layout_purchase_summary, root, false)
-            cardSummary.setContent(summaryView)
-            cardSummary.collapse()
+            // inflate the layout using viewbinding
+            val summaryBinding = LayoutPurchaseSummaryBinding.inflate(layoutInflater, root, false)
+            cardSummary.setContent(summaryBinding.root)
+            // 2. Use the ViewBinding object to set the data efficiently
+            summaryBinding.apply {
 
-            summaryView.findViewById<TextView>(R.id.tv_total_amount).text = milkAmount.toRoundedStr()
-            summaryView.findViewById<TextView>(R.id.tv_avg_fat).text = avgFat.toRoundedStr("%.2f")
-            summaryView.findViewById<TextView>(R.id.tv_avg_lr).text = avgLr.toRoundedStr("%.2f")
-            summaryView.findViewById<TextView>(R.id.tv_avg_ts).text = avgTS.toRoundedStr("%.2f")
-            summaryView.findViewById<TextView>(R.id.tv_total_amount).text =
-                "Rs. ${totalAmount.toRoundedStr(" %.0f")}"
-            summaryView.findViewById<TextView>(R.id.tv_avg_price).text =
-                "Rs. ${avgRate.toRoundedStr(" %.0f")}"
+                tvTotalMilk.text = milkAmount.toRoundedStr()
+                tvAvgFat.text = avgFat.toRoundedStr("%.2f")
+                tvAvgLr.text = avgLr.toRoundedStr("%.2f")
+                tvAvgTs.text = avgTS.toRoundedStr("%.2f")
+                tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr(" %.0f")}"
+                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr(" %.0f")}"
+            }
         }
     }
 
