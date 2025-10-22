@@ -144,6 +144,7 @@ class PurchaseFragment :
     ) {
         binding.apply {
             cardSummary.setTitle("Summary")
+            cardSummary.collapse()
             // inflate the layout using viewbinding
             val summaryBinding = LayoutPurchaseSummaryBinding.inflate(layoutInflater, root, false)
             cardSummary.setContent(summaryBinding.root)

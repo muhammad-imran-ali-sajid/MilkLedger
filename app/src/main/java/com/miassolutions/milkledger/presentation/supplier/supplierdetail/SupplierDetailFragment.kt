@@ -112,6 +112,7 @@ class SupplierDetailFragment :
     ) {
         binding.apply {
             supplierSummary.setTitle("Summary")
+            supplierSummary.collapse()
             // inflate the layout using viewbinding
             val summaryBinding =
                 LayoutSupplierDetailSummaryBinding.inflate(layoutInflater, root, false)
