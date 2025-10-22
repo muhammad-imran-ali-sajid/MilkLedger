@@ -12,7 +12,10 @@ import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
+import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
+import com.miassolutions.milkledger.databinding.LayoutSupplierDetailSummaryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -56,7 +59,7 @@ class SupplierDetailFragment :
     override fun onMenuCreated(menu: Menu) {
         val sortMenu = menu.findItem(R.id.menu_sort_item)
         sortMenu.setOnMenuItemClickListener {
-           showToast("Generating pdf report...")
+            showToast("Generating pdf report...")
             true
         }
     }
@@ -91,10 +94,38 @@ class SupplierDetailFragment :
 
             // Move this here to always update the label when the state changes
             updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
+            showSummary()
         }
 
         filterViewModel.filterOptions.collectState { filter ->
             viewModel.onEvent(SupplierUiEvent.ApplyFilter(filter))
+        }
+    }
+
+    private fun showSummary(
+        dateRange: Double = 0.0,
+        milkAmount: Double = 0.0,
+        totalTS: Double = 0.0,
+        totalPrice: Double = 0.0,
+        payment: Double = 0.0,
+        balance: Double = 0.0
+    ) {
+        binding.apply {
+            supplierSummary.setTitle("Summary")
+            // inflate the layout using viewbinding
+            val summaryBinding =
+                LayoutSupplierDetailSummaryBinding.inflate(layoutInflater, root, false)
+            supplierSummary.setContent(summaryBinding.root)
+            // 2. Use the ViewBinding object to set the data efficiently
+            summaryBinding.apply {
+
+                tvDateRangeValue.text = "22-10-25 to 26-10-25"
+                tvTotalMilkValue.text = milkAmount.toRoundedStr()
+                tvTotalTsValue.text = totalTS.toRoundedStr("%.2f")
+                tvTotalPriceValue.text = totalPrice.toRoundedStr("%.0f")
+                tvPaymentValue.text = payment.toRoundedStr("%.0f")
+                tvBalanceValue.text = balance.toRoundedStr("%.0f")
+            }
         }
     }
 
