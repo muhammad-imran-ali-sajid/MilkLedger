@@ -16,6 +16,14 @@ data class SupplierDetailUiState(
     val summary: SupplierSummary = SupplierSummary()
 )
 
+data class SupplierSummary(
+    val summaryPeriod: String = "",
+    val totalMilk: String = "",
+    val totalTs: String = "",
+    val totalPrice: String = "",
+    val paidAmount: String = "",
+    val balance: Double = 0.0
+)
 
 sealed class SupplierUiEvent {
     data class ApplyFilter(val filter: FilterOptions) : SupplierUiEvent()

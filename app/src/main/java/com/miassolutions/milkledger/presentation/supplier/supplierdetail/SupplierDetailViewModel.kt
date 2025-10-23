@@ -99,7 +99,7 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
                 totalTs = totalTs.toRoundedStr(),
                 totalPrice = totalPrice.toRoundedStr(),
                 paidAmount = totalPaid.toRoundedStr(),
-                balance = balance.toRoundedStr()
+                balance = balance
             )
 
             Log.d("SupplierDetailViewModel", supplierSummary.toString())

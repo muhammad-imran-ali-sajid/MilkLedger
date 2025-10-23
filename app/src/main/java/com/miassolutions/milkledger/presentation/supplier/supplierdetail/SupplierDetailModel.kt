@@ -18,14 +18,7 @@ data class SupplierDetailModel(
 
 )
 
-data class SupplierSummary(
-    val summaryPeriod: String = "",
-    val totalMilk: String = "",
-    val totalTs: String = "",
-    val totalPrice: String = "",
-    val paidAmount: String = "",
-    val balance: String = ""
-)
+
 
 
 fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = SupplierDetailModel(

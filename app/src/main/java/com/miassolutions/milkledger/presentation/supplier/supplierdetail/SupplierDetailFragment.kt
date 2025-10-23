@@ -1,6 +1,8 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
+import android.graphics.Color
 import android.view.Menu
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -19,6 +21,7 @@ import com.miassolutions.milkledger.databinding.LayoutSupplierDetailSummaryBindi
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class SupplierDetailFragment :
@@ -36,7 +39,6 @@ class SupplierDetailFragment :
     override fun setupViews() {
         viewModel.onSelectedSupplierId(args.supplierId)
         setupRecyclerView()
-
 
 
     }
@@ -101,13 +103,26 @@ class SupplierDetailFragment :
             // Move this here to always update the label when the state changes
             updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
             with(state.summary) {
-                showSummary(
+                val color = when {
+                    balance < 0 -> Color.RED
+                    balance == 0.0 -> "#000000".toColorInt()
+                    else -> "#4CAF50".toColorInt() // Material green 500
+                }
 
+                val balanceText = when {
+                    balance > 0 -> "+${balance.toRoundedStr()}"
+                    else -> balance.toRoundedStr()
+                }
+
+
+
+                showSummary(
                     milkAmount = totalMilk,
                     totalTS = totalTs,
                     totalPrice = totalPrice,
                     payment = paidAmount,
-                    balance = balance
+                    balance = balanceText,
+                    balanceColor = color
                 )
             }
 
@@ -126,7 +141,8 @@ class SupplierDetailFragment :
         totalTS: String,
         totalPrice: String,
         payment: String,
-        balance: String
+        balance: String,
+        balanceColor: Int
     ) {
         binding.apply {
             supplierSummary.setTitle("Summary")
@@ -144,6 +160,7 @@ class SupplierDetailFragment :
                 tvTotalPriceValue.text = totalPrice
                 tvPaymentValue.text = payment
                 tvBalanceValue.text = balance
+                tvBalanceValue.setTextColor(balanceColor)
             }
         }
     }
