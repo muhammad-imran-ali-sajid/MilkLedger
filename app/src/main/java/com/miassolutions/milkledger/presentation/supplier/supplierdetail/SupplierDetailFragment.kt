@@ -9,6 +9,9 @@ import androidx.navigation.fragment.navArgs
 import com.miassolutions.datesort.DateFilterBottomSheet
 import com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.HybridPdfGenerator
+import com.miassolutions.milkledger.core.pdf.PdfReceiptData
+import com.miassolutions.milkledger.core.pdf.RecordItem
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
@@ -64,6 +67,92 @@ class SupplierDetailFragment :
     override fun onMenuCreated(menu: Menu) {
         val sortMenu = menu.findItem(R.id.menu_sort_item)
         sortMenu.setOnMenuItemClickListener {
+            val data = PdfReceiptData(
+                title = "MilkLedger_Receipt",
+                date = LocalDate.now(),
+                partyName = "Ali Dairy Supplier",
+                recordList = listOf(
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ), RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ), RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ), RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ), RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    )
+                ),
+                totalAmount = 4050.0,
+                footerNote = "Thank you for your business!"
+            )
+
+// 🧾 Create + Share with logo and auto-numbering
+            HybridPdfGenerator.generateAndSharePdf(
+                context = requireContext(),
+                data = data,
+                showLogo = true,
+//                logoResId = R.drawable.ic_launcher_foreground
+            )
+
             showToast("Generating pdf report...")
             true
         }

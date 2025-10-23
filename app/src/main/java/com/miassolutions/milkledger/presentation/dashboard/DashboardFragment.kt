@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.HybridPdfGenerator
 import com.miassolutions.milkledger.core.pdf.PdfGenerator
 import com.miassolutions.milkledger.core.pdf.PdfReceiptData
 import com.miassolutions.milkledger.core.pdf.PdfShareHelper
@@ -151,7 +152,7 @@ class DashboardFragment :
             )
 
 // 🧾 Create + Share with logo and auto-numbering
-            PdfViewGenerator.generateAndSharePdf(
+            HybridPdfGenerator.generateAndSharePdf(
                 context = requireContext(),
                 data = data,
                 showLogo = true,
