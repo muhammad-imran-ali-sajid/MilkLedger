@@ -1,5 +1,8 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
+import com.miassolutions.milkledger.core.pdf.RecordItem
+import com.miassolutions.milkledger.core.ui.extensions.formattedDate
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import java.time.LocalDate
 
@@ -16,9 +19,7 @@ data class SupplierDetailModel(
     val rateUsed: Double,
     val notes: String? = null,
 
-)
-
-
+    )
 
 
 fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = SupplierDetailModel(
@@ -33,3 +34,17 @@ fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = Supplier
     rateUsed = this.purchase.rateUsed,
     notes = this.purchase.notes
 )
+
+fun List<SupplierDetailModel>.toRecordList(): List<RecordItem> {
+    return this.map { item ->
+        RecordItem(
+            date = item.date.formattedDate(),
+            quantity = item.milkAmount,
+            ts = item.ts,
+            rate = item.rateUsed,
+            amount = item.milkPrice,
+            paid = item.payment,
+            balance = item.balance
+        )
+    }
+}

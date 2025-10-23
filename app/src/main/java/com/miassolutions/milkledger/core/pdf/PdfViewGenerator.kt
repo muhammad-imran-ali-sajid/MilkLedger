@@ -32,7 +32,7 @@ object PdfViewGenerator {
         // Header info
         binding.tvTitle.text = data.title
         binding.tvPartyName.text = "Party: ${data.partyName}"
-        binding.tvDate.text = "Date: ${PdfUtils.getDateString(data.date)}"
+        binding.tvDateRange.text = "Date: ${data.dateRange}"
         binding.tvTotal.text = "Total: ${data.totalAmount}"
         binding.tvFooter.text = data.footerNote ?: ""
 
@@ -43,7 +43,7 @@ object PdfViewGenerator {
             rowBinding.tvQty.text = item.quantity.toString()
             rowBinding.tvTS.text = item.ts.toRoundedStr()
             rowBinding.tvRate.text = item.rate.toString()
-            rowBinding.tvAmount.text = item.amount.toString()
+            rowBinding.tvAmount.text = item.amount.toRoundedStr()
             rowBinding.tvPaid.text = item.paid.toRoundedStr()
             rowBinding.tvBalance.text = item.balance.toRoundedStr()
             binding.recordContainer.addView(rowBinding.root)

@@ -1,13 +1,11 @@
 package com.miassolutions.milkledger.core.pdf
 
-import java.time.LocalDate
-
 data class PdfReceiptData(
     val title: String,
-    val date: LocalDate,
+    val dateRange: String,
     val partyName: String,
     val recordList: List<RecordItem>,
-    val totalAmount: Double,
+    val totalAmount: String,
     val footerNote: String? = null
 )
 

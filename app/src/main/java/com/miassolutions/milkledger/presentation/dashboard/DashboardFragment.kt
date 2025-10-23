@@ -1,16 +1,9 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
 
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.pdf.HybridPdfGenerator
-import com.miassolutions.milkledger.core.pdf.PdfGenerator
-import com.miassolutions.milkledger.core.pdf.PdfReceiptData
-import com.miassolutions.milkledger.core.pdf.PdfShareHelper
-import com.miassolutions.milkledger.core.pdf.PdfViewGenerator
-import com.miassolutions.milkledger.core.pdf.RecordItem
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
@@ -73,91 +66,91 @@ class DashboardFragment :
         }
 
         binding.btnTestA.setOnClickListener {
-            val data = PdfReceiptData(
-                title = "MilkLedger_Receipt",
-                date = LocalDate.now(),
-                partyName = "Ali Dairy Supplier",
-                recordList = listOf(
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ), RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ), RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ), RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ), RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    )
-                ),
-                totalAmount = 4050.0,
-                footerNote = "Thank you for your business!"
-            )
+//            val data = PdfReceiptData(
+//                title = "MilkLedger_Receipt",
+//                date = LocalDate.now(),
+//                partyName = "Ali Dairy Supplier",
+//                recordList = listOf(
+//                    RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ),
+//                    RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ),
+//                    RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ),
+//                    RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ), RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ), RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ),
+//                    RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ),
+//                    RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ),
+//                    RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ),
+//                    RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ), RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    ), RecordItem(
+//                        "20-10-25", 12.5, 180.0, 2250.0,
+//                        amount = 121.0,
+//                        paid = 121.0,
+//                        balance = 121.0
+//                    )
+//                ),
+//                totalAmount = 4050.0,
+//                footerNote = "Thank you for your business!"
+//            )
 
 // 🧾 Create + Share with logo and auto-numbering
-            HybridPdfGenerator.generateAndSharePdf(
-                context = requireContext(),
-                data = data,
-                showLogo = true,
-//                logoResId = R.drawable.ic_launcher_foreground
-            )
+//            HybridPdfGenerator.generateAndSharePdf(
+//                context = requireContext(),
+//                data = data,
+//                showLogo = true,
+////                logoResId = R.drawable.ic_launcher_foreground
+//            )
 
 
         }

@@ -34,7 +34,7 @@ object PdfGenerator {
         // Header
         canvas.drawText(data.title, xStart, yPos, titlePaint)
         yPos += 30f
-        canvas.drawText("Date: ${PdfUtils.getDateString(data.date)}", xStart, yPos, paint)
+        canvas.drawText("Date: ", xStart, yPos, paint)
         yPos += 20f
         canvas.drawText("Name: ${data.partyName}", xStart, yPos, paint)
         yPos += 40f

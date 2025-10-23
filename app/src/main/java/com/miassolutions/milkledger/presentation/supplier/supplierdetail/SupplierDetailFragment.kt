@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
 import android.graphics.Color
+import android.util.Log
 import android.view.Menu
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.activityViewModels
@@ -11,6 +12,7 @@ import com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.pdf.HybridPdfGenerator
 import com.miassolutions.milkledger.core.pdf.PdfReceiptData
+import com.miassolutions.milkledger.core.pdf.PdfViewGenerator
 import com.miassolutions.milkledger.core.pdf.RecordItem
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
@@ -66,87 +68,38 @@ class SupplierDetailFragment :
 
     override fun onMenuCreated(menu: Menu) {
         val sortMenu = menu.findItem(R.id.menu_sort_item)
+
+
+
+
+
         sortMenu.setOnMenuItemClickListener {
+            val filteredList = viewModel.uiState.value.filteredList
+            val fromDate = viewModel.uiState.value.selectedStartDate?.formattedDate()
+            val toDate = viewModel.uiState.value.selectedEndDate?.formattedDate() ?: ""
+
+
+            val dateRange = "$fromDate - $toDate"
+            Log.d("SupplierDetailFragment", "$dateRange")
+            if (filteredList.isEmpty()) {
+                showToast("No data to generate PDF")
+                return@setOnMenuItemClickListener true
+            }
+
+            val recordList = filteredList.toRecordList()
+            val totalAmount = recordList.sumOf { it.amount }
+
             val data = PdfReceiptData(
-                title = "MilkLedger_Receipt",
-                date = LocalDate.now(),
-                partyName = "Ali Dairy Supplier",
-                recordList = listOf(
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ), RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ), RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ),
-                    RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ), RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    ), RecordItem(
-                        "20-10-25", 12.5, 180.0, 2250.0,
-                        amount = 121.0,
-                        paid = 121.0,
-                        balance = 121.0
-                    )
-                ),
-                totalAmount = 4050.0,
-                footerNote = "Thank you for your business!"
+                title = args.supplierName,
+                dateRange = dateRange,
+                partyName = args.supplierName,
+                recordList = recordList,
+                totalAmount = totalAmount.toRoundedStr(),
+                footerNote = "Thank you for your business!-- Dated : ${LocalDate.now()}"
             )
 
 // 🧾 Create + Share with logo and auto-numbering
-            HybridPdfGenerator.generateAndSharePdf(
+            PdfViewGenerator.generateAndSharePdf(
                 context = requireContext(),
                 data = data,
                 showLogo = true,
@@ -186,6 +139,8 @@ class SupplierDetailFragment :
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
             adapter.submitList(state.filteredList)
+
+
 
             binding.tvSelectedDate.text = selectedDateRange
 

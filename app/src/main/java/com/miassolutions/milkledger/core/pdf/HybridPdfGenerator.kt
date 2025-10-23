@@ -36,7 +36,7 @@ object HybridPdfGenerator {
 
         binding.tvTitle.text = data.title
         binding.tvPartyName.text = "Party: ${data.partyName}"
-        binding.tvDate.text = "Date: ${PdfUtils.getDateString(data.date)}"
+        binding.tvDateRange.text = "Dateabc: ${data.dateRange}"
         binding.tvTotal.text = "Total: ${data.totalAmount}"
         binding.tvFooter.text = data.footerNote ?: ""
 
@@ -105,7 +105,7 @@ object HybridPdfGenerator {
         showLogo: Boolean = false,
         logoResId: Int? = null
     ) {
-        val file = PdfViewGenerator.generateReceiptPdf(context, data, showLogo, logoResId)
+        val file = HybridPdfGenerator.generateReceiptPdf(context, data, showLogo, logoResId)
         PdfShareHelper.sharePdf(context, file)
     }
 }
