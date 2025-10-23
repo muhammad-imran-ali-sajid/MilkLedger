@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.TextView
+
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import androidx.core.content.edit
+import com.google.firebase.components.BuildConfig
 import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
 
 @AndroidEntryPoint
@@ -50,6 +52,8 @@ class PurchaseFragment :
                 onPicked = { viewModel.onDateSelected(it) }
             )
         }
+
+
     }
 
     override fun onMenuCreated(menu: Menu) {

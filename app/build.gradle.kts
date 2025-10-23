@@ -77,6 +77,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
     implementation("com.google.firebase:firebase-analytics")
 
+    implementation ("com.google.firebase:firebase-auth")
+    implementation ("com.google.firebase:firebase-firestore")
+
 
     // finger print
     implementation("androidx.biometric:biometric:1.2.0-alpha05")
