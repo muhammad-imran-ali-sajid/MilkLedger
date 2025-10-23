@@ -72,44 +72,97 @@ class DashboardFragment :
         }
 
         binding.btnTestA.setOnClickListener {
-//            val data = PdfReceiptData(
-//                title = "MilkLedger_Receipt",
-//                date = LocalDate.now(),
-//                partyName = "Ali Dairy Supplier",
-//                recordList = listOf(
-//                    RecordItem("Morning Milk", 12.5, 180.0, 2250.0),
-//                    RecordItem("Evening Milk", 10.0, 180.0, 1800.0)
-//                ),
-//                totalAmount = 4050.0,
-//                footerNote = "Thank you for your business!"
-//            )
-//
-//// 🧾 Create + Share with logo and auto-numbering
-//            PdfViewGenerator.generateAndSharePdf(
-//                context = requireContext(),
-//                data = data,
-//                showLogo = true,
-////                logoResId = R.drawable.ic_launcher_foreground
-//            )
+            val data = PdfReceiptData(
+                title = "MilkLedger_Receipt",
+                date = LocalDate.now(),
+                partyName = "Ali Dairy Supplier",
+                recordList = listOf(
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ), RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ), RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ),
+                    RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ), RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    ), RecordItem(
+                        "20-10-25", 12.5, 180.0, 2250.0,
+                        amount = 121.0,
+                        paid = 121.0,
+                        balance = 121.0
+                    )
+                ),
+                totalAmount = 4050.0,
+                footerNote = "Thank you for your business!"
+            )
+
+// 🧾 Create + Share with logo and auto-numbering
+            PdfViewGenerator.generateAndSharePdf(
+                context = requireContext(),
+                data = data,
+                showLogo = true,
+//                logoResId = R.drawable.ic_launcher_foreground
+            )
 
 
-
-
-//            val sheet = DateFilterBottomSheet(object : OnDateRangeSelected {
-//                override fun onDateRangeSelected(
-//                    start: LocalDate,
-//                    end: LocalDate,
-//                    type: DateRangeType
-//                ) {
-//                    binding.tvTestDate.text = "Type: $type\nFrom: $start\nTo: $end"
-//                }
-//            })
-//            sheet.show(parentFragmentManager, "DateFilter")
         }
 
 
     }
-
 
 
     private fun navigateTo(destinationId: Int) {

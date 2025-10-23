@@ -1,5 +1,6 @@
 <!-- res/layout/receipt_layout.xml -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/white">
@@ -8,15 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="12dp"> <!-- reduced from 24dp -->
 
         <!-- Optional Logo -->
         <ImageView
             android:id="@+id/imgLogo"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="8dp"
             android:visibility="gone" />
 
         <!-- Title -->
@@ -25,24 +26,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:text="Milk Purchase Receipt"
-            android:textSize="20sp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvPartyName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:textSize="16sp" />
+            android:layout_marginBottom="4dp"
+            android:textSize="10sp"
+            tools:text="Zafar" />
 
         <TextView
             android:id="@+id/tvDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:textSize="16sp" />
+            android:layout_marginBottom="8dp"
+            android:textSize="10sp"
+            tools:text="23 Oct - 25 Oct" />
 
         <!-- Table Header -->
         <LinearLayout
@@ -50,15 +53,16 @@
             android:layout_height="wrap_content"
             android:background="#EEEEEE"
             android:orientation="horizontal"
-            android:paddingVertical="4dp">
+            android:paddingVertical="2dp"
+            android:paddingHorizontal="2dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="start"
-                android:text="Item"
-                android:textSize="12sp"
+                android:text="Date"
+                android:textSize="8sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -67,7 +71,16 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Qty"
-                android:textSize="12sp"
+                android:textSize="8sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="TS"
+                android:textSize="8sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -76,7 +89,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Rate"
-                android:textSize="12sp"
+                android:textSize="8sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -85,41 +98,61 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:text="Amount"
-                android:textSize="12sp"
+                android:textSize="8sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Paid"
+                android:textSize="8sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Balance"
+                android:textSize="8sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Table Rows will go here -->
+        <!-- Table Rows -->
         <LinearLayout
             android:id="@+id/recordContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="?android:attr/dividerHorizontal"
             android:orientation="vertical"
-            android:showDividers="middle" />
+            android:showDividers="middle"
+            android:divider="?android:attr/dividerHorizontal" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:background="#000" />
 
         <TextView
             android:id="@+id/tvTotal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:layout_gravity="end"
+            android:layout_marginTop="8dp"
             android:text="Total: 0"
-            android:textSize="16sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvFooter"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:textSize="14sp" />
+            android:textSize="9sp"
+            android:textColor="#555"
+            tools:text="Thank you for your business!" />
     </LinearLayout>
 </ScrollView>

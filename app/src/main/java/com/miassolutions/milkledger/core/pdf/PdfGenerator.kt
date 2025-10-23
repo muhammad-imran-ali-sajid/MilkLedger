@@ -50,7 +50,7 @@ object PdfGenerator {
 
         // Table Rows
         for (item in data.recordList) {
-            canvas.drawText(item.description, xStart, yPos, paint)
+            canvas.drawText(item.date, xStart, yPos, paint)
             canvas.drawText(item.quantity.toString(), 250f, yPos, paint)
             canvas.drawText(item.rate.toString(), 350f, yPos, paint)
             canvas.drawText(item.amount.toString(), 450f, yPos, paint)

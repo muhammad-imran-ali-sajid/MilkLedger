@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
 import com.miassolutions.milkledger.databinding.ReceiptLayoutBinding
 import java.io.File
@@ -38,10 +39,13 @@ object PdfViewGenerator {
         // Add rows using item_record_row.xml via ViewBinding
         data.recordList.forEach { item ->
             val rowBinding = ItemRecordRowBinding.inflate(inflater, binding.recordContainer, false)
-            rowBinding.tvItemName.text = item.description
+            rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
+            rowBinding.tvTS.text = item.ts.toRoundedStr()
             rowBinding.tvRate.text = item.rate.toString()
             rowBinding.tvAmount.text = item.amount.toString()
+            rowBinding.tvPaid.text = item.paid.toRoundedStr()
+            rowBinding.tvBalance.text = item.balance.toRoundedStr()
             binding.recordContainer.addView(rowBinding.root)
         }
 
