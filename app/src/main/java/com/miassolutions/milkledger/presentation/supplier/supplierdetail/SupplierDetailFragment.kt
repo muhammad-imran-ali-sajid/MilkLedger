@@ -75,7 +75,7 @@ class SupplierDetailFragment :
 
         sortMenu.setOnMenuItemClickListener {
             val filteredList = viewModel.uiState.value.filteredList
-            val fromDate = viewModel.uiState.value.selectedStartDate?.formattedDate()
+            val fromDate = viewModel.uiState.value.selectedStartDate?.formattedDate() ?: ""
             val toDate = viewModel.uiState.value.selectedEndDate?.formattedDate() ?: ""
 
 
@@ -90,12 +90,14 @@ class SupplierDetailFragment :
             val totalAmount = recordList.sumOf { it.amount }
 
             val data = PdfReceiptData(
-                title = args.supplierName,
+                title = "Milk Ledger",
                 dateRange = dateRange,
                 partyName = args.supplierName,
                 recordList = recordList,
                 totalAmount = totalAmount.toRoundedStr(),
-                footerNote = "Thank you for your business!-- Dated : ${LocalDate.now()}"
+                footerNote = "Thank you for your business!\n Receipt generated on : ${
+                    LocalDate.now().formattedDate()
+                }"
             )
 
 // 🧾 Create + Share with logo and auto-numbering
@@ -127,7 +129,7 @@ class SupplierDetailFragment :
                 formatDateRange(start, end)
             } else ""
 
-            DateRangeType.MONTH -> start?.format(DateTimeFormatter.ofPattern("MMMM yyyy")).orEmpty()
+            DateRangeType.MONTH -> start?.formattedDate().orEmpty()
             DateRangeType.CUSTOM -> if (start != null && end != null) {
                 formatDateRange(start, end)
             } else ""

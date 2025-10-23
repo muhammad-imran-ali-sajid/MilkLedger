@@ -23,19 +23,16 @@ object PdfUtils {
         return File(dir, "${baseName}_${nextNumber}.pdf")
     }
 
-    fun getDateString(date: LocalDate): String {
-        return date.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-    }
 
     fun getLogoBitmap(context: Context, resId: Int): Bitmap {
         return BitmapFactory.decodeResource(context.resources, resId)
     }
 
-    fun saveBitmapToFile(context: Context, bitmap: Bitmap, name: String): File {
-        val file = File(context.cacheDir, "$name.png")
-        FileOutputStream(file).use { out ->
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-        }
-        return file
-    }
+//    fun saveBitmapToFile(context: Context, bitmap: Bitmap, name: String): File {
+//        val file = File(context.cacheDir, "$name.png")
+//        FileOutputStream(file).use { out ->
+//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+//        }
+//        return file
+//    }
 }

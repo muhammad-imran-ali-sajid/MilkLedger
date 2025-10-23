@@ -12,7 +12,7 @@ import java.io.FileOutputStream
 
 object PdfViewGenerator {
 
-    fun generateReceiptPdf(
+    private fun generateReceiptPdf(
         context: Context,
         data: PdfReceiptData,
         showLogo: Boolean = false,
@@ -32,7 +32,7 @@ object PdfViewGenerator {
         // Header info
         binding.tvTitle.text = data.title
         binding.tvPartyName.text = "Party: ${data.partyName}"
-        binding.tvDateRange.text = "Date: ${data.dateRange}"
+        binding.tvDateRange.text = "Date Range: ${data.dateRange}"
         binding.tvTotal.text = "Total: ${data.totalAmount}"
         binding.tvFooter.text = data.footerNote ?: ""
 
