@@ -7,14 +7,24 @@ data class SupplierDetailModel(
 
     val date: LocalDate,
     val milkAmount: Double,
-    val fat : Double,
-    val lr : Double,
+    val fat: Double,
+    val lr: Double,
     val ts: Double,
     val milkPrice: Double,
     val payment: Double,
     val balance: Double,
     val rateUsed: Double,
-    val notes: String? = null
+    val notes: String? = null,
+
+)
+
+data class SupplierSummary(
+    val summaryPeriod: String = "",
+    val totalMilk: String = "",
+    val totalTs: String = "",
+    val totalPrice: String = "",
+    val paidAmount: String = "",
+    val balance: String = ""
 )
 
 

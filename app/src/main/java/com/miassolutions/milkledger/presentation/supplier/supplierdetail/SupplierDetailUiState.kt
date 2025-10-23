@@ -12,7 +12,8 @@ data class SupplierDetailUiState(
     val currentFilter: FilterOptions = FilterOptions(),//  remember current filter
     val dateRangeType: DateRangeType = DateRangeType.ALL,
     val selectedStartDate: LocalDate? = null,
-    val selectedEndDate: LocalDate? = null
+    val selectedEndDate: LocalDate? = null,
+    val summary: SupplierSummary = SupplierSummary()
 )
 
 

@@ -1,11 +1,13 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.sort.FilterOptions
 import com.miassolutions.milkledger.core.ui.sort.SortOrder
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.repositories.PurchaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -40,12 +42,16 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
 
             repository.getPurchasesForSupplier(id).collect { list ->
                 val details = list.map { it.toSupplierDetailModel() }
+
                 _uiState.update {
                     it.copy(
                         supplierDetailList = details,
-                        filteredList = details
-                    )
+                        filteredList = details,
+
+
+                        )
                 }
+
                 filterData()
             }
         }
@@ -59,40 +65,62 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
     private fun filterData() {
         val state = _uiState.value
         var filteredList = state.supplierDetailList
+
         if (filteredList.isEmpty()) return
 
         viewModelScope.launch {
             val (startDate, endDate) = when {
                 state.selectedStartDate != null && state.selectedEndDate != null
-                    -> state.selectedStartDate to state.selectedEndDate
+                    -> {
+
+                    state.selectedStartDate to state.selectedEndDate
+                }
 
                 else -> DateRangeHelper.getRange(state.dateRangeType)
             }
 
             // Apply Date filer
             filteredList = filteredList.filter { detail ->
+
                 detail.date in startDate!!..endDate!!
+
             }
+
+
+            val totalTs = filteredList.sumOf { it.ts }
+            val totalMilk = filteredList.sumOf { it.milkAmount }
+            val totalPrice = filteredList.sumOf { it.milkPrice }
+            val totalPaid = filteredList.sumOf { it.payment }
+            val balance = filteredList.sumOf { it.balance }
+
+            val supplierSummary = SupplierSummary(
+                summaryPeriod = "",
+                totalMilk = totalMilk.toRoundedStr(),
+                totalTs = totalTs.toRoundedStr(),
+                totalPrice = totalPrice.toRoundedStr(),
+                paidAmount = totalPaid.toRoundedStr(),
+                balance = balance.toRoundedStr()
+            )
+
+            Log.d("SupplierDetailViewModel", supplierSummary.toString())
             // apply sorting
-            state.currentFilter.category?.let { category ->
-                filteredList = when (category) {
-                    "Milk" -> filteredList.sortedBy { it.milkAmount }
-                    "Price" -> filteredList.sortedBy { it.milkPrice }
-                    else -> filteredList
-                }
-            }
+//            state.currentFilter.category?.let { category ->
+//                filteredList = when (category) {
+//                    "Milk" -> filteredList.sortedBy { it.milkAmount }
+//                    "Price" -> filteredList.sortedBy { it.milkPrice }
+//                    else -> filteredList
+//                }
+//            }
 
-            filteredList = when (state.currentFilter.sortOrder) {
-                SortOrder.ASCENDING -> filteredList
-                SortOrder.DESCENDING -> filteredList.reversed()
-                else -> filteredList
-            }
+//            filteredList = when (state.currentFilter.sortOrder) {
+//                SortOrder.ASCENDING -> filteredList
+//                SortOrder.DESCENDING -> filteredList.reversed()
+//                else -> filteredList
+//            }
 
-            _uiState.update { it.copy(filteredList = filteredList) }
+            _uiState.update { it.copy(filteredList = filteredList, summary = supplierSummary) }
         }
     }
-
-
 
 
     fun changeDateRange(rangeType: DateRangeType) {
@@ -110,7 +138,6 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
         }
         filterData()
     }
-
 
 
 }

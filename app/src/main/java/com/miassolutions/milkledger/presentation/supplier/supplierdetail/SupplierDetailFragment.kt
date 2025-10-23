@@ -25,6 +25,7 @@ class SupplierDetailFragment :
     BaseFragment<FragmentSupplierDetailBinding>(FragmentSupplierDetailBinding::inflate) {
 
     private val viewModel: SupplierDetailViewModel by viewModels()
+    private var selectedDateRange: String = ""
     private val filterViewModel by activityViewModels<FilterSharedViewModel>()
     private val args by navArgs<SupplierDetailFragmentArgs>()
     private lateinit var adapter: SupplierDetailListAdapter
@@ -35,6 +36,8 @@ class SupplierDetailFragment :
     override fun setupViews() {
         viewModel.onSelectedSupplierId(args.supplierId)
         setupRecyclerView()
+
+
 
     }
 
@@ -73,7 +76,8 @@ class SupplierDetailFragment :
     }
 
     private fun updateDateLabel(rangeType: DateRangeType, start: LocalDate?, end: LocalDate?) {
-        binding.tvSelectedDate.text = when (rangeType) {
+
+        selectedDateRange = when (rangeType) {
             DateRangeType.TODAY -> start?.formattedDate().orEmpty()
             DateRangeType.WEEK -> if (start != null && end != null) {
                 formatDateRange(start, end)
@@ -92,27 +96,41 @@ class SupplierDetailFragment :
         viewModel.uiState.collectState { state ->
             adapter.submitList(state.filteredList)
 
+            binding.tvSelectedDate.text = selectedDateRange
+
             // Move this here to always update the label when the state changes
             updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
-            showSummary()
+            with(state.summary) {
+                showSummary(
+
+                    milkAmount = totalMilk,
+                    totalTS = totalTs,
+                    totalPrice = totalPrice,
+                    payment = paidAmount,
+                    balance = balance
+                )
+            }
+
         }
 
         filterViewModel.filterOptions.collectState { filter ->
             viewModel.onEvent(SupplierUiEvent.ApplyFilter(filter))
         }
+
+
     }
 
     private fun showSummary(
-        dateRange: Double = 0.0,
-        milkAmount: Double = 0.0,
-        totalTS: Double = 0.0,
-        totalPrice: Double = 0.0,
-        payment: Double = 0.0,
-        balance: Double = 0.0
+
+        milkAmount: String,
+        totalTS: String,
+        totalPrice: String,
+        payment: String,
+        balance: String
     ) {
         binding.apply {
             supplierSummary.setTitle("Summary")
-            supplierSummary.collapse()
+//            supplierSummary.collapse()
             // inflate the layout using viewbinding
             val summaryBinding =
                 LayoutSupplierDetailSummaryBinding.inflate(layoutInflater, root, false)
@@ -120,12 +138,12 @@ class SupplierDetailFragment :
             // 2. Use the ViewBinding object to set the data efficiently
             summaryBinding.apply {
 
-                tvDateRangeValue.text = "22-10-25 to 26-10-25"
-                tvTotalMilkValue.text = milkAmount.toRoundedStr()
-                tvTotalTsValue.text = totalTS.toRoundedStr("%.2f")
-                tvTotalPriceValue.text = totalPrice.toRoundedStr("%.0f")
-                tvPaymentValue.text = payment.toRoundedStr("%.0f")
-                tvBalanceValue.text = balance.toRoundedStr("%.0f")
+                tvDateRangeValue.text = selectedDateRange
+                tvTotalMilkValue.text = milkAmount
+                tvTotalTsValue.text = totalTS
+                tvTotalPriceValue.text = totalPrice
+                tvPaymentValue.text = payment
+                tvBalanceValue.text = balance
             }
         }
     }
