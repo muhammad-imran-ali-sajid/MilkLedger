@@ -1,19 +1,19 @@
 package com.miassolutions.datesort
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.datepicker.MaterialDatePicker
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.miassolutions.datesort.databinding.BottomsheetDateFilterBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneId
 
 class DateFilterBottomSheet(
     private val callback: OnDateRangeSelected
@@ -29,28 +29,28 @@ class DateFilterBottomSheet(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewLifecycleOwner.lifecycleScope.launch {
 
+        lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
                 binding.tvRange.text = state.formattedRange
             }
         }
 
-        binding.btnPrev.setOnClickListener { viewModel.onEvent(DateFilterUiEvent.OnPreviousClicked) }
-        binding.btnNext.setOnClickListener { viewModel.onEvent(DateFilterUiEvent.OnNextClicked) }
-
-        binding.btnCustom.setOnClickListener { showCustomPicker() }
-
+        // Radio group handling
         binding.radioGroup.setOnCheckedChangeListener { _, id ->
             val type = when (id) {
                 binding.rbDay.id -> DateRangeType.DAY
-                binding.rbWeek.id -> DateRangeType.WEEK
                 binding.rbMonth.id -> DateRangeType.MONTH
                 binding.rbYear.id -> DateRangeType.YEAR
                 else -> DateRangeType.DAY
             }
             viewModel.onEvent(DateFilterUiEvent.OnTypeSelected(type))
         }
+
+        binding.btnPrev.setOnClickListener { viewModel.onEvent(DateFilterUiEvent.OnPreviousClicked) }
+        binding.btnNext.setOnClickListener { viewModel.onEvent(DateFilterUiEvent.OnNextClicked) }
+
+        binding.btnCustom.setOnClickListener { showMaterialRangePicker() }
 
         binding.btnApply.setOnClickListener {
             val state = viewModel.uiState.value
@@ -59,15 +59,23 @@ class DateFilterBottomSheet(
         }
     }
 
-    private fun showCustomPicker() {
-        val today = LocalDate.now()
-        DatePickerDialog(requireContext(), { _, y, m, d ->
-            val start = LocalDate.of(y, m + 1, d)
-            DatePickerDialog(requireContext(), { _, y2, m2, d2 ->
-                val end = LocalDate.of(y2, m2 + 1, d2)
-                viewModel.onEvent(DateFilterUiEvent.OnCustomRangeSelected(start, end))
-            }, today.year, today.monthValue - 1, today.dayOfMonth).show()
-        }, today.year, today.monthValue - 1, today.dayOfMonth).show()
+    private fun showMaterialRangePicker() {
+        val picker = MaterialDatePicker.Builder.dateRangePicker()
+            .setTitleText("Select Custom Range")
+            .setTheme(R.style.ThemeOverlay_App_DatePicker)
+            .build()
+
+        picker.addOnPositiveButtonClickListener { selection ->
+            val startMillis = selection.first ?: return@addOnPositiveButtonClickListener
+            val endMillis = selection.second ?: return@addOnPositiveButtonClickListener
+
+            val start = Instant.ofEpochMilli(startMillis).atZone(ZoneId.systemDefault()).toLocalDate()
+            val end = Instant.ofEpochMilli(endMillis).atZone(ZoneId.systemDefault()).toLocalDate()
+
+            viewModel.onEvent(DateFilterUiEvent.OnCustomRangeSelected(start, end))
+        }
+
+        picker.show(childFragmentManager, "MaterialDatePicker")
     }
 
     override fun onDestroyView() {

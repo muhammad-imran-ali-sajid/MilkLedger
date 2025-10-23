@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sapphire_primary">#2C3E50</color>
+    <color name="sapphire_on_primary">#ECF0F1</color>
+    <color name="sapphire_secondary">#F1C40F</color>
+    <color name="sapphire_on_secondary">#2C3E50</color>
+    <color name="sapphire_surface">#FFFFFF</color>
+    <color name="sapphire_on_surface">#34495E</color>
+    <color name="sapphire_range_selection">#EBEBEB</color>
+</resources>

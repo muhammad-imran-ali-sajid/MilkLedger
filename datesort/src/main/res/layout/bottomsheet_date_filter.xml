@@ -29,11 +29,7 @@
                 style="@style/Widget.MaterialComponents.CompoundButton.RadioButton"
                 android:text="Day" />
 
-            <RadioButton
-                android:id="@+id/rbWeek"
-                style="@style/Widget.MaterialComponents.CompoundButton.RadioButton"
-                android:text="Week"
-                android:layout_marginStart="8dp" />
+
 
             <RadioButton
                 android:id="@+id/rbMonth"
