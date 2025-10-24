@@ -10,10 +10,8 @@ import androidx.navigation.fragment.navArgs
 import com.miassolutions.datesort.DateFilterBottomSheet
 import com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.pdf.HybridPdfGenerator
 import com.miassolutions.milkledger.core.pdf.PdfReceiptData
 import com.miassolutions.milkledger.core.pdf.PdfViewGenerator
-import com.miassolutions.milkledger.core.pdf.RecordItem
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
@@ -21,12 +19,9 @@ import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
-import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
 import com.miassolutions.milkledger.databinding.LayoutSupplierDetailSummaryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class SupplierDetailFragment :
@@ -171,7 +166,7 @@ class SupplierDetailFragment :
 
                 showSummary(
                     milkAmount = totalMilk,
-                    totalTS = totalTs,
+                    avgTS = avgTS,
                     totalPrice = totalPrice,
                     payment = paidAmount,
                     balance = balanceText,
@@ -191,7 +186,7 @@ class SupplierDetailFragment :
     private fun showSummary(
 
         milkAmount: String,
-        totalTS: String,
+        avgTS: String,
         totalPrice: String,
         payment: String,
         balance: String,
@@ -209,7 +204,7 @@ class SupplierDetailFragment :
 
                 tvDateRangeValue.text = selectedDateRange
                 tvTotalMilkValue.text = milkAmount
-                tvTotalTsValue.text = totalTS
+                tvAvgTsValue.text = avgTS
                 tvTotalPriceValue.text = totalPrice
                 tvPaymentValue.text = payment
                 tvBalanceValue.text = balance

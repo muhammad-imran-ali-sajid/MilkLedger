@@ -19,7 +19,7 @@ data class SupplierDetailUiState(
 data class SupplierSummary(
     val summaryPeriod: String = "",
     val totalMilk: String = "",
-    val totalTs: String = "",
+    val avgTS: String = "",
     val totalPrice: String = "",
     val paidAmount: String = "",
     val balance: Double = 0.0

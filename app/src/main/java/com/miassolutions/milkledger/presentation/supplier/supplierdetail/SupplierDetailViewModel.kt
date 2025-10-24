@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.sort.FilterOptions
-import com.miassolutions.milkledger.core.ui.sort.SortOrder
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.repositories.PurchaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -87,7 +86,7 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
             }
 
 
-            val totalTs = filteredList.sumOf { it.ts }
+            val avgTS = filteredList.sumOf { it.ts } / filteredList.size
             val totalMilk = filteredList.sumOf { it.milkAmount }
             val totalPrice = filteredList.sumOf { it.milkPrice }
             val totalPaid = filteredList.sumOf { it.payment }
@@ -96,7 +95,7 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
             val supplierSummary = SupplierSummary(
                 summaryPeriod = "",
                 totalMilk = totalMilk.toRoundedStr(),
-                totalTs = totalTs.toRoundedStr(),
+                avgTS = avgTS.toRoundedStr("%.2f"),
                 totalPrice = totalPrice.toRoundedStr(),
                 paidAmount = totalPaid.toRoundedStr(),
                 balance = balance
