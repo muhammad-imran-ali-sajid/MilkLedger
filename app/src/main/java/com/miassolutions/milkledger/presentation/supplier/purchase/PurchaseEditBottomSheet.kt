@@ -13,6 +13,7 @@ import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding
@@ -135,7 +136,8 @@ class PurchaseEditBottomSheet(
             volume * rate
         }
 
-        binding.tvPrice.text = "%.2f".format(price)
+        binding.tvPrice.text = "${price.toRoundedStr()}"
+        binding.tvRate.text = "@ ${rate}"
     }
 
     private fun recalculateTS() {
@@ -149,7 +151,7 @@ class PurchaseEditBottomSheet(
         }
 
         val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
-        binding.tvTs.text = "%.2f".format(ts)
+        binding.tvTs.text = ts.toRoundedStr("%.2f")
     }
 
     private fun recalculateBalance() {
@@ -165,7 +167,7 @@ class PurchaseEditBottomSheet(
 
         val text = when {
             balance > 0 -> "+${balance.roundToInt()}"
-            else -> balance.roundToInt().toString()
+            else -> balance.toRoundedStr()
         }
 
         binding.tvBalance.text = text

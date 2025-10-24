@@ -30,11 +30,16 @@ object PdfViewGenerator {
         }
 
         // Header info
-        binding.tvTitle.text = data.title
-        binding.tvPartyName.text = "Party: ${data.partyName}"
-        binding.tvDateRange.text = "Date Range: ${data.dateRange}"
-        binding.tvTotal.text = "Total: ${data.totalAmount}"
-        binding.tvFooter.text = data.footerNote ?: ""
+        with(binding) {
+            tvTitle.text = data.title
+            tvPartyName.text = "Party: ${data.partyName}"
+            tvDateRange.text = "Date Range: ${data.dateRange}"
+            tvTotal.text = data.totalAmount
+            tvTotalPaid.text = data.totalPaid
+            tvTotalBalance.text = data.totalBalance
+            tvFooter.text = data.footerNote ?: ""
+        }
+
 
         // Add rows using item_record_row.xml via ViewBinding
         data.recordList.forEach { item ->

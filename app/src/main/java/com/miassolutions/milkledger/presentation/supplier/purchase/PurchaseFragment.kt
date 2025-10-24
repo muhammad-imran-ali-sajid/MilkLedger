@@ -60,39 +60,39 @@ class PurchaseFragment :
         val editModeItem = menu.findItem(R.id.action_edit_mode)
         editModeSwitch = editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
 
-        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
-            val selectedDate = viewModel.uiState.value.currentDate
-            val isToday = selectedDate.isToday()
-
-            if (isChecked) {
-                showSnackbar("Edit mode enabled")
-
-                if (isToday && !biometricRequiredForToday) {
-                    setEditModeLockedForToday(false) // unlock
-                    enableEditMode()
-                } else {
-                    BiometricHelper.authenticate(
-                        fragment = this,
-                        title = "Unlock editing",
-                        subtitle = "Use fingerprint or device credentials",
-                        onSuccess = { enableEditMode() },
-                        onFailure = {
-                            editModeSwitch?.isChecked = false
-                            showToast("Authentication failed. Editing locked.")
-                        }
-                    )
-                }
-
-            } else {
-                showSnackbar("Edit mode disabled")
-                disableEditMode()
-
-                if (isToday) {
-                    biometricRequiredForToday = true
-                    setEditModeLockedForToday(true) // lock for today
-                }
-            }
-        }
+//        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
+//            val selectedDate = viewModel.uiState.value.currentDate
+//            val isToday = selectedDate.isToday()
+//
+//            if (isChecked) {
+//                showSnackbar("Edit mode enabled")
+//
+//                if (isToday && !biometricRequiredForToday) {
+//                    setEditModeLockedForToday(false) // unlock
+//                    enableEditMode()
+//                } else {
+//                    BiometricHelper.authenticate(
+//                        fragment = this,
+//                        title = "Unlock editing",
+//                        subtitle = "Use fingerprint or device credentials",
+//                        onSuccess = { enableEditMode() },
+//                        onFailure = {
+//                            editModeSwitch?.isChecked = false
+//                            showToast("Authentication failed. Editing locked.")
+//                        }
+//                    )
+//                }
+//
+//            } else {
+//                showSnackbar("Edit mode disabled")
+//                disableEditMode()
+//
+//                if (isToday) {
+//                    biometricRequiredForToday = true
+//                    setEditModeLockedForToday(true) // lock for today
+//                }
+//            }
+//        }
     }
 
     private fun observeUiState() {
@@ -175,10 +175,10 @@ class PurchaseFragment :
     }
 
     private fun showEditBottomSheet(purchaseWithSupplier: PurchaseWithSupplier) {
-        if (!isEditable) {
-            showSnackbar("Enable from the top menu switch")
-            return
-        }
+//        if (!isEditable) {
+//            showSnackbar("Enable from the top menu switch")
+//            return
+//        }
 
         val bottomSheet = PurchaseEditBottomSheet(
             entry = purchaseWithSupplier,

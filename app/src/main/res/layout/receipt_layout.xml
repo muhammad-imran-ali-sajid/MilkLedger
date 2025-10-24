@@ -54,8 +54,8 @@
             android:layout_height="wrap_content"
             android:background="#EEEEEE"
             android:orientation="horizontal"
-            android:paddingVertical="2dp"
-            android:paddingHorizontal="2dp">
+            android:paddingHorizontal="2dp"
+            android:paddingVertical="2dp">
 
             <TextView
                 android:layout_width="0dp"
@@ -126,9 +126,9 @@
             android:id="@+id/recordContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="?android:attr/dividerHorizontal"
             android:orientation="vertical"
-            android:showDividers="middle"
-            android:divider="?android:attr/dividerHorizontal" />
+            android:showDividers="middle" />
 
         <View
             android:layout_width="match_parent"
@@ -136,15 +136,110 @@
             android:layout_marginTop="4dp"
             android:background="#000" />
 
-        <TextView
-            android:id="@+id/tvTotal"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="8dp"
-            android:text="Total: 0"
-            android:textSize="10sp"
-            android:textStyle="bold" />
+
+            android:layout_gravity="end">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:gravity="end"
+                android:orientation="vertical"
+                android:weightSum="4">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="Total Amount:"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="Total Paid:"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="Total Balance:"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:orientation="vertical"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="100000"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+
+                    android:background="#000" />
+
+                <TextView
+                    android:id="@+id/tv_total_paid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="0000"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000" />
+
+                <TextView
+                    android:id="@+id/tv_total_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="0"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/tvFooter"
@@ -152,8 +247,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:textSize="9sp"
             android:textColor="#555"
+            android:textSize="9sp"
             tools:text="Thank you for your business!" />
     </LinearLayout>
 </ScrollView>

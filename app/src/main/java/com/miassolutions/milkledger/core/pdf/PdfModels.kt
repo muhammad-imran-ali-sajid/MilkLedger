@@ -6,6 +6,8 @@ data class PdfReceiptData(
     val partyName: String,
     val recordList: List<RecordItem>,
     val totalAmount: String,
+    val totalPaid : String,
+    val totalBalance : String,
     val footerNote: String? = null
 )
 

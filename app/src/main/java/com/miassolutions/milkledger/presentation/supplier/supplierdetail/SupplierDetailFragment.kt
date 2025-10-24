@@ -88,6 +88,8 @@ class SupplierDetailFragment :
 
             val recordList = filteredList.toRecordList()
             val totalAmount = recordList.sumOf { it.amount }
+            val totalPaid = recordList.sumOf { it.paid }
+            val totalBalance = recordList.sumOf { it.balance }
 
             val data = PdfReceiptData(
                 title = "Milk Ledger",
@@ -95,6 +97,8 @@ class SupplierDetailFragment :
                 partyName = args.supplierName,
                 recordList = recordList,
                 totalAmount = totalAmount.toRoundedStr(),
+                totalPaid = totalPaid.toRoundedStr(),
+                totalBalance = totalBalance.toRoundedStr(),
                 footerNote = "Thank you for your business!\n Receipt generated on : ${
                     LocalDate.now().formattedDate()
                 }"
