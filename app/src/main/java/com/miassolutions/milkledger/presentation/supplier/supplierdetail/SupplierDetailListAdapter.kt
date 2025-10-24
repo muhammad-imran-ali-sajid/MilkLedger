@@ -2,6 +2,9 @@ package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.miassolutions.milkledger.core.helper.handleZeroData
+import com.miassolutions.milkledger.core.helper.numberFormat
+import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
@@ -29,33 +32,16 @@ class SupplierDetailListAdapter :
         position: Int
     ) = with(binding) {
 
-
-        if (item.fat == 0.0) {
-            tvFat.text = "--"
-        } else {
-            tvFat.text = item.fat.toRoundedStr()
-        }
-
-
-        if (item.lr == 0.0) {
-            tvLr.text = "--"
-        } else {
-            tvLr.text = item.lr.toRoundedStr()
-        }
-
-
-        if (item.ts == 0.0) {
-            tvTs.text = "--"
-        } else {
-            tvTs.text = item.ts.toRoundedStr()
-        }
-
-
+        tvFat.text = handleZeroData(item.fat)
+        tvLr.text = handleZeroData(item.lr)
+        tvTs.text = handleZeroData(item.ts)
         tvDate.text = item.date.formattedDate()
         tvMilk.text = item.milkAmount.toRoundedStr()
         tvPrice.text = item.milkPrice.toRoundedStr()
         tvPayment.text = item.payment.toRoundedStr()
-        tvBalance.text = item.balance.toRoundedStr()
+
+        tvBalance.text = numberFormat(item.balance)
+        tvBalance.setTextColor(textColor(item.balance))
 
         if (item.notes.isNullOrEmpty()) {
             tvNotes.hide()

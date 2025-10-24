@@ -1,12 +1,12 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.helper.numberFormat
+import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toRoundedStr
@@ -18,7 +18,6 @@ class PurchaseAdapter(
     private val onEditClick: (PurchaseWithSupplier) -> Unit,
     private val onItemDetailClick: (PurchaseWithSupplier) -> Unit
 ) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.ViewHolder>(DiffCallback()) {
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -76,21 +75,10 @@ class PurchaseAdapter(
             tvPaid.text = item.purchase.payment.roundToInt().toString()
 
 
-            // Change color based on balance
-            val balance = item.purchase.balance
-            val color = when {
-                balance < 0 -> Color.RED
-                balance == 0.0 -> "#000000".toColorInt()
-                else -> "#4CAF50".toColorInt() // Material green 500
-            }
-            // Format balance text with + sign if positive
-            val balanceText = when {
-                balance > 0 -> "+${balance.roundToInt()}"
-                else -> balance.roundToInt().toString()
-            }
 
-            tvBalance.text = balanceText
-            tvBalance.setTextColor(color)
+
+            tvBalance.text = numberFormat(item.purchase.balance)
+            tvBalance.setTextColor(textColor(item.purchase.balance))
 
 
             btnEditForm.setOnClickListener { onEditClick(item) }

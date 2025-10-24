@@ -1,15 +1,15 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
-import android.graphics.Color
 import android.util.Log
 import android.view.Menu
-import androidx.core.graphics.toColorInt
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.miassolutions.datesort.DateFilterBottomSheet
 import com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.helper.numberFormat
+import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.pdf.PdfReceiptData
 import com.miassolutions.milkledger.core.pdf.PdfViewGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -153,16 +153,9 @@ class SupplierDetailFragment :
             // Move this here to always update the label when the state changes
             updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
             with(state.summary) {
-                val color = when {
-                    balance < 0 -> Color.RED
-                    balance == 0.0 -> "#000000".toColorInt()
-                    else -> "#4CAF50".toColorInt() // Material green 500
-                }
+                val color = textColor(balance)
 
-                val balanceText = when {
-                    balance > 0 -> "+${balance.toRoundedStr()}"
-                    else -> balance.toRoundedStr()
-                }
+                val balanceText = numberFormat(balance)
 
                 showSummary(
                     milkAmount = totalMilk,
