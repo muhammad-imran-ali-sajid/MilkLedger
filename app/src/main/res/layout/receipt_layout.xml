@@ -1,5 +1,6 @@
 <!-- res/layout/receipt_layout.xml -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -23,6 +24,7 @@
         <!-- Title -->
         <TextView
             android:id="@+id/tvTitle"
+            style="@style/TextTitleUrdu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -240,6 +242,68 @@
 
         </LinearLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="Payee Signature:"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+
+                <View
+                    android:layout_width="60dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#000" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/linearLayout"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginTop="8dp"
+                    android:text="Reciepient Signature:"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+
+                <View
+                    android:layout_width="60dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="10dp"
+                    android:background="#000" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
         <TextView
             android:id="@+id/tvFooter"
@@ -248,7 +312,7 @@
             android:layout_marginTop="12dp"
             android:gravity="center"
             android:textColor="#555"
-            android:textSize="9sp"
+            android:textSize="7sp"
             tools:text="Thank you for your business!" />
     </LinearLayout>
 </ScrollView>

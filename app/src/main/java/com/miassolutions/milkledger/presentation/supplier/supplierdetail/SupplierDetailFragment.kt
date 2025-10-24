@@ -92,14 +92,14 @@ class SupplierDetailFragment :
             val totalBalance = recordList.sumOf { it.balance }
 
             val data = PdfReceiptData(
-                title = "Milk Ledger",
+                title = args.supplierName,
                 dateRange = dateRange,
                 partyName = args.supplierName,
                 recordList = recordList,
                 totalAmount = totalAmount.toRoundedStr(),
                 totalPaid = totalPaid.toRoundedStr(),
                 totalBalance = totalBalance.toRoundedStr(),
-                footerNote = "Thank you for your business!\n Receipt generated on : ${
+                footerNote = "Receipt generated on : ${
                     LocalDate.now().formattedDate()
                 }"
             )
@@ -145,9 +145,6 @@ class SupplierDetailFragment :
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
             adapter.submitList(state.filteredList)
-
-
-
             binding.tvSelectedDate.text = selectedDateRange
 
             // Move this here to always update the label when the state changes
@@ -163,8 +160,6 @@ class SupplierDetailFragment :
                     balance > 0 -> "+${balance.toRoundedStr()}"
                     else -> balance.toRoundedStr()
                 }
-
-
 
                 showSummary(
                     milkAmount = totalMilk,
