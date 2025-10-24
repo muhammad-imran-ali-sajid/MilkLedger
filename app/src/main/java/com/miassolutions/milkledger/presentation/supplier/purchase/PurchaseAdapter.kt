@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.helper.handleZeroData
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.util.hide
@@ -12,7 +13,6 @@ import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
-import kotlin.math.roundToInt
 
 class PurchaseAdapter(
     private val onEditClick: (PurchaseWithSupplier) -> Unit,
@@ -42,25 +42,9 @@ class PurchaseAdapter(
 
             tvVolume.text = item.purchase.milkAmount.toRoundedStr()
 
-            if (item.purchase.fat == 0.0) {
-                tvFat.text = "--"
-            } else {
-                tvFat.text = item.purchase.fat.toRoundedStr("%.2f")
-            }
-
-
-            if (item.purchase.lr == 0.0) {
-                tvLr.text = "--"
-            } else {
-                tvLr.text = item.purchase.lr.toRoundedStr("%.2f")
-            }
-
-
-            if (item.purchase.ts == 0.0) {
-                tvTs.text = "--"
-            } else {
-                tvTs.text = item.purchase.ts.toRoundedStr("%.2f")
-            }
+            tvFat.text = handleZeroData(item.purchase.fat)
+            tvLr.text = handleZeroData(item.purchase.lr)
+            tvTs.text = handleZeroData(item.purchase.ts)
 
 
             if (item.purchase.notes.isNullOrBlank()) {
@@ -71,8 +55,8 @@ class PurchaseAdapter(
                 divider.show()
                 tvNotes.text = "Note: ${item.purchase.notes}"
             }
-            tvPrice.text = item.purchase.milkPrice.roundToInt().toString()
-            tvPaid.text = item.purchase.payment.roundToInt().toString()
+            tvPrice.text = item.purchase.milkPrice.toRoundedStr()
+            tvPaid.text = item.purchase.payment.toRoundedStr()
 
 
 

@@ -4,15 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import android.widget.TextView
-
+import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
@@ -20,13 +18,11 @@ import com.miassolutions.milkledger.core.util.isToday
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
+import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import androidx.core.content.edit
-import com.google.firebase.components.BuildConfig
-import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
 
 @AndroidEntryPoint
 class PurchaseFragment :
@@ -132,7 +128,6 @@ class PurchaseFragment :
         purchaseAdapter = PurchaseAdapter(::showEditBottomSheet, ::navToSupplierDetail)
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
-            layoutManager = LinearLayoutManager(requireContext())
             itemAnimator = null
             setHasFixedSize(true)
         }
@@ -147,20 +142,20 @@ class PurchaseFragment :
         avgRate: Double
     ) {
         binding.apply {
-            cardSummary.setTitle("Summary")
+            cardSummary.setTitle("Today Summary")
             cardSummary.collapse()
-            // inflate the layout using viewbinding
+
             val summaryBinding = LayoutPurchaseSummaryBinding.inflate(layoutInflater, root, false)
             cardSummary.setContent(summaryBinding.root)
             // 2. Use the ViewBinding object to set the data efficiently
             summaryBinding.apply {
 
-                tvTotalMilk.text = milkAmount.toRoundedStr()
-                tvAvgFat.text = avgFat.toRoundedStr("%.2f")
+                tvTotalMilk.text = milkAmount.toRoundedStr("%.2f")
+                tvAvgFat.text = avgFat.toRoundedStr("%.1f")
                 tvAvgLr.text = avgLr.toRoundedStr("%.2f")
                 tvAvgTs.text = avgTS.toRoundedStr("%.2f")
-                tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr(" %.0f")}"
-                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr(" %.0f")}"
+                tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr()}"
+                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
             }
         }
     }

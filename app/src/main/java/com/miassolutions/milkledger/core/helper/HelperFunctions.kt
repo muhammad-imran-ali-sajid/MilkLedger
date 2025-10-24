@@ -8,7 +8,7 @@ fun handleZeroData(value: Double): String {
     return if (value == 0.0) {
         "--"
     } else {
-        value.toRoundedStr()
+        value.toRoundedStr("%.2f")
     }
 }
 
