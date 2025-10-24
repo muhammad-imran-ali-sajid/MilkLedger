@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
-import com.miassolutions.milkledger.core.ui.sort.FilterOptions
-import com.miassolutions.milkledger.core.ui.sort.SortOrder
+
 import com.miassolutions.milkledger.data.repositories.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +24,7 @@ class CustomerDetailViewModel @Inject constructor(
 
     fun onEvent(event: CustomerUiEvent) {
         when (event) {
-            is CustomerUiEvent.ApplyFilter -> applyFilter(event.filter)
+
             is CustomerUiEvent.ChangeDateRange -> changeDateRange(event.rangeType)
             is CustomerUiEvent.NextButton -> moveDateRange(forward = true)
             is CustomerUiEvent.PrevButton -> moveDateRange(forward = false)
@@ -53,10 +52,10 @@ class CustomerDetailViewModel @Inject constructor(
         }
     }
 
-    private fun applyFilter(filter: FilterOptions) {
-        _uiState.update { it.copy(currentFilter = filter) }
-        filterData()
-    }
+//    private fun applyFilter(filter: FilterOptions) {
+//        _uiState.update { it.copy(currentFilter = filter) }
+//        filterData()
+//    }
 
     fun changeDateRange(
         rangeType: DateRangeType,
@@ -146,20 +145,20 @@ class CustomerDetailViewModel @Inject constructor(
                 detail.date in startDate!!..endDate!!
             }
 
-            // 🔹 Apply Sorting
-            state.currentFilter.category?.let { category ->
-                filteredList = when (category) {
-                    "Name" -> filteredList.sortedBy { it.date }
-                    "Net Milk" -> filteredList.sortedBy { it.netMilk }
-                    else -> filteredList
-                }
-            }
-
-            filteredList = when (state.currentFilter.sortOrder) {
-                SortOrder.ASCENDING -> filteredList
-                SortOrder.DESCENDING -> filteredList.reversed()
-                else -> filteredList
-            }
+//            // 🔹 Apply Sorting
+//            state.currentFilter.category?.let { category ->
+//                filteredList = when (category) {
+//                    "Name" -> filteredList.sortedBy { it.date }
+//                    "Net Milk" -> filteredList.sortedBy { it.netMilk }
+//                    else -> filteredList
+//                }
+//            }
+//
+//            filteredList = when (state.currentFilter.sortOrder) {
+//                SortOrder.ASCENDING -> filteredList
+//                SortOrder.DESCENDING -> filteredList.reversed()
+//                else -> filteredList
+//            }
 
             _uiState.update { it.copy(filteredList = filteredList) }
         }

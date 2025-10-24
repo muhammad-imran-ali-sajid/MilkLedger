@@ -2,21 +2,21 @@ package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
 import android.util.Log
 import android.view.Menu
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.miassolutions.datesort.DateFilterBottomSheet
-import com.miassolutions.datesort.OnDateRangeSelected
+// Removed unused imports: com.miassolutions.datesort.DateFilterBottomSheet, com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.pdf.PdfReceiptData
 import com.miassolutions.milkledger.core.pdf.PdfViewGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
+// Removed unused import: com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
-import com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
+// Removed unused import: com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
 import com.miassolutions.milkledger.databinding.LayoutSupplierDetailSummaryBinding
@@ -28,10 +28,9 @@ class SupplierDetailFragment :
     BaseFragment<FragmentSupplierDetailBinding>(FragmentSupplierDetailBinding::inflate) {
 
     private val viewModel: SupplierDetailViewModel by viewModels()
-    private var selectedDateRange: String = ""
-    private val filterViewModel by activityViewModels<FilterSharedViewModel>()
     private val args by navArgs<SupplierDetailFragmentArgs>()
     private lateinit var adapter: SupplierDetailListAdapter
+
     override fun getMenuResId(): Int {
         return R.menu.menu_supplier_detail
     }
@@ -39,58 +38,98 @@ class SupplierDetailFragment :
     override fun setupViews() {
         viewModel.onSelectedSupplierId(args.supplierId)
         setupRecyclerView()
+        setupCustomRangeCalendar()
+    }
+
+    private fun setupCustomRangeCalendar() {
+        // 1. Set up the listener
+        setFragmentResultListener(CustomDateRangeBottomSheet.REQUEST_KEY) { requestKey, bundle ->
+            if (requestKey == CustomDateRangeBottomSheet.REQUEST_KEY) {
+                // 2. Extract the data
+                val startDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_START_DATE)
+                val endDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_END_DATE)
+
+                if (startDateString != null && endDateString != null) {
+                    // 3. Convert the String dates back to LocalDate
+                    val startDate = LocalDate.parse(startDateString)
+                    val endDate = LocalDate.parse(endDateString)
+
+                    // 4. Use the selected dates -> Call ViewModel to update state
+                    handleSelectedDateRange(startDate, endDate)
+                }
+            }
+        }
+    }
 
 
+//    private fun handleSelectedDateRange(start: LocalDate, end: LocalDate) {
+//        viewModel.setCustomDateRange(start, end)
+//    }
+
+    private fun showDateFilter() {
+        val bottomSheet = CustomDateRangeBottomSheet()
+        bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_TAG")
     }
 
     override fun setupListeners() {
         binding.tvSelectedDate.setOnClickListener {
-
-
-            val sheet = DateFilterBottomSheet(object : OnDateRangeSelected {
-                override fun onDateRangeSelected(
-                    start: LocalDate,
-                    end: LocalDate,
-                    type: com.miassolutions.datesort.DateRangeType
-                ) {
-                    viewModel.setCustomDateRange(start, end)
-                }
-            })
-            sheet.show(parentFragmentManager, "DateFilter")
+            showDateFilter()
         }
-
     }
 
     override fun onMenuCreated(menu: Menu) {
         val sortMenu = menu.findItem(R.id.menu_sort_item)
 
-
-
-
-
         sortMenu.setOnMenuItemClickListener {
-            showDialog(
-                "Generate Receipt",
-                "Are you want to generate receipt for the selected date range"
-            ) {
-                generateReport()
-            }
+            handleReportGeneration()
             true
         }
     }
 
-    private fun generateReport() {
-        val filteredList = viewModel.uiState.value.filteredList
-        val fromDate = viewModel.uiState.value.selectedStartDate?.formattedDate() ?: ""
-        val toDate = viewModel.uiState.value.selectedEndDate?.formattedDate() ?: ""
+    private fun handleReportGeneration() {
+        // 1. Show the date selection filter first.
+        // We will use the callback (setFragmentResultListener) to trigger the report.
+        showDateFilter(isGeneratingReport = true)
+    }
 
+    // Modify showDateFilter to accept a flag
+    private fun showDateFilter(isGeneratingReport: Boolean = false) {
+        val bottomSheet = CustomDateRangeBottomSheet()
+
+        // Pass the flag as an argument to the BottomSheet if you needed to change its UI,
+        // but for simplicity, we'll just rely on the REQUEST_KEY here.
+
+        bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_TAG")
+    }
+
+    private fun handleSelectedDateRange(start: LocalDate, end: LocalDate) {
+        // This updates the ViewModel's state, which triggers setupObservers()
+        viewModel.setCustomDateRange(start, end)
+        // --- NEW: Trigger confirmation after dates are set ---
+        // Since this runs after *any* date selection, we now ask for confirmation to generate the report.
+        showDialog(
+            "Generate Receipt",
+            "Generate receipt for range\n${formatDateRange(start, end)}?"
+        ) {
+            // Only call generateReport AFTER confirmation
+            generateReport()
+        }
+    }
+
+    private fun generateReport() {
+        val state = viewModel.uiState.value
+        val filteredList = state.filteredList
+
+        // --- Determine the actual dates used for the current filter ---
+        val startDate = state.selectedStartDate ?: LocalDate.now().minusYears(1)
+        val endDate = state.selectedEndDate ?: LocalDate.now()
+
+        // Format the dates (assuming formattedDate() is an extension on LocalDate)
+        val fromDate = startDate.formattedDate()
+        val toDate = endDate.formattedDate()
 
         val dateRange = "$fromDate - $toDate"
-        Log.d("SupplierDetailFragment", "$dateRange")
-        if (filteredList.isEmpty()) {
-            showToast("No data to generate PDF")
-            return
-        }
+        Log.d("SupplierDetailFragment", "Report Date Range: $dateRange")
 
         val recordList = filteredList.toRecordList()
         val totalAmount = recordList.sumOf { it.amount }
@@ -109,7 +148,6 @@ class SupplierDetailFragment :
 
         )
 
-// 🧾 Create + Share with logo and auto-numbering
         PdfViewGenerator.generateAndSharePdf(
             context = requireContext(),
             data = data,
@@ -128,18 +166,14 @@ class SupplierDetailFragment :
 
     }
 
-    private fun updateDateLabel(rangeType: DateRangeType, start: LocalDate?, end: LocalDate?) {
-
-        selectedDateRange = when (rangeType) {
-            DateRangeType.TODAY -> start?.formattedDate().orEmpty()
-            DateRangeType.WEEK -> if (start != null && end != null) {
+    /**
+     * Helper to format the date range string based on ViewModel state.
+     */
+    private fun getFormattedDateRange(start: LocalDate?, end: LocalDate?): String {
+        return when {
+            start != null && end != null -> {
                 formatDateRange(start, end)
-            } else ""
-
-            DateRangeType.MONTH -> start?.formattedDate().orEmpty()
-            DateRangeType.CUSTOM -> if (start != null && end != null) {
-                formatDateRange(start, end)
-            } else ""
+            }
 
             else -> "All Records"
         }
@@ -147,14 +181,17 @@ class SupplierDetailFragment :
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
-            adapter.submitList(state.filteredList)
-            binding.tvSelectedDate.text = selectedDateRange
+            // 1. Get the current formatted date range from the state
+            val currentSelectedDateRange =
+                getFormattedDateRange(state.selectedStartDate, state.selectedEndDate)
 
-            // Move this here to always update the label when the state changes
-            updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
+            // 2. Update the UI text label with the current state value
+            binding.tvSelectedDate.text = currentSelectedDateRange
+
+            adapter.submitList(state.filteredList)
+
             with(state.summary) {
                 val color = textColor(balance)
-
                 val balanceText = numberFormat(balance)
 
                 showSummary(
@@ -163,39 +200,34 @@ class SupplierDetailFragment :
                     totalPrice = totalPrice,
                     payment = paidAmount,
                     balance = balanceText,
-                    balanceColor = color
+                    balanceColor = color,
+                    // Pass the newly computed date range to the summary function
+                    dateRange = currentSelectedDateRange
                 )
             }
-
         }
-
-        filterViewModel.filterOptions.collectState { filter ->
-            viewModel.onEvent(SupplierUiEvent.ApplyFilter(filter))
-        }
-
-
     }
 
     private fun showSummary(
-
         milkAmount: String,
         avgTS: String,
         totalPrice: String,
         payment: String,
         balance: String,
-        balanceColor: Int
+        balanceColor: Int,
+        dateRange: String // Added dateRange parameter
     ) {
         binding.apply {
             supplierSummary.setTitle("Summary")
 //            supplierSummary.collapse()
-            // inflate the layout using viewbinding
+
             val summaryBinding =
                 LayoutSupplierDetailSummaryBinding.inflate(layoutInflater, root, false)
             supplierSummary.setContent(summaryBinding.root)
-            // 2. Use the ViewBinding object to set the data efficiently
-            summaryBinding.apply {
 
-                tvDateRangeValue.text = selectedDateRange
+            summaryBinding.apply {
+                // Use the passed dateRange parameter
+                tvDateRangeValue.text = dateRange
                 tvTotalMilkValue.text = milkAmount
                 tvAvgTsValue.text = avgTS
                 tvTotalPriceValue.text = totalPrice
@@ -205,5 +237,4 @@ class SupplierDetailFragment :
             }
         }
     }
-
 }

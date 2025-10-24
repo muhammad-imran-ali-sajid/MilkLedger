@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         app:cardCornerRadius="12dp"
         app:cardElevation="4dp"
+        android:visibility="gone"
         android:layout_marginBottom="24dp"
         android:padding="16dp">
 
@@ -66,6 +67,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        android:visibility="gone"
         android:layout_marginBottom="16dp">
 
         <Button

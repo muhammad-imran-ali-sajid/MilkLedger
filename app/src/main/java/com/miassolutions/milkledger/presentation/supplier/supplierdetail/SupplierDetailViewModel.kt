@@ -3,9 +3,6 @@ package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
-import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
-import com.miassolutions.milkledger.core.ui.sort.FilterOptions
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.repositories.PurchaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,8 +27,7 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
 
     fun onEvent(event: SupplierUiEvent) {
         when (event) {
-            is SupplierUiEvent.ApplyFilter -> applyFilter(event.filter)
-            is SupplierUiEvent.ChangeDateRange -> changeDateRange(event.rangeType)
+            is SupplierUiEvent.ChangeDateRange -> filterData()
         }
     }
 
@@ -56,10 +52,8 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
         }
     }
 
-    private fun applyFilter(filter: FilterOptions) {
-        _uiState.update { it.copy(currentFilter = filter) }
-        filterData()
-    }
+
+    // ... inside SupplierDetailViewModel.kt
 
     private fun filterData() {
         val state = _uiState.value
@@ -68,24 +62,30 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
         if (filteredList.isEmpty()) return
 
         viewModelScope.launch {
-            val (startDate, endDate) = when {
+            // Determine the dates to use for filtering
+            val (filterStartDate, filterEndDate) = when {
+                // Case 1: Dates were explicitly set (via setCustomDateRange)
                 state.selectedStartDate != null && state.selectedEndDate != null
                     -> {
-
+                    // Use the selected dates
                     state.selectedStartDate to state.selectedEndDate
                 }
 
-                else -> DateRangeHelper.getRange(state.dateRangeType)
+                // Case 2: Initial load (both are null) or dates were reset (if you add a reset feature)
+                else -> {
+                    // Use the default date range
+                    LocalDate.now().minusYears(1) to LocalDate.now()
+                }
             }
+
 
             // Apply Date filer
             filteredList = filteredList.filter { detail ->
-
-                detail.date in startDate!!..endDate!!
-
+                // Use the determined non-null dates
+                detail.date in filterStartDate..filterEndDate
             }
 
-
+            // ... (Summary calculation logic remains the same) ...
             val avgTS = filteredList.sumOf { it.ts } / filteredList.size
             val totalMilk = filteredList.sumOf { it.milkAmount }
             val totalPrice = filteredList.sumOf { it.milkPrice }
@@ -101,39 +101,31 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
                 balance = balance
             )
 
+            Log.d("SupplierDetailViewModel", "Filter dates: $filterStartDate - $filterEndDate")
             Log.d("SupplierDetailViewModel", supplierSummary.toString())
-            // apply sorting
-//            state.currentFilter.category?.let { category ->
-//                filteredList = when (category) {
-//                    "Milk" -> filteredList.sortedBy { it.milkAmount }
-//                    "Price" -> filteredList.sortedBy { it.milkPrice }
-//                    else -> filteredList
-//                }
-//            }
 
-//            filteredList = when (state.currentFilter.sortOrder) {
-//                SortOrder.ASCENDING -> filteredList
-//                SortOrder.DESCENDING -> filteredList.reversed()
-//                else -> filteredList
-//            }
 
-            _uiState.update { it.copy(filteredList = filteredList, summary = supplierSummary) }
+            // CRITICAL FIX: Update the state with the dates that were actually used for filtering.
+            _uiState.update {
+                it.copy(
+                    filteredList = filteredList,
+                    summary = supplierSummary,
+                    selectedStartDate = filterStartDate, // <--- ADDED THIS
+                    selectedEndDate = filterEndDate      // <--- ADDED THIS
+                )
+            }
         }
     }
 
 
-    fun changeDateRange(rangeType: DateRangeType) {
-        _uiState.update { it.copy(dateRangeType = rangeType) }
-        filterData()
-    }
+//    fun changeDateRange(rangeType: DateRangeType) {
+//        _uiState.update { it.copy(dateRangeType = rangeType) }
+//        filterData()
+//    }
 
     fun setCustomDateRange(start: LocalDate, end: LocalDate) {
         _uiState.update {
-            it.copy(
-                dateRangeType = DateRangeType.CUSTOM,
-                selectedStartDate = start,
-                selectedEndDate = end
-            )
+            it.copy(selectedStartDate = start, selectedEndDate = end)
         }
         filterData()
     }

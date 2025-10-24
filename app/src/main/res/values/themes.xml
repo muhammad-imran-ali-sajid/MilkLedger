@@ -11,7 +11,7 @@
         <!-- Surface Colors (High Contrast) -->
         <item name="colorSurface">@color/milk_surface</item>
         <item name="android:colorBackground">@color/milk_surface</item>
-        <item name="colorOnSurface">@color/milk_surface</item>
+        <item name="colorOnSurface">@color/milk_on_surface</item>
 
         <!-- Status Bar Color (Use primary color for brand consistency) -->
         <item name="android:statusBarColor">?attr/colorPrimary</item>

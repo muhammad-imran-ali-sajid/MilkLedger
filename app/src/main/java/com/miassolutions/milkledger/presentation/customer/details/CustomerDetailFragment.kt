@@ -114,8 +114,8 @@ class CustomerDetailFragment :
             updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
         }
 
-        filterViewModel.filterOptions.collectState { filter ->
-            viewModel.onEvent(CustomerUiEvent.ApplyFilter(filter))
-        }
+//        filterViewModel.filterOptions.collectState { filter ->
+//            viewModel.onEvent(CustomerUiEvent.ApplyFilter(filter))
+//        }
     }
 }
