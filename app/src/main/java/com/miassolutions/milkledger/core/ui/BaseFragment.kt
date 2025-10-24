@@ -17,6 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.R
 import dagger.hilt.android.AndroidEntryPoint
@@ -123,7 +124,6 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
 
 
-
     protected fun SharedFlow<UiEvent>.collectEvent() {
         viewLifecycleOwner.lifecycleScope.launch {
             collect { event ->
@@ -139,6 +139,20 @@ abstract class BaseFragment<VB : ViewBinding>(
 
     protected fun setToolbarTitle(title: String) {
         (requireActivity() as? ToolbarOwner)?.setToolbarTitle(title)
+    }
+
+    protected fun showDialog(title: String, message: String, onAction: (() -> Unit)?) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("OK") { d, _ ->
+                if (onAction != null) {
+                    onAction()
+                }
+                d.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
 //    protected fun showBottomNav(show: Boolean) {

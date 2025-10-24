@@ -74,47 +74,55 @@ class SupplierDetailFragment :
 
 
         sortMenu.setOnMenuItemClickListener {
-            val filteredList = viewModel.uiState.value.filteredList
-            val fromDate = viewModel.uiState.value.selectedStartDate?.formattedDate() ?: ""
-            val toDate = viewModel.uiState.value.selectedEndDate?.formattedDate() ?: ""
-
-
-            val dateRange = "$fromDate - $toDate"
-            Log.d("SupplierDetailFragment", "$dateRange")
-            if (filteredList.isEmpty()) {
-                showToast("No data to generate PDF")
-                return@setOnMenuItemClickListener true
+            showDialog(
+                "Generate Receipt",
+                "Are you want to generate receipt for the selected date range"
+            ) {
+                generateReport()
             }
-
-            val recordList = filteredList.toRecordList()
-            val totalAmount = recordList.sumOf { it.amount }
-            val totalPaid = recordList.sumOf { it.paid }
-            val totalBalance = recordList.sumOf { it.balance }
-
-            val data = PdfReceiptData(
-                title = args.supplierName,
-                dateRange = dateRange,
-                partyName = args.supplierName,
-                recordList = recordList,
-                totalAmount = totalAmount.toRoundedStr(),
-                totalPaid = totalPaid.toRoundedStr(),
-                totalBalance = totalBalance.toRoundedStr(),
-                footerNote = "Receipt generated on : ${
-                    LocalDate.now().formattedDate()
-                }"
-            )
-
-// 🧾 Create + Share with logo and auto-numbering
-            PdfViewGenerator.generateAndSharePdf(
-                context = requireContext(),
-                data = data,
-                showLogo = true,
-//                logoResId = R.drawable.ic_launcher_foreground
-            )
-
-            showToast("Generating pdf report...")
             true
         }
+    }
+
+    private fun generateReport() {
+        val filteredList = viewModel.uiState.value.filteredList
+        val fromDate = viewModel.uiState.value.selectedStartDate?.formattedDate() ?: ""
+        val toDate = viewModel.uiState.value.selectedEndDate?.formattedDate() ?: ""
+
+
+        val dateRange = "$fromDate - $toDate"
+        Log.d("SupplierDetailFragment", "$dateRange")
+        if (filteredList.isEmpty()) {
+            showToast("No data to generate PDF")
+            return
+        }
+
+        val recordList = filteredList.toRecordList()
+        val totalAmount = recordList.sumOf { it.amount }
+        val totalPaid = recordList.sumOf { it.paid }
+        val totalBalance = recordList.sumOf { it.balance }
+
+        val data = PdfReceiptData(
+            title = args.supplierName,
+            dateRange = dateRange,
+            partyName = args.supplierName,
+            recordList = recordList,
+            totalAmount = totalAmount.toRoundedStr(),
+            totalPaid = totalPaid.toRoundedStr(),
+            totalBalance = totalBalance.toRoundedStr(),
+            footerNote = "Receipt generated on : ${LocalDate.now().formattedDate()}"
+
+        )
+
+// 🧾 Create + Share with logo and auto-numbering
+        PdfViewGenerator.generateAndSharePdf(
+            context = requireContext(),
+            data = data,
+            showLogo = true,
+//                logoResId = R.drawable.ic_launcher_foreground
+        )
+
+        showToast("Generating pdf report...")
     }
 
 
