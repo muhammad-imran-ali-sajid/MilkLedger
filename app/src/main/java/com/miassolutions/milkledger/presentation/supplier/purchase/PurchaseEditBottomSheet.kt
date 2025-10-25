@@ -124,6 +124,9 @@ class PurchaseEditBottomSheet(
         val fat = binding.etFat.text.toString().toDoubleOrNull()
         val lr = binding.etLr.text.toString().toDoubleOrNull()
         val rate = entry.supplier.supplierRate
+        val rateUsed = entry.purchase.rateUsed
+
+
 
         if (volume <= 0.0) {
             binding.tvPrice.text = "0.00"
@@ -137,7 +140,7 @@ class PurchaseEditBottomSheet(
         }
 
         binding.tvPrice.text = "${price.toRoundedStr()}"
-        binding.tvRate.text = "@ ${rate}"
+        binding.tvRate.text = "@ ${rateUsed}"
     }
 
     private fun recalculateTS() {
