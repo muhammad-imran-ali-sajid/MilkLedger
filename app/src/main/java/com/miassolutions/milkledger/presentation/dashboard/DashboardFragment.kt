@@ -1,6 +1,8 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
 
+import android.content.Intent
+import android.provider.Settings
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
@@ -66,91 +68,13 @@ class DashboardFragment :
         }
 
         binding.btnTestA.setOnClickListener {
-//            val data = PdfReceiptData(
-//                title = "MilkLedger_Receipt",
-//                date = LocalDate.now(),
-//                partyName = "Ali Dairy Supplier",
-//                recordList = listOf(
-//                    RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ),
-//                    RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ),
-//                    RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ),
-//                    RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ), RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ), RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ),
-//                    RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ),
-//                    RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ),
-//                    RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ),
-//                    RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ), RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    ), RecordItem(
-//                        "20-10-25", 12.5, 180.0, 2250.0,
-//                        amount = 121.0,
-//                        paid = 121.0,
-//                        balance = 121.0
-//                    )
-//                ),
-//                totalAmount = 4050.0,
-//                footerNote = "Thank you for your business!"
-//            )
+            val intent = Intent(Settings.ACTION_DATE_SETTINGS)
 
-// 🧾 Create + Share with logo and auto-numbering
-//            HybridPdfGenerator.generateAndSharePdf(
-//                context = requireContext(),
-//                data = data,
-//                showLogo = true,
-////                logoResId = R.drawable.ic_launcher_foreground
-//            )
+            // This flag is often necessary when starting an Activity from a non-Activity context
+            // like a utility function or the Application class.
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+            startActivity(intent)
 
 
         }

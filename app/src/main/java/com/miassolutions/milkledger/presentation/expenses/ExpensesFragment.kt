@@ -5,11 +5,13 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.format.DateTimeFormatter
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesBinding::inflate) {
@@ -20,22 +22,16 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.expenses))
-
-
         setupRecyclerView()
-
     }
 
     private fun setupRecyclerView() {
         adapter =
             ExpensesAdapter(onClick = ::showBottomSheet, onLongClick = ::onConfirmDeleteDialog)
-
-
         binding.rvExpenses.adapter = adapter
     }
 
     private fun showBottomSheet(entry: ExpensesEntity) {
-
         ExpenseEditBottomSheet(
             entry = entry,
             onSave = { viewModel.updateExpense(it) },
@@ -44,27 +40,22 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     }
 
     private fun onConfirmDeleteDialog(entry: ExpensesEntity) {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Expense")
-            .setMessage("Are you sure to delete this expense?")
-            .setNeutralButton("Yes") { d, _ ->
-                viewModel.deleteExpense(entry)
-                showToast("Expense deleted")
-                d.dismiss()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        showDialog("Delete Expense", "Are you sure to delete this expense?"){
+            viewModel.deleteExpense(entry)
+        }
     }
 
 
     override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return when {
-            item.itemId == R.id.actionNewExpense -> {
+        return when (item.itemId) {
+            R.id.actionNewExpense -> {
+                // Use the currently selected date from the UI state for the new expense
+                val selectedDate = viewModel.uiState.value.currentDate
                 ExpenseEditBottomSheet(
                     entry = ExpensesEntity(
                         expenseTitle = "New Title",
                         expenseAmount = 0.0,
-                        expenseNote = ""
+                        date = selectedDate, // Use current date
                     ),
                     onSave = {
                         viewModel.insertExpense(it)
@@ -75,15 +66,18 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
             }
 
             else -> false
-
         }
     }
 
 
     override fun setupObservers() {
+        // collectState is a custom extension of collectLatest or similar
         viewModel.uiState.collectState { state ->
             val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-            binding.dateHeader.tvSelectedDate.text = state.currentDate.format(formatter)
+            binding.tvSelectedDate.text = state.currentDate.format(formatter)
+
+            // FIX: Removed the redundant call to viewModel.collectExpenses(state.currentDate)
+            // The ViewModel is already collecting data based on its internal state changes.
 
             adapter.submitList(state.expensesList)
 
@@ -91,19 +85,24 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
                 tvTotalExpense.text = state.todayTotalExpenses.toRoundedStr()
                 tvAvgExpenses.text = state.todayAvgExpenses.toRoundedStr()
             }
-
-
         }
     }
 
     override fun setupListeners() = with(binding) {
-        dateHeader.btnNextDate.setOnClickListener {
-            viewModel.onEvent(ExpensesUiEvent.NextDate)
-        }
+        // Allow clicking the date text to open the date picker
+        tvSelectedDate.setOnClickListener {
+            // Pass the current date as the pre-selected date for better UX
+            val initialDate = viewModel.uiState.value.currentDate
 
-        dateHeader.btnPrevDate.setOnClickListener {
-            viewModel.onEvent(ExpensesUiEvent.PrevDate)
+            pickSingleDate(
+                title = "Select Expense Date",
+                initialDate = initialDate,
+                onPicked = { selectedDate: LocalDate ->
+                    viewModel.onEvent(ExpensesUiEvent.SelectDate(selectedDate))
+                }
+            )
         }
-
     }
+
+
 }

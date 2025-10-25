@@ -6,23 +6,38 @@
     android:layout_height="match_parent">
 
     <!-- Include merge layout -->
-    <include
-        android:id="@+id/dateHeader"
-        layout="@layout/date_header_layout"
+    <TextView
+        android:id="@+id/tv_selected_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:gravity="center"
+        android:padding="8dp"
+        android:background="@drawable/bg_edittext_readable"
+        android:text="📅 12-10-2025"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <!--    <include-->
+    <!--        android:id="@+id/dateHeader"-->
+    <!--        layout="@layout/date_header_layout"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <!-- RecyclerView below -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvExpenses"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/expensesSummary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/dateHeader"
+        app:layout_constraintTop_toBottomOf="@id/tv_selected_date"
         tools:listitem="@layout/item_expenses" />
 
     <LinearLayout
@@ -31,6 +46,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="16dp"
+        android:background="@drawable/bg_edittext_readable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -40,13 +56,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
+
             android:orientation="vertical">
 
             <TextView
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💸 Avg Expense"
+                android:text="Avg Expense"
                 android:textColor="#444444"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -72,7 +89,7 @@
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💰 Total Expenses"
+                android:text="Total Expenses"
                 android:textColor="#444444"
                 android:textSize="14sp"
                 android:textStyle="bold" />
