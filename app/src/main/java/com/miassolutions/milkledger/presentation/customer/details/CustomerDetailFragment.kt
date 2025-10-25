@@ -52,7 +52,7 @@ class CustomerDetailFragment :
 
             val (start, end) = DateRangeHelper.getRange(rangeType)
             updateDateLabel(rangeType, start, end)
-            viewModel.changeDateRange(rangeType, start, end)
+
         }
 
         datePickerActions.tvSelectedDate.setOnClickListener {
@@ -95,23 +95,12 @@ class CustomerDetailFragment :
     }
 
     override fun setupListeners() = with(binding.datePickerActions) {
-        btnPrevDate.setOnClickListener {
-            viewModel.onEvent(CustomerUiEvent.PrevButton)
-        }
 
-        btnNextDate.setOnClickListener {
-            viewModel.onEvent(CustomerUiEvent.NextButton)
-        }
-
-        binding.btnSort.setOnClickListener {
-            FilterBottomSheet().show(parentFragmentManager, "FilterSheet")
-        }
     }
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
             adapter.submitList(state.filteredList)
-            updateDateLabel(state.dateRangeType, state.selectedStartDate, state.selectedEndDate)
         }
 
 //        filterViewModel.filterOptions.collectState { filter ->

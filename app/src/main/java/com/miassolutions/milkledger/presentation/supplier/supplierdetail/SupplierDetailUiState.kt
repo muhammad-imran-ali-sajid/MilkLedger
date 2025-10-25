@@ -9,6 +9,7 @@ data class SupplierDetailUiState(
     val filteredList: List<SupplierDetailModel> = emptyList(),
     val selectedStartDate: LocalDate? = null,
     val selectedEndDate: LocalDate? = null,
+    val isInitialLoadComplete: Boolean = false,
     val summary: SupplierSummary = SupplierSummary()
 )
 

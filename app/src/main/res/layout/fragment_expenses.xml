@@ -21,12 +21,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <!--    <include-->
-    <!--        android:id="@+id/dateHeader"-->
-    <!--        layout="@layout/date_header_layout"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <!-- RecyclerView below -->
     <androidx.recyclerview.widget.RecyclerView

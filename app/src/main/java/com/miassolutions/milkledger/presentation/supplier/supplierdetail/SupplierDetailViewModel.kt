@@ -61,43 +61,45 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
 
     private fun filterData() {
         val state = _uiState.value
-        var filteredList = state.supplierDetailList
+        val filteredList = state.supplierDetailList
 
         if (filteredList.isEmpty()) return
 
         viewModelScope.launch {
-            // Determine the dates to use for filtering
-            val (filterStartDate, filterEndDate) = when {
-                // Case 1: Dates were explicitly set (via setCustomDateRange)
-                state.selectedStartDate != null && state.selectedEndDate != null
-                    -> {
-                    // Use the selected dates
-                    state.selectedStartDate to state.selectedEndDate
-                }
 
-                // Case 2: Initial load (both are null) or dates were reset (if you add a reset feature)
-                else -> {
-                    // Use the default date range
-                    LocalDate.now().minusYears(1) to LocalDate.now()
+            // Use the dates from the state. They will be null for "All Data".
+            val filterStartDate = state.selectedStartDate
+            val filterEndDate = state.selectedEndDate
+
+            // Initialize the list to the full list (no filtering)
+            var currentFilteredList = filteredList
+
+            // --- Core Logic Improvement ---
+            if (filterStartDate != null && filterEndDate != null) {
+                // ONLY apply Date filter if BOTH dates are explicitly set (non-null)
+                currentFilteredList = filteredList.filter { detail ->
+                    // The filter range is applied to the full list
+                    detail.date in filterStartDate..filterEndDate
                 }
+                Log.d("SupplierDetailViewModel", "Filter dates: $filterStartDate - $filterEndDate")
+            } else {
+                // If one or both dates are null, we show "All Data".
+                // currentFilteredList remains the full list.
+                Log.d("SupplierDetailViewModel", "Showing All Data (No date filter applied)")
             }
 
 
-            // Apply Date filer
-            filteredList = filteredList.filter { detail ->
-                // Use the determined non-null dates
-                detail.date in filterStartDate..filterEndDate
-            }
-
-            // ... (Summary calculation logic remains the same) ...
-            val avgTS = filteredList.sumOf { it.ts } / filteredList.size
-            val totalMilk = filteredList.sumOf { it.milkAmount }
-            val totalPrice = filteredList.sumOf { it.milkPrice }
-            val totalPaid = filteredList.sumOf { it.payment }
-            val balance = filteredList.sumOf { it.balance }
+            // --- Summary Calculation (Uses the potentially filtered list) ---
+            val avgTS = if (currentFilteredList.isNotEmpty())
+                currentFilteredList.sumOf { it.ts } / currentFilteredList.size
+            else 0.0
+            val totalMilk = currentFilteredList.sumOf { it.milkAmount }
+            val totalPrice = currentFilteredList.sumOf { it.milkPrice }
+            val totalPaid = currentFilteredList.sumOf { it.payment }
+            val balance = currentFilteredList.sumOf { it.balance }
 
             val supplierSummary = SupplierSummary(
-                summaryPeriod = "",
+                summaryPeriod = "", // UI text handled separately below
                 totalMilk = totalMilk.toRoundedStr(),
                 avgTS = avgTS.toRoundedStr("%.2f"),
                 totalPrice = totalPrice.toRoundedStr(),
@@ -105,27 +107,21 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
                 balance = balance
             )
 
-            Log.d("SupplierDetailViewModel", "Filter dates: $filterStartDate - $filterEndDate")
             Log.d("SupplierDetailViewModel", supplierSummary.toString())
 
 
-            // CRITICAL FIX: Update the state with the dates that were actually used for filtering.
+            // Update the state
             _uiState.update {
                 it.copy(
-                    filteredList = filteredList,
+                    filteredList = currentFilteredList,
                     summary = supplierSummary,
-                    selectedStartDate = filterStartDate, // <--- ADDED THIS
-                    selectedEndDate = filterEndDate      // <--- ADDED THIS
+                    // selectedStartDate and selectedEndDate are already correct in the state,
+                    // as they were set via `setCustomDateRange` or cleared to null to show "All Data".
                 )
             }
         }
     }
 
-
-//    fun changeDateRange(rangeType: DateRangeType) {
-//        _uiState.update { it.copy(dateRangeType = rangeType) }
-//        filterData()
-//    }
 
     fun setCustomDateRange(start: LocalDate, end: LocalDate) {
         _uiState.update {
