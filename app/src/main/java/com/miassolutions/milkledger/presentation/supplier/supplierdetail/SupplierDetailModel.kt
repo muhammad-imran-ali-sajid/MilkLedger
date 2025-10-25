@@ -17,9 +17,9 @@ data class SupplierDetailModel(
     val payment: Double,
     val balance: Double,
     val rateUsed: Double,
-    val oldRate: Double,
+    val newRate: Double,
     val isRateChanged: Boolean,
-    val isConsecutiveRateChange: Boolean = false,
+    val isRateChangeStart: Boolean = false,
     val notes: String? = null,
 
     )
@@ -35,7 +35,7 @@ fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = Supplier
     milkPrice = this.purchase.milkPrice,
     payment = this.purchase.payment,
     balance = this.purchase.balance,
-    oldRate = this.supplier.supplierRate,
+    newRate = this.supplier.supplierRate,
     rateUsed = this.purchase.rateUsed,
     isRateChanged = this.purchase.rateUsed != this.supplier.supplierRate,
     notes = this.purchase.notes
@@ -56,29 +56,42 @@ fun List<SupplierDetailModel>.toRecordList(): List<RecordItem> {
     }
 }
 
-// NEW FUNCTION to be added in your data layer/helper utility where the list is prepared
+// NEW or REPLACED FUNCTION to be used in the ViewModel after initial mapping
 
 /**
- * Iterates through a list of SupplierDetailModel (which must be sorted by date)
- * and flags items where the rate change is consecutive (i.e., the current item
- * AND the next item both have rate changes).
+ * Flags the first entry on which the rateUsed differs from the rateUsed on the previous day.
+ * This should replace or augment the flagConsecutiveRateChanges logic.
  */
-fun List<SupplierDetailModel>.flagConsecutiveRateChanges(): List<SupplierDetailModel> {
-    if (this.size < 2) return this
+fun List<SupplierDetailModel>.flagRateChangeStarts(): List<SupplierDetailModel> {
+    if (this.isEmpty()) return this
 
-    // Use a mutable copy for modification during iteration
     val mutableList = this.toMutableList()
 
-    for (i in 0 until mutableList.size - 1) {
-        val current = mutableList[i]
-        val next = mutableList[i + 1]
+    // The rate change alert should only show if the rate USED for this purchase
+    // is different from the rate USED for the previous purchase.
 
-        // Check if both the current item and the next item had a rate change
-        if (current.isRateChanged && next.isRateChanged) {
-            // Flag both items as part of a consecutive change
-            // Note: We use copy() to update the data class immutably
-            mutableList[i] = current.copy(isConsecutiveRateChange = true)
-            mutableList[i + 1] = next.copy(isConsecutiveRateChange = true)
+    // 1. Check the very first item: if its rateUsed is different from the oldRate (supplier's default),
+    // it's a rate change start (assuming the list starts after the change was made).
+    // However, it's safer to compare with the previous item's rateUsed.
+
+    // For the first item, we can't compare to a previous day. We'll only flag it if
+    // it is flagged as 'isRateChanged' (i.e., different from the supplier's default).
+    if (mutableList[0].isRateChanged) {
+        mutableList[0] = mutableList[0].copy(isRateChangeStart = true)
+    }
+
+    for (i in 1 until mutableList.size) {
+        val current = mutableList[i]
+        val previous = mutableList[i - 1]
+
+        // Check if the current rateUsed is different from the previous rateUsed
+        // Note: Floating point comparison should ideally use an epsilon (tolerance),
+        // but simple != is often used for simplicity with currency/rates.
+        val hasRateChangedFromPreviousDay = current.rateUsed != previous.rateUsed
+
+        if (hasRateChangedFromPreviousDay) {
+            // This is the start of a new rate block. Flag it.
+            mutableList[i] = current.copy(isRateChangeStart = true)
         }
     }
 

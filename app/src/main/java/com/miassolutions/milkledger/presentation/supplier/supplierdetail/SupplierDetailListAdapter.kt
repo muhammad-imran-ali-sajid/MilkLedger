@@ -53,29 +53,27 @@ class SupplierDetailListAdapter :
             tvNotes.text = "Note: ${item.notes}"
         }
 
+        // 1. Reset default appearance for rate and date
+        tvDate.setTextColor(Color.BLACK)
+        tvRate.hide()
 
-//        if (item.date == LocalDate.now()  && item.isRateChanged) {
-//            tvDate.setTextColor(Color.RED)
-//            tvRate.show()
-//            tvRate.text = "Alert rate changes: ${item.oldRate.toRoundedStr()}"
-//        }
-
-        if (item.isConsecutiveRateChange) {
-
-            if (item.isRateChanged) {
-                tvDate.setTextColor(Color.BLUE)
-                tvRate.show()
-                tvRate.text = "Alert rate changes: ${item.oldRate.toRoundedStr()}"
-            }
-            // Choose a color (e.g., BLUE or a specific color from your resources)
-//            tvDate.setTextColor(Color.BLUE)
-//            tvRate.show()
-//            tvRate.text = "Alert rate changes: ${item.oldRate.toRoundedStr()}"
-            // Optional: Hide the rate alert if it was only a consecutive change
-            // and not a "today" alert, or show a different message.
-            // If you want the consecutive highlight to override the single-day
-            // highlight, place this logic *after* the single-day logic.
+        // 2. Use the new flag to show the alert only once
+        if (item.isRateChangeStart) {
+            // Use RED for the alert (or BLUE for consecutive if you keep that logic)
+            tvDate.setTextColor(Color.RED)
+            tvRate.show()
+            tvRate.text = "Rate changed to: ${item.newRate.toRoundedStr()}" // Show the NEW rate
         }
+
+        // 3. OPTIONAL: Keep the logic for highlighting today's entry if it's special
+        val isToday = item.date == LocalDate.now()
+        if (isToday && item.isRateChanged && !item.isRateChangeStart) {
+            // You might still want to highlight today's entry even if the change started previously
+            // This is application-specific visual preference.
+            // Example: Highlight today's entry, even if the rate started yesterday
+            // tvDate.setTextColor(Color.GREEN)
+        }
+
 
 
     }

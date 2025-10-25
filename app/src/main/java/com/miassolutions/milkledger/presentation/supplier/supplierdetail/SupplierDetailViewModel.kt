@@ -40,7 +40,7 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
                 val initialDetails = list.map { it.toSupplierDetailModel() }
 
                 // 2. Apply the consecutive change logic
-                val finalDetails = initialDetails.flagConsecutiveRateChanges() // <-- NEW LINE
+                val finalDetails = initialDetails.flagRateChangeStarts()
 
                 _uiState.update {
                     it.copy(
