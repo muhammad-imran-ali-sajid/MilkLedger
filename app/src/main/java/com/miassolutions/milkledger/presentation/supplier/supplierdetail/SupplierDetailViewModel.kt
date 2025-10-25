@@ -36,12 +36,16 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
             val id = _uiState.value.selectedSupplierId ?: return@launch
 
             repository.getPurchasesForSupplier(id).collect { list ->
-                val details = list.map { it.toSupplierDetailModel() }
+                // 1. Convert raw data to detail models
+                val initialDetails = list.map { it.toSupplierDetailModel() }
+
+                // 2. Apply the consecutive change logic
+                val finalDetails = initialDetails.flagConsecutiveRateChanges() // <-- NEW LINE
 
                 _uiState.update {
                     it.copy(
-                        supplierDetailList = details,
-                        filteredList = details,
+                        supplierDetailList = finalDetails,
+                        filteredList = finalDetails,
 
 
                         )

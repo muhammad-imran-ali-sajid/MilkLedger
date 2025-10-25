@@ -19,12 +19,14 @@ data class SupplierDetailModel(
     val rateUsed: Double,
     val oldRate: Double,
     val isRateChanged: Boolean,
+    val isConsecutiveRateChange: Boolean = false,
     val notes: String? = null,
 
     )
 
 
 fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = SupplierDetailModel(
+
     date = this.purchase.date,
     milkAmount = this.purchase.milkAmount,
     fat = this.purchase.fat,
@@ -40,6 +42,7 @@ fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = Supplier
 )
 
 fun List<SupplierDetailModel>.toRecordList(): List<RecordItem> {
+
     return this.map { item ->
         RecordItem(
             date = item.date.formattedDate(),
@@ -51,4 +54,33 @@ fun List<SupplierDetailModel>.toRecordList(): List<RecordItem> {
             balance = item.balance
         )
     }
+}
+
+// NEW FUNCTION to be added in your data layer/helper utility where the list is prepared
+
+/**
+ * Iterates through a list of SupplierDetailModel (which must be sorted by date)
+ * and flags items where the rate change is consecutive (i.e., the current item
+ * AND the next item both have rate changes).
+ */
+fun List<SupplierDetailModel>.flagConsecutiveRateChanges(): List<SupplierDetailModel> {
+    if (this.size < 2) return this
+
+    // Use a mutable copy for modification during iteration
+    val mutableList = this.toMutableList()
+
+    for (i in 0 until mutableList.size - 1) {
+        val current = mutableList[i]
+        val next = mutableList[i + 1]
+
+        // Check if both the current item and the next item had a rate change
+        if (current.isRateChanged && next.isRateChanged) {
+            // Flag both items as part of a consecutive change
+            // Note: We use copy() to update the data class immutably
+            mutableList[i] = current.copy(isConsecutiveRateChange = true)
+            mutableList[i + 1] = next.copy(isConsecutiveRateChange = true)
+        }
+    }
+
+    return mutableList.toList()
 }

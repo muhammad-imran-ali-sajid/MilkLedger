@@ -54,10 +54,27 @@ class SupplierDetailListAdapter :
         }
 
 
-        if (item.date == LocalDate.now() && item.isRateChanged) {
-            tvDate.setTextColor(Color.RED)
-            tvRate.show()
-            tvRate.text = "Alert rate changes: ${item.oldRate.toRoundedStr()}"
+//        if (item.date == LocalDate.now()  && item.isRateChanged) {
+//            tvDate.setTextColor(Color.RED)
+//            tvRate.show()
+//            tvRate.text = "Alert rate changes: ${item.oldRate.toRoundedStr()}"
+//        }
+
+        if (item.isConsecutiveRateChange) {
+
+            if (item.isRateChanged) {
+                tvDate.setTextColor(Color.BLUE)
+                tvRate.show()
+                tvRate.text = "Alert rate changes: ${item.oldRate.toRoundedStr()}"
+            }
+            // Choose a color (e.g., BLUE or a specific color from your resources)
+//            tvDate.setTextColor(Color.BLUE)
+//            tvRate.show()
+//            tvRate.text = "Alert rate changes: ${item.oldRate.toRoundedStr()}"
+            // Optional: Hide the rate alert if it was only a consecutive change
+            // and not a "today" alert, or show a different message.
+            // If you want the consecutive highlight to override the single-day
+            // highlight, place this logic *after* the single-day logic.
         }
 
 
