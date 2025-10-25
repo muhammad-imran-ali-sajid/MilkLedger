@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSupplierDetailBinding
+import java.time.LocalDate
 
 class SupplierDetailListAdapter :
     BaseListAdapter<SupplierDetailModel, ItemSupplierDetailBinding>(
@@ -51,11 +52,12 @@ class SupplierDetailListAdapter :
             tvNotes.text = "Note: ${item.notes}"
         }
 
-        if (item.isRateChanged) {
+
+        if (item.date == LocalDate.now() && item.isRateChanged){
             tvDate.setTextColor(Color.RED)
-        } else {
-            tvDate.setTextColor(Color.GREEN)
         }
+
+
     }
 
 }
