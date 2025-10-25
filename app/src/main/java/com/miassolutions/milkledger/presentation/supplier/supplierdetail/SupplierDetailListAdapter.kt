@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.miassolutions.milkledger.core.helper.handleZeroData
@@ -48,6 +49,12 @@ class SupplierDetailListAdapter :
         } else {
 
             tvNotes.text = "Note: ${item.notes}"
+        }
+
+        if (item.isRateChanged) {
+            tvDate.setTextColor(Color.RED)
+        } else {
+            tvDate.setTextColor(Color.GREEN)
         }
     }
 

@@ -62,18 +62,9 @@ class SupplierDetailFragment :
     }
 
 
-//    private fun handleSelectedDateRange(start: LocalDate, end: LocalDate) {
-//        viewModel.setCustomDateRange(start, end)
-//    }
-
-    private fun showDateFilter() {
-        val bottomSheet = CustomDateRangeBottomSheet()
-        bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_TAG")
-    }
-
     override fun setupListeners() {
         binding.tvSelectedDate.setOnClickListener {
-            showDateFilter()
+            showDateFilter(isGeneratingReport = false)
         }
     }
 
@@ -81,25 +72,24 @@ class SupplierDetailFragment :
         val sortMenu = menu.findItem(R.id.menu_sort_item)
 
         sortMenu.setOnMenuItemClickListener {
-            handleReportGeneration()
+            showDateFilter(isGeneratingReport = true)
             true
         }
     }
 
-    private fun handleReportGeneration() {
-        // 1. Show the date selection filter first.
-        // We will use the callback (setFragmentResultListener) to trigger the report.
-        showDateFilter(isGeneratingReport = true)
-    }
+
 
     // Modify showDateFilter to accept a flag
-    private fun showDateFilter(isGeneratingReport: Boolean = false) {
+    private fun showDateFilter(isGeneratingReport: Boolean = true) {
         val bottomSheet = CustomDateRangeBottomSheet()
+        if (isGeneratingReport) {
+            showDialog("Select Range", "Set date range for generating report") {
+                bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_TAG")
+            }
+        } else {
+            bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_ONLY_FILTER_DATA")
+        }
 
-        // Pass the flag as an argument to the BottomSheet if you needed to change its UI,
-        // but for simplicity, we'll just rely on the REQUEST_KEY here.
-
-        bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_TAG")
     }
 
     private fun handleSelectedDateRange(start: LocalDate, end: LocalDate) {
@@ -201,7 +191,6 @@ class SupplierDetailFragment :
                     payment = paidAmount,
                     balance = balanceText,
                     balanceColor = color,
-                    // Pass the newly computed date range to the summary function
                     dateRange = currentSelectedDateRange
                 )
             }
