@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeHelper
 import com.miassolutions.milkledger.core.ui.datesort.DateRangeType
+import com.miassolutions.milkledger.core.util.toRoundedStr
 
 import com.miassolutions.milkledger.data.repositories.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,11 +33,15 @@ class CustomerDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val id = _uiState.value.selectedCustomerId ?: return@launch
             repository.getSalesForCustomer(id).collect { list ->
-                val details = list.map { it.toCustomerDetail() }
+
+                val initialDetail = list.map { it.toCustomerDetail() }
+
+                val finalDetail = initialDetail.flagPriceChangeStarts()
+
                 _uiState.update {
                     it.copy(
-                        customerDetailList = details,
-                        filteredList = details
+                        customerDetailList = finalDetail,
+                        filteredList = finalDetail
                     )
                 }
                 filterData() // immediately filter after loading
@@ -44,6 +49,59 @@ class CustomerDetailViewModel @Inject constructor(
         }
     }
 
+
+
+
+
+    private fun filterData() {
+        val state = _uiState.value
+        val filteredList = state.customerDetailList
+
+        if (filteredList.isEmpty()) return
+
+        viewModelScope.launch {
+
+            val filterStartDate = state.selectedStartDate
+            val filterEndDate = state.selectedEndDate
+
+            var currentFilteredList = filteredList
+
+            //core logic
+
+            if (filterStartDate != null && filterEndDate != null) {
+
+                currentFilteredList = filteredList.filter { detail ->
+                    detail.date in filterStartDate..filterEndDate
+                }
+            } else {
+                // all data
+            }
+
+            val totalMilkAmount = currentFilteredList.sumOf { it.milkAmount }
+            val totalDeduction = currentFilteredList.sumOf { it.deduction }
+            val totalPrice = currentFilteredList.sumOf { it.milkPrice }
+            val totalPaid = currentFilteredList.sumOf { it.payment }
+            val balance = currentFilteredList.sumOf { it.balance }
+
+            val customerSummary = CustomerSummary(
+                summaryPeriod = "",
+                totalMilk = totalMilkAmount.toRoundedStr(),
+                totalDeduction = totalDeduction.toRoundedStr(),
+                totalPrice = totalPrice.toRoundedStr(),
+                paidAmount = totalPaid.toRoundedStr(),
+                balance = balance
+            )
+
+            _uiState.update {
+                it.copy(
+                    filteredList = currentFilteredList,
+                    summary = customerSummary
+                )
+            }
+
+
+        }
+    }
 
     fun setCustomDateRange(start: LocalDate, end: LocalDate) {
         _uiState.update {
@@ -53,30 +111,6 @@ class CustomerDetailViewModel @Inject constructor(
             )
         }
         filterData()
-    }
-
-
-    private fun filterData() {
-        val state = _uiState.value
-        var filteredList = state.customerDetailList
-        if (filteredList.isEmpty()) return
-
-        viewModelScope.launch {
-            val (startDate, endDate) = when {
-                state.selectedStartDate != null && state.selectedEndDate != null ->
-                    state.selectedStartDate to state.selectedEndDate
-
-                else -> null to null
-            }
-
-            // 🔹 Apply Date Filter
-            filteredList = filteredList.filter { detail ->
-                detail.date in startDate!!..endDate!!
-            }
-
-
-            _uiState.update { it.copy(filteredList = filteredList) }
-        }
     }
 
 }
