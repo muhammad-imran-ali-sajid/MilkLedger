@@ -12,9 +12,14 @@ import java.io.FileOutputStream
 
 object PdfViewGenerator {
 
+    /**
+     * Generates the PDF document from the layout, saves it to a file, and returns the file.
+     * The file naming uses the improved logic from PdfUtils (BaseName_YYYYMMDD_HHMMSS.pdf).
+     */
     private fun generateReceiptPdf(
         context: Context,
         data: PdfReceiptData,
+        baseName : String,
         showLogo: Boolean = false,
         logoResId: Int? = null
     ): File {
@@ -28,10 +33,11 @@ object PdfViewGenerator {
         } else {
             binding.imgLogo.visibility = View.GONE
         }
-
+        val file = PdfUtils.getPdfFile(context, baseName)
+        val receiptName = file.name.removeSuffix(".pdf")
         // Header info
         with(binding) {
-            tvTitle.text = data.title
+            tvReceipt.text = "Receipt Id: $receiptName"
             tvPartyName.text = "Party: ${data.partyName}"
             tvDateRange.text = "Date Range: ${data.dateRange}"
             tvTotal.text = data.totalAmount
@@ -65,8 +71,11 @@ object PdfViewGenerator {
         )
         view.layout(0, 0, width, view.measuredHeight)
 
-        // Create PDF
-        val file = PdfUtils.getPdfFile(context, data.title.replace(" ", "_"))
+//        // Create PDF
+//        // 👇 This call utilizes the improved file naming logic in PdfUtils
+//        val baseName = data.receipt.replace(" ", "_").replace(Regex("[^a-zA-Z0-9_-]"), "")
+
+
         val pdfDoc = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(width, view.measuredHeight, 1).create()
         val page = pdfDoc.startPage(pageInfo)
@@ -80,13 +89,20 @@ object PdfViewGenerator {
         return file
     }
 
+    /**
+     * Generates the PDF and immediately initiates the share intent.
+     */
     fun generateAndSharePdf(
         context: Context,
         data: PdfReceiptData,
+        baseName: String,
         showLogo: Boolean = false,
         logoResId: Int? = null
     ) {
-        val file = generateReceiptPdf(context, data, showLogo, logoResId)
-        PdfShareHelper.sharePdf(context, file)
+        // Generate the file first
+        val file = generateReceiptPdf(context, data, baseName,showLogo, logoResId)
+
+        // Then share it
+        PdfUtils.sharePdf(context, file)
     }
 }

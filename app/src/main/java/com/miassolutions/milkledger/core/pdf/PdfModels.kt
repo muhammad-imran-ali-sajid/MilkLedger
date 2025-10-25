@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.core.pdf
 
 data class PdfReceiptData(
-    val title: String,
+
     val dateRange: String,
     val partyName: String,
     val recordList: List<RecordItem>,

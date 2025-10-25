@@ -1,26 +1,36 @@
 package com.miassolutions.milkledger.core.pdf
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
+import androidx.core.content.FileProvider
 import java.io.File
-import java.io.FileOutputStream
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 object PdfUtils {
 
+    val DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss")
+
     private const val FOLDER_NAME = "Receipts"
 
-    fun getPdfFile(context: Context, baseName: String): File {
+    fun getPdfFile(context: Context, baseName : String): File {
         val dir = File(context.getExternalFilesDir(null), FOLDER_NAME)
+        // Ensure the directory exists
         if (!dir.exists()) dir.mkdirs()
 
-        // Automatically generate sequential names
-        val files = dir.listFiles()?.filter { it.name.endsWith(".pdf") } ?: emptyList()
-        val nextNumber = (files.size + 1).toString().padStart(3, '0')
+        // Get the current date and time formatted for a file name
+        val timestamp = LocalDateTime.now().format(DATE_FORMATTER)
 
-        return File(dir, "${baseName}_${nextNumber}.pdf")
+        // Sanitize the base name for file system compatibility (optional but recommended)
+//        val sanitizedBaseName = baseName.replace(Regex("[^a-zA-Z0-9_-]"), "_")
+
+        // Construct the unique file name
+        val fileName = "${baseName}_$timestamp.pdf"
+
+        return File(dir, fileName)
     }
 
 
@@ -28,11 +38,21 @@ object PdfUtils {
         return BitmapFactory.decodeResource(context.resources, resId)
     }
 
-//    fun saveBitmapToFile(context: Context, bitmap: Bitmap, name: String): File {
-//        val file = File(context.cacheDir, "$name.png")
-//        FileOutputStream(file).use { out ->
-//            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-//        }
-//        return file
-//    }
+
+    fun sharePdf(context: Context, file: File, title: String = "Share Receipt") {
+        val uri = FileProvider.getUriForFile(
+            context,
+            context.packageName + ".provider", // defined in manifest
+            file
+        )
+
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "application/pdf"
+            putExtra(Intent.EXTRA_STREAM, uri)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        Log.d("PDF_UTILS", "${file.absolutePath}")
+        context.startActivity(Intent.createChooser(intent, title))
+    }
 }

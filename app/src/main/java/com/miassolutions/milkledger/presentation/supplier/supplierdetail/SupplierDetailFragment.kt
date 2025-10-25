@@ -127,7 +127,7 @@ class SupplierDetailFragment :
         val totalBalance = recordList.sumOf { it.balance }
 
         val data = PdfReceiptData(
-            title = args.supplierName,
+
             dateRange = dateRange,
             partyName = args.supplierName,
             recordList = recordList,
@@ -141,6 +141,7 @@ class SupplierDetailFragment :
         PdfViewGenerator.generateAndSharePdf(
             context = requireContext(),
             data = data,
+            baseName = "Supplier",
             showLogo = true,
 //                logoResId = R.drawable.ic_launcher_foreground
         )

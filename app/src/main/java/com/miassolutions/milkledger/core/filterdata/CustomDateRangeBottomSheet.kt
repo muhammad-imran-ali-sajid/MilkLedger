@@ -77,7 +77,7 @@ class CustomDateRangeBottomSheet : BottomSheetDialogFragment() {
             dismiss()
         }
 
-        picker.show(parentFragmentManager, "MaterialDatePicker")
+        picker.show(childFragmentManager, "MaterialDatePicker")
     }
 
     override fun onDestroyView() {

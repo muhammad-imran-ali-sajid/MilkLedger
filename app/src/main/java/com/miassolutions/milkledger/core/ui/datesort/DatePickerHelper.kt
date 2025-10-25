@@ -66,6 +66,8 @@ fun LocalDate.formattedDate(pattern: String = "dd MMM yyyy") : String {
     return this.format(DateTimeFormatter.ofPattern(pattern))
 }
 
+
+
 // --------- Private helpers -----------
 
 private fun buildPicker(

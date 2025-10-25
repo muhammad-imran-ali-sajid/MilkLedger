@@ -23,7 +23,7 @@
 
         <!-- Title -->
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/tvPartyName"
             style="@style/TextTitleUrdu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tvPartyName"
+            android:id="@+id/tv_receipt"
             style="@style/TextTitleUrdu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
