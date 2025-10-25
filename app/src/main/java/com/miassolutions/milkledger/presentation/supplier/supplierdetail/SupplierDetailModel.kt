@@ -17,6 +17,7 @@ data class SupplierDetailModel(
     val payment: Double,
     val balance: Double,
     val rateUsed: Double,
+    val oldRate: Double,
     val isRateChanged: Boolean,
     val notes: String? = null,
 
@@ -32,6 +33,7 @@ fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = Supplier
     milkPrice = this.purchase.milkPrice,
     payment = this.purchase.payment,
     balance = this.purchase.balance,
+    oldRate = this.supplier.supplierRate,
     rateUsed = this.purchase.rateUsed,
     isRateChanged = this.purchase.rateUsed != this.supplier.supplierRate,
     notes = this.purchase.notes

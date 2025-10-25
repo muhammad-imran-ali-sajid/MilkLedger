@@ -10,6 +10,7 @@ import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.hide
+import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSupplierDetailBinding
 import java.time.LocalDate
@@ -53,8 +54,10 @@ class SupplierDetailListAdapter :
         }
 
 
-        if (item.date == LocalDate.now() && item.isRateChanged){
+        if (item.date == LocalDate.now() && item.isRateChanged) {
             tvDate.setTextColor(Color.RED)
+            tvRate.show()
+            tvRate.text = "Alert rate changes: ${item.oldRate.toRoundedStr()}"
         }
 
 
