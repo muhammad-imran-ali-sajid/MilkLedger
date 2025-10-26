@@ -128,11 +128,14 @@
         <item name="android:focusable">true</item>
     </style>
 
-    <style name="PurchaseCard" parent="BaseCardStyle">
-        <item name="cardBackgroundColor">#E2E8EB</item>
-        <item name="strokeColor">#E2E8EB</item>
-
+    <style name="PurchaseCard">
+        <item name="colorSurface">@color/orange_200</item>
+        <item name="colorOutline">@color/blue_200</item>
+        <item name="strokeColor">@color/orange_700</item>
+        <item name="strokeWidth">2dp</item>
     </style>
+
+
 
     <style name="SaleCard" parent="BaseCardStyle">
         <item name="cardBackgroundColor">#E2E8EB</item>
