@@ -60,9 +60,9 @@ class SupplierDetailListAdapter :
         // 2. Use the new flag to show the alert only once
         if (item.isRateChangeStart) {
             // Use RED for the alert (or BLUE for consecutive if you keep that logic)
-            tvDate.setTextColor(Color.RED)
+
             tvRate.show()
-            tvRate.text = "Rate changed to: ${item.newRate.toRoundedStr()}" // Show the NEW rate
+
         }
 
         // 3. OPTIONAL: Keep the logic for highlighting today's entry if it's special
@@ -72,8 +72,10 @@ class SupplierDetailListAdapter :
             // This is application-specific visual preference.
             // Example: Highlight today's entry, even if the rate started yesterday
             // tvDate.setTextColor(Color.GREEN)
-        }
 
+            tvRate.show()
+
+        }
 
 
     }
