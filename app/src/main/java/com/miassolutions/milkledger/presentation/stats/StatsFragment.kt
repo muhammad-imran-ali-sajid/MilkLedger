@@ -60,18 +60,16 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
                     financialOverViewCard(
                         purchaseAmount = state.purchaseTotal.toRoundedStr(),
                         saleAmount = state.salesTotal.toRoundedStr(),
-                        expenseAmount = state.period,
-                        netProfit = state.period
+                        expenseAmount = state.expensesTotal.toRoundedStr(),
+                        netProfit = state.profit.toRoundedStr()
+                    )
+
+                    milkOverViewCard(
+                        milkPurchase = state.milkPurchase.toRoundedStr(),
+                        milkSold = state.milkSold.toRoundedStr()
                     )
 
                     binding.tvTitle.text = state.period
-
-
-
-                    Log.d(
-                        "StatsFragment",
-                        "collectUiState: ${state.salesTotal} - ${state.purchaseTotal}"
-                    )
 
                 }
             }

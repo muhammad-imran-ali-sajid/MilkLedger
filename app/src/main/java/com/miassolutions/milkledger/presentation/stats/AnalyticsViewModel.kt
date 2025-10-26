@@ -9,6 +9,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -39,33 +42,48 @@ class AnalyticsViewModel @Inject constructor(
     }
 
     // ---------- CORE LOADER ----------
+    // ... (inside AnalyticsViewModel)
+
+    // ---------- CORE LOADER ----------
     private fun loadDataForRange(periodLabel: String, range: Pair<LocalDate, LocalDate>) {
-        viewModelScope.launch {
-            try {
-                _uiState.value = _uiState.value.copy(isLoading = true)
 
-                val (start, end) = range
+        val (start, end) = range
 
-                val sales = analyticsRepository.getSalesTotal(start, end)
-                Log.d("AnalyticalViewModel", "$sales")
-                val purchases = analyticsRepository.getPurchasesTotal(start, end)
-                val profit = analyticsRepository.getProfit(start, end)
+        // Use the combine overload for 6 flows (results array)
+        combine(
+            analyticsRepository.getTotalMilkPurchaseBetween(start, end), // 1st element
+            analyticsRepository.getTotalMilkSoldBetween(start, end),     // 2nd element
+            analyticsRepository.getTotalSalesBetween(start, end),       // 3rd element
+            analyticsRepository.getTotalPurchasesBetween(start, end),   // 4th element
+            analyticsRepository.getTotalExpensesBetween(start, end),    // 5th element
+            analyticsRepository.getProfitBetween(start, end)            // 6th element
+        ) { results ->
 
-                _uiState.value = _uiState.value.copy(
-                    period = periodLabel,
-                    startDate = start,
-                    endDate = end,
-                    salesTotal = sales,
-                    purchaseTotal = purchases,
-                    profit = profit,
-                    isLoading = false
-                )
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(isLoading = false)
-                e.printStackTrace()
-            }
-        }
+            // Fix: Use a run block to manage variable assignment and casting cleanly
+            // Destructuring here would require a manually-written componentN function for the Array
+            // So, we just declare and assign variables explicitly for clarity:
+
+            val milkPurchase = results[0] ?: 0.0
+            val milkSold = results[1] ?: 0.0
+            val totalSales = results[2] ?: 0.0
+            val totalPurchase = results[3] ?: 0.0
+            val totalExpense = results[4] ?: 0.0
+            val netProfit = results[5] as Double // Already non-nullable from repo combine
+
+            AnalyticsUiState(
+                period = periodLabel,
+                milkPurchase = milkPurchase,
+                milkSold = milkSold,
+                salesTotal = totalSales,
+                purchaseTotal = totalPurchase,
+                expensesTotal = totalExpense,
+                profit = netProfit,
+                startDate = start,
+                endDate = end
+            )
+
+        }.onEach { state ->
+            _uiState.value = state
+        }.launchIn(viewModelScope)
     }
 }
-
-

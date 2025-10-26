@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.data.repository
 
 
-
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import java.time.LocalDate
 import javax.inject.Inject
@@ -11,6 +10,12 @@ import kotlinx.coroutines.flow.combine
 class ReportsRepository @Inject constructor(
     private val reportsDao: ReportsDao
 ) {
+
+    fun getTotalMilkPurchaseBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getTotalMilkPurchaseBetween(start, end)
+
+    fun getTotalMilkSoldBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getTotalMilkSoldBetween(start, end)
 
     fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
         reportsDao.getTotalSalesBetween(start, end)

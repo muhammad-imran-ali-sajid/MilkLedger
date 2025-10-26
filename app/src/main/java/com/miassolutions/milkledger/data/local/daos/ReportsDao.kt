@@ -18,6 +18,9 @@ interface ReportsDao {
     @Query("SELECT SUM(netMilk) FROM sales_table WHERE date = :date")
     fun getTotalMilkSoldOn(date: LocalDate): Flow<Double?>
 
+    @Query("SELECT SUM(netMilk) FROM sales_table WHERE  date BETWEEN :start AND :end")
+    fun getTotalMilkSoldBetween(start: LocalDate, end : LocalDate): Flow<Double?>
+
     @Query("SELECT SUM(price) FROM sales_table WHERE date BETWEEN :start AND :end")
     fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
@@ -27,6 +30,9 @@ interface ReportsDao {
 
     @Query("SELECT * FROM purchase_table WHERE supplierId = :supplierId ORDER BY date DESC")
     fun getSupplierPurchaseHistory(supplierId: String): Flow<List<PurchaseEntity>>
+
+    @Query("SELECT SUM(milkAmount) FROM purchase_table WHERE  date BETWEEN :start AND :end")
+    fun getTotalMilkPurchaseBetween(start: LocalDate, end : LocalDate): Flow<Double?>
 
     @Query("SELECT SUM(milkPrice) FROM purchase_table WHERE date BETWEEN :start AND :end")
     fun getTotalPurchasesBetween(start: LocalDate, end: LocalDate): Flow<Double?>

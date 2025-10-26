@@ -1,33 +1,47 @@
 package com.miassolutions.milkledger.data.repository
 
 
-import com.miassolutions.milkledger.data.local.daos.ExpensesDao
-import com.miassolutions.milkledger.data.local.daos.PurchaseDao
-import com.miassolutions.milkledger.data.local.daos.SalesDao
+import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import java.time.LocalDate
 
 @Singleton
 class AnalyticsRepository @Inject constructor(
-    private val salesDao: SalesDao,
-    private val purchaseDao: PurchaseDao,
-    private val expensesDao: ExpensesDao
+
+    private val reportsDao : ReportsDao
 ) {
 
-    suspend fun getSalesTotal(start: LocalDate, end: LocalDate): Double =
-        salesDao.getSalesTotalBetween(start, end) ?: 0.0
-
-    suspend fun getPurchasesTotal(start: LocalDate, end: LocalDate): Double =
-        purchaseDao.getPurchasesTotalBetween(start, end) ?: 0.0
-
-    suspend fun getExpensesTotal(start: LocalDate, end: LocalDate): Double =
-        expensesDao.getExpensesTotalBetween(start, end) ?: 0.0
-
-    suspend fun getProfit(start: LocalDate, end: LocalDate): Double {
-        val sales = getSalesTotal(start, end)
-        val purchases = getPurchasesTotal(start, end)
-        val expenses = getExpensesTotal(start, end)
-        return sales - (purchases + expenses)
+    fun getTotalMilkPurchaseBetween(start: LocalDate, end: LocalDate) : Flow<Double?> {
+      return  reportsDao.getTotalMilkPurchaseBetween(start, end)
     }
+
+    fun getTotalMilkSoldBetween(start: LocalDate, end: LocalDate) : Flow<Double?> =
+        reportsDao.getTotalMilkSoldBetween(start, end)
+
+
+
+
+    fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getTotalSalesBetween(start, end)
+
+    fun getTotalPurchasesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getTotalPurchasesBetween(start, end)
+
+    fun getTotalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getTotalExpensesBetween(start, end)
+
+    fun getProfitBetween(start: LocalDate, end: LocalDate): Flow<Double> =
+        combine(
+            reportsDao.getTotalSalesBetween(start, end),
+            reportsDao.getTotalPurchasesBetween(start, end),
+            reportsDao.getTotalExpensesBetween(start, end)
+        ) { sales, purchases, expenses ->
+            val totalSales = sales ?: 0.0
+            val totalPurchases = purchases ?: 0.0
+            val totalExpenses = expenses ?: 0.0
+            totalSales - (totalPurchases + totalExpenses)
+        }
 }
