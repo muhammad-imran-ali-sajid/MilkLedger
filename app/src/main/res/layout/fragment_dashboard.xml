@@ -10,10 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-
         <!-- ====== DASHBOARD SHORTCUTS ====== -->
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,8 +32,8 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     app:cardCornerRadius="8dp">
 
@@ -71,17 +68,17 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     app:cardCornerRadius="8dp">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        app:tint="@color/green_700"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_sales" />
+                        android:src="@drawable/ic_sales"
+                        app:tint="@color/green_700" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
@@ -107,8 +104,8 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     app:cardCornerRadius="8dp">
 
@@ -116,8 +113,8 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="center"
-                        app:tint="@color/orange_200"
-                        android:src="@drawable/ic_expense" />
+                        android:src="@drawable/ic_expense"
+                        app:tint="@color/orange_200" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
@@ -143,17 +140,17 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     app:cardCornerRadius="8dp">
 
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
-                        app:tint="@color/teal_700"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_stats" />
+                        android:src="@drawable/ic_stats"
+                        app:tint="@color/teal_700" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <TextView
@@ -179,17 +176,6 @@
             android:orientation="vertical">
 
             <!-- 📊 Header -->
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:padding="12dp"
-                android:text="Milk Ledger Analytics"
-                android:textAppearance="?attr/textAppearanceTitleLargeEmphasized"
-
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
 
             <!-- ====== FINANCIAL OVERVIEW SECTION ====== -->
             <TextView
@@ -198,7 +184,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginVertical="16dp"
-                android:text="26-10-2025"
+                android:text="Date: 26-10-2025"
                 android:textColor="?attr/colorOnSurface"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -210,6 +196,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="16dp"
+                android:paddingHorizontal="4dp"
                 android:text="Financial Overview"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -388,6 +375,7 @@
                 android:paddingVertical="16dp"
                 android:text="Milk Overview"
                 android:textSize="16sp"
+                android:paddingHorizontal="4dp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -511,7 +499,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Custom" />
+                    android:text="All" />
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
 

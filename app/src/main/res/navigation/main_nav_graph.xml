@@ -88,9 +88,9 @@
         android:label="DriveBackupFragment" />
     <fragment
         android:id="@+id/dashboardFragment"
-        tools:layout="@layout/fragment_dashboard"
         android:name="com.miassolutions.milkledger.presentation.dashboard.DashboardFragment"
-        android:label="DashboardFragment" >
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_dashboard">
         <action
             android:id="@+id/action_dashboardFragment_to_purchaseFragment"
             app:destination="@id/purchaseFragment" />

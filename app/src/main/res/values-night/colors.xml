@@ -1,40 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Primary Brand Color (A strong, accessible blue) -->
+    <color name="milk_primary">#2A4D69</color>
+    <!-- Text/Icons ON Primary (Should always be white for contrast) -->
+    <color name="milk_on_primary">#FFFFFF</color>
 
-    <!--
- Resource Qualifier: values-night
- These colors will OVERRIDE the corresponding names in res/values/colors.xml
- when the device is in Dark Mode (Night Theme).
- -->
+    <!-- Secondary Accent Color (A neutral green for secondary actions or completion status) -->
+    <color name="milk_secondary">#4D8B31</color>
+    <!-- Text/Icons ON Secondary -->
+    <color name="milk_on_secondary">#FFFFFF</color>
 
-    <!--
-    NOTE: In Dark Theme, the primary and secondary colors should be lighter/brighter
-    to ensure they stand out against the dark background.
-    -->
+    <!-- UI Background Surfaces (Near-white for light theme) -->
+    <color name="milk_surface">#F5F5F5</color>
+    <color name="milk_background">#FFFFFF</color>
+    <!-- Text/Icons ON Surfaces (Near-black for contrast) -->
+    <color name="milk_on_surface">#1F1F1F</color>
 
-    <!-- Primary Brand Color Override (Light Blue for contrast on dark surface) -->
+    <color name="teal_700">#00796B</color>
+    <color name="teal_200">#80CBC4</color>
+    <color name="orange_700">#E65100</color>
+    <color name="orange_200">#FFCC80</color>
+    <color name="blue_700">#1976D2</color>
+    <color name="blue_200">#90CAF9</color>
+    <color name="green_700">#2E7D32</color>
+    <color name="green_200">#A5D6A7</color>
 
-    <color name="milk_primary">#AECFEF</color>
 
-    <!-- Text/Icons ON Primary (Dark text/icons on the light primary) -->
 
-    <color name="milk_on_primary">#000000</color>
 
-    <!-- Secondary Accent Color Override (Light Green for contrast on dark surface) -->
+    <!-- Brand -->
+    <color name="md_theme_primary">#0288D1</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_secondary">#FFA000</color>
+    <color name="md_theme_onSecondary">#000000</color>
 
-    <color name="milk_secondary">#C3E6B2</color>
+    <!-- Neutral surfaces -->
+    <color name="md_theme_background">#FFFFFF</color>
+    <color name="md_theme_onBackground">#212121</color>
+    <color name="md_theme_surface">#F5F5F5</color>
+    <color name="md_theme_onSurface">#212121</color>
 
-    <!-- Text/Icons ON Secondary (Dark text/icons on the light secondary) -->
+    <color name="icon_color">#000000</color>
 
-    <color name="milk_on_secondary">#000000</color>
+    <!-- Status -->
+    <color name="success">#4CAF50</color>
+    <color name="error">#F44336</color>
+    <color name="warning">#FF9800</color>
+    <color name="info">#2196F3</color>
 
-    <!-- UI Background Surfaces (Dark Theme values using the simplified names) -->
 
-    <color name="milk_surface">#121212</color>
-    <color name="milk_background">#151515</color>
+    <!--    App specific colors-->
+    <color name="sale_color">#4CAF50</color>
+    <color name="purchase_color">#F44336</color>
+    <color name="title_color">#000</color>
 
-    <!-- Text/Icons ON Surfaces (Light gray for contrast) -->
 
-    <color name="milk_on_surface">#EAEAEA</color>
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
+    <color name="transparent">#00000000</color>
+    <color name="light_black">#ccc</color>
+    <color name="grey">#eeeeee</color>
+
+
+    <color name="milk_cream">#FFF8E1</color>
+    <color name="milk_light_blue">#81D4FA</color>
+    <color name="milk_soft_green">#A5D6A7</color>
+    <color name="milk_pale_yellow">#FFF59D</color>
+    <color name="milk_light_coral">#FF8A80</color>
+    <color name="milk_light_brown">#BCAAA4</color>
+    <color name="milk_soft_purple">#CE93D8</color>
+
+
+    <color name="edittext_bg_tint">#FFFFFF</color>       <!-- EditText white -->
+    <color name="textview_bg_tint">#FFF3E0</color>       <!-- Light orange-ish for TextViews -->
+    <color name="textview_text_color">#000000</color>
+
+
+    <!-- Divider -->
+    <color name="divider">#E0E0E0</color>
+
+<!--    &lt;!&ndash;-->
+<!-- Resource Qualifier: values-night-->
+<!-- These colors will OVERRIDE the corresponding names in res/values/colors.xml-->
+<!-- when the device is in Dark Mode (Night Theme).-->
+<!-- &ndash;&gt;-->
+
+<!--    &lt;!&ndash;-->
+<!--    NOTE: In Dark Theme, the primary and secondary colors should be lighter/brighter-->
+<!--    to ensure they stand out against the dark background.-->
+<!--    &ndash;&gt;-->
+
+<!--    &lt;!&ndash; Primary Brand Color Override (Light Blue for contrast on dark surface) &ndash;&gt;-->
+
+<!--    <color name="milk_primary">#AECFEF</color>-->
+
+<!--    &lt;!&ndash; Text/Icons ON Primary (Dark text/icons on the light primary) &ndash;&gt;-->
+
+<!--    <color name="milk_on_primary">#000000</color>-->
+
+<!--    &lt;!&ndash; Secondary Accent Color Override (Light Green for contrast on dark surface) &ndash;&gt;-->
+
+<!--    <color name="milk_secondary">#C3E6B2</color>-->
+
+<!--    &lt;!&ndash; Text/Icons ON Secondary (Dark text/icons on the light secondary) &ndash;&gt;-->
+
+<!--    <color name="milk_on_secondary">#000000</color>-->
+
+<!--    &lt;!&ndash; UI Background Surfaces (Dark Theme values using the simplified names) &ndash;&gt;-->
+
+<!--    <color name="milk_surface">#121212</color>-->
+<!--    <color name="milk_background">#151515</color>-->
+
+<!--    &lt;!&ndash; Text/Icons ON Surfaces (Light gray for contrast) &ndash;&gt;-->
+
+<!--    <color name="milk_on_surface">#EAEAEA</color>-->
 </resources>

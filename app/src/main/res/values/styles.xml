@@ -20,7 +20,6 @@
     </style>
 
 
-
     <style name="TitleText" parent="TextAppearance.MilkLedger.BodyLarge">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -105,7 +104,6 @@
     </style>
 
 
-
     <style name="dashboard_element_style">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
@@ -134,7 +132,6 @@
         <item name="strokeColor">@color/orange_700</item>
         <item name="strokeWidth">2dp</item>
     </style>
-
 
 
     <style name="SaleCard" parent="BaseCardStyle">
@@ -169,13 +166,13 @@
 
     <style name="CompactToggleButton" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">0dp</item>
+        <item name="android:minHeight">48dp</item>
         <item name="android:paddingHorizontal">4dp</item>
         <item name="strokeWidth">2dp</item>
-        <item name="strokeColor">@color/milk_primary</item>
+        <item name="strokeColor">@color/teal_700</item>
         <item name="android:paddingVertical">4dp</item>
         <item name="android:textSize">12sp</item>
-        <item name="cornerRadius">6dp</item>
+        <item name="cornerRadius">12dp</item>
     </style>
 
 
