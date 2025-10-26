@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,18 +23,17 @@ class DashboardFragment :
         setToolbarTitle(getString(R.string.app_name)) // or "ڈیش بورڈ" in Urdu
 
         // Example of setting today's date
-        val todayDate = LocalDate.now().toString()
-        binding.tvTodayDate.text = todayDate
+        val todayDate = LocalDate.now()
 
 
     }
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
-            binding.tvTodayDate.text = state.date.toString()
-            binding.tvTotalSales.text = "Rs. ${state.totalSales.toRoundedStr("%.0f")}"
-            binding.tvTotalExpense.text = "Rs. ${state.totalPurchases.toRoundedStr("%.0f")}"
-            binding.tvProfit.text = "Rs. ${state.profit.toRoundedStr("%.0f")}"
+            binding.tvTodayDate.text = "Today: ${state.date.formattedDate()}"
+            binding.tvTotalSales.text = "Rs. ${state.totalSales.toRoundedStr()}"
+            binding.tvTotalExpense.text = "Rs. ${state.totalPurchases.toRoundedStr()}"
+            binding.tvTotalExpense.text = "Rs. ${state.totalExpenses.toRoundedStr()}"
         }
     }
 

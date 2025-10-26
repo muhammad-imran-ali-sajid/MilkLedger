@@ -29,7 +29,8 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:titleCentered="true"
                 tools:title="Milk App"
-                app:navigationIconTint="@color/white"
+                style="@style/Widget.Material3.CollapsingToolbar.Large"
+                app:navigationIconTint="?attr/colorOnPrimary"
                 app:titleTextAppearance="@style/Text.H1"
                  />
 

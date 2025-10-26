@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.presentation.activities
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         windowsInsets()
 
         setSupportActionBar(binding.toolbar)
+
 
         val navHost =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
