@@ -205,7 +205,7 @@ fun Fragment.showExpenseDatePicker(
 
     // 2. Convert LocalDate to a UTC timestamp for pre-selection
     val initialTimestamp = initialDate
-        .atStartOfDay(ZoneId.systemDefault())
+        .atStartOfDay(ZoneId.of("UTC"))
         .toInstant()
         .toEpochMilli()
 
