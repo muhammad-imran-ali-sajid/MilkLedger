@@ -9,6 +9,6 @@
         android:color="@color/milk_primary"
         android:dashWidth="10dp"
         android:dashGap="5dp" />
-    <corners android:radius="12dp" />
+
 
 </shape>
