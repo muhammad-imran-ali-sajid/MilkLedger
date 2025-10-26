@@ -28,8 +28,8 @@
 
             <ImageView
                 android:id="@+id/iv_arrow"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:src="@drawable/ic_arrow"
                 android:rotation="90"
                 android:padding="8dp"

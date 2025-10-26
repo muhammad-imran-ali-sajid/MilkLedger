@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
+import com.miassolutions.milkledger.databinding.LayoutCustomerDetailSummaryBinding
 import com.miassolutions.milkledger.presentation.supplier.supplierdetail.toRecordList
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -46,6 +47,17 @@ class CustomerDetailFragment :
 
             // 2. Update the UI text label with the current state value
             binding.tvSelectedDate.text = currentSelectedDateRange
+
+            with(state.summary) {
+                Log.d("CustomerDetail", "setupObservers: $totalMilk -$balance")
+                customerSummary(
+                    totalVolume = totalMilk,
+                    totalDeduction = totalDeduction,
+                    totalPrice = totalPrice,
+                    totalPaid = paidAmount,
+                    balance = balance.toString()
+                )
+            }
 
 
             adapter.submitList(state.filteredList)
@@ -160,6 +172,39 @@ class CustomerDetailFragment :
 
             else -> "All Records"
         }
+    }
+
+    private fun customerSummary(
+        totalVolume: String,
+        totalDeduction: String,
+        totalPrice: String,
+        totalPaid: String,
+        balance: String
+    ) {
+        val start = viewModel.uiState.value.selectedStartDate
+        val end = viewModel.uiState.value.selectedEndDate
+
+        binding.customerSummary.setTitle("Customer Summary")
+
+        binding.apply {
+            val summaryBinding =
+                LayoutCustomerDetailSummaryBinding.inflate(layoutInflater, root, false)
+            customerSummary.setContent(summaryBinding.root)
+
+            summaryBinding.apply {
+
+                if (start != null && end != null) {
+                    tvDateRangeValue.text = getFormattedDateRange(start, end)
+                }
+
+                tvTotalMilkValue.text = totalVolume
+                tvDeductionValue.text = totalDeduction
+                tvTotalPriceValue.text = totalPrice
+                tvPaymentValue.text = totalPaid
+                tvBalanceValue.text = balance
+            }
+        }
+
     }
 
 //    private fun setupDateRangeToggle() = with(binding) {
