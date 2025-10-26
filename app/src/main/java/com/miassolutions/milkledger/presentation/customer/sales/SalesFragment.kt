@@ -1,30 +1,18 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
 import android.util.Log
-import android.view.Menu
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
-import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
-import com.miassolutions.milkledger.presentation.expenses.ExpensesUiEvent
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
-import java.util.Calendar
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::inflate) {

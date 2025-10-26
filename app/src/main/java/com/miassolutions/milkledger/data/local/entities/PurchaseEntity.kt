@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Entity(
-    tableName = "purchase_entry_table",
+    tableName = "purchase_table",
     foreignKeys = [
         ForeignKey(
             entity = SupplierEntity::class,
@@ -19,7 +19,7 @@ import java.util.UUID
     ],
     indices = [Index("supplierId"), Index("date")]
 )
-data class PurchaseEntryEntity(
+data class PurchaseEntity(
     @PrimaryKey val purchaseId: String = UUID.randomUUID().toString(),
     val supplierId: String,
     val date: LocalDate = LocalDate.now(),

@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.presentation.supplier.purchase
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
-import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
+import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.repositories.PurchaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -30,7 +30,7 @@ class PurchaseViewModel @Inject constructor(
         observeForDate(_uiState.value.currentDate)
     }
 
-    fun updatePurchaseManually(updated: PurchaseEntryEntity) {
+    fun updatePurchaseManually(updated: PurchaseEntity) {
         viewModelScope.launch {
             // 🧮 Recalculate derived values before saving
             val newTs = MilkCalculationUtils.calculateTS(
@@ -82,7 +82,7 @@ class PurchaseViewModel @Inject constructor(
             }
 
             missingSuppliers.forEach { supplier ->
-                val newEntry = PurchaseEntryEntity(
+                val newEntry = PurchaseEntity(
                     supplierId = supplier.supplierId,
                     date = date,
                     milkAmount = 0.0,

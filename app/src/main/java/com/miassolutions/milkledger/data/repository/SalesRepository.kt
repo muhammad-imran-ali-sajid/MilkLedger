@@ -1,8 +1,8 @@
 package com.miassolutions.milkledger.data.repositories
 
-import com.miassolutions.milkledger.data.local.daos.SalesEntryDao
+import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -11,38 +11,38 @@ import javax.inject.Singleton
 
 @Singleton
 class SalesRepository @Inject constructor(
-    private val salesEntryDao: SalesEntryDao
+    private val salesDao: SalesDao
 ) {
 
     // ✅ One-time fetch for exporting or single-use operations
     suspend fun getSalesByDateOnce(date: LocalDate): List<SaleWithCustomer> =
-        salesEntryDao.getSalesByDateOnce(date)
+        salesDao.getSalesByDateOnce(date)
 
     fun getAllCustomers() : Flow<List<CustomerEntity>> =
-        salesEntryDao.getAllCustomers()
+        salesDao.getAllCustomers()
 
 
     // 🧾 All sales for reports or admin
     fun getAllSalesWithCustomers(): Flow<List<SaleWithCustomer>> =
-        salesEntryDao.getAllSalesWithCustomers()
+        salesDao.getAllSalesWithCustomers()
 
     // 📅 For current date screen (daily ledger)
     fun getSalesByDate(date: LocalDate): Flow<List<SaleWithCustomer>> =
-        salesEntryDao.getSalesByDate(date)
+        salesDao.getSalesByDate(date)
 
     // 👤 For customer ledger details
     fun getSalesForCustomer(customerId: String): Flow<List<SaleWithCustomer>> =
-        salesEntryDao.getSalesForCustomer(customerId)
+        salesDao.getSalesForCustomer(customerId)
 
     // 🟢 Insert new sale (when a customer is first added today)
-    suspend fun insertSale(sale: SalesEntryEntity) =
-        salesEntryDao.insertSale(sale)
+    suspend fun insertSale(sale: SalesEntity) =
+        salesDao.insertSale(sale)
 
     // 🟡 Update live changes (fat, lr, volume, notes, etc.)
-    suspend fun updateSale(sale: SalesEntryEntity) =
-        salesEntryDao.updateSale(sale)
+    suspend fun updateSale(sale: SalesEntity) =
+        salesDao.updateSale(sale)
 
     // 🔴 Delete sale entry
     suspend fun deleteSale(saleId: String) =
-        salesEntryDao.deleteSale(saleId)
+        salesDao.deleteSale(saleId)
 }

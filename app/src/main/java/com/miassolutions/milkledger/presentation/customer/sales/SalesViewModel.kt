@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.presentation.customer.sales
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
-import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.repositories.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -38,7 +38,7 @@ class SalesViewModel @Inject constructor(
     // ----------------------------------------------------------
     // 🧮 Update Sale Entry Manually
     // ----------------------------------------------------------
-    fun updateSaleManually(updated: SalesEntryEntity) {
+    fun updateSaleManually(updated: SalesEntity) {
         viewModelScope.launch {
             // Recalculate price based on milk parameters
             val newPrice = MilkCalculationUtils.calculateCustomerPrice(
@@ -78,7 +78,7 @@ class SalesViewModel @Inject constructor(
             }
 
             missingCustomers.forEach { customer ->
-                val newSale = SalesEntryEntity(
+                val newSale = SalesEntity(
                     customerId = customer.customerId,
                     date = date,
                     volume = 0.0,

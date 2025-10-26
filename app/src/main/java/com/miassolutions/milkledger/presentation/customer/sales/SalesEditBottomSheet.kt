@@ -11,7 +11,7 @@ import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
 import kotlin.math.roundToInt
@@ -19,7 +19,7 @@ import kotlin.math.roundToInt
 
 class SalesEditBottomSheet(
     private val entry: SaleWithCustomer,
-    private val onSave: (SalesEntryEntity) -> Unit
+    private val onSave: (SalesEntity) -> Unit
 ) : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetEditSalesBinding? = null

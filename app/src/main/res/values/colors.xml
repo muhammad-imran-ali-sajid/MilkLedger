@@ -17,6 +17,14 @@
     <!-- Text/Icons ON Surfaces (Near-black for contrast) -->
     <color name="milk_on_surface">#1F1F1F</color>
 
+    <color name="teal_700">#00796B</color>
+    <color name="teal_200">#80CBC4</color>
+    <color name="orange_700">#E65100</color>
+    <color name="orange_200">#FFCC80</color>
+    <color name="blue_700">#1976D2</color>
+    <color name="blue_200">#90CAF9</color>
+    <color name="green_700">#2E7D32</color>
+    <color name="green_200">#A5D6A7</color>
 
 
 

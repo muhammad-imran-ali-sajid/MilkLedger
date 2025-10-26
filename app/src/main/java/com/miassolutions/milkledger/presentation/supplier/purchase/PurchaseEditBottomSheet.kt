@@ -14,14 +14,14 @@ import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
+import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding
 import kotlin.math.roundToInt
 
 class PurchaseEditBottomSheet(
     private val entry: PurchaseWithSupplier,
-    private val onSave: (PurchaseEntryEntity) -> Unit
+    private val onSave: (PurchaseEntity) -> Unit
 ) : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetEditPurchaseBinding? = null

@@ -3,10 +3,10 @@ package com.miassolutions.milkledger.data.local.relations
 import androidx.room.Embedded
 import androidx.room.Relation
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
 
 data class SaleWithCustomer(
-    @Embedded val sale: SalesEntryEntity,
+    @Embedded val sale: SalesEntity,
     @Relation(
         parentColumn = "customerId",
         entityColumn = "customerId"

@@ -29,4 +29,7 @@ interface ExpensesDao {
     @Query("SELECT EXISTS(SELECT 1 FROM expense_table WHERE expenseTitle = :title AND date = :date LIMIT 1)")
     suspend fun expenseExistsForTitleAndDate(title: String, date: LocalDate): Boolean
 
+    @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date BETWEEN :start AND :end")
+    suspend fun getExpensesTotalBetween(start: LocalDate, end: LocalDate): Double?
+
 }

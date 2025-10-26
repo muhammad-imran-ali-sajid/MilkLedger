@@ -7,11 +7,11 @@ import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.StaticDataCallback
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
-import com.miassolutions.milkledger.data.local.daos.PurchaseEntryDao
+import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
-import com.miassolutions.milkledger.data.local.daos.SalesEntryDao
+import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
-import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.data.repository.AnalyticsRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,11 +45,11 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun providePurchaseDao(db: AppDatabase): PurchaseEntryDao = db.purchaseEntryDao()
+    fun providePurchaseDao(db: AppDatabase): PurchaseDao = db.purchaseDao()
 
     @Singleton
     @Provides
-    fun provideSalesDao(db: AppDatabase): SalesEntryDao = db.salesEntryDao()
+    fun provideSalesDao(db: AppDatabase): SalesDao = db.salesDao()
 
     @Singleton
     @Provides
@@ -58,4 +58,7 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun providesReportsDao(db: AppDatabase): ReportsDao = db.reportsDao()
+
+
+
 }

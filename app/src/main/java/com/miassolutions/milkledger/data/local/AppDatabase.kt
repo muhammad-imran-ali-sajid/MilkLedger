@@ -5,22 +5,22 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
-import com.miassolutions.milkledger.data.local.daos.PurchaseEntryDao
+import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
-import com.miassolutions.milkledger.data.local.daos.SalesEntryDao
+import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.data.local.entities.PurchaseEntryEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
+import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 
 @Database(
     entities = [
         CustomerEntity::class,
         SupplierEntity::class,
-        PurchaseEntryEntity::class,
-        SalesEntryEntity::class,
+        PurchaseEntity::class,
+        SalesEntity::class,
         ExpensesEntity::class
     ],
     version = 1,
@@ -31,8 +31,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun customerDao(): CustomerDao
     abstract fun supplierDao(): SupplierDao
-    abstract fun purchaseEntryDao(): PurchaseEntryDao
-    abstract fun salesEntryDao(): SalesEntryDao
+    abstract fun purchaseDao(): PurchaseDao
+    abstract fun salesDao(): SalesDao
     abstract fun expensesDao(): ExpensesDao
     abstract fun reportsDao(): ReportsDao
 }

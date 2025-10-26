@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Entity(
-    tableName = "sales_entry_table",
+    tableName = "sales_table",
     foreignKeys = [
         ForeignKey(
             entity = CustomerEntity::class,
@@ -19,7 +19,7 @@ import java.util.UUID
     ],
     indices = [Index("customerId"), Index("date")]
 )
-data class SalesEntryEntity(
+data class SalesEntity(
     @PrimaryKey val saleId: String = UUID.randomUUID().toString(),
     val customerId: String,
     val date: LocalDate = LocalDate.now(),   // ledger date
