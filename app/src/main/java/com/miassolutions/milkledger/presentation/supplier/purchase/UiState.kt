@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
+import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import java.time.LocalDate
 
 data class PurchaseUiState(
@@ -20,4 +21,5 @@ data class PurchaseUiState(
 
 sealed class PurchaseUiEvent {
     data class OnSupplierSelected(val supplierId: String) : PurchaseUiEvent()
+    data class SelectDate(val date: LocalDate) : PurchaseUiEvent()
 }

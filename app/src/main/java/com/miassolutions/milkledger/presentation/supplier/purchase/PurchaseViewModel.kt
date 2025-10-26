@@ -121,7 +121,7 @@ class PurchaseViewModel @Inject constructor(
 
                 val avgTS = if (validTsEntries.isNotEmpty()) {
                     val totalTsMilk =
-                        validTsEntries.sumOf { it.purchase.ts  }
+                        validTsEntries.sumOf { it.purchase.ts }
                     totalTsMilk / validTsEntries.count()
                 } else 0.0
                 val grandTotal = sortedPurchases.sumOf { it.purchase.milkPrice }
@@ -152,6 +152,9 @@ class PurchaseViewModel @Inject constructor(
             is PurchaseUiEvent.OnSupplierSelected ->
                 _uiState.update { it.copy(navigateToLedgerForSupplierId = event.supplierId) }
 
+            is PurchaseUiEvent.SelectDate -> {
+                _uiState.update { it.copy(currentDate = event.date) }
+            }
         }
     }
 

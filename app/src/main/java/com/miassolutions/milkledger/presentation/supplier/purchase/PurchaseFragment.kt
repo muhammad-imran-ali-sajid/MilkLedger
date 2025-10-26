@@ -15,10 +15,12 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.util.isToday
+import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
+import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -43,9 +45,18 @@ class PurchaseFragment :
 
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
-            pickSingleDate(
+            // Assume you fetch the authorization status dynamically
+            val isUserAuthorized = false // Replace with actual auth check
+
+            showExpenseDatePicker(
+
+                isAuthorized = isUserAuthorized,
                 initialDate = currentDate,
-                onPicked = { viewModel.onDateSelected(it) }
+                // The selectedDate (LocalDate) is available here!
+                onPicked = { selectedDate: LocalDate ->
+                    // This is where you pass the result to your ViewModel
+                    viewModel.onEvent(PurchaseUiEvent.SelectDate(selectedDate))
+                }
             )
         }
 
