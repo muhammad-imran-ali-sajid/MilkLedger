@@ -45,6 +45,6 @@ interface PurchaseDao {
     @Query("DELETE FROM purchase_table WHERE purchaseId = :id")
     suspend fun deletePurchase(id: String)
 
-    @Query("SELECT SUM(milkPrice * milkAmount) FROM purchase_table WHERE date BETWEEN :start AND :end")
+    @Query("SELECT SUM(milkPrice) FROM purchase_table WHERE date BETWEEN :start AND :end")
     suspend fun getPurchasesTotalBetween(start: LocalDate, end: LocalDate): Double?
 }

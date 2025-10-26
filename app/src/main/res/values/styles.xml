@@ -164,4 +164,16 @@
     </style>
 
 
+    <style name="CompactToggleButton" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingHorizontal">4dp</item>
+        <item name="strokeWidth">2dp</item>
+        <item name="strokeColor">@color/milk_primary</item>
+        <item name="android:paddingVertical">4dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="cornerRadius">6dp</item>
+    </style>
+
+
 </resources>

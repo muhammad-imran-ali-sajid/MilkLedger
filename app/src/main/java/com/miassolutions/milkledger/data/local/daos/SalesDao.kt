@@ -54,6 +54,6 @@ interface SalesDao {
     suspend fun getSalesByDateOnce(date: LocalDate): List<SaleWithCustomer>
 
 
-    @Query("SELECT SUM(price * netMilk) FROM sales_table WHERE date BETWEEN :start AND :end")
+    @Query("SELECT SUM(price) FROM sales_table WHERE date BETWEEN :start AND :end")
     suspend fun getSalesTotalBetween(start: LocalDate, end: LocalDate): Double?
 }
