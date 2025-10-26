@@ -13,7 +13,6 @@ import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
 import com.miassolutions.milkledger.databinding.LayoutCustomerDetailSummaryBinding
-import com.miassolutions.milkledger.presentation.supplier.supplierdetail.toRecordList
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -29,6 +28,7 @@ class CustomerDetailFragment :
     override fun setupViews() {
         viewModel.onSelectedCustomerId(args.customerId, args.customerName)
         setupRecyclerView()
+        setupCustomRangeCalendar()
 
     }
 
@@ -51,6 +51,7 @@ class CustomerDetailFragment :
             with(state.summary) {
                 Log.d("CustomerDetail", "setupObservers: $totalMilk -$balance")
                 customerSummary(
+                    summaryPeriod = currentSelectedDateRange,
                     totalVolume = totalMilk,
                     totalDeduction = totalDeduction,
                     totalPrice = totalPrice,
@@ -175,14 +176,14 @@ class CustomerDetailFragment :
     }
 
     private fun customerSummary(
+        summaryPeriod: String,
         totalVolume: String,
         totalDeduction: String,
         totalPrice: String,
         totalPaid: String,
         balance: String
     ) {
-        val start = viewModel.uiState.value.selectedStartDate
-        val end = viewModel.uiState.value.selectedEndDate
+
 
         binding.customerSummary.setTitle("Customer Summary")
 
@@ -193,9 +194,9 @@ class CustomerDetailFragment :
 
             summaryBinding.apply {
 
-                if (start != null && end != null) {
-                    tvDateRangeValue.text = getFormattedDateRange(start, end)
-                }
+
+                tvDateRangeValue.text = summaryPeriod
+
 
                 tvTotalMilkValue.text = totalVolume
                 tvDeductionValue.text = totalDeduction
