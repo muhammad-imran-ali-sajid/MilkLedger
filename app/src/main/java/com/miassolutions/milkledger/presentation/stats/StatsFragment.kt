@@ -24,17 +24,7 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
         setupToggleGroup()
         collectUiState()
 
-        milkOverViewCard(
-            milkPurchase = "123",
-            milkSold = "123"
-        )
 
-        financialOverViewCard(
-            purchaseAmount = "123",
-            saleAmount = "123",
-            expenseAmount = "123",
-            netProfit = "123"
-        )
 
         // Load default data
         viewModel.loadCustomData(LocalDate.now(), LocalDate.now())

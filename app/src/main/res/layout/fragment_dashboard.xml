@@ -183,6 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:background="@drawable/bg_edittext_readable"
                 android:layout_marginVertical="16dp"
                 android:text="Date: 26-10-2025"
                 android:textColor="?attr/colorOnSurface"
@@ -195,10 +196,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingVertical="16dp"
                 android:paddingHorizontal="4dp"
+                android:paddingVertical="16dp"
                 android:text="Financial Overview"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
 
@@ -233,7 +234,7 @@
                             android:layout_height="wrap_content"
                             android:text="Purchases"
                             android:textColor="@color/orange_700"
-                            android:textSize="12sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -270,7 +271,7 @@
                             android:layout_height="wrap_content"
                             android:text="Sales"
                             android:textColor="@color/teal_700"
-                            android:textSize="12sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -315,7 +316,7 @@
                             android:layout_height="wrap_content"
                             android:text="Expense"
                             android:textColor="@color/orange_700"
-                            android:textSize="12sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -352,7 +353,7 @@
                             android:layout_height="wrap_content"
                             android:text="Profit"
                             android:textColor="@color/blue_700"
-                            android:textSize="12sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -372,10 +373,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingHorizontal="4dp"
                 android:paddingVertical="16dp"
                 android:text="Milk Overview"
-                android:textSize="16sp"
-                android:paddingHorizontal="4dp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -406,7 +407,7 @@
                             android:layout_height="wrap_content"
                             android:text="Milk Purchased"
                             android:textColor="@color/orange_700"
-                            android:textSize="12sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -442,7 +443,7 @@
                             android:layout_height="wrap_content"
                             android:text="Milk Sold"
                             android:textColor="@color/green_700"
-                            android:textSize="12sp"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
