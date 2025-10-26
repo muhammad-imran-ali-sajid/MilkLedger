@@ -27,6 +27,7 @@ class PurchaseViewModel @Inject constructor(
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
 
     init {
+        // Start observing for the initial date from the UI state
         observeForDate(_uiState.value.currentDate)
     }
 
@@ -59,8 +60,17 @@ class PurchaseViewModel @Inject constructor(
     }
 
 
+    /**
+     * FIX 1: Ensure the UI state is updated immediately when the date changes,
+     * and THEN call observeForDate. This keeps the UI state and the observation
+     * logic synchronized.
+     */
     fun onDateSelected(date: LocalDate) {
         if (date != _uiState.value.currentDate) {
+            // Update the state first
+            _uiState.update { it.copy(currentDate = date) }
+
+            // Now start the new observation
             observeForDate(date)
         }
     }
@@ -75,10 +85,50 @@ class PurchaseViewModel @Inject constructor(
         purchasesJob?.cancel()
         purchasesJob = viewModelScope.launch {
             val sortedSuppliers = repository.getAllSuppliers().first()
-            val existingPurchases = repository.getPurchasesByDateOnce(date)
+            val existingPurchasesWithSupplier = repository.getPurchasesByDateOnce(date)
 
+            // Map suppliers for easy lookup of the current rate
+            val supplierRateMap = sortedSuppliers.associateBy { it.supplierId }
+
+            // 1. Rate update logic (Only for today, previously added for rate change fix)
+            if (date == LocalDate.now()) {
+                val updates = existingPurchasesWithSupplier.mapNotNull { purchaseWithSupplier ->
+                    val supplier = supplierRateMap[purchaseWithSupplier.purchase.supplierId]
+                    val purchaseEntity = purchaseWithSupplier.purchase
+
+                    if (supplier != null && purchaseEntity.rateUsed != supplier.supplierRate) {
+
+                        val newTs = MilkCalculationUtils.calculateTS(
+                            fat = purchaseEntity.fat,
+                            lr = purchaseEntity.lr,
+                            volume = purchaseEntity.milkAmount
+                        )
+
+                        val newPrice = MilkCalculationUtils.calculatePrice(
+                            rate = supplier.supplierRate,
+                            volume = purchaseEntity.milkAmount,
+                            fat = purchaseEntity.fat,
+                            lr = purchaseEntity.lr
+                        )
+
+                        val newBalance = purchaseEntity.payment - newPrice
+
+                        purchaseEntity.copy(
+                            rateUsed = supplier.supplierRate,
+                            ts = newTs,
+                            milkPrice = newPrice,
+                            balance = newBalance
+                        )
+                    } else null
+                }
+
+                updates.forEach { repository.updatePurchase(it) }
+            }
+
+
+            // 2. Insert missing entries (original logic)
             val missingSuppliers = sortedSuppliers.filterNot { supplier ->
-                existingPurchases.any { it.supplier.supplierId == supplier.supplierId }
+                existingPurchasesWithSupplier.any { it.purchase.supplierId == supplier.supplierId }
             }
 
             missingSuppliers.forEach { supplier ->
@@ -97,6 +147,11 @@ class PurchaseViewModel @Inject constructor(
                 repository.insertPurchase(newEntry)
             }
 
+            /**
+             * FIX 2: Check the date parameter passed to getPurchasesByDate(date)
+             * in your PurchaseRepository implementation to ensure it is using the 'date'
+             * parameter and not a static or cached date.
+             */
             repository.getPurchasesByDate(date).collectLatest { purchases ->
                 val sortedPurchases = purchases.sortedBy { it.supplier.sortOrder }
                 val validTsEntries = sortedPurchases.filter { it.purchase.ts > 0.0 }
@@ -128,6 +183,7 @@ class PurchaseViewModel @Inject constructor(
                 val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
 
                 _uiState.update {
+                    // Update all calculated values and ensure currentDate is correct
                     it.copy(
                         currentDate = date,
                         purchasesForDate = sortedPurchases,
@@ -152,9 +208,8 @@ class PurchaseViewModel @Inject constructor(
             is PurchaseUiEvent.OnSupplierSelected ->
                 _uiState.update { it.copy(navigateToLedgerForSupplierId = event.supplierId) }
 
-            is PurchaseUiEvent.SelectDate -> {
-                _uiState.update { it.copy(currentDate = event.date) }
-            }
+            // Removed direct date update here as it's now handled in onDateSelected
+            is PurchaseUiEvent.SelectDate -> onDateSelected(event.date)
         }
     }
 

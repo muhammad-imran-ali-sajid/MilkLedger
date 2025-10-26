@@ -46,7 +46,7 @@ class PurchaseFragment :
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
             // Assume you fetch the authorization status dynamically
-            val isUserAuthorized = false // Replace with actual auth check
+            val isUserAuthorized = true // Replace with actual auth check
 
             showExpenseDatePicker(
 

@@ -162,7 +162,8 @@ class DatePickerLogic {
         // 2. Set the custom DateValidator that controls past date selection
         val validator = ConditionalPastDateValidator(isAuthorized, today)
 
-        constraintsBuilder.setValidator(validator)
+        constraintsBuilder.setFirstDayOfWeek(Calendar.MONDAY)
+            .setValidator(validator)
 
         // For authorized users, we allow selection of dates far in the past.
         // If not authorized, the validator handles restricting to today.
@@ -189,7 +190,6 @@ class DatePickerLogic {
  * This function handles the creation and display of the Material Date Picker
  * and the conversion of the selected timestamp into a LocalDate.
  *
- * @param activity The host FragmentActivity (or Fragment) to get the FragmentManager.
  * @param isAuthorized The user's authorization status (passed to the constraints).
  * @param initialDate The date to pre-select in the picker.
  * @param onPicked A lambda function to execute when a date is successfully selected.
@@ -214,6 +214,7 @@ fun Fragment.showExpenseDatePicker(
 //        .setTheme(com.google.android.material.R.style.ThemeOverlay_MaterialComponents_MaterialCalendar) // Use a standard theme
         .setTitleText("Select Expense Date")
         .setSelection(initialTimestamp)
+
         .setCalendarConstraints(constraints)
         .build()
 
