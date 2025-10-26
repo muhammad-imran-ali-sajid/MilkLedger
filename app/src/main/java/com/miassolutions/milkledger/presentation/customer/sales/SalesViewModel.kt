@@ -128,6 +128,9 @@ class SalesViewModel @Inject constructor(
         when (event) {
             is SalesUiEvent.OnCustomerSelected ->
                 _uiState.update { it.copy(navToLedgerForCustomerId = event.supplierId) }
+
+            is SalesUiEvent.SelectDate ->
+                _uiState.update { it.copy(currentDate = event.date) }
         }
     }
 

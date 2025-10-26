@@ -12,11 +12,13 @@ import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
+import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntryEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
+import com.miassolutions.milkledger.presentation.expenses.ExpensesUiEvent
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
 import java.time.LocalDate
@@ -42,29 +44,29 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         return R.menu.menu_sales
     }
 
-    override fun onMenuCreated(menu: Menu) {
-
-        val editModeItem = menu.findItem(R.id.action_edit_mode)
-        val switch =
-            editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
-
-        switch?.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                BiometricHelper.authenticate(
-                    fragment = this,
-                    title = "Authenticate to enable edit mode",
-                    subtitle = "Use your fingerprint or device credentials",
-                    onSuccess = { enableEditMode() },
-                    onFailure = {
-                        switch.isChecked = false
-                        showToast("Authentication failed.")
-                    }
-                )
-            } else {
-                disableEditMode()
-            }
-        }
-    }
+//    override fun onMenuCreated(menu: Menu) {
+//
+//        val editModeItem = menu.findItem(R.id.action_edit_mode)
+//        val switch =
+//            editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
+//
+//        switch?.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+//                BiometricHelper.authenticate(
+//                    fragment = this,
+//                    title = "Authenticate to enable edit mode",
+//                    subtitle = "Use your fingerprint or device credentials",
+//                    onSuccess = { enableEditMode() },
+//                    onFailure = {
+//                        switch.isChecked = false
+//                        showToast("Authentication failed.")
+//                    }
+//                )
+//            } else {
+//                disableEditMode()
+//            }
+//        }
+//    }
 
     private fun enableEditMode() {
         isEditable = true
@@ -112,9 +114,18 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
 
-            pickSingleDate(
+            // Assume you fetch the authorization status dynamically
+            val isUserAuthorized = false // Replace with actual auth check
+
+            showExpenseDatePicker(
+
+                isAuthorized = isUserAuthorized,
                 initialDate = currentDate,
-                onPicked = { viewModel.onDateSelected(it) }
+                // The selectedDate (LocalDate) is available here!
+                onPicked = { selectedDate: LocalDate ->
+                    // This is where you pass the result to your ViewModel
+                    viewModel.onEvent(SalesUiEvent.SelectDate(selectedDate))
+                }
             )
 
         }

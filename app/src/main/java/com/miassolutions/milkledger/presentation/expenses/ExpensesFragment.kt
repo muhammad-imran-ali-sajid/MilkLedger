@@ -6,6 +6,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
+import com.miassolutions.milkledger.core.util.DatePickerLogic
+import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
@@ -90,19 +92,41 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
     override fun setupListeners() = with(binding) {
         // Allow clicking the date text to open the date picker
-        tvSelectedDate.setOnClickListener {
-            // Pass the current date as the pre-selected date for better UX
-            val initialDate = viewModel.uiState.value.currentDate
+//        tvSelectedDate.setOnClickListener {
+////            // Pass the current date as the pre-selected date for better UX
+////            val initialDate = viewModel.uiState.value.currentDate
+////
+////            pickSingleDate(
+////                title = "Select Expense Date",
+////                initialDate = initialDate,
+////                onPicked = { selectedDate: LocalDate ->
+////                    viewModel.onEvent(ExpensesUiEvent.SelectDate(selectedDate))
+////                }
+////            )
+//
+//            val datePickerLogic = DatePickerLogic()
+//            val isAuth = datePickerLogic.buildConstraints(isAuthorized = false)
+//
+//        }
 
-            pickSingleDate(
-                title = "Select Expense Date",
+        tvSelectedDate.setOnClickListener {
+            // Assume you fetch the authorization status dynamically
+            val isUserAuthorized = false // Replace with actual auth check
+
+            // Pass the current date as the pre-selected date for better UX
+            val initialDate = viewModel.uiState.value!!.currentDate
+
+            showExpenseDatePicker(
+
+                isAuthorized = isUserAuthorized,
                 initialDate = initialDate,
+                // The selectedDate (LocalDate) is available here!
                 onPicked = { selectedDate: LocalDate ->
+                    // This is where you pass the result to your ViewModel
                     viewModel.onEvent(ExpensesUiEvent.SelectDate(selectedDate))
                 }
             )
         }
+
     }
-
-
 }
