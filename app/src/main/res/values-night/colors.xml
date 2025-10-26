@@ -32,7 +32,7 @@
     <!-- UI Background Surfaces (Dark Theme values using the simplified names) -->
 
     <color name="milk_surface">#121212</color>
-    <color name="milk_background">#000000</color>
+    <color name="milk_background">#151515</color>
 
     <!-- Text/Icons ON Surfaces (Light gray for contrast) -->
 
