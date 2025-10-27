@@ -1,30 +1,31 @@
-package com.miassolutions.milkledger.core.pdf
+package com.miassolutions.milkledger.core.pdf.sales
 
 import android.content.Context
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
+import com.miassolutions.milkledger.core.pdf.PdfUtils
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
-import com.miassolutions.milkledger.databinding.ReceiptLayoutBinding
+import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
+import com.miassolutions.milkledger.databinding.LayoutSalesReceiptBinding
 import java.io.File
 import java.io.FileOutputStream
 
-object PdfViewGenerator {
+object SalesPdfGenerator {
 
     /**
      * Generates the PDF document from the layout, saves it to a file, and returns the file.
      * The file naming uses the improved logic from PdfUtils (BaseName_YYYYMMDD_HHMMSS.pdf).
      */
-    private fun generateReceiptPdf(
+    private fun generateSalesReceiptPdf(
         context: Context,
-        data: PdfReceiptData,
-        baseName : String,
+        data: SalesReceiptPdf,
+        baseName: String,
         showLogo: Boolean = false,
         logoResId: Int? = null
     ): File {
         val inflater = LayoutInflater.from(context)
-        val binding = ReceiptLayoutBinding.inflate(inflater)
+        val binding = LayoutSalesReceiptBinding.inflate(inflater)
 
         // Show/hide logo
         if (showLogo && logoResId != null) {
@@ -49,10 +50,11 @@ object PdfViewGenerator {
 
         // Add rows using item_record_row.xml via ViewBinding
         data.recordList.forEach { item ->
-            val rowBinding = ItemRecordRowBinding.inflate(inflater, binding.recordContainer, false)
+            val rowBinding =
+                ItemSaleRecordRowBinding.inflate(inflater, binding.recordContainer, false)
             rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
-            rowBinding.tvTS.text = item.ts.toRoundedStr()
+            rowBinding.tvDeduction.text = item.deduction.toRoundedStr()
             rowBinding.tvRate.text = item.rate.toString()
             rowBinding.tvAmount.text = item.amount.toRoundedStr()
             rowBinding.tvPaid.text = item.paid.toRoundedStr()
@@ -94,13 +96,13 @@ object PdfViewGenerator {
      */
     fun generateAndSharePdf(
         context: Context,
-        data: PdfReceiptData,
+        data: SalesReceiptPdf,
         baseName: String,
         showLogo: Boolean = false,
         logoResId: Int? = null
     ) {
         // Generate the file first
-        val file = generateReceiptPdf(context, data, baseName,showLogo, logoResId)
+        val file = generateSalesReceiptPdf(context, data, baseName, showLogo, logoResId)
 
         // Then share it
         PdfUtils.sharePdf(context, file)

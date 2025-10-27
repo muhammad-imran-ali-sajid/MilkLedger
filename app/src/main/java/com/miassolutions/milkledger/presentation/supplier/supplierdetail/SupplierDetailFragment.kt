@@ -10,8 +10,8 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
-import com.miassolutions.milkledger.core.pdf.PdfReceiptData
-import com.miassolutions.milkledger.core.pdf.PdfViewGenerator
+import com.miassolutions.milkledger.core.pdf.purchasea.PurchaseReceiptPdf
+import com.miassolutions.milkledger.core.pdf.purchasea.PurchasePdfGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
 // Removed unused import: com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
@@ -111,7 +111,7 @@ class SupplierDetailFragment :
         val filteredList = state.filteredList
 
         // --- Determine the actual dates used for the current filter ---
-        val startDate = state.selectedStartDate ?: LocalDate.now().minusYears(1)
+        val startDate = state.selectedStartDate ?: LocalDate.now()
         val endDate = state.selectedEndDate ?: LocalDate.now()
 
         // Format the dates (assuming formattedDate() is an extension on LocalDate)
@@ -126,7 +126,7 @@ class SupplierDetailFragment :
         val totalPaid = recordList.sumOf { it.paid }
         val totalBalance = recordList.sumOf { it.balance }
 
-        val data = PdfReceiptData(
+        val data = PurchaseReceiptPdf(
 
             dateRange = dateRange,
             partyName = args.supplierName,
@@ -138,7 +138,7 @@ class SupplierDetailFragment :
 
         )
 
-        PdfViewGenerator.generateAndSharePdf(
+        PurchasePdfGenerator.generateAndSharePdf(
             context = requireContext(),
             data = data,
             baseName = "Supplier",

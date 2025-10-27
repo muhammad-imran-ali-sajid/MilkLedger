@@ -1,8 +1,7 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
-import com.miassolutions.milkledger.core.pdf.RecordItem
+import com.miassolutions.milkledger.core.pdf.purchasea.PurchaseItemRecord
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
-import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import java.time.LocalDate
 
@@ -41,10 +40,10 @@ fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = Supplier
     notes = this.purchase.notes
 )
 
-fun List<SupplierDetailModel>.toRecordList(): List<RecordItem> {
+fun List<SupplierDetailModel>.toRecordList(): List<PurchaseItemRecord> {
 
     return this.map { item ->
-        RecordItem(
+        PurchaseItemRecord(
             date = item.date.formattedDate(),
             quantity = item.milkAmount,
             ts = item.ts,
@@ -62,38 +61,46 @@ fun List<SupplierDetailModel>.toRecordList(): List<RecordItem> {
  * Flags the first entry on which the rateUsed differs from the rateUsed on the previous day.
  * This should replace or augment the flagConsecutiveRateChanges logic.
  */
-fun List<SupplierDetailModel>.flagRateChangeStarts(): List<SupplierDetailModel> {
-    if (this.isEmpty()) return this
+fun List<SupplierDetailModel>.flagRateChangeStartsUniversal(): List<SupplierDetailModel> {
+    if (this.size <= 1) return this
+
+    // Detect sorting order using the first and last comparable item (date)
+    val firstDate = this.first().date
+    val lastDate = this.last().date
+    val isDescending = firstDate.isAfter(lastDate)
 
     val mutableList = this.toMutableList()
 
-    // The rate change alert should only show if the rate USED for this purchase
-    // is different from the rate USED for the previous purchase.
+    // Depending on order, adjust the iteration logic
+    if (!isDescending) {
+        // ASCENDING (oldest → newest)
+        // Compare current with previous
+        if (mutableList.first().isRateChanged) {
+            mutableList[0] = mutableList.first().copy(isRateChangeStart = true)
+        }
 
-    // 1. Check the very first item: if its rateUsed is different from the oldRate (supplier's default),
-    // it's a rate change start (assuming the list starts after the change was made).
-    // However, it's safer to compare with the previous item's rateUsed.
+        for (i in 1 until mutableList.size) {
+            val prev = mutableList[i - 1]
+            val curr = mutableList[i]
+            val changed = curr.rateUsed != prev.rateUsed
+            mutableList[i] = curr.copy(isRateChangeStart = changed)
+        }
+    } else {
+        // DESCENDING (newest → oldest)
+        // Compare current with next
+        if (mutableList.first().isRateChanged) {
+            mutableList[0] = mutableList.first().copy(isRateChangeStart = true)
+        }
 
-    // For the first item, we can't compare to a previous day. We'll only flag it if
-    // it is flagged as 'isRateChanged' (i.e., different from the supplier's default).
-    if (mutableList[0].isRateChanged) {
-        mutableList[0] = mutableList[0].copy(isRateChangeStart = true)
-    }
-
-    for (i in 1 until mutableList.size) {
-        val current = mutableList[i]
-        val previous = mutableList[i - 1]
-
-        // Check if the current rateUsed is different from the previous rateUsed
-        // Note: Floating point comparison should ideally use an epsilon (tolerance),
-        // but simple != is often used for simplicity with currency/rates.
-        val hasRateChangedFromPreviousDay = current.rateUsed != previous.rateUsed
-
-        if (hasRateChangedFromPreviousDay) {
-            // This is the start of a new rate block. Flag it.
-            mutableList[i] = current.copy(isRateChangeStart = true)
+        for (i in 0 until mutableList.size - 1) {
+            val curr = mutableList[i]
+            val next = mutableList[i + 1]
+            val changed = curr.rateUsed != next.rateUsed
+            mutableList[i] = curr.copy(isRateChangeStart = changed)
         }
     }
 
-    return mutableList.toList()
+    return mutableList
 }
+
+

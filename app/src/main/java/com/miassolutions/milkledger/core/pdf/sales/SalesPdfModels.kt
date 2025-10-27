@@ -1,22 +1,23 @@
-package com.miassolutions.milkledger.core.pdf
+package com.miassolutions.milkledger.core.pdf.sales
 
-data class PdfReceiptData(
-
+data class SalesReceiptPdf(
     val dateRange: String,
     val partyName: String,
-    val recordList: List<RecordItem>,
+    val recordList: List<SalesItemRecord>,
     val totalAmount: String,
-    val totalPaid : String,
-    val totalBalance : String,
+    val totalPaid: String,
+    val totalBalance: String,
     val footerNote: String? = null
 )
 
-data class RecordItem(
+data class SalesItemRecord(
     val date: String,
     val quantity: Double,
-    val ts: Double,
+    val deduction: Double,
     val rate: Double,
     val amount: Double,
     val paid: Double,
     val balance: Double
 )
+
+
