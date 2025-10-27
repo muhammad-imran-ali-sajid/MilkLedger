@@ -39,6 +39,7 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
                 // 1. Convert raw data to detail models
                 val initialDetails = list.map { it.toSupplierDetailModel() }
 
+
                 // 2. Apply the consecutive change logic
                 val finalDetails = initialDetails.flagRateChangeStartsUniversal()
 

@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.core.pdf.purchasea
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View

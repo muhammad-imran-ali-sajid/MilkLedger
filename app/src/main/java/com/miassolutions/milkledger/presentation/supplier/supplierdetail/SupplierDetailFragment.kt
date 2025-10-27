@@ -16,6 +16,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 // Removed unused import: com.miassolutions.milkledger.core.ui.datesort.DateRangeType
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
+import com.miassolutions.milkledger.core.util.RateChangeUtils
 // Removed unused import: com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
@@ -126,11 +127,13 @@ class SupplierDetailFragment :
         val totalPaid = recordList.sumOf { it.paid }
         val totalBalance = recordList.sumOf { it.balance }
 
+        val flaggedList = RateChangeUtils.flagRateChangeStarts(filteredList)
+
         val data = PurchaseReceiptPdf(
 
             dateRange = dateRange,
             partyName = args.supplierName,
-            recordList = recordList,
+            recordList = flaggedList.toRecordList(),
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             totalBalance = totalBalance.toRoundedStr(),
