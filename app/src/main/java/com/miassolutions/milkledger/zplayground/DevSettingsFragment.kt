@@ -77,24 +77,24 @@ class DevSettingsFragment : Fragment() {
         // Insert dummy customers
         customerDao.insertAll(
             listOf(
-                CustomerEntity(customerName = "گھر", customerRate = 100.0, sortOrder = 1),
-                CustomerEntity(customerName = "العزیز", customerRate = 50.0, sortOrder = 2),
-                CustomerEntity(customerName = "العزیز گھر", customerRate = 200.0, sortOrder = 3),
-                CustomerEntity(customerName = "بیکری", customerRate = 150.0, sortOrder = 4),
-                CustomerEntity(customerName = "بیکری گھر", customerRate = 131.0, sortOrder = 5),
+                CustomerEntity(customerName = "Home", customerRate = 100.0, sortOrder = 1),
+                CustomerEntity(customerName = "Al-Aziz", customerRate = 50.0, sortOrder = 2),
+                CustomerEntity(customerName = "Al-Aziz Home", customerRate = 200.0, sortOrder = 3),
+                CustomerEntity(customerName = "Bakery", customerRate = 150.0, sortOrder = 4),
+                CustomerEntity(customerName = "Bakery Home", customerRate = 131.0, sortOrder = 5),
             )
         )
 
         // Insert dummy suppliers
         supplierDao.insertAll(
             listOf(
-                SupplierEntity(supplierName = "ظفر عباس", supplierRate = 145.0, sortOrder = 1),
-                SupplierEntity(supplierName = "زاہد", supplierRate = 140.0, sortOrder = 2),
-                SupplierEntity(supplierName = "مظہر", supplierRate = 165.0, sortOrder = 3),
-                SupplierEntity(supplierName = "ساجد", supplierRate = 145.0, sortOrder = 4),
-                SupplierEntity(supplierName = "سیف", supplierRate = 155.0, sortOrder = 5),
-                SupplierEntity(supplierName = "پومی", supplierRate = 160.0, sortOrder = 6),
-                SupplierEntity(supplierName = "حافظ لیاقت", supplierRate = 162.50, sortOrder = 7),
+                SupplierEntity(supplierName = "Zafar Abbas", supplierRate = 145.0, sortOrder = 1),
+                SupplierEntity(supplierName = "Zahir", supplierRate = 140.0, sortOrder = 2),
+                SupplierEntity(supplierName = "Mazhar", supplierRate = 165.0, sortOrder = 3),
+                SupplierEntity(supplierName = "Sajid", supplierRate = 145.0, sortOrder = 4),
+                SupplierEntity(supplierName = "Saif", supplierRate = 155.0, sortOrder = 5),
+                SupplierEntity(supplierName = "Pomi", supplierRate = 160.0, sortOrder = 6),
+                SupplierEntity(supplierName = "Hafiz Liaqat", supplierRate = 162.50, sortOrder = 7),
 
 
             )
