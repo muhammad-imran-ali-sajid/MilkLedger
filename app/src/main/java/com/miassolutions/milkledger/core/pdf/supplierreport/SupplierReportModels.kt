@@ -1,16 +1,16 @@
-package com.miassolutions.milkledger.core.pdf.purchasea
+package com.miassolutions.milkledger.core.pdf.supplierreport
 
-data class PurchaseReceiptPdf(
+data class SupplierReceiptPdf(
     val dateRange: String,
     val partyName: String,
-    val recordList: List<PurchaseItemRecord>,
+    val recordList: List<SupplierItemRecord>,
     val totalAmount: String,
     val totalPaid : String,
     val totalBalance : String,
     val footerNote: String? = null
 )
 
-data class PurchaseItemRecord(
+data class SupplierItemRecord(
     val date: String,
     val quantity: Double,
     val ts: Double,

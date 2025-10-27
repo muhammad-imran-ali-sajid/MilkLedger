@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.pdf.sales
+package com.miassolutions.milkledger.core.pdf.customerreport
 
 import android.content.Context
 import android.graphics.pdf.PdfDocument
@@ -11,7 +11,7 @@ import com.miassolutions.milkledger.databinding.LayoutSalesReceiptBinding
 import java.io.File
 import java.io.FileOutputStream
 
-object SalesPdfGenerator {
+object CustomerReportGenerator {
 
     /**
      * Generates the PDF document from the layout, saves it to a file, and returns the file.

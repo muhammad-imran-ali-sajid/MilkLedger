@@ -1,12 +1,11 @@
-package com.miassolutions.milkledger.core.pdf.purchasea
+package com.miassolutions.milkledger.core.pdf.supplierreport
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
-import com.miassolutions.milkledger.core.pdf.sales.SalesReceiptPdf
+import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
 import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
@@ -15,7 +14,7 @@ import com.miassolutions.milkledger.databinding.LayoutSalesReceiptBinding
 import java.io.File
 import java.io.FileOutputStream
 
-object PurchasePdfGenerator {
+object SupplierReportGenerator {
 
     /**
      * Generates the PDF document from the layout, saves it to a file, and returns the file.
@@ -23,7 +22,7 @@ object PurchasePdfGenerator {
      */
     private fun generatePurchaseReceiptPdf(
         context: Context,
-        data: PurchaseReceiptPdf,
+        data: SupplierReceiptPdf,
         baseName: String,
         showLogo: Boolean = false,
         logoResId: Int? = null
@@ -178,7 +177,7 @@ object PurchasePdfGenerator {
      */
     fun generateAndSharePdf(
         context: Context,
-        data: PurchaseReceiptPdf,
+        data: SupplierReceiptPdf,
         baseName: String,
         showLogo: Boolean = false,
         logoResId: Int? = null

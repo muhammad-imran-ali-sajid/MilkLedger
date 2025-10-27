@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.pdf.sales
+package com.miassolutions.milkledger.core.pdf.customerreport
 
 data class SalesReceiptPdf(
     val dateRange: String,

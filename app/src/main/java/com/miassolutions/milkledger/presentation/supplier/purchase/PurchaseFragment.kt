@@ -8,19 +8,20 @@ import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReceiptPdf
+import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseSummary
+import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
-import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
 import com.miassolutions.milkledger.core.util.isToday
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
-import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
+import com.miassolutions.milkledger.presentation.supplier.supplierdetail.toPurchaseRecordList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -65,7 +66,13 @@ class PurchaseFragment :
 
     override fun onMenuCreated(menu: Menu) {
         val editModeItem = menu.findItem(R.id.action_edit_mode)
+        val pdfMenuItem = menu.findItem(R.id.action_gen_pdf)
         editModeSwitch = editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
+
+        pdfMenuItem?.setOnMenuItemClickListener {
+            generateReport()
+            true
+        }
 
 //        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
 //            val selectedDate = viewModel.uiState.value.currentDate
@@ -100,6 +107,8 @@ class PurchaseFragment :
 //                }
 //            }
 //        }
+
+
     }
 
     private fun observeUiState() {
@@ -142,6 +151,56 @@ class PurchaseFragment :
             itemAnimator = null
             setHasFixedSize(true)
         }
+    }
+
+    private fun generateReport() {
+        val state = viewModel.uiState.value
+        val filteredList = state.purchasesForDate
+
+
+        val recordList = filteredList.toPurchaseRecordList()
+
+        val pdfSummary = pdfSummary(
+            totalQty = state.totalVolume,
+            totalAmount = state.grandTotalForDate,
+            totalPaid = state.grandTotalForDate,
+            balanceDue = state.grandTotalForDate
+
+        )
+
+        val data = PurchaseReceiptPdf(
+
+
+            footerNote = "Receipt generated on : ${LocalDate.now().formattedDate()}",
+            date = state.currentDate.formattedDate(),
+            recordList = recordList,
+            purchaseSummary = pdfSummary
+        )
+
+
+        TodayPurchasePdf.generateAndSharePdf(
+            context = requireContext(),
+            data = data,
+            baseName = "Supplier",
+            showLogo = true,
+//                logoResId = R.drawable.ic_launcher_foreground
+        )
+
+        showToast("Generating pdf report...")
+    }
+
+    private fun pdfSummary(
+        totalQty: Double,
+        totalAmount: Double,
+        totalPaid: Double,
+        balanceDue: Double
+    ): PurchaseSummary {
+        return PurchaseSummary(
+            totalQty = totalQty.toRoundedStr(),
+            totalAmount = totalAmount.toRoundedStr(),
+            totalPaid = totalPaid.toRoundedStr(),
+            balanceDue = balanceDue.toRoundedStr()
+        )
     }
 
     private fun showSummary(

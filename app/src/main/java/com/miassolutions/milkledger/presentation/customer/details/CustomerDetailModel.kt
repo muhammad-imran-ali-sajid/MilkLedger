@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.presentation.customer.details
 
-import com.miassolutions.milkledger.core.pdf.sales.SalesItemRecord
+import com.miassolutions.milkledger.core.pdf.customerreport.SalesItemRecord
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import java.time.LocalDate

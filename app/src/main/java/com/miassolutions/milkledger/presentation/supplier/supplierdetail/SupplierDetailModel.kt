@@ -1,7 +1,9 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
-import com.miassolutions.milkledger.core.pdf.purchasea.PurchaseItemRecord
+import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseItemRecord
+import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierItemRecord
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import java.time.LocalDate
 
@@ -40,10 +42,10 @@ fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = Supplier
     notes = this.purchase.notes
 )
 
-fun List<SupplierDetailModel>.toRecordList(): List<PurchaseItemRecord> {
+fun List<SupplierDetailModel>.toRecordList(): List<SupplierItemRecord> {
 
     return this.map { item ->
-        PurchaseItemRecord(
+        SupplierItemRecord(
             date = item.date.formattedDate(),
             quantity = item.milkAmount,
             ts = item.ts,
@@ -52,6 +54,23 @@ fun List<SupplierDetailModel>.toRecordList(): List<PurchaseItemRecord> {
             paid = item.payment,
             balance = item.balance
         )
+    }
+}
+
+fun List<PurchaseWithSupplier>.toPurchaseRecordList(): List<PurchaseItemRecord> {
+    return this.map { item ->
+        PurchaseItemRecord(
+            partyName = item.supplier.supplierName,
+            milkVolume = item.purchase.milkAmount.toRoundedStr(),
+            fat = item.purchase.fat.toRoundedStr(),
+            lr = item.purchase.lr.toRoundedStr(),
+            ts = item.purchase.ts.toRoundedStr(),
+            rate = item.supplier.supplierRate.toRoundedStr(),
+            amount = item.purchase.milkPrice.toRoundedStr(),
+            paid = item.purchase.payment.toRoundedStr(),
+            balance = item.purchase.balance.toRoundedStr()
+        )
+
     }
 }
 

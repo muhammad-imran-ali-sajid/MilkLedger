@@ -5,10 +5,8 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
-import com.miassolutions.milkledger.core.pdf.purchasea.PurchaseReceiptPdf
-import com.miassolutions.milkledger.core.pdf.purchasea.PurchasePdfGenerator
-import com.miassolutions.milkledger.core.pdf.sales.SalesPdfGenerator
-import com.miassolutions.milkledger.core.pdf.sales.SalesReceiptPdf
+import com.miassolutions.milkledger.core.pdf.customerreport.CustomerReportGenerator
+import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
@@ -153,7 +151,7 @@ class CustomerDetailFragment :
 
         )
 
-        SalesPdfGenerator.generateAndSharePdf(
+        CustomerReportGenerator.generateAndSharePdf(
             context = requireContext(),
             data = data,
             baseName = "Customer",

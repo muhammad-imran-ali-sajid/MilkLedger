@@ -4,6 +4,12 @@
     <item
         android:id="@+id/action_edit_mode"
         android:title="Edit"
-        app:showAsAction="always"
-        app:actionLayout="@layout/item_menu_switch" />
+        app:actionLayout="@layout/item_menu_switch"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_gen_pdf"
+        android:icon="@drawable/ic_pdf"
+        android:title="Pdf"
+        app:showAsAction="never" />
 </menu>
