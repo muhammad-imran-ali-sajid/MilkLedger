@@ -3,7 +3,6 @@ package com.miassolutions.milkledger.core.util
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.time.Instant
@@ -233,35 +232,5 @@ fun Fragment.showExpenseDatePicker(
     datePicker.show(parentFragmentManager, "EXPENSE_DATE_PICKER_TAG")
 }
 
-/**
- * ==============================================================================
- * 4. SIMULATED USAGE EXAMPLE (How to integrate in your Android code)
- * ==============================================================================
- */
-//fun main() {
-//    val datePickerLogic = DatePickerLogic()
-//
-//    // --- SCENARIO 1: UNAUTHORIZED USER (Cannot select past or future) ---
-//    val unauthorizedConstraints = datePickerLogic.buildConstraints(isAuthorized = false)
-//    println("--- UNAUTHORIZED USER CONSTRAINTS ---")
-//    println("Max Date (Set End) Constraint: ${unauthorizedConstraints.end} (Today)")
-//    // The validator will only return true for 'today' (up to the current time)
-//    // The calendar's start date is also set to today for scrolling limitation.
-//
-//    // --- SCENARIO 2: AUTHORIZED USER (Can select past, cannot select future) ---
-//    val authorizedConstraints = datePickerLogic.buildConstraints(isAuthorized = true)
-//    println("\n--- AUTHORIZED USER CONSTRAINTS ---")
-//    println("Max Date (Set End) Constraint: ${authorizedConstraints.end} (Today)")
-//    // The validator will return true for all past dates.
-//    // The calendar's start date will be set far in the past to allow scrolling.
-//
-//    // --- HOW TO USE IN AN ANDROID FRAGMENT/ACTIVITY ---
-//    println("\n--- ANDROID INTEGRATION GUIDE ---")
-//    println("To use the constraints, you would build the MaterialDatePicker like this:")
-//    println("val constraints = datePickerLogic.buildConstraints(isUserAdminOrAuthorized)")
-//    println("val datePicker = MaterialDatePicker.Builder.datePicker()")
-//    println("    .setCalendarConstraints(constraints)")
-//    println("    .setTitleText(\"Select a Date (Authorized: \$isUserAdminOrAuthorized)\")")
-//    println("    .build()")
-//    println("// datePicker.show(supportFragmentManager, \"DATE_PICKER_TAG\")")
-//}
+
+

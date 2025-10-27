@@ -11,6 +11,7 @@ import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
+import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -75,26 +76,27 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         totalAmount: Double,
         avgRate: Double
     ) {
+
+
         binding.apply {
             cardSalesSummary.setTitle("Summary")
-            val summaryView =
-                layoutInflater.inflate(R.layout.layout_sales_summary, binding.root, false)
-            cardSalesSummary.setContent(summaryView)
+
+            val summaryBinding by lazy {
+                LayoutSalesSummaryBinding.inflate(layoutInflater)
+            }
+
+            cardSalesSummary.setContent(summaryBinding.root)
             cardSalesSummary.collapse()
 
 
-            // You can access child TextViews like this:
-            val tvMilkAmount = summaryView.findViewById<TextView>(R.id.tv_total_milk)
-            val tvDeduction = summaryView.findViewById<TextView>(R.id.tv_deduction)
-            val tvTotalNetMilk = summaryView.findViewById<TextView>(R.id.tv_total_net_milk)
-            val tvTotalAmount = summaryView.findViewById<TextView>(R.id.tv_total_amount)
-            val tvAvgRate = summaryView.findViewById<TextView>(R.id.tv_avg_price)
+            summaryBinding.apply {
+                tvTotalMilk.text = milkAmount.toRoundedStr()
+                tvDeduction.text = deduction.toRoundedStr()
+                tvTotalNetMilk.text = totalNetMilk.toRoundedStr()
+                tvAvgPrice.text = avgRate.toRoundedStr()
+                tvTotalAmount.text = totalAmount.toRoundedStr()
+            }
 
-            tvMilkAmount.text = milkAmount.toRoundedStr()
-            tvDeduction.text = deduction.toRoundedStr()
-            tvTotalNetMilk.text = totalNetMilk.toRoundedStr()
-            tvAvgRate.text = avgRate.toRoundedStr()
-            tvTotalAmount.text = totalAmount.toRoundedStr()
         }
     }
 
