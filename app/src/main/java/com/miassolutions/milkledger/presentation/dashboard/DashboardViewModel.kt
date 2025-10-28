@@ -7,7 +7,9 @@ import com.miassolutions.milkledger.core.util.DateRangeUtil
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -55,10 +57,53 @@ class DashboardViewModel @Inject constructor(
         loadRange(currentRange.first, currentRange.second)
     }
 
-    fun loadCustom(start: LocalDate, end: LocalDate) {
+    fun loadCustom(start: LocalDate?, end: LocalDate?) {
         currentPeriod = Period.CUSTOM
-        currentRange = start to end
-        loadRange(start, end)
+
+        if (start == null || end == null) {
+
+            loadAllRecords()
+        } else {
+            currentRange = start to end
+            loadRange(start, end)
+        }
+    }
+
+    /**
+     * Load all records without date range limits.
+     */
+    private fun loadAllRecords() {
+        viewModelScope.launch {
+            combine(
+                analyticsRepository.getTotalMilkPurchaseAll(),
+                analyticsRepository.getTotalMilkSoldAll(),
+                analyticsRepository.getTotalSalesAll(),
+                analyticsRepository.getTotalPurchasesAll(),
+                analyticsRepository.getTotalExpensesAll(),
+                analyticsRepository.getProfitAll()
+            ) { results ->
+                val milkPurchase = results[0] ?: 0.0
+                val milkSold = results[1] ?: 0.0
+                val totalSales = results[2] ?: 0.0
+                val totalPurchase = results[3] ?: 0.0
+                val totalExpense = results[4] ?: 0.0
+                val profit = results[5] as Double
+
+                AnalyticsUiState(
+                    milkPurchase = milkPurchase,
+                    milkSold = milkSold,
+                    salesTotal = totalSales,
+                    purchaseTotal = totalPurchase,
+                    expensesTotal = totalExpense,
+                    profit = profit,
+                    startDate = null,
+                    endDate = null,
+                    period = "All Records"
+                )
+            }.collect {
+                _uiState.value = it
+            }
+        }
     }
 
     // --- Date Navigation ---

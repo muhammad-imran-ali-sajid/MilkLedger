@@ -10,7 +10,9 @@ import java.time.LocalDate
 @Dao
 interface ReportsDao {
 
-    // --- Sales ---
+    // ───────────────────────────────
+    // 🧾 SALES
+    // ───────────────────────────────
 
     @Query("SELECT * FROM sales_table WHERE customerId = :customerId ORDER BY date DESC")
     fun getCustomerSalesHistory(customerId: String): Flow<List<SalesEntity>>
@@ -18,28 +20,49 @@ interface ReportsDao {
     @Query("SELECT SUM(netMilk) FROM sales_table WHERE date = :date")
     fun getTotalMilkSoldOn(date: LocalDate): Flow<Double?>
 
-    @Query("SELECT SUM(netMilk) FROM sales_table WHERE  date BETWEEN :start AND :end")
-    fun getTotalMilkSoldBetween(start: LocalDate, end : LocalDate): Flow<Double?>
+    @Query("SELECT SUM(netMilk) FROM sales_table WHERE date BETWEEN :start AND :end")
+    fun getTotalMilkSoldBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
     @Query("SELECT SUM(price) FROM sales_table WHERE date BETWEEN :start AND :end")
     fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
+    // ➕ All Records (Sales)
+    @Query("SELECT SUM(netMilk) FROM sales_table")
+    fun getTotalMilkSoldAll(): Flow<Double?>
 
-    // --- Purchases ---
+    @Query("SELECT SUM(price) FROM sales_table")
+    fun getTotalSalesAll(): Flow<Double?>
 
+
+    // ───────────────────────────────
+    // 🧾 PURCHASES
+    // ───────────────────────────────
 
     @Query("SELECT * FROM purchase_table WHERE supplierId = :supplierId ORDER BY date DESC")
     fun getSupplierPurchaseHistory(supplierId: String): Flow<List<PurchaseEntity>>
 
-    @Query("SELECT SUM(milkAmount) FROM purchase_table WHERE  date BETWEEN :start AND :end")
-    fun getTotalMilkPurchaseBetween(start: LocalDate, end : LocalDate): Flow<Double?>
+    @Query("SELECT SUM(milkAmount) FROM purchase_table WHERE date BETWEEN :start AND :end")
+    fun getTotalMilkPurchaseBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
     @Query("SELECT SUM(milkPrice) FROM purchase_table WHERE date BETWEEN :start AND :end")
     fun getTotalPurchasesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
+    // ➕ All Records (Purchases)
+    @Query("SELECT SUM(milkAmount) FROM purchase_table")
+    fun getTotalMilkPurchaseAll(): Flow<Double?>
 
-    // --- Expenses ---
+    @Query("SELECT SUM(milkPrice) FROM purchase_table")
+    fun getTotalPurchasesAll(): Flow<Double?>
+
+
+    // ───────────────────────────────
+    // 💰 EXPENSES
+    // ───────────────────────────────
 
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date BETWEEN :start AND :end")
     fun getTotalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
+
+    // ➕ All Records (Expenses)
+    @Query("SELECT SUM(expenseAmount) FROM expense_table")
+    fun getTotalExpensesAll(): Flow<Double?>
 }

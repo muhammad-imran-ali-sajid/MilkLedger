@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.data.repository
 
-
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
@@ -10,19 +9,18 @@ import java.time.LocalDate
 
 @Singleton
 class AnalyticsRepository @Inject constructor(
-
-    private val reportsDao : ReportsDao
+    private val reportsDao: ReportsDao
 ) {
 
-    fun getTotalMilkPurchaseBetween(start: LocalDate, end: LocalDate) : Flow<Double?> {
-      return  reportsDao.getTotalMilkPurchaseBetween(start, end)
-    }
+    // ───────────────────────────────
+    // 📅 RANGE-BASED QUERIES
+    // ───────────────────────────────
 
-    fun getTotalMilkSoldBetween(start: LocalDate, end: LocalDate) : Flow<Double?> =
+    fun getTotalMilkPurchaseBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getTotalMilkPurchaseBetween(start, end)
+
+    fun getTotalMilkSoldBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
         reportsDao.getTotalMilkSoldBetween(start, end)
-
-
-
 
     fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
         reportsDao.getTotalSalesBetween(start, end)
@@ -38,6 +36,37 @@ class AnalyticsRepository @Inject constructor(
             reportsDao.getTotalSalesBetween(start, end),
             reportsDao.getTotalPurchasesBetween(start, end),
             reportsDao.getTotalExpensesBetween(start, end)
+        ) { sales, purchases, expenses ->
+            val totalSales = sales ?: 0.0
+            val totalPurchases = purchases ?: 0.0
+            val totalExpenses = expenses ?: 0.0
+            totalSales - (totalPurchases + totalExpenses)
+        }
+
+    // ───────────────────────────────
+    // 📊 ALL RECORDS QUERIES
+    // ───────────────────────────────
+
+    fun getTotalMilkPurchaseAll(): Flow<Double?> =
+        reportsDao.getTotalMilkPurchaseAll()
+
+    fun getTotalMilkSoldAll(): Flow<Double?> =
+        reportsDao.getTotalMilkSoldAll()
+
+    fun getTotalSalesAll(): Flow<Double?> =
+        reportsDao.getTotalSalesAll()
+
+    fun getTotalPurchasesAll(): Flow<Double?> =
+        reportsDao.getTotalPurchasesAll()
+
+    fun getTotalExpensesAll(): Flow<Double?> =
+        reportsDao.getTotalExpensesAll()
+
+    fun getProfitAll(): Flow<Double> =
+        combine(
+            reportsDao.getTotalSalesAll(),
+            reportsDao.getTotalPurchasesAll(),
+            reportsDao.getTotalExpensesAll()
         ) { sales, purchases, expenses ->
             val totalSales = sales ?: 0.0
             val totalPurchases = purchases ?: 0.0

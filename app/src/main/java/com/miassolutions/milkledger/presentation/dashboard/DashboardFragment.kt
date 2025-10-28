@@ -8,7 +8,6 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toRoundedStr
@@ -70,6 +69,7 @@ class DashboardFragment :
 
                 R.id.btn_all -> {
                     btnVisibilityControl(true)
+                    viewModel.loadCustom(null, null)
 
 
                 }
@@ -104,6 +104,7 @@ class DashboardFragment :
 
 
     private fun handleSelectedDateRange(startDate: LocalDate?, endDate: LocalDate?) {
+
         if (startDate != null && endDate != null)
             viewModel.loadCustom(startDate, endDate)
     }
