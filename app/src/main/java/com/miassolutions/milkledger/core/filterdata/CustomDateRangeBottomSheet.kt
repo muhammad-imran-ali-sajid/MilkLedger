@@ -51,8 +51,8 @@ class CustomDateRangeBottomSheet : BottomSheetDialogFragment() {
     private fun showMaterialRangePicker() {
         val picker = MaterialDatePicker.Builder.dateRangePicker()
             .setTitleText("Select Custom Range")
-//            .setTheme(com.google.android.material.R.style.ThemeOverlay_Material3_MaterialCalendar) // Use the standard M3 theme
-            .setTheme(com.google.android.material.R.style.ThemeOverlay_Material3_MaterialCalendar_Fullscreen)
+            .setTheme(com.google.android.material.R.style.ThemeOverlay_Material3_MaterialCalendar) // Use the standard M3 theme
+//            .setTheme(com.google.android.material.R.style.ThemeOverlay_Material3_MaterialCalendar_Fullscreen)
             .build()
 
         picker.addOnPositiveButtonClickListener { selection ->
