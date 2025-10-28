@@ -5,10 +5,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.hide
+import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class DashboardFragment :
@@ -21,7 +22,6 @@ class DashboardFragment :
         setupToggleGroup()
 
     }
-
 
 
     override fun setupObservers() = with(binding) {
@@ -42,12 +42,45 @@ class DashboardFragment :
             if (!isChecked) return@addOnButtonCheckedListener
 
             when (checkedId) {
-                R.id.btnToday -> viewModel.loadToday()
-                R.id.btnWeekly -> viewModel.loadWeekly()
-                R.id.btnMonthly -> viewModel.loadMonthly()
-                R.id.btnYearly -> viewModel.loadYearly()
+                R.id.btn_daily -> {
+                    visibilityCustomRangeButton()
+                    viewModel.loadDaily()
+                }
+
+                R.id.btnWeekly -> {
+                    visibilityCustomRangeButton()
+                    viewModel.loadWeekly()
+                }
+
+                R.id.btnMonthly -> {
+                    visibilityCustomRangeButton()
+                    viewModel.loadMonthly()
+                }
+
+                R.id.btnYearly -> {
+                    visibilityCustomRangeButton()
+                    viewModel.loadYearly()
+                }
+
+                R.id.btn_all -> {
+                    visibilityCustomRangeButton(true)
+                    showCustomRange()
+                }
             }
         }
+    }
+
+    private fun visibilityCustomRangeButton(toShow: Boolean = false) {
+        if (toShow) {
+            binding.btnCustomRange.show()
+        } else {
+            binding.btnCustomRange.hide()
+        }
+    }
+
+    private fun showCustomRange() {
+
+
     }
 
 

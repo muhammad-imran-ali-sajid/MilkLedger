@@ -502,12 +502,12 @@
                 app:singleSelection="true">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnToday"
+                    android:id="@+id/btn_daily"
                     style="@style/CompactToggleButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Today" />
+                    android:text="Daily" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWeekly"
@@ -533,6 +533,15 @@
                     android:layout_weight="1"
                     android:text="Yearly" />
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_all"
+                    style="@style/CompactToggleButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="All"
+                     />
+
 
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -544,6 +553,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
                 android:text="Custom Range"
+                android:visibility="gone"
                 app:icon="@drawable/ic_calendar"
                 app:iconGravity="textStart"
                 app:iconTint="@color/milk_primary" />

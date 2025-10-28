@@ -24,13 +24,13 @@ class DashboardViewModel @Inject constructor(
     private var currentRange: Pair<LocalDate, LocalDate> = Pair(LocalDate.now(), LocalDate.now())
 
     init {
-        loadToday()
+        loadDaily()
     }
 
     enum class Period { DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM }
 
     // --- Loaders ---
-    fun loadToday() {
+    fun loadDaily() {
         currentPeriod = Period.DAILY
         val today = LocalDate.now()
         currentRange = today to today
