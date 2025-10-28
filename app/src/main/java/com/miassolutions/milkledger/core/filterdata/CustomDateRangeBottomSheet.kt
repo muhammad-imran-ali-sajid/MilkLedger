@@ -39,7 +39,6 @@ class CustomDateRangeBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // The main action is to show the date picker when the button is clicked
         binding.btnSelectCustomRange.setOnClickListener {
             showMaterialRangePicker()
         }
@@ -72,8 +71,6 @@ class CustomDateRangeBottomSheet : BottomSheetDialogFragment() {
 
             // 2. Send the result using the Fragment Result API
             setFragmentResult(REQUEST_KEY, result)
-
-            // 3. Dismiss the BottomSheet
             dismiss()
         }
 

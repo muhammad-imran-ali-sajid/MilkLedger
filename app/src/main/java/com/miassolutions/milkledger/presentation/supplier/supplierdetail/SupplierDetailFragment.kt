@@ -17,6 +17,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
 import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.RateChangeUtils
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 // Removed unused import: com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
@@ -65,7 +66,7 @@ class SupplierDetailFragment :
 
     override fun setupListeners() {
         binding.tvSelectedDate.setOnClickListener {
-            showDateFilter(isGeneratingReport = false)
+            showDateFilter()
         }
     }
 
@@ -73,38 +74,19 @@ class SupplierDetailFragment :
         val sortMenu = menu.findItem(R.id.menu_sort_item)
 
         sortMenu.setOnMenuItemClickListener {
-            showDateFilter(isGeneratingReport = true)
+            generateReport()
             true
         }
     }
 
 
-
-    // Modify showDateFilter to accept a flag
-    private fun showDateFilter(isGeneratingReport: Boolean = true) {
+    private fun showDateFilter() {
         val bottomSheet = CustomDateRangeBottomSheet()
-        if (isGeneratingReport) {
-            showDialog("Select Range", "Set date range for generating report") {
-                bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_TAG")
-            }
-        } else {
-            bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_ONLY_FILTER_DATA")
-        }
-
+        bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_ONLY_FILTER_DATA")
     }
 
     private fun handleSelectedDateRange(start: LocalDate, end: LocalDate) {
-        // This updates the ViewModel's state, which triggers setupObservers()
         viewModel.setCustomDateRange(start, end)
-        // --- NEW: Trigger confirmation after dates are set ---
-        // Since this runs after *any* date selection, we now ask for confirmation to generate the report.
-        showDialog(
-            "Generate Receipt",
-            "Generate receipt for range\n${formatDateRange(start, end)}?"
-        ) {
-            // Only call generateReport AFTER confirmation
-            generateReport()
-        }
     }
 
     private fun generateReport() {
@@ -136,7 +118,7 @@ class SupplierDetailFragment :
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             totalBalance = totalBalance.toRoundedStr(),
-            footerNote = "Receipt generated on : ${LocalDate.now().formattedDate()}"
+            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}"
 
         )
 
