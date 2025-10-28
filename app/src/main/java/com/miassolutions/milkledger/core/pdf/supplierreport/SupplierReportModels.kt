@@ -2,8 +2,10 @@ package com.miassolutions.milkledger.core.pdf.supplierreport
 
 data class SupplierReceiptPdf(
     val dateRange: String,
-    val partyName: String,
+    val supplierName: String,
     val recordList: List<SupplierItemRecord>,
+    val totalQty:String,
+    val avgTs : String,
     val totalAmount: String,
     val totalPaid : String,
     val totalBalance : String,

@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
-import android.util.Log
 import android.view.Menu
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -104,6 +103,8 @@ class SupplierDetailFragment :
         val dateRange = "$fromDate - $toDate"
 
         val recordList = filteredList.toRecordList()
+        val totalQty = recordList.sumOf { it.quantity }
+        val avgTS = recordList.sumOf { it.ts } / recordList.size
         val totalAmount = recordList.sumOf { it.amount }
         val totalPaid = recordList.sumOf { it.paid }
         val totalBalance = recordList.sumOf { it.balance }
@@ -113,13 +114,14 @@ class SupplierDetailFragment :
         val data = SupplierReceiptPdf(
 
             dateRange = dateRange,
-            partyName = args.supplierName,
+            supplierName = args.supplierName,
+            totalQty = totalQty.toRoundedStr(),
+            avgTs = avgTS.toRoundedStr(),
             recordList = flaggedList.toRecordList(),
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             totalBalance = totalBalance.toRoundedStr(),
             footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}"
-
         )
 
         SupplierReportGenerator.generateAndSharePdf(

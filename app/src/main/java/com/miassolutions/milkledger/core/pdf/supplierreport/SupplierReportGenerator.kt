@@ -42,11 +42,14 @@ object SupplierReportGenerator {
         // Header info
         with(binding) {
             tvReceipt.text = "Receipt Id: $receiptName"
-            tvPartyName.text = "Party: ${data.partyName}"
+            tvPartyName.text = "${data.supplierName}"
             tvDateRange.text = "Date Range: ${data.dateRange}"
-            tvTotal.text = data.totalAmount
-            tvTotalPaid.text = data.totalPaid
-            tvTotalBalance.text = data.totalBalance
+            tvSummaryTotalQty.text = data.totalQty
+            tvAvgTs.text = data.avgTs
+            tvSummaryTotalAmount.text = data.totalAmount
+            tvSummaryTotalPaid.text = data.totalPaid
+            tvSummaryBalance.text = data.totalBalance
+
             tvFooter.text = data.footerNote ?: ""
         }
 
@@ -74,11 +77,6 @@ object SupplierReportGenerator {
             View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.UNSPECIFIED)
         )
         view.layout(0, 0, width, view.measuredHeight)
-
-//        // Create PDF
-//        // 👇 This call utilizes the improved file naming logic in PdfUtils
-//        val baseName = data.receipt.replace(" ", "_").replace(Regex("[^a-zA-Z0-9_-]"), "")
-
 
         val pdfDoc = PdfDocument()
         val pageInfo = PdfDocument.PageInfo.Builder(width, view.measuredHeight, 1).create()
