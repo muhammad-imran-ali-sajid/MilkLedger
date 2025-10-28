@@ -1,14 +1,14 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.DateRangeUtil
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
-import com.miassolutions.milkledger.data.repository.ReportsRepository
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -20,71 +20,105 @@ class DashboardViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AnalyticsUiState())
     val uiState = _uiState.asStateFlow()
 
+    private var currentPeriod: Period = Period.DAILY
+    private var currentRange: Pair<LocalDate, LocalDate> = Pair(LocalDate.now(), LocalDate.now())
+
     init {
-        loadYearlyData()
+        loadToday()
     }
 
-    // ---------- PUBLIC LOADERS ----------
+    enum class Period { DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM }
 
-    fun loadWeeklyData() {
-        loadDataForRange("This Week", DateRangeUtil.thisWeek())
+    // --- Loaders ---
+    fun loadToday() {
+        currentPeriod = Period.DAILY
+        val today = LocalDate.now()
+        currentRange = today to today
+        loadRange(today, today)
     }
 
-    fun loadMonthlyData() {
-        loadDataForRange("This Month", DateRangeUtil.thisMonth())
+    fun loadWeekly() {
+        currentPeriod = Period.WEEKLY
+        currentRange = DateRangeUtil.thisWeek()
+        loadRange(currentRange.first, currentRange.second)
     }
 
-    fun loadYearlyData() {
-        loadDataForRange("This Year", DateRangeUtil.thisYear())
+    fun loadMonthly() {
+        currentPeriod = Period.MONTHLY
+        currentRange = DateRangeUtil.thisMonth()
+        loadRange(currentRange.first, currentRange.second)
     }
 
-    fun loadCustomData(start: LocalDate, end: LocalDate) {
-        loadDataForRange("Custom Range", Pair(start, end))
+    fun loadYearly() {
+        currentPeriod = Period.YEARLY
+        currentRange = DateRangeUtil.thisYear()
+        loadRange(currentRange.first, currentRange.second)
     }
 
-    // ---------- CORE LOADER ----------
-    // ... (inside AnalyticsViewModel)
+    fun loadCustom(start: LocalDate, end: LocalDate) {
+        currentPeriod = Period.CUSTOM
+        currentRange = start to end
+        loadRange(start, end)
+    }
 
-    // ---------- CORE LOADER ----------
-    private fun loadDataForRange(periodLabel: String, range: Pair<LocalDate, LocalDate>) {
+    // --- Date Navigation ---
+    fun onNextClicked() {
+        shiftRange(+1)
+    }
 
-        val (start, end) = range
+    fun onPrevClicked() {
+        shiftRange(-1)
+    }
 
-        // Use the combine overload for 6 flows (results array)
-        combine(
-            analyticsRepository.getTotalMilkPurchaseBetween(start, end), // 1st element
-            analyticsRepository.getTotalMilkSoldBetween(start, end),     // 2nd element
-            analyticsRepository.getTotalSalesBetween(start, end),       // 3rd element
-            analyticsRepository.getTotalPurchasesBetween(start, end),   // 4th element
-            analyticsRepository.getTotalExpensesBetween(start, end),    // 5th element
-            analyticsRepository.getProfitBetween(start, end)            // 6th element
-        ) { results ->
+    private fun shiftRange(direction: Int) {
+        val (start, end) = currentRange
+        val newRange = when (currentPeriod) {
+            Period.DAILY -> Pair(start.plusDays(direction.toLong()), end.plusDays(direction.toLong()))
+            Period.WEEKLY -> Pair(start.plusWeeks(direction.toLong()), end.plusWeeks(direction.toLong()))
+            Period.MONTHLY -> Pair(start.plusMonths(direction.toLong()), end.plusMonths(direction.toLong()))
+            Period.YEARLY -> Pair(start.plusYears(direction.toLong()), end.plusYears(direction.toLong()))
+            Period.CUSTOM -> return // Skip shifting custom range
+        }
+        currentRange = newRange
+        loadRange(newRange.first, newRange.second)
+    }
 
-            // Fix: Use a run block to manage variable assignment and casting cleanly
-            // Destructuring here would require a manually-written componentN function for the Array
-            // So, we just declare and assign variables explicitly for clarity:
+    private fun loadRange(start: LocalDate, end: LocalDate) {
+        viewModelScope.launch {
+            combine(
+                analyticsRepository.getTotalMilkPurchaseBetween(start, end),
+                analyticsRepository.getTotalMilkSoldBetween(start, end),
+                analyticsRepository.getTotalSalesBetween(start, end),
+                analyticsRepository.getTotalPurchasesBetween(start, end),
+                analyticsRepository.getTotalExpensesBetween(start, end),
+                analyticsRepository.getProfitBetween(start, end)
+            ) { results ->
+                val milkPurchase = results[0] ?: 0.0
+                val milkSold = results[1] ?: 0.0
+                val totalSales = results[2] ?: 0.0
+                val totalPurchase = results[3] ?: 0.0
+                val totalExpense = results[4] ?: 0.0
+                val profit = results[5] as Double
 
-            val milkPurchase = results[0] ?: 0.0
-            val milkSold = results[1] ?: 0.0
-            val totalSales = results[2] ?: 0.0
-            val totalPurchase = results[3] ?: 0.0
-            val totalExpense = results[4] ?: 0.0
-            val netProfit = results[5] as Double // Already non-nullable from repo combine
+                AnalyticsUiState(
+                    milkPurchase = milkPurchase,
+                    milkSold = milkSold,
+                    salesTotal = totalSales,
+                    purchaseTotal = totalPurchase,
+                    expensesTotal = totalExpense,
+                    profit = profit,
+                    startDate = start,
+                    endDate = end,
+                    period = formatPeriodLabel(start, end)
+                )
+            }.collect {
+                _uiState.value = it
+            }
+        }
+    }
 
-            AnalyticsUiState(
-                period = periodLabel,
-                milkPurchase = milkPurchase,
-                milkSold = milkSold,
-                salesTotal = totalSales,
-                purchaseTotal = totalPurchase,
-                expensesTotal = totalExpense,
-                profit = netProfit,
-                startDate = start,
-                endDate = end
-            )
-
-        }.onEach { state ->
-            _uiState.value = state
-        }.launchIn(viewModelScope)
+    private fun formatPeriodLabel(start: LocalDate, end: LocalDate): String {
+        return if (start == end) start.formattedDate()
+        else "${start.formattedDate()} → ${end.formattedDate()}"
     }
 }
