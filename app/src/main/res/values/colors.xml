@@ -79,4 +79,5 @@
 
     <!-- Divider -->
     <color name="divider">#E0E0E0</color>
+    <color name="blue_100">#B3E5FC</color>
 </resources>

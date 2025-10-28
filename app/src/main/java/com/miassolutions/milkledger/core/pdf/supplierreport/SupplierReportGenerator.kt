@@ -9,8 +9,9 @@ import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
 import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
-import com.miassolutions.milkledger.databinding.LayoutPurchaseReceiptBinding
+
 import com.miassolutions.milkledger.databinding.LayoutSalesReceiptBinding
+import com.miassolutions.milkledger.databinding.LayoutSupplierReceiptBinding
 import java.io.File
 import java.io.FileOutputStream
 
@@ -28,7 +29,7 @@ object SupplierReportGenerator {
         logoResId: Int? = null
     ): File {
         val inflater = LayoutInflater.from(context)
-        val binding = LayoutPurchaseReceiptBinding.inflate(inflater)
+        val binding = LayoutSupplierReceiptBinding.inflate(inflater)
 
         // Show/hide logo
         if (showLogo && logoResId != null) {

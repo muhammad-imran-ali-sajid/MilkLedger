@@ -30,6 +30,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="8dp"
             android:text="Milk Purchase Receipt"
+            android:textColor="@color/orange_700"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -48,13 +49,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:textSize="10sp"
+            android:textStyle="bold"
             tools:text="23 Oct - 25 Oct" />
 
         <!-- Table Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#EEEEEE"
+            android:background="@color/blue_100"
             android:orientation="horizontal"
             android:paddingHorizontal="2dp"
             android:paddingVertical="2dp">
@@ -308,8 +310,6 @@
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 
         <TextView

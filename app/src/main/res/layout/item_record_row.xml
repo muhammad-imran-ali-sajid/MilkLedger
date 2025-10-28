@@ -1,12 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/item_record_row.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<LinearLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingVertical="2dp"
-    android:paddingHorizontal="2dp">
+    android:padding="2dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
         android:id="@+id/tvDate"
@@ -14,9 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:gravity="start"
-        android:textSize="9sp"
-        android:textColor="#000000"
-        tools:text="23 Oct" />
+        android:textSize="9sp" />
 
     <TextView
         android:id="@+id/tvQty"
@@ -24,9 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
-        android:textColor="#000000"
-        tools:text="10" />
+        android:textSize="9sp" />
 
     <TextView
         android:id="@+id/tvTS"
@@ -34,9 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
-        android:textColor="#000000"
-        tools:text="4.2" />
+        android:textSize="9sp" />
 
     <TextView
         android:id="@+id/tvRate"
@@ -44,19 +34,15 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
-        android:textColor="#000000"
-        tools:text="65.0" />
+        android:textSize="9sp" />
 
     <TextView
         android:id="@+id/tvAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="end"
-        android:textSize="9sp"
-        android:textColor="#000000"
-        tools:text="650.00" />
+        android:gravity="center"
+        android:textSize="9sp" />
 
     <TextView
         android:id="@+id/tv_paid"
@@ -64,9 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
-        android:textColor="#000000"
-        tools:text="500.00" />
+        android:textSize="9sp" />
 
     <TextView
         android:id="@+id/tv_balance"
@@ -74,8 +58,5 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
-        android:textColor="#000000"
-        tools:text="150.00" />
-
+        android:textSize="9sp" />
 </LinearLayout>
