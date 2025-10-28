@@ -60,7 +60,7 @@ fun List<SupplierDetailModel>.toRecordList(): List<SupplierItemRecord> {
 fun List<PurchaseWithSupplier>.toPurchaseRecordList(): List<PurchaseItemRecord> {
     return this.map { item ->
         PurchaseItemRecord(
-            partyName = item.supplier.supplierName,
+            supplierName = item.supplier.supplierName,
             milkVolume = item.purchase.milkAmount.toRoundedStr(),
             fat = item.purchase.fat.toRoundedStr(),
             lr = item.purchase.lr.toRoundedStr(),

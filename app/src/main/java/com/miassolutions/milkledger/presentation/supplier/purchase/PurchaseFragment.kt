@@ -162,6 +162,7 @@ class PurchaseFragment :
 
         val pdfSummary = pdfSummary(
             totalQty = state.totalVolume,
+            avgTs = state.avgTS,
             totalAmount = state.grandTotalForDate,
             totalPaid = state.grandTotalForDate,
             balanceDue = state.grandTotalForDate
@@ -191,12 +192,14 @@ class PurchaseFragment :
 
     private fun pdfSummary(
         totalQty: Double,
+        avgTs : Double,
         totalAmount: Double,
         totalPaid: Double,
         balanceDue: Double
     ): PurchaseSummary {
         return PurchaseSummary(
             totalQty = totalQty.toRoundedStr(),
+            avgTs = avgTs.toRoundedStr("%.1f"),
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             balanceDue = balanceDue.toRoundedStr()

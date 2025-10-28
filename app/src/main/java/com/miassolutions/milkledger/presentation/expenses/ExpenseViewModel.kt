@@ -100,6 +100,6 @@ class ExpenseViewModel @Inject constructor(
 
     // FIX: Moved staticTitles to a companion object to ensure initialization safety
     companion object {
-        private val STATIC_TITLES = listOf("Fuel", "Wages")
+        private val STATIC_TITLES = listOf("Fuel", "Meal")
     }
 }

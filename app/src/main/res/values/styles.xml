@@ -175,5 +175,13 @@
         <item name="cornerRadius">12dp</item>
     </style>
 
+    <style name="PdfSummaryTextStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#666666</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 
 </resources>

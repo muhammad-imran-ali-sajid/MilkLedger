@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/item_record_row.xml -->
+<?xml version="1.0" encoding="utf-8"?><!-- res/layout/item_record_row.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingVertical="2dp"
-    android:paddingHorizontal="2dp">
+    android:paddingHorizontal="2dp"
+    android:paddingVertical="2dp">
 
     <TextView
         android:id="@+id/tv_supplier_name"
@@ -14,9 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="2"
         android:gravity="start"
-        android:textSize="9sp"
         android:textColor="#000000"
-        tools:text="23 Oct" />
+        android:textSize="9sp"
+        android:textStyle="bold"
+        tools:text="Ali Hussain" />
 
     <TextView
         android:id="@+id/tvQty"
@@ -24,8 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
         android:textColor="#000000"
+        android:textSize="9sp"
         tools:text="10" />
 
     <TextView
@@ -34,8 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
         android:textColor="#000000"
+        android:textSize="9sp"
         tools:text="4.2" />
 
     <TextView
@@ -44,8 +44,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
         android:textColor="#000000"
+        android:textSize="9sp"
         tools:text="4.2" />
 
     <TextView
@@ -54,8 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
         android:textColor="#000000"
+        android:textSize="9sp"
         tools:text="4.2" />
 
     <TextView
@@ -64,8 +64,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
         android:textColor="#000000"
+        android:textSize="9sp"
         tools:text="65.0" />
 
     <TextView
@@ -74,8 +74,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="end"
-        android:textSize="9sp"
         android:textColor="#000000"
+        android:textSize="9sp"
         tools:text="650.00" />
 
     <TextView
@@ -84,8 +84,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
         android:textColor="#000000"
+        android:textSize="9sp"
         tools:text="500.00" />
 
     <TextView
@@ -94,8 +94,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:textSize="9sp"
         android:textColor="#000000"
+        android:textSize="9sp"
         tools:text="150.00" />
 
 </LinearLayout>

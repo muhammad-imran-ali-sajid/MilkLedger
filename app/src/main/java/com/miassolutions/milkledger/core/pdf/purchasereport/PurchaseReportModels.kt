@@ -9,13 +9,14 @@ data class PurchaseReceiptPdf(
 
 data class PurchaseSummary(
     val totalQty: String,
+    val avgTs : String,
     val totalAmount: String,
     val totalPaid: String,
     val balanceDue: String
 )
 
 data class PurchaseItemRecord(
-    val partyName: String,
+    val supplierName: String,
     val milkVolume: String,
     val fat: String,
     val lr: String,

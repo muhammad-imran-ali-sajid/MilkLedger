@@ -47,9 +47,9 @@ object TodayPurchasePdf {
         // 1. Header and General Info Mapping (based on receipt_layout.xml IDs)
         with(binding) {
             // tv_receipt corresponds to tvPartyName in the header
-            tvReceipt.text = "Receipt Id# $receiptName"
+            tvReceipt.text = "Receipt Id: $receiptName"
             tvPartyName.text = "Milk Purchase Receipt" // Static title
-            tvDateRange.text = data.date // This ID was tvDateRange
+            tvDateRange.text = "Date: ${data.date}" // This ID was tvDateRange
             tvFooter.text = data.footerNote ?: ""
         }
 
@@ -59,8 +59,7 @@ object TodayPurchasePdf {
             val rowBinding =
                 ItemPurchaseRecordRowBinding.inflate(inflater, binding.recordContainer, false)
 
-            rowBinding.tvSupplierName.text =
-                item.partyName // Assuming you show the supplier name per line
+            rowBinding.tvSupplierName.text = item.supplierName
             rowBinding.tvQty.text = item.milkVolume
             rowBinding.tvFat.text = item.fat
             rowBinding.tvLr.text = item.lr
@@ -79,6 +78,7 @@ object TodayPurchasePdf {
         with(binding) {
 
             tvSummaryTotalQty.text = data.purchaseSummary.totalQty
+            tvAvgTs.text = data.purchaseSummary.avgTs
             tvSummaryTotalAmount.text = data.purchaseSummary.totalAmount
             tvSummaryTotalPaid.text = data.purchaseSummary.totalPaid
             tvSummaryBalance.text = data.purchaseSummary.balanceDue
