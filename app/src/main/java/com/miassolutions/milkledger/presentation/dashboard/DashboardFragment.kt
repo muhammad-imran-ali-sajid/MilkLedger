@@ -151,10 +151,10 @@ class DashboardFragment :
             navigateTo(dest.actionId)
         }
 
-        binding.navSummary.setOnClickListener {
-            val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
-            navigateTo(dest.actionId)
-        }
+//        binding.navSummary.setOnClickListener {
+//            val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
+//            navigateTo(dest.actionId)
+//        }
 
         binding.apply {
             btnNextDate.setOnClickListener { viewModel.onNextClicked() }
