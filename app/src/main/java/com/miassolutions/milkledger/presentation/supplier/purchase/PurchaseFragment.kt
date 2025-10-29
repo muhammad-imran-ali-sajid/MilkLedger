@@ -121,7 +121,7 @@ class PurchaseFragment :
                     milkAmount = state.totalVolume,
                     avgFat = state.avgFat,
                     avgLr = state.avgLr,
-                    avgTS = state.avgTS,
+                    avgTS = state.totalTS,
                     totalAmount = state.grandTotalForDate,
                     avgRate = state.avgRatePerLiter
                 )
@@ -162,7 +162,9 @@ class PurchaseFragment :
 
         val pdfSummary = pdfSummary(
             totalQty = state.totalVolume,
-            avgTs = state.avgTS,
+            avgFat = state.avgFat,
+            avgLr = state.avgLr,
+            totalTs = state.totalTS,
             totalAmount = state.grandTotalForDate,
             totalPaid = state.grandTotalForDate,
             balanceDue = state.grandTotalForDate
@@ -170,8 +172,6 @@ class PurchaseFragment :
         )
 
         val data = PurchaseReceiptPdf(
-
-
             footerNote = "Receipt generated on : ${LocalDate.now().formattedDate()}",
             date = state.currentDate.formattedDate(),
             recordList = recordList,
@@ -192,14 +192,18 @@ class PurchaseFragment :
 
     private fun pdfSummary(
         totalQty: Double,
-        avgTs : Double,
+        avgFat: Double,
+        avgLr: Double,
+        totalTs: Double,
         totalAmount: Double,
         totalPaid: Double,
         balanceDue: Double
     ): PurchaseSummary {
         return PurchaseSummary(
-            totalQty = totalQty.toRoundedStr(),
-            avgTs = avgTs.toRoundedStr("%.1f"),
+            totalQty = totalQty.toRoundedStr("%.2f"),
+            avgFat = avgFat.toRoundedStr("%.2f"),
+            avgLr = avgLr.toRoundedStr("%.2f"),
+            totalTs = totalTs.toRoundedStr("%.2f"),
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             balanceDue = balanceDue.toRoundedStr()
@@ -224,11 +228,11 @@ class PurchaseFragment :
             summaryBinding.apply {
 
                 tvTotalMilk.text = milkAmount.toRoundedStr("%.2f")
-                tvAvgFat.text = avgFat.toRoundedStr("%.1f")
+                tvAvgFat.text = avgFat.toRoundedStr("%.2f")
                 tvAvgLr.text = avgLr.toRoundedStr("%.2f")
                 tvAvgTs.text = avgTS.toRoundedStr("%.2f")
                 tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr()}"
-                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
+                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr("%.2f")}"
             }
         }
     }

@@ -78,7 +78,9 @@ object TodayPurchasePdf {
         with(binding) {
 
             tvSummaryTotalQty.text = data.purchaseSummary.totalQty
-            tvAvgTs.text = data.purchaseSummary.avgTs
+            tvSummaryAvgFat.text = data.purchaseSummary.avgFat
+            tvSummaryAvgLr.text = data.purchaseSummary.avgLr
+            tvTotalTs.text = data.purchaseSummary.totalTs
             tvSummaryTotalAmount.text = data.purchaseSummary.totalAmount
             tvSummaryTotalPaid.text = data.purchaseSummary.totalPaid
             tvSummaryBalance.text = data.purchaseSummary.balanceDue

@@ -175,9 +175,8 @@ class PurchaseViewModel @Inject constructor(
 
 
                 val avgTS = if (validTsEntries.isNotEmpty()) {
-                    val totalTsMilk =
-                        validTsEntries.sumOf { it.purchase.ts }
-                    totalTsMilk / validTsEntries.count()
+                    val totalTsMilk = validTsEntries.sumOf { it.purchase.ts }
+                    totalTsMilk
                 } else 0.0
                 val grandTotal = sortedPurchases.sumOf { it.purchase.milkPrice }
                 val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
@@ -190,7 +189,7 @@ class PurchaseViewModel @Inject constructor(
                         totalVolume = totalVolume,
                         avgFat = avgFat,
                         avgLr = avgLr,
-                        avgTS = avgTS,
+                        totalTS = avgTS,
                         grandTotalForDate = grandTotal,
                         avgRatePerLiter = avgRatePerLiter
                     )

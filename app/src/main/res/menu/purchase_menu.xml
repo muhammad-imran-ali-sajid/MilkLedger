@@ -10,6 +10,6 @@
     <item
         android:id="@+id/action_gen_pdf"
         android:icon="@drawable/ic_pdf"
-        android:title="Pdf"
-        app:showAsAction="never" />
+        android:title="Pdf Report"
+        app:showAsAction="ifRoom" />
 </menu>

@@ -181,103 +181,165 @@
             android:id="@+id/summaryContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:background="@drawable/bg_edittext_readable"
             android:padding="4dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    style="@style/PdfSummaryTextStyle"
-                    android:text="Total Quantity"
-                    android:textColor="#616161" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvSummaryTotalQty"
-                    style="@style/PdfSummaryTextStyle"
-                    android:textColor="#000000"
-                    tools:text="150.50 L" />
+                    <TextView
+                        style="@style/PdfSummaryTextStyle"
+                        android:text="Total Qty"
+                        android:textColor="#616161" />
+
+                    <TextView
+                        android:id="@+id/tvSummaryTotalQty"
+                        style="@style/PdfSummaryTextStyle"
+                        android:textColor="#000000"
+                        tools:text="150.50 L" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/PdfSummaryTextStyle"
+                        android:text="Average Fat"
+                        android:textColor="#616161" />
+
+                    <TextView
+                        android:id="@+id/tvSummaryAvgFat"
+                        style="@style/PdfSummaryTextStyle"
+                        android:textColor="#000000"
+                        tools:text="4.82" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/PdfSummaryTextStyle"
+                        android:text="Average LR"
+                        android:textColor="#616161" />
+
+                    <TextView
+                        android:id="@+id/tvSummaryAvgLr"
+                        style="@style/PdfSummaryTextStyle"
+                        android:textColor="#000000"
+                        tools:text="27.29" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/PdfSummaryTextStyle"
+                        android:text="Total TS"
+                        android:textColor="#616161" />
+
+                    <TextView
+                        android:id="@+id/tv_total_ts"
+                        style="@style/PdfSummaryTextStyle"
+                        android:textColor="#000000"
+                        tools:text="24" />
+                </LinearLayout>
+
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:paddingVertical="4dp"
+                android:background="@color/orange_200"/>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
-                <TextView
-                    style="@style/PdfSummaryTextStyle"
-                    android:text="Avg TS"
-                    android:textColor="#616161" />
 
-                <TextView
-                    android:id="@+id/tv_avg_ts"
-                    style="@style/PdfSummaryTextStyle"
-                    android:textColor="#000000"
-                    tools:text="24" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/PdfSummaryTextStyle"
+                        android:text="Total Amount"
+                        android:textColor="#616161" />
+
+                    <TextView
+                        android:id="@+id/tvSummaryTotalAmount"
+                        style="@style/PdfSummaryTextStyle"
+                        android:textColor="#000000"
+                        tools:text="15,050.00" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/PdfSummaryTextStyle"
+                        android:text="Total Paid"
+                        android:textColor="#616161" />
+
+                    <TextView
+                        android:id="@+id/tvSummaryTotalPaid"
+                        style="@style/PdfSummaryTextStyle"
+                        android:textColor="#2E7D32"
+                        tools:text="10,000.00" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/PdfSummaryTextStyle"
+                        android:text="Balance"
+                        android:textColor="#616161" />
+
+                    <TextView
+                        android:id="@+id/tvSummaryBalance"
+                        style="@style/PdfSummaryTextStyle"
+                        android:textColor="#C62828"
+                        tools:text="5,050.00" />
+                </LinearLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
 
-                <TextView
-                    style="@style/PdfSummaryTextStyle"
-                    android:text="Total Amount"
-                    android:textColor="#616161" />
-
-                <TextView
-                    android:id="@+id/tvSummaryTotalAmount"
-                    style="@style/PdfSummaryTextStyle"
-                    android:textColor="#000000"
-                    tools:text="15,050.00" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/PdfSummaryTextStyle"
-                    android:text="Total Paid"
-                    android:textColor="#616161" />
-
-                <TextView
-                    android:id="@+id/tvSummaryTotalPaid"
-                    style="@style/PdfSummaryTextStyle"
-                    android:textColor="#2E7D32"
-                    tools:text="10,000.00" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/PdfSummaryTextStyle"
-                    android:text="Balance"
-                    android:textColor="#616161" />
-
-                <TextView
-                    android:id="@+id/tvSummaryBalance"
-                    style="@style/PdfSummaryTextStyle"
-                    android:textColor="#C62828"
-                    tools:text="5,050.00" />
-            </LinearLayout>
         </LinearLayout>
 
         <!-- Footer -->

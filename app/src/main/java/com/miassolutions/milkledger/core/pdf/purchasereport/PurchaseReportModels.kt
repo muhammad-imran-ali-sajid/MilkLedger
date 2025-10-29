@@ -9,7 +9,9 @@ data class PurchaseReceiptPdf(
 
 data class PurchaseSummary(
     val totalQty: String,
-    val avgTs : String,
+    val avgFat : String,
+    val avgLr : String,
+    val totalTs : String,
     val totalAmount: String,
     val totalPaid: String,
     val balanceDue: String

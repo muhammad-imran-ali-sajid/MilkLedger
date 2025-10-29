@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
-import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import java.time.LocalDate
 
 data class PurchaseUiState(
@@ -14,7 +13,7 @@ data class PurchaseUiState(
     val totalVolume: Double = 0.0,
     val avgFat: Double = 0.0,
     val avgLr: Double = 0.0,
-    val avgTS : Double = 0.0,
+    val totalTS : Double = 0.0,
     val avgRatePerLiter: Double = 0.0,
 )
 
