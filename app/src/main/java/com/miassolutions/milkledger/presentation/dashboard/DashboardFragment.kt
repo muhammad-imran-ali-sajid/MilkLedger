@@ -135,18 +135,18 @@ class DashboardFragment :
         }
 
 
-        binding.navSales.setOnClickListener {
+        binding.saleCard.setOnClickListener {
             val dest = DashboardFragmentDirections.actionDashboardFragmentToSalesFragment()
             navigateTo(dest.actionId)
 
         }
 
-        binding.navPurchase.setOnClickListener {
+        binding.purchaseCard.setOnClickListener {
             val dest = DashboardFragmentDirections.actionDashboardFragmentToPurchaseFragment()
             navigateTo(dest.actionId)
         }
 
-        binding.navExpenses.setOnClickListener {
+        binding.expenseCard.setOnClickListener {
             val dest = DashboardFragmentDirections.actionDashboardFragmentToExpensesFragment()
             navigateTo(dest.actionId)
         }

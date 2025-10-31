@@ -12,94 +12,213 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <!-- ====== DASHBOARD SHORTCUTS ====== -->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="12dp"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:weightSum="3">-->
+
+<!--            &lt;!&ndash; Purchase &ndash;&gt;-->
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/nav_purchase"-->
+<!--                style="@style/Widget.Material3.Button.IconButton.Outlined"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="4dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Purchase"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="14sp"-->
+<!--                app:cornerRadius="12dp"-->
+<!--                app:icon="@drawable/ic_buy"-->
+<!--                app:iconGravity="top"-->
+<!--                app:iconSize="24dp"-->
+<!--                app:iconTint="@color/orange_700"-->
+<!--                app:rippleColor="?attr/colorOnSurfaceVariant"-->
+<!--                app:strokeColor="@color/orange_700"-->
+<!--                app:strokeWidth="2dp" />-->
+
+<!--            &lt;!&ndash; Sales &ndash;&gt;-->
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/nav_sales"-->
+<!--                style="@style/Widget.Material3.Button.IconButton.Outlined"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="4dp"-->
+
+<!--                android:layout_weight="1"-->
+<!--                android:text="Sales"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="14sp"-->
+<!--                app:cornerRadius="12dp"-->
+<!--                app:icon="@drawable/ic_sales"-->
+<!--                app:iconGravity="top"-->
+<!--                app:iconSize="24dp"-->
+<!--                app:iconTint="@color/green_700"-->
+<!--                app:rippleColor="?attr/colorOnSurfaceVariant"-->
+<!--                app:strokeColor="@color/green_700"-->
+<!--                app:strokeWidth="2dp" />-->
+
+<!--            &lt;!&ndash; Expense &ndash;&gt;-->
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/nav_expenses"-->
+<!--                style="@style/Widget.Material3.Button.IconButton.Outlined"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="4dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Expense"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="14sp"-->
+<!--                app:cornerRadius="12dp"-->
+<!--                app:icon="@drawable/ic_expense"-->
+<!--                app:iconGravity="top"-->
+<!--                app:iconSize="24dp"-->
+<!--                app:iconTint="@color/error"-->
+<!--                app:rippleColor="?attr/colorOnSurfaceVariant"-->
+<!--                app:strokeColor="@color/error"-->
+<!--                app:strokeWidth="2dp" />-->
+
+<!--            &lt;!&ndash; Summary &ndash;&gt;-->
+<!--            &lt;!&ndash;            <com.google.android.material.button.MaterialButton&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:id="@+id/nav_summary"&ndash;&gt;-->
+<!--            &lt;!&ndash;                style="@style/Widget.Material3.Button.TonalButton"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_weight="1"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:layout_marginHorizontal="4dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:text="Summary"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:textColor="@color/black"&ndash;&gt;-->
+<!--            &lt;!&ndash;                android:textSize="14sp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                app:icon="@drawable/ic_stats"&ndash;&gt;-->
+<!--            &lt;!&ndash;                app:iconTint="@color/teal_700"&ndash;&gt;-->
+<!--            &lt;!&ndash;                app:iconSize="24dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                app:iconGravity="top"&ndash;&gt;-->
+<!--            &lt;!&ndash;                app:cornerRadius="12dp"&ndash;&gt;-->
+<!--            &lt;!&ndash;                app:rippleColor="?attr/colorOnSurfaceVariant" />&ndash;&gt;-->
+
+<!--        </LinearLayout>-->
+
+
         <LinearLayout
+            android:id="@+id/layout_date_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:gravity="center"
+            android:background="@drawable/bg_gradient_top_bar"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:paddingHorizontal="16dp"
+            android:weightSum="8">
 
-            <!-- Purchase -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/nav_purchase"
-                style="@style/Widget.Material3.Button.IconButton.Outlined"
+
+            <ImageButton
+                android:id="@+id/btn_prev_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
-                android:text="Purchase"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                app:cornerRadius="12dp"
-                app:icon="@drawable/ic_buy"
-                app:iconGravity="top"
-                app:iconSize="24dp"
-                app:iconTint="@color/orange_700"
-                app:rippleColor="?attr/colorOnSurfaceVariant"
-                app:strokeColor="@color/orange_700"
-                app:strokeWidth="2dp" />
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow" />
 
-            <!-- Sales -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/nav_sales"
-                style="@style/Widget.Material3.Button.IconButton.Outlined"
+            <TextView
+                android:id="@+id/tv_selected_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="4dp"
-
-                android:layout_weight="1"
-                android:text="Sales"
+                android:layout_weight="6"
+                android:gravity="center_horizontal"
+                android:padding="8dp"
+                android:text="📅 12-10-2025"
                 android:textColor="@color/black"
-                android:textSize="14sp"
-                app:cornerRadius="12dp"
-                app:icon="@drawable/ic_sales"
-                app:iconGravity="top"
-                app:iconSize="24dp"
-                app:iconTint="@color/green_700"
-                app:rippleColor="?attr/colorOnSurfaceVariant"
-                app:strokeColor="@color/green_700"
-                app:strokeWidth="2dp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
-            <!-- Expense -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/nav_expenses"
-                style="@style/Widget.Material3.Button.IconButton.Outlined"
+            <ImageButton
+                android:id="@+id/btn_next_date"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="4dp"
                 android:layout_weight="1"
-                android:text="Expense"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                app:cornerRadius="12dp"
-                app:icon="@drawable/ic_expense"
-                app:iconGravity="top"
-                app:iconSize="24dp"
-                app:iconTint="@color/error"
-                app:rippleColor="?attr/colorOnSurfaceVariant"
-                app:strokeColor="@color/error"
-                app:strokeWidth="2dp" />
-
-            <!-- Summary -->
-            <!--            <com.google.android.material.button.MaterialButton-->
-            <!--                android:id="@+id/nav_summary"-->
-            <!--                style="@style/Widget.Material3.Button.TonalButton"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:layout_marginHorizontal="4dp"-->
-            <!--                android:text="Summary"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:textSize="14sp"-->
-            <!--                app:icon="@drawable/ic_stats"-->
-            <!--                app:iconTint="@color/teal_700"-->
-            <!--                app:iconSize="24dp"-->
-            <!--                app:iconGravity="top"-->
-            <!--                app:cornerRadius="12dp"-->
-            <!--                app:rippleColor="?attr/colorOnSurfaceVariant" />-->
-
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="8dp"
+                android:rotation="180"
+                android:src="@drawable/ic_arrow" />
         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/togglePeriod"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:padding="4dp"
+            app:selectionRequired="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_daily"
+                style="@style/CompactToggleButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Daily"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnWeekly"
+                style="@style/CompactToggleButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Weekly"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnMonthly"
+                style="@style/CompactToggleButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Monthly"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnYearly"
+                style="@style/CompactToggleButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Yearly"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_all"
+                style="@style/CompactToggleButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="All"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCustomRange"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="Custom Range"
+            android:visibility="gone"
+            app:icon="@drawable/ic_calendar"
+            app:iconGravity="textStart"
+            app:iconTint="@color/milk_primary" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -115,113 +234,6 @@
 
                 <!-- ====== FINANCIAL OVERVIEW SECTION ====== -->
 
-                <LinearLayout
-                    android:id="@+id/layout_date_header"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_gradient_top_bar"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="16dp"
-                    android:weightSum="8">
-
-
-                    <ImageButton
-                        android:id="@+id/btn_prev_date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:padding="8dp"
-                        android:src="@drawable/ic_arrow" />
-
-                    <TextView
-                        android:id="@+id/tv_selected_date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="6"
-                        android:gravity="center_horizontal"
-                        android:padding="8dp"
-                        android:text="📅 12-10-2025"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/btn_next_date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="?attr/selectableItemBackgroundBorderless"
-                        android:padding="8dp"
-                        android:rotation="180"
-                        android:src="@drawable/ic_arrow" />
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/togglePeriod"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:padding="4dp"
-                    app:selectionRequired="true"
-                    app:singleSelection="true">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_daily"
-                        style="@style/CompactToggleButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Daily" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnWeekly"
-                        style="@style/CompactToggleButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Weekly" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMonthly"
-                        style="@style/CompactToggleButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Monthly" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnYearly"
-                        style="@style/CompactToggleButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Yearly" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btn_all"
-                        style="@style/CompactToggleButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="All" />
-
-
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCustomRange"
-                    style="@style/Widget.Material3.Button.TonalButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="8dp"
-                    android:text="Custom Range"
-                    android:visibility="gone"
-                    app:icon="@drawable/ic_calendar"
-                    app:iconGravity="textStart"
-                    app:iconTint="@color/milk_primary" />
 
 
                 <!-- 💰 Financial Overview -->
@@ -230,11 +242,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:paddingHorizontal="4dp"
                     android:paddingVertical="16dp"
                     android:text="Financial Overview"
-                    android:textSize="18sp"
-                    android:layout_gravity="center"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
 
@@ -244,11 +256,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:orientation="vertical"
-                    android:paddingHorizontal="16dp">
+                    >
 
                     <!-- Purchases -->
                     <com.google.android.material.card.MaterialCardView
                         style="@style/dashboard_card"
+                        android:id="@+id/purchase_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
@@ -269,7 +282,7 @@
                                 android:layout_weight="1"
                                 android:text="Purchases"
                                 android:textColor="@color/orange_700"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -277,9 +290,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="end"
                                 android:text="Rs. 7,500"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -287,6 +301,7 @@
                     <!-- Sales -->
                     <com.google.android.material.card.MaterialCardView
                         style="@style/dashboard_card"
+                        android:id="@+id/sale_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
@@ -307,7 +322,7 @@
                                 android:layout_weight="1"
                                 android:text="Sales"
                                 android:textColor="@color/teal_700"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -315,9 +330,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="end"
                                 android:text="Rs. 12,000"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -325,6 +341,7 @@
                     <!-- Expense -->
                     <com.google.android.material.card.MaterialCardView
                         style="@style/dashboard_card"
+                        android:id="@+id/expense_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
@@ -345,7 +362,7 @@
                                 android:layout_weight="1"
                                 android:text="Expense"
                                 android:textColor="@color/error"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -353,9 +370,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="end"
                                 android:text="Rs. 4,500"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -383,7 +401,7 @@
                                 android:layout_weight="1"
                                 android:text="Profit"
                                 android:textColor="@color/blue_700"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -391,9 +409,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
+                                android:gravity="end"
                                 android:text="Rs. 4,500"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -405,21 +424,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:paddingHorizontal="4dp"
                     android:paddingVertical="16dp"
                     android:text="Milk Overview"
-                    android:layout_gravity="center"
-                    android:textSize="18sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <!-- ====== MILK DASHBOARD CARDS ====== -->
-                <!-- ====== MILK DASHBOARD (VERTICAL STACK, LABEL–VALUE HORIZONTAL) ====== -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:orientation="vertical"
-                    android:paddingHorizontal="16dp">
+                    >
 
                     <!-- Milk Purchased -->
                     <com.google.android.material.card.MaterialCardView
@@ -442,19 +460,20 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Milk Purchased"
+                                android:text="Purchased"
                                 android:textColor="@color/orange_700"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_milk_purchase"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:gravity="end"
                                 android:text="Rs. 7,500"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -480,19 +499,20 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Milk Sold"
+                                android:text="Sold"
                                 android:textColor="@color/green_700"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_milk_sold"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:gravity="end"
                                 android:text="Rs. 8,200"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -520,17 +540,18 @@
                                 android:layout_weight="1"
                                 android:text="Average Fat"
                                 android:textColor="@color/milk_primary"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_avg_fat"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:gravity="end"
                                 android:text="4.2"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -558,17 +579,18 @@
                                 android:layout_weight="1"
                                 android:text="Average LR"
                                 android:textColor="@color/teal_700"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_avg_lr"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:gravity="end"
                                 android:text="28.5"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -596,17 +618,18 @@
                                 android:layout_weight="1"
                                 android:text="Total TS"
                                 android:textColor="@color/blue_700"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_total_ts"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
                                 android:gravity="end"
                                 android:text="12.3"
                                 android:textColor="@color/black"
-                                android:textSize="20sp"
+                                android:textSize="24sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
