@@ -15,6 +15,9 @@ interface CustomerDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(customers: List<CustomerEntity>)
 
+    @Query("SELECT * FROM customer_table WHERE isSynced = 0 OR deletedAt IS NOT NULL")
+    suspend fun getPendingSync(): List<CustomerEntity>
+
     @Query("DELETE FROM customer_table")
     suspend fun deleteAll()
 
@@ -32,4 +35,7 @@ interface CustomerDao {
 
     @Query("SELECT * FROM customer_table WHERE customerId = :id LIMIT 1")
     fun getCustomerById(id: String): Flow<CustomerEntity?>
+
+    @Query("SELECT * FROM customer_table WHERE customerId = :id LIMIT 1")
+    fun getCustomerByIdOnce(id: String): CustomerEntity?
 }

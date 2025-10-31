@@ -30,6 +30,11 @@ data class SalesEntity(
     val paid : Double,
     val balance : Double,
     val rateUsed: Double,                    // snapshot of rate at entry time
-    val notes: String? = null
+    val notes: String? = null,
+
+    val isSynced: Boolean = false,
+    val updatedAt: Long = System.currentTimeMillis(),
+    val deletedAt: Long? = null
+
 )
 

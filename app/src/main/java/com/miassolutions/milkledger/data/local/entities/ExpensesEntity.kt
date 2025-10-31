@@ -13,5 +13,10 @@ data class ExpensesEntity(
     val expenseTitle: String,
     val expenseAmount: Double = 0.0,
     val expenseNote: String? = null,
-    val isDefault: Boolean = false
+    val isDefault: Boolean = false,
+
+    val isSynced: Boolean = false,
+    val updatedAt: Long = System.currentTimeMillis(),
+    val deletedAt: Long? = null
+
 )

@@ -28,9 +28,14 @@ data class PurchaseEntity(
     val lr: Double,
     val ts: Double,
     val milkPrice: Double,
-    val payment : Double,
-    val balance : Double,
+    val payment: Double,
+    val balance: Double,
     val rateUsed: Double,
-    val notes: String? = null
+    val notes: String? = null,
+
+    val isSynced: Boolean = false,
+    val updatedAt: Long = System.currentTimeMillis(),
+    val deletedAt: Long? = null
+
 )
 

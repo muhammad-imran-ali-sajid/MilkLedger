@@ -3,12 +3,20 @@ package com.miassolutions.milkledger.data.repository
 
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
+import com.miassolutions.milkledger.data.remote.SyncManager
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CustomerRepository @Inject constructor(
-    private val customerDao: CustomerDao
+    private val customerDao: CustomerDao,
+    private val syncManager: SyncManager
 ) {
+
+    suspend fun addCustomer(customer: CustomerEntity) {
+        customerDao.insertCustomer(customer.isSynced = false)
+        syncManager.syncCustomers()
+    }
+
     // Insert or replace a customer
     suspend fun insertCustomer(customer: CustomerEntity) {
         customerDao.insertCustomer(customer)

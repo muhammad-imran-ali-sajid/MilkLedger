@@ -12,5 +12,10 @@ data class CustomerEntity(
     val customerRate: Double,  // default rate, can be changed later
     val sortOrder: Int = 0,
     val createdAt: LocalDate = LocalDate.now(),
-    val isDefault: Boolean = false
+    val isDefault: Boolean = false,
+
+    val isSynced: Boolean = false,
+    val updatedAt: Long = System.currentTimeMillis(),
+    val deletedAt: Long? = null
+
 )
