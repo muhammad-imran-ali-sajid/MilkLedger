@@ -8,17 +8,17 @@ class SyncManager @Inject constructor(
     private val firestoreService: FirestoreService
 ) {
     suspend fun syncCustomers() {
-        // 1. Upload unsynced
-        val localPending = customerDao.getPendingSync()
-        for (c in localPending) firestoreService.uploadCustomer(c)
-
-        // 2. Download newer
-        val remote = firestoreService.downloadCustomers()
-        remote.forEach { remoteCustomer ->
-            val local = customerDao.getCustomerByIdOnce(remoteCustomer.customerId)
-            if (local == null || remoteCustomer.updatedAt > local.updatedAt) {
-                customerDao.insertCustomer(remoteCustomer.copy(isSynced = true))
-            }
-        }
+//        // 1. Upload unsynced
+//        val localPending = customerDao.getPendingSync()
+//        for (c in localPending) firestoreService.uploadCustomer(c)
+//
+//        // 2. Download newer
+//        val remote = firestoreService.downloadCustomers()
+//        remote.forEach { remoteCustomer ->
+//            val local = customerDao.getCustomerByIdOnce(remoteCustomer.customerId)
+//            if (local == null || remoteCustomer.updatedAt > local.updatedAt) {
+//                customerDao.insertCustomer(remoteCustomer.copy(isSynced = true))
+//            }
+//        }
     }
 }

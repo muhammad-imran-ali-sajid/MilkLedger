@@ -9,13 +9,13 @@ import javax.inject.Inject
 
 class CustomerRepository @Inject constructor(
     private val customerDao: CustomerDao,
-    private val syncManager: SyncManager
+//    private val syncManager: SyncManager
 ) {
 
-    suspend fun addCustomer(customer: CustomerEntity) {
-        customerDao.insertCustomer(customer.isSynced = false)
-        syncManager.syncCustomers()
-    }
+//    suspend fun addCustomer(customer: CustomerEntity) {
+//        customerDao.insertCustomer(customer.isSynced = false)
+//        syncManager.syncCustomers()
+//    }
 
     // Insert or replace a customer
     suspend fun insertCustomer(customer: CustomerEntity) {

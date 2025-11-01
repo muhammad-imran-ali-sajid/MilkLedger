@@ -1,12 +1,15 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
 
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
+import com.miassolutions.milkledger.core.helper.RemoteConfigHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
@@ -18,10 +21,34 @@ import java.time.LocalDate
 @AndroidEntryPoint
 class DashboardFragment :
     BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
-
+    private var isTrialVersion: Boolean = false
     private val viewModel by viewModels<DashboardViewModel>()
 
     override fun setupViews() {
+
+
+        RemoteConfigHelper.init()
+        RemoteConfigHelper.fetchAndActivate {
+            isTrialVersion = RemoteConfigHelper.applyButtonState(binding.purchaseCard)
+            RemoteConfigHelper.applyButtonState(binding.saleCard)
+            RemoteConfigHelper.applyButtonState(binding.expenseCard)
+
+            Handler(Looper.getMainLooper()).post {
+                binding.apply {
+                    val pText = if (!isTrialVersion) "Trial Expire" else "Purchases"
+                    val sText = if (!isTrialVersion) "Trial Expire" else "Sales"
+                    val eText = if (!isTrialVersion) "Trial Expire" else "Expenses"
+                    tvPurchase.text = pText
+                    tvSale.text = sText
+                    tvExpense.text = eText
+                }
+            }
+
+
+        }
+
+
+
 
         setupToggleGroup()
         setupCustomRangeCalendar()

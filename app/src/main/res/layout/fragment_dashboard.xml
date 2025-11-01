@@ -1,149 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical"
     android:padding="12dp">
 
     <LinearLayout
+        android:id="@+id/layout_date_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <!-- ====== DASHBOARD SHORTCUTS ====== -->
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="12dp"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:weightSum="3">-->
-
-<!--            &lt;!&ndash; Purchase &ndash;&gt;-->
-<!--            <com.google.android.material.button.MaterialButton-->
-<!--                android:id="@+id/nav_purchase"-->
-<!--                style="@style/Widget.Material3.Button.IconButton.Outlined"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginHorizontal="4dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:text="Purchase"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="14sp"-->
-<!--                app:cornerRadius="12dp"-->
-<!--                app:icon="@drawable/ic_buy"-->
-<!--                app:iconGravity="top"-->
-<!--                app:iconSize="24dp"-->
-<!--                app:iconTint="@color/orange_700"-->
-<!--                app:rippleColor="?attr/colorOnSurfaceVariant"-->
-<!--                app:strokeColor="@color/orange_700"-->
-<!--                app:strokeWidth="2dp" />-->
-
-<!--            &lt;!&ndash; Sales &ndash;&gt;-->
-<!--            <com.google.android.material.button.MaterialButton-->
-<!--                android:id="@+id/nav_sales"-->
-<!--                style="@style/Widget.Material3.Button.IconButton.Outlined"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginHorizontal="4dp"-->
-
-<!--                android:layout_weight="1"-->
-<!--                android:text="Sales"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="14sp"-->
-<!--                app:cornerRadius="12dp"-->
-<!--                app:icon="@drawable/ic_sales"-->
-<!--                app:iconGravity="top"-->
-<!--                app:iconSize="24dp"-->
-<!--                app:iconTint="@color/green_700"-->
-<!--                app:rippleColor="?attr/colorOnSurfaceVariant"-->
-<!--                app:strokeColor="@color/green_700"-->
-<!--                app:strokeWidth="2dp" />-->
-
-<!--            &lt;!&ndash; Expense &ndash;&gt;-->
-<!--            <com.google.android.material.button.MaterialButton-->
-<!--                android:id="@+id/nav_expenses"-->
-<!--                style="@style/Widget.Material3.Button.IconButton.Outlined"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginHorizontal="4dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:text="Expense"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="14sp"-->
-<!--                app:cornerRadius="12dp"-->
-<!--                app:icon="@drawable/ic_expense"-->
-<!--                app:iconGravity="top"-->
-<!--                app:iconSize="24dp"-->
-<!--                app:iconTint="@color/error"-->
-<!--                app:rippleColor="?attr/colorOnSurfaceVariant"-->
-<!--                app:strokeColor="@color/error"-->
-<!--                app:strokeWidth="2dp" />-->
-
-<!--            &lt;!&ndash; Summary &ndash;&gt;-->
-<!--            &lt;!&ndash;            <com.google.android.material.button.MaterialButton&ndash;&gt;-->
-<!--            &lt;!&ndash;                android:id="@+id/nav_summary"&ndash;&gt;-->
-<!--            &lt;!&ndash;                style="@style/Widget.Material3.Button.TonalButton"&ndash;&gt;-->
-<!--            &lt;!&ndash;                android:layout_width="0dp"&ndash;&gt;-->
-<!--            &lt;!&ndash;                android:layout_height="wrap_content"&ndash;&gt;-->
-<!--            &lt;!&ndash;                android:layout_weight="1"&ndash;&gt;-->
-<!--            &lt;!&ndash;                android:layout_marginHorizontal="4dp"&ndash;&gt;-->
-<!--            &lt;!&ndash;                android:text="Summary"&ndash;&gt;-->
-<!--            &lt;!&ndash;                android:textColor="@color/black"&ndash;&gt;-->
-<!--            &lt;!&ndash;                android:textSize="14sp"&ndash;&gt;-->
-<!--            &lt;!&ndash;                app:icon="@drawable/ic_stats"&ndash;&gt;-->
-<!--            &lt;!&ndash;                app:iconTint="@color/teal_700"&ndash;&gt;-->
-<!--            &lt;!&ndash;                app:iconSize="24dp"&ndash;&gt;-->
-<!--            &lt;!&ndash;                app:iconGravity="top"&ndash;&gt;-->
-<!--            &lt;!&ndash;                app:cornerRadius="12dp"&ndash;&gt;-->
-<!--            &lt;!&ndash;                app:rippleColor="?attr/colorOnSurfaceVariant" />&ndash;&gt;-->
-
-<!--        </LinearLayout>-->
+        android:background="@drawable/bg_gradient_top_bar"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:weightSum="8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
 
-        <LinearLayout
-            android:id="@+id/layout_date_header"
-            android:layout_width="match_parent"
+        <ImageButton
+            android:id="@+id/btn_prev_date"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_gradient_top_bar"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="16dp"
-            android:weightSum="8">
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow" />
 
+        <TextView
+            android:id="@+id/tv_selected_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:text="📅 12-10-2025"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/btn_prev_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:src="@drawable/ic_arrow" />
+        <ImageButton
+            android:id="@+id/btn_next_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:rotation="180"
+            android:src="@drawable/ic_arrow" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_selected_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="6"
-                android:gravity="center_horizontal"
-                android:padding="8dp"
-                android:text="📅 12-10-2025"
-                android:textColor="@color/black"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_date_header"
+        tools:layout_editor_absoluteX="12dp">
 
-            <ImageButton
-                android:id="@+id/btn_next_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="8dp"
-                android:rotation="180"
-                android:src="@drawable/ic_arrow" />
-        </LinearLayout>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/togglePeriod"
@@ -235,11 +154,11 @@
                 <!-- ====== FINANCIAL OVERVIEW SECTION ====== -->
 
 
-
                 <!-- 💰 Financial Overview -->
 
 
                 <TextView
+                    android:id="@+id/tvFinance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -255,13 +174,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <!-- Purchases -->
                     <com.google.android.material.card.MaterialCardView
-                        style="@style/dashboard_card"
                         android:id="@+id/purchase_card"
+                        style="@style/dashboard_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
@@ -277,10 +195,11 @@
                             android:padding="12dp">
 
                             <TextView
+                                android:id="@+id/tvPurchase"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Purchases"
+                                tools:text="Purchases"
                                 android:textColor="@color/orange_700"
                                 android:textSize="24sp"
                                 android:textStyle="bold" />
@@ -300,8 +219,8 @@
 
                     <!-- Sales -->
                     <com.google.android.material.card.MaterialCardView
-                        style="@style/dashboard_card"
                         android:id="@+id/sale_card"
+                        style="@style/dashboard_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
@@ -317,6 +236,7 @@
                             android:padding="12dp">
 
                             <TextView
+                                android:id="@+id/tvSale"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -340,8 +260,8 @@
 
                     <!-- Expense -->
                     <com.google.android.material.card.MaterialCardView
-                        style="@style/dashboard_card"
                         android:id="@+id/expense_card"
+                        style="@style/dashboard_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
@@ -357,6 +277,7 @@
                             android:padding="12dp">
 
                             <TextView
+                                android:id="@+id/tvExpense"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -436,8 +357,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
 
                     <!-- Milk Purchased -->
                     <com.google.android.material.card.MaterialCardView
@@ -637,14 +557,14 @@
                 </LinearLayout>
 
 
-
-
-
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
 
-
     </LinearLayout>
-</LinearLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
