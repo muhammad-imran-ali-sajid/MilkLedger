@@ -1,14 +1,15 @@
 package com.miassolutions.milkledger.zplayground
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.backup.DatabaseBackupHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
 import java.io.InputStream
 import javax.inject.Inject
 
@@ -17,62 +18,52 @@ class BackupRestoreViewModel @Inject constructor(
     private val helper: DatabaseBackupHelper
 ) : ViewModel() {
 
-    private val TAG = "BackupRestoreViewModel"
+    private val _status = MutableSharedFlow<String>(replay = 1) // SharedFlow for status/progress
+    val status = _status.asSharedFlow()
 
-    private val _status = MutableStateFlow("Idle")
-    val status = _status.asStateFlow()
-
-
-    // Backup to SAF URI
+    /** Backup database to a SAF Uri with progress */
     fun backupDatabaseToUri(uri: Uri) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                helper.backupDatabaseToUri(uri, viewModelScope)
-                _status.value = "✅ Backup saved successfully"
+                _status.emit("Backing up...")
+
+                // Pass a lambda for progress updates
+                helper.backupDatabaseToUri(uri) { progress ->
+                    // Wrap emit in coroutine
+                    viewModelScope.launch {
+                        _status.emit("Backing up: $progress%")
+                    }
+                }
+
+                _status.emit("✅ Backup successful")
             } catch (e: Exception) {
-                _status.value = "❌ Backup failed: ${e.message}"
+                _status.emit("❌ Backup failed: ${e.message}")
             }
         }
     }
 
-    // Existing backup function
-    fun backupDatabase() {
-        viewModelScope.launch {
-            try {
-                val file = helper.backupDatabase()
-                _status.value = "✅ Backup saved: ${file.absolutePath}"
-            } catch (e: Exception) {
-                Log.d(TAG, "Backup failed: ❌ Backup failed: ${e.message}")
-                _status.value = "❌ Backup failed: ${e.message}"
-            }
-        }
-    }
-
-    // Existing restore function (kept for path-based restores if needed)
-    fun restoreDatabase() {
-        viewModelScope.launch {
-            try {
-                val success = helper.restoreDatabase()
-                _status.value = if (success) "✅ Restore successful" else "⚠️ Backup file not found"
-            } catch (e: Exception) {
-                Log.d(TAG, "restoreDatabase: ❌ Restore failed: ${e.message}")
-                _status.value = "❌ Restore failed: ${e.message}"
-            }
-        }
-    }
-
-    // New SAF-based restore function
+    /** Restore database from an InputStream with progress */
     fun restoreDatabaseFromInputStream(inputStream: InputStream) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                val success = helper.restoreDatabase(inputStream)
-                _status.value = if (success) "✅ Restore successful" else "⚠️ Failed to restore from file"
+                _status.emit("Restoring...")
+
+                // Read input stream into bytes to avoid "Stream Closed"
+                val bytes = inputStream.readBytes()
+                val byteStream = ByteArrayInputStream(bytes)
+
+                helper.restoreDatabase(byteStream) { progress ->
+                    viewModelScope.launch {
+                        _status.emit("Restoring: $progress%")
+                    }
+                }
+
+                _status.emit("✅ Restore successful")
             } catch (e: Exception) {
-                Log.d(TAG, "restoreDatabaseFromInputStream: ❌ Restore failed: ${e.message}")
-                _status.value = "❌ Restore failed: ${e.message}"
+                _status.emit("❌ Restore failed: ${e.message}")
             }
         }
     }
 
-    fun getBackupPath() = helper.getBackupPath()
+
 }
