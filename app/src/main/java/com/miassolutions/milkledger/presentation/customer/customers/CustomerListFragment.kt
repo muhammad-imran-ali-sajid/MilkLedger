@@ -24,7 +24,7 @@ class CustomerListFragment :
 
     override fun setupListeners() = with(binding) {
 
-        fabAddCustomer.setOnClickListener {
+        btnAddCustomer.setOnClickListener {
             viewModel.onAddCustomerClick()
         }
     }
