@@ -1,11 +1,11 @@
 package com.miassolutions.milkledger.presentation.supplier.suppliers
 
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.helper.DragDropReorderHelper
+import com.miassolutions.milkledger.core.helper.recyclerviewhelper.DragDropReorderHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.databinding.FragmentSuppliersBinding
 import com.miassolutions.milkledger.domain.model.Supplier
 import com.miassolutions.milkledger.presentation.supplier.SupplierFormBottomSheetFragment
@@ -50,21 +50,21 @@ class SupplierListFragment :
     }
 
     private fun setupRecyclerView() {
-        adapter = SupplierListAdapter { supplier ->
-            showEditDeleteDialog(supplier)
-        }
-
+        adapter = SupplierListAdapter(
+            onItemDelete = { viewModel.deleteSupplier(it) }
+        )
         binding.rvSupplier.adapter = adapter
 
-        // Use lambda to get the latest adapter list
-        val helper = DragDropReorderHelper(
-            getItems = { adapter.currentList.toMutableList() }
-        ) { reorderedList ->
-            viewModel.saveNewOrder(reorderedList)
-        }
+        val dragDropHelper = DragDropReorderHelper(
+            adapter,
+            onMoveCompleted = { newList ->
+                viewModel.saveNewOrder(newList)
+            },
+            enableSwipe = true,
+            swipeDirs = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        )
+        dragDropHelper.createTouchHelper().attachToRecyclerView(binding.rvSupplier)
 
-        val touchHelper = helper.createTouchHelper(adapter)
-        touchHelper.attachToRecyclerView(binding.rvSupplier)
     }
 
 
