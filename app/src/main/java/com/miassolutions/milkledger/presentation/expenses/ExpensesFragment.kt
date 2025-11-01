@@ -2,18 +2,15 @@ package com.miassolutions.milkledger.presentation.expenses
 
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.extensions.pickSingleDate
-import com.miassolutions.milkledger.core.util.DatePickerLogic
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.format.DateTimeFormatter
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesBinding::inflate) {
