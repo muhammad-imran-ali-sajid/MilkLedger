@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.supplier.suppliers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.mapper.toDomain
 import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.repository.CustomerRepository
@@ -13,6 +14,7 @@ import com.miassolutions.milkledger.presentation.customer.customers.CustomerUiSt
 import com.miassolutions.sort_filter.FilterOption
 import com.miassolutions.sort_filter.SortOption
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -53,49 +55,9 @@ class SupplierListViewModel @Inject constructor(
         }
     }
 
-    /**  Called from Fragment after user applies sort/filter */
-
-    fun applySortAndFilter(filters: List<FilterOption>, sorts: List<SortOption>) {
-        viewModelScope.launch {
-            var filtered = allSuppliers
-
-            // 🔹 Apply filters
-            if (filters.any { it.isSelected }) {
-                val selectedIds = filters.filter { it.isSelected }.map { it.id }
-                filtered = filtered.filter { supplier ->
-                    when {
-                        "active" in selectedIds -> supplier.rate >= 0.0
-                        "inactive" in selectedIds -> supplier.rate == 0.0
-                        else -> true
-                    }
-                }
-            }
-
-            // 🔹 Apply sorting
-            val selectedSort = sorts.find { it.isSelected }
-            val sorted = when (selectedSort?.id) {
-                "name" -> if (selectedSort.ascending)
-                    filtered.sortedBy { it.name.lowercase() }
-                else filtered.sortedByDescending { it.name.lowercase() }
-
-                "date" -> if (selectedSort.ascending)
-                    filtered.sortedBy { it.name }
-                else filtered.sortedByDescending { it.name }
-
-                else -> filtered
-            }
-
-            _uiState.value = _uiState.value.copy(displayedSuppliers = sorted)
-        }
-    }
 
 
-    fun onAddSupplierClick() {
-        viewModelScope.launch {
-            _uiEvent.emit(SupplierUiEvent.ShowSupplierForm)
-        }
-    }
-
+    /** ➕ Add or edit supplier */
     fun saveSupplier(supplier: Supplier) {
         viewModelScope.launch {
             try {
@@ -105,14 +67,62 @@ class SupplierListViewModel @Inject constructor(
                     repository.updateSupplier(supplier.toEntity())
                     _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier updated"))
                 } else {
-                    repository.insertSupplier(supplier.toEntity())
-                    _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier saved"))
+                    // determine next sort order
+                    val nextSortOrder = (allSuppliers.maxOfOrNull { it.sortOrder } ?: 0) + 1
+                    repository.insertSupplier(supplier.toEntity().copy(sortOrder = nextSortOrder))
+                    _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier added"))
                 }
             } catch (e: Exception) {
                 _uiEvent.emit(SupplierUiEvent.ShowMessage("Error saving supplier"))
             }
         }
     }
+
+    /** 🔁 Save the new supplier order after drag & drop */
+    fun saveNewOrder(reorderedSuppliers: List<Supplier>) {
+        viewModelScope.launch {
+            reorderedSuppliers.forEachIndexed { index, supplier ->
+                repository.updateSupplier(
+                    supplier.toEntity().copy(sortOrder = index)
+                )
+            }
+        }
+    }
+
+
+//    fun saveNewOrder(reorderedSuppliers: List<SupplierEntity>) {
+//        viewModelScope.launch {
+//            reorderedSuppliers.forEachIndexed { index, supplier ->
+//                repository.updateSupplier(supplier.copy(sortOrder = index))
+//            }
+//        }
+//    }
+
+
+
+    fun onAddSupplierClick() {
+        viewModelScope.launch {
+            _uiEvent.emit(SupplierUiEvent.ShowSupplierForm)
+        }
+    }
+
+//    fun saveSupplier(supplier: Supplier) {
+//        viewModelScope.launch {
+//            try {
+//                val existing = supplier.id?.let { repository.getSupplierById(it) }
+//
+//                if (existing != null) {
+//                    repository.updateSupplier(supplier.toEntity())
+//                    _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier updated"))
+//                } else {
+//                    repository.insertSupplier(supplier.toEntity())
+//                    _uiEvent.emit(SupplierUiEvent.ShowMessage("Supplier saved"))
+//                }
+//            } catch (e: Exception) {
+//                _uiEvent.emit(SupplierUiEvent.ShowMessage("Error saving supplier"))
+//            }
+//        }
+//    }
 
 
 

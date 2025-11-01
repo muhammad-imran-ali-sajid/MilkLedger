@@ -1,51 +1,26 @@
 package com.miassolutions.milkledger.presentation.supplier.suppliers
 
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.helper.DragDropReorderHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.databinding.FragmentSuppliersBinding
 import com.miassolutions.milkledger.domain.model.Supplier
 import com.miassolutions.milkledger.presentation.supplier.SupplierFormBottomSheetFragment
-import com.miassolutions.sort_filter.DataSortBottomSheet
-import com.miassolutions.sort_filter.FilterOption
-import com.miassolutions.sort_filter.SortOption
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SupplierListFragment :
     BaseFragment<FragmentSuppliersBinding>(FragmentSuppliersBinding::inflate) {
 
-    // somewhere near your SupplierListFragment
-    private val supplierFilters = listOf(
-        FilterOption("active", "Active"),
-        FilterOption("inactive", "Inactive")
-    )
-
-    private val supplierSorts = listOf(
-        SortOption("name", "Name (A–Z)", ascending = true),
-        SortOption("date", "Date Added (Newest First)", ascending = false)
-    )
-
     private val viewModel by viewModels<SupplierListViewModel>()
-
     private lateinit var adapter: SupplierListAdapter
-
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.suppliers))
-
         setupRecyclerView()
-
-        // Listen for sort/filter results from BottomSheet
-        setFragmentResultListener(DataSortBottomSheet.REQUEST_KEY) { _, bundle ->
-            val filters = bundle.getParcelableArrayList<FilterOption>("filters") ?: emptyList()
-            val sorts = bundle.getParcelableArrayList<SortOption>("sorts") ?: emptyList()
-            viewModel.applySortAndFilter(filters, sorts)
-        }
-
-
     }
 
     override fun setupListeners() = with(binding) {
@@ -57,9 +32,8 @@ class SupplierListFragment :
     override fun setupObservers() {
 
         viewModel.uiState.collectState { state ->
-            adapter.submitList(state.displayedSuppliers)
+            adapter.submitList(state.displayedSuppliers.toMutableList()) // Make list mutable for reordering
         }
-
 
         viewModel.uiEvent.collectState { event ->
             when (event) {
@@ -67,9 +41,8 @@ class SupplierListFragment :
                 SupplierUiEvent.ShowSupplierForm -> {
                     SupplierFormBottomSheetFragment(
                         supplier = null
-                    ) {
-                        viewModel.saveSupplier(it)
-
+                    ) { newSupplier ->
+                        viewModel.saveSupplier(newSupplier)
                     }.show(parentFragmentManager, null)
                 }
             }
@@ -79,10 +52,21 @@ class SupplierListFragment :
     private fun setupRecyclerView() {
         adapter = SupplierListAdapter { supplier ->
             showEditDeleteDialog(supplier)
-            true
         }
+
         binding.rvSupplier.adapter = adapter
+
+        // Use lambda to get the latest adapter list
+        val helper = DragDropReorderHelper(
+            getItems = { adapter.currentList.toMutableList() }
+        ) { reorderedList ->
+            viewModel.saveNewOrder(reorderedList)
+        }
+
+        val touchHelper = helper.createTouchHelper(adapter)
+        touchHelper.attachToRecyclerView(binding.rvSupplier)
     }
+
 
     private fun showEditDeleteDialog(supplier: Supplier?) {
         val options = arrayOf("Edit", "Delete")
@@ -121,6 +105,4 @@ class SupplierListFragment :
             .setNegativeButton("Cancel", null)
             .show()
     }
-
-
 }

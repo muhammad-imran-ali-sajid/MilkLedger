@@ -10,6 +10,9 @@ class SupplierRepository @Inject constructor(
     private val supplierDao: SupplierDao
 ) {
 
+    suspend fun updateSuppliers(suppliers: List<SupplierEntity>) {
+        supplierDao.updateSuppliers(suppliers)
+    }
 
 
     // Insert or replace a supplier

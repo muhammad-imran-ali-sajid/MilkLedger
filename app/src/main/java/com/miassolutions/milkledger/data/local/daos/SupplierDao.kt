@@ -19,6 +19,9 @@ interface SupplierDao {
     @Query("DELETE FROM supplier_table")
    suspend fun clearAll()
 
+    @Update
+    suspend fun updateSuppliers(suppliers: List<SupplierEntity>)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
    suspend fun insertAll(suppliers: List<SupplierEntity>)
 

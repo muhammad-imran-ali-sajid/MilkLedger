@@ -58,7 +58,8 @@ class SupplierFormBottomSheetFragment(
             val updatedSupplier = Supplier(
                 id = supplier?.id, // keep old ID if editing
                 name = name,
-                rate = rate!! // safe since validated above
+                rate = rate!!, // safe since validated above
+                sortOrder = supplier?.sortOrder ?: 0
             )
 
             onSave(updatedSupplier)
