@@ -95,6 +95,7 @@ class CustomerFormBottomSheetFragment(
         if (customer != null) {
             binding.etName.setText(customer.name)
             binding.etRate.setText(customer.rate.toString())
+            binding.etPosition.setText(customer.sortOrder.toString())
             binding.btnSave.text = "Update"
         } else {
             binding.btnSave.text = "Save"

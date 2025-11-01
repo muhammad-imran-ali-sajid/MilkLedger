@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
@@ -9,20 +11,22 @@
     android:backgroundTint="@color/green_700"
     android:orientation="horizontal"
     android:padding="16dp"
-    android:weightSum="6">
+    android:weightSum="10">
 
     <TextView
         android:id="@+id/tvPosition"
         style="@style/Text.Title"
-        android:layout_width="0dp"
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_weight="1"
-        android:gravity="start"
-        android:textColor="@color/white"
-        android:text="1"
 
-        />
+        android:gravity="start"
+        android:text="1"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_customer_name"
@@ -30,22 +34,26 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_weight="3"
+        android:layout_weight="5"
         android:gravity="start"
-        android:textColor="@color/white"
         android:text="Ali Imran"
 
-        />
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPosition"
+        app:layout_constraintStart_toEndOf="@+id/tvPosition"
+        app:layout_constraintTop_toTopOf="@+id/tvPosition" />
 
     <TextView
         android:id="@+id/tv_customer_rate"
         style="@style/Text.Title"
         android:layout_width="0dp"
-        android:gravity="center"
-        android:textColor="@color/white"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:text="Rs. 25.50" />
+        android:gravity="end"
+        android:text="Rs. 25.50"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPosition"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvPosition" />
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
