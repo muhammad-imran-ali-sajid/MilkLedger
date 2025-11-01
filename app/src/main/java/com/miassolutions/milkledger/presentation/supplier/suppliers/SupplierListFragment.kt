@@ -38,10 +38,13 @@ class SupplierListFragment :
                 is SupplierUiEvent.ShowMessage -> showToast(event.message)
                 SupplierUiEvent.ShowSupplierForm -> {
                     SupplierFormBottomSheetFragment(
-                        supplier = null
-                    ) { newSupplier ->
-                        viewModel.saveSupplier(newSupplier)
-                    }.show(parentFragmentManager, null)
+                        supplier = null,
+                        currentSuppliers = adapter.currentList,
+                        onSave = { newSupplier ->
+                            viewModel.saveSupplier(newSupplier)
+                        }
+                    ).show(parentFragmentManager, null)
+
                 }
             }
         }
@@ -72,7 +75,7 @@ class SupplierListFragment :
     }
 
     private fun handleEditSupplier(supplier: Supplier?) {
-        val currentList = adapter.currentList // get the current list from adapter
+        val currentList = adapter.currentList // ✅ latest displayed list from adapter
 
         val fragment = SupplierFormBottomSheetFragment(
             supplier = supplier,
@@ -83,6 +86,7 @@ class SupplierListFragment :
         )
         fragment.show(parentFragmentManager, null)
     }
+
 
     private fun confirmDeleteSupplier(supplier: Supplier?) {
         if (supplier == null) return

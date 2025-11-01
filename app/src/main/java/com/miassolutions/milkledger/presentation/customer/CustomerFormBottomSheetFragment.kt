@@ -10,6 +10,7 @@ import com.miassolutions.milkledger.domain.model.Customer
 
 class CustomerFormBottomSheetFragment(
     private val customer: Customer? = null,
+    private val currentCustomers: List<Customer> = emptyList<Customer>(),
     private val onSave: (Customer) -> Unit
 ) : BottomSheetDialogFragment() {
 
@@ -37,6 +38,7 @@ class CustomerFormBottomSheetFragment(
 
             val name = binding.etName.text.toString().trim()
             val rateText = binding.etRate.text.toString().trim()
+            val positionText = binding.etPosition.text.toString().trim()
 
             var isValid = true
 
@@ -45,7 +47,7 @@ class CustomerFormBottomSheetFragment(
                 isValid = false
             }
 
-            val rate = rateText.toDouble()
+            val rate = rateText.toDoubleOrNull()
             if (rateText.isEmpty()) {
                 binding.etRateLayout.error = "Rate is required"
                 isValid = false
@@ -54,12 +56,33 @@ class CustomerFormBottomSheetFragment(
                 isValid = false
             }
 
+            // Validate sortOrder
+            val position = positionText.toIntOrNull()
+            when {
+                positionText.isEmpty() -> {
+                    binding.etPosLayout.error = "Position is required"
+                    isValid = false
+                }
+
+                position == null -> {
+                    binding.etPosLayout.error = "Invalid number"
+                    isValid = false
+                }
+
+                currentCustomers.any { it.sortOrder == position && it.id != customer?.id } -> {
+                    binding.etPosLayout.error = "Sort order already exists"
+                    isValid = false
+                }
+            }
+
             if (!isValid) return@setOnClickListener
 
             val updatedCustomer = Customer(
                 id = customer?.id, // keep old ID if editing
                 name = name,
-                rate =rate // safe because we already validated it
+                rate = rate!!,
+                sortOrder = position!!// safe because we already validated it
+
             )
 
             onSave(updatedCustomer)

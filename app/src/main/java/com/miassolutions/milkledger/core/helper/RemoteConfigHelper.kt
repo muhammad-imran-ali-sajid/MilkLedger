@@ -1,53 +1,60 @@
 package com.miassolutions.milkledger.core.helper
 
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object RemoteConfigHelper {
-    private val tag = "RemoteConfigHelper"
-    private const val BUTTON_ENABLED_KEY = "isTrialVersion" // Change key as needed
+    private const val TAG = "RemoteConfigHelper"
+    private const val BUTTON_ENABLED_KEY = "isTrialVersion"
     private val remoteConfig: FirebaseRemoteConfig by lazy { FirebaseRemoteConfig.getInstance() }
 
-
     /**
-     * Initialize Remote Config with defaults and fetch new values.
+     * Initialize Remote Config with defaults and fetch interval settings.
      */
     fun init(defaults: Map<String, Any> = mapOf(BUTTON_ENABLED_KEY to true)) {
         val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(0) // 1 hour for production, 0 for debug
+            .setMinimumFetchIntervalInSeconds(0) // 0 = debug, use 3600 for production
             .build()
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(defaults)
     }
 
-
     /**
-     * Fetch and activate remote config values.
+     * Lifecycle-safe fetch and activate.
+     * Executes callback only if lifecycle is at least STARTED.
      */
-    fun fetchAndActivate(onComplete: (() -> Unit)? = null) {
+    fun fetchAndActivate(
+        lifecycleOwner: LifecycleOwner,
+        onComplete: (Boolean) -> Unit
+    ) {
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    onComplete?.invoke()
+                // Execute only if the fragment/activity is still active
+                if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                    lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+                        onComplete(task.isSuccessful)
+                    }
                 } else {
-                    onComplete?.invoke()
+                    Log.w(TAG, "fetchAndActivate ignored: lifecycle not active")
                 }
             }
     }
 
-
     /**
-     * Apply the button enable/disable state based on Remote Config value.
+     * Apply enable/disable state to a button/card based on Remote Config value.
      */
     fun applyButtonState(button: ViewGroup, key: String = BUTTON_ENABLED_KEY): Boolean {
         val isEnabled = remoteConfig.getBoolean(key)
         button.isEnabled = isEnabled
-        button.alpha = if (isEnabled) 1.0f else 0.5f // Optional: dim the button when disabled
-        Log.d(tag, "Value : $isEnabled")
+        button.alpha = if (isEnabled) 1.0f else 0.5f
+        Log.d(TAG, "RemoteConfig [$key] = $isEnabled")
         return isEnabled
     }
 }

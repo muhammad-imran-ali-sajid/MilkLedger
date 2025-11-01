@@ -10,7 +10,7 @@ import com.miassolutions.milkledger.domain.model.Supplier
 
 class SupplierFormBottomSheetFragment(
     private val supplier: Supplier? = null,
-    private val currentSuppliers: List<Supplier> = emptyList(), // pass current list
+    private val currentSuppliers: List<Supplier> = emptyList(), // full supplier list from adapter
     private val onSave: (Supplier) -> Unit
 ) : BottomSheetDialogFragment() {
 
@@ -27,14 +27,10 @@ class SupplierFormBottomSheetFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupForm()
 
         binding.btnSave.setOnClickListener {
-            // Reset errors
-            binding.nameLayout.error = null
-            binding.etRateLayout.error = null
-            binding.etPosLayout.error = null
+            clearErrors()
 
             val name = binding.etName.text.toString().trim()
             val rateText = binding.etRate.text.toString().trim()
@@ -42,11 +38,13 @@ class SupplierFormBottomSheetFragment(
 
             var isValid = true
 
+            // --- NAME ---
             if (name.isEmpty()) {
                 binding.nameLayout.error = "Name is required"
                 isValid = false
             }
 
+            // --- RATE ---
             val rate = rateText.toDoubleOrNull()
             if (rateText.isEmpty()) {
                 binding.etRateLayout.error = "Rate is required"
@@ -56,18 +54,20 @@ class SupplierFormBottomSheetFragment(
                 isValid = false
             }
 
-            // Validate sortOrder
+            // --- SORT ORDER ---
             val position = positionText.toIntOrNull()
-            when {
-                positionText.isEmpty() -> {
-                    binding.etPosLayout.error = "Position is required"
-                    isValid = false
-                }
-                position == null -> {
-                    binding.etPosLayout.error = "Invalid number"
-                    isValid = false
-                }
-                currentSuppliers.any { it.sortOrder == position && it.id != supplier?.id } -> {
+            if (positionText.isEmpty()) {
+                binding.etPosLayout.error = "Position is required"
+                isValid = false
+            } else if (position == null) {
+                binding.etPosLayout.error = "Invalid number"
+                isValid = false
+            } else {
+                val duplicateExists = currentSuppliers
+                    .filter { it.id != supplier?.id } // exclude the current one being edited
+                    .any { it.sortOrder == position }
+
+                if (duplicateExists) {
                     binding.etPosLayout.error = "Sort order already exists"
                     isValid = false
                 }
@@ -75,6 +75,7 @@ class SupplierFormBottomSheetFragment(
 
             if (!isValid) return@setOnClickListener
 
+            // --- CREATE UPDATED SUPPLIER ---
             val updatedSupplier = Supplier(
                 id = supplier?.id, // keep old ID if editing
                 name = name,
@@ -89,16 +90,22 @@ class SupplierFormBottomSheetFragment(
 
     private fun setupForm() {
         if (supplier != null) {
-            // Editing existing supplier
+            // Editing
             binding.etName.setText(supplier.name)
             binding.etRate.setText(supplier.rate.toString())
             binding.etPosition.setText(supplier.sortOrder.toString())
             binding.btnSave.text = "Update"
         } else {
-            // Adding new supplier: user must manually enter sortOrder
-            binding.etPosition.setText("")
+            // Adding new
+            binding.etPosition.setText("") // user must enter manually
             binding.btnSave.text = "Save"
         }
+    }
+
+    private fun clearErrors() {
+        binding.nameLayout.error = null
+        binding.etRateLayout.error = null
+        binding.etPosLayout.error = null
     }
 
     override fun onDestroyView() {

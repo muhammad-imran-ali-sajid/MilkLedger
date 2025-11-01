@@ -9,7 +9,20 @@
     android:backgroundTint="@color/green_700"
     android:orientation="horizontal"
     android:padding="16dp"
-    android:weightSum="5">
+    android:weightSum="6">
+
+    <TextView
+        android:id="@+id/tvPosition"
+        style="@style/Text.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:textColor="@color/white"
+        android:text="1"
+
+        />
 
     <TextView
         android:id="@+id/tv_customer_name"

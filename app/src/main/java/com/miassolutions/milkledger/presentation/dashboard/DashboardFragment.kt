@@ -21,29 +21,25 @@ import java.time.LocalDate
 @AndroidEntryPoint
 class DashboardFragment :
     BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
-    private var isTrialVersion: Boolean = false
+
     private val viewModel by viewModels<DashboardViewModel>()
 
     override fun setupViews() {
 
 
-        RemoteConfigHelper.fetchAndActivate {
-            isTrialVersion = RemoteConfigHelper.applyButtonState(binding.purchaseCard)
+        RemoteConfigHelper.fetchAndActivate(viewLifecycleOwner) {
+            val isTrial = RemoteConfigHelper.applyButtonState(binding.purchaseCard)
             RemoteConfigHelper.applyButtonState(binding.saleCard)
             RemoteConfigHelper.applyButtonState(binding.expenseCard)
 
-            Handler(Looper.getMainLooper()).post {
-                binding.apply {
-                    val pText = if (!isTrialVersion) "Trial Expire" else "Purchases"
-                    val sText = if (!isTrialVersion) "Trial Expire" else "Sales"
-                    val eText = if (!isTrialVersion) "Trial Expire" else "Expenses"
-                    tvPurchase.text = pText
-                    tvSale.text = sText
-                    tvExpense.text = eText
-                }
+            binding.apply {
+                val pText = if (!isTrial) "Trial Expire" else "Purchases"
+                val sText = if (!isTrial) "Trial Expire" else "Sales"
+                val eText = if (!isTrial) "Trial Expire" else "Expenses"
+                tvPurchase.text = pText
+                tvSale.text = sText
+                tvExpense.text = eText
             }
-
-
         }
 
 

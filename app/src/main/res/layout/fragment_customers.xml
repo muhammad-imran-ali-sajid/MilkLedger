@@ -17,13 +17,23 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp"
-        android:weightSum="5"
+        android:weightSum="6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/tv_customer_name"
+
+            style="@style/Text.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="Sr#"
+            android:textColor="@color/black" />
+
+        <TextView
             style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -34,7 +44,7 @@
             android:textColor="@color/black" />
 
         <TextView
-            android:id="@+id/tv_customer_rate"
+
             style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -42,14 +42,15 @@ class CustomerListFragment :
     override fun setupObservers() {
 
         viewModel.uiState.collectState { state ->
-            adapter.submitList(state.customers)
+            adapter.submitList(state.customers.toMutableList())
         }
 
         viewModel.uiEvent.collectState { event ->
             when (event) {
                 CustomerUiEvent.ShowCustomerForm -> {
                     CustomerFormBottomSheetFragment(
-                        customer = null
+                        customer = null,
+                        currentCustomers = adapter.currentList
                     ) {
                         viewModel.saveCustomer(it)
 
@@ -77,8 +78,10 @@ class CustomerListFragment :
     }
 
     private fun handleEditCustomer(customer: Customer?) {
+        val currentCustomers = adapter.currentList
         val fragment = CustomerFormBottomSheetFragment(
             customer = customer,
+            currentCustomers = currentCustomers,
             onSave = { updatedCustomer ->
                 viewModel.saveCustomer(updatedCustomer)
             }
@@ -99,7 +102,6 @@ class CustomerListFragment :
             .setNegativeButton("Cancel", null)
             .show()
     }
-
 
 
 }
