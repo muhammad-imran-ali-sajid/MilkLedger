@@ -16,6 +16,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
+            android:inputType="textCapWords"
+            android:imeOptions="actionNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -30,8 +32,25 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_rate"
             android:layout_width="match_parent"
+            android:imeOptions="actionNext"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etPosLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Position">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPosition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="number" />
     </com.google.android.material.textfield.TextInputLayout>
 
 

@@ -50,20 +50,8 @@ class SupplierListFragment :
     }
 
     private fun setupRecyclerView() {
-        adapter = SupplierListAdapter(
-            onItemDelete = { viewModel.deleteSupplier(it) }
-        )
+        adapter = SupplierListAdapter(::showEditDeleteDialog)
         binding.rvSupplier.adapter = adapter
-
-        val dragDropHelper = DragDropReorderHelper(
-            adapter,
-            onMoveCompleted = { newList ->
-                viewModel.saveNewOrder(newList)
-            },
-            enableSwipe = true,
-            swipeDirs = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
-        )
-        dragDropHelper.createTouchHelper().attachToRecyclerView(binding.rvSupplier)
 
     }
 
@@ -83,8 +71,11 @@ class SupplierListFragment :
     }
 
     private fun handleEditSupplier(supplier: Supplier?) {
+        val currentList = adapter.currentList // get the current list from adapter
+
         val fragment = SupplierFormBottomSheetFragment(
             supplier = supplier,
+            currentSuppliers = currentList,
             onSave = { updatedSupplier ->
                 viewModel.saveSupplier(updatedSupplier)
             }

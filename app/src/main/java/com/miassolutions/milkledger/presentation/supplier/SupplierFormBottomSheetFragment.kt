@@ -10,6 +10,7 @@ import com.miassolutions.milkledger.domain.model.Supplier
 
 class SupplierFormBottomSheetFragment(
     private val supplier: Supplier? = null,
+    private val currentSuppliers: List<Supplier> = emptyList(), // pass current list
     private val onSave: (Supplier) -> Unit
 ) : BottomSheetDialogFragment() {
 
@@ -33,9 +34,11 @@ class SupplierFormBottomSheetFragment(
             // Reset errors
             binding.nameLayout.error = null
             binding.etRateLayout.error = null
+            binding.etPosLayout.error = null
 
             val name = binding.etName.text.toString().trim()
             val rateText = binding.etRate.text.toString().trim()
+            val positionText = binding.etPosition.text.toString().trim()
 
             var isValid = true
 
@@ -53,13 +56,30 @@ class SupplierFormBottomSheetFragment(
                 isValid = false
             }
 
+            // Validate sortOrder
+            val position = positionText.toIntOrNull()
+            when {
+                positionText.isEmpty() -> {
+                    binding.etPosLayout.error = "Position is required"
+                    isValid = false
+                }
+                position == null -> {
+                    binding.etPosLayout.error = "Invalid number"
+                    isValid = false
+                }
+                currentSuppliers.any { it.sortOrder == position && it.id != supplier?.id } -> {
+                    binding.etPosLayout.error = "Sort order already exists"
+                    isValid = false
+                }
+            }
+
             if (!isValid) return@setOnClickListener
 
             val updatedSupplier = Supplier(
                 id = supplier?.id, // keep old ID if editing
                 name = name,
-                rate = rate!!, // safe since validated above
-                sortOrder = supplier?.sortOrder ?: 0
+                rate = rate!!,
+                sortOrder = position!!
             )
 
             onSave(updatedSupplier)
@@ -69,10 +89,14 @@ class SupplierFormBottomSheetFragment(
 
     private fun setupForm() {
         if (supplier != null) {
+            // Editing existing supplier
             binding.etName.setText(supplier.name)
             binding.etRate.setText(supplier.rate.toString())
+            binding.etPosition.setText(supplier.sortOrder.toString())
             binding.btnSave.text = "Update"
         } else {
+            // Adding new supplier: user must manually enter sortOrder
+            binding.etPosition.setText("")
             binding.btnSave.text = "Save"
         }
     }
