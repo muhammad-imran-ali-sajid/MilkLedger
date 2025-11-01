@@ -1,10 +1,8 @@
 package com.miassolutions.milkledger.presentation.supplier.suppliers
 
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.ItemTouchHelper
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.helper.recyclerviewhelper.DragDropReorderHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSuppliersBinding
 import com.miassolutions.milkledger.domain.model.Supplier
@@ -53,10 +51,11 @@ class SupplierListFragment :
         adapter = SupplierListAdapter(::showEditDeleteDialog)
         binding.rvSupplier.adapter = adapter
 
+
     }
 
 
-    private fun showEditDeleteDialog(supplier: Supplier?) {
+    private fun showEditDeleteDialog(supplier: Supplier?): Boolean {
         val options = arrayOf("Edit", "Delete")
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Select Action")
@@ -68,6 +67,8 @@ class SupplierListFragment :
                 dialog.dismiss()
             }
             .show()
+
+        return true
     }
 
     private fun handleEditSupplier(supplier: Supplier?) {

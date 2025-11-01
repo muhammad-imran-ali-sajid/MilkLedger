@@ -14,7 +14,7 @@ import com.miassolutions.milkledger.domain.model.Supplier
  * Supports item clicks, drag-and-drop, and swipe actions.
  */
 class SupplierListAdapter(
-    private val onItemClick: ((Supplier) -> Unit)? = null,
+    private val onItemLongClick: ((Supplier) -> Boolean)? = null,
 ) : ListAdapter<Supplier, SupplierListAdapter.SupplierViewHolder>(SupplierDiffCallback()) {
 
 
@@ -31,7 +31,6 @@ class SupplierListAdapter(
         holder.bind(getItem(position))
     }
 
-
     /**
      * ViewHolder is defined inside the adapter
      */
@@ -44,8 +43,9 @@ class SupplierListAdapter(
             binding.tvSupplierRate.text = supplier.rate.toRoundedStr("%.2f")
             binding.tvSort.text = supplier.sortOrder.toString()
             // Item click listener
-            binding.root.setOnClickListener {
-                onItemClick?.invoke(supplier)
+            binding.root.setOnLongClickListener {
+                onItemLongClick?.invoke(supplier)
+                true
             }
         }
     }
