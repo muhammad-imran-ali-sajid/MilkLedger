@@ -45,17 +45,11 @@ class SupplierListFragment :
             viewModel.applySortAndFilter(filters, sorts)
         }
 
-        binding.btnSort.setOnClickListener {
-
-            val bottomSheet = DataSortBottomSheet.newInstance(supplierFilters, supplierSorts)
-            bottomSheet.show(parentFragmentManager, "SupplierSortFilter")
-        }
-
 
     }
 
     override fun setupListeners() = with(binding) {
-        fabAddSupplier.setOnClickListener {
+        btnAddSupplier.setOnClickListener {
             viewModel.onAddSupplierClick()
         }
     }

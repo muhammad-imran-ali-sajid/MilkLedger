@@ -33,16 +33,16 @@ class DashboardFragment :
             RemoteConfigHelper.applyButtonState(binding.saleCard)
             RemoteConfigHelper.applyButtonState(binding.expenseCard)
 
-            Handler(Looper.getMainLooper()).post {
-                binding.apply {
-                    val pText = if (!isTrialVersion) "Trial Expire" else "Purchases"
-                    val sText = if (!isTrialVersion) "Trial Expire" else "Sales"
-                    val eText = if (!isTrialVersion) "Trial Expire" else "Expenses"
-                    tvPurchase.text = pText
-                    tvSale.text = sText
-                    tvExpense.text = eText
-                }
-            }
+//            Handler(Looper.getMainLooper()).post {
+//                binding.apply {
+//                    val pText = if (!isTrialVersion) "Trial Expire" else "Purchases"
+//                    val sText = if (!isTrialVersion) "Trial Expire" else "Sales"
+//                    val eText = if (!isTrialVersion) "Trial Expire" else "Expenses"
+//                    tvPurchase.text = pText
+//                    tvSale.text = sText
+//                    tvExpense.text = eText
+//                }
+//            }
 
 
         }
