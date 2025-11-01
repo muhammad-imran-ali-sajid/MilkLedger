@@ -10,13 +10,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.databinding.FragmentDevSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.util.UUID
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class DevSettingsFragment : Fragment() {
@@ -70,35 +76,148 @@ class DevSettingsFragment : Fragment() {
             .show()
     }
 
-    private  fun populateDummyData() {
+//    private suspend fun populateDummyData() {
+//        val customerDao = database.customerDao()
+//        val supplierDao = database.supplierDao()
+//        val purchaseDao = database.purchaseDao()
+//        val saleDao = database.salesDao()
+//
+//
+//
+//
+//        // Insert dummy customers
+//        customerDao.insertAll(
+//            listOf(
+//                CustomerEntity(customerName = "Home", customerRate = 100.0, sortOrder = 1),
+//                CustomerEntity(customerName = "Al-Aziz", customerRate = 50.0, sortOrder = 2),
+//                CustomerEntity(customerName = "Al-Aziz Home", customerRate = 200.0, sortOrder = 3),
+//                CustomerEntity(customerName = "Bakery", customerRate = 150.0, sortOrder = 4),
+//                CustomerEntity(customerName = "Bakery Home", customerRate = 131.0, sortOrder = 5),
+//            )
+//        )
+//
+//        // Insert dummy suppliers
+//        supplierDao.insertAll(
+//            listOf(
+//                SupplierEntity(supplierName = "Zafar Abbas", supplierRate = 145.0, sortOrder = 1),
+//                SupplierEntity(supplierName = "Zahir", supplierRate = 140.0, sortOrder = 2),
+//                SupplierEntity(supplierName = "Mazhar", supplierRate = 165.0, sortOrder = 3),
+//                SupplierEntity(supplierName = "Sajid", supplierRate = 145.0, sortOrder = 4),
+//                SupplierEntity(supplierName = "Saif", supplierRate = 155.0, sortOrder = 5),
+//                SupplierEntity(supplierName = "Pomi", supplierRate = 160.0, sortOrder = 6),
+//                SupplierEntity(supplierName = "Hafiz Liaqat", supplierRate = 162.50, sortOrder = 7),
+//
+//
+//            )
+//        )
+//    }
+
+
+
+    private suspend fun populateDummyData() {
         val customerDao = database.customerDao()
         val supplierDao = database.supplierDao()
+        val purchaseDao = database.purchaseDao()
+        val saleDao = database.salesDao()
+        val expenseDao = database.expensesDao()
+
+
+        // Insert 7 dummy expenses
+        val expenseTitles = listOf("Feed", "Fuel", "Maintenance", "Cleaning", "Electricity", "Water", "Miscellaneous")
+        val expensesList = mutableListOf<ExpensesEntity>()
+        for (i in 1..7) {
+            expensesList.add(
+                ExpensesEntity(
+                    date = LocalDate.now().minusDays(i.toLong()),
+                    expenseTitle = expenseTitles[i - 1],
+                    expenseAmount = Random.nextDouble(500.0, 2000.0),
+                    expenseNote = "Dummy expense for ${expenseTitles[i - 1]}"
+                )
+            )
+        }
+        expenseDao.insertAll(expensesList)
 
         // Insert dummy customers
-        customerDao.insertAll(
-            listOf(
-                CustomerEntity(customerName = "Home", customerRate = 100.0, sortOrder = 1),
-                CustomerEntity(customerName = "Al-Aziz", customerRate = 50.0, sortOrder = 2),
-                CustomerEntity(customerName = "Al-Aziz Home", customerRate = 200.0, sortOrder = 3),
-                CustomerEntity(customerName = "Bakery", customerRate = 150.0, sortOrder = 4),
-                CustomerEntity(customerName = "Bakery Home", customerRate = 131.0, sortOrder = 5),
-            )
+        val customers = listOf(
+            CustomerEntity(customerName = "Home", customerRate = 100.0, sortOrder = 1),
+            CustomerEntity(customerName = "Al-Aziz", customerRate = 50.0, sortOrder = 2),
+            CustomerEntity(customerName = "Al-Aziz Home", customerRate = 200.0, sortOrder = 3),
+            CustomerEntity(customerName = "Bakery", customerRate = 150.0, sortOrder = 4),
+            CustomerEntity(customerName = "Bakery Home", customerRate = 131.0, sortOrder = 5),
         )
+        customerDao.insertAll(customers)
 
         // Insert dummy suppliers
-        supplierDao.insertAll(
-            listOf(
-                SupplierEntity(supplierName = "Zafar Abbas", supplierRate = 145.0, sortOrder = 1),
-                SupplierEntity(supplierName = "Zahir", supplierRate = 140.0, sortOrder = 2),
-                SupplierEntity(supplierName = "Mazhar", supplierRate = 165.0, sortOrder = 3),
-                SupplierEntity(supplierName = "Sajid", supplierRate = 145.0, sortOrder = 4),
-                SupplierEntity(supplierName = "Saif", supplierRate = 155.0, sortOrder = 5),
-                SupplierEntity(supplierName = "Pomi", supplierRate = 160.0, sortOrder = 6),
-                SupplierEntity(supplierName = "Hafiz Liaqat", supplierRate = 162.50, sortOrder = 7),
-
-
-            )
+        val suppliers = listOf(
+            SupplierEntity(supplierName = "Zafar Abbas", supplierRate = 145.0, sortOrder = 1),
+            SupplierEntity(supplierName = "Zahir", supplierRate = 140.0, sortOrder = 2),
+            SupplierEntity(supplierName = "Mazhar", supplierRate = 165.0, sortOrder = 3),
+            SupplierEntity(supplierName = "Sajid", supplierRate = 145.0, sortOrder = 4),
+            SupplierEntity(supplierName = "Saif", supplierRate = 155.0, sortOrder = 5),
+            SupplierEntity(supplierName = "Pomi", supplierRate = 160.0, sortOrder = 6),
+            SupplierEntity(supplierName = "Hafiz Liaqat", supplierRate = 162.50, sortOrder = 7),
         )
+        supplierDao.insertAll(suppliers)
+
+        // Insert 7 dummy purchases for each supplier
+        val purchaseList = mutableListOf<PurchaseEntity>()
+        suppliers.forEach { supplier ->
+            for (i in 1..7) {
+                val milkAmount = Random.nextDouble(10.0, 50.0)
+                val fat = Random.nextDouble(3.0, 5.0)
+                val lr = Random.nextDouble(4.0, 6.0)
+                val ts = Random.nextDouble(12.0, 14.0)
+                val milkPrice = milkAmount * supplier.supplierRate
+                val payment = milkPrice * Random.nextDouble(0.5, 1.0)
+                val balance = milkPrice - payment
+
+                purchaseList.add(
+                    PurchaseEntity(
+                        supplierId = supplier.supplierId ?: UUID.randomUUID().toString(),
+                        date = LocalDate.now().minusDays(i.toLong()),
+                        milkAmount = milkAmount,
+                        fat = fat,
+                        lr = lr,
+                        ts = ts,
+                        milkPrice = milkPrice,
+                        payment = payment,
+                        balance = balance,
+                        rateUsed = supplier.supplierRate,
+                        notes = "Purchase $i from ${supplier.supplierName}"
+                    )
+                )
+            }
+        }
+        purchaseDao.insertAll(purchaseList)
+
+        // Insert 7 dummy sales for each customer
+        val salesList = mutableListOf<SalesEntity>()
+        customers.forEach { customer ->
+            for (i in 1..7) {
+                val volume = Random.nextDouble(5.0, 40.0)
+                val deduction = Random.nextDouble(0.0, 2.0)
+                val netMilk = volume - deduction
+                val price = netMilk * customer.customerRate
+                val paid = price * Random.nextDouble(0.5, 1.0)
+                val balance = price - paid
+
+                salesList.add(
+                    SalesEntity(
+                        customerId = customer.customerId ?: UUID.randomUUID().toString(),
+                        date = LocalDate.now().minusDays(i.toLong()),
+                        volume = volume,
+                        deduction = deduction,
+                        netMilk = netMilk,
+                        price = price,
+                        paid = paid,
+                        balance = balance,
+                        rateUsed = customer.customerRate,
+                        notes = "Sale $i to ${customer.customerName}"
+                    )
+                )
+            }
+        }
+        saleDao.insertAll(salesList)
     }
 
     override fun onDestroyView() {

@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.data.backup
 
 import android.content.Context
 import android.net.Uri
+import androidx.room.withTransaction
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -21,11 +22,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 import java.lang.reflect.Type
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.zip.GZIPOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -34,16 +33,20 @@ class DatabaseBackupHelper @Inject constructor(
     private val db: AppDatabase,
     @ApplicationContext private val context: Context
 ) {
+
     private val gson = GsonBuilder()
         .setPrettyPrinting()
-        .registerTypeAdapter(LocalDate::class.java, object : JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
-            private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-            override fun serialize(src: LocalDate?, typeOfSrc: Type?, ctx: JsonSerializationContext?) =
-                src?.let { JsonPrimitive(it.format(formatter)) }
+        .registerTypeAdapter(
+            LocalDate::class.java,
+            object : JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
+                private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
+                override fun serialize(src: LocalDate?, typeOfSrc: Type?, ctx: JsonSerializationContext?) =
+                    src?.let { JsonPrimitive(it.format(formatter)) }
 
-            override fun deserialize(json: JsonElement?, typeOfT: Type?, ctx: JsonDeserializationContext?) =
-                json?.asString?.let { LocalDate.parse(it, formatter) }
-        }).create()
+                override fun deserialize(json: JsonElement?, typeOfT: Type?, ctx: JsonDeserializationContext?) =
+                    json?.asString?.let { LocalDate.parse(it, formatter) }
+            }
+        ).create()
 
     data class BackupData(
         val customers: List<CustomerEntity>,
@@ -53,8 +56,12 @@ class DatabaseBackupHelper @Inject constructor(
         val expenses: List<ExpensesEntity>
     )
 
-    // Backup to SAF URI with progress callback
-    suspend fun backupDatabaseToUri(uri: Uri, progressCallback: (Int) -> Unit = {}) = withContext(Dispatchers.IO) {
+    // Backup database to URI
+    suspend fun backupDatabaseToUri(
+        uri: Uri,
+        progressCallback: (Int) -> Unit = {}
+    ) = withContext(Dispatchers.IO) {
+
         val data = BackupData(
             customers = db.customerDao().getAllSync(),
             suppliers = db.supplierDao().getAllSync(),
@@ -62,9 +69,11 @@ class DatabaseBackupHelper @Inject constructor(
             sales = db.salesDao().getAllSync(),
             expenses = db.expensesDao().getAllSync()
         )
+
         val json = gson.toJson(data)
+        val bytes = json.toByteArray()
+
         context.contentResolver.openOutputStream(uri)?.use { outStream ->
-            val bytes = json.toByteArray()
             val bufferSize = 4096
             var written = 0
             while (written < bytes.size) {
@@ -77,10 +86,15 @@ class DatabaseBackupHelper @Inject constructor(
         } ?: throw IOException("Failed to open URI for writing")
     }
 
-    // Restore from InputStream with progress callback
-    suspend fun restoreDatabase(inputStream: InputStream, progressCallback: (Int) -> Unit = {}): Boolean = withContext(Dispatchers.IO) {
+    // Restore database from InputStream
+    suspend fun restoreDatabase(
+        inputStream: InputStream,
+        progressCallback: (Int) -> Unit = {}
+    ): Boolean = withContext(Dispatchers.IO) {
+
         val bytes = inputStream.readBytes()
         val total = bytes.size
+
         val json = buildString {
             val bufferSize = 4096
             var written = 0
@@ -95,20 +109,24 @@ class DatabaseBackupHelper @Inject constructor(
         val type = object : TypeToken<BackupData>() {}.type
         val backupData: BackupData = gson.fromJson(json, type)
 
-        db.runInTransaction {
+        // Suspend-friendly transaction
+        db.withTransaction {
             db.customerDao().clearAll()
-            db.supplierDao().clearAll()
-            db.purchaseDao().clearAll()
-            db.salesDao().clearAll()
-            db.expensesDao().clearAll()
-
             db.customerDao().insertAll(backupData.customers)
+
+            db.supplierDao().clearAll()
             db.supplierDao().insertAll(backupData.suppliers)
+
+            db.purchaseDao().clearAll()
             db.purchaseDao().insertAll(backupData.purchases)
+
+            db.salesDao().clearAll()
             db.salesDao().insertAll(backupData.sales)
+
+            db.expensesDao().clearAll()
             db.expensesDao().insertAll(backupData.expenses)
         }
+
         true
     }
 }
-

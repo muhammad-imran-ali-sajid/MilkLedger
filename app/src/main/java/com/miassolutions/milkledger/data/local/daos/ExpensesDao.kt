@@ -10,13 +10,13 @@ import java.time.LocalDate
 interface ExpensesDao {
 
     @Query("SELECT * FROM expense_table")
-    fun getAllSync(): List<ExpensesEntity>
+    suspend fun getAllSync(): List<ExpensesEntity>
 
     @Query("DELETE FROM expense_table")
-    fun clearAll()
+    suspend fun clearAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(expenses: List<ExpensesEntity>)
+    suspend fun insertAll(expenses: List<ExpensesEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExpense(expense: ExpensesEntity)

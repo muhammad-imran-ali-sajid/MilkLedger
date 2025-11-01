@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.zplayground
+package com.miassolutions.milkledger.presentation.backup
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -30,7 +30,7 @@ class BackupRestoreViewModel @Inject constructor(
                 // Pass a lambda for progress updates
                 helper.backupDatabaseToUri(uri) { progress ->
                     // Wrap emit in coroutine
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.Main) {
                         _status.emit("Backing up: $progress%")
                     }
                 }
@@ -53,7 +53,7 @@ class BackupRestoreViewModel @Inject constructor(
                 val byteStream = ByteArrayInputStream(bytes)
 
                 helper.restoreDatabase(byteStream) { progress ->
-                    viewModelScope.launch {
+                    viewModelScope.launch(Dispatchers.Main) {
                         _status.emit("Restoring: $progress%")
                     }
                 }

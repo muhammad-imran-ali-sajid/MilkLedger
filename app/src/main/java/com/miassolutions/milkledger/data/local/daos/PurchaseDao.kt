@@ -14,13 +14,13 @@ import java.time.LocalDate
 interface PurchaseDao {
 
     @Query("SELECT * FROM purchase_table")
-    fun getAllSync(): List<PurchaseEntity>
+   suspend fun getAllSync(): List<PurchaseEntity>
 
     @Query("DELETE FROM purchase_table")
-    fun clearAll()
+    suspend fun clearAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(expenses: List<PurchaseEntity>)
+   suspend fun insertAll(expenses: List<PurchaseEntity>)
 
     @Query("SELECT * FROM supplier_table")
     fun getAllSuppliers(): Flow<List<SupplierEntity>>

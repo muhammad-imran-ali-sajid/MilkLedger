@@ -84,7 +84,7 @@
     <fragment
         android:id="@+id/driveBackupFragment"
         tools:layout="@layout/fragment_drive_backup"
-        android:name="com.miassolutions.milkledger.zplayground.DriveBackupFragment"
+        android:name="com.miassolutions.milkledger.presentation.backup.DriveBackupFragment"
         android:label="DriveBackupFragment" />
     <fragment
         android:id="@+id/dashboardFragment"

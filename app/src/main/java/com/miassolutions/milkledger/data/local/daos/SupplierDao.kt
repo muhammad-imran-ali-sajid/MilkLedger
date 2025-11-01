@@ -14,13 +14,13 @@ import kotlinx.coroutines.flow.Flow
 interface SupplierDao {
 
     @Query("SELECT * FROM supplier_table")
-    fun getAllSync(): List<SupplierEntity>
+    suspend fun getAllSync(): List<SupplierEntity>
 
     @Query("DELETE FROM supplier_table")
-    fun clearAll()
+   suspend fun clearAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(suppliers: List<SupplierEntity>)
+   suspend fun insertAll(suppliers: List<SupplierEntity>)
 
     @Query("DELETE FROM supplier_table")
     suspend fun deleteAll()

@@ -17,13 +17,13 @@ import java.time.LocalDate
 interface SalesDao {
 
     @Query("SELECT * FROM sales_table")
-    fun getAllSync(): List<SalesEntity>
+    suspend fun getAllSync(): List<SalesEntity>
 
     @Query("DELETE FROM sales_table")
-    fun clearAll()
+    suspend fun clearAll()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(expenses: List<SalesEntity>)
+   suspend fun insertAll(expenses: List<SalesEntity>)
 
     // ✅ Insert or replace for auto-save
     @Insert(onConflict = OnConflictStrategy.REPLACE)
