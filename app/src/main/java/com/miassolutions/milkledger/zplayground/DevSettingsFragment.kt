@@ -70,7 +70,7 @@ class DevSettingsFragment : Fragment() {
             .show()
     }
 
-    private suspend fun populateDummyData() {
+    private  fun populateDummyData() {
         val customerDao = database.customerDao()
         val supplierDao = database.supplierDao()
 

@@ -12,8 +12,16 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CustomerDao {
 
+    @Query("SELECT * FROM customer_table")
+    fun getAllSync(): List<CustomerEntity>
+
+    @Query("DELETE FROM customer_table")
+    fun clearAll()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(customers: List<CustomerEntity>)
+    fun insertAll(customers: List<CustomerEntity>)
+
+
 
     @Query("SELECT * FROM customer_table WHERE isSynced = 0 OR deletedAt IS NOT NULL")
     suspend fun getPendingSync(): List<CustomerEntity>

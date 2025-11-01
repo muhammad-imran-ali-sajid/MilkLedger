@@ -6,14 +6,21 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SupplierDao {
 
+    @Query("SELECT * FROM supplier_table")
+    fun getAllSync(): List<SupplierEntity>
+
+    @Query("DELETE FROM supplier_table")
+    fun clearAll()
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(suppliers: List<SupplierEntity>)
+    fun insertAll(suppliers: List<SupplierEntity>)
 
     @Query("DELETE FROM supplier_table")
     suspend fun deleteAll()

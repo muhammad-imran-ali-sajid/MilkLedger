@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import kotlinx.coroutines.flow.Flow
@@ -15,9 +16,19 @@ import java.time.LocalDate
 @Dao
 interface SalesDao {
 
+    @Query("SELECT * FROM sales_table")
+    fun getAllSync(): List<SalesEntity>
+
+    @Query("DELETE FROM sales_table")
+    fun clearAll()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertAll(expenses: List<SalesEntity>)
+
     // ✅ Insert or replace for auto-save
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSale(sale: SalesEntity)
+
 
     @Query("SELECT * FROM customer_table ORDER BY sortOrder ASC")
     fun getAllCustomers(): Flow<List<CustomerEntity>>
