@@ -1,19 +1,19 @@
 package com.miassolutions.milkledger.presentation.customer.details
 
 import com.miassolutions.milkledger.core.pdf.customerreport.SalesItemRecord
-import com.miassolutions.milkledger.core.ui.extensions.formattedDate
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import java.time.LocalDate
 
 
 data class CustomerDetailModel(
-    val date : LocalDate,
-    val milkAmount : Double,
-    val deduction : Double,
-    val netMilk : Double,
-    val milkPrice : Double, // This is the total price/amount (Price * NetMilk)
-    val payment : Double,
-    val balance : Double,
+    val date: LocalDate,
+    val milkAmount: Double,
+    val deduction: Double,
+    val netMilk: Double,
+    val milkPrice: Double, // This is the total price/amount (Price * NetMilk)
+    val payment: Double,
+    val balance: Double,
 
     // 💡 Added fields for rate tracking (analogous to SupplierDetailModel)
     val rateUsed: Double,
@@ -21,7 +21,7 @@ data class CustomerDetailModel(
     val isRateChanged: Boolean,
     val isRateChangeStart: Boolean = false, // Will be set by the extension function
 
-    val notes : String? = null
+    val notes: String? = null
 )
 
 
@@ -29,7 +29,7 @@ data class CustomerDetailModel(
 // - this.sale.rateUsed (price used for this specific sale)
 // - this.customer.customerRate (current price for the customer)
 
-fun SaleWithCustomer.toCustomerDetail() : CustomerDetailModel = CustomerDetailModel(
+fun SaleWithCustomer.toCustomerDetail(): CustomerDetailModel = CustomerDetailModel(
     date = this.sale.date,
     milkAmount = this.sale.volume,
     deduction = this.sale.deduction,
@@ -87,7 +87,7 @@ fun List<CustomerDetailModel>.toRecordList(): List<SalesItemRecord> {
 
     return this.map { item ->
         SalesItemRecord(
-            date = item.date.formattedDate(),
+            date = item.date.toDisplayFormat(),
             quantity = item.netMilk, // Use netMilk for quantity
             deduction = 0.0, // N/A for customer, or use a placeholder
             rate = item.rateUsed,

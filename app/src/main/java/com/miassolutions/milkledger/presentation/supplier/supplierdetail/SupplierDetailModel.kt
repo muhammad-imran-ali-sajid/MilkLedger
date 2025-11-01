@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseItemRecord
 import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierItemRecord
-import com.miassolutions.milkledger.core.ui.extensions.formattedDate
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import java.time.LocalDate
@@ -46,7 +46,7 @@ fun List<SupplierDetailModel>.toRecordList(): List<SupplierItemRecord> {
 
     return this.map { item ->
         SupplierItemRecord(
-            date = item.date.formattedDate(),
+            date = item.date.toDisplayFormat(),
             quantity = item.milkAmount,
             ts = item.ts,
             rate = item.rateUsed,

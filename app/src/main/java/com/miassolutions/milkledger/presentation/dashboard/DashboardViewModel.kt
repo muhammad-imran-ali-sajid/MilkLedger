@@ -2,9 +2,8 @@ package com.miassolutions.milkledger.presentation.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.DateRangeUtil
-import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -163,8 +162,5 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private fun formatPeriodLabel(start: LocalDate, end: LocalDate): String {
-        return if (start == end) start.toDisplayFormat()
-        else "${start.toDisplayFormat()} → ${end.toDisplayFormat()}"
-    }
+
 }

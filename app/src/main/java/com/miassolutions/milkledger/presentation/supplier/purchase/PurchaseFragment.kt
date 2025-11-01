@@ -14,9 +14,9 @@ import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReceiptPdf
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseSummary
 import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.isToday
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
@@ -115,7 +115,7 @@ class PurchaseFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
                 purchaseAdapter.submitList(state.purchasesForDate)
-                binding.tvSelectedDate.text = state.currentDate.formattedDate()
+                binding.tvSelectedDate.text = state.currentDate.toDisplayFormat()
 
                 showSummary(
                     milkAmount = state.totalVolume,
@@ -172,8 +172,8 @@ class PurchaseFragment :
         )
 
         val data = PurchaseReceiptPdf(
-            footerNote = "Receipt generated on : ${LocalDate.now().formattedDate()}",
-            date = state.currentDate.formattedDate(),
+            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}",
+            date = state.currentDate.toDisplayFormat(),
             recordList = recordList,
             purchaseSummary = pdfSummary
         )

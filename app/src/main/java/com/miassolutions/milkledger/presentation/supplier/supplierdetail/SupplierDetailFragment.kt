@@ -1,10 +1,12 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
+// Removed unused imports: com.miassolutions.datesort.DateFilterBottomSheet, com.miassolutions.datesort.OnDateRangeSelected
+// Removed unused import: com.miassolutions.milkledger.core.ui.datesort.DateRangeType
+// Removed unused import: com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import android.view.Menu
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-// Removed unused imports: com.miassolutions.datesort.DateFilterBottomSheet, com.miassolutions.datesort.OnDateRangeSelected
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.helper.numberFormat
@@ -12,12 +14,9 @@ import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierReceiptPdf
 import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierReportGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
-// Removed unused import: com.miassolutions.milkledger.core.ui.datesort.DateRangeType
-import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
-import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.RateChangeUtils
+import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.core.util.toDisplayFormat
-// Removed unused import: com.miassolutions.milkledger.core.ui.sort.FilterSharedViewModel
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
 import com.miassolutions.milkledger.databinding.LayoutSupplierDetailSummaryBinding
@@ -97,8 +96,8 @@ class SupplierDetailFragment :
         val endDate = state.selectedEndDate ?: LocalDate.now()
 
         // Format the dates (assuming formattedDate() is an extension on LocalDate)
-        val fromDate = startDate.formattedDate()
-        val toDate = endDate.formattedDate()
+        val fromDate = startDate.toDisplayFormat()
+        val toDate = endDate.toDisplayFormat()
 
         val dateRange = "$fromDate - $toDate"
 
@@ -149,7 +148,7 @@ class SupplierDetailFragment :
     private fun getFormattedDateRange(start: LocalDate?, end: LocalDate?): String {
         return when {
             start != null && end != null -> {
-                formatDateRange(start, end)
+                formatPeriodLabel(start, end)
             }
 
             else -> "All Records"

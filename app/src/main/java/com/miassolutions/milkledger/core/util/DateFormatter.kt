@@ -9,3 +9,9 @@ private fun appDateFormatter(): DateTimeFormatter =
 
 fun LocalDate.toDisplayFormat(): String =
     this.format(appDateFormatter())
+
+
+fun formatPeriodLabel(start: LocalDate, end: LocalDate): String {
+    return if (start == end) start.toDisplayFormat()
+    else "${start.toDisplayFormat()} to ${end.toDisplayFormat()}"
+}

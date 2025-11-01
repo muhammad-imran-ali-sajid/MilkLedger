@@ -1,13 +1,12 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
 import android.util.Log
-import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.extensions.formattedDate
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
@@ -148,7 +147,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             adapter.submitList(state.salesForDate)
 
             binding.apply {
-                tvSelectedDate.text = state.currentDate.formattedDate()
+                tvSelectedDate.text = state.currentDate.toDisplayFormat()
 
 
 

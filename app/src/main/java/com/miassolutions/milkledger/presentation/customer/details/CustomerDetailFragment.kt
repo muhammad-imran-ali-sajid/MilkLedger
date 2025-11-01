@@ -8,8 +8,8 @@ import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.pdf.customerreport.CustomerReportGenerator
 import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.ui.extensions.formatDateRange
-import com.miassolutions.milkledger.core.ui.extensions.formattedDate
+import com.miassolutions.milkledger.core.util.formatPeriodLabel
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
 import com.miassolutions.milkledger.databinding.LayoutCustomerDetailSummaryBinding
@@ -111,7 +111,7 @@ class CustomerDetailFragment :
         // Since this runs after *any* date selection, we now ask for confirmation to generate the report.
         showDialog(
             "Generate Receipt",
-            "Generate receipt for range\n${formatDateRange(start, end)}?"
+            "Generate receipt for range\n${formatPeriodLabel(start, end)}?"
         ) {
             // Only call generateReport AFTER confirmation
             generateReport()
@@ -128,8 +128,8 @@ class CustomerDetailFragment :
         val endDate = state.selectedEndDate ?: LocalDate.now()
 
         // Format the dates (assuming formattedDate() is an extension on LocalDate)
-        val fromDate = startDate.formattedDate()
-        val toDate = endDate.formattedDate()
+        val fromDate = startDate.toDisplayFormat()
+        val toDate = endDate.toDisplayFormat()
 
         val dateRange = "$fromDate - $toDate"
         Log.d("SupplierDetailFragment", "Report Date Range: $dateRange")
@@ -147,7 +147,7 @@ class CustomerDetailFragment :
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             totalBalance = totalBalance.toRoundedStr(),
-            footerNote = "Receipt generated on : ${LocalDate.now().formattedDate()}"
+            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}"
 
         )
 
@@ -168,7 +168,7 @@ class CustomerDetailFragment :
     private fun getFormattedDateRange(start: LocalDate?, end: LocalDate?): String {
         return when {
             start != null && end != null -> {
-                formatDateRange(start, end)
+                formatPeriodLabel(start, end)
             }
 
             else -> "All Records"
@@ -207,65 +207,6 @@ class CustomerDetailFragment :
         }
 
     }
-
-//    private fun setupDateRangeToggle() = with(binding) {
-//        toggleGroupFilter.addOnButtonCheckedListener { _, checkedId, isChecked ->
-//            if (!isChecked) return@addOnButtonCheckedListener
-//
-//            val rangeType = when (checkedId) {
-//                R.id.btnDaily -> DateRangeType.TODAY
-//                R.id.btnWeekly -> DateRangeType.WEEK
-//                R.id.btnMonthly -> DateRangeType.MONTH
-//                else -> DateRangeType.ALL
-//            }
-//
-//            val (start, end) = DateRangeHelper.getRange(rangeType)
-//            updateDateLabel(rangeType, start, end)
-//
-//        }
-//
-//        datePickerActions.tvSelectedDate.setOnClickListener {
-//            when (toggleGroupFilter.checkedButtonId) {
-//                R.id.btnDaily -> pickSingleDate { date ->
-//                    updateDateLabel(DateRangeType.TODAY, date, date)
-//                    viewModel.setCustomDateRange(date, date)
-//                }
-//
-//                R.id.btnWeekly -> pickWeek { start, end ->
-//                    updateDateLabel(DateRangeType.WEEK, start, end)
-//                    viewModel.setCustomDateRange(start, end)
-//                }
-//
-//                R.id.btnMonthly -> pickMonth { start, end, label ->
-//                    datePickerActions.tvSelectedDate.text = label
-//                    viewModel.setCustomDateRange(start, end)
-//                }
-//
-//                else -> toggleGroupFilter.check(R.id.btnDaily)
-//            }
-//        }
-//
-//        // Default selection on screen load
-//        toggleGroupFilter.check(R.id.btnDaily)
-//        val today = LocalDate.now()
-//        updateDateLabel(DateRangeType.TODAY, today, today)
-//        viewModel.setCustomDateRange(today, today)
-//    }
-
-//    private fun updateDateLabel(rangeType: DateRangeType, start: LocalDate?, end: LocalDate?) {
-//        binding.datePickerActions.tvSelectedDate.text = when (rangeType) {
-//            DateRangeType.TODAY -> start?.toString().orEmpty()
-//            DateRangeType.WEEK -> if (start != null && end != null) {
-//                formatDateRange(start, end)
-//            } else ""
-//            DateRangeType.MONTH -> start?.format(DateTimeFormatter.ofPattern("MMMM yyyy")).orEmpty()
-//            else -> "All Records"
-//        }
-//    }
-
-//    override fun setupListeners() = with(binding.datePickerActions) {
-//
-//    }
 
 
 }
