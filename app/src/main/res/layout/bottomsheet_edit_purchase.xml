@@ -11,8 +11,8 @@
     app:cardElevation="6dp">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
         android:id="@+id/scrollView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -24,17 +24,45 @@
             <!-- Supplier Name -->
             <TextView
                 android:id="@+id/tv_supplier_name"
+                style="@style/TextTitleUrdu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_edittext_readable"
+                android:backgroundTint="@color/milk_pale_yellow"
                 android:paddingVertical="12dp"
                 android:text="سپلائر کا نام"
                 android:textAlignment="center"
-                style="@style/TextTitleUrdu"
-                android:backgroundTint="@color/milk_pale_yellow"
-                android:background="@drawable/bg_edittext_readable"
                 android:textColor="@android:color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/tilAdvance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="Advance"
+                    android:textColor="#555555"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAdvanceAmount"
+                    android:layout_width="0dp"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:inputType="numberDecimal"
+                    android:padding="10dp" />
+            </LinearLayout>
 
             <!-- Volume -->
             <LinearLayout
@@ -61,8 +89,7 @@
                     android:layout_weight="3"
                     android:background="@drawable/bg_edittext_readable"
                     android:inputType="numberDecimal"
-                    android:padding="10dp"
-                     />
+                    android:padding="10dp" />
             </LinearLayout>
 
             <!-- Fat -->
@@ -157,55 +184,69 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                android:layout_marginTop="8dp">
 
+                <!-- Label: Price -->
                 <TextView
+                    android:id="@+id/textView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="Price"
                     android:textColor="#555555"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintWidth_percent="0.4" /> <!-- 2 / 5 -->
 
-
-
+                <!-- Value: tv_price -->
                 <TextView
                     android:id="@+id/tv_price"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:background="@drawable/bg_edittext_readable"
                     android:backgroundTint="@color/textview_bg_tint"
-                    android:inputType="numberDecimal"
                     android:padding="10dp"
                     android:textColor="@color/textview_text_color"
-                    android:textDirection="ltr"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textDirection="ltr"
+                    app:layout_constraintStart_toEndOf="@id/textView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintWidth_percent="0.3" /> <!-- 3 / 5 -->
 
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Rate"
+                    android:textSize="10sp"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_rate"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_rate"
+                    app:layout_constraintStart_toEndOf="@+id/tv_price"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Rate: tv_rate -->
                 <TextView
                     android:id="@+id/tv_rate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/milk_soft_green"
-                    android:paddingVertical="14dp"
+                    android:paddingStart="4dp"
                     android:text="000"
                     android:textColor="@color/textview_text_color"
-                    android:textDirection="ltr"
-                    android:textSize="10sp"
+                    android:textSize="16sp"
                     android:textStyle="bold"
-                    tools:ignore="SmallSp" />
-            </LinearLayout>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_price"
+                    app:layout_constraintWidth_percent="0.3" /> <!-- 3 / 5 -->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <!-- Paid -->
             <LinearLayout
@@ -309,8 +350,6 @@
                 android:orientation="horizontal">
 
 
-
-
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_cancel"
                     android:layout_width="0dp"
@@ -327,8 +366,8 @@
                     android:id="@+id/btn_save"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="12dp"
+                    android:layout_weight="1"
                     android:background="@drawable/bg_edittext_readable"
                     android:backgroundTint="@color/md_theme_primary"
                     android:text="Save"

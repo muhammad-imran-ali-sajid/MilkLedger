@@ -13,6 +13,8 @@ import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
+import com.miassolutions.milkledger.core.util.hide
+import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
@@ -44,11 +46,15 @@ class PurchaseEditBottomSheet(
             tvSupplierName.text = supplier.supplierName
 
             // Autofill with empty if 0
+            tvAdvanceAmount.text = supplier.advanceAmount.toRoundedStr()
             etVolume.setText(purchase.milkAmount.takeIf { it != 0.0 }?.toString() ?: "")
             etFat.setText(purchase.fat.takeIf { it != 0.0 }?.toString() ?: "")
             etLr.setText(purchase.lr.takeIf { it != 0.0 }?.toString() ?: "")
             etPaid.setText(purchase.payment.toString())
             etNotes.setText(purchase.notes ?: "")
+            tvRate.text = "${purchase.rateUsed.toRoundedStr(" % .1f")}"
+
+            if(supplier.advanceAmount <= 0.0) binding.tilAdvance.hide() else binding.tilAdvance.show()
 
             listOf(etVolume, etFat, etLr, etPaid, etNotes).forEach { autoSelectOnFocus(it) }
 
@@ -124,7 +130,6 @@ class PurchaseEditBottomSheet(
         val fat = binding.etFat.text.toString().toDoubleOrNull()
         val lr = binding.etLr.text.toString().toDoubleOrNull()
         val rate = entry.supplier.supplierRate
-        val rateUsed = entry.purchase.rateUsed
 
 
 
@@ -139,8 +144,7 @@ class PurchaseEditBottomSheet(
             volume * rate
         }
 
-        binding.tvPrice.text = "${price.toRoundedStr()}"
-        binding.tvRate.text = "@ ${rateUsed}"
+        binding.tvPrice.text = price.toRoundedStr()
     }
 
     private fun recalculateTS() {
