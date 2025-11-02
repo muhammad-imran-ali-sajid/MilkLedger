@@ -5,26 +5,21 @@ package com.miassolutions.milkledger.core.alarm
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import com.miassolutions.milkledger.R
+import android.widget.Toast
+import com.miassolutions.milkledger.core.notification.AppNotifier
+
 
 class AlarmReceiver : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent?) {
+        val title = intent?.getStringExtra("title") ?: "Reminder"
+        val message = intent?.getStringExtra("message") ?: "Your scheduled task is due"
 
-    override fun onReceive(context: Context, intent: Intent) {
-        val title = intent.getStringExtra("title") ?: "Note Reminder"
-        val content = intent.getStringExtra("content") ?: ""
+        AppNotifier.show(
+            context = context,
+            title = title,
+            message = message
+        )
 
-        val notification = NotificationCompat.Builder(context, "notes_channel")
-            .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(title)
-            .setContentText(content)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(true)
-            .build()
-
-        with(NotificationManagerCompat.from(context)) {
-            notify(title.hashCode(), notification)
-        }
+        Toast.makeText(context, "Alarm Triggered: $title", Toast.LENGTH_SHORT).show()
     }
 }

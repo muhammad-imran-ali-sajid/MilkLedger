@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +16,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.core.alarm.AlarmHelper
+import com.miassolutions.milkledger.core.notification.AppNotifier
+import com.miassolutions.milkledger.core.notification.NotificationPermissionHelper
+import com.miassolutions.milkledger.core.notification.NotificationScheduler
 import com.miassolutions.milkledger.core.util.requestExactAlarmPermissionIfNeeded
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.showMaterialTimePicker
@@ -33,6 +38,16 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetAddEditNoteBinding? = null
     private val binding get() = _binding!!
 
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            Toast.makeText(
+                requireContext(),
+                if (granted) "Permission granted" else "Denied",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
     private val viewModel by viewModels<NotesViewModel>()
     private var currentNote: NoteEntity? = null
     private val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
@@ -49,30 +64,14 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
-            }
-        }
+        AppNotifier.init(requireContext())
+        NotificationPermissionHelper.requestPermissionIfNeeded(this, notificationPermissionLauncher)
 
         setupUI()
         setupObservers()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 101 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            showSnackbar("Notification permission granted")
-        }
-    }
+
 
 
     private fun setupUI() {
@@ -113,6 +112,8 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
 
                         // Ask permission and schedule alarm
                         checkAndScheduleAlarm(alarmDateTime)
+
+
                     }
 
 

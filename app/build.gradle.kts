@@ -72,6 +72,13 @@ dependencies {
     implementation(project(":Sort-Filter"))
     implementation(project(":datesort"))
 
+
+    val work_version = "2.11.0"
+
+
+    // Kotlin + coroutines
+    implementation("androidx.work:work-runtime-ktx:$work_version")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // Import the Firebase BoM
