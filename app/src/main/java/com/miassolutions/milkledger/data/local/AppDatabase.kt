@@ -5,12 +5,14 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
+import com.miassolutions.milkledger.data.local.daos.NoteDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
@@ -21,7 +23,8 @@ import com.miassolutions.milkledger.data.local.entities.SupplierEntity
         SupplierEntity::class,
         PurchaseEntity::class,
         SalesEntity::class,
-        ExpensesEntity::class
+        ExpensesEntity::class,
+        NoteEntity::class
     ],
     version = 1,
     exportSchema = false
@@ -35,4 +38,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun salesDao(): SalesDao
     abstract fun expensesDao(): ExpensesDao
     abstract fun reportsDao(): ReportsDao
+    abstract fun noteDao(): NoteDao
 }

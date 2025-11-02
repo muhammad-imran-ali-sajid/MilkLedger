@@ -47,7 +47,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                 R.id.dashboardFragment,
                 R.id.action_customersFragment,
                 R.id.action_suppliersFragment,
-                R.id.action_settingsFragment
+                R.id.action_settingsFragment,
+                R.id.action_notesFragment
             ),
             binding.drawerLayout
         )
@@ -65,6 +66,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             val destinationId = when (menuItem.itemId) {
                 R.id.action_settingsFragment -> R.id.settingsFragment
                 R.id.action_customersFragment -> R.id.customersFragment
+                R.id.action_notesFragment -> R.id.notesListFragment
                 R.id.action_suppliersFragment -> R.id.suppliersFragment
                 R.id.action_devSettingsFragment -> R.id.devSettingsFragment
                 R.id.action_driveBackupFragment -> R.id.driveBackupFragment

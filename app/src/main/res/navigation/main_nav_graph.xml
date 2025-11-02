@@ -128,4 +128,18 @@
             android:name="supplierId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/notesListFragment"
+        android:name="com.miassolutions.milkledger.presentation.notes.NotesListFragment"
+        android:label="Notes"
+        tools:layout="@layout/fragment_notes_list" >
+        <action
+            android:id="@+id/action_notesListFragment_to_addEditNoteFragment"
+            app:destination="@id/addEditNoteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditNoteFragment"
+        android:name="com.miassolutions.milkledger.presentation.notes.AddEditNoteFragment"
+        android:label="Add New Note"
+        tools:layout="@layout/fragment_add_edit_note" />
 </navigation>

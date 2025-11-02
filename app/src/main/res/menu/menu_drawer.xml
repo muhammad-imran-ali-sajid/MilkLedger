@@ -15,6 +15,13 @@
             android:orderInCategory="101"
             android:title="@string/suppliers"
             app:showAsAction="never" />
+
+        <item
+            android:id="@+id/action_notesFragment"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:orderInCategory="102"
+            android:title="@string/suppliers"
+            app:showAsAction="never" />
     </group>
 
     <!-- Tools / Settings -->
