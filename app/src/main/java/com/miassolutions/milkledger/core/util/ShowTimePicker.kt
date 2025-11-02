@@ -1,22 +1,29 @@
 package com.miassolutions.milkledger.core.util
 
 
-import android.app.TimePickerDialog
-import android.content.Context
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import java.time.LocalTime
 
-fun showTimePicker(
-    context: Context,
+fun showMaterialTimePicker(
+    fragmentManager: FragmentManager,
     initialTime: LocalTime = LocalTime.now(),
+    is24Hour: Boolean = true,
     onPicked: (LocalTime) -> Unit
 ) {
-    TimePickerDialog(
-        context,
-        { _, hourOfDay, minute ->
-            onPicked(LocalTime.of(hourOfDay, minute))
-        },
-        initialTime.hour,
-        initialTime.minute,
-        true // 24-hour format
-    ).show()
+    val picker = MaterialTimePicker.Builder()
+        .setTimeFormat(if (is24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H)
+        .setHour(initialTime.hour)
+        .setMinute(initialTime.minute)
+        .setTitleText("Select time")
+        .build()
+
+    picker.addOnPositiveButtonClickListener {
+        val selectedTime = LocalTime.of(picker.hour, picker.minute)
+        onPicked(selectedTime)
+    }
+
+    picker.show(fragmentManager, "MaterialTimePicker")
 }
+

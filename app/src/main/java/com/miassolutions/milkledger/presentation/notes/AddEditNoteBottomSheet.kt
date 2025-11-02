@@ -16,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.core.alarm.AlarmHelper
 import com.miassolutions.milkledger.core.util.requestExactAlarmPermissionIfNeeded
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.util.showTimePicker
+import com.miassolutions.milkledger.core.util.showMaterialTimePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.BottomSheetAddEditNoteBinding
@@ -24,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
@@ -51,7 +52,8 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
             }
         }
@@ -99,12 +101,15 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
                 isAuthorized = true,
                 initialDate = LocalDate.now(),
                 useConstraints = false,
-                onPicked = {pickedDate->
-                    showTimePicker(requireContext()) { pickedTime ->
+                onPicked = { pickedDate ->
+                    showMaterialTimePicker(
+                        fragmentManager = parentFragmentManager,
+                        initialTime = LocalTime.now()
+                    ) { pickedTime ->
                         val alarmDateTime = pickedDate.atTime(pickedTime)
                         selectedDate = pickedDate
                         binding.tvAlarmDateAndTime.text =
-                            "${pickedDate.toDisplayFormat()} ${pickedTime.toString()}"
+                            "${pickedDate.toDisplayFormat()} ${pickedTime}"
 
                         // Ask permission and schedule alarm
                         checkAndScheduleAlarm(alarmDateTime)
@@ -161,7 +166,8 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
             }
 
             if (requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 101)
                 return
             }
