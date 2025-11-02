@@ -16,7 +16,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.core.alarm.AlarmScheduler
 import com.miassolutions.milkledger.core.notification.AppNotifier
 import com.miassolutions.milkledger.core.notification.NotificationPermissionHelper
+import com.miassolutions.milkledger.core.util.dateTimeFormatter
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
+import com.miassolutions.milkledger.core.util.showFutureDatePicker
 import com.miassolutions.milkledger.core.util.showMaterialTimePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
@@ -51,8 +53,7 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
 
     private val viewModel by viewModels<NotesViewModel>()
     private var currentNote: NoteEntity? = null
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yy")
-    private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yy : hh mm a")
+
     private var selectedDateTime: LocalDateTime? = null
 
 
@@ -99,30 +100,32 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
             binding.etNoteTitle.setText(note.title)
             binding.etNoteContent.setText(note.content)
             note.alarmDateTime?.let {
-                binding.tvAlarmDateAndTime.text = it.format(dateFormatter)
+                binding.tvAlarmDateAndTime.text = it.format(dateTimeFormatter)
             }
             binding.btnSaveNote.text = "Update Note"
         }
 
         // Pick alarm date
         binding.tvAlarmDateAndTime.setOnClickListener {
-            showExpenseDatePicker(
-                isAuthorized = true,
+            showFutureDatePicker(
                 initialDate = LocalDate.now(),
-                useConstraints = false,
                 onPicked = { pickedDate ->
                     showMaterialTimePicker(
                         fragmentManager = parentFragmentManager,
                         initialTime = LocalTime.now()
                     ) { pickedTime ->
                         val alarmDateTime = pickedDate.atTime(pickedTime)
-                        selectedDateTime = alarmDateTime // ✅ Save full date + time
 
-                        // Show both date and time in the TextView
-                        val displayText = alarmDateTime.format(dateTimeFormatter)
-                        binding.tvAlarmDateAndTime.text = displayText
+                        // ✅ Prevent scheduling if in the past
+                        if (alarmDateTime.isBefore(LocalDateTime.now())) {
+                            showSnackbar("Please select a future time.")
+                            return@showMaterialTimePicker
+                        }
 
-                        // Optionally schedule alarm now
+                        selectedDateTime = alarmDateTime
+                        binding.tvAlarmDateAndTime.text =
+                            alarmDateTime.format(dateTimeFormatter)
+
                         checkAndScheduleAlarm(alarmDateTime)
 
                     }

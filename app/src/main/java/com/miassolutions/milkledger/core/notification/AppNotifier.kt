@@ -14,6 +14,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.miassolutions.milkledger.R
 
 object AppNotifier {
 
@@ -29,7 +30,7 @@ object AppNotifier {
             val channel = NotificationChannel(
                 DEFAULT_CHANNEL_ID,
                 DEFAULT_CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 description = "Default app notifications"
             }
@@ -46,7 +47,7 @@ object AppNotifier {
         title: String,
         message: String,
         channelId: String = DEFAULT_CHANNEL_ID,
-        @DrawableRes icon: Int = android.R.drawable.ic_dialog_info,
+        @DrawableRes icon: Int = R.drawable.ic_notification,
         intent: Intent? = null,
         notificationId: Int = System.currentTimeMillis().toInt()
     ) {
@@ -72,7 +73,7 @@ object AppNotifier {
             .setContentTitle(title)
             .setContentText(message)
             .setAutoCancel(true)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .apply {
                 if (pendingIntent != null) setContentIntent(pendingIntent)
             }

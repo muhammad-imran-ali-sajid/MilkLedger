@@ -3,10 +3,14 @@ package com.miassolutions.milkledger.core.util
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 import java.util.Calendar
 import java.util.concurrent.TimeUnit
@@ -180,6 +184,96 @@ class DatePickerLogic {
         return constraintsBuilder.build()
     }
 }
+
+class FutureDateValidator : CalendarConstraints.DateValidator {
+
+    companion object {
+        @JvmField
+        val CREATOR: Parcelable.Creator<FutureDateValidator> =
+            object : Parcelable.Creator<FutureDateValidator> {
+                override fun createFromParcel(parcel: Parcel) = FutureDateValidator()
+                override fun newArray(size: Int): Array<FutureDateValidator?> =
+                    arrayOfNulls(size)
+            }
+    }
+
+    override fun isValid(dateInMillis: Long): Boolean {
+        val todayStart = CalendarUtils.getTodayUtcTimestampAtMidnight()
+        return dateInMillis >= todayStart // ✅ only today or future
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {}
+    override fun describeContents() = 0
+}
+
+fun buildFutureConstraints(): CalendarConstraints {
+    val constraintsBuilder = CalendarConstraints.Builder()
+    val validator = FutureDateValidator()
+
+    // Let users scroll far into the future (e.g., +10 years)
+    val futureDate = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC")).apply {
+        add(Calendar.YEAR, 10)
+    }.timeInMillis
+
+    val today = CalendarUtils.getTodayUtcTimestampAtMidnight()
+
+    return constraintsBuilder
+        .setStart(today)
+        .setEnd(futureDate)
+        .setValidator(validator)
+        .build()
+}
+
+fun Fragment.showFutureDatePicker(
+    initialDate: LocalDate = LocalDate.now(),
+    onPicked: (LocalDate) -> Unit
+) {
+    val constraints = buildFutureConstraints()
+
+    val initialTimestamp = initialDate
+        .atStartOfDay(ZoneId.of("UTC"))
+        .toInstant()
+        .toEpochMilli()
+
+    val builder = MaterialDatePicker.Builder.datePicker()
+        .setTitleText("Select Alarm Date")
+        .setSelection(initialTimestamp)
+        .setCalendarConstraints(constraints)
+
+    val datePicker = builder.build()
+
+    datePicker.addOnPositiveButtonClickListener { selectedTimestamp ->
+        val selectedDate = Instant.ofEpochMilli(selectedTimestamp)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+        onPicked(selectedDate)
+    }
+
+    datePicker.show(parentFragmentManager, "FUTURE_DATE_PICKER_TAG")
+}
+
+
+fun showMaterialTimePicker(
+    fragmentManager: FragmentManager,
+    initialTime: LocalTime = LocalTime.now(),
+    is24Hour: Boolean = true,
+    onPicked: (LocalTime) -> Unit
+) {
+    val picker = MaterialTimePicker.Builder()
+        .setTimeFormat(if (is24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H)
+        .setHour(initialTime.hour)
+        .setMinute(initialTime.minute)
+        .setTitleText("Select time")
+        .build()
+
+    picker.addOnPositiveButtonClickListener {
+        val selectedTime = LocalTime.of(picker.hour, picker.minute)
+        onPicked(selectedTime)
+    }
+
+    picker.show(fragmentManager, "MaterialTimePicker")
+}
+
 
 
 // ==============================================================================
