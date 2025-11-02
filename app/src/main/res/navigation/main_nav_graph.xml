@@ -139,7 +139,7 @@
     </fragment>
     <fragment
         android:id="@+id/addEditNoteFragment"
-        android:name="com.miassolutions.milkledger.presentation.notes.AddEditNoteFragment"
+        android:name="com.miassolutions.milkledger.presentation.notes.AddEditNoteBottomSheet"
         android:label="Add New Note"
-        tools:layout="@layout/fragment_add_edit_note" />
+        tools:layout="@layout/bottom_sheet_add_edit_note" />
 </navigation>

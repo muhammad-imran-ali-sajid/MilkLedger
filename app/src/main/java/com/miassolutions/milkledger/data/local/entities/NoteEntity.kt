@@ -1,11 +1,14 @@
 package com.miassolutions.milkledger.data.local.entities
 
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 import java.util.UUID
 
+@Parcelize
 @Entity(tableName = "note_table")
 data class NoteEntity(
     @PrimaryKey
@@ -15,4 +18,4 @@ data class NoteEntity(
     val createdDate: LocalDate = LocalDate.now(),
     val alarmDate: LocalDate?,
     val isDone: Boolean = false
-)
+) : Parcelable

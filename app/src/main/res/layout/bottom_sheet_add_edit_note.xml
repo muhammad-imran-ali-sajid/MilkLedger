@@ -7,7 +7,7 @@
     android:background="@android:color/white"
     android:fillViewport="true"
     android:padding="16dp"
-    tools:context=".presentation.notes.AddEditNoteFragment">
+    tools:context=".presentation.notes.AddEditNoteBottomSheet">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
 
         <!-- Note Title -->
         <EditText
-            android:id="@+id/noteTitle"
+            android:id="@+id/etNoteTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -29,7 +29,7 @@
 
         <!-- Note Body -->
         <EditText
-            android:id="@+id/noteBody"
+            android:id="@+id/etNoteContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -69,7 +69,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/noteDate"
+                    android:id="@+id/tvNoteDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="2dp"
@@ -96,7 +96,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/alarmDateAndTime"
+                    android:id="@+id/tvAlarmDateAndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingTop="2dp"

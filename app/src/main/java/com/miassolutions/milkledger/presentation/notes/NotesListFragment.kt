@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.presentation.notes
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -48,6 +49,8 @@ class NotesListFragment :
         binding.fabAddNote.setOnClickListener {
 //            viewModel.addOrUpdateNote()
             // Navigate to add note fragment or bottom sheet
+            AddEditNoteBottomSheet.newInstance(null).show(parentFragmentManager, "AddEditNote")
+
         }
     }
 
@@ -98,12 +101,8 @@ class NotesListFragment :
     }
 
     private fun showUndoSnackbar(note: NoteEntity) {
-        Snackbar.make(binding.root, "Note deleted", Snackbar.LENGTH_LONG)
-            .setAction("Undo") {
-                viewModel.addOrUpdateNote(note)
-            }
-            .show()
+        showSnackbar("Note Deleted", Snackbar.LENGTH_LONG) {
+            viewModel.addOrUpdateNote(note)
+        }
     }
-
-
 }
