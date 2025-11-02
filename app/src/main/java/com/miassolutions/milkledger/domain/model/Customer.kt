@@ -5,6 +5,7 @@ data class Customer(
     val name: String,
     val rate: Double,
     val sortOrder : Int,
-    val advanceAmount : Double
+    val advanceAmount : Double,
+    var isExpanded : Boolean = false
 )
 
