@@ -1,10 +1,7 @@
 package com.miassolutions.milkledger
 
 import android.app.Application
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.os.Build
-import androidx.core.os.BuildCompat
+import com.google.firebase.FirebaseApp
 import com.miassolutions.milkledger.core.helper.RemoteConfigHelper
 import dagger.hilt.android.HiltAndroidApp
 
@@ -12,6 +9,8 @@ import dagger.hilt.android.HiltAndroidApp
 class MilkLedgerApp : Application() {
     override fun onCreate() {
         super.onCreate()
+
+        FirebaseApp.initializeApp(this)
         RemoteConfigHelper.init()
 
 //        val channel = NotificationChannel(

@@ -39,7 +39,9 @@ class NotesListAdapter(
 
             val pastColor = "#FF9100".toColorInt()
 
-            if (LocalDateTime.now() > note.alarmDateTime) tillTitle.setBackgroundColor(pastColor)
+            if (LocalDateTime.now() > note.alarmDateTime) tillTitle.setBackgroundColor(pastColor) else {
+                tillTitle.setBackgroundColor("#00000000".toColorInt())
+            }
 
             root.setOnClickListener { onItemClick(note) }
 

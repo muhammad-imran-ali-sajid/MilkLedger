@@ -126,7 +126,11 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
                         binding.tvAlarmDateAndTime.text =
                             alarmDateTime.format(dateTimeFormatter)
 
-                        checkAndScheduleAlarm(alarmDateTime)
+                        checkAndScheduleAlarm(
+                            alarmDateTime,
+                            binding.etNoteTitle.text.toString(),
+                            binding.etNoteContent.text.toString()
+                        )
 
                     }
 
@@ -163,15 +167,19 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
 
     }
 
-    private fun checkAndScheduleAlarm(alarmDateTime: LocalDateTime) {
+    private fun checkAndScheduleAlarm(
+        alarmDateTime: LocalDateTime,
+        title: String,
+        message: String
+    ) {
         AlarmScheduler.scheduleExactAlarm(
             requireContext(),
             alarmDateTime,
-            "Test Alarm",
-            "This is test alarm"
+            title,
+            message
         )
-
     }
+
 
 
     private fun setupObservers() {
