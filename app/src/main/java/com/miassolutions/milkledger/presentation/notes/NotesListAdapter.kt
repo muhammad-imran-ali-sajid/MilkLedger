@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.ItemNoteBinding
 
@@ -21,7 +22,7 @@ class NotesListAdapter(
         fun bind(note: NoteEntity) = with(binding) {
             tvNoteTitle.text = note.title
             tvNoteContent.text = note.content
-            tvNoteDate.text = note.createdDate.toString()
+            tvNoteDate.text = note.createdDate.toDisplayFormat()
             tvAlarm.text = note.alarmDate?.toString() ?: "No Alarm"
             cbDone.isChecked = note.isDone
 

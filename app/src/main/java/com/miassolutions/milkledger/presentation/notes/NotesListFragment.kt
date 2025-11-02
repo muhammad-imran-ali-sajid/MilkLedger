@@ -27,9 +27,7 @@ class NotesListFragment :
     private fun setupRecyclerView() {
         adapter = NotesListAdapter(
             onItemClick = { note ->
-                // Navigate to Add/Edit bottom sheet or fragment
-                // e.g. findNavController().navigate(...)
-                viewModel.addOrUpdateNote(note)
+                AddEditNoteBottomSheet.newInstance(note).show(parentFragmentManager, "AddEditNote")
             },
             onDeleteClick = { note ->
                 showDeleteConfirmation(note)

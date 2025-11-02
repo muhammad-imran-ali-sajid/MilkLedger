@@ -20,7 +20,7 @@
             android:id="@+id/action_notesFragment"
             android:icon="@android:drawable/ic_menu_edit"
             android:orderInCategory="102"
-            android:title="@string/suppliers"
+            android:title="@string/notes"
             app:showAsAction="never" />
     </group>
 
