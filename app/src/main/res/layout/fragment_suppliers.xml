@@ -5,70 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginVertical="4dp"
-        android:background="@drawable/bg_card"
-        android:backgroundTint="@color/orange_200"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:weightSum="11"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-
-            android:id="@+id/textView3"
-            style="@style/Text.Title"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="2"
-            android:gravity="start"
-            android:text="Sr#"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView"
-            style="@style/Text.Title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="5"
-            android:gravity="start"
-            android:text="Name"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/textView3"
-            app:layout_constraintStart_toEndOf="@+id/textView3"
-            app:layout_constraintTop_toTopOf="@+id/textView3" />
-
-        <TextView
-
-            android:id="@+id/textView2"
-            style="@style/Text.Title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_weight="4"
-            android:gravity="center"
-            android:text="Rate"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/textView3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView3"
-            app:layout_constraintVertical_bias="0.0" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_supplier"
@@ -76,23 +12,25 @@
         android:layout_height="0dp"
         android:layout_marginVertical="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddSupplier"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout2"
-        tools:itemCount="30"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="10"
+        android:paddingBottom="70dp"
+        android:clipToPadding="false"
         tools:listitem="@layout/item_supplier" />
 
-    <com.google.android.material.button.MaterialButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnAddSupplier"
-        style="@style/Widget.Material3.Button"
-        app:elevation="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:padding="14dp"
+        android:layout_marginBottom="16dp"
         android:text="Add New Supplier"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        app:backgroundTint="#00796B"
+        app:iconTint="@color/white"
+        android:textColor="@color/white"
         app:icon="@drawable/ic_person_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

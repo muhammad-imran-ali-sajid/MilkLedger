@@ -41,7 +41,7 @@ class SupplierListAdapter(
         fun bind(supplier: Supplier) {
             binding.tvSupplierName.text = supplier.name
             binding.tvSupplierRate.text = supplier.rate.toRoundedStr("%.2f")
-            binding.tvSort.text = supplier.sortOrder.toString()
+            binding.tvPosition.text = supplier.sortOrder.toString()
             // Item click listener
             binding.root.setOnLongClickListener {
                 onItemLongClick?.invoke(supplier)
