@@ -23,7 +23,7 @@ class NotesListAdapter(
             tvNoteTitle.text = note.title
             tvNoteContent.text = note.content
             tvNoteDate.text = note.createdDate.toDisplayFormat()
-            tvAlarm.text = note.alarmDate?.toString() ?: "No Alarm"
+            tvAlarm.text = note.alarmDateTime.toString() ?: "No Alarm"
             cbDone.isChecked = note.isDone
 
             root.setOnClickListener { onItemClick(note) }

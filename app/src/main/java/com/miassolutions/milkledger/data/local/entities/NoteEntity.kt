@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Parcelize
@@ -16,6 +17,6 @@ data class NoteEntity(
     val title: String,
     val content: String,
     val createdDate: LocalDate = LocalDate.now(),
-    val alarmDate: LocalDate?,
+    val alarmDateTime: LocalDateTime?,
     val isDone: Boolean = false
 ) : Parcelable
