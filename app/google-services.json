@@ -1,51 +1,13 @@
 {
   "project_info": {
-    "project_number": "794704362678",
-    "project_id": "firestorenotes-1ab38",
-    "storage_bucket": "firestorenotes-1ab38.firebasestorage.app"
+    "project_number": "218670424677",
+    "project_id": "milk-ledger-55f0f",
+    "storage_bucket": "milk-ledger-55f0f.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:794704362678:android:02bdab96a73b4b15927a17",
-        "android_client_info": {
-          "package_name": "com.miassolutions.firestorenote"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCOnH-Pd7CUCEm5xEl_6m0X8VxszerBekM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:794704362678:android:ea602ce05cdb61fb927a17",
-        "android_client_info": {
-          "package_name": "com.miassolutions.miascodesnippets"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCOnH-Pd7CUCEm5xEl_6m0X8VxszerBekM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:794704362678:android:370552ed466aece7927a17",
+        "mobilesdk_app_id": "1:218670424677:android:623e73efa5e6126ffe1c8c",
         "android_client_info": {
           "package_name": "com.miassolutions.milkledger"
         }
@@ -53,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCOnH-Pd7CUCEm5xEl_6m0X8VxszerBekM"
+          "current_key": "AIzaSyBlXEgFr8SzE2H4SWHPFIqBHiQcVnh_Sjs"
         }
       ],
       "services": {

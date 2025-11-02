@@ -9,17 +9,17 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/writeButton"
+        android:id="@+id/btnUpload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Write"
+        android:text="Upload to cloud"
         />
 
     <Button
-        android:id="@+id/readButton"
+        android:id="@+id/btnDownload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Read"
+        android:text="Restore from the cloud"
         />
 
 

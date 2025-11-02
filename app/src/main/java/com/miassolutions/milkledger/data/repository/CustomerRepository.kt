@@ -149,18 +149,34 @@ class CustomerRepository @Inject constructor(
      * Download remote Firestore collection and replace local DB.
      * Note: This assumes FirestoreSyncHelper throws on download error.
      */
+//    suspend fun refreshFromFirestore() {
+//        try {
+//            val remoteList: List<CustomerEntity> = firestoreHelper.downloadCollection(collectionName)
+//            if (remoteList.isNotEmpty()) {
+//                // ⭐️ Use the single atomic DAO function
+//                customerDao.replaceAll(remoteList)
+//                Log.d(TAG, "Refreshed local DB from Firestore with ${remoteList.size} customers")
+//            } else {
+//                Log.d(TAG, "No customers found in Firestore to refresh")
+//            }
+//        } catch (e: Exception) {
+//            Log.e(TAG, "Failed to refresh local DB from Firestore. Local data is preserved.", e)
+//        }
+//    }
+
+    // Download remote Firestore collection and replace local DB
     suspend fun refreshFromFirestore() {
         try {
             val remoteList: List<CustomerEntity> = firestoreHelper.downloadCollection(collectionName)
             if (remoteList.isNotEmpty()) {
-                // ⭐️ Use the single atomic DAO function
-                customerDao.replaceAll(remoteList)
+                customerDao.clearAll()
+                customerDao.insertAll(remoteList)
                 Log.d(TAG, "Refreshed local DB from Firestore with ${remoteList.size} customers")
             } else {
                 Log.d(TAG, "No customers found in Firestore to refresh")
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to refresh local DB from Firestore. Local data is preserved.", e)
+            Log.e(TAG, "Failed to refresh local DB from Firestore", e)
         }
     }
 }

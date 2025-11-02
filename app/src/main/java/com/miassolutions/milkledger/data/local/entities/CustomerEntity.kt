@@ -8,7 +8,7 @@ import java.util.UUID
 @Entity(tableName = "customer_table")
 data class CustomerEntity(
     @PrimaryKey val customerId: String = UUID.randomUUID().toString(),
-    val customerName: String,
+    val customerName: String = "",        // ✅ Default value added
     val customerRate: Double = 0.0,
     val sortOrder: Int = 1,
     val advanceAmount: Double = 0.0,

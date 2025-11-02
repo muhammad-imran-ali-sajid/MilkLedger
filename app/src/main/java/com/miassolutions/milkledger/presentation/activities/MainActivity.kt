@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -14,11 +15,16 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
+import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ToolbarOwner {
+
+
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -32,6 +38,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         enableEdgeToEdge()
         setContentView(binding.root)
         windowsInsets()
+
+
 
         setSupportActionBar(binding.toolbar)
 
