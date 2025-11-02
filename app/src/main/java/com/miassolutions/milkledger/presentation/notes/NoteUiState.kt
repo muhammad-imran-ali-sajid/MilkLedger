@@ -5,6 +5,7 @@ import com.miassolutions.milkledger.data.local.entities.NoteEntity
 data class NoteUiState(
     val notes: List<NoteEntity> = emptyList(),
     val isLoading: Boolean = false,
+    val searchQuery: String = "",
     val error: String? = null
 )
 

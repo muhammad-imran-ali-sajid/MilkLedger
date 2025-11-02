@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.ui.FilterableDelegate
+import com.miassolutions.milkledger.core.ui.FilterableList
 import com.miassolutions.milkledger.core.util.dateFormatter
 import com.miassolutions.milkledger.core.util.dateTimeFormatter
-import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.ItemNoteBinding
 
@@ -16,7 +17,12 @@ class NotesListAdapter(
     private val onItemClick: (NoteEntity) -> Unit,
     private val onDeleteClick: (NoteEntity) -> Unit,
     private val onCheckChanged: (NoteEntity, Boolean) -> Unit
-) : ListAdapter<NoteEntity, NotesListAdapter.NoteViewHolder>(DiffCallback) {
+) : ListAdapter<NoteEntity, NotesListAdapter.NoteViewHolder>(DiffCallback),
+    FilterableList<NoteEntity> {
+
+    private val filterDelegate = FilterableDelegate(this) { item, query ->
+        item.title.lowercase().contains(query) || item.content.lowercase().contains(query)
+    }
 
     inner class NoteViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -57,5 +63,13 @@ class NotesListAdapter(
 
         override fun areContentsTheSame(oldItem: NoteEntity, newItem: NoteEntity) =
             oldItem == newItem
+    }
+
+    override fun setOriginalList(list: List<NoteEntity>) {
+        filterDelegate.setOriginalList(list)
+    }
+
+    override fun filter(query: String) {
+        filterDelegate.filter(query)
     }
 }

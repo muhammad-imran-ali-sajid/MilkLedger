@@ -1,11 +1,9 @@
 package com.miassolutions.milkledger.presentation.notes
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.data.repository.NoteRepository
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -24,6 +22,9 @@ class NotesViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<NoteUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    // Keep the full list for filtering
+    private var allNotes: List<NoteEntity> = emptyList()
+
     init {
         getAllNotes()
     }
@@ -34,7 +35,14 @@ class NotesViewModel @Inject constructor(
                 .onStart { _uiState.update { it.copy(isLoading = true) } }
                 .catch { e -> _uiState.update { it.copy(isLoading = false, error = e.message) } }
                 .collect { notes ->
-                    _uiState.update { it.copy(isLoading = false, notes = notes) }
+                    allNotes = notes
+                    val query = _uiState.value.searchQuery
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            notes = filterNotes(query, notes)
+                        )
+                    }
                 }
         }
     }
@@ -68,6 +76,26 @@ class NotesViewModel @Inject constructor(
             } catch (e: Exception) {
                 _eventFlow.emit(NoteUiEvent.ShowMessage("Failed to update status"))
             }
+        }
+    }
+
+    // ✅ Corrected search handler
+    fun onSearchQueryChanged(query: String) {
+        _uiState.update { current ->
+            current.copy(
+                searchQuery = query,
+                notes = filterNotes(query, allNotes)
+            )
+        }
+    }
+
+    // ✅ Helper function to filter notes
+    private fun filterNotes(query: String, notes: List<NoteEntity>): List<NoteEntity> {
+        if (query.isBlank()) return notes
+        val q = query.lowercase()
+        return notes.filter {
+            it.title.lowercase().contains(q) ||
+                    it.content.lowercase().contains(q)
         }
     }
 }

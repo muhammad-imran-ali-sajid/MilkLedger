@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.notes
 
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
@@ -60,6 +61,10 @@ class NotesListFragment :
         binding.fabAddNote.setOnClickListener {
             AddEditNoteBottomSheet.newInstance(null).show(parentFragmentManager, "AddEditNote")
         }
+        binding.etSearch.addTextChangedListener { editable ->
+            viewModel.onSearchQueryChanged(editable?.toString().orEmpty())
+        }
+
     }
 
     override fun setupObservers() {
