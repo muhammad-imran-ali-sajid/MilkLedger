@@ -1,86 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="6dp"
     android:backgroundTint="@color/orange_200"
-    app:cardUseCompatPadding="true">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:padding="12dp">
 
-        <!-- Row 1: Position + Name -->
+        <!-- Position -->
         <TextView
             android:id="@+id/tvPosition"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:text="1"
+            android:layout_marginEnd="8dp"
+            tools:text="1"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Supplier Name -->
         <TextView
             android:id="@+id/tvSupplierName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Ali Imran"
+            tools:text="Ali Imran"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/tvPosition"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvSupplierRate"
             app:layout_constraintStart_toEndOf="@id/tvPosition"
             app:layout_constraintTop_toTopOf="@id/tvPosition" />
-
-        <!-- Row 2: Rate + Advance -->
-        <!-- Rate Label -->
-        <TextView
-            android:id="@+id/tvRateLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Rate:"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@id/tvPosition"
-            app:layout_constraintTop_toBottomOf="@id/tvPosition" />
 
         <!-- Rate Value -->
         <TextView
             android:id="@+id/tvSupplierRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:text="Rs. 25.50"
+            tools:text="Rs. 25.50"
+            android:textColor="@android:color/black"
             android:textSize="16sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/tvRateLabel"
-            app:layout_constraintStart_toEndOf="@id/tvRateLabel" />
+            app:layout_constraintBaseline_toBaselineOf="@id/tvSupplierName"
+            app:layout_constraintEnd_toStartOf="@id/imgArrow" />
 
-        <!-- Advance Label -->
-        <TextView
-            android:id="@+id/tvAdvanceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="Advance:"
-            android:textSize="16sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/tvRateLabel"
-            app:layout_constraintEnd_toStartOf="@+id/tvAdvanceAmount" />
+        <!-- Expand Arrow -->
+        <ImageView
+            android:id="@+id/imgArrow"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_arrow_down"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvSupplierName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@android:color/black" />
 
-        <!-- Advance Value -->
-        <TextView
-            android:id="@+id/tvAdvanceAmount"
-            android:layout_width="wrap_content"
+        <!-- Expandable Section -->
+        <LinearLayout
+            android:id="@+id/layoutExpandable"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="2550"
-            android:textSize="16sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/tvRateLabel"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/tvPosition"
+            app:layout_constraintTop_toBottomOf="@id/tvSupplierName">
+
+            <!-- Advance Label -->
+            <TextView
+                android:id="@+id/tvAdvanceLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Advance:"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <!-- Advance Value -->
+            <TextView
+                android:id="@+id/tvAdvanceAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                tools:text="2550"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

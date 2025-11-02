@@ -8,7 +8,8 @@ fun Supplier.toEntity(): SupplierEntity = SupplierEntity(
     supplierId = this.id ?: UUID.randomUUID().toString(),
     supplierName = this.name,
     supplierRate = this.rate,
-    sortOrder = this.sortOrder
+    sortOrder = this.sortOrder,
+    advanceAmount = this.advanceAmount
 
 )
 
@@ -16,6 +17,8 @@ fun SupplierEntity.toDomain(): Supplier = Supplier(
     id = this.supplierId,
     name = this.supplierName,
     rate = this.supplierRate,
-    sortOrder = this.sortOrder
-)
+    sortOrder = this.sortOrder,
+    advanceAmount = this.advanceAmount,
+
+    )
 

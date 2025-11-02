@@ -35,6 +35,7 @@ class SupplierFormBottomSheetFragment(
             val name = binding.etName.text.toString().trim()
             val rateText = binding.etRate.text.toString().trim()
             val positionText = binding.etPosition.text.toString().trim()
+            val advanceAmountText = binding.etAdvanceAmount.text.toString().trim()
 
             var isValid = true
 
@@ -73,6 +74,8 @@ class SupplierFormBottomSheetFragment(
                 }
             }
 
+            val advanceAmount = advanceAmountText.toDoubleOrNull() ?: 0.0
+
             if (!isValid) return@setOnClickListener
 
             // --- CREATE UPDATED SUPPLIER ---
@@ -80,7 +83,8 @@ class SupplierFormBottomSheetFragment(
                 id = supplier?.id, // keep old ID if editing
                 name = name,
                 rate = rate!!,
-                sortOrder = position!!
+                sortOrder = position!!,
+                advanceAmount = advanceAmount
             )
 
             onSave(updatedSupplier)
@@ -94,6 +98,7 @@ class SupplierFormBottomSheetFragment(
             binding.etName.setText(supplier.name)
             binding.etRate.setText(supplier.rate.toString())
             binding.etPosition.setText(supplier.sortOrder.toString())
+            binding.etAdvanceAmount.setText(supplier.advanceAmount.toString())
             binding.btnSave.text = "Update"
         } else {
             // Adding new

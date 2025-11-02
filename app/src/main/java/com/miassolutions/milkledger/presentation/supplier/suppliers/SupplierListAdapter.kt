@@ -1,22 +1,54 @@
 package com.miassolutions.milkledger.presentation.supplier.suppliers
 
+import android.transition.AutoTransition
+import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSupplierBinding
 import com.miassolutions.milkledger.domain.model.Supplier
 
-/**
- * Supplier ListAdapter with internal ViewHolder.
- * Supports item clicks, drag-and-drop, and swipe actions.
- */
 class SupplierListAdapter(
-    private val onItemLongClick: ((Supplier) -> Boolean)? = null,
+    private val onEditClick: (Supplier) -> Boolean = { false }
 ) : ListAdapter<Supplier, SupplierListAdapter.SupplierViewHolder>(SupplierDiffCallback()) {
 
+    inner class SupplierViewHolder(
+        private val binding: ItemSupplierBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(supplier: Supplier, position: Int) {
+            val b = binding
+
+            // --- Basic binding ---
+            b.tvPosition.text = supplier.sortOrder.toString()
+            b.tvSupplierName.text = supplier.name
+            b.tvSupplierRate.text = "${"%.2f".format(supplier.rate)}"
+            b.tvAdvanceAmount.text = "${"%.2f".format(supplier.advanceAmount)}"
+
+            // --- Expansion handling ---
+            b.layoutExpandable.visibility =
+                if (supplier.isExpanded) android.view.View.VISIBLE else android.view.View.GONE
+            b.imgArrow.rotation = if (supplier.isExpanded) 180f else 0f
+
+            // --- Click to expand/collapse ---
+            b.root.setOnClickListener {
+                val updatedSupplier = supplier.copy(isExpanded = !supplier.isExpanded)
+                val newList = currentList.toMutableList()
+                newList[position] = updatedSupplier
+
+                // Animate smooth expand/collapse
+                TransitionManager.beginDelayedTransition(b.root as ViewGroup, AutoTransition())
+                submitList(newList)
+            }
+
+            // --- Long click listener (edit or extra action) ---
+            b.root.setOnLongClickListener {
+                onEditClick(supplier)
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SupplierViewHolder {
         val binding = ItemSupplierBinding.inflate(
@@ -28,38 +60,14 @@ class SupplierListAdapter(
     }
 
     override fun onBindViewHolder(holder: SupplierViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position)
     }
+}
 
-    /**
-     * ViewHolder is defined inside the adapter
-     */
-    inner class SupplierViewHolder(
-        private val binding: ItemSupplierBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
+class SupplierDiffCallback : DiffUtil.ItemCallback<Supplier>() {
+    override fun areItemsTheSame(oldItem: Supplier, newItem: Supplier): Boolean =
+        oldItem.id == newItem.id
 
-        fun bind(supplier: Supplier) {
-            binding.tvSupplierName.text = supplier.name
-            binding.tvSupplierRate.text = supplier.rate.toRoundedStr("%.2f")
-            binding.tvPosition.text = supplier.sortOrder.toString()
-            // Item click listener
-            binding.root.setOnLongClickListener {
-                onItemLongClick?.invoke(supplier)
-                true
-            }
-        }
-    }
-
-    /**
-     * DiffCallback for ListAdapter
-     */
-    class SupplierDiffCallback : DiffUtil.ItemCallback<Supplier>() {
-        override fun areItemsTheSame(oldItem: Supplier, newItem: Supplier): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Supplier, newItem: Supplier): Boolean {
-            return oldItem == newItem
-        }
-    }
+    override fun areContentsTheSame(oldItem: Supplier, newItem: Supplier): Boolean =
+        oldItem == newItem
 }

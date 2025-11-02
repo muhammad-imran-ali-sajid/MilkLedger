@@ -4,6 +4,8 @@ data class Supplier(
     val id: String? = null, // null for new, not null for existing
     val name: String,
     val rate: Double,
-    val sortOrder : Int
+    val sortOrder: Int,
+    val advanceAmount : Double,
+    var isExpanded: Boolean = false
 )
 
