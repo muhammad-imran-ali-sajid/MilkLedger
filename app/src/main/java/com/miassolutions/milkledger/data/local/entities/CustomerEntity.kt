@@ -9,14 +9,13 @@ import java.util.UUID
 data class CustomerEntity(
     @PrimaryKey val customerId: String = UUID.randomUUID().toString(),
     val customerName: String,
-    val customerRate: Double,  // default rate, can be changed later
+    val customerRate: Double = 0.0,
     val sortOrder: Int = 1,
-    val advanceAmount : Double = 0.0,
-    val createdAt: LocalDate = LocalDate.now(),
+    val advanceAmount: Double = 0.0,
+    val createdAt: String = LocalDate.now().toString(),
     val isDefault: Boolean = false,
 
-    val isSynced: Boolean = false,
+    var isSynced: Boolean = false,
     val updatedAt: Long = System.currentTimeMillis(),
     val deletedAt: Long? = null
-
 )

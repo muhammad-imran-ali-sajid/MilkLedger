@@ -73,23 +73,22 @@ dependencies {
     implementation(project(":datesort"))
 
 
+    // Firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+
+
+    implementation("com.google.firebase:firebase-config")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-firestore")
+
+    implementation("com.google.code.gson:gson:2.13.2")
+
+
     val work_version = "2.11.0"
-
-
     // Kotlin + coroutines
     implementation("androidx.work:work-runtime-ktx:$work_version")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-    // Import the Firebase BoM
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-config")
-
-
-    implementation ("com.google.firebase:firebase-auth")
-    implementation ("com.google.firebase:firebase-firestore")
-
 
     // finger print
     implementation("androidx.biometric:biometric:1.2.0-alpha05")
@@ -103,9 +102,6 @@ dependencies {
     implementation("androidx.room:room-ktx:2.8.1")
     ksp("androidx.room:room-compiler:2.8.1")
 
-    // Image Loading
-    implementation("com.github.bumptech.glide:glide:5.0.5") // Assumed latest stable version
-    ksp("com.github.bumptech.glide:compiler:5.0.5")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
@@ -128,13 +124,4 @@ dependencies {
     // DocumentFile is a wrapper class in AndroidX that helps you interact with files and folders
     implementation("androidx.documentfile:documentfile:1.1.0")
 
-    // Required for Google Sign-In (modern)
-    implementation("com.google.android.gms:play-services-auth:21.4.0")
-
-// Official Drive REST API client (not deprecated)
-    implementation("com.google.api-client:google-api-client-android:2.8.1")
-    // Google Drive REST API client library
-    implementation("com.google.apis:google-api-services-drive:v3-rev20250220-2.0.0")
-
-    implementation("com.google.api-client:google-api-client-android:2.8.1")
 }

@@ -9,14 +9,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.FragmentSignupBinding
 
 class SignupFragment : Fragment() {
 
     private lateinit var binding: FragmentSignupBinding
-    private val auth = FirebaseAuth.getInstance()
+//    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentSignupBinding.inflate(inflater, container, false)
@@ -39,14 +38,14 @@ class SignupFragment : Fragment() {
             Toast.makeText(requireContext(), "Enter email & password", Toast.LENGTH_SHORT).show()
             return
         }
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                Toast.makeText(requireContext(), "Signup successful! Please login.", Toast.LENGTH_SHORT).show()
-                findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
-            }
-            .addOnFailureListener {
-                Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
-            }
+//
+//        auth.createUserWithEmailAndPassword(email, password)
+//            .addOnSuccessListener {
+//                Toast.makeText(requireContext(), "Signup successful! Please login.", Toast.LENGTH_SHORT).show()
+//                findNavController().navigate(R.id.action_signupFragment_to_loginFragment)
+//            }
+//            .addOnFailureListener {
+//                Toast.makeText(requireContext(), it.localizedMessage, Toast.LENGTH_SHORT).show()
+//            }
     }
 }

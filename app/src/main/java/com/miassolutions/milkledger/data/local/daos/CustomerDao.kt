@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import kotlinx.coroutines.flow.Flow
@@ -45,4 +46,10 @@ interface CustomerDao {
 
     @Query("SELECT * FROM customer_table WHERE customerId = :id LIMIT 1")
     fun getCustomerByIdOnce(id: String): CustomerEntity?
+
+    @Transaction
+    suspend fun replaceAll(customers: List<CustomerEntity>) {
+        clearAll()
+        insertAll(customers)
+    }
 }

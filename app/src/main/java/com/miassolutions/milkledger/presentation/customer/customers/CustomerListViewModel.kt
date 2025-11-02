@@ -51,7 +51,7 @@ class CustomerListViewModel @Inject constructor(
     fun saveCustomer(customer: Customer) {
         viewModelScope.launch {
             try {
-                repository.insertCustomer(customer.toEntity())
+                repository.upsertCustomer(customer.toEntity())
                 _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer saved"))
             } catch (e: Exception) {
                 _uiEvent.emit(CustomerUiEvent.ShowMessage("Error saving customer"))

@@ -76,41 +76,7 @@ class DevSettingsFragment : Fragment() {
             .show()
     }
 
-//    private suspend fun populateDummyData() {
-//        val customerDao = database.customerDao()
-//        val supplierDao = database.supplierDao()
-//        val purchaseDao = database.purchaseDao()
-//        val saleDao = database.salesDao()
-//
-//
-//
-//
-//        // Insert dummy customers
-//        customerDao.insertAll(
-//            listOf(
-//                CustomerEntity(customerName = "Home", customerRate = 100.0, sortOrder = 1),
-//                CustomerEntity(customerName = "Al-Aziz", customerRate = 50.0, sortOrder = 2),
-//                CustomerEntity(customerName = "Al-Aziz Home", customerRate = 200.0, sortOrder = 3),
-//                CustomerEntity(customerName = "Bakery", customerRate = 150.0, sortOrder = 4),
-//                CustomerEntity(customerName = "Bakery Home", customerRate = 131.0, sortOrder = 5),
-//            )
-//        )
-//
-//        // Insert dummy suppliers
-//        supplierDao.insertAll(
-//            listOf(
-//                SupplierEntity(supplierName = "Zafar Abbas", supplierRate = 145.0, sortOrder = 1),
-//                SupplierEntity(supplierName = "Zahir", supplierRate = 140.0, sortOrder = 2),
-//                SupplierEntity(supplierName = "Mazhar", supplierRate = 165.0, sortOrder = 3),
-//                SupplierEntity(supplierName = "Sajid", supplierRate = 145.0, sortOrder = 4),
-//                SupplierEntity(supplierName = "Saif", supplierRate = 155.0, sortOrder = 5),
-//                SupplierEntity(supplierName = "Pomi", supplierRate = 160.0, sortOrder = 6),
-//                SupplierEntity(supplierName = "Hafiz Liaqat", supplierRate = 162.50, sortOrder = 7),
-//
-//
-//            )
-//        )
-//    }
+
 
 
 

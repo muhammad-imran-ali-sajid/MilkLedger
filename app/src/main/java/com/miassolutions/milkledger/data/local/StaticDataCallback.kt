@@ -19,10 +19,10 @@ class StaticDataCallback @Inject constructor(
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val database = provider.get()
-            val helper = StaticDataHelper(database)
-            helper.insertStaticData()
-        }
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val database = provider.get()
+//            val helper = StaticDataHelper(database)
+//            helper.insertStaticData()
+//        }
     }
 }
