@@ -31,6 +31,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:id="@+id/tillTitle"
             android:layout_height="wrap_content">
 
             <TextView

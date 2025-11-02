@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.core.util
 
 import android.os.Parcel
 import android.os.Parcelable
+import android.widget.TimePicker
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.CalendarConstraints
@@ -256,13 +257,14 @@ fun Fragment.showFutureDatePicker(
 fun showMaterialTimePicker(
     fragmentManager: FragmentManager,
     initialTime: LocalTime = LocalTime.now(),
-    is24Hour: Boolean = true,
+    is24Hour: Boolean = false,
     onPicked: (LocalTime) -> Unit
 ) {
     val picker = MaterialTimePicker.Builder()
         .setTimeFormat(if (is24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H)
         .setHour(initialTime.hour)
         .setMinute(initialTime.minute)
+        .setInputMode(MaterialTimePicker.INPUT_MODE_CLOCK)
         .setTitleText("Select time")
         .build()
 

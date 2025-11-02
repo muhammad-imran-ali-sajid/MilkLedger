@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.notes
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,8 @@ import com.miassolutions.milkledger.core.util.dateFormatter
 import com.miassolutions.milkledger.core.util.dateTimeFormatter
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.ItemNoteBinding
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 
 class NotesListAdapter(
@@ -33,6 +36,10 @@ class NotesListAdapter(
             tvNoteDate.text = note.createdDate.format(dateFormatter)
             tvAlarm.text = note.alarmDateTime?.format(dateTimeFormatter) ?: "No Alarm"
             cbDone.isChecked = note.isDone
+
+            val pastColor = "#FF9100".toColorInt()
+
+            if (LocalDateTime.now() > note.alarmDateTime) tillTitle.setBackgroundColor(pastColor)
 
             root.setOnClickListener { onItemClick(note) }
 
