@@ -25,6 +25,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.lang.reflect.Type
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -55,7 +56,25 @@ class DatabaseBackupHelper @Inject constructor(
                 ) =
                     json?.asString?.let { LocalDate.parse(it, formatter) }
             }
-        ).create()
+        )
+        .registerTypeAdapter(
+            LocalDateTime::class.java,
+            object : JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
+                private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                override fun serialize(
+                    src: LocalDateTime?,
+                    typeOfSrc: Type?,
+                    context: JsonSerializationContext?
+                ) = src?.let { JsonPrimitive(it.format(formatter)) }
+
+                override fun deserialize(
+                    json: JsonElement?,
+                    typeOfT: Type?,
+                    context: JsonDeserializationContext?
+                ) = json?.asString?.let { LocalDateTime.parse(it, formatter) }
+            }
+        )
+        .create()
 
     data class BackupData(
         val customers: List<CustomerEntity>,
