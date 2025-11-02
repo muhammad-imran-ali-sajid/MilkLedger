@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken
 import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
@@ -40,10 +41,18 @@ class DatabaseBackupHelper @Inject constructor(
             LocalDate::class.java,
             object : JsonSerializer<LocalDate>, JsonDeserializer<LocalDate> {
                 private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
-                override fun serialize(src: LocalDate?, typeOfSrc: Type?, ctx: JsonSerializationContext?) =
+                override fun serialize(
+                    src: LocalDate?,
+                    typeOfSrc: Type?,
+                    ctx: JsonSerializationContext?
+                ) =
                     src?.let { JsonPrimitive(it.format(formatter)) }
 
-                override fun deserialize(json: JsonElement?, typeOfT: Type?, ctx: JsonDeserializationContext?) =
+                override fun deserialize(
+                    json: JsonElement?,
+                    typeOfT: Type?,
+                    ctx: JsonDeserializationContext?
+                ) =
                     json?.asString?.let { LocalDate.parse(it, formatter) }
             }
         ).create()
@@ -53,7 +62,8 @@ class DatabaseBackupHelper @Inject constructor(
         val suppliers: List<SupplierEntity>,
         val purchases: List<PurchaseEntity>,
         val sales: List<SalesEntity>,
-        val expenses: List<ExpensesEntity>
+        val expenses: List<ExpensesEntity>,
+        val notes: List<NoteEntity>
     )
 
     // Backup database to URI
@@ -67,7 +77,8 @@ class DatabaseBackupHelper @Inject constructor(
             suppliers = db.supplierDao().getAllSync(),
             purchases = db.purchaseDao().getAllSync(),
             sales = db.salesDao().getAllSync(),
-            expenses = db.expensesDao().getAllSync()
+            expenses = db.expensesDao().getAllSync(),
+            notes = db.noteDao().getAllSync()
         )
 
         val json = gson.toJson(data)
@@ -125,6 +136,9 @@ class DatabaseBackupHelper @Inject constructor(
 
             db.expensesDao().clearAll()
             db.expensesDao().insertAll(backupData.expenses)
+
+            db.noteDao().clearAll()
+            db.noteDao().insertAll(backupData.notes)
         }
 
         true
