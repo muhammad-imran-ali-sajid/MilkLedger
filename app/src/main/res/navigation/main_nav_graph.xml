@@ -64,7 +64,7 @@
         tools:layout="@layout/supplier_form_layout" />
     <dialog
         android:id="@+id/customerFormBottomSheetFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.CustomerFormBottomSheetFragment"
+        android:name="com.miassolutions.milkledger.presentation.customer.customers.CustomerFormBottomSheetFragment"
         android:label="CustomerFormBottomSheetFragment"
         tools:layout="@layout/customer_form_layout" />
     <fragment

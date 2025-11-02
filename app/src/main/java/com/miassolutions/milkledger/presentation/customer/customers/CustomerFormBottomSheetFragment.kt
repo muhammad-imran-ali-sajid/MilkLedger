@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customer
+package com.miassolutions.milkledger.presentation.customer.customers
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,6 +39,7 @@ class CustomerFormBottomSheetFragment(
             val name = binding.etName.text.toString().trim()
             val rateText = binding.etRate.text.toString().trim()
             val positionText = binding.etPosition.text.toString().trim()
+            val advanceAmountText = binding.etAdvanceAmount.text.toString().trim()
 
             var isValid = true
 
@@ -75,14 +76,17 @@ class CustomerFormBottomSheetFragment(
                 }
             }
 
+            val advanceAmount = advanceAmountText.toDoubleOrNull() ?: 0.0
+
+
             if (!isValid) return@setOnClickListener
 
             val updatedCustomer = Customer(
                 id = customer?.id, // keep old ID if editing
                 name = name,
                 rate = rate!!,
-                sortOrder = position!!// safe because we already validated it
-
+                sortOrder = position!!, // safe because we already validated it
+                advanceAmount = advanceAmount
             )
 
             onSave(updatedCustomer)
@@ -96,6 +100,7 @@ class CustomerFormBottomSheetFragment(
             binding.etName.setText(customer.name)
             binding.etRate.setText(customer.rate.toString())
             binding.etPosition.setText(customer.sortOrder.toString())
+            binding.etAdvanceAmount.setText(customer.advanceAmount.toString())
             binding.btnSave.text = "Update"
         } else {
             binding.btnSave.text = "Save"

@@ -1,60 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
-    android:layout_marginVertical="4dp"
-    android:background="@drawable/bg_card"
-    android:backgroundTint="#4CAF50"
-    android:padding="16dp"
-    android:clipToPadding="false">
+    android:layout_marginHorizontal="8dp"
+    android:backgroundTint="@color/blue_100"
+    app:cardUseCompatPadding="true">
 
-    <!-- Position / Sr# -->
-    <TextView
-        android:id="@+id/tvPosition"
-        style="@style/Text.Title"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="1"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.1" />
+        android:padding="16dp">
 
-    <!-- Customer Name -->
-    <TextView
-        android:id="@+id/tv_customer_name"
-        style="@style/Text.Title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:text="Ali Imran"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@id/tvPosition"
-        app:layout_constraintStart_toEndOf="@id/tvPosition"
-        app:layout_constraintTop_toTopOf="@id/tvPosition"
-        app:layout_constraintWidth_percent="0.6" />
+        <!-- Row 1: Position + Name -->
+        <TextView
+            android:id="@+id/tvPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="1"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Customer Rate -->
-    <TextView
-        android:id="@+id/tv_customer_rate"
-        style="@style/Text.Title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:text="Rs. 25.50"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@id/tvPosition"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/tv_customer_name"
-        app:layout_constraintTop_toTopOf="@id/tvPosition"
-        app:layout_constraintWidth_percent="0.3" />
+        <TextView
+            android:id="@+id/tv_customer_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Ali Imran"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/tvPosition"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tvPosition"
+            app:layout_constraintTop_toTopOf="@id/tvPosition" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Row 2: Rate + Advance -->
+        <!-- Rate Label -->
+        <TextView
+            android:id="@+id/tvRateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Rate:"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/tvPosition"
+            app:layout_constraintTop_toBottomOf="@id/tvPosition" />
+
+        <!-- Rate Value -->
+        <TextView
+            android:id="@+id/tv_customer_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="Rs. 25.50"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvRateLabel"
+            app:layout_constraintStart_toEndOf="@id/tvRateLabel" />
+
+        <!-- Advance Label -->
+        <TextView
+            android:id="@+id/tvAdvanceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="Advance:"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvRateLabel"
+            app:layout_constraintEnd_toStartOf="@+id/tvAdvanceAmount" />
+
+        <!-- Advance Value -->
+        <TextView
+            android:id="@+id/tvAdvanceAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2550"
+            android:textSize="16sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/tvRateLabel"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

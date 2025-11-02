@@ -15,31 +15,31 @@ class StaticDataHelper @Inject constructor(private val database: AppDatabase) {
 
         val customers = listOf(
             CustomerEntity(
-                customerName = "گھر",
+                customerName = "Home",
                 customerRate = 100.0,
                 sortOrder = 1,
                 isDefault = true
             ),
             CustomerEntity(
-                customerName = "العزیز",
+                customerName = "Al-Aziz",
                 customerRate = 50.0,
                 sortOrder = 2,
                 isDefault = true
             ),
             CustomerEntity(
-                customerName = "العزیز گھر",
+                customerName = "Al-Aziz Home",
                 customerRate = 200.0,
                 sortOrder = 3,
                 isDefault = true
             ),
             CustomerEntity(
-                customerName = "بیکری",
+                customerName = "Bakery",
                 customerRate = 150.0,
                 sortOrder = 4,
                 isDefault = true
             ),
             CustomerEntity(
-                customerName = "بیکری گھر",
+                customerName = "Bakery Home",
                 customerRate = 131.0,
                 sortOrder = 5,
                 isDefault = true
@@ -48,43 +48,43 @@ class StaticDataHelper @Inject constructor(private val database: AppDatabase) {
 
         val suppliers = listOf(
             SupplierEntity(
-                supplierName = "ظفر عباس",
+                supplierName = "Zafar Abbas",
                 supplierRate = 145.0,
                 sortOrder = 1,
                 isDefault = true
             ),
             SupplierEntity(
-                supplierName = "زاہد",
+                supplierName = "Zahid",
                 supplierRate = 140.0,
                 sortOrder = 2,
                 isDefault = true
             ),
             SupplierEntity(
-                supplierName = "مظہر",
+                supplierName = "Mazhar",
                 supplierRate = 165.0,
                 sortOrder = 3,
                 isDefault = true
             ),
             SupplierEntity(
-                supplierName = "ساجد",
+                supplierName = "Sajid",
                 supplierRate = 145.0,
                 sortOrder = 4,
                 isDefault = true
             ),
             SupplierEntity(
-                supplierName = "سیف",
+                supplierName = "Saif",
                 supplierRate = 155.0,
                 sortOrder = 5,
                 isDefault = true
             ),
             SupplierEntity(
-                supplierName = "پومی",
+                supplierName = "Pomi",
                 supplierRate = 160.0,
                 sortOrder = 6,
                 isDefault = true
             ),
             SupplierEntity(
-                supplierName = "حافظ لیاقت",
+                supplierName = "Hafiz Liaqat",
                 supplierRate = 162.50,
                 sortOrder = 7,
                 isDefault = true

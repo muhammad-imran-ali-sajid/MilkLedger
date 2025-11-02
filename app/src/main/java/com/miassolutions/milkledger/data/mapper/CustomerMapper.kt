@@ -8,7 +8,8 @@ fun Customer.toEntity(): CustomerEntity = CustomerEntity(
     customerId = this.id ?: UUID.randomUUID().toString(),
     customerName = this.name,
     customerRate = this.rate,
-    sortOrder = this.sortOrder
+    sortOrder = this.sortOrder,
+    advanceAmount = this.advanceAmount
 
 )
 
@@ -16,6 +17,7 @@ fun CustomerEntity.toDomain(): Customer = Customer(
     id = this.customerId,
     name = this.customerName,
     rate = this.customerRate,
-    sortOrder = this.sortOrder
+    sortOrder = this.sortOrder,
+    advanceAmount = this.advanceAmount
 )
 

@@ -5,65 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".presentation.customers.CustomersFragment">
+    >
 
-    <!-- Header Row -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_card"
-        android:backgroundTint="#388E3C"
-        android:padding="12dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
 
-        <TextView
-            android:id="@+id/textSr"
-            style="@style/Text.Title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Sr#"
-            android:lines="1"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.1" />
-
-        <TextView
-            android:id="@+id/textName"
-            style="@style/Text.Title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text="Name"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/textSr"
-            app:layout_constraintStart_toEndOf="@id/textSr"
-            app:layout_constraintTop_toTopOf="@id/textSr"
-            app:layout_constraintWidth_percent="0.6" />
-
-        <TextView
-            android:id="@+id/textRate"
-            style="@style/Text.Title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Rate"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/textSr"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/textName"
-            app:layout_constraintTop_toTopOf="@id/textSr"
-            app:layout_constraintWidth_percent="0.3" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
@@ -72,12 +16,13 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
+        android:paddingBottom="70dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout"
-        app:layout_constraintBottom_toTopOf="@id/btnAddCustomer"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
         tools:listitem="@layout/item_customer" />
 
     <!-- Add Customer Button -->
