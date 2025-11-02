@@ -3,8 +3,7 @@ package com.miassolutions.milkledger.presentation.notes
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
@@ -27,7 +26,8 @@ class NotesListFragment :
     private fun setupRecyclerView() {
         adapter = NotesListAdapter(
             onItemClick = { note ->
-                AddEditNoteBottomSheet.newInstance(note).show(parentFragmentManager, "AddEditNote")
+                AddEditNoteBottomSheet.newInstance(note)
+                    .show(parentFragmentManager, "AddEditNote")
             },
             onDeleteClick = { note ->
                 showDeleteConfirmation(note)
@@ -38,17 +38,27 @@ class NotesListFragment :
         )
 
         binding.rvNotes.apply {
-            layoutManager = LinearLayoutManager(requireContext())
             adapter = this@NotesListFragment.adapter
+
+
+            //Add scroll listener for FAB hide/show
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0 && binding.fabAddNote.isShown) {
+                        binding.fabAddNote.animate().translationY(binding.fabAddNote.height.toFloat() + 50).alpha(0f).start()
+                    } else if (dy < 0 && binding.fabAddNote.alpha == 0f) {
+                        binding.fabAddNote.animate().translationY(0f).alpha(1f).start()
+                    }
+                }
+            })
         }
     }
 
+
     override fun setupListeners() {
         binding.fabAddNote.setOnClickListener {
-//            viewModel.addOrUpdateNote()
-            // Navigate to add note fragment or bottom sheet
             AddEditNoteBottomSheet.newInstance(null).show(parentFragmentManager, "AddEditNote")
-
         }
     }
 
