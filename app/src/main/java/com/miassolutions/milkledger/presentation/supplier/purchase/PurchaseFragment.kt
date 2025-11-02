@@ -53,6 +53,7 @@ class PurchaseFragment :
 
                 isAuthorized = isUserAuthorized,
                 initialDate = currentDate,
+
                 // The selectedDate (LocalDate) is available here!
                 onPicked = { selectedDate: LocalDate ->
                     // This is where you pass the result to your ViewModel

@@ -49,62 +49,35 @@
             android:layout_marginVertical="12dp"
             android:background="#DDDDDD" />
 
-        <!-- Date Section -->
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:layout_gravity="end"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:text="Alarm"
+                android:textColor="#000"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Created on"
-                    android:textColor="#888888"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/tvNoteDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="2dp"
-                    android:textColor="#000000"
-                    android:textSize="15sp"
-                    tools:text="02 Nov 2025" />
-            </LinearLayout>
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvAlarmDateAndTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                android:paddingHorizontal="8dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Alarm"
-                    android:textColor="#888888"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/tvAlarmDateAndTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="2dp"
-                    android:textColor="#000000"
-                    android:textSize="15sp"
-                    tools:text="07 Nov 2025, 9:00 AM" />
-            </LinearLayout>
+                android:paddingTop="2dp"
+                android:text="Set Alarm"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                tools:text="07 Nov 2025, 9:00 AM" />
         </LinearLayout>
+
 
         <!-- Save Button -->
         <Button

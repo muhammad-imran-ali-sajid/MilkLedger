@@ -181,6 +181,7 @@ class DatePickerLogic {
     }
 }
 
+
 // ==============================================================================
 // 4. DATE PICKER INTEGRATION & USAGE (The fix for your query)
 // ==============================================================================
@@ -193,44 +194,48 @@ class DatePickerLogic {
  * @param initialDate The date to pre-select in the picker.
  * @param onPicked A lambda function to execute when a date is successfully selected.
  */
-fun Fragment.showExpenseDatePicker(
 
-    isAuthorized: Boolean,
-    initialDate: LocalDate,
+fun Fragment.showExpenseDatePicker(
+    isAuthorized: Boolean = true,
+    initialDate: LocalDate = LocalDate.now(),
+    useConstraints: Boolean = true, // toggle constraints ON/OFF
     onPicked: (LocalDate) -> Unit
 ) {
-    // 1. Get the Constraints
-    val constraints = DatePickerLogic().buildConstraints(isAuthorized)
+    // Build constraints only if requested
+    val constraints = if (useConstraints) {
+        DatePickerLogic().buildConstraints(isAuthorized)
+    } else null
 
-    // 2. Convert LocalDate to a UTC timestamp for pre-selection
+    // Convert LocalDate to UTC timestamp
     val initialTimestamp = initialDate
         .atStartOfDay(ZoneId.of("UTC"))
         .toInstant()
         .toEpochMilli()
 
-    // 3. Build the Material Date Picker
-    val datePicker = MaterialDatePicker.Builder.datePicker()
-//        .setTheme(com.google.android.material.R.style.ThemeOverlay_MaterialComponents_MaterialCalendar) // Use a standard theme
-        .setTitleText("Select Expense Date")
+    // Build the Material Date Picker
+    val builder = MaterialDatePicker.Builder.datePicker()
+        .setTitleText("Select Date")
         .setSelection(initialTimestamp)
 
-        .setCalendarConstraints(constraints)
-        .build()
+    // Apply constraints only if they exist
+    constraints?.let { builder.setCalendarConstraints(it) }
 
-    // 4. Handle the positive button click (Selected Date)
-    datePicker.addOnPositiveButtonClickListener { selectedTimestamp: Long ->
-        // CONVERSION STEP: Convert the UTC timestamp (Long) back to LocalDate
+    val datePicker = builder.build()
+
+    // Handle selected date
+    datePicker.addOnPositiveButtonClickListener { selectedTimestamp ->
         val selectedDate = Instant.ofEpochMilli(selectedTimestamp)
-            .atZone(ZoneId.systemDefault()) // Convert to the device's time zone
+            .atZone(ZoneId.systemDefault())
             .toLocalDate()
 
-        // 5. Call the user's callback with the converted LocalDate
         onPicked(selectedDate)
     }
 
-    // 6. Show the picker
-    datePicker.show(parentFragmentManager, "EXPENSE_DATE_PICKER_TAG")
+    // Show the picker
+    datePicker.show(parentFragmentManager, "DATE_PICKER_TAG")
 }
+
+
 
 
 

@@ -7,6 +7,7 @@
         <item name="colorOnPrimary">@color/milk_on_primary</item>
         <item name="colorSecondary">@color/milk_secondary</item>
         <item name="colorOnSecondary">@color/milk_on_secondary</item>
+        <item name="fontFamily">@font/poppins_bold</item>
 
         <!-- Surface Colors (High Contrast) -->
         <item name="colorSurface">@color/milk_surface</item>

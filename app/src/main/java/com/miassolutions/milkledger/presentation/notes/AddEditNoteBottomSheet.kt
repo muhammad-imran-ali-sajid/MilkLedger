@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.presentation.notes
 
-import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
+import com.miassolutions.milkledger.core.util.showExpenseDatePicker
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.BottomSheetAddEditNoteBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,6 +29,7 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
     private val viewModel by viewModels<NotesViewModel>()
     private var currentNote: NoteEntity? = null
     private val dateFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+    private var selectedDate: LocalDate? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,40 +48,42 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupUI() {
         // Get note from arguments (for edit mode)
-        currentNote = arguments?.getParcelable("note")
+        currentNote = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arguments?.getParcelable("note", NoteEntity::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            arguments?.getParcelable("note")
+        }
+
+
 
         currentNote?.let { note ->
             binding.etNoteTitle.setText(note.title)
             binding.etNoteContent.setText(note.content)
             note.alarmDate?.let {
-                binding.tvNoteDate.text = it.format(dateFormatter)
+                binding.tvAlarmDateAndTime.text = it.format(dateFormatter)
             }
             binding.btnSaveNote.text = "Update Note"
         }
 
         // Pick alarm date
         binding.tvAlarmDateAndTime.setOnClickListener {
-            val today = LocalDate.now()
-            val dialog = DatePickerDialog(
-                requireContext(),
-                { _, year, month, day ->
-                    val selected = LocalDate.of(year, month + 1, day)
-                    binding.tvAlarmDateAndTime.text = selected.format(dateFormatter)
-                },
-                today.year, today.monthValue - 1, today.dayOfMonth
+            showExpenseDatePicker(
+                isAuthorized = true,
+                initialDate = LocalDate.now(),
+                useConstraints = false,
+                onPicked = {
+                    binding.tvAlarmDateAndTime.text = it.toDisplayFormat()
+                    selectedDate = it
+
+                }
             )
-            dialog.show()
         }
 
         // Save note
         binding.btnSaveNote.setOnClickListener {
             val title = binding.etNoteTitle.text.toString().trim()
             val content = binding.etNoteContent.text.toString().trim()
-            val alarmDateText = binding.tvAlarmDateAndTime.text.toString().trim()
-            val alarmDate =
-                if (alarmDateText.isNotEmpty() && alarmDateText != "Select Date")
-                    LocalDate.parse(alarmDateText, dateFormatter)
-                else null
 
             if (title.isEmpty()) {
                 showSnackbar("Please enter a title")
@@ -88,11 +93,11 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
             val newNote = currentNote?.copy(
                 title = title,
                 content = content,
-                alarmDate = alarmDate
+                alarmDate = selectedDate
             ) ?: NoteEntity(
                 title = title,
                 content = content,
-                alarmDate = alarmDate
+                alarmDate = selectedDate
             )
 
             viewModel.addOrUpdateNote(newNote)
