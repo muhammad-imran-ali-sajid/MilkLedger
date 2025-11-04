@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReceiptPdf
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseSummary
 import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
+import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.isToday
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
@@ -37,6 +38,7 @@ class PurchaseFragment :
     private var editModeSwitch: MaterialSwitch? = null
     private var biometricRequiredForToday = false
     private var isEditable = true
+    var isUserAuthorized = false
 
     private val viewModel: PurchaseViewModel by viewModels()
     private lateinit var purchaseAdapter: PurchaseAdapter
@@ -45,10 +47,16 @@ class PurchaseFragment :
         setToolbarTitle(getString(R.string.purchases))
         setupRecyclerView()
 
+        val role = SharedPrefsHelper.getUserRole(requireContext())
+
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
             // Assume you fetch the authorization status dynamically
-            val isUserAuthorized = false // Replace with actual auth check
+            if (role == "admin") {
+                isUserAuthorized = true
+            } else {
+                isUserAuthorized = false
+            }
 
             showExpenseDatePicker(
 

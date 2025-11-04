@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.helper.RemoteConfigHelper
+import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
@@ -25,6 +26,8 @@ class DashboardFragment :
     private val viewModel by viewModels<DashboardViewModel>()
 
     override fun setupViews() {
+
+
 
         RemoteConfigHelper.fetchAndActivate(viewLifecycleOwner) {
             val isTrial = RemoteConfigHelper.applyButtonState(binding.purchaseCard)

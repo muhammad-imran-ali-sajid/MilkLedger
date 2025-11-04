@@ -1,11 +1,13 @@
 package com.miassolutions.milkledger.presentation.activities
 
-
-
+import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.databinding.ActivityLoginBinding
 
 /**
@@ -14,12 +16,15 @@ import com.miassolutions.milkledger.databinding.ActivityLoginBinding
  */
 class LoginActivity : AppCompatActivity() {
 
-    // Initialize View Binding instance. Activities only need a single binding instance.
+    // Tag for logging purposes
+    private val TAG = "LoginActivity"
+
+    // Initialize View Binding instance.
     private lateinit var binding: ActivityLoginBinding
 
-    // Mock Firebase instances for structure
-    // private lateinit var auth: FirebaseAuth
-    // private lateinit var firestore: FirebaseFirestore
+    // Initialize Firebase Auth instance
+    private val auth by lazy { FirebaseAuth.getInstance() }
+    private val db by lazy { FirebaseFirestore.getInstance() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,9 +33,11 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TODO: 1. Initialize Firebase (if this were a real app)
-        // auth = FirebaseAuth.getInstance()
-        // firestore = FirebaseFirestore.getInstance()
+        // If a user is already signed in, navigate away immediately (optional check)
+        // if (auth.currentUser != null) {
+        //     navigateToHomeScreen()
+        //     return
+        // }
 
         setupLoginButton()
         setupForgotPassword()
@@ -46,12 +53,12 @@ class LoginActivity : AppCompatActivity() {
 
             if (email.isEmpty() || password.isEmpty()) {
                 binding.tvStatusMessage.text = "Email/Username and Password are required."
-                // No return@setOnClickListener needed here as we are in an Activity method
+                return@setOnClickListener
             } else {
                 // Clear previous status messages
                 binding.tvStatusMessage.text = ""
 
-                // Start login process (Replace this with real Firebase code)
+                // Start login process
                 attemptFirebaseLogin(email, password)
             }
         }
@@ -59,45 +66,98 @@ class LoginActivity : AppCompatActivity() {
 
     /**
      * Sets up the listener for the Forgot Password button.
-     * This triggers the password recovery flow.
+     * This prompts the user for their email and sends a recovery link.
      */
     private fun setupForgotPassword() {
         binding.btnForgotPassword.setOnClickListener {
-            // In a real application, you would typically collect the user's email
-            // and call FirebaseAuth.sendPasswordResetEmail(email) here.
-            Toast.makeText(this, "Initiating password recovery...", Toast.LENGTH_SHORT).show()
-            Log.d("LoginActivity", "MOCK: Initiating Firebase password reset flow.")
-            // A more complete implementation would show a dialog for email input.
+            val email = binding.etEmail.text.toString().trim()
+            if (email.isEmpty()) {
+                binding.tvStatusMessage.text = "Please enter your email to reset the password."
+                return@setOnClickListener
+            }
+
+            // Send password reset email
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(
+                            this,
+                            "Password reset email sent to $email.",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        Log.d(TAG, "Password reset email sent.")
+                    } else {
+                        val message =
+                            task.exception?.localizedMessage ?: "Failed to send reset email."
+                        binding.tvStatusMessage.text = message
+                        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+                    }
+                }
         }
     }
 
     /**
-     * Mocks the Firebase authentication process using email and password.
+     * Attempts to sign in the user with Firebase Authentication.
      */
     private fun attemptFirebaseLogin(email: String, password: String) {
-        // Show loading state and clear messages
+        // Show loading state and disable button
         binding.tvStatusMessage.text = "Attempting login..."
         binding.btnLogin.isEnabled = false
 
-        // --- MOCK LOGIC FOR DEMONSTRATION ---
-        // Simulate a delay for a network call. Use postDelayed on the view for UI thread execution.
-        binding.root.postDelayed({
-            if (email.isNotEmpty() && password.length >= 6) {
-                // Simulate successful login
-                Toast.makeText(this, "Login Successful!", Toast.LENGTH_LONG).show()
-                binding.tvStatusMessage.text = "Welcome, user!"
-                // navigateToHomeScreen()
-            } else {
-                // Simulate generic login failure
-                binding.tvStatusMessage.text = "Authentication failed. Invalid credentials."
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                Log.d(TAG, "signInWithEmail:success")
+                Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
+
+                fetchUserRoleAndProceed()
+
+
             }
-            binding.btnLogin.isEnabled = true
-        }, 1500)
+            .addOnFailureListener { e ->
+                Log.w(TAG, "signInWithEmail:failure", e)
+
+                // Display the failure message to the user
+                val message =
+                    e.localizedMessage ?: "Authentication failed. Please check your credentials."
+                binding.tvStatusMessage.text = message
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+
+                // Re-enable the button
+                binding.btnLogin.isEnabled = true
+            }
     }
 
-    // Function to navigate after successful login (not implemented here)
-    // private fun navigateToHomeScreen() {
-    //     Log.d("LoginActivity", "Navigating to main application screen.")
-    // }
-}
+    private fun fetchUserRoleAndProceed() {
+        val uid = auth.currentUser?.uid
+        if (uid == null) {
+            showToast("User not logged in")
+            return
+        }
 
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener { doc ->
+                if (!doc.exists()) {
+                    showToast("User data not found")
+
+                    return@addOnSuccessListener
+                }
+
+                val role = doc.getString("role") ?: "user" // default to "user" if missing
+                SharedPrefsHelper.saveUserRole(this, role)
+
+                val intent = Intent(this, MainActivity::class.java)
+                intent.putExtra("role", role)
+                startActivity(intent)
+                finish()
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Failed to fetch user role", e)
+                Toast.makeText(this, "Failed to get user role", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+    fun showToast(msg: String) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+    }
+}

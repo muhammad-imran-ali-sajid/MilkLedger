@@ -1,29 +1,28 @@
 package com.miassolutions.milkledger.presentation.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
-import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ToolbarOwner {
-
 
 
     private val binding by lazy {
@@ -38,6 +37,15 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         enableEdgeToEdge()
         setContentView(binding.root)
         windowsInsets()
+
+
+        val role = SharedPrefsHelper.getUserRole(this)
+
+        if (role == "admin") {
+            showToast("This is admin")
+        } else {
+            showToast("This is not admin")
+        }
 
 
 
@@ -71,29 +79,67 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             binding.drawerLayout.closeDrawers()
 
-            val destinationId = when (menuItem.itemId) {
-                R.id.action_settingsFragment -> R.id.settingsFragment
-                R.id.action_customersFragment -> R.id.customersFragment
-                R.id.action_notesFragment -> R.id.notesListFragment
-                R.id.action_suppliersFragment -> R.id.suppliersFragment
-                R.id.action_devSettingsFragment -> R.id.devSettingsFragment
-                R.id.action_driveBackupFragment -> R.id.driveBackupFragment
-                else -> null
-            }
-
-            destinationId?.let {
-                if (navController.currentDestination?.id != it) {
-                    navController.navigate(it)
+            when (menuItem.itemId) {
+                R.id.action_settingsFragment -> {
+                    navController.navigate(R.id.settingsFragment)
+                    true
                 }
-                true
-            } ?: run {
-                // Fallback for other items
-                val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
-                if (handled) binding.drawerLayout.closeDrawers()
-                handled
+
+                R.id.action_customersFragment -> {
+                    navController.navigate(R.id.customersFragment)
+                    true
+                }
+
+                R.id.action_notesFragment -> {
+                    navController.navigate(R.id.notesListFragment)
+                    true
+                }
+
+                R.id.action_suppliersFragment -> {
+                    navController.navigate(R.id.suppliersFragment)
+                    true
+                }
+
+                R.id.action_devSettingsFragment -> {
+                    navController.navigate(R.id.devSettingsFragment)
+                    true
+                }
+
+                R.id.action_driveBackupFragment -> {
+                    navController.navigate(R.id.driveBackupFragment)
+                    true
+                }
+
+                R.id.action_logout -> {
+                    logoutUser()
+                    true
+                }
+
+                else -> {
+                    val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+                    if (handled) binding.drawerLayout.closeDrawers()
+                    handled
+                }
             }
         }
 
+
+    }
+
+    private fun logoutUser() {
+        MaterialAlertDialogBuilder(this)
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to log out?")
+            .setPositiveButton("Yes") { _, _ ->
+                FirebaseAuth.getInstance().signOut()
+                SharedPrefsHelper.clearUserRole(this)
+                val intent = Intent(this, LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                finish()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
 
@@ -108,6 +154,10 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
 
     override fun setToolbarTitle(title: String) {
         supportActionBar?.title = title
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
 
