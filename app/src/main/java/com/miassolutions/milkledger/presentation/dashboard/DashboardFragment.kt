@@ -26,9 +26,6 @@ class DashboardFragment :
 
     override fun setupViews() {
 
-
-
-
         RemoteConfigHelper.fetchAndActivate(viewLifecycleOwner) {
             val isTrial = RemoteConfigHelper.applyButtonState(binding.purchaseCard)
             RemoteConfigHelper.applyButtonState(binding.saleCard)

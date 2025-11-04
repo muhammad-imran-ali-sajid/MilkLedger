@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReceiptPdf
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseSummary
 import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
@@ -31,7 +32,7 @@ import java.time.LocalDate
 class PurchaseFragment :
     BaseFragment<FragmentPurchasesBinding>(FragmentPurchasesBinding::inflate) {
 
-    override fun getMenuResId(): Int? = R.menu.purchase_menu
+    override fun getMenuResId(): Int = R.menu.purchase_menu
 
     private var editModeSwitch: MaterialSwitch? = null
     private var biometricRequiredForToday = false
@@ -47,7 +48,7 @@ class PurchaseFragment :
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
             // Assume you fetch the authorization status dynamically
-            val isUserAuthorized = true // Replace with actual auth check
+            val isUserAuthorized = false // Replace with actual auth check
 
             showExpenseDatePicker(
 
@@ -75,39 +76,39 @@ class PurchaseFragment :
             true
         }
 
-//        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
-//            val selectedDate = viewModel.uiState.value.currentDate
-//            val isToday = selectedDate.isToday()
-//
-//            if (isChecked) {
-//                showSnackbar("Edit mode enabled")
-//
-//                if (isToday && !biometricRequiredForToday) {
-//                    setEditModeLockedForToday(false) // unlock
-//                    enableEditMode()
-//                } else {
-//                    BiometricHelper.authenticate(
-//                        fragment = this,
-//                        title = "Unlock editing",
-//                        subtitle = "Use fingerprint or device credentials",
-//                        onSuccess = { enableEditMode() },
-//                        onFailure = {
-//                            editModeSwitch?.isChecked = false
-//                            showToast("Authentication failed. Editing locked.")
-//                        }
-//                    )
-//                }
-//
-//            } else {
-//                showSnackbar("Edit mode disabled")
-//                disableEditMode()
-//
-//                if (isToday) {
-//                    biometricRequiredForToday = true
-//                    setEditModeLockedForToday(true) // lock for today
-//                }
-//            }
-//        }
+        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
+            val selectedDate = viewModel.uiState.value.currentDate
+            val isToday = selectedDate.isToday()
+
+            if (isChecked) {
+                showSnackbar("Edit mode enabled")
+
+                if (isToday && !biometricRequiredForToday) {
+                    setEditModeLockedForToday(false) // unlock
+                    enableEditMode()
+                } else {
+                    BiometricHelper.authenticate(
+                        fragment = this,
+                        title = "Unlock editing",
+                        subtitle = "Use fingerprint or device credentials",
+                        onSuccess = { enableEditMode() },
+                        onFailure = {
+                            editModeSwitch?.isChecked = false
+                            showToast("Authentication failed. Editing locked.")
+                        }
+                    )
+                }
+
+            } else {
+                showSnackbar("Edit mode disabled")
+                disableEditMode()
+
+                if (isToday) {
+                    biometricRequiredForToday = true
+                    setEditModeLockedForToday(true) // lock for today
+                }
+            }
+        }
 
 
     }
@@ -248,10 +249,10 @@ class PurchaseFragment :
     }
 
     private fun showEditBottomSheet(purchaseWithSupplier: PurchaseWithSupplier) {
-//        if (!isEditable) {
-//            showSnackbar("Enable from the top menu switch")
-//            return
-//        }
+        if (!isEditable) {
+            showSnackbar("Enable from the top menu switch")
+            return
+        }
 
         val bottomSheet = PurchaseEditBottomSheet(
             entry = purchaseWithSupplier,

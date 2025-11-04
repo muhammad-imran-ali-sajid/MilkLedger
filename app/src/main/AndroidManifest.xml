@@ -25,9 +25,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MilkLedger">
 
-        <activity android:name=".presentation.activities.auth.AuthActivity"
+        <activity android:name=".presentation.activities.LoginActivity"
             android:theme="@style/Theme.Auth"
-            android:exported="false"/>
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
 
         <activity android:name=".presentation.activities.LauncherActivity"
             android:theme="@style/Theme.Launcher"
@@ -38,13 +45,10 @@
         <activity
             android:name=".presentation.activities.MainActivity"
             android:screenOrientation="portrait"
-            android:exported="true"
+            android:exported="false"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
 
         </activity>
 
