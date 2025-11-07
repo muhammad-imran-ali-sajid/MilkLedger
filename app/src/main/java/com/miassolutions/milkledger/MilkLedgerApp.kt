@@ -22,10 +22,6 @@ class MilkLedgerApp : Application() {
         FirebaseApp.initializeApp(this)
         RemoteConfigHelper.init()
 
-        // Trigger Firestore sync after launch
-        CoroutineScope(Dispatchers.IO).launch {
-            customerRepository.refreshFromFirestore() // 🔽 Fetch from Firestore
 
-        }
     }
 }

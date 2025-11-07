@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.UUID // <-- Added UUID import
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,14 +33,18 @@ class ExpenseViewModel @Inject constructor(
      */
     private suspend fun ensureStaticExpensesForDate(date: LocalDate) {
         STATIC_TITLES.forEach { title -> // Now using the constant from companion object
+            // NOTE: The repository's expenseExistsForTitleAndDate only checks title and date,
+            // not a specific ID, which is fine for this initialization logic.
             val exists = repository.expenseExistsForTitleAndDate(title, date)
             if (!exists) {
                 repository.insertExpense(
                     ExpensesEntity(
+                        // FIX: Generate a unique ID (UUID) for Firestore/Room synchronization
+                        expenseId = UUID.randomUUID().toString(),
                         expenseTitle = title,
                         expenseAmount = 0.0,
                         date = date,
-                        // Other properties (like id or note) will use defaults
+                        // Other properties (like note) will use defaults
                     )
                 )
             }
@@ -86,8 +91,17 @@ class ExpenseViewModel @Inject constructor(
 
     }
 
+    /**
+     * Inserts a new expense, ensuring it has a unique ID for synchronization.
+     */
     fun insertExpense(expense: ExpensesEntity) = viewModelScope.launch {
-        repository.insertExpense(expense)
+        // Ensure the expense has an ID before inserting and syncing
+        val expenseToInsert = if (expense.expenseId.isBlank()) {
+            expense.copy(expenseId = UUID.randomUUID().toString())
+        } else {
+            expense
+        }
+        repository.insertExpense(expenseToInsert)
     }
 
     fun updateExpense(expense: ExpensesEntity) = viewModelScope.launch {
@@ -98,7 +112,6 @@ class ExpenseViewModel @Inject constructor(
         repository.deleteExpense(expense)
     }
 
-    // FIX: Moved staticTitles to a companion object to ensure initialization safety
     companion object {
         private val STATIC_TITLES = listOf("Fuel", "Meal")
     }

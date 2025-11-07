@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
+import com.google.firebase.firestore.Source
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
@@ -16,100 +17,121 @@ class CustomerRepository @Inject constructor(
 
     companion object {
         private const val TAG = "CustomerRepository"
+        private const val CUSTOMER_COLLECTION = "customers"
     }
 
-    private val collectionName = "customers"
-
-    // --- Core CRUD Operations with Improved Sync Logic ---
+    // --- Local Write Operations + Remote Synchronization Trigger ---
 
     /**
-     * Insert or replace a customer locally and remotely.
-     * Marks the local entity as synced on successful remote upload.
+     * Inserts or replaces a customer locally, then triggers a remote upload.
+     * Assumes customerDao.insertCustomer uses OnConflictStrategy.REPLACE (an upsert).
      */
-    suspend fun upsertCustomer(customer: CustomerEntity, syncRemote: Boolean = true) {
-        val customerToInsert = customer.copy(isSynced = !syncRemote) // Assume not synced if remote sync will happen later
+    suspend fun insertCustomer(customer: CustomerEntity) {
+        // 1. Local write for immediate UI update
         try {
-            customerDao.insertCustomer(customerToInsert)
-            Log.d(TAG, "Inserted customer locally: ${customerToInsert.customerId}")
+            customerDao.insertCustomer(customer)
+            Log.d(TAG, "Inserted customer locally: ${customer.customerId}")
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to insert customer locally: ${customerToInsert.customerId}", e)
-            return // Stop if local insert fails
+            Log.e(TAG, "Failed to insert customer locally: ${customer.customerId}", e)
+            return
         }
 
-        if (syncRemote) {
-            try {
-                firestoreHelper.uploadSingle(collectionName, customer.customerId, customerToInsert)
-                // If remote upload succeeds, update local entity's sync status
-                customerDao.updateCustomer(customerToInsert.copy(isSynced = true))
-                Log.d(TAG, "Synced customer to Firestore: ${customer.customerId} and marked as synced locally.")
-            } catch (e: Exception) {
-                // The entity remains marked as isSynced = false for syncPendingToFirestore to pick up
-                Log.e(TAG, "Failed to sync customer to Firestore: ${customer.customerId}", e)
-            }
-        }
-    }
-
-    /**
-     * Update an existing customer locally and remotely.
-     * Marks the local entity as synced on successful remote upload.
-     */
-    suspend fun updateCustomer(customer: CustomerEntity, syncRemote: Boolean = true) {
-        val customerToUpdate = customer.copy(isSynced = !syncRemote) // Assume not synced if remote sync will happen later
+        // 2. Initiate remote write (Firestore handles the background sync)
         try {
-            customerDao.updateCustomer(customerToUpdate)
-            Log.d(TAG, "Updated customer locally: ${customerToUpdate.customerId}")
+            firestoreHelper.uploadSingle(CUSTOMER_COLLECTION, customer.customerId, customer)
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to update customer locally: ${customerToUpdate.customerId}", e)
-            return // Stop if local update fails
-        }
-
-        if (syncRemote) {
-            try {
-                firestoreHelper.uploadSingle(collectionName, customer.customerId, customerToUpdate)
-                // If remote upload succeeds, update local entity's sync status
-                customerDao.updateCustomer(customerToUpdate.copy(isSynced = true))
-                Log.d(TAG, "Updated customer in Firestore: ${customer.customerId} and marked as synced locally.")
-            } catch (e: Exception) {
-                // The entity remains marked as isSynced = false for syncPendingToFirestore to pick up
-                Log.e(TAG, "Failed to update customer in Firestore: ${customer.customerId}", e)
-            }
+            Log.e(TAG, "Failed to sync inserted customer to Firestore: ${customer.customerId}", e)
+            // Local operation succeeded; remote sync will retry later via the full sync function
         }
     }
 
     /**
-     * Delete a customer: performs remote soft-delete first, then local hard-delete.
-     * This prevents re-insertion on refreshFromFirestore if soft-delete fails.
+     * Updates an existing customer locally, then triggers a remote update.
      */
-    suspend fun deleteCustomer(customer: CustomerEntity, syncRemote: Boolean = true) {
-        if (syncRemote) {
-            val deletedCustomer = customer.copy(
-                deletedAt = System.currentTimeMillis(),
-                isSynced = true // This change must be synced
-            )
-            try {
-                // 1. Perform remote soft-delete
-                firestoreHelper.uploadSingle(collectionName, customer.customerId, deletedCustomer)
-                Log.d(TAG, "Marked customer as deleted in Firestore: ${customer.customerId}")
+    suspend fun updateCustomer(customer: CustomerEntity) {
+        // 1. Local write for immediate UI update
+        try {
+            customerDao.updateCustomer(customer)
+            Log.d(TAG, "Updated customer locally: ${customer.customerId}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to update customer locally: ${customer.customerId}", e)
+            return
+        }
 
-                // 2. Perform local hard-delete ONLY if remote soft-delete succeeds
-                customerDao.deleteCustomer(customer)
-                Log.d(TAG, "Deleted customer locally: ${customer.customerId} after remote sync.")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to mark customer as deleted in Firestore. Local data retained to retry sync.", e)
-                // Important: Do not delete locally if remote fails, so the pending status can be re-synced later.
-            }
-        } else {
-            // If syncRemote is false, just delete locally
-            try {
-                customerDao.deleteCustomer(customer)
-                Log.d(TAG, "Deleted customer locally (no remote sync): ${customer.customerId}")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to delete customer locally: ${customer.customerId}", e)
-            }
+        // 2. Initiate remote write
+        try {
+            firestoreHelper.uploadSingle(CUSTOMER_COLLECTION, customer.customerId, customer)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to sync updated customer to Firestore: ${customer.customerId}", e)
         }
     }
 
-    // --- Data Access Methods (Unchanged) ---
+    /**
+     * Deletes a customer locally, then triggers a remote hard-delete.
+     * Note: If soft-delete is needed (marking with deletedAt field), the implementation
+     * would involve an update/insert instead of a delete. Sticking to the hard-delete pattern
+     * for consistency with the established repository model.
+     */
+    suspend fun deleteCustomer(customer: CustomerEntity) {
+        val customerId = customer.customerId
+
+        // 1. Local delete for immediate UI update
+        try {
+            customerDao.deleteCustomer(customer)
+            Log.d(TAG, "Deleted customer locally: $customerId")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to delete customer locally: $customerId", e)
+            return
+        }
+
+        // 2. Initiate remote delete
+        try {
+            firestoreHelper.deleteDocument(CUSTOMER_COLLECTION, customerId)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to sync delete for customer ID: $customerId", e)
+        }
+    }
+
+    // --- Full Synchronization ---
+
+    /**
+     * Synchronizes all local customers with the remote Firestore database.
+     * This performs a full two-way sync: downloads remote changes and uploads all local changes.
+     * NOTE: This assumes customerDao.upsertAll and customerDao.getAllCustomersList() exist.
+     */
+    suspend fun synchronizeCustomers() {
+        Log.d(TAG, "Starting full customer synchronization...")
+        try {
+            // 1. Download and merge remote changes
+            // Use Source.DEFAULT to request network data, falling back to cache if offline.
+            val remoteCustomers = firestoreHelper.downloadCollection<CustomerEntity>(CUSTOMER_COLLECTION)
+
+            if (remoteCustomers.isNotEmpty()) {
+                // Insert/replace all downloaded data into the local Room database
+                customerDao.upsertAll(remoteCustomers)
+                Log.d(TAG, "Downloaded and merged ${remoteCustomers.size} customers from Firestore.")
+            } else {
+                Log.d(TAG, "No remote items found to download.")
+            }
+
+            // 2. Upload all local changes (ensuring all local data is pushed)
+            val allLocalCustomers = customerDao.getAllCustomersList()
+            if (allLocalCustomers.isNotEmpty()) {
+                firestoreHelper.uploadCollection(
+                    collectionName = CUSTOMER_COLLECTION,
+                    dataList = allLocalCustomers,
+                    idExtractor = { it.customerId } // Explicitly use the 'customerId' field
+                )
+                Log.d(TAG, "Uploaded ${allLocalCustomers.size} local items to Firestore.")
+            }
+
+        } catch (e: Exception) {
+            Log.e(TAG, "Full synchronization failed: ${e.localizedMessage}", e)
+            // The system remains operational due to local data, but sync failed.
+        }
+    }
+
+    // --- Local Read Operations (Offline-First Read) ---
 
     // Get all customers as Flow
     fun getAllCustomers(): Flow<List<CustomerEntity>> = customerDao.getAllCustomers()
@@ -119,64 +141,4 @@ class CustomerRepository @Inject constructor(
 
     // Get a customer by ID once
     suspend fun getCustomerByIdOnce(id: String): CustomerEntity? = customerDao.getCustomerByIdOnce(id)
-
-    // --- Bulk Sync Operations ---
-
-    /**
-     * Upload pending local changes to Firestore.
-     */
-    suspend fun syncPendingToFirestore() {
-        val pending = customerDao.getPendingSync()
-        if (pending.isNotEmpty()) {
-            try {
-                // Upload the list using the FirestoreSyncHelper
-                firestoreHelper.uploadCollection(collectionName, pending) { it.customerId }
-                Log.d(TAG, "Successfully synced ${pending.size} pending customers to Firestore")
-
-                // Mark as synced locally using an upsert operation
-                val syncedList = pending.map { it.copy(isSynced = true) }
-                customerDao.insertAll(syncedList) // Assuming insertAll is an upsert/replace operation
-                Log.d(TAG, "Successfully marked ${pending.size} customers as synced locally.")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to sync pending customers to Firestore", e)
-            }
-        } else {
-            Log.d(TAG, "No pending customers to sync")
-        }
-    }
-
-    /**
-     * Download remote Firestore collection and replace local DB.
-     * Note: This assumes FirestoreSyncHelper throws on download error.
-     */
-//    suspend fun refreshFromFirestore() {
-//        try {
-//            val remoteList: List<CustomerEntity> = firestoreHelper.downloadCollection(collectionName)
-//            if (remoteList.isNotEmpty()) {
-//                // ⭐️ Use the single atomic DAO function
-//                customerDao.replaceAll(remoteList)
-//                Log.d(TAG, "Refreshed local DB from Firestore with ${remoteList.size} customers")
-//            } else {
-//                Log.d(TAG, "No customers found in Firestore to refresh")
-//            }
-//        } catch (e: Exception) {
-//            Log.e(TAG, "Failed to refresh local DB from Firestore. Local data is preserved.", e)
-//        }
-//    }
-
-    // Download remote Firestore collection and replace local DB
-    suspend fun refreshFromFirestore() {
-        try {
-            val remoteList: List<CustomerEntity> = firestoreHelper.downloadCollection(collectionName)
-            if (remoteList.isNotEmpty()) {
-                customerDao.clearAll()
-                customerDao.insertAll(remoteList)
-                Log.d(TAG, "Refreshed local DB from Firestore with ${remoteList.size} customers")
-            } else {
-                Log.d(TAG, "No customers found in Firestore to refresh")
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to refresh local DB from Firestore", e)
-        }
-    }
 }

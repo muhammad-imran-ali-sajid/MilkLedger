@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.*
-import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -9,14 +8,16 @@ import java.time.LocalDate
 @Dao
 interface ExpensesDao {
 
+    // Retrieve all entities as a List for synchronization purposes
     @Query("SELECT * FROM expense_table")
-    suspend fun getAllSync(): List<ExpensesEntity>
+    suspend fun getAllExpensesList(): List<ExpensesEntity>
 
     @Query("DELETE FROM expense_table")
     suspend fun clearAll()
 
+    // Inserts a list of entities, replacing existing ones (upsert)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(expenses: List<ExpensesEntity>)
+    suspend fun upsertAll(expenses: List<ExpensesEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExpense(expense: ExpensesEntity)

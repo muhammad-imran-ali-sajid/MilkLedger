@@ -98,8 +98,8 @@ class StaticDataHelper @Inject constructor(private val database: AppDatabase) {
 
         )
 
-        customerDao.insertAll(customers)
-        supplierDao.insertAll(suppliers)
-        expensesDao.insertAll(expenseTypes)
+        customerDao.upsertAll(customers)
+        supplierDao.upsertAll(suppliers)
+        expensesDao.upsertAll(expenseTypes)
     }
 }

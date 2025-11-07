@@ -101,7 +101,7 @@ class DevSettingsFragment : Fragment() {
                 )
             )
         }
-        expenseDao.insertAll(expensesList)
+        expenseDao.upsertAll(expensesList)
 
         // Insert dummy customers
         val customers = listOf(
@@ -111,7 +111,7 @@ class DevSettingsFragment : Fragment() {
             CustomerEntity(customerName = "Bakery", customerRate = 150.0, sortOrder = 4),
             CustomerEntity(customerName = "Bakery Home", customerRate = 131.0, sortOrder = 5),
         )
-        customerDao.insertAll(customers)
+        customerDao.upsertAll(customers)
 
         // Insert dummy suppliers
         val suppliers = listOf(
@@ -123,7 +123,7 @@ class DevSettingsFragment : Fragment() {
             SupplierEntity(supplierName = "Pomi", supplierRate = 160.0, sortOrder = 6),
             SupplierEntity(supplierName = "Hafiz Liaqat", supplierRate = 162.50, sortOrder = 7),
         )
-        supplierDao.insertAll(suppliers)
+        supplierDao.upsertAll(suppliers)
 
         // Insert 7 dummy purchases for each supplier
         val purchaseList = mutableListOf<PurchaseEntity>()

@@ -11,7 +11,7 @@ import kotlin.math.min
 
 @Singleton
 class FirestoreSyncHelper @Inject constructor(
-     val firestore: FirebaseFirestore
+    val firestore: FirebaseFirestore
 ) {
 
     companion object {
@@ -86,6 +86,23 @@ class FirestoreSyncHelper @Inject constructor(
             Log.d(TAG, "Uploaded $collectionName/${docRef.id} successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Error uploading single doc: ${e.localizedMessage}", e)
+            throw e
+        }
+    }
+
+    /**
+     * Delete a single document.
+     */
+    suspend fun deleteDocument(
+        collectionName: String,
+        documentId: String
+    ) {
+        try {
+            firestore.collection(collectionName).document(documentId).delete().await()
+            Log.d(TAG, "Deleted $collectionName/$documentId successfully")
+        } catch (e: Exception) {
+            Log.e(TAG, "Error deleting doc $documentId in $collectionName: ${e.localizedMessage}", e)
+            // Propagate the exception but allow the local delete to stand (offline-first principle)
             throw e
         }
     }

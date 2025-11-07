@@ -6,27 +6,33 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface SupplierDao {
 
+    // --- Synchronization Helper Methods ---
+
+    /**
+     * Used by the repository to get a list of all local entities for remote upload.
+     */
     @Query("SELECT * FROM supplier_table")
-    suspend fun getAllSync(): List<SupplierEntity>
+    suspend fun getAllSuppliersList(): List<SupplierEntity>
 
-    @Query("DELETE FROM supplier_table")
-   suspend fun clearAll()
-
-    @Update
-    suspend fun updateSuppliers(suppliers: List<SupplierEntity>)
-
+    /**
+     * Batch upsert (Insert or Replace) used for merging remote data into the local database.
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-   suspend fun insertAll(suppliers: List<SupplierEntity>)
+    suspend fun upsertAll(suppliers: List<SupplierEntity>)
 
+    /**
+     * Deletes all supplier records.
+     */
     @Query("DELETE FROM supplier_table")
-    suspend fun deleteAll()
+    suspend fun clearAll()
+
+    // --- Single Entity Operations (Trigger Remote Sync) ---
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSupplier(supplier: SupplierEntity)
@@ -36,6 +42,8 @@ interface SupplierDao {
 
     @Delete
     suspend fun deleteSupplier(supplier: SupplierEntity)
+
+    // --- Local Read Operations (Offline-First Read) ---
 
     @Query("SELECT * FROM supplier_table ORDER BY sortOrder ASC")
     fun getAllSuppliers(): Flow<List<SupplierEntity>>

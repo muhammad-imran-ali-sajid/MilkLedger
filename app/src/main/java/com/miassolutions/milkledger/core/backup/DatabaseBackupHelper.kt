@@ -92,12 +92,12 @@ class DatabaseBackupHelper @Inject constructor(
     ) = withContext(Dispatchers.IO) {
 
         val data = BackupData(
-            customers = db.customerDao().getAllSync(),
-            suppliers = db.supplierDao().getAllSync(),
+            customers = db.customerDao().getAllCustomersList(),
+            suppliers = db.supplierDao().getAllSuppliersList(),
             purchases = db.purchaseDao().getAllSync(),
             sales = db.salesDao().getAllSync(),
-            expenses = db.expensesDao().getAllSync(),
-            notes = db.noteDao().getAllSync()
+            expenses = db.expensesDao().getAllExpensesList(),
+            notes = db.noteDao().getAllNotesList()
         )
 
         val json = gson.toJson(data)
@@ -142,10 +142,10 @@ class DatabaseBackupHelper @Inject constructor(
         // Suspend-friendly transaction
         db.withTransaction {
             db.customerDao().clearAll()
-            db.customerDao().insertAll(backupData.customers)
+            db.customerDao().upsertAll(backupData.customers)
 
             db.supplierDao().clearAll()
-            db.supplierDao().insertAll(backupData.suppliers)
+            db.supplierDao().upsertAll(backupData.suppliers)
 
             db.purchaseDao().clearAll()
             db.purchaseDao().insertAll(backupData.purchases)
@@ -154,10 +154,10 @@ class DatabaseBackupHelper @Inject constructor(
             db.salesDao().insertAll(backupData.sales)
 
             db.expensesDao().clearAll()
-            db.expensesDao().insertAll(backupData.expenses)
+            db.expensesDao().upsertAll(backupData.expenses)
 
             db.noteDao().clearAll()
-            db.noteDao().insertAll(backupData.notes)
+            db.noteDao().upsertAll(backupData.notes)
         }
 
         true

@@ -1,22 +1,22 @@
 package com.miassolutions.milkledger.data.local.daos
 
-
 import androidx.room.*
-import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
 
+    // Retrieve all entities as a List for synchronization purposes (renamed from getAllSync)
     @Query("SELECT * FROM note_table")
-    suspend fun getAllSync(): List<NoteEntity>
+    suspend fun getAllNotesList(): List<NoteEntity>
 
     @Query("DELETE FROM note_table")
     suspend fun clearAll()
 
+    // Inserts a list of entities, replacing existing ones (upsert) (renamed from insertAll)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(notes: List<NoteEntity>)
+    suspend fun upsertAll(notes: List<NoteEntity>)
 
     // --- Insert or Update ---
     @Insert(onConflict = OnConflictStrategy.REPLACE)

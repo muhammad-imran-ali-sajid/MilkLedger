@@ -65,9 +65,7 @@ object DatabaseModule {
     @Provides
     fun provideNoteDao(db: AppDatabase): NoteDao = db.noteDao()
 
-    @Provides
-    @Singleton
-    fun provideNoteRepository(noteDao: NoteDao): NoteRepository = NoteRepository(noteDao)
+
 
 
 

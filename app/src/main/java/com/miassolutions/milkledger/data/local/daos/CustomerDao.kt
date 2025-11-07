@@ -5,7 +5,6 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import kotlinx.coroutines.flow.Flow
@@ -13,21 +12,27 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CustomerDao {
 
-    @Query("SELECT * FROM customer_table")
-    suspend fun getAllSync(): List<CustomerEntity>
+    // --- Synchronization Helper Methods ---
 
+    /**
+     * Used by the repository to get a list of all local entities for remote upload.
+     */
+    @Query("SELECT * FROM customer_table")
+    suspend fun getAllCustomersList(): List<CustomerEntity>
+
+    /**
+     * Batch upsert (Insert or Replace) used for merging remote data into the local database.
+     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(customers: List<CustomerEntity>)
+
+    /**
+     * Deletes all customer records.
+     */
     @Query("DELETE FROM customer_table")
     suspend fun clearAll()
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(customers: List<CustomerEntity>)
-
-
-    @Query("SELECT * FROM customer_table WHERE isSynced = 0 OR deletedAt IS NOT NULL")
-    suspend fun getPendingSync(): List<CustomerEntity>
-
-    @Query("DELETE FROM customer_table")
-    suspend fun deleteAll()
+    // --- Single Entity Operations (Trigger Remote Sync) ---
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCustomer(customer: CustomerEntity)
@@ -38,6 +43,8 @@ interface CustomerDao {
     @Delete
     suspend fun deleteCustomer(customer: CustomerEntity)
 
+    // --- Local Read Operations (Offline-First Read) ---
+
     @Query("SELECT * FROM customer_table ORDER BY sortOrder ASC")
     fun getAllCustomers(): Flow<List<CustomerEntity>>
 
@@ -45,11 +52,5 @@ interface CustomerDao {
     fun getCustomerById(id: String): Flow<CustomerEntity?>
 
     @Query("SELECT * FROM customer_table WHERE customerId = :id LIMIT 1")
-    fun getCustomerByIdOnce(id: String): CustomerEntity?
-
-    @Transaction
-    suspend fun replaceAll(customers: List<CustomerEntity>) {
-        clearAll()
-        insertAll(customers)
-    }
+    suspend fun getCustomerByIdOnce(id: String): CustomerEntity?
 }
