@@ -76,6 +76,19 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         binding.navigationView.setupWithNavController(navController)
 
 
+        binding.navigationView.post {
+            val isAdmin = SharedPrefsHelper.isAdmin(this)
+            val navMenu = binding.navigationView.menu
+
+            if (!isAdmin) {
+
+                navMenu.findItem(R.id.action_customersFragment)?.isVisible = false
+                navMenu.findItem(R.id.action_suppliersFragment)?.isVisible = false
+                navMenu.findItem(R.id.action_notesFragment)?.isVisible = false
+            }
+        }
+
+
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             binding.drawerLayout.closeDrawers()
 
