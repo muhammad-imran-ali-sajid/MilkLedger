@@ -154,7 +154,7 @@ class DevSettingsFragment : Fragment() {
                 )
             }
         }
-        purchaseDao.insertAll(purchaseList)
+        purchaseDao.upsertAll(purchaseList)
 
         // Insert 7 dummy sales for each customer
         val salesList = mutableListOf<SalesEntity>()
