@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.presentation.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -171,6 +172,15 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
 
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+
+
+    override fun attachBaseContext(newBase: Context) {
+        val configuration = newBase.resources.configuration
+        configuration.fontScale = 1.0f // Prevents scaling
+        val context = newBase.createConfigurationContext(configuration)
+        super.attachBaseContext(context)
     }
 
 
