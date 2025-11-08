@@ -29,7 +29,6 @@
                 android:text="کسٹمر کا نام"
                 android:textAlignment="center"
                 style="@style/TextTitleUrdu"
-                android:backgroundTint="@color/milk_pale_yellow"
                 android:background="@drawable/bg_edittext_readable"
                 android:textColor="@android:color/black"
                 android:textSize="22sp"
@@ -265,10 +264,8 @@
                     android:id="@+id/btn_cancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
                     android:layout_weight="1"
                     android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/md_theme_primary"
                     android:text="Cancel"
                     android:textColor="@color/white"
                     app:cornerRadius="8dp" />
@@ -280,7 +277,6 @@
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
                     android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/md_theme_primary"
                     android:text="Save"
                     android:textColor="@color/white"
                     app:cornerRadius="8dp" />

@@ -28,7 +28,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_edittext_readable"
-                android:backgroundTint="@color/milk_pale_yellow"
                 android:paddingVertical="12dp"
                 android:text="سپلائر کا نام"
                 android:textAlignment="center"
@@ -354,10 +353,8 @@
                     android:id="@+id/btn_cancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
                     android:layout_weight="1"
                     android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/md_theme_primary"
                     android:text="Cancel"
                     android:textColor="@color/white"
                     app:cornerRadius="8dp" />
@@ -369,7 +366,6 @@
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/md_theme_primary"
                     android:text="Save"
                     android:textColor="@color/white"
                     app:cornerRadius="8dp" />

@@ -3,35 +3,24 @@
     <style name="Base.Theme.MilkLedger" parent="Theme.Material3.Dark.NoActionBar">
 
         <!-- Brand Colors -->
-        <item name="colorPrimary">@color/milk_primary</item>
+        <item name="colorPrimary">@color/primary</item>
         <item name="android:textColor">@color/black</item>
-        <item name="colorOnPrimary">@color/milk_on_primary</item>
-        <item name="colorSecondary">@color/milk_secondary</item>
-        <item name="colorOnSecondary">@color/milk_on_secondary</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
         <item name="fontFamily">@font/poppins_bold</item>
 
-        <!-- Surface Colors (High Contrast) -->
-        <item name="colorSurface">@color/milk_surface</item>
-        <item name="android:colorBackground">@color/milk_surface</item>
-        <item name="colorOnSurface">@color/milk_on_surface</item>
+<!--         Surface Colors (High Contrast) -->
+        <item name="colorSurface">@color/surface</item>
+        <item name="android:colorBackground">@color/surface</item>
+        <item name="colorOnSurface">@color/on_surface</item>
 
-        <!-- Status Bar Color (Use primary color for brand consistency) -->
+         Status Bar Color (Use primary color for brand consistency)
         <item name="android:statusBarColor">?attr/colorPrimary</item>
 
-        <!-- ************************************ -->
-        <!-- 2. TYPOGRAPHY (CRITICAL FOR READABILITY) -->
-        <!-- ************************************ -->
 
-        <!-- Customize key text styles to increase font size significantly -->
 
-        <!-- For main body text in lists, cards, and paragraphs -->
-        <item name="textAppearanceBodyLarge">@style/TextAppearance.MilkLedger.BodyLarge</item>
 
-        <!-- For titles of large sections or cards -->
-        <item name="textAppearanceTitleLarge">@style/TextAppearance.MilkLedger.TitleLarge</item>
-
-        <!-- For screen titles or major headings -->
-        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.MilkLedger.HeadlineMedium</item>
 
 
 
@@ -39,8 +28,8 @@
 
     <style name="Theme.MilkLedger" parent="Base.Theme.MilkLedger" />
 
-    <style name="Theme.Launcher" parent="Theme.Material3.Light.NoActionBar"/>
-    <style name="Theme.Auth" parent="Theme.Material3.Light.NoActionBar"/>
+    <style name="Theme.Launcher" parent="Theme.Material3.Dark.NoActionBar"/>
+    <style name="Theme.Auth" parent="Theme.Material3.Dark.NoActionBar"/>
 
 
 

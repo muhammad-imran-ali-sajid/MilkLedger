@@ -186,7 +186,7 @@
                     android:id="@+id/tvPaid"
                     style="@style/TextValue"
                     android:text="10000"
-                    android:textColor="@color/success" />
+                     />
             </LinearLayout>
 
             <!-- Balance -->

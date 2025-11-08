@@ -6,7 +6,7 @@
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/milk_bg_app">
+    android:background="@drawable/drawer_header_background">
 
     <!-- Profile Picture -->
 
