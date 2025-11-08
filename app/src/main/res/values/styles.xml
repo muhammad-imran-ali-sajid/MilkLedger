@@ -170,7 +170,7 @@
         <item name="strokeColor">@color/teal_700</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="cornerRadius">4dp</item>
+        <item name="cornerRadius">8dp</item>
     </style>
 
     <style name="PdfSummaryTextStyle">
