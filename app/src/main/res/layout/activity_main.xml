@@ -5,7 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/milk_bg_app"
+    android:background="@drawable/drawer_header_background"
     tools:context=".presentation.activities.MainActivity">
 
     <!-- Main content -->

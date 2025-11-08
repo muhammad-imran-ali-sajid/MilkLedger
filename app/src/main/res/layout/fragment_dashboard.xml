@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_date_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/teal_700"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
         android:weightSum="8"
-        android:background="@color/green_700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,8 +27,8 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            app:tint="@color/white"
-            android:src="@drawable/ic_arrow" />
+            android:src="@drawable/ic_arrow"
+            app:tint="@color/white" />
 
         <TextView
             android:id="@+id/tv_selected_date"
@@ -53,8 +50,8 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:rotation="180"
-            app:tint="@color/white"
-            android:src="@drawable/ic_arrow" />
+            android:src="@drawable/ic_arrow"
+            app:tint="@color/white" />
     </LinearLayout>
 
     <LinearLayout
@@ -62,16 +59,14 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_date_header"
-        tools:layout_editor_absoluteX="12dp">
+        app:layout_constraintTop_toBottomOf="@+id/layout_date_header">
 
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/togglePeriod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:padding="4dp"
+            android:layout_marginHorizontal="24dp"
             app:selectionRequired="true"
             app:singleSelection="true">
 
@@ -81,9 +76,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Daily"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="Daily" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWeekly"
@@ -91,9 +84,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Weekly"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="Weekly" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMonthly"
@@ -101,9 +92,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Monthly"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="Monthly" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnYearly"
@@ -121,9 +110,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="All"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="All" />
 
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -148,8 +135,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="8dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp">
 
                 <!-- 📊 Header -->
 
@@ -176,22 +163,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:weightSum="2"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:weightSum="2">
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:weightSum="2"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:weightSum="2">
 
                         <!-- Purchases -->
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/purchase_card"
                             style="@style/dashboard_card"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="6dp"
+                            android:layout_weight="1"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="4dp"
                             app:layout_constraintBottom_toBottomOf="@+id/sale_card"
@@ -243,9 +230,9 @@
                             android:id="@+id/sale_card"
                             style="@style/dashboard_card"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="6dp"
+                            android:layout_weight="1"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="4dp"
                             app:layout_constraintDimensionRatio="w,1:1"
@@ -293,9 +280,9 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:layout_height="wrap_content">
+                        android:weightSum="2">
 
 
                         <!-- Expense -->
@@ -303,9 +290,9 @@
                             android:id="@+id/expense_card"
                             style="@style/dashboard_card"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="6dp"
+                            android:layout_weight="1"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="4dp"
                             app:layout_constraintEnd_toEndOf="@+id/purchase_card"
@@ -355,9 +342,9 @@
                             android:id="@+id/materialCardView"
                             style="@style/dashboard_card"
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="6dp"
+                            android:layout_weight="1"
                             app:cardCornerRadius="12dp"
                             app:cardElevation="4dp"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -402,8 +389,6 @@
                         </com.google.android.material.card.MaterialCardView>
 
                     </LinearLayout>
-
-
 
 
                 </LinearLayout>
@@ -631,8 +616,6 @@
 
 
     </LinearLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
