@@ -179,7 +179,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:cardBackgroundColor="@color/purchase_color"
-
                             app:strokeColor="@color/purchase_color">
 
                             <LinearLayout
@@ -218,7 +217,6 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             app:cardBackgroundColor="@color/sale_color"
-                            app:layout_constraintDimensionRatio="w,1:1"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:strokeColor="@color/sale_color">
@@ -365,8 +363,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
                         app:strokeColor="@color/orange_200">
 
                         <LinearLayout
@@ -401,9 +397,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
-                        app:strokeColor="@color/green_700">
+                        app:strokeColor="@color/green_200">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -437,9 +431,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
-                        app:strokeColor="@color/primary">
+                        app:strokeColor="@color/green">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -473,9 +465,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
-                        app:strokeColor="@color/teal_700">
+                        app:strokeColor="@color/teal_200">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -509,8 +499,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="6dp"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="4dp"
                         app:strokeColor="@color/blue_700">
 
                         <LinearLayout
