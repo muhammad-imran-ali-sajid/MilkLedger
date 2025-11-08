@@ -112,16 +112,15 @@
     </style>
 
     <style name="BaseCardStyle">
-        <item name="cardCornerRadius">12dp</item>
-        <item name="cardElevation">4dp</item>
-        <item name="elevation">4dp</item>
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">8dp</item>
 
     </style>
 
     <style name="dashboard_card" parent="BaseCardStyle">
-        <item name="cardBackgroundColor">#eee</item>
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="strokeColor">@color/white</item>
         <item name="android:clickable">true</item>
-        <item name="strokeColor">#eee</item>
         <item name="android:layout_margin">4dp</item>
         <item name="android:focusable">true</item>
     </style>
