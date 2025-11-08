@@ -28,7 +28,6 @@ class DashboardFragment :
     override fun setupViews() {
 
 
-
         RemoteConfigHelper.fetchAndActivate(viewLifecycleOwner) {
             val isTrial = RemoteConfigHelper.applyButtonState(binding.purchaseCard)
             RemoteConfigHelper.applyButtonState(binding.saleCard)
@@ -157,6 +156,11 @@ class DashboardFragment :
     override fun setupListeners() {
         binding.btnCustomRange.setOnClickListener {
             showDateFilter()
+        }
+
+        // later will pullToRefresh TODO()
+        binding.cardProfit.setOnClickListener {
+            viewModel.fetchData()
         }
 
 

@@ -14,8 +14,8 @@ import java.util.UUID
 data class NoteEntity(
     @PrimaryKey
     val id: String = UUID.randomUUID().toString(),
-    val title: String,
-    val content: String,
+    val title: String= "",
+    val content: String= "",
     val createdDate: LocalDate = LocalDate.now(),
     val alarmDateTime: LocalDateTime?,
     val isDone: Boolean = false
