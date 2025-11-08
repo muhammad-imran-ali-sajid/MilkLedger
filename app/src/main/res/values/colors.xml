@@ -21,14 +21,19 @@
     <color name="teal_200">#80CBC4</color>
     <color name="orange_700">#E65100</color>
     <color name="orange_200">#FFCC80</color>
+    <color name="orange_300">#ee3820</color>
 
-    <color name="blue_700">#1976D2</color>
+
+
+    <color name="blue_700">#1236D2</color>
+    <color name="blue_300">#13aAF9</color>
     <color name="blue_200">#90CAF9</color>
     <color name="green_700">#2E7D32</color>
     <color name="green">#2faD32</color>
     <color name="green_200">#A5D6A7</color>
-    <color name="bg_dark">#232322</color>
-    <color name="bg_dark2">#333324</color>
+    <color name="green_300">#aca512</color>
+    <color name="bg_dark">#222332</color>
+    <color name="bg_dark2">#223333</color>
 
 
 
@@ -36,8 +41,13 @@
 
 
     <!--    App specific colors-->
-    <color name="sale_color">#4CAF50</color>
-    <color name="purchase_color">#F44336</color>
+    <color name="sale_color">#008060</color>
+
+    <color name="purchase_color">#103766</color>
+
+    <color name="expense_color">#A03E48</color>
+
+    <color name="profit_color">#CCA000</color>
     <color name="title_color">#fff</color>
 
 

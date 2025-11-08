@@ -56,12 +56,13 @@ class DashboardFragment :
     override fun setupObservers() = with(binding) {
         viewModel.uiState.collectState { state ->
             tvSelectedDate.text = state.period
-            tvTotalPurchases.text = "Rs. ${state.purchaseTotal.toRoundedStr()}"
-            tvTotalSales.text = "Rs. ${state.salesTotal.toRoundedStr()}"
-            tvTotalExpense.text = "Rs. ${state.expensesTotal.toRoundedStr()}"
-            tvNetProfit.text = "Rs. ${state.profit.toRoundedStr()}"
+            tvTotalPurchases.text = state.purchaseTotal.toRoundedStr()
+            tvTotalSales.text = state.salesTotal.toRoundedStr()
+            tvTotalExpense.text = state.expensesTotal.toRoundedStr()
+            tvNetProfit.text = state.profit.toRoundedStr()
             tvMilkPurchase.text = "${state.milkPurchase.toRoundedStr()} Litre"
             tvMilkSold.text = "${state.milkSold.toRoundedStr()} Litre"
+
 
         }
     }
