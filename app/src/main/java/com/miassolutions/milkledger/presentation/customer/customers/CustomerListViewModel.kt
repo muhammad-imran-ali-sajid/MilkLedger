@@ -35,7 +35,12 @@ class CustomerListViewModel @Inject constructor(
             repository.getAllCustomers()
                 .map { list -> list.map { it.toDomain() } } // Convert to domain model
                 .collect { customers ->
-                    _uiState.value = _uiState.value.copy(customers = customers)
+                    allCustomers = customers
+                    _uiState.value =
+                        _uiState.value.copy(
+                            customers = customers,
+                            displayedCustomers = customers
+                        )
                 }
         }
     }
@@ -46,25 +51,34 @@ class CustomerListViewModel @Inject constructor(
         }
     }
 
-
+    private var allCustomers: List<Customer> = emptyList()
 
     fun saveCustomer(customer: Customer) {
         viewModelScope.launch {
             try {
-                repository.updateCustomer(customer.toEntity())
-                _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer saved"))
+                val existing = customer.id?.let { repository.getCustomerById(it) }
+
+                if (existing != null) {
+                    repository.updateCustomer(customer.toEntity())
+                    _uiEvent.emit(CustomerUiEvent.ShowMessage("Supplier updated"))
+                } else {
+                    // determine next sort order
+                    val nextSortOrder = (allCustomers.maxOfOrNull { it.sortOrder } ?: 0) + 1
+                    repository.insertCustomer(customer.toEntity().copy(sortOrder = nextSortOrder))
+                    _uiEvent.emit(CustomerUiEvent.ShowMessage("Supplier added"))
+                }
             } catch (e: Exception) {
-                _uiEvent.emit(CustomerUiEvent.ShowMessage("Error saving customer"))
+                _uiEvent.emit(CustomerUiEvent.ShowMessage("Error saving supplier"))
             }
         }
     }
 
-    fun deleteCustomer(customer: Customer){
+    fun deleteCustomer(customer: Customer) {
         viewModelScope.launch {
             try {
                 repository.deleteCustomer(customer.toEntity())
                 _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer deleted"))
-            } catch (e:Exception){
+            } catch (e: Exception) {
                 _uiEvent.emit(CustomerUiEvent.ShowMessage("Error deleting customer"))
             }
         }
