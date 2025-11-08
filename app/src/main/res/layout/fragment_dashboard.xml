@@ -525,7 +525,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Total TS"
-                                android:textColor="@color/blue_700"
+                                android:textColor="@color/blue_300"
                                 android:textSize="20sp" />
 
                             <TextView
