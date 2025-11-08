@@ -9,7 +9,7 @@
         android:id="@+id/layout_date_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/green"
+        android:background="@drawable/drawer_header_background"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
