@@ -25,6 +25,7 @@
     <color name="blue_700">#1976D2</color>
     <color name="blue_200">#90CAF9</color>
     <color name="green_700">#2E7D32</color>
+    <color name="green">#2faD32</color>
     <color name="green_200">#A5D6A7</color>
 
 
@@ -55,7 +56,7 @@
 
     <color name="edittext_bg_tint">#FFFFFF</color>       <!-- EditText white -->
     <color name="textview_bg_tint">#FFF3E0</color>       <!-- Light orange-ish for TextViews -->
-    <color name="textview_text_color">#fff</color>
+    <color name="textview_text_color">#ddd</color>
 
 
     <!-- Divider -->

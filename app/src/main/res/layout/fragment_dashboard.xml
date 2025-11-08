@@ -9,7 +9,7 @@
         android:id="@+id/layout_date_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/teal_700"
+        android:background="@color/green"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
@@ -413,7 +413,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Sold"
-                                android:textColor="@color/green_700"
+                                android:textColor="@color/green_200"
                                 android:textSize="20sp" />
 
                             <TextView
@@ -449,7 +449,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Avg Fat"
-                                android:textColor="@color/primary"
+                                android:textColor="@color/green"
                                 android:textSize="20sp" />
 
                             <TextView
@@ -485,7 +485,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Avg LR"
-                                android:textColor="@color/teal_700"
+                                android:textColor="@color/teal_200"
                                 android:textSize="20sp" />
 
                             <TextView
