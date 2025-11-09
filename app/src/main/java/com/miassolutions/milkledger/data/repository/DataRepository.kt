@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
+import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.mapper.toEntityModel
@@ -13,6 +14,7 @@ import com.miassolutions.milkledger.data.mapper.toRoomEntity
 import com.miassolutions.milkledger.data.remote.model.FirestoreCustomer
 import com.miassolutions.milkledger.data.remote.model.FirestoreExpense
 import com.miassolutions.milkledger.data.remote.model.FirestoreNotes
+import com.miassolutions.milkledger.data.remote.model.FirestoreSales
 import com.miassolutions.milkledger.data.remote.model.FirestoreSupplier
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import jakarta.inject.Inject
@@ -28,6 +30,7 @@ class DataRepository @Inject constructor(
     private val supplierDao: SupplierDao,
     private val customerDao: CustomerDao,
     private val expenseDao: ExpensesDao,
+    private val salesDao: SalesDao,
     private val notesDao: NoteDao
 ) {
     private val TAG = "DataRepository"
@@ -44,6 +47,7 @@ class DataRepository @Inject constructor(
         // This scope will keep running until the calling scope (ViewModelScope) is cancelled.
         launch { observeCollectionChanges("suppliers") }
         launch { observeCollectionChanges("customers") }
+        launch { observeCollectionChanges("sales") }
         launch { observeCollectionChanges("notes") }
         launch { observeCollectionChanges("expenses") }
 
@@ -84,6 +88,7 @@ class DataRepository @Inject constructor(
                                     // Upsert: Add or replace the document in Room
                                     upsertChangedDocument(collectionPath, change)
                                 }
+
                                 DocumentChange.Type.REMOVED -> {
                                     // Delete: Remove the document from Room
                                     deleteRemovedDocument(collectionPath, change)
@@ -116,14 +121,22 @@ class DataRepository @Inject constructor(
                 val entity = (cloudModel as FirestoreSupplier).toRoomEntity()
                 supplierDao.upsertAll(listOf(entity))
             }
+
             "customers" -> {
                 val entity = (cloudModel as FirestoreCustomer).toRoomEntity()
                 customerDao.upsertAll(listOf(entity))
             }
+
+            "sales" -> {
+                val entity = (cloudModel as FirestoreSales).toEntityModel()
+                salesDao.upsertAll(listOf(entity))
+            }
+
             "notes" -> {
                 val entity = (cloudModel as FirestoreNotes).toEntity()
                 notesDao.upsertAll(listOf(entity))
             }
+
             "expenses" -> {
                 val entity = (cloudModel as FirestoreExpense).toEntityModel()
                 expenseDao.upsertAll(listOf(entity))
@@ -152,6 +165,7 @@ class DataRepository @Inject constructor(
         return when (collectionPath) {
             "suppliers" -> FirestoreSupplier::class.java
             "customers" -> FirestoreCustomer::class.java
+            "sales" -> FirestoreSales::class.java
             "notes" -> FirestoreNotes::class.java
             "expenses" -> FirestoreExpense::class.java
             else -> throw IllegalArgumentException("Unknown collection path: $collectionPath")

@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity(
@@ -21,20 +22,20 @@ import java.util.UUID
 )
 data class SalesEntity(
     @PrimaryKey val saleId: String = UUID.randomUUID().toString(),
-    val customerId: String,
-    val date: LocalDate = LocalDate.now(),   // ledger date
+    val customerId: String = "",
+    val date: LocalDate,   // ledger date
     val volume: Double,
     val deduction: Double,
     val netMilk: Double,
     val price: Double,
-    val paid : Double,
-    val balance : Double,
+    val paid: Double,
+    val balance: Double,
     val rateUsed: Double,                    // snapshot of rate at entry time
     val notes: String? = null,
 
     val isSynced: Boolean = false,
-    val updatedAt: Long = System.currentTimeMillis(),
-    val deletedAt: Long? = null
+    val updatedAt: String = LocalDateTime.now().toString(),
+    val deletedAt: String? = null
 
 )
 

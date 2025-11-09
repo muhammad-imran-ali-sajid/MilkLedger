@@ -32,7 +32,8 @@ class SalesViewModel @Inject constructor(
     // ⚙️ Initialize with today's sales
     // ----------------------------------------------------------
     init {
-        observeForDate(_uiState.value.currentDate)
+        // Start observing for today's date
+        observeSalesForDate(_uiState.value.currentDate)
     }
 
     // ----------------------------------------------------------
@@ -47,7 +48,14 @@ class SalesViewModel @Inject constructor(
                 deduction = updated.deduction,
             )
 
-            val finalEntry = updated.copy(price = newPrice)
+            // NOTE: The 'deduction' is usually a volume/quantity deduction before pricing,
+            // so we calculate netMilk here, which is essential for the calculation utility.
+            val netMilk = updated.volume - updated.deduction
+
+            val finalEntry = updated.copy(
+                price = newPrice,
+                netMilk = netMilk // Ensure netMilk is correctly calculated
+            )
             repository.updateSale(finalEntry)
         }
     }
@@ -57,51 +65,43 @@ class SalesViewModel @Inject constructor(
     // ----------------------------------------------------------
     fun onDateSelected(date: LocalDate) {
         if (date != _uiState.value.currentDate) {
-            observeForDate(date)
+            // 1. Update the UI state date immediately
+            _uiState.update { it.copy(currentDate = date) }
+
+            // 2. Start the combined setup and observation logic
+            observeSalesForDate(date)
         }
     }
 
     // ----------------------------------------------------------
-    // 🔁 Observe sales for selected date
+    // 🔁 Combined logic for setup (once) and observation (real-time)
     // ----------------------------------------------------------
     private var salesJob: Job? = null
 
-    fun observeForDate(date: LocalDate) {
+    // Renamed for clarity: observeForDate -> observeSalesForDate
+    private fun observeSalesForDate(date: LocalDate) {
         salesJob?.cancel()
+
+        // 1. **CRITICAL FIX:** Perform the initial data setup/insertion OUTSIDE of the Flow collection.
+        // This ensures the local write does not immediately trigger the flow again.
+        viewModelScope.launch {
+            ensureSalesEntriesExist(date)
+        }
+
+        // 2. Start the real-time observation job
         salesJob = viewModelScope.launch {
-            val allCustomers = repository.getAllCustomers().first()
-            val existingSales = repository.getSalesByDateOnce(date)
-
-            // Auto-create empty entries for customers missing for that date
-            val missingCustomers = allCustomers.filterNot { customer ->
-                existingSales.any { it.customer.customerId == customer.customerId }
-            }
-
-            missingCustomers.forEach { customer ->
-                val newSale = SalesEntity(
-                    customerId = customer.customerId,
-                    date = date,
-                    volume = 0.0,
-                    deduction = 0.0,
-                    netMilk = 0.0,
-                    price = 0.0,
-                    paid = 0.0,
-                    rateUsed = customer.customerRate,
-                    balance = 0.0
-
-                )
-                repository.insertSale(newSale)
-            }
-
-            // Observe sales in realtime
             repository.getSalesByDate(date).collectLatest { sales ->
                 val sortedSales = sales.sortedBy { it.customer.sortOrder }
 
                 val totalMilk = sortedSales.sumOf { it.sale.volume }
                 val totalDeduction = sortedSales.sumOf { it.sale.deduction }
-                val totalAmount = sortedSales.sumOf { it.sale.price - it.sale.deduction }
-                val totalNetMilk = sortedSales.sumOf { it.sale.netMilk }
+
+                // FIX: Use the 'price' field for the grand total,
+                // and 'price' minus 'paid' for the outstanding amount.
                 val grandTotal = sortedSales.sumOf { it.sale.price }
+                val totalNetMilk = sortedSales.sumOf { it.sale.netMilk }
+                val totalAmountDue = sortedSales.sumOf { it.sale.price - it.sale.paid }
+
                 val avgRatePerLiter =
                     if (totalMilk > 0) grandTotal / totalMilk else 0.0
 
@@ -111,7 +111,7 @@ class SalesViewModel @Inject constructor(
                         salesForDate = sortedSales,
                         totalMilk = totalMilk,
                         totalDeduction = totalDeduction,
-                        totalAmount = totalAmount,
+                        totalAmount = totalAmountDue, // Use totalAmountDue for consistency
                         totalNetMilk = totalNetMilk,
                         grandSaleTotalForDate = grandTotal,
                         avgRatePerLiter = avgRatePerLiter
@@ -121,6 +121,35 @@ class SalesViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Helper function to check if all customers have a sales entry for the given date,
+     * and inserts a blank entry if one is missing.
+     */
+    private suspend fun ensureSalesEntriesExist(date: LocalDate) {
+        val allCustomers = repository.getAllCustomers().first()
+        val existingSales = repository.getSalesByDateOnce(date)
+
+        val missingCustomers = allCustomers.filterNot { customer ->
+            existingSales.any { it.customer.customerId == customer.customerId }
+        }
+
+        missingCustomers.forEach { customer ->
+            val newSale = SalesEntity(
+                customerId = customer.customerId,
+                date = date,
+                volume = 0.0,
+                deduction = 0.0,
+                netMilk = 0.0,
+                price = 0.0,
+                paid = 0.0,
+                rateUsed = customer.customerRate,
+                balance = 0.0
+            )
+            repository.insertSale(newSale)
+        }
+    }
+
+
     // ----------------------------------------------------------
     // ⚡ Handle UI Events
     // ----------------------------------------------------------
@@ -129,8 +158,9 @@ class SalesViewModel @Inject constructor(
             is SalesUiEvent.OnCustomerSelected ->
                 _uiState.update { it.copy(navToLedgerForCustomerId = event.supplierId) }
 
+            // SelectDate event now just updates the date and triggers the observation logic
             is SalesUiEvent.SelectDate ->
-                _uiState.update { it.copy(currentDate = event.date) }
+                onDateSelected(event.date)
         }
     }
 
