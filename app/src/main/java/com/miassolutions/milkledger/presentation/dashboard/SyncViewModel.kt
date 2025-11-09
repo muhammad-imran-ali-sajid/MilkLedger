@@ -26,7 +26,7 @@ class SyncViewModel @Inject constructor(
             _syncState.value = SyncState.Loading
             viewModelScope.launch {
                 try {
-                    dataRepository.syncAllDataFromCloud()
+                    dataRepository.setupRealtimeListeners()
                     _syncState.value = SyncState.Success
                 } catch (e: Exception) {
                     _syncState.value = SyncState.Error("Initial sync failed: ${e.message}")

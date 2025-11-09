@@ -7,7 +7,6 @@ import com.miassolutions.milkledger.core.util.DateRangeUtil
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.mapper.toRoomEntity
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
-import com.miassolutions.milkledger.data.repository.AppData
 import com.miassolutions.milkledger.data.repository.DataRepository
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -162,7 +162,7 @@ class DashboardFragment :
 
         // later will pullToRefresh TODO()
         binding.cardProfit.setOnClickListener {
-
+                syncViewModel.startInitialSync()
         }
 
 
