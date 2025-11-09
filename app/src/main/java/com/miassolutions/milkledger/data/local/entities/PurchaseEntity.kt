@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
 @Entity(
@@ -22,7 +23,7 @@ import java.util.UUID
 data class PurchaseEntity(
     @PrimaryKey val purchaseId: String = UUID.randomUUID().toString(),
     val supplierId: String,
-    val date: LocalDate = LocalDate.now(),
+    val date: LocalDate,
     val milkAmount: Double,
     val fat: Double,
     val lr: Double,
@@ -34,8 +35,8 @@ data class PurchaseEntity(
     val notes: String? = null,
 
     val isSynced: Boolean = false,
-    val updatedAt: Long = System.currentTimeMillis(),
-    val deletedAt: Long? = null
+    val updatedAt: String = LocalDateTime.now().toString(),
+    val deletedAt: LocalDateTime? = null
 
 )
 
