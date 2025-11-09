@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    android:backgroundTint="@color/white"
-
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="16dp"
     app:cardElevation="6dp">
 
@@ -21,166 +19,82 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Supplier Name -->
             <TextView
                 android:id="@+id/tv_supplier_name"
-                style="@style/TextTitleUrdu"
+                style="@style/Style.TextLabel.Header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:background="@drawable/bg_edittext_readable"
-                android:paddingVertical="12dp"
-                android:text="سپلائر کا نام"
-                android:textAlignment="center"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:text="Supplier Name" />
 
             <LinearLayout
                 android:id="@+id/tilAdvance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Advance"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="Advance" />
 
                 <TextView
                     android:id="@+id/tvAdvanceAmount"
-                    android:layout_width="0dp"
-                    android:textSize="16sp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp" />
+                    style="@style/Style.TextViewValue"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-            <!-- Volume -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Volume"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="Volume" />
 
                 <EditText
                     android:id="@+id/et_volume"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp" />
+                    style="@style/Style.EditTextInput"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-            <!-- Fat -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="FAT"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="FAT" />
 
                 <EditText
                     android:id="@+id/et_fat"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textDirection="ltr" />
+                    style="@style/Style.EditTextInput"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-            <!-- LR -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="LR"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="LR" />
 
                 <EditText
                     android:id="@+id/et_lr"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textDirection="ltr" />
+                    style="@style/Style.EditTextInput"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="TS"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="TS" />
 
                 <TextView
                     android:id="@+id/tv_ts"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/textview_bg_tint"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:text="111"
-                    android:textColor="@color/textview_text_color"
-                    android:textDirection="ltr"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.TextViewValue.ReadOnly"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -188,159 +102,102 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
 
-                <!-- Label: Price -->
                 <TextView
                     android:id="@+id/textView"
+                    style="@style/Style.InputLabel"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:text="Price"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintWidth_percent="0.4" /> <!-- 2 / 5 -->
+                    app:layout_constraintWidth_percent="0.4" />
 
-                <!-- Value: tv_price -->
                 <TextView
                     android:id="@+id/tv_price"
+                    style="@style/Style.TextViewValue"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/textview_bg_tint"
-                    android:padding="10dp"
-                    android:textColor="@color/textview_text_color"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textDirection="ltr"
+                    android:paddingEnd="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@id/textView"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintWidth_percent="0.3" /> <!-- 3 / 5 -->
+                    app:layout_constraintWidth_percent="0.3" />
 
                 <TextView
+                    android:id="@+id/tv_rate_header"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Rate"
-                    android:textSize="10sp"
                     android:gravity="center"
+                    android:text="Rate"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
                     app:layout_constraintBottom_toTopOf="@+id/tv_rate"
                     app:layout_constraintEnd_toEndOf="@+id/tv_rate"
                     app:layout_constraintStart_toEndOf="@+id/tv_price"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- Rate: tv_rate -->
                 <TextView
                     android:id="@+id/tv_rate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:paddingStart="4dp"
                     android:text="000"
-                    android:textColor="@color/textview_text_color"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:gravity="center"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/tv_price"
-                    app:layout_constraintWidth_percent="0.3" /> <!-- 3 / 5 -->
+                    app:layout_constraintTop_toBottomOf="@id/tv_rate_header"
+                    app:layout_constraintWidth_percent="0.3" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-            <!-- Paid -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Payment"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="Payment" />
 
                 <EditText
                     android:id="@+id/et_paid"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
+                    style="@style/Style.EditTextInput"
                     android:imeOptions="actionDone"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textDirection="ltr" />
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Balance"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="Balance" />
 
                 <TextView
                     android:id="@+id/tv_balance"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/textview_bg_tint"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textColor="@color/textview_text_color"
-                    android:textDirection="ltr"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.TextViewValue.ReadOnly"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-            <!-- Notes -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/Style.InputRow"
                 android:layout_marginTop="8dp"
-                android:gravity="top"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                android:gravity="top">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    style="@style/Style.InputLabel"
                     android:paddingTop="8dp"
-                    android:text="Notes"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:text="Notes" />
 
                 <EditText
                     android:id="@+id/et_notes"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
+                    style="@style/Style.EditTextInput"
                     android:imeOptions="actionDone"
-                    android:inputType="textCapSentences"
-                    android:padding="10dp"
-                    android:textDirection="ltr" />
+                    android:inputType="textCapSentences" />
             </LinearLayout>
 
-            <!-- Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -348,33 +205,22 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_cancel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:text="Cancel"
-                    android:textColor="@color/white"
-                    app:cornerRadius="8dp" />
+                    style="@style/Style.Button.Action"
+                    android:layout_marginStart="0dp"
+                    android:text="Cancel" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_save"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    style="@style/Style.Button.Action"
                     android:layout_marginStart="12dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:text="Save"
-                    android:textColor="@color/white"
-                    app:cornerRadius="8dp" />
+                    android:text="Save" />
 
             </LinearLayout>
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-
 
 </com.google.android.material.card.MaterialCardView>
