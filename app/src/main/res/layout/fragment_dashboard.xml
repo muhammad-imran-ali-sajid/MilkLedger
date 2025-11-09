@@ -128,234 +128,230 @@
             app:iconGravity="textStart"
             app:iconTint="@color/primary" />
 
-        <androidx.core.widget.NestedScrollView
+
+        <!-- ====== DASHBOARD CARDS (VERTICAL, LABEL + VALUE HORIZONTAL) ====== -->
+        <TextView
+            android:id="@+id/tvFinance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="16dp"
+            android:background="@drawable/bg_card"
+            android:padding="12dp"
+            android:text="Financial Overview"
+            android:textSize="18sp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:orientation="vertical"
+            android:weightSum="2">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="8dp">
+                android:weightSum="2">
 
-                <!-- 📊 Header -->
-
-                <!-- ====== FINANCIAL OVERVIEW SECTION ====== -->
-
-
-                <!-- 💰 Financial Overview -->
-
-
-                <TextView
-                    android:id="@+id/tvFinance"
-                    android:layout_width="wrap_content"
+                <!-- Purchases -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/purchase_card"
+                    style="@style/dashboard_card"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginVertical="12dp"
-                    android:background="@drawable/bg_card"
-                    android:padding="12dp"
-                    android:text="Financial Overview"
-                    android:textSize="24sp" />
-
-
-                <!-- ====== DASHBOARD CARDS (VERTICAL, LABEL + VALUE HORIZONTAL) ====== -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="vertical"
-                    android:weightSum="2">
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/purchase_color"
+                    app:strokeColor="@color/purchase_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:weightSum="2">
+                        android:background="@drawable/bg_purchase"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
-                        <!-- Purchases -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/purchase_card"
-                            style="@style/dashboard_card"
-                            android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/tvPurchase"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Purchases"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tvTotalPurchases"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            app:cardBackgroundColor="@color/purchase_color"
-                            app:strokeColor="@color/purchase_color">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_purchase"
-                                android:gravity="center"
-                                android:orientation="vertical"
-                                android:padding="12dp">
-
-                                <TextView
-                                    android:id="@+id/tvPurchase"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Purchases"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp" />
-
-                                <TextView
-                                    android:id="@+id/tvTotalPurchases"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="7,500"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <!-- Sales -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/sale_card"
-                            style="@style/dashboard_card"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/sale_color"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:strokeColor="@color/sale_color">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_sale"
-                                android:gravity="center"
-                                android:orientation="vertical"
-                                android:padding="12dp">
-
-                                <TextView
-                                    android:id="@+id/tvSale"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Sales"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp" />
-
-                                <TextView
-                                    android:id="@+id/tvTotalSales"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="12,000"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
+                            android:gravity="center"
+                            android:text="7,500"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
                     </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Sales -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/sale_card"
+                    style="@style/dashboard_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/sale_color"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/sale_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:background="@drawable/bg_sale"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
 
-
-                        <!-- Expense -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/expense_card"
-                            style="@style/dashboard_card"
-                            android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/tvSale"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginVertical="6dp"
-                            android:layout_weight="1"
-                            app:strokeColor="@color/teal_700">
+                            android:text="Sales"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_expense"
-                                android:gravity="center"
-                                android:orientation="vertical"
-                                android:padding="12dp">
-
-                                <TextView
-                                    android:id="@+id/tvExpense"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:text="Expenses"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp" />
-
-                                <TextView
-                                    android:id="@+id/tvTotalExpense"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="4,500"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <!-- Profit -->
-                        <com.google.android.material.card.MaterialCardView
-
-                            android:id="@+id/cardProfit"
-                            style="@style/dashboard_card"
-                            android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/tvTotalSales"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:clickable="false"
-                            android:focusable="false"
-                            app:cardBackgroundColor="@color/profit_color"
-                            app:strokeColor="@color/blue_700">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/bg_profit"
-                                android:gravity="center"
-                                android:orientation="vertical"
-                                android:padding="12dp">
-
-                                <TextView
-                                    android:id="@+id/textView2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Profit"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp" />
-
-                                <TextView
-                                    android:id="@+id/tv_net_profit"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="4,500"
-                                    android:textColor="@color/white"
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
+                            android:text="12,000"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
                     </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
 
-                </LinearLayout>
-
-
-                <!-- Milk Overview Section -->
-                <TextView
-                    android:layout_width="wrap_content"
+                <!-- Expense -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/expense_card"
+                    style="@style/dashboard_card"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginVertical="8dp"
-                    android:background="@drawable/bg_card"
-                    android:padding="12dp"
-                    android:text="Milk Overview"
-                    android:textSize="24sp" />
+                    android:layout_marginVertical="6dp"
+                    android:layout_weight="1"
+                    app:strokeColor="@color/teal_700">
 
-                <!-- ====== MILK DASHBOARD CARDS ====== -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_expense"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:id="@+id/tvExpense"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Expenses"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tvTotalExpense"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4,500"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Profit -->
+                <com.google.android.material.card.MaterialCardView
+
+                    android:id="@+id/cardProfit"
+                    style="@style/dashboard_card"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:cardBackgroundColor="@color/profit_color"
+                    app:strokeColor="@color/blue_700">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_profit"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Profit"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/tv_net_profit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="4,500"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="16dp"
+            android:paddingHorizontal="8dp"
+            android:background="@drawable/bg_milk_overview"
+            android:orientation="vertical">
+
+            <!-- Milk Overview Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginVertical="8dp"
+                android:padding="12dp"
+                android:text="Milk Overview"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     android:layout_marginBottom="12dp"
+
                     android:orientation="vertical">
 
                     <!-- Milk Purchased -->
@@ -530,10 +526,8 @@
 
                 </LinearLayout>
 
-
-            </LinearLayout>
-
-        </androidx.core.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
 
 
     </LinearLayout>
