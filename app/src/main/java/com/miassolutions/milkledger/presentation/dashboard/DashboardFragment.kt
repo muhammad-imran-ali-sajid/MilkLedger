@@ -24,9 +24,11 @@ class DashboardFragment :
     BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
 
     private val viewModel by viewModels<DashboardViewModel>()
+    private val syncViewModel by viewModels<SyncViewModel>()
 
     override fun setupViews() {
 
+        syncViewModel.startInitialSync()
 
         RemoteConfigHelper.fetchAndActivate(viewLifecycleOwner) {
             val isTrial = RemoteConfigHelper.applyButtonState(binding.purchaseCard)
@@ -160,7 +162,7 @@ class DashboardFragment :
 
         // later will pullToRefresh TODO()
         binding.cardProfit.setOnClickListener {
-            viewModel.fetchData()
+
         }
 
 

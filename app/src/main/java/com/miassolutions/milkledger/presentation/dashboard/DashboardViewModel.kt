@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.DateRangeUtil
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
+import com.miassolutions.milkledger.data.mapper.toRoomEntity
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
 import com.miassolutions.milkledger.data.repository.AppData
 import com.miassolutions.milkledger.data.repository.DataRepository
@@ -27,38 +28,15 @@ class DashboardViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AnalyticsUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _appData = MutableStateFlow<AppData?>(null)
-    val appData: StateFlow<AppData?> = _appData.asStateFlow()
-
-    private val _isLoading = MutableStateFlow(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-
-
 
     private var currentPeriod: Period = Period.DAILY
     private var currentRange: Pair<LocalDate, LocalDate> = Pair(LocalDate.now(), LocalDate.now())
 
     init {
         loadDaily()
-        fetchData()
     }
 
-    fun fetchData() {
-        viewModelScope.launch {
-            _isLoading.value = true
-            try {
-                // Call the consolidated fetch function
-                val data = dataRepository.fetchAllAppCollections()
-                _appData.value = data
-            } catch (e: Exception) {
-                Log.e("VM", "Error fetching all data: $e")
-                // Handle error (e.g., show a toast)
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
+
 
     enum class Period { DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM }
 

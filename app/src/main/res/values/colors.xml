@@ -12,7 +12,7 @@
     <color name="on_secondary">#FFFFFF</color>
 
     <!-- UI Background Surfaces (Near-white for light theme) -->
-    <color name="surface">#333</color>
+    <color name="surface">#444</color>
     <color name="background">#333</color>
     <!-- Text/Icons ON Surfaces (Near-black for contrast) -->
     <color name="on_surface">#1F1F1F</color>
