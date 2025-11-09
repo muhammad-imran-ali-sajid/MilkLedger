@@ -32,6 +32,10 @@ interface CustomerDao {
     @Query("DELETE FROM customer_table")
     suspend fun clearAll()
 
+    @Query("DELETE FROM customer_table WHERE customerId = :docId")
+    suspend fun deleteById(docId: String)
+
+
     // --- Single Entity Operations (Trigger Remote Sync) ---
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

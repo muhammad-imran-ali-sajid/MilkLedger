@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
 import com.google.firebase.firestore.Source
+import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
@@ -11,6 +12,7 @@ import javax.inject.Inject
 
 class SupplierRepository @Inject constructor(
     private val supplierDao: SupplierDao,
+    private val purchaseDao: PurchaseDao,
     private val firestoreSyncHelper: FirestoreSyncHelper // Inject the sync helper
 ) {
 

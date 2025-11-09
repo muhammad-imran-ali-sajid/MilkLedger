@@ -43,6 +43,12 @@ interface SupplierDao {
     @Delete
     suspend fun deleteSupplier(supplier: SupplierEntity)
 
+    /**
+     * Deletes a supplier by its unique document ID.
+     */
+    @Query("DELETE FROM supplier_table WHERE supplierId = :docId")
+    suspend fun deleteById(docId: String)
+
     // --- Local Read Operations (Offline-First Read) ---
 
     @Query("SELECT * FROM supplier_table ORDER BY sortOrder ASC")

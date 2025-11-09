@@ -124,7 +124,7 @@ class DataRepository @Inject constructor(
                 salesDao.upsertAll(listOf(this))
             }
 
-            "purchase" -> (cloudModel as FirestorePurchase).toEntityModel().apply {
+            "purchases" -> (cloudModel as FirestorePurchase).toEntityModel().apply {
                 purchaseDao.upsertAll(listOf(this))
             }
 
@@ -143,8 +143,41 @@ class DataRepository @Inject constructor(
     private suspend fun deleteRemovedDocument(collectionPath: String, change: DocumentChange) {
         val docId = change.document.id
         when (collectionPath) {
-//            "suppliers" -> supplierDao.deleteById(docId)
-//            "customers" -> customerDao.deleteById(docId)
+            "suppliers" -> {
+                supplierDao.deleteById(docId)
+                firestore.collection("purchases")
+                    .whereEqualTo("supplierId", docId)
+                    .get()
+                    .addOnSuccessListener { snapshots ->
+                        snapshots?.forEach {doc ->
+                            firestore.collection("purchases").document(doc.id).delete()
+
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.e(TAG, "Failed to delete Firestore purchase for supplier $docId : ${exception.message}")
+                    }
+                Log.d(TAG, "Deleted supplier $docId and their sales locally and in Firestore")
+            }
+            "customers" -> {
+                // Delete customer locally (Room cascade will remove local sales)
+                customerDao.deleteById(docId)
+
+                // Also delete Firestore sales belonging to this customer
+                firestore.collection("sales")
+                    .whereEqualTo("customerId", docId)
+                    .get()
+                    .addOnSuccessListener { snapshot ->
+                        snapshot?.forEach { doc ->
+                            firestore.collection("sales").document(doc.id).delete()
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e(TAG, "Failed to delete Firestore sales for customer $docId: ${e.message}")
+                    }
+
+                Log.d(TAG, "Deleted customer $docId and their sales locally and in Firestore")
+            }
 //            "sales" -> salesDao.deleteById(docId)
 //            "notes" -> notesDao.deleteById(docId)
 //            "expenses" -> expenseDao.deleteById(docId)
@@ -160,13 +193,12 @@ class DataRepository @Inject constructor(
             "suppliers" -> FirestoreSupplier::class.java
             "customers" -> FirestoreCustomer::class.java
             "sales" -> FirestoreSales::class.java
+            "purchases" -> FirestorePurchase::class.java
             "notes" -> FirestoreNotes::class.java
             "expenses" -> FirestoreExpense::class.java
             else -> throw IllegalArgumentException("Unknown collection path: $collectionPath")
         }
     }
 
-    // --- Data Streams from Room ---
-    fun getSuppliersStream() = supplierDao.getAllSuppliers()
-    fun getCustomersStream() = customerDao.getAllCustomers()
+
 }

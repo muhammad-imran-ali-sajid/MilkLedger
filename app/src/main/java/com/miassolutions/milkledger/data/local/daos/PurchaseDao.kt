@@ -30,6 +30,11 @@ interface PurchaseDao {
     @Query("DELETE FROM purchase_table")
     suspend fun clearAll()
 
+    /**
+     * Deletes all purchase records associated with a specific supplier ID.
+     */
+    @Query("DELETE FROM purchase_table WHERE supplierId = :supplierId")
+    suspend fun deleteAllBySupplierId(supplierId: String)
 
     // --- Single Entity Operations (Trigger Remote Sync) ---
 

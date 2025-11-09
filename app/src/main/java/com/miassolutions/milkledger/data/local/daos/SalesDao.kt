@@ -50,6 +50,12 @@ interface SalesDao {
     suspend fun deleteSale(id: String)
 
 
+    /**
+     * Deletes all purchase records associated with a specific supplier ID.
+     */
+    @Query("DELETE FROM sales_table WHERE customerId = :customerId")
+    suspend fun deleteAllByCustomerId(customerId: String)
+
     // --- Read Operations (Purely Local Flow/One-Time Fetches) ---
 
     // 🧾 Get all entries with customer info — for reports or admin view
