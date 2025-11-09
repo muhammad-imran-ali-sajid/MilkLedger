@@ -15,9 +15,9 @@ fun handleZeroData(value: Double): String {
 
 fun textColor(amount: Double): Int {
     return when {
-        amount < 0 -> Color.RED
+        amount < 0 -> "#bd0606".toColorInt()
         amount == 0.0 -> "#000000".toColorInt()
-        else -> "#4CAF50".toColorInt() // Material green 500
+        else -> "#2faD32".toColorInt() // Material green 500
     }
 }
 

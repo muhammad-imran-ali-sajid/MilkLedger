@@ -65,7 +65,7 @@ class PurchaseAdapter(
             tvBalance.setTextColor(textColor(item.purchase.balance))
 
 
-            btnEditForm.setOnClickListener { onEditClick(item) }
+            root.setOnLongClickListener { onEditClick(item); true }
             btnSupplierDetail.setOnClickListener { onItemDetailClick(item) }
         }
     }
