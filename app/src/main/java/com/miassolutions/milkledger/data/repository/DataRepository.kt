@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
+import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.mapper.toEntity
@@ -14,6 +15,7 @@ import com.miassolutions.milkledger.data.mapper.toRoomEntity
 import com.miassolutions.milkledger.data.remote.model.FirestoreCustomer
 import com.miassolutions.milkledger.data.remote.model.FirestoreExpense
 import com.miassolutions.milkledger.data.remote.model.FirestoreNotes
+import com.miassolutions.milkledger.data.remote.model.FirestorePurchase
 import com.miassolutions.milkledger.data.remote.model.FirestoreSales
 import com.miassolutions.milkledger.data.remote.model.FirestoreSupplier
 import dagger.hilt.android.scopes.ActivityRetainedScoped
@@ -30,6 +32,7 @@ class DataRepository @Inject constructor(
     private val customerDao: CustomerDao,
     private val expenseDao: ExpensesDao,
     private val salesDao: SalesDao,
+    private val purchaseDao: PurchaseDao,
     private val notesDao: NoteDao
 ) {
     private val TAG = "DataRepository"
@@ -44,6 +47,7 @@ class DataRepository @Inject constructor(
         launch { observeCollectionChanges("suppliers") }
         launch { observeCollectionChanges("customers") }
         launch { observeCollectionChanges("sales") }
+        launch { observeCollectionChanges("purchases") }
         launch { observeCollectionChanges("notes") }
         launch { observeCollectionChanges("expenses") }
     }
@@ -77,6 +81,7 @@ class DataRepository @Inject constructor(
                                     DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
                                         upsertChangedDocument(collectionPath, change)
                                     }
+
                                     DocumentChange.Type.REMOVED -> {
                                         deleteRemovedDocument(collectionPath, change)
                                     }
@@ -110,15 +115,23 @@ class DataRepository @Inject constructor(
             "suppliers" -> (cloudModel as FirestoreSupplier).toRoomEntity().apply {
                 supplierDao.upsertAll(listOf(this))
             }
+
             "customers" -> (cloudModel as FirestoreCustomer).toRoomEntity().apply {
                 customerDao.upsertAll(listOf(this))
             }
+
             "sales" -> (cloudModel as FirestoreSales).toEntityModel().apply {
                 salesDao.upsertAll(listOf(this))
             }
+
+            "purchase" -> (cloudModel as FirestorePurchase).toEntityModel().apply {
+                purchaseDao.upsertAll(listOf(this))
+            }
+
             "notes" -> (cloudModel as FirestoreNotes).toEntity().apply {
                 notesDao.upsertAll(listOf(this))
             }
+
             "expenses" -> (cloudModel as FirestoreExpense).toEntityModel().apply {
                 expenseDao.upsertAll(listOf(this))
             }
