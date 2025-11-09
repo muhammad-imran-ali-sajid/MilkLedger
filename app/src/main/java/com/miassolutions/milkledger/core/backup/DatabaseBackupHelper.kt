@@ -95,7 +95,7 @@ class DatabaseBackupHelper @Inject constructor(
             customers = db.customerDao().getAllCustomersList(),
             suppliers = db.supplierDao().getAllSuppliersList(),
             purchases = db.purchaseDao().getAllPurchasesList(),
-            sales = db.salesDao().getAllSync(),
+            sales = db.salesDao().getAllSalesList(),
             expenses = db.expensesDao().getAllExpensesList(),
             notes = db.noteDao().getAllNotesList()
         )
@@ -151,7 +151,7 @@ class DatabaseBackupHelper @Inject constructor(
             db.purchaseDao().upsertAll(backupData.purchases)
 
             db.salesDao().clearAll()
-            db.salesDao().insertAll(backupData.sales)
+            db.salesDao().upsertAll(backupData.sales)
 
             db.expensesDao().clearAll()
             db.expensesDao().upsertAll(backupData.expenses)

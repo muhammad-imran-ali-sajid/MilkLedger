@@ -183,7 +183,7 @@ class DevSettingsFragment : Fragment() {
                 )
             }
         }
-        saleDao.insertAll(salesList)
+        saleDao.upsertAll(salesList)
     }
 
     override fun onDestroyView() {

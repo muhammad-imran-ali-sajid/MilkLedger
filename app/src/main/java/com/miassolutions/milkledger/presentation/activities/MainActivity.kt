@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             val isAdmin = SharedPrefsHelper.isAdmin(this)
             val navMenu = binding.navigationView.menu
 
-            if (isAdmin) {  //todo()
+            if (!isAdmin) {
 
                 navMenu.findItem(R.id.action_customersFragment)?.isVisible = false
                 navMenu.findItem(R.id.action_suppliersFragment)?.isVisible = false
