@@ -16,7 +16,7 @@ data class ExpensesEntity(
     val expenseNote: String? = null,
     val isDefault: Boolean = false,
 
-    val createdAt: String = LocalDateTime.now().toString(),
+    val createdAt: String,
     val isSynced: Boolean = false,
     val updatedAt: String = LocalDateTime.now().toString(),
     val deletedAt: LocalDateTime? = null

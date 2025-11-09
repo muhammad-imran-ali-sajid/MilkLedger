@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.data.mapper.toFirestoreModel
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -57,19 +58,34 @@ class ExpensesRepository @Inject constructor(
      * Updates an expense locally, then attempts to update it on Firestore.
      */
     suspend fun updateExpense(expense: ExpensesEntity) {
-        expensesDao.updateExpense(expense)
-        try {
-            val firestoreExpense = expense.toFirestoreModel()
-            firestoreSyncHelper.uploadSingle(
-                collectionName = EXPENSES_COLLECTION,
-                documentId = expense.expenseId,
-                data = firestoreExpense
+        // Fetch the existing expense from DB
+        val existingExpense = expensesDao.getExpenseById(expense.expenseId)
+
+        if (existingExpense != null) {
+            val expenseToUpdate = expense.copy(
+//                createdAt = existingExpense.createdAt, // Preserve original creation date
+                updatedAt = LocalDateTime.now().toString() // Update the modified timestamp
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to sync update for expense ID: ${expense.expenseId}", e)
-            // Log the error but allow the local operation to succeed (offline-first)
+
+            // Update locally
+            expensesDao.updateExpense(expenseToUpdate)
+
+            // Try syncing with Firestore
+            try {
+                val firestoreExpense = expenseToUpdate.toFirestoreModel()
+                firestoreSyncHelper.uploadSingle(
+                    collectionName = EXPENSES_COLLECTION,
+                    documentId = expenseToUpdate.expenseId,
+                    data = firestoreExpense
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to sync update for expense ID: ${expense.expenseId}", e)
+            }
+        } else {
+            Log.e(TAG, "Expense not found for update: ${expense.expenseId}")
         }
     }
+
 
     /**
      * Deletes an expense locally, then attempts to delete it from Firestore.

@@ -4,6 +4,7 @@ import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class StaticDataHelper @Inject constructor(private val database: AppDatabase) {
@@ -92,11 +93,19 @@ class StaticDataHelper @Inject constructor(private val database: AppDatabase) {
         )
 
         val expenseTypes = listOf(
-            ExpensesEntity(expenseTitle = "Fuel", isDefault = true),
-            ExpensesEntity(expenseTitle = "Meal", isDefault = true),
+            ExpensesEntity(
+                expenseTitle = "Fuel",
+                createdAt = LocalDateTime.now().toString(),
+                isDefault = true
+            ),
+            ExpensesEntity(
+                expenseTitle = "Meal",
+                createdAt = LocalDateTime.now().toString(),
+                isDefault = true
+            ),
 
 
-        )
+            )
 
         customerDao.upsertAll(customers)
         supplierDao.upsertAll(suppliers)

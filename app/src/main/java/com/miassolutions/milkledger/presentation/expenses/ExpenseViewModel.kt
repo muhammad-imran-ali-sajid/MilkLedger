@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID // <-- Added UUID import
 import javax.inject.Inject
 
@@ -41,6 +42,7 @@ class ExpenseViewModel @Inject constructor(
                     ExpensesEntity(
                         // FIX: Generate a unique ID (UUID) for Firestore/Room synchronization
                         expenseId = UUID.randomUUID().toString(),
+                        createdAt = LocalDateTime.now().toString(),
                         expenseTitle = title,
                         expenseAmount = 0.0,
                         date = date,

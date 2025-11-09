@@ -10,6 +10,7 @@ import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
@@ -39,7 +40,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     }
 
     private fun onConfirmDeleteDialog(entry: ExpensesEntity) {
-        showDialog("Delete Expense", "Are you sure to delete this expense?"){
+        showDialog("Delete Expense", "Are you sure to delete this expense?") {
             viewModel.deleteExpense(entry)
         }
     }
@@ -54,6 +55,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
                     entry = ExpensesEntity(
                         expenseTitle = "New Title",
                         expenseAmount = 0.0,
+                        createdAt = LocalDateTime.now().toString(),
                         date = selectedDate, // Use current date
                     ),
                     onSave = {

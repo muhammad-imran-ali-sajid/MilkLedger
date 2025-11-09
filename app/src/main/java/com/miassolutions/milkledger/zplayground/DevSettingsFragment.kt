@@ -20,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
@@ -53,7 +54,8 @@ class DevSettingsFragment : Fragment() {
                 populateDummyData()
 
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "Dummy data inserted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Dummy data inserted", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -68,16 +70,17 @@ class DevSettingsFragment : Fragment() {
                     database.clearAllTables()
 
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), "Database reset successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Database reset successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
-
-
-
 
 
     private suspend fun populateDummyData() {
@@ -89,7 +92,15 @@ class DevSettingsFragment : Fragment() {
 
 
         // Insert 7 dummy expenses
-        val expenseTitles = listOf("Feed", "Fuel", "Maintenance", "Cleaning", "Electricity", "Water", "Miscellaneous")
+        val expenseTitles = listOf(
+            "Feed",
+            "Fuel",
+            "Maintenance",
+            "Cleaning",
+            "Electricity",
+            "Water",
+            "Miscellaneous"
+        )
         val expensesList = mutableListOf<ExpensesEntity>()
         for (i in 1..7) {
             expensesList.add(
@@ -97,6 +108,7 @@ class DevSettingsFragment : Fragment() {
                     date = LocalDate.now().minusDays(i.toLong()),
                     expenseTitle = expenseTitles[i - 1],
                     expenseAmount = Random.nextDouble(500.0, 2000.0),
+                    createdAt = LocalDateTime.now().toString(),
                     expenseNote = "Dummy expense for ${expenseTitles[i - 1]}"
                 )
             )
