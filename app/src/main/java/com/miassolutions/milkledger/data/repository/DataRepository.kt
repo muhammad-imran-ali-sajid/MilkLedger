@@ -2,12 +2,15 @@ package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
+import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.mapper.toEntity
+import com.miassolutions.milkledger.data.mapper.toEntityModel
 import com.miassolutions.milkledger.data.mapper.toRoomEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.data.remote.model.FirestoreCustomer
+import com.miassolutions.milkledger.data.remote.model.FirestoreExpense
 import com.miassolutions.milkledger.data.remote.model.FirestoreNotes
 import com.miassolutions.milkledger.data.remote.model.FirestoreSupplier
 import jakarta.inject.Inject
@@ -20,6 +23,7 @@ class DataRepository @Inject constructor(
     private val syncHelper: FirestoreSyncHelper,
     private val supplierDao: SupplierDao, // Injected Room DAO
     private val customerDao: CustomerDao,
+    private val expenseDao: ExpensesDao,
     private val notesDao: NoteDao
     // ... inject other DAOs here later (e.g., productDao)
 ) {
@@ -42,6 +46,10 @@ class DataRepository @Inject constructor(
             syncHelper.downloadCollection<FirestoreNotes>("notes")
         }
 
+        val expensesDeferred = async {
+            syncHelper.downloadCollection<FirestoreExpense>("expenses")
+        }
+
         // --- 2. DOWNLOAD OTHER COLLECTIONS HERE (e.g., Products) ---
         // val productsDeferred = async {
         //     syncHelper.downloadCollection<FirestoreProduct>("products")
@@ -49,8 +57,8 @@ class DataRepository @Inject constructor(
 
         // Await all downloads concurrently
         val downloadedSuppliers = suppliersDeferred.await()
-        // val downloadedProducts = productsDeferred.await()
         val downloadedCustomers = customersDeferred.await()
+        val downloadedExpenses = expensesDeferred.await()
         val downloadedNotes = notesDeferred.await()
 
         // --- 3. PROCESS AND SAVE SUPPLIERS ---
@@ -66,6 +74,9 @@ class DataRepository @Inject constructor(
         notesDao.upsertAll(notesEntities)
         Log.d("DataRepository", "Saved ${notesEntities.size} notes to Room.")
 
+        val expensesEntities = downloadedExpenses.map { it.toEntityModel() }
+        expenseDao.upsertAll(expensesEntities)
+        Log.d("DataRepository", "Saved ${expensesEntities.size} expenses to Room.")
 
         // --- 4. PROCESS AND SAVE PRODUCTS ---
         // val productEntities = downloadedProducts.map { it.toRoomEntity() }

@@ -3,9 +3,10 @@ package com.miassolutions.milkledger.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.UUID
 
-@Entity (tableName = "expense_table")
+@Entity(tableName = "expense_table")
 data class ExpensesEntity(
     @PrimaryKey
     val expenseId: String = UUID.randomUUID().toString(),
@@ -15,8 +16,9 @@ data class ExpensesEntity(
     val expenseNote: String? = null,
     val isDefault: Boolean = false,
 
+    val createdAt: String = LocalDateTime.now().toString(),
     val isSynced: Boolean = false,
-    val updatedAt: Long = System.currentTimeMillis(),
-    val deletedAt: Long? = null
+    val updatedAt: String = LocalDateTime.now().toString(),
+    val deletedAt: LocalDateTime? = null
 
 )

@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.data.repository
 import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.data.mapper.toFirestoreModel
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -40,10 +41,11 @@ class ExpensesRepository @Inject constructor(
         expensesDao.insertExpense(expense)
         try {
             // Assuming ExpensesEntity has an 'id' field used as the documentId
+            val firestoreExpense = expense.toFirestoreModel()
             firestoreSyncHelper.uploadSingle(
                 collectionName = EXPENSES_COLLECTION,
                 documentId = expense.expenseId,
-                data = expense
+                data = firestoreExpense
             )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to sync insert for expense ID: ${expense.expenseId}", e)
@@ -57,10 +59,11 @@ class ExpensesRepository @Inject constructor(
     suspend fun updateExpense(expense: ExpensesEntity) {
         expensesDao.updateExpense(expense)
         try {
+            val firestoreExpense = expense.toFirestoreModel()
             firestoreSyncHelper.uploadSingle(
                 collectionName = EXPENSES_COLLECTION,
                 documentId = expense.expenseId,
-                data = expense
+                data = firestoreExpense
             )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to sync update for expense ID: ${expense.expenseId}", e)
@@ -98,7 +101,8 @@ class ExpensesRepository @Inject constructor(
         Log.d(TAG, "Starting full expense synchronization...")
         try {
             // 1. Download and merge remote changes (simple implementation: merge unique items)
-            val remoteExpenses = firestoreSyncHelper.downloadCollection<ExpensesEntity>(EXPENSES_COLLECTION)
+            val remoteExpenses =
+                firestoreSyncHelper.downloadCollection<ExpensesEntity>(EXPENSES_COLLECTION)
             if (remoteExpenses.isNotEmpty()) {
                 // Conflict resolution strategy: remote updates overwrite local or new remote items are inserted.
                 // For simplicity, we just insert/update all remote items locally.
@@ -109,7 +113,8 @@ class ExpensesRepository @Inject constructor(
             }
 
             // 2. Upload all local changes (ensuring all local data is pushed)
-            val allLocalExpenses = expensesDao.getAllExpensesList() // Needs a DAO function to get all as a list
+            val allLocalExpenses =
+                expensesDao.getAllExpensesList() // Needs a DAO function to get all as a list
             if (allLocalExpenses.isNotEmpty()) {
                 firestoreSyncHelper.uploadCollection(
                     collectionName = EXPENSES_COLLECTION,
