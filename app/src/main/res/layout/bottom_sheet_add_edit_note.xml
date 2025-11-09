@@ -1,93 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/addEditNoteRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
-    android:fillViewport="true"
+    android:background="@drawable/bg_milk_overview"
+    android:orientation="vertical"
     android:padding="16dp"
     tools:context=".presentation.notes.AddEditNoteBottomSheet">
 
-    <LinearLayout
+
+    <!-- Note Title -->
+    <EditText
+        android:id="@+id/etNoteTitle"
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:hint="Note title"
+        android:inputType="textCapSentences"
+        android:paddingVertical="8dp"
+        android:textColorHint="#333"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="Meeting notes" />
 
-        <!-- Note Title -->
-        <EditText
-            android:id="@+id/etNoteTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:hint="Note title"
-            android:inputType="textCapSentences"
-            android:paddingVertical="8dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            tools:text="Meeting notes" />
+    <!-- Note Body -->
+    <EditText
+        android:id="@+id/etNoteContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="top"
+        android:textColorHint="#333"
+        android:hint="Write your note here..."
+        android:inputType="textMultiLine"
+        android:minLines="4"
+        android:padding="8dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        tools:text="Discuss project milestones and deadlines." />
 
-        <!-- Note Body -->
-        <EditText
-            android:id="@+id/etNoteContent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"
-            android:gravity="top"
-            android:hint="Write your note here..."
-            android:inputType="textMultiLine"
-            android:minLines="4"
-            android:padding="8dp"
-            android:textSize="15sp"
-            tools:text="Discuss project milestones and deadlines." />
-
-        <!-- Divider -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginVertical="12dp"
-            android:background="#DDDDDD" />
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="12dp"
+        android:background="#666" />
 
 
-        <LinearLayout
+    <LinearLayout
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:paddingHorizontal="8dp">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="vertical"
-            android:paddingHorizontal="8dp">
+            android:text="Alarm"
+            android:textColor="#000"
+            android:textSize="16sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Alarm"
-                android:textColor="#000"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tvAlarmDateAndTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="2dp"
-                android:text="Set Alarm"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                tools:text="07 Nov 2025, 9:00 AM" />
-        </LinearLayout>
-
-
-        <!-- Save Button -->
-        <Button
-            android:id="@+id/btnSaveNote"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tvAlarmDateAndTime"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:backgroundTint="?attr/colorPrimary"
-            android:text="Save Note"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:paddingTop="2dp"
+            android:text="Set Alarm"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            tools:text="07 Nov 2025, 9:00 AM" />
     </LinearLayout>
-</ScrollView>
+
+
+    <!-- Save Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSaveNote"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Save Note" />
+</LinearLayout>
+

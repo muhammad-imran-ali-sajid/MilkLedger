@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    android:backgroundTint="@color/white"
-
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="16dp"
     app:cardElevation="6dp">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
         android:id="@+id/scrollView"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -20,236 +20,156 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Supplier Name -->
             <TextView
                 android:id="@+id/tv_customer_name"
+                style="@style/Style.TextLabel.Header"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingVertical="12dp"
-                android:text="کسٹمر کا نام"
-                android:textAlignment="center"
-                style="@style/TextTitleUrdu"
                 android:background="@drawable/bg_edittext_readable"
-                android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:text="Customer Name" />
 
-            <!-- Volume -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Milk Volume"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="Volume" />
 
                 <EditText
                     android:id="@+id/etVolume"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                     />
+                    style="@style/Style.EditTextInput"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-            <!-- Fat -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Deduction"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="Deduction" />
 
                 <EditText
                     android:id="@+id/etDeduction"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textDirection="ltr" />
+                    style="@style/Style.EditTextInput"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-            <!-- LR -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Net Milk"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="Net Milk" />
 
                 <TextView
                     android:id="@+id/tvNetMilk"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:backgroundTint="@color/textview_bg_tint"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textDirection="ltr" />
+                    style="@style/Style.TextViewValue.ReadOnly"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-
-
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                android:layout_marginTop="8dp">
 
                 <TextView
+                    android:id="@+id/textView"
+                    style="@style/Style.InputLabel"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
                     android:text="Price"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.4" />
 
                 <TextView
                     android:id="@+id/tv_price"
+                    style="@style/Style.TextViewValue"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/textview_bg_tint"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textColor="@color/textview_text_color"
-                    android:textDirection="ltr"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Paid -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                    android:paddingEnd="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/textView"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.3" />
 
                 <TextView
+                    android:id="@+id/tv_rate_header"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Payment"
-                    android:textColor="#555555"
+                    android:gravity="center"
+                    android:text="Rate"
+                    android:textColor="@color/black"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_rate"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_rate"
+                    app:layout_constraintStart_toEndOf="@+id/tv_price"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_rate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="4dp"
+                    android:text="000"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_price"
+                    app:layout_constraintTop_toBottomOf="@id/tv_rate_header"
+                    app:layout_constraintWidth_percent="0.3" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    style="@style/Style.InputLabel"
+                    android:text="Payment" />
 
                 <EditText
                     android:id="@+id/etPayment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
+                    style="@style/Style.EditTextInput"
                     android:imeOptions="actionDone"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textDirection="ltr" />
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                style="@style/Style.InputRow"
+                android:layout_marginTop="8dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:text="Balance"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.InputLabel"
+                    android:text="Balance" />
 
                 <TextView
                     android:id="@+id/tv_balance"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:backgroundTint="@color/textview_bg_tint"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textColor="@color/textview_text_color"
-                    android:textDirection="ltr"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    style="@style/Style.TextViewValue.ReadOnly"
+                    android:inputType="numberDecimal" />
             </LinearLayout>
 
-            <!-- Notes -->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/Style.InputRow"
                 android:layout_marginTop="8dp"
-                android:gravity="top"
-                android:orientation="horizontal"
-                android:weightSum="5">
+                android:gravity="top">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    style="@style/Style.InputLabel"
                     android:paddingTop="8dp"
-                    android:text="Notes"
-                    android:textColor="#555555"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:text="Notes" />
 
                 <EditText
                     android:id="@+id/et_notes"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:background="@drawable/bg_edittext_readable"
+                    style="@style/Style.EditTextInput"
                     android:imeOptions="actionDone"
-                    android:inputType="textCapSentences"
-                    android:padding="10dp"
-                    android:textDirection="ltr" />
+                    android:inputType="textCapSentences" />
             </LinearLayout>
 
-            <!-- Buttons -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -257,35 +177,22 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-
-
-
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_cancel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:text="Cancel"
-                    android:textColor="@color/white"
-                    app:cornerRadius="8dp" />
+                    style="@style/Style.Button.Action"
+                    android:layout_marginStart="0dp"
+                    android:text="Cancel" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_save"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    style="@style/Style.Button.Action"
                     android:layout_marginStart="12dp"
-                    android:background="@drawable/bg_edittext_readable"
-                    android:text="Save"
-                    android:textColor="@color/white"
-                    app:cornerRadius="8dp" />
+                    android:text="Save" />
 
             </LinearLayout>
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-
 
 </com.google.android.material.card.MaterialCardView>
