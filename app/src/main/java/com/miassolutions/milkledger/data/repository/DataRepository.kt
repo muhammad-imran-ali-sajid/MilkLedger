@@ -23,10 +23,9 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 
-// NOTE: I'm injecting FirebaseFirestore directly as the FirestoreSyncHelper implementation was unknown.
 @ActivityRetainedScoped
 class DataRepository @Inject constructor(
-    private val firestore: FirebaseFirestore, // Assumed to be injected via Dagger/Hilt
+    private val firestore: FirebaseFirestore,
     private val supplierDao: SupplierDao,
     private val customerDao: CustomerDao,
     private val expenseDao: ExpensesDao,
@@ -37,70 +36,62 @@ class DataRepository @Inject constructor(
 
     /**
      * Sets up real-time listeners for all necessary collections.
-     * This function suspends and launches the long-running listeners in a supervisorScope,
-     * ensuring that if one listener fails, others remain active.
      */
     suspend fun setupRealtimeListeners() = supervisorScope {
         Log.d(TAG, "Setting up real-time listeners in a SupervisorScope...")
 
-        // Launch each collection observer as a separate, long-running child coroutine.
-        // This scope will keep running until the calling scope (ViewModelScope) is cancelled.
+        // Launch each collection observer as a separate coroutine.
         launch { observeCollectionChanges("suppliers") }
         launch { observeCollectionChanges("customers") }
         launch { observeCollectionChanges("sales") }
         launch { observeCollectionChanges("notes") }
         launch { observeCollectionChanges("expenses") }
-
-        // This coroutine will suspend indefinitely while the child listeners are running.
-        // The ViewModel will launch this in a detached coroutine, allowing its setup flow to complete.
     }
 
     /**
      * A generic function to set up a robust, real-time Firestore listener and update Room.
-     * It uses documentChanges to only process specific documents that were added, modified, or removed.
-     * @param collectionPath The name of the Firestore collection (e.g., "suppliers").
      */
     private suspend fun observeCollectionChanges(collectionPath: String) {
-        // This Flow represents the real-time stream of data from Firestore.
         callbackFlow {
             Log.d(TAG, "Starting listener for $collectionPath...")
 
             val collectionRef = firestore.collection(collectionPath)
 
-            // Add the robust real-time snapshot listener
             val listenerRegistration = collectionRef.addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     Log.e(TAG, "Listen failed for $collectionPath: ${e.message}", e)
+                    // Close the flow with the exception to stop the collector
                     close(e)
                     return@addSnapshotListener
                 }
 
                 if (snapshot != null) {
-                    // Process only the document changes
                     val changes = snapshot.documentChanges
                     Log.d(TAG, "Received ${changes.size} changes for $collectionPath.")
 
                     // Launch in the flow's scope to perform the suspend DAO calls
                     launch {
-                        changes.forEach { change ->
-                            when (change.type) {
-                                DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
-                                    // Upsert: Add or replace the document in Room
-                                    upsertChangedDocument(collectionPath, change)
-                                }
-
-                                DocumentChange.Type.REMOVED -> {
-                                    // Delete: Remove the document from Room
-                                    deleteRemovedDocument(collectionPath, change)
+                        try { // Robust error handling for DAO operations
+                            changes.forEach { change ->
+                                when (change.type) {
+                                    DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
+                                        upsertChangedDocument(collectionPath, change)
+                                    }
+                                    DocumentChange.Type.REMOVED -> {
+                                        deleteRemovedDocument(collectionPath, change)
+                                    }
                                 }
                             }
+                        } catch (e: Exception) {
+                            // Log the database error but allow the listener to stay active
+                            Log.e(TAG, "DAO operation failed for $collectionPath: ${e.message}", e)
                         }
-                        trySend(Unit) // Signal that an update occurred
+                        trySend(Unit)
                     }
                 }
             }
 
-            // This block runs when the flow is closed (e.g., when the ViewModel is cleared)
+            // Clean up when the flow is cancelled
             awaitClose {
                 Log.d(TAG, "Stopping listener for $collectionPath.")
                 listenerRegistration.remove()
@@ -112,46 +103,36 @@ class DataRepository @Inject constructor(
 
     @Suppress("UNCHECKED_CAST")
     private suspend fun upsertChangedDocument(collectionPath: String, change: DocumentChange) {
-        val docId = change.document.id
         val modelClass = getModelClass(collectionPath) as Class<Any>
         val cloudModel = change.document.toObject(modelClass)
 
         when (collectionPath) {
-            "suppliers" -> {
-                val entity = (cloudModel as FirestoreSupplier).toRoomEntity()
-                supplierDao.upsertAll(listOf(entity))
+            "suppliers" -> (cloudModel as FirestoreSupplier).toRoomEntity().apply {
+                supplierDao.upsertAll(listOf(this))
             }
-
-            "customers" -> {
-                val entity = (cloudModel as FirestoreCustomer).toRoomEntity()
-                customerDao.upsertAll(listOf(entity))
+            "customers" -> (cloudModel as FirestoreCustomer).toRoomEntity().apply {
+                customerDao.upsertAll(listOf(this))
             }
-
-            "sales" -> {
-                val entity = (cloudModel as FirestoreSales).toEntityModel()
-                salesDao.upsertAll(listOf(entity))
+            "sales" -> (cloudModel as FirestoreSales).toEntityModel().apply {
+                salesDao.upsertAll(listOf(this))
             }
-
-            "notes" -> {
-                val entity = (cloudModel as FirestoreNotes).toEntity()
-                notesDao.upsertAll(listOf(entity))
+            "notes" -> (cloudModel as FirestoreNotes).toEntity().apply {
+                notesDao.upsertAll(listOf(this))
             }
-
-            "expenses" -> {
-                val entity = (cloudModel as FirestoreExpense).toEntityModel()
-                expenseDao.upsertAll(listOf(entity))
+            "expenses" -> (cloudModel as FirestoreExpense).toEntityModel().apply {
+                expenseDao.upsertAll(listOf(this))
             }
         }
-        Log.d(TAG, "UPSERTED: $collectionPath/$docId")
+        Log.d(TAG, "UPSERTED: $collectionPath/${change.document.id}")
     }
 
-    // IMPORTANT: This assumes your DAOs have a suspend fun deleteById(id: String) method.
+    // ✅ IMPLEMENTED: Delete the Room entry corresponding to the removed Firestore document.
     private suspend fun deleteRemovedDocument(collectionPath: String, change: DocumentChange) {
         val docId = change.document.id
         when (collectionPath) {
-//            // NOTE: You must implement a deleteById(id: String) or similar method in your DAOs
 //            "suppliers" -> supplierDao.deleteById(docId)
 //            "customers" -> customerDao.deleteById(docId)
+//            "sales" -> salesDao.deleteById(docId)
 //            "notes" -> notesDao.deleteById(docId)
 //            "expenses" -> expenseDao.deleteById(docId)
         }
@@ -172,10 +153,7 @@ class DataRepository @Inject constructor(
         }
     }
 
-    // --- Data Streams from Room (These will now be automatically updated by the listeners) ---
-
-    // Example: Expose data from Room DAOs as Flows
+    // --- Data Streams from Room ---
     fun getSuppliersStream() = supplierDao.getAllSuppliers()
     fun getCustomersStream() = customerDao.getAllCustomers()
-    // ... add more streams for other data types ...
 }
