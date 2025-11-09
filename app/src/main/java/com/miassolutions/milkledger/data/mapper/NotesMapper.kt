@@ -10,7 +10,7 @@ fun NoteEntity.toFirestoreModel(): FirestoreNotes {
         title = title,
         content = content,
         createdDate = createdDate.toString(),               // ensure String
-        alarmDate = alarmDateTime?.toString() ?: "",        // safe null check
+        alarmDate = alarmDateTime?.toString() ?: LocalDateTime.now().toString(),        // safe null check
         isDone = isDone
     )
 }

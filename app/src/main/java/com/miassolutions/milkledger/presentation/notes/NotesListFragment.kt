@@ -1,15 +1,22 @@
 package com.miassolutions.milkledger.presentation.notes
 
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.miassolutions.milkledger.core.notification.AppNotifier
+import com.miassolutions.milkledger.core.notification.NotificationPermissionHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.FragmentNotesListBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NotesListFragment :
@@ -18,10 +25,33 @@ class NotesListFragment :
     private val viewModel by viewModels<NotesViewModel>()
     private lateinit var adapter: NotesListAdapter
 
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                showToast("Thanks! Permission Granted")
+            } else {
+                // ❌ Permission denied — check if permanently denied
+                showToast("Permission not granted, notification now not will be shown")
+                NotificationPermissionHelper.handlePermissionDenied(this)
+            }
+        }
+
     override fun setupViews() {
         setupRecyclerView()
         setupObservers()
         setupListeners()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                checkNotificationPermission()
+
+            }
+        }
+        AppNotifier.init(requireContext())
+    }
+
+    private fun checkNotificationPermission() {
+        NotificationPermissionHelper.requestPermissionIfNeeded(this, notificationPermissionLauncher)
     }
 
     private fun setupRecyclerView() {

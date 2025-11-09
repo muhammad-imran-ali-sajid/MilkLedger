@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -14,13 +13,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.core.alarm.AlarmScheduler
-import com.miassolutions.milkledger.core.notification.AppNotifier
-import com.miassolutions.milkledger.core.notification.NotificationPermissionHelper
 import com.miassolutions.milkledger.core.util.dateTimeFormatter
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.showFutureDatePicker
 import com.miassolutions.milkledger.core.util.showMaterialTimePicker
-import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.BottomSheetAddEditNoteBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +23,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
@@ -36,26 +30,9 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
     private var _binding: BottomSheetAddEditNoteBinding? = null
     private val binding get() = _binding!!
 
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
-    private val notificationPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                showToast("Thanks! Permission Granted")
-            } else {
-                // ❌ Permission denied — check if permanently denied
-                showToast("Permission not granted, notification now not will be shown")
-                NotificationPermissionHelper.handlePermissionDenied(this)
-            }
-        }
-
     private val viewModel by viewModels<NotesViewModel>()
     private var currentNote: NoteEntity? = null
-
     private var selectedDateTime: LocalDateTime? = null
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,24 +45,9 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                checkNotificationPermission()
-
-            }
-        }
-        AppNotifier.init(requireContext())
-
         setupUI()
         setupObservers()
     }
-
-
-    private fun checkNotificationPermission() {
-        NotificationPermissionHelper.requestPermissionIfNeeded(this, notificationPermissionLauncher)
-    }
-
 
     private fun setupUI() {
         // Get note from arguments (for edit mode)
@@ -101,51 +63,51 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
             binding.etNoteContent.setText(note.content)
             note.alarmDateTime?.let {
                 binding.tvAlarmDateAndTime.text = it.format(dateTimeFormatter)
+                selectedDateTime = it // restore previous alarm time
             }
             binding.btnSaveNote.text = "Update Note"
         }
 
         // Pick alarm date
         binding.tvAlarmDateAndTime.setOnClickListener {
+            val safeDate = selectedDateTime?.toLocalDate() ?: LocalDate.now()
+            val safeTime = selectedDateTime?.toLocalTime() ?: LocalTime.now()
+
             showFutureDatePicker(
-                initialDate = LocalDate.now(),
+                initialDate = safeDate,
                 onPicked = { pickedDate ->
                     showMaterialTimePicker(
                         fragmentManager = parentFragmentManager,
-                        initialTime = LocalTime.now()
+                        initialTime = safeTime
                     ) { pickedTime ->
                         val alarmDateTime = pickedDate.atTime(pickedTime)
-
-                        // ✅ Prevent scheduling if in the past
                         if (alarmDateTime.isBefore(LocalDateTime.now())) {
                             showSnackbar("Please select a future time.")
                             return@showMaterialTimePicker
                         }
 
                         selectedDateTime = alarmDateTime
-                        binding.tvAlarmDateAndTime.text =
-                            alarmDateTime.format(dateTimeFormatter)
-
-                        checkAndScheduleAlarm(
-                            alarmDateTime,
-                            binding.etNoteTitle.text.toString(),
-                            binding.etNoteContent.text.toString()
-                        )
-
+                        binding.tvAlarmDateAndTime.text = alarmDateTime.format(dateTimeFormatter)
+                        checkAndScheduleAlarm(alarmDateTime, binding.etNoteTitle.text.toString(), binding.etNoteContent.text.toString())
                     }
-
-
                 }
             )
         }
+
 
         // Save note
         binding.btnSaveNote.setOnClickListener {
             val title = binding.etNoteTitle.text.toString().trim()
             val content = binding.etNoteContent.text.toString().trim()
 
+
             if (title.isEmpty()) {
                 showSnackbar("Please enter a title")
+                return@setOnClickListener
+            }
+
+            if (selectedDateTime == null) {
+                showSnackbar("Please set alarm date and time")
                 return@setOnClickListener
             }
 
@@ -159,12 +121,8 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
                 alarmDateTime = selectedDateTime
             )
 
-
-
             viewModel.addOrUpdateNote(newNote)
         }
-
-
     }
 
     private fun checkAndScheduleAlarm(
@@ -180,8 +138,6 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
         )
     }
 
-
-
     private fun setupObservers() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -191,11 +147,7 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
                             showSnackbar("Note saved")
                             dismiss()
                         }
-
-                        is NoteUiEvent.ShowMessage -> {
-                            showSnackbar(event.message)
-                        }
-
+                        is NoteUiEvent.ShowMessage -> showSnackbar(event.message)
                         else -> Unit
                     }
                 }
