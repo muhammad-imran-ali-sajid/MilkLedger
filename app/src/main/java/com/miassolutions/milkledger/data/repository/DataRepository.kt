@@ -2,10 +2,13 @@ package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
+import com.miassolutions.milkledger.data.local.daos.NoteDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
+import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.mapper.toRoomEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.data.remote.model.FirestoreCustomer
+import com.miassolutions.milkledger.data.remote.model.FirestoreNotes
 import com.miassolutions.milkledger.data.remote.model.FirestoreSupplier
 import jakarta.inject.Inject
 import kotlinx.coroutines.async
@@ -17,6 +20,7 @@ class DataRepository @Inject constructor(
     private val syncHelper: FirestoreSyncHelper,
     private val supplierDao: SupplierDao, // Injected Room DAO
     private val customerDao: CustomerDao,
+    private val notesDao: NoteDao
     // ... inject other DAOs here later (e.g., productDao)
 ) {
     // ... AppData, toRoomEntity() mapper (as extension function) ...
@@ -34,6 +38,10 @@ class DataRepository @Inject constructor(
             syncHelper.downloadCollection<FirestoreCustomer>("customers")
         }
 
+        val notesDeferred = async {
+            syncHelper.downloadCollection<FirestoreNotes>("notes")
+        }
+
         // --- 2. DOWNLOAD OTHER COLLECTIONS HERE (e.g., Products) ---
         // val productsDeferred = async {
         //     syncHelper.downloadCollection<FirestoreProduct>("products")
@@ -43,6 +51,7 @@ class DataRepository @Inject constructor(
         val downloadedSuppliers = suppliersDeferred.await()
         // val downloadedProducts = productsDeferred.await()
         val downloadedCustomers = customersDeferred.await()
+        val downloadedNotes = notesDeferred.await()
 
         // --- 3. PROCESS AND SAVE SUPPLIERS ---
         val supplierEntities = downloadedSuppliers.map { it.toRoomEntity() }
@@ -51,7 +60,11 @@ class DataRepository @Inject constructor(
 
         val customersEntities = downloadedCustomers.map { it.toRoomEntity() }
         customerDao.upsertAll(customersEntities)
-        Log.d("DataRepository", "Saved ${customersEntities.size} suppliers to Room.")
+        Log.d("DataRepository", "Saved ${customersEntities.size} customers to Room.")
+
+        val notesEntities = downloadedNotes.map { it.toEntity() }
+        notesDao.upsertAll(notesEntities)
+        Log.d("DataRepository", "Saved ${notesEntities.size} notes to Room.")
 
 
         // --- 4. PROCESS AND SAVE PRODUCTS ---
@@ -68,5 +81,6 @@ class DataRepository @Inject constructor(
 // A container to hold all fetched data
 data class AppData(
     val suppliers: List<FirestoreSupplier>,
-    val customers: List<FirestoreCustomer>
+    val customers: List<FirestoreCustomer>,
+    val notes: List<FirestoreNotes>
 )

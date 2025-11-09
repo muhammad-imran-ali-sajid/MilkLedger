@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.data.repository
 import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.NoteDao
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
+import com.miassolutions.milkledger.data.mapper.toFirestoreModel
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -37,10 +38,11 @@ class NoteRepository @Inject constructor(
         noteDao.insertOrUpdate(note)
         try {
             // Assuming NoteEntity has an 'id' field used as the documentId
+            val firestoreModel = note.toFirestoreModel()
             firestoreSyncHelper.uploadSingle(
                 collectionName = NOTES_COLLECTION,
                 documentId = note.id,
-                data = note
+                data = firestoreModel
             )
         } catch (e: Exception) {
             Log.e(TAG, "Failed to sync insertOrUpdate for note ID: ${note.id}", e)
@@ -83,7 +85,7 @@ class NoteRepository @Inject constructor(
                 firestoreSyncHelper.uploadSingle(
                     collectionName = NOTES_COLLECTION,
                     documentId = updatedNote.id,
-                    data = updatedNote
+                    data = updatedNote.toFirestoreModel()
                 )
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to sync done state update for note ID: $noteId", e)

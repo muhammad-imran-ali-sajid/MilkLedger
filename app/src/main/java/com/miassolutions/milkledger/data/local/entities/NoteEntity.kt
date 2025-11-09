@@ -16,7 +16,7 @@ data class NoteEntity(
     val id: String = UUID.randomUUID().toString(),
     val title: String= "",
     val content: String= "",
-    val createdDate: LocalDate = LocalDate.now(),
+    val createdDate: LocalDateTime = LocalDateTime.now(),
     val alarmDateTime: LocalDateTime?,
     val isDone: Boolean = false
 ) : Parcelable
