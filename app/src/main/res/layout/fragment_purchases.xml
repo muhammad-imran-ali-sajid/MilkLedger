@@ -14,6 +14,7 @@
         android:clickable="true"
         android:focusable="true"
         android:padding="8dp"
+        android:background="@drawable/bg_purchase"
         android:gravity="center_horizontal"
         android:text="12-10-2025"
         android:textSize="20sp"

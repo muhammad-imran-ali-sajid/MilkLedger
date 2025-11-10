@@ -186,8 +186,8 @@
 
 
     <style name="SaleCard" parent="BaseCardStyle">
-        <item name="cardBackgroundColor">#E2E8EB</item>
-        <item name="strokeColor">#E2E8EB</item>
+        <item name="cardBackgroundColor">#acacac</item>
+        <item name="strokeColor">#acacac</item>
 
     </style>
 
