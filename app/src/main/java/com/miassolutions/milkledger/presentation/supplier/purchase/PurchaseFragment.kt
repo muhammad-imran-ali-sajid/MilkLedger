@@ -23,6 +23,8 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistoryAdapter
+import com.miassolutions.milkledger.presentation.supplier.TransactionHistoryBottomSheet
 import com.miassolutions.milkledger.presentation.supplier.supplierdetail.toPurchaseRecordList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -155,12 +157,21 @@ class PurchaseFragment :
     }
 
     private fun setupRecyclerView() {
-        purchaseAdapter = PurchaseAdapter(::showEditBottomSheet, ::navToSupplierDetail)
+        purchaseAdapter = PurchaseAdapter(
+            ::showEditBottomSheet,
+            ::navToSupplierDetail,
+            ::showBalanceHistory
+        )
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
             itemAnimator = null
             setHasFixedSize(true)
         }
+    }
+
+    private fun showBalanceHistory() {
+        val btmSheet = TransactionHistoryBottomSheet()
+        btmSheet.show(childFragmentManager, null)
     }
 
     private fun generateReport() {

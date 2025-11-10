@@ -1,0 +1,37 @@
+package com.miassolutions.milkledger.presentation.supplier
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
+
+class BalanceHistoryAdapter(
+    private val balanceHistoryList: List<BalanceHistory>
+) : RecyclerView.Adapter<BalanceHistoryAdapter.BalanceHistoryViewHolder>() {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BalanceHistoryViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val b = ItemBalanceHitoryBinding.inflate(inflater, parent, false)
+        return BalanceHistoryViewHolder(b)
+    }
+
+    override fun onBindViewHolder(
+        holder: BalanceHistoryViewHolder,
+        position: Int
+    ) {
+        val item = balanceHistoryList[position]
+        holder.bind(item)
+    }
+
+    override fun getItemCount(): Int = balanceHistoryList.size
+
+    class BalanceHistoryViewHolder(private val binding: ItemBalanceHitoryBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: BalanceHistory) {
+            binding.tvDate.text = item.date
+            binding.tvBalance.text = item.balance
+        }
+    }
+}

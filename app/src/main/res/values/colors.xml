@@ -70,7 +70,7 @@
 
     <color name="edittext_bg_tint">#FFFFFF</color>       <!-- EditText white -->
     <color name="textview_bg_tint">#FFF3E0</color>       <!-- Light orange-ish for TextViews -->
-    <color name="textview_text_color">#ddd</color>
+    <color name="textview_text_color">#fff</color>
 
 
     <!-- Divider -->
