@@ -8,16 +8,16 @@
         android:layout_height="wrap_content"
         android:padding="4dp">
 
-        <TextView
-            android:id="@+id/tv_date_range_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Summary Period"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/tv_date_range_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Summary Period"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_date_range_value"
@@ -39,49 +39,49 @@
             android:background="?attr/colorOutline"
             app:layout_constraintTop_toBottomOf="@id/tv_date_range_value" />
 
-        <TextView
-            android:id="@+id/tv_total_milk_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Total Volume (Ltr)"
-            android:textSize="14sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator_header" />
+    <TextView
+        android:id="@+id/tv_total_milk_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Total Volume (Ltr)"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/separator_header" />
 
-        <TextView
-            android:id="@+id/tv_total_milk_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/on_surface"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_total_milk_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="450.50" />
+    <TextView
+        android:id="@+id/tv_total_milk_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_total_milk_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="450.50" />
 
-        <TextView
-            android:id="@+id/tv_total_deduction_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Total Deduction"
-            android:textSize="14sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_total_milk_label" />
+    <TextView
+        android:id="@+id/tv_total_deduction_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Total Deduction"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_total_milk_label" />
 
-        <TextView
-            android:id="@+id/tv_deduction_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/on_surface"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_total_deduction_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="55.80" />
+    <TextView
+        android:id="@+id/tv_deduction_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_total_deduction_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="55.80" />
 
         <View
             android:id="@+id/separator_middle"
@@ -91,73 +91,75 @@
             android:background="?attr/colorOutline"
             app:layout_constraintTop_toBottomOf="@id/tv_total_deduction_label" />
 
-        <TextView
-            android:id="@+id/tv_total_price_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="Total Price"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/on_surface"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/separator_middle" />
+    <TextView
+        android:id="@+id/tv_total_price_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Total Price"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/separator_middle" />
 
-        <TextView
-            android:id="@+id/tv_total_price_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="?attr/colorPrimary"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_total_price_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="₹ 45,500" />
+    <TextView
+        android:id="@+id/tv_total_price_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#eee"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_total_price_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="₹ 45,500" />
 
-        <TextView
-            android:id="@+id/tv_payment_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Paid Amount"
-            android:textSize="14sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_total_price_label" />
+    <TextView
+        android:id="@+id/tv_payment_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Paid Amount"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_total_price_label" />
 
-        <TextView
-            android:id="@+id/tv_payment_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/on_surface"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_payment_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="₹ 30,000" />
+    <TextView
+        android:id="@+id/tv_payment_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_payment_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="₹ 30,000" />
 
-        <TextView
-            android:id="@+id/tv_balance_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="4dp"
-            android:text="Balance Due"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_payment_label" />
+    <TextView
+        android:id="@+id/tv_balance_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="4dp"
+        android:text="Balance Due"
+        android:textColor="#eee"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_payment_label" />
 
-        <TextView
-            android:id="@+id/tv_balance_value"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_balance_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="₹ 15,500" />
+    <TextView
+        android:id="@+id/tv_balance_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#eee"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_balance_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="₹ 15,500" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

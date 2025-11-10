@@ -40,6 +40,7 @@
     <com.miassolutions.milkledger.core.util.CollapsibleCardView
         android:id="@+id/cardSalesSummary"
         android:layout_width="match_parent"
+        android:backgroundTint="#eee"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
