@@ -187,17 +187,15 @@ class CustomerDetailFragment :
 
         binding.customerSummary.setTitle("Customer Summary")
 
+
         binding.apply {
             val summaryBinding =
                 LayoutCustomerDetailSummaryBinding.inflate(layoutInflater, root, false)
             customerSummary.setContent(summaryBinding.root)
-
+            customerSummary.collapse()
             summaryBinding.apply {
 
-
                 tvDateRangeValue.text = summaryPeriod
-
-
                 tvTotalMilkValue.text = totalVolume
                 tvDeductionValue.text = totalDeduction
                 tvTotalPriceValue.text = totalPrice

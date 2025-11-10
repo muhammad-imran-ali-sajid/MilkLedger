@@ -1,43 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/card_summary_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="4dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_summary_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="8dp"
+    android:paddingTop="18dp">
 
     <TextView
         android:id="@+id/tv_date_range_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Summary Period"
-        android:textColor="#eee"
-        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_date_range_value"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textColor="@color/on_surface"
-            android:textSize="16sp"
-            app:layout_constraintBaseline_toBaselineOf="@id/tv_date_range_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_date_range_label"
-            tools:text="15 Aug 2024 - 30 Aug 2024" />
+    <TextView
+        android:id="@+id/tv_date_range_value"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textColor="@color/black"
+        android:textSize="16sp"
 
-        <View
-            android:id="@+id/separator_header"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="12dp"
-            android:background="?attr/colorOutline"
-            app:layout_constraintTop_toBottomOf="@id/tv_date_range_value" />
+        app:layout_constraintBaseline_toBaselineOf="@id/tv_date_range_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_date_range_label"
+        tools:text="15 Aug 2024 - 30 Aug 2024" />
+
+    <View
+        android:id="@+id/separator_header"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="?attr/colorOutline"
+        app:layout_constraintTop_toBottomOf="@id/tv_date_range_value" />
 
     <TextView
         android:id="@+id/tv_total_milk_label"
@@ -45,8 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="Total Volume (Ltr)"
-        android:textColor="#eee"
-        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/separator_header" />
 
@@ -54,9 +55,8 @@
         android:id="@+id/tv_total_milk_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#eee"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="22sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_total_milk_label"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="450.50" />
@@ -67,8 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Total Deduction"
-        android:textColor="#eee"
-        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_total_milk_label" />
 
@@ -76,20 +76,19 @@
         android:id="@+id/tv_deduction_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#eee"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="22sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_total_deduction_label"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="55.80" />
 
-        <View
-            android:id="@+id/separator_middle"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="12dp"
-            android:background="?attr/colorOutline"
-            app:layout_constraintTop_toBottomOf="@id/tv_total_deduction_label" />
+    <View
+        android:id="@+id/separator_middle"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:background="?attr/colorOutline"
+        app:layout_constraintTop_toBottomOf="@id/tv_total_deduction_label" />
 
     <TextView
         android:id="@+id/tv_total_price_label"
@@ -97,8 +96,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:text="Total Price"
-        android:textColor="#eee"
-        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/separator_middle" />
@@ -107,9 +106,8 @@
         android:id="@+id/tv_total_price_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#eee"
-        android:textSize="24sp"
-        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="22sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_total_price_label"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="₹ 45,500" />
@@ -120,8 +118,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Paid Amount"
-        android:textColor="#eee"
-        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_total_price_label" />
 
@@ -129,9 +127,8 @@
         android:id="@+id/tv_payment_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#eee"
-        android:textSize="16sp"
-        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="22sp"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_payment_label"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="₹ 30,000" />
@@ -143,8 +140,8 @@
         android:layout_marginTop="12dp"
         android:layout_marginBottom="4dp"
         android:text="Balance Due"
-        android:textColor="#eee"
-        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -154,12 +151,11 @@
         android:id="@+id/tv_balance_value"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#eee"
+        android:textColor="@color/black"
         android:textSize="22sp"
-        android:textStyle="bold"
         app:layout_constraintBaseline_toBaselineOf="@id/tv_balance_label"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="₹ 15,500" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
