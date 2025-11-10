@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.presentation.supplier
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.util.dateFormatter
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
 
 class BalanceHistoryAdapter(
@@ -30,7 +31,7 @@ class BalanceHistoryAdapter(
     class BalanceHistoryViewHolder(private val binding: ItemBalanceHitoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BalanceHistory) {
-            binding.tvDate.text = item.date.toString()
+            binding.tvDate.text = item.date.format(dateFormatter)
             binding.tvBalance.text = item.balance.toString()
         }
     }

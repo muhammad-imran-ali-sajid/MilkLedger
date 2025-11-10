@@ -66,10 +66,14 @@ class TransactionHistoryBottomSheet : BottomSheetDialogFragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.balanceHistory.collect {
                     Log.d("TransactionHistory", "$it")
+
+                    val totalBalance = it.sumOf { balanceHistory -> balanceHistory.balance }
+                    binding.tvBalance.text = totalBalance.toString()
                     adapter.submitList(it)
                 }
             }
         }
+
 
     }
 }
