@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
 
 class BalanceHistoryAdapter(
-    private val balanceHistoryList: List<BalanceHistory>
+    private var balanceHistoryList: List<BalanceHistory> = emptyList()
 ) : RecyclerView.Adapter<BalanceHistoryAdapter.BalanceHistoryViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,8 +30,13 @@ class BalanceHistoryAdapter(
     class BalanceHistoryViewHolder(private val binding: ItemBalanceHitoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BalanceHistory) {
-            binding.tvDate.text = item.date
-            binding.tvBalance.text = item.balance
+            binding.tvDate.text = item.date.toString()
+            binding.tvBalance.text = item.balance.toString()
         }
+    }
+
+    fun submitList(newList: List<BalanceHistory>) {
+        balanceHistoryList = newList
+        notifyDataSetChanged()
     }
 }

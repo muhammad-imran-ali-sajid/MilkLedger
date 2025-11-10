@@ -1,9 +1,12 @@
 package com.miassolutions.milkledger.data.local.daos
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistoryAdapter
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -17,6 +20,8 @@ interface PurchaseDao {
      */
     @Query("SELECT * FROM purchase_table")
     suspend fun getAllPurchasesList(): List<PurchaseEntity>
+
+
 
     /**
      * Batch upsert (Insert or Replace) used for merging remote data into the local database.
@@ -55,6 +60,10 @@ interface PurchaseDao {
     @Query("SELECT * FROM supplier_table")
     fun getAllSuppliers(): Flow<List<SupplierEntity>>
 
+    // ✅ Get only the date and balance for a supplier (for a simple ledger/summary)
+    @Query("SELECT date, balance FROM purchase_table WHERE supplierId = :supplierId ORDER BY date DESC")
+    fun getSupplierBalanceHistory(supplierId: String): Flow<List<BalanceHistory>>
+
     @Transaction
     @Query("SELECT * FROM purchase_table WHERE date = :date")
     suspend fun getPurchasesByDateOnce(date: LocalDate): List<PurchaseWithSupplier>
@@ -63,6 +72,8 @@ interface PurchaseDao {
     @Transaction
     @Query("SELECT * FROM purchase_table ORDER BY date DESC")
     fun getAllPurchasesWithSuppliers(): Flow<List<PurchaseWithSupplier>>
+
+
 
     // ✅ Daily entries view (for your current screen)
     @Transaction

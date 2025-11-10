@@ -1,12 +1,14 @@
 package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.data.mapper.toFirestoreModel // Assuming you have a mapper for this
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import javax.inject.Inject
@@ -21,6 +23,11 @@ class PurchaseRepository @Inject constructor(
     private companion object {
         private const val TAG = "PurchaseRepository"
         private const val PURCHASE_COLLECTION = "purchases"
+    }
+
+
+    fun getBalanceHistory(supplierId: String): Flow<List<BalanceHistory>> {
+        return purchaseDao.getSupplierBalanceHistory(supplierId)
     }
 
     // --- Write/Update/Delete Operations (Local Write First, Then Remote Sync) ---

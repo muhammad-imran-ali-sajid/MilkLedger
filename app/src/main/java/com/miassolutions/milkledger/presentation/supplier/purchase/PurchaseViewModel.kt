@@ -5,13 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -26,10 +32,39 @@ class PurchaseViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
 
+    private val _balanceSupplierId = MutableStateFlow<String?>(null)
+
+    // 2. Public StateFlow (Derived Data)
+    // We start with flatMapLatest to switch to the new data stream when the ID changes.
+    val balanceHistory: StateFlow<List<BalanceHistory>> = _balanceSupplierId
+        .filterNotNull() // Only process non-null IDs
+        .flatMapLatest { supplierId ->
+            // Call the repository function that now returns Flow
+            repository.getBalanceHistory(supplierId)
+        }
+        // Ensure it starts with an initial value (an empty list)
+        .onStart { emit(emptyList()) }
+        // Convert the Flow into a StateFlow that shares the results
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000), // Start collecting when a UI collector appears
+            initialValue = emptyList()
+        )
+
+    // 3. Public function for the Fragment to set the ID
+    fun setBalanceSupplierId(supplierId: String) {
+        // Update the StateFlow, which automatically triggers the flatMapLatest block above.
+        _balanceSupplierId.value = supplierId
+    }
+
+
+
     init {
         // Start observing for the initial date from the UI state
         observeForDate(_uiState.value.currentDate)
     }
+
+
 
     fun updatePurchaseManually(updated: PurchaseEntity) {
         viewModelScope.launch {
