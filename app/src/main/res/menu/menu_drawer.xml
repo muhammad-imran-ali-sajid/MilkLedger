@@ -4,19 +4,23 @@
 
     <!-- Main Navigation -->
     <group android:id="@+id/menu_group_navigation">
+
+        <item
+            android:id="@+id/action_suppliersFragment"
+            android:orderInCategory="100"
+            android:icon="@drawable/ic_supplier2"
+            android:title="@string/suppliers"
+            app:showAsAction="never" />
+
+
         <item
             android:id="@+id/action_customersFragment"
-            android:orderInCategory="100"
+            android:orderInCategory="101"
             android:title="@string/customers"
             android:icon="@drawable/ic_cutomer2"
             app:showAsAction="never" />
 
-        <item
-            android:id="@+id/action_suppliersFragment"
-            android:orderInCategory="101"
-            android:icon="@drawable/ic_supplier2"
-            android:title="@string/suppliers"
-            app:showAsAction="never" />
+
 
         <item
             android:id="@+id/action_notesFragment"

@@ -67,6 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="12dp"
+
             app:selectionRequired="true"
             app:singleSelection="true">
 
@@ -331,7 +332,7 @@
                 android:padding="12dp"
                 android:text="Milk Overview"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"

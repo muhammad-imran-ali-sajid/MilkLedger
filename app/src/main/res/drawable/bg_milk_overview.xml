@@ -14,7 +14,7 @@
         android:endColor="#99AABB" />
 
     <stroke
-        android:width="4dp"
-        android:color="#334466" />
+        android:width="1dp"
+        android:color="@color/teal_700" />
 
 </shape>
