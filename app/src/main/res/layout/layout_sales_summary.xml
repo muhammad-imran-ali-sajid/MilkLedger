@@ -26,16 +26,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total Milk"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                 />
 
             <TextView
                 android:id="@+id/tv_total_milk"
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="124.5"
-                android:textSize="16sp" />
+                android:text="124.5" />
         </LinearLayout>
 
         <LinearLayout
@@ -49,17 +47,14 @@
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Deduction"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="Deduction" />
 
             <TextView
                 android:id="@+id/tv_deduction"
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="28.1"
-                android:textSize="16sp" />
+                android:text="28.1" />
         </LinearLayout>
 
         <LinearLayout
@@ -73,17 +68,14 @@
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Net Milk"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="Net Milk" />
 
             <TextView
                 android:id="@+id/tv_total_net_milk"
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4.3"
-                android:textSize="16sp" />
+                android:text="4.3" />
         </LinearLayout>
 
     </LinearLayout>
@@ -113,17 +105,14 @@
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Amount"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="Total Amount" />
 
             <TextView
                 android:id="@+id/tv_total_amount"
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rs. 10500"
-                android:textSize="16sp" />
+                android:text="Rs. 10500" />
         </LinearLayout>
 
         <!-- Avg Rate -->
@@ -138,17 +127,14 @@
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Avg Amount"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="Avg Amount" />
 
             <TextView
                 android:id="@+id/tv_avg_price"
                 style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rs. 84.3"
-                android:textSize="16sp" />
+                android:text="Rs. 84.3" />
         </LinearLayout>
 
 

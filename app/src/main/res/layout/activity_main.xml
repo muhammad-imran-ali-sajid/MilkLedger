@@ -5,6 +5,7 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:openDrawer="start"
     android:background="@drawable/drawer_header_background"
     tools:context=".presentation.activities.MainActivity">
 
@@ -58,6 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        app:itemTextAppearance="@style/TextLabel"
         app:headerLayout="@layout/drawer_header"
         app:menu="@menu/menu_drawer" />
 
