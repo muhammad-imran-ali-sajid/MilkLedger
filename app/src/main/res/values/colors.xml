@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Primary Brand Color (A strong, accessible blue) -->
-    <color name="primary">#2A4D69</color>
+    <color name="primary">#00796B</color>
     <!-- Text/Icons ON Primary (Should always be white for contrast) -->
     <color name="on_primary">#FFFFFF</color>
 
