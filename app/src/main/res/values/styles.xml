@@ -136,7 +136,6 @@
 
     </style>
 
-    <style name="Button.Tonal" parent="Widget.Material3.Button.TonalButton"></style>
 
     <!-- Cards -->
     <style name="Card.Filled" parent="Widget.Material3.CardView.Filled">
@@ -157,18 +156,24 @@
         <item name="boxCornerRadiusBottomEnd">@dimen/corner_medium</item>
     </style>
 
+    <style name="ExtendedFABStyle" parent="Widget.Material3.ExtendedFloatingActionButton.Secondary">
+        <item name="backgroundTint">@color/teal_700</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="elevation">8dp</item>
 
-    <style name="dashboard_element_style">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:gravity">center</item>
-        <item name="android:orientation">vertical</item>
     </style>
+
+
+
 
     <style name="BaseCardStyle">
         <item name="cardCornerRadius">12dp</item>
         <item name="cardElevation">6dp</item>
 
+    </style>
+
+    <style name="SupplierCardStyle" parent="BaseCardStyle">
+        <item name="cardBackgroundColor">#ddd</item>
     </style>
 
     <style name="dashboard_card" parent="BaseCardStyle">
@@ -186,8 +191,9 @@
 
 
     <style name="SaleCard" parent="BaseCardStyle">
-        <item name="cardBackgroundColor">#acacac</item>
-        <item name="strokeColor">#acacac</item>
+        <item name="cardBackgroundColor">#abc</item>
+        <item name="cardElevation">8dp</item>
+        <item name="strokeColor">#232323</item>
 
     </style>
 
