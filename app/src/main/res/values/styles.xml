@@ -168,7 +168,8 @@
 
     <style name="BaseCardStyle">
         <item name="cardCornerRadius">12dp</item>
-        <item name="cardElevation">6dp</item>
+        <item name="cardElevation">8dp</item>
+        <item name="cardBackgroundColor">#111</item>
 
     </style>
 
@@ -178,6 +179,7 @@
 
     <style name="dashboard_card" parent="BaseCardStyle">
         <item name="android:clickable">true</item>
+
         <item name="android:layout_margin">4dp</item>
         <item name="android:focusable">true</item>
     </style>
