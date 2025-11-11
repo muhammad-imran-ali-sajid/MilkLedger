@@ -19,6 +19,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.isToday
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
@@ -223,10 +224,10 @@ class PurchaseFragment :
         balanceDue: Double
     ): PurchaseSummary {
         return PurchaseSummary(
-            totalQty = totalQty.toRoundedStr("%.2f"),
-            avgFat = avgFat.toRoundedStr("%.2f"),
-            avgLr = avgLr.toRoundedStr("%.2f"),
-            totalTs = totalTs.toRoundedStr("%.2f"),
+            totalQty = totalQty.toRoundedStr(),
+            avgFat = avgFat.toRoundedStr(),
+            avgLr = avgLr.toRoundedStr(),
+            totalTs = totalTs.toRoundedStr(),
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             balanceDue = balanceDue.toRoundedStr()
@@ -250,12 +251,12 @@ class PurchaseFragment :
             // 2. Use the ViewBinding object to set the data efficiently
             summaryBinding.apply {
 
-                tvTotalMilk.text = milkAmount.toRoundedStr("%.2f")
-                tvAvgFat.text = avgFat.toRoundedStr("%.2f")
-                tvAvgLr.text = avgLr.toRoundedStr("%.2f")
-                tvAvgTs.text = avgTS.toRoundedStr("%.2f")
-                tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr()}"
-                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr("%.2f")}"
+                tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
+                tvAvgFat.text = "${avgFat.toRoundedStr()}%"
+                tvAvgLr.text = avgLr.toRoundedStr()
+                tvAvgTs.text = "${avgTS.toRoundedStr()}%"
+                tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
+                tvAvgPrice.text = "Rs. ${avgRate.toPriceStr()}"
             }
         }
     }

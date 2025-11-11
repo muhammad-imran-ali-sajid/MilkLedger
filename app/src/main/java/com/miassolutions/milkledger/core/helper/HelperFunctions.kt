@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.core.helper
 
 import android.graphics.Color
 import androidx.core.graphics.toColorInt
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 
 fun handleZeroData(value: Double): String {
@@ -16,7 +17,7 @@ fun handleZeroData(value: Double): String {
 fun textColor(amount: Double): Int {
     return when {
         amount < 0 -> "#bd0606".toColorInt()
-        amount == 0.0 -> "#000000".toColorInt()
+        amount == 0.00 -> Color.BLACK
         else -> "#2faD32".toColorInt() // Material green 500
     }
 }
@@ -24,7 +25,7 @@ fun textColor(amount: Double): Int {
 
 fun numberFormat(amount: Double): String {
     return when {
-        amount > 0 -> "+${amount.toRoundedStr()}"
-        else -> amount.toRoundedStr()
+        amount > 0 -> "+${amount.toPriceStr()}"
+        else -> amount.toPriceStr()
     }
 }

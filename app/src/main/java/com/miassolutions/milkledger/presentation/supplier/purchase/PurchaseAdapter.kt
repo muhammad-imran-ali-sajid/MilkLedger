@@ -10,6 +10,7 @@ import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
@@ -56,8 +57,8 @@ class PurchaseAdapter(
                 divider.show()
                 tvNotes.text = "Note: ${item.purchase.notes}"
             }
-            tvPrice.text = item.purchase.milkPrice.toRoundedStr()
-            tvPaid.text = item.purchase.payment.toRoundedStr()
+            tvPrice.text = item.purchase.milkPrice.toPriceStr()
+            tvPaid.text = item.purchase.payment.toPriceStr()
 
             tvBalance.text = numberFormat(item.purchase.balance)
             tvBalance.setTextColor(textColor(item.purchase.balance))

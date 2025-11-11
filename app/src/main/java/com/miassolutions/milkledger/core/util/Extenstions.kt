@@ -6,7 +6,11 @@ import androidx.core.graphics.toColorInt
 import java.time.LocalDate
 
 
-fun Double.toRoundedStr(format: String = "%.0f"): String {
+fun Double.toRoundedStr(format: String = "%.2f"): String {
+    return String.format(format, this)
+}
+
+fun Double.toPriceStr(format: String = "%.0f"): String {
     return String.format(format, this)
 }
 

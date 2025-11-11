@@ -15,6 +15,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
@@ -144,7 +145,7 @@ class PurchaseEditBottomSheet(
             volume * rate
         }
 
-        binding.tvPrice.text = price.toRoundedStr()
+        binding.tvPrice.text = price.toPriceStr()
     }
 
     private fun recalculateTS() {
@@ -174,7 +175,7 @@ class PurchaseEditBottomSheet(
 
         val text = when {
             balance > 0 -> "+${balance.roundToInt()}"
-            else -> balance.toRoundedStr()
+            else -> balance.toPriceStr()
         }
 
         binding.tvBalance.text = text

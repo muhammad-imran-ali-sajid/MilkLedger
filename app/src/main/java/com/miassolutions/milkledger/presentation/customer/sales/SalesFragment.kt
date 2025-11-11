@@ -89,11 +89,11 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
 
             summaryBinding.apply {
-                tvTotalMilk.text = milkAmount.toRoundedStr()
-                tvDeduction.text = deduction.toRoundedStr()
-                tvTotalNetMilk.text = totalNetMilk.toRoundedStr()
-                tvAvgPrice.text = avgRate.toRoundedStr()
-                tvTotalAmount.text = totalAmount.toRoundedStr()
+                tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
+                tvDeduction.text = "${deduction.toRoundedStr()} L"
+                tvTotalNetMilk.text = "${totalNetMilk.toRoundedStr()} L"
+                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
+                tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr()}"
             }
 
         }
