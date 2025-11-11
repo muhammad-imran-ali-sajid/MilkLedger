@@ -63,10 +63,10 @@ class PurchaseAdapter(
             tvBalance.text = numberFormat(item.purchase.balance)
             tvBalance.setTextColor(textColor(item.purchase.balance))
 
-            tvBalance.setOnLongClickListener { onBalanceClick(item.supplier.supplierId); true }
+            btnBalance.setOnLongClickListener { onBalanceClick(item.supplier.supplierId); true }
 
 
-            root.setOnClickListener { onEditClick(item) }
+            btnEditForm.setOnClickListener { onEditClick(item) }
             btnSupplierDetail.setOnClickListener { onItemDetailClick(item) }
         }
     }
