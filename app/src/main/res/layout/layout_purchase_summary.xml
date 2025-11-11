@@ -1,193 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingTop="8dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:paddingHorizontal="16dp">
 
-
-
-    <!-- Row 1: Milk, Fat, LR -->
+    <!-- Metric 1: Volume (Label and Value Inline) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="4">
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical">
 
+        <TextView
+            style="@style/Text.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Volume" />
 
-        <!-- Milk -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_total_milk"
+            style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:text="124.5 L"
+            android:gravity="end" />
+    </LinearLayout>
 
-            <TextView
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Volume"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+    <!-- Metric 2: Avg Fat (Label and Value Inline) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tv_total_milk"
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="124.5"
-                android:textSize="16sp" />
-        </LinearLayout>
+        <TextView
+            style="@style/Text.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avg Fat" />
 
-        <!-- Fat -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_avg_fat"
+            style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:text="4.3 %"
+            android:gravity="end" />
+    </LinearLayout>
 
-            <TextView
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Avg Fat"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+    <!-- Metric 3: Avg LR (Label and Value Inline) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tv_avg_fat"
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4.3"
-                android:textSize="16sp" />
-        </LinearLayout>
+        <TextView
+            style="@style/Text.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avg LR" />
 
-        <!-- LR -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_avg_lr"
+            style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:text="28.1"
+            android:gravity="end" />
+    </LinearLayout>
 
-            <TextView
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Avg LR"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+    <!-- Metric 4: Avg TS (Label and Value Inline) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tv_avg_lr"
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="28.1"
-                android:textSize="16sp" />
-        </LinearLayout>
+        <TextView
+            style="@style/Text.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avg TS" />
 
-        <!-- LR -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_avg_ts"
+            style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Avg TS"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_avg_ts"
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="28.1"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-
-
-
-
-
-
+            android:text="28.1"
+            android:gravity="end" />
     </LinearLayout>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginVertical="4dp"
-        android:backgroundTint="@color/divider" />
-    <!-- Row 2: Total Amount, Avg Rate -->
+        android:layout_marginVertical="8dp"
+        app:dividerColor="#E0E0E0" />
+
+    <!-- Metric 5: Total Amount (Label and Value Inline) -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:paddingVertical="8dp"
+        android:gravity="center_vertical">
 
+        <TextView
+            style="@style/Text.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Amount" />
 
-        <!-- Total Amount -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_total_amount"
+            style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:text="Rs. 10500"
+            android:gravity="end" />
+    </LinearLayout>
 
-            <TextView
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total Amount"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+    <!-- Metric 6: Avg Rate (Label and Value Inline) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/tv_total_amount"
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rs. 10500"
-                android:textSize="16sp" />
-        </LinearLayout>
+        <TextView
+            style="@style/Text.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Avg Rate" />
 
-        <!-- Avg Rate -->
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_avg_price"
+            style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Avg Rate"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_avg_price"
-                style="@style/Text.Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rs. 84.3"
-                android:textSize="16sp" />
-        </LinearLayout>
-
+            android:text="Rs. 84.3"
+            android:gravity="end" />
     </LinearLayout>
 
 </LinearLayout>
