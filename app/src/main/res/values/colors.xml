@@ -4,7 +4,7 @@
     <!-- Primary Brand Color (A strong, accessible blue) -->
     <color name="primary">#00796B</color>
     <!-- Text/Icons ON Primary (Should always be white for contrast) -->
-    <color name="on_primary">#FFFFFF</color>
+    <color name="on_primary">#eee</color>
 
     <!-- Secondary Accent Color (A neutral green for secondary actions or completion status) -->
     <color name="secondary">#4D8B31</color>
@@ -15,7 +15,7 @@
     <color name="surface">#232323</color>
     <color name="background">#333</color>
     <!-- Text/Icons ON Surfaces (Near-black for contrast) -->
-    <color name="on_surface">#1F1F1F</color>
+    <color name="on_surface">#eee</color>
 
     <color name="teal_700">#00796B</color>
     <color name="teal_200">#80CBC4</color>
