@@ -91,10 +91,10 @@
             style="@style/Text.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Avg TS" />
+            android:text="Total TS" />
 
         <TextView
-            android:id="@+id/tv_avg_ts"
+            android:id="@+id/tv_total_ts"
             style="@style/Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

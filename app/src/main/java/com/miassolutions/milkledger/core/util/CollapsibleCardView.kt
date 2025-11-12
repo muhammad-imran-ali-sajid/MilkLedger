@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.core.util
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,7 @@ class CollapsibleCardView @JvmOverloads constructor(
     fun setContent(view: View) {
         binding.contentContainer.removeAllViews()
         binding.contentContainer.addView(view)
+
     }
 
     fun toggleCard() {

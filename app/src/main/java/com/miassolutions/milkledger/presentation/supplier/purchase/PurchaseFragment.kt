@@ -53,11 +53,7 @@ class PurchaseFragment :
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
             // Assume you fetch the authorization status dynamically
-            if (role == "admin") {
-                isUserAuthorized = true
-            } else {
-                isUserAuthorized = false
-            }
+            isUserAuthorized = role == "admin"
 
             showExpenseDatePicker(
 
@@ -133,7 +129,7 @@ class PurchaseFragment :
                     milkAmount = state.totalVolume,
                     avgFat = state.avgFat,
                     avgLr = state.avgLr,
-                    avgTS = state.totalTS,
+                    totalTS = state.totalTS,
                     totalAmount = state.grandTotalForDate,
                     avgRate = state.avgRatePerLiter
                 )
@@ -237,7 +233,7 @@ class PurchaseFragment :
         milkAmount: Double,
         avgLr: Double,
         avgFat: Double,
-        avgTS: Double,
+        totalTS: Double,
         totalAmount: Double,
         avgRate: Double
     ) {
@@ -253,7 +249,7 @@ class PurchaseFragment :
                 tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
                 tvAvgFat.text = "${avgFat.toRoundedStr()}%"
                 tvAvgLr.text = avgLr.toRoundedStr()
-                tvAvgTs.text = "${avgTS.toRoundedStr()}%"
+                tvTotalTs.text = "${totalTS.toRoundedStr()}"
                 tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
                 tvAvgPrice.text = "Rs. ${avgRate.toPriceStr()}"
             }

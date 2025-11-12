@@ -243,8 +243,9 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-
-
+    <style name="TextViewSummaryStyle">
+        <item name="android:textColor">@color/black</item>
+    </style>
 
 
 </resources>

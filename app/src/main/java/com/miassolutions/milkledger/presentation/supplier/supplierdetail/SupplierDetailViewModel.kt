@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -91,9 +92,19 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
 
 
             // --- Summary Calculation (Uses the potentially filtered list) ---
-            val avgTS = if (currentFilteredList.isNotEmpty())
-                currentFilteredList.sumOf { it.ts } / currentFilteredList.size
+            val totalTS = if (currentFilteredList.isNotEmpty())
+                currentFilteredList.sumOf { it.ts }
             else 0.0
+
+            val avgFat = if (currentFilteredList.isNotEmpty())
+                currentFilteredList.sumOf { it.fat } / currentFilteredList.size
+            else 0.0
+
+            val avgLr = if (currentFilteredList.isNotEmpty())
+                currentFilteredList.sumOf { it.lr } / currentFilteredList.size
+            else 0.0
+
+
             val totalMilk = currentFilteredList.sumOf { it.milkAmount }
             val totalPrice = currentFilteredList.sumOf { it.milkPrice }
             val totalPaid = currentFilteredList.sumOf { it.payment }
@@ -101,10 +112,12 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
 
             val supplierSummary = SupplierSummary(
                 summaryPeriod = "", // UI text handled separately below
-                totalMilk = totalMilk.toRoundedStr(),
-                avgTS = avgTS.toRoundedStr("%.2f"),
-                totalPrice = totalPrice.toRoundedStr(),
-                paidAmount = totalPaid.toRoundedStr(),
+                totalMilk = "${totalMilk.toRoundedStr()} L",
+                avgFat = "${avgFat.toRoundedStr()}%",
+                avgLr = avgLr.toRoundedStr(),
+                totalTS = totalTS.toRoundedStr(),
+                totalPrice = "Rs. ${totalPrice.toPriceStr()}",
+                paidAmount = "Rs. ${totalPaid.toPriceStr()}",
                 balance = balance
             )
 

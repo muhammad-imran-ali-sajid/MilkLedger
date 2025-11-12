@@ -172,12 +172,14 @@ class SupplierDetailFragment :
 
                 showSummary(
                     milkAmount = totalMilk,
-                    avgTS = avgTS,
+                    totalTS = totalTS,
                     totalPrice = totalPrice,
                     payment = paidAmount,
                     balance = balanceText,
                     balanceColor = color,
-                    dateRange = currentSelectedDateRange
+                    dateRange = currentSelectedDateRange,
+                    avgFat = avgFat,
+                    avgLr = avgLr
                 )
             }
         }
@@ -185,7 +187,9 @@ class SupplierDetailFragment :
 
     private fun showSummary(
         milkAmount: String,
-        avgTS: String,
+        totalTS: String,
+        avgFat: String,
+        avgLr: String,
         totalPrice: String,
         payment: String,
         balance: String,
@@ -194,7 +198,7 @@ class SupplierDetailFragment :
     ) {
         binding.apply {
             supplierSummary.setTitle("Summary")
-//            supplierSummary.collapse()
+            supplierSummary.collapse()
 
             val summaryBinding =
                 LayoutSupplierDetailSummaryBinding.inflate(layoutInflater, root, false)
@@ -203,9 +207,11 @@ class SupplierDetailFragment :
             summaryBinding.apply {
                 // Use the passed dateRange parameter
                 tvDateRangeValue.text = dateRange
-                tvTotalMilkValue.text = milkAmount
-                tvAvgTsValue.text = avgTS
-                tvTotalPriceValue.text = totalPrice
+                tvTotalMilk.text = milkAmount
+                tvTotalTs.text = totalTS
+                tvTotalAmount.text = totalPrice
+                tvAvgFat.text = avgFat
+                tvAvgLr.text = avgLr
                 tvPaymentValue.text = payment
                 tvBalanceValue.text = balance
                 tvBalanceValue.setTextColor(balanceColor)
