@@ -93,17 +93,10 @@ class PurchaseFragment :
         editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
             val selectedDate = viewModel.uiState.value.currentDate
             val isToday = selectedDate.isToday()
-            val isLockedToday = isEditModeLockedForToday() // Check lock state
+//            val isLockedToday = isEditModeLockedForToday() // Check lock state
 
             if (isChecked) {
-                // 1. PERMANENT LOCK CHECK: If permanently locked for today, prevent re-enabling for all.
-                if (isToday && isLockedToday) {
-                    editModeSwitch?.isChecked = false
-                    showSnackbar("Edit mode cannot be re-enabled today once manually disabled.")
-                    return@setOnCheckedChangeListener
-                }
-
-                // 2. ADMIN ROLE CHECK: Only admin can enable if the lock is not set.
+                // Check 1: Block non-admins from enabling at all times.
                 if (role != "admin") {
                     // Revert the switch state to off and show a message
                     editModeSwitch?.isChecked = false
@@ -111,11 +104,12 @@ class PurchaseFragment :
                     return@setOnCheckedChangeListener
                 }
 
-                // If admin, proceed with enabling
+                // If we reach here, the user IS an admin. Admin can always enable.
                 showSnackbar("Edit mode enabled")
 
                 if (isToday) {
-                    // Removed setEditModeLockedForToday(false) as the lock is intended to be permanent once set.
+                    // Admin override: If the admin enables it, they are effectively clearing the daily lock.
+                    setEditModeLockedForToday(false)
                     enableEditMode()
                 }
 
@@ -124,7 +118,7 @@ class PurchaseFragment :
                 showSnackbar("Edit mode disabled")
                 disableEditMode()
 
-                // 3. APPLY PERMANENT LOCK: If it's today, set the lock to prevent re-enabling.
+                // Apply PERMANENT LOCK: If it's today, set the lock to prevent re-enabling by non-admins.
                 if (isToday) {
                     setEditModeLockedForToday(true)
                 }
