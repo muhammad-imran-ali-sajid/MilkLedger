@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.helper.BiometricHelper
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReceiptPdf
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseSummary
 import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
@@ -24,7 +23,6 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistoryAdapter
 import com.miassolutions.milkledger.presentation.supplier.TransactionHistoryBottomSheet
 import com.miassolutions.milkledger.presentation.supplier.supplierdetail.toPurchaseRecordList
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +61,7 @@ class PurchaseFragment :
 
             showExpenseDatePicker(
 
-                isAuthorized = isUserAuthorized,
+                isAuthorized = isUserAuthorized, // only admin is allowed todo()
                 initialDate = currentDate,
 
                 // The selectedDate (LocalDate) is available here!
@@ -93,7 +91,7 @@ class PurchaseFragment :
         editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
             val selectedDate = viewModel.uiState.value.currentDate
             val isToday = selectedDate.isToday()
-//            val isLockedToday = isEditModeLockedForToday() // Check lock state
+            val isLockedToday = isEditModeLockedForToday() // Check lock state
 
             if (isChecked) {
                 // Check 1: Block non-admins from enabling at all times.
@@ -107,11 +105,8 @@ class PurchaseFragment :
                 // If we reach here, the user IS an admin. Admin can always enable.
                 showSnackbar("Edit mode enabled")
 
-                if (isToday) {
-                    // Admin override: If the admin enables it, they are effectively clearing the daily lock.
-                    setEditModeLockedForToday(false)
-                    enableEditMode()
-                }
+                setEditModeLockedForToday(false)
+                enableEditMode()
 
             } else {
                 // Allow anyone to disable (turn off) the switch
@@ -165,7 +160,7 @@ class PurchaseFragment :
         purchaseAdapter = PurchaseAdapter(
             ::showEditBottomSheet,
             ::navToSupplierDetail,
-            {it: String -> showBalanceHistory(it)}
+            { it: String -> showBalanceHistory(it) }
         )
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
@@ -174,7 +169,7 @@ class PurchaseFragment :
         }
     }
 
-    private fun showBalanceHistory(supplierId : String) {
+    private fun showBalanceHistory(supplierId: String) {
 
         val btmSheet = TransactionHistoryBottomSheet.newInstance(supplierId)
 
