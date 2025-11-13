@@ -60,15 +60,15 @@ class CustomerListViewModel @Inject constructor(
 
                 if (existing != null) {
                     repository.updateCustomer(customer.toEntity())
-                    _uiEvent.emit(CustomerUiEvent.ShowMessage("Supplier updated"))
+                    _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer updated"))
                 } else {
                     // determine next sort order
                     val nextSortOrder = (allCustomers.maxOfOrNull { it.sortOrder } ?: 0) + 1
                     repository.insertCustomer(customer.toEntity().copy(sortOrder = nextSortOrder))
-                    _uiEvent.emit(CustomerUiEvent.ShowMessage("Supplier added"))
+                    _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer added"))
                 }
             } catch (e: Exception) {
-                _uiEvent.emit(CustomerUiEvent.ShowMessage("Error saving supplier"))
+                _uiEvent.emit(CustomerUiEvent.ShowMessage("Error saving customer"))
             }
         }
     }

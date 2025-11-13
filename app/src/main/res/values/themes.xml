@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.MilkLedger" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
+    <style name="Base.Theme.MilkLedger" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
 
         <!-- Brand Colors -->
         <item name="colorPrimary">@color/primary</item>

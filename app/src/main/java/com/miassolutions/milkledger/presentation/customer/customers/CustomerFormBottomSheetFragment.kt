@@ -10,7 +10,7 @@ import com.miassolutions.milkledger.domain.model.Customer
 
 class CustomerFormBottomSheetFragment(
     private val customer: Customer? = null,
-    private val currentCustomers: List<Customer> = emptyList<Customer>(),
+    private val currentCustomers: List<Customer> = emptyList(),
     private val onSave: (Customer) -> Unit
 ) : BottomSheetDialogFragment() {
 
