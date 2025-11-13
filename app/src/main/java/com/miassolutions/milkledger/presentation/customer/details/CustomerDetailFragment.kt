@@ -49,7 +49,6 @@ class CustomerDetailFragment :
             binding.tvSelectedDate.text = currentSelectedDateRange
 
             with(state.summary) {
-                Log.d("CustomerDetail", "setupObservers: $totalMilk -$balance")
                 customerSummary(
                     summaryPeriod = currentSelectedDateRange,
                     totalVolume = totalMilk,
@@ -196,10 +195,10 @@ class CustomerDetailFragment :
             summaryBinding.apply {
 
                 tvDateRangeValue.text = summaryPeriod
-                tvTotalMilkValue.text = totalVolume
-                tvDeductionValue.text = totalDeduction
-                tvTotalPriceValue.text = totalPrice
-                tvPaymentValue.text = totalPaid
+                tvTotalMilkValue.text = "${totalVolume} L"
+                tvDeductionValue.text = "${totalDeduction} L"
+                tvTotalPriceValue.text = "Rs. ${totalPrice}"
+                tvPaymentValue.text = "Rs. ${totalPaid}"
                 tvBalanceValue.text = balance
             }
         }
