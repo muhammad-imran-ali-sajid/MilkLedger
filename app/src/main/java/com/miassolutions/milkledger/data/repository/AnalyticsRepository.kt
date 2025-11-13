@@ -22,6 +22,15 @@ class AnalyticsRepository @Inject constructor(
     fun getTotalMilkSoldBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
         reportsDao.getTotalMilkSoldBetween(start, end)
 
+    fun getAvgFatBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getAvgFatBetween(start, end)
+
+    fun getAvgLrBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getAvgLrBetween(start, end)
+
+    fun getTotalTsBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getTsBetween(start, end)
+
     fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
         reportsDao.getTotalSalesBetween(start, end)
 
@@ -47,6 +56,9 @@ class AnalyticsRepository @Inject constructor(
     // 📊 ALL RECORDS QUERIES
     // ───────────────────────────────
 
+    fun getTotalFat(): Flow<Double?> = reportsDao.getTotalFat()
+    fun getTotalLr(): Flow<Double?> = reportsDao.getTotalLr()
+    fun getTotalTs(): Flow<Double?> = reportsDao.getTotalTs()
     fun getTotalMilkPurchaseAll(): Flow<Double?> =
         reportsDao.getTotalMilkPurchaseAll()
 

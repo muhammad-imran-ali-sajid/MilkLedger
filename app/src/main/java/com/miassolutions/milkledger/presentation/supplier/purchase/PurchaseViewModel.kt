@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -36,6 +37,7 @@ class PurchaseViewModel @Inject constructor(
 
     // 2. Public StateFlow (Derived Data)
     // We start with flatMapLatest to switch to the new data stream when the ID changes.
+    @OptIn(ExperimentalCoroutinesApi::class)
     val balanceHistory: StateFlow<List<BalanceHistory>> = _balanceSupplierId
         .filterNotNull() // Only process non-null IDs
         .flatMapLatest { supplierId ->

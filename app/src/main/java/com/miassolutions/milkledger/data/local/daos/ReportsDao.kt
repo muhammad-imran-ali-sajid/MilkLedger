@@ -23,8 +23,19 @@ interface ReportsDao {
     @Query("SELECT SUM(netMilk) FROM sales_table WHERE date BETWEEN :start AND :end")
     fun getTotalMilkSoldBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
+    @Query("SELECT AVG(fat) FROM purchase_table WHERE date BETWEEN :start AND :end AND fat > 0.0")
+    fun getAvgFatBetween(start: LocalDate, end: LocalDate): Flow<Double?>
+
+    @Query("SELECT AVG(lr) FROM purchase_table WHERE date BETWEEN :start AND :end AND fat > 0.0")
+    fun getAvgLrBetween(start: LocalDate, end: LocalDate): Flow<Double?>
+
+    @Query("SELECT SUM(ts) FROM purchase_table WHERE date BETWEEN :start AND :end")
+    fun getTsBetween(start: LocalDate, end: LocalDate): Flow<Double?>
+
     @Query("SELECT SUM(price) FROM sales_table WHERE date BETWEEN :start AND :end")
     fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
+
+
 
     // ➕ All Records (Sales)
     @Query("SELECT SUM(netMilk) FROM sales_table")
@@ -50,6 +61,15 @@ interface ReportsDao {
     // ➕ All Records (Purchases)
     @Query("SELECT SUM(milkAmount) FROM purchase_table")
     fun getTotalMilkPurchaseAll(): Flow<Double?>
+
+    @Query("SELECT AVG(fat) FROM purchase_table WHERE fat > 0.0")
+    fun getTotalFat(): Flow<Double?>
+
+    @Query("SELECT AVG(lr) FROM purchase_table WHERE lr > 0.0")
+    fun getTotalLr(): Flow<Double?>
+
+    @Query("SELECT SUM(ts) FROM purchase_table")
+    fun getTotalTs(): Flow<Double?>
 
     @Query("SELECT SUM(milkPrice) FROM purchase_table")
     fun getTotalPurchasesAll(): Flow<Double?>

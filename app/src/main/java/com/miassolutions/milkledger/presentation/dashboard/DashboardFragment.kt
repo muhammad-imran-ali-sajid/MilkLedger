@@ -61,8 +61,11 @@ class DashboardFragment :
             tvTotalSales.text = state.salesTotal.toRoundedStr()
             tvTotalExpense.text = state.expensesTotal.toRoundedStr()
             tvNetProfit.text = state.profit.toRoundedStr()
-            tvMilkPurchase.text = "${state.milkPurchase.toRoundedStr()} Litre"
-            tvMilkSold.text = "${state.milkSold.toRoundedStr()} Litre"
+            tvMilkPurchase.text = "${state.milkPurchase.toRoundedStr()} L"
+            tvMilkSold.text = "${state.milkSold.toRoundedStr()} L"
+            tvAvgFat.text = "${state.avgFat.toRoundedStr()}%"
+            tvAvgLr.text = state.avgLr.toRoundedStr()
+            tvTotalTs.text = state.totalTs.toRoundedStr()
 
 
         }
@@ -162,7 +165,7 @@ class DashboardFragment :
 
         // later will pullToRefresh TODO()
         binding.cardProfit.setOnClickListener {
-                syncViewModel.startInitialSync()
+            syncViewModel.startInitialSync()
         }
 
 

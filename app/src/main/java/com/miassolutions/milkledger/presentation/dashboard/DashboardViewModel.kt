@@ -1,17 +1,14 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.DateRangeUtil
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
-import com.miassolutions.milkledger.data.mapper.toRoomEntity
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
 import com.miassolutions.milkledger.data.repository.DataRepository
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
@@ -20,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val analyticsRepository: AnalyticsRepository,
+    private val repository: AnalyticsRepository,
     private val dataRepository: DataRepository
 ) : ViewModel() {
 
@@ -83,12 +80,16 @@ class DashboardViewModel @Inject constructor(
     private fun loadAllRecords() {
         viewModelScope.launch {
             combine(
-                analyticsRepository.getTotalMilkPurchaseAll(),
-                analyticsRepository.getTotalMilkSoldAll(),
-                analyticsRepository.getTotalSalesAll(),
-                analyticsRepository.getTotalPurchasesAll(),
-                analyticsRepository.getTotalExpensesAll(),
-                analyticsRepository.getProfitAll()
+                repository.getTotalMilkPurchaseAll(),
+                repository.getTotalMilkSoldAll(),
+                repository.getTotalSalesAll(),
+                repository.getTotalPurchasesAll(),
+                repository.getTotalExpensesAll(),
+                repository.getProfitAll(),
+                repository.getTotalFat(),
+                repository.getTotalLr(),
+                repository.getTotalTs()
+
             ) { results ->
                 val milkPurchase = results[0] ?: 0.0
                 val milkSold = results[1] ?: 0.0
@@ -96,6 +97,9 @@ class DashboardViewModel @Inject constructor(
                 val totalPurchase = results[3] ?: 0.0
                 val totalExpense = results[4] ?: 0.0
                 val profit = results[5] as Double
+                val totalFat = results[6] ?: 0.0
+                val totalLr = results[7] ?: 0.0
+                val totalTs = results[8] ?: 0.0
 
                 AnalyticsUiState(
                     milkPurchase = milkPurchase,
@@ -104,6 +108,9 @@ class DashboardViewModel @Inject constructor(
                     purchaseTotal = totalPurchase,
                     expensesTotal = totalExpense,
                     profit = profit,
+                    avgFat = totalFat,
+                    avgLr = totalLr,
+                    totalTs = totalTs,
                     startDate = null,
                     endDate = null,
                     period = "All Records"
@@ -139,12 +146,15 @@ class DashboardViewModel @Inject constructor(
     private fun loadRange(start: LocalDate, end: LocalDate) {
         viewModelScope.launch {
             combine(
-                analyticsRepository.getTotalMilkPurchaseBetween(start, end),
-                analyticsRepository.getTotalMilkSoldBetween(start, end),
-                analyticsRepository.getTotalSalesBetween(start, end),
-                analyticsRepository.getTotalPurchasesBetween(start, end),
-                analyticsRepository.getTotalExpensesBetween(start, end),
-                analyticsRepository.getProfitBetween(start, end)
+                repository.getTotalMilkPurchaseBetween(start, end),
+                repository.getTotalMilkSoldBetween(start, end),
+                repository.getTotalSalesBetween(start, end),
+                repository.getTotalPurchasesBetween(start, end),
+                repository.getTotalExpensesBetween(start, end),
+                repository.getProfitBetween(start, end),
+                repository.getAvgFatBetween(start,end),
+                repository.getAvgLrBetween(start,end),
+                repository.getTotalTsBetween(start,end)
             ) { results ->
                 val milkPurchase = results[0] ?: 0.0
                 val milkSold = results[1] ?: 0.0
@@ -152,6 +162,9 @@ class DashboardViewModel @Inject constructor(
                 val totalPurchase = results[3] ?: 0.0
                 val totalExpense = results[4] ?: 0.0
                 val profit = results[5] as Double
+                val fat = results[6] ?: 0.0
+                val lr = results[7] ?: 0.0
+                val ts = results[8] ?: 0.0
 
                 AnalyticsUiState(
                     milkPurchase = milkPurchase,
@@ -160,6 +173,9 @@ class DashboardViewModel @Inject constructor(
                     purchaseTotal = totalPurchase,
                     expensesTotal = totalExpense,
                     profit = profit,
+                    avgFat = fat,
+                    avgLr = lr,
+                    totalTs =  ts,
                     startDate = start,
                     endDate = end,
                     period = formatPeriodLabel(start, end)
