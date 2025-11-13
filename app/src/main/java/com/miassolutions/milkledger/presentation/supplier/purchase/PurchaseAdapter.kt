@@ -60,8 +60,10 @@ class PurchaseAdapter(
             tvPrice.text = item.purchase.milkPrice.toPriceStr()
             tvPaid.text = item.purchase.payment.toPriceStr()
 
-            tvBalance.text = numberFormat(item.purchase.balance)
-            tvBalance.setTextColor(textColor(item.purchase.balance))
+            val balance = item.purchase.milkPrice - item.purchase.payment
+
+            tvBalance.text = numberFormat(balance)
+            tvBalance.setTextColor(textColor(balance))
 
             btnBalance.setOnLongClickListener { onBalanceClick(item.supplier.supplierId); true }
 
