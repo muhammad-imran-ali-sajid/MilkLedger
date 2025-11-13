@@ -2,56 +2,55 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-        <style name="Style.InputRow" parent="android:Widget">
-            <item name="android:layout_width">match_parent</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:orientation">horizontal</item>
-            <item name="android:gravity">center_vertical</item>
-            <item name="android:weightSum">5</item>
-        </style>
+    <style name="Style.InputRow" parent="android:Widget">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:weightSum">5</item>
+    </style>
 
-        <style name="Style.InputLabel" parent="TextLabel2">
-            <item name="android:layout_width">0dp</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:layout_weight">2</item>
-        </style>
+    <style name="Style.InputLabel" parent="TextLabel2">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">2</item>
+    </style>
 
-        <style name="Style.TextViewValue" parent="TextValue">
-            <item name="android:layout_width">0dp</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:layout_weight">3</item>
-            <item name="android:gravity">center</item>
-            <item name="android:padding">10dp</item>
-            <item name="android:background">@drawable/bg_edittext_readable</item>
-            <item name="android:textColor">@color/black</item>
-        </style>
+    <style name="Style.TextViewValue" parent="TextValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/bg_edittext_readable</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 
-        <style name="Style.TextViewValue.ReadOnly">
-            <item name="android:backgroundTint">@color/textview_bg_tint</item>
-        </style>
+    <style name="Style.TextViewValue.ReadOnly">
+        <item name="android:backgroundTint">@color/textview_bg_tint</item>
+    </style>
 
-        <style name="Style.EditTextInput" parent="TextValue">
-            <item name="android:layout_width">0dp</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:layout_weight">3</item>
-            <item name="android:padding">10dp</item>
-            <item name="android:background">@drawable/bg_edittext_readable</item>
-        </style>
+    <style name="Style.EditTextInput" parent="TextValue">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">3</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/bg_edittext_readable</item>
+    </style>
 
-        <style name="Style.TextLabel.Header" parent="TextLabel2">
-            <item name="android:paddingVertical">12dp</item>
-            <item name="android:textAlignment">center</item>
-        </style>
+    <style name="Style.TextLabel.Header" parent="TextLabel2">
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
 
-        <style name="Style.Button.Action" parent="Widget.Material3.Button.TonalButton">
-            <item name="android:layout_width">0dp</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:layout_weight">1</item>
-            <item name="android:background">@drawable/bg_edittext_readable</item>
-            <item name="android:textColor">@color/white</item>
-            <item name="cornerRadius">8dp</item>
-        </style>
-
+    <style name="Style.Button.Action" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/bg_edittext_readable</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
 
 
     <style name="TextAppearance.MilkLedger.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
@@ -164,8 +163,6 @@
     </style>
 
 
-
-
     <style name="BaseCardStyle">
         <item name="cardCornerRadius">12dp</item>
         <item name="cardElevation">8dp</item>
@@ -177,25 +174,25 @@
         <item name="cardBackgroundColor">#ddd</item>
     </style>
 
-    <style name="dashboard_card" parent="BaseCardStyle">
+    <style name="DashboardCard" parent="BaseCardStyle">
         <item name="android:clickable">true</item>
 
         <item name="android:layout_margin">4dp</item>
         <item name="android:focusable">true</item>
     </style>
 
-    <style name="PurchaseCard" parent="dashboard_card">
-        <item name="cardBackgroundColor">#abc</item>
+    <style name="PurchaseCard">
+        <item name="cardBackgroundColor">@color/white</item>
         <item name="cardElevation">8dp</item>
-        <item name="strokeColor">#232323</item>
+        <item name="strokeColor">@color/white</item>
 
     </style>
 
 
-    <style name="SaleCard" parent="BaseCardStyle">
-        <item name="cardBackgroundColor">#abc</item>
+    <style name="SaleCard">
+        <item name="cardBackgroundColor">@color/white</item>
         <item name="cardElevation">8dp</item>
-        <item name="strokeColor">#232323</item>
+        <item name="strokeColor">@color/white</item>
 
     </style>
 
