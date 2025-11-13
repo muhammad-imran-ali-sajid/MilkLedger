@@ -35,8 +35,8 @@
                 android:layout_weight="2"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/transparent"
-                android:tint="@color/white"
                 android:src="@drawable/ic_edit_form"
+                app:tint="@color/white"
                 tools:ignore="NestedWeights" />
 
 
