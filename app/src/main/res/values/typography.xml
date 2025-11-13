@@ -25,7 +25,6 @@
 
     <!-- Body text -->
     <style name="Text.Body" parent="TextAppearance.Material3.BodyLarge">
-        <item name="android:fontFamily">@font/inter</item>
         <item name="android:textSize">@dimen/sp_body</item>
     </style>
 

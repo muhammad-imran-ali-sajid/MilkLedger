@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.presentation.expenses
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
@@ -109,8 +110,10 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 //        }
 
         tvSelectedDate.setOnClickListener {
+            val admin = SharedPrefsHelper.getUserRole(requireContext())
+            val isAuth = admin == "admin"
             // Assume you fetch the authorization status dynamically
-            val isUserAuthorized = false // Replace with actual auth check
+            val isUserAuthorized = isAuth // Replace with actual auth check
 
             // Pass the current date as the pre-selected date for better UX
             val initialDate = viewModel.uiState.value!!.currentDate
