@@ -170,6 +170,7 @@ class PurchaseViewModel @Inject constructor(
 
             missingSuppliers.forEach { supplier ->
                 val newEntry = PurchaseEntity(
+                    purchaseId = "${supplier.supplierId}_${date.toString()}",
                     supplierId = supplier.supplierId,
                     date = date,
                     milkAmount = 0.0,

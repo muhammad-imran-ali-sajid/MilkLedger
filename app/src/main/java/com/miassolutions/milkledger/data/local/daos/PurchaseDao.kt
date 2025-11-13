@@ -26,7 +26,7 @@ interface PurchaseDao {
     /**
      * Batch upsert (Insert or Replace) used for merging remote data into the local database.
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Upsert
     suspend fun upsertAll(purchases: List<PurchaseEntity>)
 
     /**

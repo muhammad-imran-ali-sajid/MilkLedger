@@ -135,6 +135,7 @@ class SalesViewModel @Inject constructor(
 
         missingCustomers.forEach { customer ->
             val newSale = SalesEntity(
+                saleId = "${customer.customerId}_${date.toString()}",
                 customerId = customer.customerId,
                 date = date,
                 volume = 0.0,
