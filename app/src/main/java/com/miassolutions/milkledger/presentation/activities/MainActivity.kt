@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -20,6 +21,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
+import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,12 +43,20 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
 
 
         val role = SharedPrefsHelper.getUserRole(this)
+        val email = SharedPrefsHelper.getUserMail(this)
 
-        if (role == "admin") {
-            showToast("This is admin")
-        } else {
-            showToast("This is not admin")
-        }
+
+
+
+        val navigationView = binding.navigationView
+        val headerView = navigationView.getHeaderView(0)
+
+        val headerBinding = DrawerHeaderBinding.bind(headerView)
+        headerBinding.tvVersion.text = "${role.uppercase()} Version"
+        headerBinding.tvEmail.text = email
+
+
+
 
 
 
@@ -114,10 +124,10 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                     true
                 }
 
-                R.id.action_devSettingsFragment -> {
-                    navController.navigate(R.id.devSettingsFragment)
-                    true
-                }
+//                R.id.action_devSettingsFragment -> {
+//                    navController.navigate(R.id.devSettingsFragment)
+//                    true
+//                }
 
                 R.id.action_driveBackupFragment -> {
                     navController.navigate(R.id.driveBackupFragment)
@@ -173,7 +183,6 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
 
 
     override fun attachBaseContext(newBase: Context) {

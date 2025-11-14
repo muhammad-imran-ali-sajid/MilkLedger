@@ -55,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
                 binding.tvStatusMessage.text = "Email/Username and Password are required."
                 return@setOnClickListener
             } else {
+                SharedPrefsHelper.saveUserMail(this, email)
                 // Clear previous status messages
                 binding.tvStatusMessage.text = ""
 
