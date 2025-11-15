@@ -29,6 +29,8 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     override fun setupViews() {
 
+
+
         setupSalesRV()
 
 
@@ -45,53 +47,110 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
 
         // Fetch the user role once for the switch logic
-        val role = SharedPrefsHelper.getUserRole(requireContext())
+        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
 
+        // --- 1. INITIALIZE SWITCH STATE ---
+        initializeEditModeState(isAdmin, viewModel.uiState.value.currentDate)
+
+        // --- 2. SETUP LISTENER ---
         editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
             val selectedDate = viewModel.uiState.value.currentDate
-            val isToday = selectedDate.isToday()
+            val isCurrentDateToday = selectedDate.isToday()
+
+            // Step A: Immediately save the intended status
+            SalesPrefsHelper.setEditModeActive(requireContext(), isChecked)
 
             if (isChecked) {
-                // Check 1: Block non-admins from enabling at all times.
-                if (role != "admin") {
-                    // Revert the switch state to off and show a message
+                // Logic when trying to turn ON:
+
+                // If the user is NOT an admin, they are immediately blocked from turning ON.
+                if (!isAdmin) {
+                    // Revert UI and Preferences because the action is blocked
                     editModeSwitch?.isChecked = false
-                    showSnackbar("Only administrators are allowed to enable edit mode.")
+                    SalesPrefsHelper.setEditModeActive(requireContext(), false)
+                    showSnackbar("As a non-admin, you cannot re-enable edit mode once disabled for today.")
                     return@setOnCheckedChangeListener
                 }
 
-                // If we reach here, the user IS an admin. Admin can always enable.
-                showSnackbar("Edit mode enabled")
+                // If user IS an admin:
 
-                // USE HELPER HERE
-                SalesPrefsHelper.setEditModeLockedForToday(requireContext(), false)
+                // 1. Enable mode
                 enableEditMode()
 
+                // 2. Remove the permanent lock (admin always overrides the lock to ON)
+                SalesPrefsHelper.setEditModeLockedForToday(requireContext(), false)
+
+
             } else {
-                // Allow anyone to disable (turn off) the switch
-                showSnackbar("Edit mode disabled")
+                // Logic when trying to turn OFF (Allowed for everyone):
                 disableEditMode()
 
-                // Apply PERMANENT LOCK: If it's today, set the lock to prevent re-enabling by non-admins.
-                if (isToday) {
-                    // USE HELPER HERE
+                // Apply PERMANENT LOCK: If it's today, set the lock.
+                if (isCurrentDateToday) {
                     SalesPrefsHelper.setEditModeLockedForToday(requireContext(), true)
+
+                    if (!isAdmin) {
+                        showSnackbar("Edit mode disabled and permanently locked for today.")
+                    }
+                } else {
+                    showSnackbar("Edit mode disabled")
                 }
             }
         }
     }
 
+    /**
+     * Determines and sets the initial state of the edit mode based on admin status,
+     * persistent active state, and permanent daily lock status.
+     */
+    /**
+     * Determines and sets the initial state of the edit mode based on admin status,
+     * persistent active state, and permanent daily lock status.
+     */
+    private fun initializeEditModeState(isAdmin: Boolean, selectedDate: LocalDate) {
+
+        val isToday = selectedDate.isToday()
+        val isLocked = isToday && SalesPrefsHelper.isEditModeLockedForToday(requireContext())
+
+        var shouldBeActive: Boolean
+
+        if (isAdmin) {
+            // ADMIN LOGIC: Can use the last saved active state (shouldBeActive)
+            // but is restricted by date and temporary lock.
+
+            shouldBeActive = SalesPrefsHelper.isEditModeActive(requireContext())
+
+            if (isLocked || !isToday) {
+                // If permanently locked OR if it's not today, it must be OFF for the Admin
+                shouldBeActive = false
+                // Note: We don't save this 'false' state here, the admin can re-enable later.
+            }
+
+        } else {
+            // NON-ADMIN LOGIC:
+            // 1. If it's today AND NOT permanently locked, they start ON.
+            // 2. Otherwise (not today OR locked), it must be OFF.
+            shouldBeActive = isToday && !isLocked
+
+            // Crucial: Update active pref to reflect this calculated state for the non-admin.
+            // This ensures if they navigate away and come back, they return to this state.
+            SalesPrefsHelper.setEditModeActive(requireContext(), shouldBeActive)
+        }
+
+        // 2. Apply the final determined state
+        isEditable = shouldBeActive
+        adapter.isEditable = shouldBeActive
+        editModeSwitch?.isChecked = shouldBeActive
+    }
 
     private fun enableEditMode() {
         isEditable = true
         adapter.isEditable = true
-        showSnackbar("Edit mode enabled")
     }
 
     private fun disableEditMode() {
         isEditable = false
         adapter.isEditable = false
-        showSnackbar("Edit mode disabled")
     }
 
     private fun showSummary(
@@ -130,16 +189,13 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             val currentDate = viewModel.uiState.value.currentDate
 
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-            // Assume you fetch the authorization status dynamically
             val isUserAuthorized = isAdmin // Replace with actual auth check
 
             showExpenseDatePicker(
-
                 isAuthorized = isUserAuthorized,
                 initialDate = currentDate,
-                // The selectedDate (LocalDate) is available here!
                 onPicked = { selectedDate: LocalDate ->
-                    // This is where you pass the result to your ViewModel
+
                     viewModel.onEvent(SalesUiEvent.SelectDate(selectedDate))
                 }
             )
@@ -176,6 +232,8 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             binding.apply {
                 tvSelectedDate.text = state.currentDate.toDisplayFormat()
 
+                val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+                initializeEditModeState(isAdmin, state.currentDate)
 
 
                 showSummary(

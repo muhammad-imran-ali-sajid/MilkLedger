@@ -13,6 +13,7 @@ object SalesPrefsHelper {
     private const val PREFS_NAME = "sales_purchase_prefs"
     private const val KEY_LOCKED_DATE = "edit_mode_locked_date"
     private const val KEY_LOCKED_TODAY = "edit_mode_locked_today"
+    private const val KEY_EDIT_MODE_ACTIVE = "edit_mode_is_active"
 
     /**
      * Retrieves the SharedPreferences instance.
@@ -25,6 +26,19 @@ object SalesPrefsHelper {
     /**
      * Checks if the edit mode has been permanently locked for the current date.
      */
+
+    fun setEditModeActive(context: Context, isActive: Boolean) {
+        getPrefs(context).edit {
+            putBoolean(KEY_EDIT_MODE_ACTIVE, isActive)
+        }
+    }
+
+    // NEW FUNCTION: Retrieves the last saved active state
+    fun isEditModeActive(context: Context): Boolean {
+        // Default to false if not found
+        return getPrefs(context).getBoolean(KEY_EDIT_MODE_ACTIVE, false)
+    }
+
     fun isEditModeLockedForToday(context: Context): Boolean {
         val prefs = getPrefs(context)
         val savedDate = prefs.getString(KEY_LOCKED_DATE, null)
