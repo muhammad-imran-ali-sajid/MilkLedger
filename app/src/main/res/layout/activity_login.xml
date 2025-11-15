@@ -41,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.25" />
+        app:layout_constraintGuide_begin="195dp" />
 
     <!-- Email/Username Input -->
     <com.google.android.material.textfield.TextInputLayout

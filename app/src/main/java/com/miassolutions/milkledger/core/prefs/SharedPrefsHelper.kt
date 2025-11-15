@@ -10,6 +10,8 @@ object SharedPrefsHelper {
     private const val KEY_ROLE = "user_role"
     private const val KEY_MAIL = "user_mail"
 
+    private const val KEY_EDIT_LOCK = "key_edit_lock"
+
     private fun prefs(context: Context): SharedPreferences =
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
@@ -19,7 +21,12 @@ object SharedPrefsHelper {
     const val ROLE_EMPLOYER = "employer"
     const val ROLE_USER = "user" // default fallback
 
+    const val EDIT_LOCK = "edit_lock"
+
     // --- Save ---
+
+
+
     fun saveUserRole(context: Context, role: String) {
         prefs(context).edit(commit = true) { // commit ensures it's immediately saved
             putString(KEY_ROLE, role)

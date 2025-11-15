@@ -1,10 +1,15 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
 import android.util.Log
+import android.view.Menu
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.prefs.SalesPrefsHelper
+import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.isToday
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toRoundedStr
@@ -18,6 +23,7 @@ import java.time.LocalDate
 class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::inflate) {
 
     private lateinit var adapter: SalesEntryAdapter
+    private var editModeSwitch: MaterialSwitch? = null
     private val viewModel by viewModels<SalesViewModel>()
     private var isEditable = false
 
@@ -32,29 +38,49 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         return R.menu.menu_sales
     }
 
-//    override fun onMenuCreated(menu: Menu) {
-//
-//        val editModeItem = menu.findItem(R.id.action_edit_mode)
-//        val switch =
-//            editModeItem.actionView?.findViewById<MaterialSwitch>(R.id.switch_toolbar_edit_mode)
-//
-//        switch?.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-//                BiometricHelper.authenticate(
-//                    fragment = this,
-//                    title = "Authenticate to enable edit mode",
-//                    subtitle = "Use your fingerprint or device credentials",
-//                    onSuccess = { enableEditMode() },
-//                    onFailure = {
-//                        switch.isChecked = false
-//                        showToast("Authentication failed.")
-//                    }
-//                )
-//            } else {
-//                disableEditMode()
-//            }
-//        }
-//    }
+    override fun onMenuCreated(menu: Menu) {
+
+        val editModeItem = menu.findItem(R.id.action_edit_mode)
+        editModeSwitch =
+            editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
+
+        // Fetch the user role once for the switch logic
+        val role = SharedPrefsHelper.getUserRole(requireContext())
+
+        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
+            val selectedDate = viewModel.uiState.value.currentDate
+            val isToday = selectedDate.isToday()
+
+            if (isChecked) {
+                // Check 1: Block non-admins from enabling at all times.
+                if (role != "admin") {
+                    // Revert the switch state to off and show a message
+                    editModeSwitch?.isChecked = false
+                    showSnackbar("Only administrators are allowed to enable edit mode.")
+                    return@setOnCheckedChangeListener
+                }
+
+                // If we reach here, the user IS an admin. Admin can always enable.
+                showSnackbar("Edit mode enabled")
+
+                // USE HELPER HERE
+                SalesPrefsHelper.setEditModeLockedForToday(requireContext(), false)
+                enableEditMode()
+
+            } else {
+                // Allow anyone to disable (turn off) the switch
+                showSnackbar("Edit mode disabled")
+                disableEditMode()
+
+                // Apply PERMANENT LOCK: If it's today, set the lock to prevent re-enabling by non-admins.
+                if (isToday) {
+                    // USE HELPER HERE
+                    SalesPrefsHelper.setEditModeLockedForToday(requireContext(), true)
+                }
+            }
+        }
+    }
+
 
     private fun enableEditMode() {
         isEditable = true
@@ -103,8 +129,9 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
 
+            val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
             // Assume you fetch the authorization status dynamically
-            val isUserAuthorized = true // Replace with actual auth check
+            val isUserAuthorized = isAdmin // Replace with actual auth check
 
             showExpenseDatePicker(
 
@@ -164,10 +191,10 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     }
 
     private fun showEditSaleBottomSheet(saleWithCustomer: SaleWithCustomer) {
-//        if (!isEditable) {
-//            showSnackbar("Enable from the top menu switch")
-//            return
-//        }
+        if (!isEditable) {
+            showSnackbar("Enable from the top menu switch")
+            return
+        }
         SalesEditBottomSheet(
             entry = saleWithCustomer,
             onSave = { salesEntryEntity ->
