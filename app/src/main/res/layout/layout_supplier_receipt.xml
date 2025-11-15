@@ -49,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:textSize="10sp"
+            android:textColor="@color/black"
             android:textStyle="bold"
             tools:text="23 Oct - 25 Oct" />
 
@@ -67,6 +68,7 @@
                 android:layout_weight="2"
                 android:gravity="start"
                 android:text="Date"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -76,6 +78,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Qty"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -85,6 +88,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="TS"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -94,6 +98,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Rate"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -103,6 +108,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:text="Amount"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -112,6 +118,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Paid"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -121,6 +128,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Balance"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -183,7 +191,7 @@
 
                 <TextView
                     style="@style/PdfSummaryTextStyle"
-                    android:text="Avg TS"
+                    android:text="Total TS"
                     android:textColor="#616161" />
 
                 <TextView
@@ -269,8 +277,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:textColor="@color/black"
                     android:layout_marginTop="8dp"
-                    android:text="Payee Signature:"
+                    android:text="Payer Sign:"
                     android:textSize="10sp"
                     android:textStyle="bold" />
 
@@ -296,7 +305,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="8dp"
-                    android:text="Reciepient Signature:"
+                    android:text="Reciepient Sign:"
+                    android:textColor="@color/black"
                     android:textSize="10sp"
                     android:textStyle="bold" />
 

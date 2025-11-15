@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
 import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
 import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
@@ -61,10 +62,10 @@ object SupplierReportGenerator {
             rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
             rowBinding.tvTS.text = item.ts.toRoundedStr()
-            rowBinding.tvRate.text = item.rate.toString()
-            rowBinding.tvAmount.text = item.amount.toRoundedStr()
-            rowBinding.tvPaid.text = item.paid.toRoundedStr()
-            rowBinding.tvBalance.text = item.balance.toRoundedStr()
+            rowBinding.tvRate.text = item.rate.toPriceStr()
+            rowBinding.tvAmount.text = item.amount.toPriceStr()
+            rowBinding.tvPaid.text = item.paid.toPriceStr()
+            rowBinding.tvBalance.text = item.balance.toPriceStr()
             binding.recordContainer.addView(rowBinding.root)
         }
 

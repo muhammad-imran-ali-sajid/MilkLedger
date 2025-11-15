@@ -29,10 +29,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     override fun setupViews() {
 
-
-
         setupSalesRV()
-
 
     }
 
@@ -46,7 +43,6 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         editModeSwitch =
             editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
 
-        // Fetch the user role once for the switch logic
         val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
 
         // --- 1. INITIALIZE SWITCH STATE ---

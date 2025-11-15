@@ -101,7 +101,7 @@ class SupplierDetailFragment :
 
         val recordList = filteredList.toRecordList()
         val totalQty = recordList.sumOf { it.quantity }
-        val avgTS = recordList.sumOf { it.ts } / recordList.size
+        val avgTS = recordList.sumOf { it.ts }
         val totalAmount = recordList.sumOf { it.amount }
         val totalPaid = recordList.sumOf { it.paid }
         val totalBalance = recordList.sumOf { it.balance }
