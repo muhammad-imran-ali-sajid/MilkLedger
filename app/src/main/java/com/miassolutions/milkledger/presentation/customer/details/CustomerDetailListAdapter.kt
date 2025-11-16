@@ -2,6 +2,8 @@ package com.miassolutions.milkledger.presentation.customer.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.miassolutions.milkledger.core.helper.numberFormat
+import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.core.util.hide
@@ -33,7 +35,12 @@ class CustomerDetailListAdapter :
         tvNetMilk.text = item.netMilk.toString()
         tvPrice.text = item.milkPrice.toString()
         tvPayment.text = item.payment.toString()
-        tvBalance.text = item.balance.toString()
+
+
+        val balance = item.milkPrice - item.payment
+
+        tvBalance.text = numberFormat(balance)
+        tvBalance.setTextColor(textColor(balance))
 
         if (item.notes.isNullOrBlank()) {
             tvNotes.hide()
