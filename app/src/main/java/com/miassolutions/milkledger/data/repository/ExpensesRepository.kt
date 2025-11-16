@@ -5,6 +5,7 @@ import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.mapper.toFirestoreModel
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
+import com.miassolutions.milkledger.presentation.stats.ExpenseSummary
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -25,6 +26,9 @@ class ExpensesRepository @Inject constructor(
 
     fun getAllExpensesForDate(date: LocalDate): Flow<List<ExpensesEntity>> =
         expensesDao.getAllExpenses(date)
+
+    fun getTotalExpenses(date: LocalDate) : Flow<List<ExpenseSummary>> =
+        expensesDao.getTotalExpenses(date)
 
     suspend fun getExpenseById(id: String): ExpensesEntity? {
         return expensesDao.getExpenseById(id)

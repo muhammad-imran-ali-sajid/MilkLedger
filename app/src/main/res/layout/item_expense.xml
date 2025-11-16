@@ -10,7 +10,7 @@
     android:paddingBottom="8dp">
 
     <TextView
-        android:id="@+id/supplierNameTextView"
+        android:id="@+id/tvExpense"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -20,7 +20,7 @@
         tools:text="Akram" />
 
     <TextView
-        android:id="@+id/paymentAmountTextView"
+        android:id="@+id/tvExpenseAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="end"

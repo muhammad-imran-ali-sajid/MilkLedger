@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.ItemCustomerPaidBinding
+import com.miassolutions.milkledger.databinding.ItemExpenseBinding
 import com.miassolutions.milkledger.databinding.ItemHeaderBinding
 import com.miassolutions.milkledger.databinding.ItemSupplierPaidBinding
 
@@ -15,6 +17,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
     private val TYPE_HEADER = 0
     private val TYPE_CUSTOMER = 1
     private val TYPE_SUPPLIER = 2
+    private val TYPE_EXPENSE = 3
 
     // --- 1. Determine View Type ---
     override fun getItemViewType(position: Int): Int {
@@ -22,6 +25,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.Header -> TYPE_HEADER
             is StatListItem.CustomerItem -> TYPE_CUSTOMER
             is StatListItem.SupplierItem -> TYPE_SUPPLIER
+            is StatListItem.ExpenseItem -> TYPE_EXPENSE
         }
     }
 
@@ -34,16 +38,24 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
                 val binding = ItemHeaderBinding.inflate(inflater, parent, false)
                 HeaderViewHolder(binding)
             }
+
             TYPE_CUSTOMER -> {
                 // Inflate customer item layout (e.g., R.layout.item_customer_paid)
                 val binding = ItemCustomerPaidBinding.inflate(inflater, parent, false)
                 CustomerViewHolder(binding)
             }
+
             TYPE_SUPPLIER -> {
                 // Inflate supplier item layout (e.g., R.layout.item_supplier_paid)
                 val binding = ItemSupplierPaidBinding.inflate(inflater, parent, false)
                 SupplierViewHolder(binding)
             }
+
+            TYPE_EXPENSE -> {
+                val binding = ItemExpenseBinding.inflate(inflater, parent, false)
+                ExpenseViewHolder(binding)
+            }
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -54,19 +66,22 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.Header -> (holder as HeaderViewHolder).bind(item.title)
             is StatListItem.CustomerItem -> (holder as CustomerViewHolder).bind(item.summary)
             is StatListItem.SupplierItem -> (holder as SupplierViewHolder).bind(item.summary)
+            is StatListItem.ExpenseItem -> (holder as ExpenseViewHolder).bind(item.summary)
         }
     }
 }
 
 
 // Example ViewHolder implementations
-class HeaderViewHolder(private val binding: ItemHeaderBinding) : RecyclerView.ViewHolder(binding.root) {
+class HeaderViewHolder(private val binding: ItemHeaderBinding) :
+    RecyclerView.ViewHolder(binding.root) {
     fun bind(title: String) {
         binding.titleTextView.text = title
     }
 }
 
-class CustomerViewHolder(private val binding: ItemCustomerPaidBinding) : RecyclerView.ViewHolder(binding.root) {
+class CustomerViewHolder(private val binding: ItemCustomerPaidBinding) :
+    RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: CustomerPaidSummary) {
         // e.g., Set text: Ali 199.0
         binding.customerNameTextView.text = summary.customerName
@@ -74,7 +89,8 @@ class CustomerViewHolder(private val binding: ItemCustomerPaidBinding) : Recycle
     }
 }
 
-class SupplierViewHolder(private val binding: ItemSupplierPaidBinding) : RecyclerView.ViewHolder(binding.root) {
+class SupplierViewHolder(private val binding: ItemSupplierPaidBinding) :
+    RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: SupplierPaidSummary) {
         // e.g., Set text: Ali 199.0
         binding.supplierNameTextView.text = summary.supplierName
@@ -82,6 +98,15 @@ class SupplierViewHolder(private val binding: ItemSupplierPaidBinding) : Recycle
     }
 }
 
+class ExpenseViewHolder(private val binding: ItemExpenseBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(summary: ExpenseSummary) {
+        binding.apply {
+            tvExpense.text = summary.expenseTitle
+            tvExpenseAmount.text = summary.expenseAmount.toPriceStr()
+        }
+    }
+}
 
 
 class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
@@ -103,6 +128,9 @@ class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
             // Both are Supplier Items: Check if their supplierName is the same
             oldItem is StatListItem.SupplierItem && newItem is StatListItem.SupplierItem ->
                 oldItem.summary.supplierName == newItem.summary.supplierName
+
+            oldItem is StatListItem.ExpenseItem && newItem is StatListItem.ExpenseItem ->
+                oldItem.summary.expenseTitle == newItem.summary.expenseTitle
 
             // If types are different, they are definitely not the same item
             else -> false

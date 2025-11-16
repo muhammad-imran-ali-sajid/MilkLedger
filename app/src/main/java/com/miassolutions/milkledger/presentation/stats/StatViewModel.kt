@@ -1,7 +1,10 @@
 package com.miassolutions.milkledger.presentation.stats
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.data.repository.ExpensesRepository
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.data.repository.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,11 +23,13 @@ import javax.inject.Inject
 @HiltViewModel
 class StatViewModel @Inject constructor(
     private val salesRepository: SalesRepository,
-    private val purchaseRepository: PurchaseRepository
+    private val purchaseRepository: PurchaseRepository,
+    private val expensesRepository: ExpensesRepository
+
 ) : ViewModel() {
 
     // 1. Define the input date stream (can be changed dynamically)
-    private val _targetDateFlow = MutableStateFlow(LocalDate.now().minusDays(1))
+    private val _targetDateFlow = MutableStateFlow(LocalDate.now())
     val targetDate: StateFlow<LocalDate> = _targetDateFlow
 
     // --- Data Streams from Repositories ---
@@ -43,20 +48,37 @@ class StatViewModel @Inject constructor(
             purchaseRepository.getPaidToSuppliersForDate(date)
         }
 
+    private val totalExpenseFlow: Flow<List<ExpenseSummary>> =
+        _targetDateFlow.flatMapLatest { date ->
+            expensesRepository.getTotalExpenses(date)
+        }
+
     // --- Combine Streams into UI State ---
 
     val dashboardState: StateFlow<StatDashboardState> =
         combine(
             _targetDateFlow,
             customerPaymentsFlow,
-            supplierPaymentsFlow
-        ) { date, customerList, supplierList ->
+            supplierPaymentsFlow,
+            totalExpenseFlow
+        ) { date, customerList, supplierList, expenseList ->
             // 2. Map the three combined results into the final State
+            val totalCustomerPayment = customerList.sumOf { it.paidAmount }
+            val totalSupplierPayment = supplierList.sumOf { it.paidAmount }
+            val totalExpense = expenseList.sumOf { it.expenseAmount }
+            // val totalExpense =
+
+            Log.d("StatsViewModel", "$totalSupplierPayment - $totalCustomerPayment")
+
             StatDashboardState(
+
                 targetDate = date,
                 customerPayments = customerList,
                 supplierPayments = supplierList,
-                isLoading = false // Data has loaded
+                isLoading = false,
+                totalCustomerPayment = totalCustomerPayment,
+                totalSupplierPayment = totalSupplierPayment,
+                totalExpenses = totalExpense
             )
         }
             // 3. Convert the Flow into a StateFlow to hold the latest value
@@ -85,6 +107,11 @@ class StatViewModel @Inject constructor(
                     add(StatListItem.Header("Supplier Payments"))
                     state.supplierPayments.map { summary ->
                         add(StatListItem.SupplierItem(summary))
+                    }
+
+                    add(StatListItem.Header("Expenses"))
+                    state.expenseList.map { summary ->
+                        add(StatListItem.ExpenseItem(summary))
                     }
                 }
             }

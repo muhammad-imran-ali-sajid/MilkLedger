@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.*
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.presentation.stats.ExpenseSummary
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -30,6 +31,19 @@ interface ExpensesDao {
 
     @Query("SELECT * FROM expense_table WHERE date = :date")
     fun getAllExpenses(date : LocalDate): Flow<List<ExpensesEntity>>
+
+    @Query("""
+    SELECT 
+        expenseTitle, 
+        expenseAmount 
+    FROM 
+        expense_table 
+    WHERE 
+        date = :date AND deletedAt IS NULL  -- Use the :date parameter here
+    ORDER BY 
+        expenseAmount DESC
+""")
+    fun getTotalExpenses(date : LocalDate): Flow<List<ExpenseSummary>>
 
     @Query("SELECT * FROM expense_table WHERE expenseId = :id LIMIT 1")
     suspend fun getExpenseById(id: String): ExpensesEntity?
