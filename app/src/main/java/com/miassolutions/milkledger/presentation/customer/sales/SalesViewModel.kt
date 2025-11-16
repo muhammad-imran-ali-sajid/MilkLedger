@@ -100,14 +100,16 @@ class SalesViewModel @Inject constructor(
                 val totalVolume = sortedSales.sumOf { it.sale.volume }
                 val totalDeduction = sortedSales.sumOf { it.sale.deduction }
 
-                // FIX: Use the 'price' field for the grand total,
-                // and 'price' minus 'paid' for the outstanding amount.
+                val validForAvg = sortedSales.filter { it.customer.customerRate > 0.0 }
+                val aTotalPrice = validForAvg.sumOf { it.sale.price }
+                val aTotalVolume = validForAvg.sumOf { it.sale.volume }
+
                 val grandTotalPrice = sortedSales.sumOf { it.sale.price }
                 val totalNetMilk = sortedSales.sumOf { it.sale.netMilk }
                 val totalBalance = sortedSales.sumOf { it.sale.price - it.sale.paid }
 
                 val avgRatePerLiter =
-                    if (totalVolume > 0) grandTotalPrice / totalVolume else 0.0
+                    if (aTotalVolume > 0) aTotalPrice / aTotalVolume else 0.0
 
                 _uiState.update {
                     it.copy(

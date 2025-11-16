@@ -17,6 +17,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.isToday
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
@@ -188,7 +189,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
                 tvDeduction.text = "${deduction.toRoundedStr()} L"
                 tvTotalNetMilk.text = "${totalNetMilk.toRoundedStr()} L"
                 tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
-                tvTotalAmount.text = "Rs. ${totalAmount.toRoundedStr()}"
+                tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
             }
 
         }

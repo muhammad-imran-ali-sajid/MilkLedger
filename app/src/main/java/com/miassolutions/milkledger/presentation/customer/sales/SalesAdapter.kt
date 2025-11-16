@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
@@ -48,8 +49,8 @@ class SalesEntryAdapter(
             tvMilk.text = item.sale.volume.toRoundedStr()
             tvDeduction.text = item.sale.deduction.toRoundedStr()
             tvNetMilk.text = item.sale.netMilk.toRoundedStr()
-            tvPrice.text = item.sale.price.toRoundedStr()
-            tvPayment.text = item.sale.price.toRoundedStr() // Assuming full payment for simplicity
+            tvPrice.text = item.sale.price.toPriceStr()
+            tvPayment.text = item.sale.price.toPriceStr() // Assuming full payment for simplicity
             tvBalance.text = "0" // Placeholder, compute if needed
 
             if (item.sale.notes.isNullOrBlank()) {
