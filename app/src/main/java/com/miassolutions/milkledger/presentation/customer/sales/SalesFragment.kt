@@ -22,6 +22,7 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
 import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
+import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
 import com.miassolutions.milkledger.presentation.customer.details.toSaleRecordList
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -269,14 +270,22 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     private fun setupSalesRV() {
 
-        adapter = SalesEntryAdapter(::showEditSaleBottomSheet, ::navToDetail)
+        adapter = SalesEntryAdapter(
+            ::showEditSaleBottomSheet,
+            ::navToDetail
+        ) { id, name -> showCustomerBalanceHistory(id, name) }
         binding.rvSales.adapter = adapter
 
     }
 
+    private fun showCustomerBalanceHistory(id: String, name: String) {
+        val btmSheet = CustomerBalanceHistoryBottomSheet.newInstance(id, name)
+        btmSheet.show(childFragmentManager, null)
+    }
+
     private fun navToDetail(id: String, name: String) {
         val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-        if (!isAdmin){
+        if (!isAdmin) {
             showSnackbar("Only ADMIN is allowed")
             return
         }

@@ -1,5 +1,8 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
@@ -9,13 +12,20 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.data.repository.SalesRepository
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -39,7 +49,50 @@ class SalesViewModel @Inject constructor(
     init {
         // Start observing for today's date
         observeSalesForDate(_uiState.value.currentDate)
+
     }
+
+//    private val _balanceCustomerId = MutableStateFlow<String?>(null)
+
+    private val _balanceHistory = MutableStateFlow<List<BalanceHistory>>(emptyList())
+    val balanceHistory : StateFlow<List<BalanceHistory>> get() = _balanceHistory
+
+
+    fun getBalanceHistory(customerId: String) = viewModelScope.launch {
+        // ⚠️ Redundancy Fix: Call the repository once
+        val history = repository.getBalanceHistory(customerId)
+
+        _balanceHistory.value = history
+
+        // 💡 Logging the input ID is crucial for debugging
+        Log.d("SalesViewModel", "Loaded Balance History for ID: $customerId. Items: ${history.size}")
+    }
+//    fun getBalanceHistory(customerId: String) = viewModelScope.launch {
+//        _balanceHistory.value = repository.getBalanceHistory(customerId)
+//        Log.d("SalesViewModel", "${repository.getBalanceHistory(customerId)}")
+//    }
+
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    val balanceHistory: StateFlow<List<BalanceHistory>> = _balanceCustomerId
+//        .filterNotNull() // Only process non-null IDs
+//        .flatMapLatest { id ->
+//            // Call the repository function that now returns Flow
+//            repository.getBalanceHistory(id)
+//        }
+//        // Ensure it starts with an initial value (an empty list)
+//        .onStart { emit(emptyList()) }
+//        // Convert the Flow into a StateFlow that shares the results
+//        .stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5000), // Start collecting when a UI collector appears
+//            initialValue = emptyList()
+//        )
+
+//    fun setBalanceCustomerId(customerId: String) {
+//        // Update the StateFlow, which automatically triggers the flatMapLatest block above.
+//        _balanceCustomerId.value = customerId
+//    }
+
 
     // ----------------------------------------------------------
     // 🧮 Update Sale Entry Manually

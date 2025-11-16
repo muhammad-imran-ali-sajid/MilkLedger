@@ -9,11 +9,15 @@ import androidx.room.Update
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 @Dao
 interface SalesDao {
+
+    @Query("SELECT date, balance FROM sales_table WHERE customerId = :customerId ORDER BY date DESC")
+    suspend fun getCustomerBalanceHistory(customerId: String): List<BalanceHistory>
 
     // --- Synchronization Helper Functions (Used by Repository's synchronizeSales()) ---
 

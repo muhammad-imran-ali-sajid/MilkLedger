@@ -15,7 +15,8 @@ import kotlin.math.truncate
 
 class SalesEntryAdapter(
     private val onEditClick: (SaleWithCustomer) -> Unit,
-    private val navToDetailClick: (String, String) -> Unit
+    private val navToDetailClick: (String, String) -> Unit,
+    private val onBalanceClick: (String, String) -> Unit
 ) : BaseListAdapter<SaleWithCustomer, ItemSalesBinding>(
     diffCallback = object : DiffUtil.ItemCallback<SaleWithCustomer>() {
         override fun areItemsTheSame(
@@ -50,8 +51,12 @@ class SalesEntryAdapter(
             tvDeduction.text = item.sale.deduction.toRoundedStr()
             tvNetMilk.text = item.sale.netMilk.toRoundedStr()
             tvPrice.text = item.sale.price.toPriceStr()
-            tvPayment.text = item.sale.price.toPriceStr() // Assuming full payment for simplicity
+            tvPayment.text = item.sale.paid.toPriceStr() // Assuming full payment for simplicity
             tvBalance.text = "0" // Placeholder, compute if needed
+
+            btnBalance.setOnClickListener {
+                onBalanceClick(item.customer.customerId, item.customer.customerName)
+            }
 
             if (item.sale.notes.isNullOrBlank()) {
                 tvNotes.hide()

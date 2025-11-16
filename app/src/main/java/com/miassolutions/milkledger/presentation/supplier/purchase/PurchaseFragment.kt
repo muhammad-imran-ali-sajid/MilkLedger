@@ -156,9 +156,8 @@ class PurchaseFragment :
     private fun setupRecyclerView() {
         purchaseAdapter = PurchaseAdapter(
             ::showEditBottomSheet,
-            ::navToSupplierDetail,
-            { id, name -> showBalanceHistory(id, name) }
-        )
+            ::navToSupplierDetail
+        ) { id, name -> showBalanceHistory(id, name) }
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
             itemAnimator = null

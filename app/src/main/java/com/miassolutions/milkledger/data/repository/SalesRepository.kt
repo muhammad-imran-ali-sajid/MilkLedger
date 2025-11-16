@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.data.mapper.toFirestoreModel
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import javax.inject.Inject
@@ -18,6 +19,11 @@ class SalesRepository @Inject constructor(
     // Keep FirestoreSyncHelper for W/U/D operations (local-write-first, remote-write-after)
     private val firestoreSyncHelper: FirestoreSyncHelper
 ) {
+
+    suspend fun getBalanceHistory(customerId: String): List<BalanceHistory> {
+        return salesDao.getCustomerBalanceHistory(customerId)
+    }
+
 
     private companion object {
         private const val TAG = "SalesRepository"
