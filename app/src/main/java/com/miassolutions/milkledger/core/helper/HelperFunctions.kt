@@ -27,7 +27,7 @@ fun textColor(amount: Double): Int {
         wholeAmount == 0L -> Color.BLACK // Black for zero or near-zero
 
         // Otherwise, it is a positive whole number (e.g., 1, 2, etc.)
-        else -> "#2faD32".toColorInt() // Green for positive
+        else -> "#008800".toColorInt() // Green for positive
     }
 }
 

@@ -10,6 +10,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.miassolutions.milkledger.core.helper.numberFormat
+import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.BottomsheetBalanceHistoryBinding
 import com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseViewModel
@@ -72,7 +74,10 @@ class TransactionHistoryBottomSheet : BottomSheetDialogFragment() {
                     Log.d("TransactionHistory", "$it")
 
                     val totalBalance = it.sumOf { balanceHistory -> balanceHistory.balance }
-                    binding.tvBalance.text = totalBalance.toPriceStr()
+
+                    binding.tvBalance.text = numberFormat(totalBalance)
+                    binding.tvBalance.setTextColor(textColor(totalBalance))
+
                     binding.tvTitle.text = "$supplierName\nBalance History"
                     adapter.submitList(it)
                 }
