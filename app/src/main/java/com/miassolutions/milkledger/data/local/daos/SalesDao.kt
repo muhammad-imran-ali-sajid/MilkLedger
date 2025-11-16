@@ -9,12 +9,36 @@ import androidx.room.Update
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
+import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 @Dao
 interface SalesDao {
+
+    /*
+    * @param targetDate The specific date (e.g., LocalDate.of(2025, 11, 17))
+    */
+    @Query("""
+        SELECT
+            T2.customerName,
+            T1.paid AS paidAmount  -- Select the paid amount for that sale
+        FROM
+            sales_table AS T1
+        LEFT JOIN
+            customer_table AS T2
+        ON
+            T1.customerId = T2.customerId
+        WHERE
+            T1.date = :targetDate  -- Filter by the specific date
+            AND T1.paid > 0        -- Only include sales where some amount was paid
+            AND T1.deletedAt IS NULL
+        ORDER BY
+            T2.customerName ASC
+    """)
+    fun getPaidAmountForDate(targetDate: LocalDate): Flow<List<CustomerPaidSummary>>
+
 
     @Query("SELECT date, balance FROM sales_table WHERE customerId = :customerId ORDER BY date DESC")
     suspend fun getCustomerBalanceHistory(customerId: String): List<BalanceHistory>

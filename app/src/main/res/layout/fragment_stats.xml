@@ -1,150 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/analyticsScrollView"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_customer_paid" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 📊 Header -->
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:text="Milk Ledger Analytics"
-            android:textAppearance="?attr/textAppearanceHeadlineSmall"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface" />
-
-        <!-- 🕒 Period Selector -->
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/togglePeriod"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="4dp"
-            app:selectionRequired="true"
-            app:singleSelection="true">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnWeekly"
-                style="@style/CompactToggleButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Weekly" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnMonthly"
-                style="@style/CompactToggleButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Monthly" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnYearly"
-                style="@style/CompactToggleButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Yearly" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCustom"
-                style="@style/CompactToggleButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Custom" />
-        </com.google.android.material.button.MaterialButtonToggleGroup>
-
-        <!-- Milk Overview Section -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Milk Overview"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp"
-            android:textColor="?attr/colorOnSurface" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <include
-                android:id="@+id/cardMilkPurchase"
-                layout="@layout/item_financial_card" />
-
-            <include
-                android:id="@+id/cardMilkSold"
-                layout="@layout/item_financial_card" />
-
-
-
-        </LinearLayout>
-
-        <!-- 💰 Financial Overview -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="8dp"
-            android:text="Financial Overview"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <!-- Sales -->
-            <include
-                layout="@layout/item_financial_card"
-                android:id="@+id/cardSales" />
-
-            <!-- Purchases -->
-            <include
-                layout="@layout/item_financial_card"
-                android:id="@+id/cardPurchases" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginTop="8dp">
-
-            <!-- Expenses -->
-            <include
-                layout="@layout/item_financial_card"
-                android:id="@+id/cardExpenses" />
-
-            <!-- Profit -->
-            <include
-                layout="@layout/item_financial_card"
-                android:id="@+id/cardProfit" />
-        </LinearLayout>
-
-
-
-
-
-
-
-
-
-    </LinearLayout>
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

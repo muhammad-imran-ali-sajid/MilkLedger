@@ -1,17 +1,46 @@
 package com.miassolutions.milkledger.data.local.daos
 
-import androidx.lifecycle.LiveData
-import androidx.room.*
-import com.miassolutions.milkledger.data.local.entities.SupplierEntity
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
+import androidx.room.Upsert
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
+import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
+import com.miassolutions.milkledger.presentation.stats.SupplierPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistoryAdapter
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 @Dao
 interface PurchaseDao {
+
+    /**
+     * Retrieves a list of supplier names and the amount paid to them on a specific date.
+     *
+     * @param targetDate The specific date (e.g., LocalDate.of(2025, 11, 17))
+     */
+    @Query("""
+        SELECT
+            T2.supplierName,
+            T1.payment AS paidAmount  -- Select the amount paid from the Purchase table
+        FROM
+            purchase_table AS T1
+        LEFT JOIN
+            supplier_table AS T2
+        ON
+            T1.supplierId = T2.supplierId
+        WHERE
+            T1.date = :targetDate  -- Filter by the specific date
+            AND T1.payment > 0     -- Only include purchase records where some payment was made
+            AND T1.deletedAt IS NULL
+        ORDER BY
+            T2.supplierName ASC
+    """)
+    fun getPaidAmountToSupplierForDate(targetDate: LocalDate): Flow<List<SupplierPaidSummary>>
 
     // --- Synchronization Helper Methods ---
 

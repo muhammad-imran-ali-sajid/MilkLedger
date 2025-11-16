@@ -12,6 +12,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SupplierDao {
 
+
+
+
     // --- Synchronization Helper Methods ---
 
     /**

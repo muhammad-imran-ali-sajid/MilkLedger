@@ -47,6 +47,11 @@ interface ReportsDao {
     @Query("SELECT SUM(price) FROM sales_table")
     fun getTotalSalesAll(): Flow<Double?>
 
+    @Query("SELECT paid FROM sales_table WHERE customerId =:customerId AND paid > 0.0")
+    fun getPaymentReceived(customerId: String) : Double
+
+
+
 
     // ───────────────────────────────
     // 🧾 PURCHASES

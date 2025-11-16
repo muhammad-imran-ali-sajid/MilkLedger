@@ -2,10 +2,12 @@ package com.miassolutions.milkledger.presentation.stats
 
 import android.app.DatePickerDialog
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -18,116 +20,52 @@ import java.time.LocalDate
 @AndroidEntryPoint
 class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::inflate) {
 
-    private val viewModel by viewModels<AnalyticsViewModel>()
+    private val viewModel: StatViewModel by viewModels()
+    // Initialize the Multi-View Type Adapter
+    private lateinit var statAdapter: StatAdapter
 
     override fun setupViews() {
-        setupToggleGroup()
-        collectUiState()
 
+        setupRecyclerView()
+
+        // 2. Observe and Collect the Data Flow
+        observeViewModelData()
+
+        // Optional: Example of how to change the date dynamically
+        // binding.datePickerButton.setOnClickListener {
+        //     val newDate = LocalDate.now().minusDays(1) // Yesterday's date
+        //     viewModel.setTargetDate(newDate)
+        // }
 
 
         // Load default data
-        viewModel.loadCustomData(LocalDate.now(), LocalDate.now())
+
     }
 
-    private fun setupToggleGroup() {
-        binding.togglePeriod.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (!isChecked) return@addOnButtonCheckedListener
-
-            when (checkedId) {
-                R.id.btnWeekly -> viewModel.loadWeeklyData()
-                R.id.btnMonthly -> viewModel.loadMonthlyData()
-                R.id.btnYearly -> viewModel.loadYearlyData()
-                R.id.btnCustom -> showCustomDatePicker()
-            }
+    private fun setupRecyclerView() {
+        statAdapter = StatAdapter()
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = statAdapter
+            // You might want to add dividers or item decorations here
         }
     }
 
-    private fun collectUiState() {
+    private fun observeViewModelData() {
+        // Use repeatOnLifecycle to safely collect the Flow only when the view is started
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    financialOverViewCard(
-                        purchaseAmount = state.purchaseTotal.toRoundedStr(),
-                        saleAmount = state.salesTotal.toRoundedStr(),
-                        expenseAmount = state.expensesTotal.toRoundedStr(),
-                        netProfit = state.profit.toRoundedStr()
-                    )
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Collect the combined list from the ViewModel
+                viewModel.combinedList.collect { list ->
+                    // Submit the new list to the ListAdapter (StatAdapter)
+                    statAdapter.submitList(list)
 
-                    milkOverViewCard(
-                        milkPurchase = state.milkPurchase.toRoundedStr(),
-                        milkSold = state.milkSold.toRoundedStr()
-                    )
-
-                    binding.tvTitle.text = state.period
-
+                    // Optional: Update loading spinner visibility
+                    binding.progressBar.visibility = if (list.isEmpty() && viewModel.dashboardState.value.isLoading) View.VISIBLE else View.GONE
                 }
             }
         }
     }
 
-    private fun milkOverViewCard(milkPurchase: String, milkSold: String) = with(binding) {
 
-        cardMilkPurchase.apply {
-            tvTitle.text = "Milk Purchase"
-            tvValue.text = milkPurchase
-        }
-
-        cardMilkSold.apply {
-            tvTitle.text = "Milk Sold"
-            tvValue.text = milkSold
-        }
-
-
-    }
-
-    private fun financialOverViewCard(
-        purchaseAmount: String,
-        saleAmount: String,
-        expenseAmount: String,
-        netProfit: String
-    ) =
-        with(binding) {
-            cardSales.apply {
-                tvTitle.text = "Sales Amount"
-                tvValue.text = saleAmount
-            }
-            cardPurchases.apply {
-                tvTitle.text = "Purchase Amount"
-                tvValue.text = purchaseAmount
-            }
-            cardExpenses.apply {
-                tvTitle.text = "Expenses"
-                tvValue.text = expenseAmount
-            }
-            cardProfit.apply {
-                tvTitle.text = "Net Profit"
-                tvValue.text = netProfit
-            }
-        }
-
-    private fun showCustomDatePicker() {
-        val today = LocalDate.now()
-
-        val startPicker = DatePickerDialog(
-            requireContext(),
-            { _, y, m, d ->
-                val start = LocalDate.of(y, m + 1, d)
-                val endPicker = DatePickerDialog(
-                    requireContext(),
-                    { _, y2, m2, d2 ->
-                        val end = LocalDate.of(y2, m2 + 1, d2)
-                        viewModel.loadCustomData(start, end)
-                    },
-                    today.year, today.monthValue - 1, today.dayOfMonth
-                )
-                endPicker.setTitle("Select End Date")
-                endPicker.show()
-            },
-            today.year, today.monthValue - 1, today.dayOfMonth
-        )
-
-        startPicker.setTitle("Select Start Date")
-        startPicker.show()
-    }
 }

@@ -1,8 +1,6 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
@@ -12,20 +10,18 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.data.repository.SalesRepository
+import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -36,6 +32,9 @@ class SalesViewModel @Inject constructor(
     private val repository: SalesRepository,
     private val pRepo : PurchaseRepository
 ) : ViewModel() {
+
+
+
 
     // ----------------------------------------------------------
     // 🌟 UI State
@@ -49,10 +48,31 @@ class SalesViewModel @Inject constructor(
     init {
         // Start observing for today's date
         observeSalesForDate(_uiState.value.currentDate)
+        loadPaidSales()
 
     }
+    // State to hold the data, starting with an empty list
+    private val _paidSalesList = MutableStateFlow<List<CustomerPaidSummary>>(emptyList())
+    val paidSalesList: StateFlow<List<CustomerPaidSummary>> = _paidSalesList
 
-//    private val _balanceCustomerId = MutableStateFlow<String?>(null)
+
+    private fun loadPaidSales() {
+        repository.getPaidSalesForDate(_uiState.value.currentDate)
+            // Use onEach to update the StateFlow whenever the data changes in the DB
+            .onEach { list ->
+                _paidSalesList.value = list
+                Log.d("SalesViewModel", "loadPaidSales: $list")
+            }
+            .catch { exception ->
+                // Handle errors, e.g., log them or update a separate error StateFlow
+                println("Error loading paid sales: $exception")
+            }
+            // Start collecting the Flow in the ViewModel's scope
+            .launchIn(viewModelScope)
+    }
+
+
+
 
     private val _balanceHistory = MutableStateFlow<List<BalanceHistory>>(emptyList())
     val balanceHistory : StateFlow<List<BalanceHistory>> get() = _balanceHistory
