@@ -6,6 +6,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReportPdf
+import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
+import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
+import com.miassolutions.milkledger.core.pdf.salereport.SalesReportPdf
+import com.miassolutions.milkledger.core.pdf.salereport.TodaySalesPdf
 import com.miassolutions.milkledger.core.prefs.SalesPrefsHelper
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -16,6 +21,7 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
 import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
+import com.miassolutions.milkledger.presentation.customer.details.toSaleRecordList
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -199,6 +205,57 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         }
 
 
+    }
+
+
+    private fun generateReport() {
+        val state = viewModel.uiState.value
+        val filteredList: List<SaleWithCustomer> = state.salesForDate
+
+
+        val recordList = filteredList.toSaleRecordList()
+
+        val pdfSummary = pdfSummary(
+            totalQty = state.totalMilk,
+            totalDeduction = state.totalDeduction,
+            totalAmount = state.totalAmount,
+            totalPaid = state.totalPaid,
+            balanceDue = state.totalBalance
+
+        )
+
+        val data = SalesReportPdf(
+            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}",
+            date = state.currentDate.toDisplayFormat(),
+            recordList = recordList,
+            salesSummary = pdfSummary
+        )
+
+
+        TodaySalesPdf.generateAndSharePdf(
+            context = requireContext(),
+            data = data,
+            baseName = "Supplier",
+            showLogo = true,
+        )
+
+        showToast("Generating pdf report...")
+    }
+
+    private fun pdfSummary(
+        totalQty: Double,
+        totalDeduction: Double,
+        totalAmount: Double,
+        totalPaid: Double,
+        balanceDue: Double
+    ): PdfSalesSummary {
+        return PdfSalesSummary(
+            totalQty = totalQty.toRoundedStr(),
+            totalDeduction = totalDeduction.toRoundedStr(),
+            totalAmount = totalAmount.toRoundedStr(),
+            totalPaid = totalPaid.toRoundedStr(),
+            balanceDue = balanceDue.toRoundedStr()
+        )
     }
 
     private fun setupSalesRV() {

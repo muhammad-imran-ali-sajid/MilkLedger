@@ -1,7 +1,12 @@
 package com.miassolutions.milkledger.presentation.customer.details
 
 import com.miassolutions.milkledger.core.pdf.customerreport.SalesItemRecord
+import com.miassolutions.milkledger.core.pdf.purchasereport.PdfPurchaseItemRecord
+import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesItemRecord
 import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import java.time.LocalDate
 
@@ -29,7 +34,7 @@ data class CustomerDetailModel(
 // - this.sale.rateUsed (price used for this specific sale)
 // - this.customer.customerRate (current price for the customer)
 
-fun SaleWithCustomer.toCustomerDetail(): CustomerDetailModel = CustomerDetailModel(
+fun SaleWithCustomer.toCustomerDetailModel(): CustomerDetailModel = CustomerDetailModel(
     date = this.sale.date,
     milkAmount = this.sale.volume,
     deduction = this.sale.deduction,
@@ -46,6 +51,39 @@ fun SaleWithCustomer.toCustomerDetail(): CustomerDetailModel = CustomerDetailMod
     notes = this.sale.notes
 )
 
+
+// Assumes you have a similar RecordItem structure for Customer
+// Using Supplier's RecordItem for demonstration, but adjusting field names
+fun List<CustomerDetailModel>.toRecordList(): List<SalesItemRecord> {
+
+    return this.map { item ->
+        SalesItemRecord(
+            date = item.date.toDisplayFormat(),
+            quantity = item.netMilk, // Use netMilk for quantity
+            deduction = 0.0, // N/A for customer, or use a placeholder
+            rate = item.rateUsed,
+            amount = item.milkPrice, // Total amount/price
+            paid = item.payment,
+            balance = item.balance
+        )
+    }
+}
+
+
+fun List<SaleWithCustomer>.toSaleRecordList(): List<PdfSalesItemRecord> {
+    return this.map { item ->
+        PdfSalesItemRecord(
+            customerName = item.customer.customerName,
+            milkVolume = item.sale.volume.toPriceStr(),
+            deduction = item.sale.deduction.toPriceStr(),
+            rate = item.sale.rateUsed.toRoundedStr(),
+            amount = item.sale.price.toRoundedStr(),
+            paid = item.sale.paid.toPriceStr(),
+            balance = item.sale.balance.toPriceStr()
+        )
+
+    }
+}
 
 // NEW EXTENSION FUNCTION to be used in the ViewModel after initial mapping
 
@@ -81,19 +119,3 @@ fun List<CustomerDetailModel>.flagPriceChangeStarts(): List<CustomerDetailModel>
 }
 
 
-// Assumes you have a similar RecordItem structure for Customer
-// Using Supplier's RecordItem for demonstration, but adjusting field names
-fun List<CustomerDetailModel>.toRecordList(): List<SalesItemRecord> {
-
-    return this.map { item ->
-        SalesItemRecord(
-            date = item.date.toDisplayFormat(),
-            quantity = item.netMilk, // Use netMilk for quantity
-            deduction = 0.0, // N/A for customer, or use a placeholder
-            rate = item.rateUsed,
-            amount = item.milkPrice, // Total amount/price
-            paid = item.payment,
-            balance = item.balance
-        )
-    }
-}

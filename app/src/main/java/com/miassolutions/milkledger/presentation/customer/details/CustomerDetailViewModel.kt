@@ -32,7 +32,7 @@ class CustomerDetailViewModel @Inject constructor(
             val id = _uiState.value.selectedCustomerId ?: return@launch
             repository.getSalesForCustomer(id).collect { list ->
 
-                val initialDetail = list.map { it.toCustomerDetail() }
+                val initialDetail = list.map { it.toCustomerDetailModel() }
 
                 val finalDetail = initialDetail.flagPriceChangeStarts()
 

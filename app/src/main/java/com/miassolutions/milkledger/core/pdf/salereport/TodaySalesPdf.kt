@@ -1,28 +1,28 @@
-package com.miassolutions.milkledger.core.pdf.purchasereport
+package com.miassolutions.milkledger.core.pdf.salereport
 
 import android.content.Context
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
-import com.miassolutions.milkledger.databinding.ItemPurchaseRecordRowBinding
+import com.miassolutions.milkledger.databinding.ItemCustomerRecordRowBinding
 // NOTE: I am assuming the purchase layout is bound to LayoutPurchaseReceiptBinding
 // If you are using your old LayoutSalesReceiptBinding for the new XML, keep it,
 // but I'll use a hypothetical, more appropriate binding name for clarity.
 // I will proceed using LayoutSalesReceiptBinding as it's what you provided, but
 // will treat it as if it binds to the new receipt_layout.xml.
-import com.miassolutions.milkledger.databinding.LayoutTodayPurchaseReceiptBinding
+import com.miassolutions.milkledger.databinding.LayoutTodaySaleReceiptBinding
 import java.io.File
 import java.io.FileOutputStream
 
-object TodayPurchasePdf {
+object TodaySalesPdf {
 
     /**
      * Generates the PDF document from the layout, saves it to a file, and returns the file.
      */
-    private fun generateTodayPurchaseReceiptPdf(
+    private fun generateTodaySalesReportPdf(
         context: Context,
-        data: PurchaseReportPdf,
+        data: SalesReportPdf,
         baseName: String,
         showLogo: Boolean = false,
         logoResId: Int? = null
@@ -30,7 +30,7 @@ object TodayPurchasePdf {
         val inflater = LayoutInflater.from(context)
         // Using LayoutSalesReceiptBinding as provided in original code,
         // but ensuring IDs match the receipt_layout.xml structure.
-        val binding = LayoutTodayPurchaseReceiptBinding.inflate(inflater)
+        val binding = LayoutTodaySaleReceiptBinding.inflate(inflater)
 
         // Show/hide logo
         if (showLogo && logoResId != null) {
@@ -57,13 +57,11 @@ object TodayPurchasePdf {
         // 2. Add Detail Rows (assuming ItemSaleRecordRowBinding is adapted for purchase rows)
         data.recordList.forEach { item ->
             val rowBinding =
-                ItemPurchaseRecordRowBinding.inflate(inflater, binding.recordContainer, false)
+                ItemCustomerRecordRowBinding.inflate(inflater, binding.recordContainer, false)
 
-            rowBinding.tvSupplierName.text = item.supplierName
+            rowBinding.tvCustomer.text = item.customerName
             rowBinding.tvQty.text = item.milkVolume
-            rowBinding.tvFat.text = item.fat
-            rowBinding.tvLr.text = item.lr
-            rowBinding.tvTS.text = item.ts
+            rowBinding.tvDeduction.text = item.deduction
             rowBinding.tvRate.text = item.rate
             rowBinding.tvAmount.text = item.amount
             rowBinding.tvPaid.text = item.paid
@@ -77,13 +75,11 @@ object TodayPurchasePdf {
         // Note: LayoutSalesReceiptBinding needs to have IDs tvSummaryTotalQty, tvSummaryTotalAmount, etc.
         with(binding) {
 
-            tvSummaryTotalQty.text = data.pdfPurchaseSummary.totalQty
-            tvSummaryAvgFat.text = data.pdfPurchaseSummary.avgFat
-            tvSummaryAvgLr.text = data.pdfPurchaseSummary.avgLr
-            tvTotalTs.text = data.pdfPurchaseSummary.totalTs
-            tvSummaryTotalAmount.text = data.pdfPurchaseSummary.totalAmount
-            tvSummaryTotalPaid.text = data.pdfPurchaseSummary.totalPaid
-            tvSummaryBalance.text = data.pdfPurchaseSummary.balanceDue
+            tvTotalQuantity.text = data.purchaseSummary.totalQty
+            tvTotalDeduction.text = data.purchaseSummary.totalDeduction
+            tvSummaryTotalAmount.text = data.purchaseSummary.totalAmount
+            tvSummaryTotalPaid.text = data.purchaseSummary.totalPaid
+            tvSummaryBalance.text = data.purchaseSummary.balanceDue
         }
 
 
@@ -120,13 +116,13 @@ object TodayPurchasePdf {
      */
     fun generateAndSharePdf(
         context: Context,
-        data: PurchaseReportPdf,
+        data: SalesReportPdf,
         baseName: String,
         showLogo: Boolean = false,
         logoResId: Int? = null
     ) {
         // Generate the file first
-        val file = generateTodayPurchaseReceiptPdf(context, data, baseName, showLogo, logoResId)
+        val file = generateTodaySalesReportPdf(context, data, baseName, showLogo, logoResId)
 
         // Then share it
         PdfUtils.sharePdf(context, file)

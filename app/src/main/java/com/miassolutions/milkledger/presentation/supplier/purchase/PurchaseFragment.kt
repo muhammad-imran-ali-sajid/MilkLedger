@@ -10,8 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReceiptPdf
-import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseSummary
+import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReportPdf
+import com.miassolutions.milkledger.core.pdf.purchasereport.PdfPurchaseSummary
 import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -190,11 +190,11 @@ class PurchaseFragment :
 
         )
 
-        val data = PurchaseReceiptPdf(
+        val data = PurchaseReportPdf(
             footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}",
             date = state.currentDate.toDisplayFormat(),
             recordList = recordList,
-            purchaseSummary = pdfSummary
+            pdfPurchaseSummary = pdfSummary
         )
 
 
@@ -217,8 +217,8 @@ class PurchaseFragment :
         totalAmount: Double,
         totalPaid: Double,
         balanceDue: Double
-    ): PurchaseSummary {
-        return PurchaseSummary(
+    ): PdfPurchaseSummary {
+        return PdfPurchaseSummary(
             totalQty = totalQty.toRoundedStr(),
             avgFat = avgFat.toRoundedStr(),
             avgLr = avgLr.toRoundedStr(),

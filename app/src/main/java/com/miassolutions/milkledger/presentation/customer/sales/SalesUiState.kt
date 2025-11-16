@@ -9,12 +9,29 @@ data class SalesUiState(
     val grandSaleTotalForDate: Double = 0.0,
     val selectedCustomerId: String? = null,
     val navToLedgerForCustomerId: String? = null,
+    val salePdfReport: SalePdfReport = SalePdfReport(),
     val totalMilk: Double = 0.0,
     val totalNetMilk: Double = 0.0,
     val totalDeduction: Double = 0.0,
     val totalAmount: Double = 0.0,
+    val totalPaid: Double = 0.0,
+    val totalBalance: Double = 0.0,
     val avgRatePerLiter: Double = 0.0
 )
+
+
+data class SalePdfReport(
+    val customerName: String = "",
+    val date: String = "",
+    val receiptId: String = "",
+    val totalMilk: Double = 0.0,
+    val totalNetMilk: Double = 0.0,
+    val totalDeduction: Double = 0.0,
+    val totalAmount: Double = 0.0,
+    val totalPaid: Double = 0.0,
+    val totalBalance: Double = 0.0,
+
+    )
 
 
 sealed class SalesUiEvent {

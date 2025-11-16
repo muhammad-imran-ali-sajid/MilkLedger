@@ -1,13 +1,13 @@
 package com.miassolutions.milkledger.core.pdf.purchasereport
 
-data class PurchaseReceiptPdf(
+data class PurchaseReportPdf(
     val date: String,
-    val recordList: List<PurchaseItemRecord>,
-    val purchaseSummary: PurchaseSummary,
+    val recordList: List<PdfPurchaseItemRecord>,
+    val pdfPurchaseSummary: PdfPurchaseSummary,
     val footerNote: String? = null
 )
 
-data class PurchaseSummary(
+data class PdfPurchaseSummary(
     val totalQty: String,
     val avgFat : String,
     val avgLr : String,
@@ -17,7 +17,7 @@ data class PurchaseSummary(
     val balanceDue: String
 )
 
-data class PurchaseItemRecord(
+data class PdfPurchaseItemRecord(
     val supplierName: String,
     val milkVolume: String,
     val fat: String,

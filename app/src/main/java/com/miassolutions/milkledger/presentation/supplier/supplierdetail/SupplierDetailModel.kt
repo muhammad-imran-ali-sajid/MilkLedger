@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
-import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseItemRecord
-import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierItemRecord
+import com.miassolutions.milkledger.core.pdf.purchasereport.PdfPurchaseItemRecord
+import com.miassolutions.milkledger.core.pdf.supplierreport.PdfSupplierItemRecord
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
@@ -42,10 +42,10 @@ fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = Supplier
     notes = this.purchase.notes
 )
 
-fun List<SupplierDetailModel>.toRecordList(): List<SupplierItemRecord> {
+fun List<SupplierDetailModel>.toRecordList(): List<PdfSupplierItemRecord> {
 
     return this.map { item ->
-        SupplierItemRecord(
+        PdfSupplierItemRecord(
             date = item.date.toDisplayFormat(),
             quantity = item.milkAmount,
             ts = item.ts,
@@ -57,9 +57,9 @@ fun List<SupplierDetailModel>.toRecordList(): List<SupplierItemRecord> {
     }
 }
 
-fun List<PurchaseWithSupplier>.toPurchaseRecordList(): List<PurchaseItemRecord> {
+fun List<PurchaseWithSupplier>.toPurchaseRecordList(): List<PdfPurchaseItemRecord> {
     return this.map { item ->
-        PurchaseItemRecord(
+        PdfPurchaseItemRecord(
             supplierName = item.supplier.supplierName,
             milkVolume = item.purchase.milkAmount.toRoundedStr(),
             fat = item.purchase.fat.toRoundedStr(),

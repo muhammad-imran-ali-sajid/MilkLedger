@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.core.pdf.supplierreport
 data class SupplierReceiptPdf(
     val dateRange: String,
     val supplierName: String,
-    val recordList: List<SupplierItemRecord>,
+    val recordList: List<PdfSupplierItemRecord>,
     val totalQty:String,
     val avgTs : String,
     val totalAmount: String,
@@ -12,7 +12,7 @@ data class SupplierReceiptPdf(
     val footerNote: String? = null
 )
 
-data class SupplierItemRecord(
+data class PdfSupplierItemRecord(
     val date: String,
     val quantity: Double,
     val ts: Double,
