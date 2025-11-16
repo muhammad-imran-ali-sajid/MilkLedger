@@ -26,6 +26,7 @@ import java.time.LocalDate
 class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::inflate) {
 
     private val viewModel: StatViewModel by viewModels()
+
     // Initialize the Multi-View Type Adapter
     private lateinit var statAdapter: StatAdapter
 
@@ -87,7 +88,8 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
                 viewModel.dashboardState.collect { state ->
 
                     // --- 2. Calculate balance using the LATEST emitted state values ---
-                    val balance =  state.totalSupplierPayment-state.totalCustomerPayment
+                    val balance =
+                        state.totalCustomerPayment - (state.totalSupplierPayment + state.totalExpenses)
                     binding.tvBalance.text = "Balance: ${balance.toPriceStr()}"
 
                     // --- 3. Update the RecyclerView List (if combinedList is based on dashboardState) ---

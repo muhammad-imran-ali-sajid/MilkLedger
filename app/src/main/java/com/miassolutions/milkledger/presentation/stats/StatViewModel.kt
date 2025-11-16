@@ -66,15 +66,16 @@ class StatViewModel @Inject constructor(
             val totalCustomerPayment = customerList.sumOf { it.paidAmount }
             val totalSupplierPayment = supplierList.sumOf { it.paidAmount }
             val totalExpense = expenseList.sumOf { it.expenseAmount }
-            // val totalExpense =
 
-            Log.d("StatsViewModel", "$totalSupplierPayment - $totalCustomerPayment")
+
+            Log.d("StatsViewModel", "$expenseList - $totalCustomerPayment")
 
             StatDashboardState(
 
                 targetDate = date,
                 customerPayments = customerList,
                 supplierPayments = supplierList,
+                expenseList = expenseList,
                 isLoading = false,
                 totalCustomerPayment = totalCustomerPayment,
                 totalSupplierPayment = totalSupplierPayment,
