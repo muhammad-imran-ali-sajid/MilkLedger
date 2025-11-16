@@ -1,26 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     android:gravity="center"
-    android:layout_height="match_parent">
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnUpload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Upload to cloud"
-        />
 
-    <Button
-        android:id="@+id/btnDownload"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Restore from the cloud"
-        />
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Choose a Soothing Button Color"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp">
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alignmentMode="alignMargins"
+                android:columnCount="2"
+                android:columnOrderPreserved="false"
+                android:padding="16dp"
+                android:rowCount="3">
+
+                <Button
+                    android:id="@+id/btnTealDark"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:backgroundTint="#00796B"
+                    android:text="Teal Dark"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnSteelBlue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:backgroundTint="#4682B4"
+                    android:text="Steel Blue"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnMidnightBlue"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:backgroundTint="#1C2833"
+                    android:text="Midnight Blue"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnDeepForest"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:backgroundTint="#2C3E50"
+                    android:text="Deep Forest"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnSageGreen"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="#45B39D"
+                    android:text="Sage Green"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:cornerRadius="8dp" />
+
+                <Button
+                    android:id="@+id/btnSoftBlack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="#17202A"
+                    android:text="Soft Black"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:cornerRadius="8dp" />
+
+            </GridLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btnDefault"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Default"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        android:backgroundTint="#00796B"-->
+    <!--        android:textColor="@android:color/white" />-->
+    <!--    <Button-->
+    <!--        android:id="@+id/btnBlue"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Steel Blue"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        android:backgroundTint="#4682B4"-->
+    <!--        android:textColor="@android:color/white" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btn_color_green"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Midnight Blue"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        android:backgroundTint="#1C2833"-->
+    <!--        android:textColor="@android:color/white" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btnDeepForest"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Default Gray"-->
+    <!--        android:backgroundTint="#2C3E50"-->
+    <!--        android:textColor="@android:color/white" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btnSageGreen"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Sage Green"-->
+    <!--        android:backgroundTint="#45B39D"-->
+    <!--        android:textColor="@android:color/white" />-->
+
+    <!--    <Button-->
+    <!--        android:id="@+id/btnSoftBlack"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Soft Black"-->
+    <!--        android:backgroundTint="#17202A"-->
+    <!--        android:textColor="@android:color/white" />-->
 
 
 </LinearLayout>

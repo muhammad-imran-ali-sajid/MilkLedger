@@ -3,10 +3,20 @@
 
 
 
+    <color name="teal_dark">#00796B</color>
+    <color name="steel_blue">#4682B4</color>
+    <color name="midnight_blue">#1C2833</color>
+    <color name="deep_forest_green">#2C3E50</color>
+    <color name="sage_green">#45B39D</color>
+    <color name="soft_black">#17202A</color>
+
     <!-- Primary Brand Color (A strong, accessible blue) -->
     <color name="primary">#00796B</color>
     <!-- Text/Icons ON Primary (Should always be white for contrast) -->
     <color name="on_primary">#eee</color>
+
+
+
 
     <!-- Secondary Accent Color (A neutral green for secondary actions or completion status) -->
     <color name="secondary">#4D8B31</color>

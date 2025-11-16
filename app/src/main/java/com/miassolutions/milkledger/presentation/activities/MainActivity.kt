@@ -18,15 +18,19 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ToolbarOwner {
 
+    @Inject
+    lateinit var appPreferences: AppPreferencesManager
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -37,6 +41,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        applySavedBackground()
         enableEdgeToEdge()
         setContentView(binding.root)
         windowsInsets()
@@ -44,8 +49,6 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
 
         val role = SharedPrefsHelper.getUserRole(this)
         val email = SharedPrefsHelper.getUserMail(this)
-
-
 
 
         val navigationView = binding.navigationView
@@ -190,6 +193,12 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         configuration.fontScale = 1.0f // Prevents scaling
         val context = newBase.createConfigurationContext(configuration)
         super.attachBaseContext(context)
+    }
+
+    private fun applySavedBackground() {
+        val colorId = appPreferences.loadBackgroundColor()
+        val colorInt = getColor(colorId)
+        window.decorView.setBackgroundColor(colorInt)
     }
 
 
