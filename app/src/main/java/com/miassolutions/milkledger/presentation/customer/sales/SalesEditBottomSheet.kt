@@ -10,6 +10,7 @@ import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
+import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
@@ -65,8 +66,7 @@ class SalesEditBottomSheet(
             tvRate.text =entry.sale.rateUsed.toRoundedStr()
             etNotes.setText(entry.sale.notes ?: "")
 
-//            val rate = entry.customer.customerRate
-//            tvRate.text = "Rate: Rs. ${rate.toRoundedStr()}"
+
 
             // Initial calculation
             recalculateAll()
@@ -80,12 +80,7 @@ class SalesEditBottomSheet(
         autoSelectOnFocus(etNotes)
     }
 
-    private fun autoSelectOnFocus(editText: EditText) {
-        editText.setSelectAllOnFocus(true)
-        editText.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) (v as EditText).selectAll()
-        }
-    }
+
 
     private fun setupSaveButton() {
         binding.btnSave.setOnClickListener {

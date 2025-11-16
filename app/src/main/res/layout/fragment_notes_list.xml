@@ -75,6 +75,8 @@
         android:layout_height="wrap_content"
         android:text="Add New Note"
         app:icon="@drawable/ic_add"
+        android:textColor="@color/white"
+        app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

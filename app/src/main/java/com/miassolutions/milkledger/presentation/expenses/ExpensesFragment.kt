@@ -5,6 +5,7 @@ import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
@@ -19,7 +20,6 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
     private val viewModel: ExpenseViewModel by viewModels()
     private lateinit var adapter: ExpensesAdapter
-    override fun getMenuResId(): Int? = R.menu.expenses_menu
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.expenses))
@@ -47,29 +47,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     }
 
 
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.actionNewExpense -> {
-                // Use the currently selected date from the UI state for the new expense
-                val selectedDate = viewModel.uiState.value.currentDate
-                ExpenseEditBottomSheet(
-                    entry = ExpensesEntity(
-                        expenseTitle = "New Title",
-                        expenseAmount = 0.0,
-                        createdAt = LocalDateTime.now().toString(),
-                        date = selectedDate, // Use current date
-                    ),
-                    onSave = {
-                        viewModel.insertExpense(it)
-                    },
-                    isNewExpense = true
-                ).show(parentFragmentManager, null)
-                true
-            }
 
-            else -> false
-        }
-    }
 
 
     override fun setupObservers() {
@@ -90,24 +68,27 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
         }
     }
 
+
+
     override fun setupListeners() = with(binding) {
-        // Allow clicking the date text to open the date picker
-//        tvSelectedDate.setOnClickListener {
-////            // Pass the current date as the pre-selected date for better UX
-////            val initialDate = viewModel.uiState.value.currentDate
-////
-////            pickSingleDate(
-////                title = "Select Expense Date",
-////                initialDate = initialDate,
-////                onPicked = { selectedDate: LocalDate ->
-////                    viewModel.onEvent(ExpensesUiEvent.SelectDate(selectedDate))
-////                }
-////            )
-//
-//            val datePickerLogic = DatePickerLogic()
-//            val isAuth = datePickerLogic.buildConstraints(isAuthorized = false)
-//
-//        }
+
+
+        fabAddExpense.setOnClickListener {
+            val selectedDate = viewModel.uiState.value.currentDate
+            ExpenseEditBottomSheet(
+                entry = ExpensesEntity(
+                    expenseTitle = "New Title",
+                    expenseAmount = 0.0,
+                    createdAt = LocalDateTime.now().toString(),
+                    date = selectedDate, // Use current date
+                ),
+                onSave = {
+                    viewModel.insertExpense(it)
+                },
+                isNewExpense = true
+            ).show(parentFragmentManager, null)
+        }
+
 
         tvSelectedDate.setOnClickListener {
             val admin = SharedPrefsHelper.getUserRole(requireContext())

@@ -11,13 +11,11 @@
 
     <TextView
         android:id="@+id/tvExpenseTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:minWidth="100dp"
+        android:gravity="center"
         android:textColor="@color/black"
         android:text="Expense Title"
-        style="@style/TextLabel2"
         android:visibility="gone" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -28,6 +26,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etName"
+            android:inputType="text"
+            android:imeOptions="actionNext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -42,6 +42,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etExpenseAmount"
             android:layout_width="match_parent"
+            android:imeOptions="actionNext"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -56,6 +57,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNotes"
+            android:inputType="text"
+            android:imeOptions="actionDone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -63,7 +66,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"

@@ -29,8 +29,23 @@
         app:layout_constraintBottom_toTopOf="@id/expensesSummary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:paddingBottom="78dp"
+        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@id/tv_selected_date"
         tools:listitem="@layout/item_expenses" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabAddExpense"
+        style="@style/ExtendedFABStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New Expense"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_add"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/rvExpenses"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/expensesSummary"

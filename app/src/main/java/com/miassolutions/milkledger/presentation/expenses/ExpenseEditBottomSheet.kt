@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.BottomsheetEditExpensesBinding
 
 class ExpenseEditBottomSheet(
     private val entry: ExpensesEntity,
     private val onSave: (ExpensesEntity) -> Unit,
-    private val isNewExpense : Boolean = false
+    private val isNewExpense: Boolean = false
 ) : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetEditExpensesBinding? = null
@@ -26,8 +27,17 @@ class ExpenseEditBottomSheet(
         return binding.root
     }
 
+    private fun autoFocusNext() = with(binding) {
+        autoSelectOnFocus(etName)
+        autoSelectOnFocus(etExpenseAmount)
+        autoSelectOnFocus(etNotes)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        autoFocusNext()
 
         if (isNewExpense) {
             binding.nameLayout.visibility = View.VISIBLE
@@ -76,9 +86,6 @@ class ExpenseEditBottomSheet(
             }
         }
     }
-
-
-
 
 
     override fun onDestroyView() {
