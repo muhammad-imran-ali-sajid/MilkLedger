@@ -131,6 +131,7 @@ class PurchaseRepository @Inject constructor(
     fun getAllSuppliers(): Flow<List<SupplierEntity>> =
         purchaseDao.getAllSuppliers()
 
+
     // 🧾 All purchases for reports or dashboard
     fun getAllPurchasesWithSuppliers(): Flow<List<PurchaseWithSupplier>> =
         purchaseDao.getAllPurchasesWithSuppliers()

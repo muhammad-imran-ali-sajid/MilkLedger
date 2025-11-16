@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.data.repository.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -22,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SalesViewModel @Inject constructor(
-    private val repository: SalesRepository
+    private val repository: SalesRepository,
+    private val pRepo : PurchaseRepository
 ) : ViewModel() {
 
     // ----------------------------------------------------------
@@ -104,12 +106,17 @@ class SalesViewModel @Inject constructor(
                 val aTotalPrice = validForAvg.sumOf { it.sale.price }
                 val aTotalVolume = validForAvg.sumOf { it.sale.volume }
 
+                // as per original ledger
+                val pTotalVolume = pRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
+
+
+
                 val grandTotalPrice = sortedSales.sumOf { it.sale.price }
                 val totalNetMilk = sortedSales.sumOf { it.sale.netMilk }
                 val totalBalance = sortedSales.sumOf { it.sale.price - it.sale.paid }
 
                 val avgRatePerLiter =
-                    if (aTotalVolume > 0) aTotalPrice / aTotalVolume else 0.0
+                    if (aTotalVolume > 0) aTotalPrice / pTotalVolume else 0.0
 
                 _uiState.update {
                     it.copy(

@@ -60,6 +60,10 @@ interface PurchaseDao {
     @Query("SELECT * FROM supplier_table")
     fun getAllSuppliers(): Flow<List<SupplierEntity>>
 
+
+
+
+
     // ✅ Get only the date and balance for a supplier (for a simple ledger/summary)
     @Query("SELECT date, balance FROM purchase_table WHERE supplierId = :supplierId ORDER BY date DESC")
     fun getSupplierBalanceHistory(supplierId: String): Flow<List<BalanceHistory>>
@@ -79,6 +83,8 @@ interface PurchaseDao {
     @Transaction
     @Query("SELECT * FROM purchase_table WHERE date = :date ORDER BY supplierId")
     fun getPurchasesByDate(date: LocalDate): Flow<List<PurchaseWithSupplier>>
+
+
 
     // ✅ Supplier ledger (date-wise history)
     @Transaction
