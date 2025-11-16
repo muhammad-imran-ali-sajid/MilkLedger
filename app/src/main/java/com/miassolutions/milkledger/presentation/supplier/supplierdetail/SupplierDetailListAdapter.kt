@@ -11,6 +11,7 @@ import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSupplierDetailBinding
 import java.time.LocalDate
@@ -40,8 +41,8 @@ class SupplierDetailListAdapter :
         tvTs.text = handleZeroData(item.ts)
         tvDate.text = item.date.toDisplayFormat()
         tvMilk.text = item.milkAmount.toRoundedStr()
-        tvPrice.text = item.milkPrice.toRoundedStr()
-        tvPayment.text = item.payment.toRoundedStr()
+        tvPrice.text = item.milkPrice.toPriceStr()
+        tvPayment.text = item.payment.toPriceStr()
 
         tvBalance.text = numberFormat(item.balance)
         tvBalance.setTextColor(textColor(item.balance))
