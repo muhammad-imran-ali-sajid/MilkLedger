@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +47,12 @@ class DashboardFragment :
         }
 
 
+        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+
+        if (!isAdmin) {
+            hideTextViews()
+        }
+
 
 
         setupToggleGroup()
@@ -53,14 +60,23 @@ class DashboardFragment :
 
     }
 
+    private fun hideTextViews() {
+        binding.apply {
+            tvTotalPurchases.hide()
+            tvTotalExpense.hide()
+            tvTotalSales.hide()
+            tvNetProfit.hide()
+        }
+    }
+
 
     override fun setupObservers() = with(binding) {
         viewModel.uiState.collectState { state ->
             tvSelectedDate.text = state.period
-            tvTotalPurchases.text = state.purchaseTotal.toRoundedStr()
-            tvTotalSales.text = state.salesTotal.toRoundedStr()
-            tvTotalExpense.text = state.expensesTotal.toRoundedStr()
-            tvNetProfit.text = state.profit.toRoundedStr()
+            tvTotalPurchases.text = state.purchaseTotal.toPriceStr()
+            tvTotalSales.text = state.salesTotal.toPriceStr()
+            tvTotalExpense.text = state.expensesTotal.toPriceStr()
+            tvNetProfit.text = state.profit.toPriceStr()
             tvMilkPurchase.text = "${state.milkPurchase.toRoundedStr()} L"
             tvMilkSold.text = "${state.milkSold.toRoundedStr()} L"
             tvAvgFat.text = "${state.avgFat.toRoundedStr()}%"

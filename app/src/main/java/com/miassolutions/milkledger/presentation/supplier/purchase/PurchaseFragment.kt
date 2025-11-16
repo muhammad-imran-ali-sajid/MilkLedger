@@ -251,7 +251,7 @@ class PurchaseFragment :
                 tvAvgLr.text = avgLr.toRoundedStr()
                 tvTotalTs.text = "${totalTS.toRoundedStr()}"
                 tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
-                tvAvgPrice.text = "Rs. ${avgRate.toPriceStr()}"
+                tvAvgPrice.text = "Rs. ${avgRate.toPriceStr("%.2f")}"
             }
         }
     }
