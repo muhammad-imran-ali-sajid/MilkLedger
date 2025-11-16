@@ -10,6 +10,7 @@ import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
@@ -58,9 +59,10 @@ class SalesEditBottomSheet(
     private fun setupInitialData() {
         binding.apply {
             tvCustomerName.text = entry.customer.customerName
-            etVolume.setText(entry.sale.volume.toString())
-            etDeduction.setText(entry.sale.deduction.toString())
-            etPayment.setText(entry.sale.paid.toString())
+            etVolume.setText(entry.sale.volume.toRoundedStr())
+            etDeduction.setText(entry.sale.deduction.toRoundedStr())
+            etPayment.setText(entry.sale.paid.toPriceStr())
+            tvRate.text =entry.sale.rateUsed.toRoundedStr()
             etNotes.setText(entry.sale.notes ?: "")
 
 //            val rate = entry.customer.customerRate
@@ -136,7 +138,7 @@ class SalesEditBottomSheet(
             deduction = deduction,
             rate = rate
         )
-        binding.tvPrice.text = "${price.toRoundedStr()}"
+        binding.tvPrice.text = "${price.toPriceStr()}"
 
         // 3️⃣ Balance
         val balance = price - paid

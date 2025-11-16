@@ -47,11 +47,11 @@ class PurchaseEditBottomSheet(
             tvSupplierName.text = supplier.supplierName
 
             // Autofill with empty if 0
-            tvAdvanceAmount.text = supplier.advanceAmount.toRoundedStr()
+            tvAdvanceAmount.text = supplier.advanceAmount.toPriceStr()
             etVolume.setText(purchase.milkAmount.takeIf { it != 0.0 }?.toString() ?: "")
-            etFat.setText(purchase.fat.takeIf { it != 0.0 }?.toString() ?: "")
-            etLr.setText(purchase.lr.takeIf { it != 0.0 }?.toString() ?: "")
-            etPaid.setText(purchase.payment.toString())
+            etFat.setText(purchase.fat.takeIf { it != 0.0 }?.toRoundedStr() ?: "")
+            etLr.setText(purchase.lr.takeIf { it != 0.0 }?.toRoundedStr() ?: "")
+            etPaid.setText(purchase.payment.toPriceStr())
             etNotes.setText(purchase.notes ?: "")
             tvRate.text = "${purchase.rateUsed.toRoundedStr(" % .1f")}"
 
@@ -159,7 +159,7 @@ class PurchaseEditBottomSheet(
         }
 
         val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
-        binding.tvTs.text = ts.toRoundedStr("%.2f")
+        binding.tvTs.text = ts.toRoundedStr()
     }
 
     private fun recalculateBalance() {
