@@ -10,12 +10,15 @@ import com.miassolutions.milkledger.databinding.ItemCustomerPaidBinding
 import com.miassolutions.milkledger.databinding.ItemExpenseBinding
 import com.miassolutions.milkledger.databinding.ItemHeaderBinding
 import com.miassolutions.milkledger.databinding.ItemSupplierPaidBinding
+import com.miassolutions.milkledger.databinding.ItemTotalSummaryBinding
 
 class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffCallback()) {
 
     // Define constants for view types
     private val TYPE_HEADER = 0
     private val TYPE_CUSTOMER = 1
+
+    private val TYPE_TOTAL_SUMMARY = 4
     private val TYPE_SUPPLIER = 2
     private val TYPE_EXPENSE = 3
 
@@ -26,6 +29,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.CustomerItem -> TYPE_CUSTOMER
             is StatListItem.SupplierItem -> TYPE_SUPPLIER
             is StatListItem.ExpenseItem -> TYPE_EXPENSE
+            is StatListItem.TotalSummary -> TYPE_TOTAL_SUMMARY
         }
     }
 
@@ -56,6 +60,11 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
                 ExpenseViewHolder(binding)
             }
 
+            TYPE_TOTAL_SUMMARY -> {
+                val binding = ItemTotalSummaryBinding.inflate(inflater, parent, false)
+                TotalSummaryViewHolder(binding)
+            }
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -67,6 +76,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.CustomerItem -> (holder as CustomerViewHolder).bind(item.summary)
             is StatListItem.SupplierItem -> (holder as SupplierViewHolder).bind(item.summary)
             is StatListItem.ExpenseItem -> (holder as ExpenseViewHolder).bind(item.summary)
+            is StatListItem.TotalSummary -> (holder as TotalSummaryViewHolder).bind(item)
         }
     }
 }
@@ -77,6 +87,13 @@ class HeaderViewHolder(private val binding: ItemHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(title: String) {
         binding.titleTextView.text = title
+    }
+}
+
+class TotalSummaryViewHolder(private val binding: ItemTotalSummaryBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(summary: StatListItem.TotalSummary) {
+        binding.totalLabelTextView.text = summary.label
+        binding.totalAmountTextView.text = summary.amount.toPriceStr() // Use your extension function
     }
 }
 
@@ -132,6 +149,8 @@ class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
             oldItem is StatListItem.ExpenseItem && newItem is StatListItem.ExpenseItem ->
                 oldItem.summary.expenseTitle == newItem.summary.expenseTitle
 
+            oldItem is StatListItem.TotalSummary && newItem is StatListItem.TotalSummary ->
+                oldItem.label == newItem.label
             // If types are different, they are definitely not the same item
             else -> false
         }

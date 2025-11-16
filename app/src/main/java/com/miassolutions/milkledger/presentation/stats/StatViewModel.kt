@@ -93,26 +93,39 @@ class StatViewModel @Inject constructor(
     val combinedList: Flow<List<StatListItem>> = dashboardState
         .map { state ->
             if (state.isLoading) {
-                // Return an empty list or a loading indicator item
                 emptyList()
             } else {
-                // Build the final list with headers and items
+                // Build the final list with headers, items, and totals
                 buildList {
-                    // Customer Section
+                    // --- Customer Section ---
                     add(StatListItem.Header("Customer Payments"))
                     state.customerPayments.map { summary ->
                         add(StatListItem.CustomerItem(summary))
                     }
+                    // Add Customer Total Summary
+                    if (state.totalCustomerPayment > 0 || state.customerPayments.isNotEmpty()) {
+                        add(StatListItem.TotalSummary("TOTAL RECEIVED", state.totalCustomerPayment))
+                    }
 
-                    // Supplier Section
+
+                    // --- Supplier Section ---
                     add(StatListItem.Header("Supplier Payments"))
                     state.supplierPayments.map { summary ->
                         add(StatListItem.SupplierItem(summary))
                     }
+                    // Add Supplier Total Summary
+                    if (state.totalSupplierPayment > 0 || state.supplierPayments.isNotEmpty()) {
+                        add(StatListItem.TotalSummary("TOTAL PAID", state.totalSupplierPayment))
+                    }
 
+                    // --- Expenses Section ---
                     add(StatListItem.Header("Expenses"))
                     state.expenseList.map { summary ->
                         add(StatListItem.ExpenseItem(summary))
+                    }
+                    // Add Expense Total Summary
+                    if (state.totalExpenses > 0 || state.expenseList.isNotEmpty()) {
+                        add(StatListItem.TotalSummary("TOTAL EXPENSES", state.totalExpenses))
                     }
                 }
             }

@@ -22,11 +22,17 @@ data class ExpenseSummary(
     val expenseAmount: Double
 )
 
+data class SumSummary(
+    val title: String,
+    val sum : Double
+)
+
 
 
 sealed class StatListItem {
     // 1. For Section Headers (e.g., "Customer Payments")
     data class Header(val title: String) : StatListItem()
+    data class TotalSummary(val label: String, val amount: Double) : StatListItem()
 
     // 2. For Customer Data
     data class CustomerItem(val summary: CustomerPaidSummary) : StatListItem()
