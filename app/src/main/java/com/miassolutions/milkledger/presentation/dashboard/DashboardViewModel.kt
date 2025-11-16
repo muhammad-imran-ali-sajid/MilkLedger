@@ -33,7 +33,6 @@ class DashboardViewModel @Inject constructor(
     }
 
 
-
     enum class Period { DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM }
 
     // --- Loaders ---
@@ -133,10 +132,26 @@ class DashboardViewModel @Inject constructor(
     private fun shiftRange(direction: Int) {
         val (start, end) = currentRange
         val newRange = when (currentPeriod) {
-            Period.DAILY -> Pair(start.plusDays(direction.toLong()), end.plusDays(direction.toLong()))
-            Period.WEEKLY -> Pair(start.plusWeeks(direction.toLong()), end.plusWeeks(direction.toLong()))
-            Period.MONTHLY -> Pair(start.plusMonths(direction.toLong()), end.plusMonths(direction.toLong()))
-            Period.YEARLY -> Pair(start.plusYears(direction.toLong()), end.plusYears(direction.toLong()))
+            Period.DAILY -> Pair(
+                start.plusDays(direction.toLong()),
+                end.plusDays(direction.toLong())
+            )
+
+            Period.WEEKLY -> Pair(
+                start.plusWeeks(direction.toLong()),
+                end.plusWeeks(direction.toLong())
+            )
+
+            Period.MONTHLY -> Pair(
+                start.plusMonths(direction.toLong()),
+                end.plusMonths(direction.toLong())
+            )
+
+            Period.YEARLY -> Pair(
+                start.plusYears(direction.toLong()),
+                end.plusYears(direction.toLong())
+            )
+
             Period.CUSTOM -> return // Skip shifting custom range
         }
         currentRange = newRange
@@ -152,9 +167,10 @@ class DashboardViewModel @Inject constructor(
                 repository.getTotalPurchasesBetween(start, end),
                 repository.getTotalExpensesBetween(start, end),
                 repository.getProfitBetween(start, end),
-                repository.getAvgFatBetween(start,end),
-                repository.getAvgLrBetween(start,end),
-                repository.getTotalTsBetween(start,end)
+                repository.getAvgFatBetween(start, end),
+                repository.getAvgLrBetween(start, end),
+                repository.getTotalTsBetween(start, end),
+                repository.getTotalMilkWithFatAndLr(start, end)
             ) { results ->
                 val milkPurchase = results[0] ?: 0.0
                 val milkSold = results[1] ?: 0.0
@@ -165,6 +181,7 @@ class DashboardViewModel @Inject constructor(
                 val fat = results[6] ?: 0.0
                 val lr = results[7] ?: 0.0
                 val ts = results[8] ?: 0.0
+                val totalMilkWithFatAndLr = results[9] ?: 0.0
 
                 AnalyticsUiState(
                     milkPurchase = milkPurchase,
@@ -175,7 +192,8 @@ class DashboardViewModel @Inject constructor(
                     profit = profit,
                     avgFat = fat,
                     avgLr = lr,
-                    totalTs =  ts,
+                    totalTs = ts,
+                    totalMilkWithFatAndLr = totalMilkWithFatAndLr,
                     startDate = start,
                     endDate = end,
                     period = formatPeriodLabel(start, end)

@@ -26,6 +26,9 @@ interface ReportsDao {
     @Query("SELECT AVG(fat) FROM purchase_table WHERE date BETWEEN :start AND :end AND fat > 0.0")
     fun getAvgFatBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
+    @Query("SELECT SUM(milkAmount) FROM purchase_table WHERE date BETWEEN :start AND :end AND fat > 0.0 AND lr > 0.0")
+    fun getTotalMilkWithFatAndLrBetween(start: LocalDate, end: LocalDate): Flow<Double?>
+
     @Query("SELECT AVG(lr) FROM purchase_table WHERE date BETWEEN :start AND :end AND fat > 0.0")
     fun getAvgLrBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 

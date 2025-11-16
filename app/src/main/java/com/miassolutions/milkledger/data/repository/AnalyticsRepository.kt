@@ -40,6 +40,9 @@ class AnalyticsRepository @Inject constructor(
     fun getTotalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
         reportsDao.getTotalExpensesBetween(start, end)
 
+    fun getTotalMilkWithFatAndLr(start: LocalDate, end: LocalDate): Flow<Double?> =
+        reportsDao.getTotalMilkWithFatAndLrBetween(start, end)
+
     fun getProfitBetween(start: LocalDate, end: LocalDate): Flow<Double> =
         combine(
             reportsDao.getTotalSalesBetween(start, end),
@@ -73,6 +76,8 @@ class AnalyticsRepository @Inject constructor(
 
     fun getTotalExpensesAll(): Flow<Double?> =
         reportsDao.getTotalExpensesAll()
+
+
 
     fun getProfitAll(): Flow<Double> =
         combine(
