@@ -60,12 +60,10 @@ class PurchaseViewModel @Inject constructor(
     }
 
 
-
     init {
         // Start observing for the initial date from the UI state
         observeForDate(_uiState.value.currentDate)
     }
-
 
 
     fun updatePurchaseManually(updated: PurchaseEntity) {
@@ -216,6 +214,11 @@ class PurchaseViewModel @Inject constructor(
                     val totalTsMilk = validTsEntries.sumOf { it.purchase.ts }
                     totalTsMilk
                 } else 0.0
+
+                val milkFatLr = if (avgLr > 0.0 && avgFat > 0.0){
+                    validLREntries.sumOf { it.purchase.milkAmount }
+                } else 0.0
+
                 val grandTotal = sortedPurchases.sumOf { it.purchase.milkPrice }
                 val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
 
@@ -228,6 +231,7 @@ class PurchaseViewModel @Inject constructor(
                         avgFat = avgFat,
                         avgLr = avgLr,
                         totalTS = avgTS,
+                        milkFatLr = milkFatLr,
                         grandTotalForDate = grandTotal,
                         avgRatePerLiter = avgRatePerLiter
                     )

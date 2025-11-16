@@ -131,7 +131,8 @@ class PurchaseFragment :
                     avgLr = state.avgLr,
                     totalTS = state.totalTS,
                     totalAmount = state.grandTotalForDate,
-                    avgRate = state.avgRatePerLiter
+                    avgRate = state.avgRatePerLiter,
+                    milkFatLr = state.milkFatLr
                 )
 
                 val isToday = state.currentDate.isToday()
@@ -234,6 +235,7 @@ class PurchaseFragment :
         avgLr: Double,
         avgFat: Double,
         totalTS: Double,
+        milkFatLr: Double,
         totalAmount: Double,
         avgRate: Double
     ) {
@@ -246,10 +248,11 @@ class PurchaseFragment :
             // 2. Use the ViewBinding object to set the data efficiently
             summaryBinding.apply {
 
+
                 tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
-                tvAvgFat.text = "${avgFat.toRoundedStr()}%"
-                tvAvgLr.text = avgLr.toRoundedStr()
-                tvTotalTs.text = "${totalTS.toRoundedStr()}"
+                tvAvgFat.text = "${avgFat.toRoundedStr()}% (${milkFatLr})"
+                tvAvgLr.text = "${avgLr.toRoundedStr()} (${milkFatLr})"
+                tvTotalTs.text = "${totalTS.toRoundedStr()} (${milkFatLr})"
                 tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
                 tvAvgPrice.text = "Rs. ${avgRate.toPriceStr("%.2f")}"
             }
