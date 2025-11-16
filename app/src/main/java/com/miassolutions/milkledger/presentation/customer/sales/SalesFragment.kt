@@ -275,6 +275,13 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     }
 
     private fun navToDetail(id: String, name: String) {
+        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+        if (!isAdmin){
+            showSnackbar("Only ADMIN is allowed")
+            return
+        }
+
+
         findNavController().navigate(
             SalesFragmentDirections.actionSalesFragmentToCustomerDetailFragment(
                 id,

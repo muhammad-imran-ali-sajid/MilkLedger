@@ -260,6 +260,12 @@ class PurchaseFragment :
     }
 
     private fun navToSupplierDetail(supplier: PurchaseWithSupplier) {
+        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+        if (!isAdmin){
+            showSnackbar("Only ADMIN is allowed")
+            return
+        }
+
         findNavController().navigate(
             PurchaseFragmentDirections.actionPurchaseFragmentToSupplierDetailFragment(
                 supplier.supplier.supplierName,
