@@ -12,14 +12,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
-import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.BottomsheetBalanceHistoryBinding
 import com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class TransactionHistoryBottomSheet : BottomSheetDialogFragment() {
+class SupplierBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
 
     private val viewModel by viewModels<PurchaseViewModel>()
     private lateinit var adapter: BalanceHistoryAdapter
@@ -28,13 +27,13 @@ class TransactionHistoryBottomSheet : BottomSheetDialogFragment() {
         const val ARG_SUPPLIER_ID = "supplier_id"
         const val ARG_SUPPLIER_NAME = "supplier_name"
 
-        fun newInstance(supplierId: String, supplierName: String): TransactionHistoryBottomSheet {
+        fun newInstance(supplierId: String, supplierName: String): SupplierBalanceHistoryBottomSheet {
             val args = Bundle().apply {
                 putString(ARG_SUPPLIER_ID, supplierId)
                 putString(ARG_SUPPLIER_NAME, supplierName)
             }
 
-            val fragment = TransactionHistoryBottomSheet()
+            val fragment = SupplierBalanceHistoryBottomSheet()
             fragment.arguments = args
             return fragment
         }

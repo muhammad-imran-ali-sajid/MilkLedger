@@ -23,7 +23,7 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
-import com.miassolutions.milkledger.presentation.supplier.TransactionHistoryBottomSheet
+import com.miassolutions.milkledger.presentation.supplier.SupplierBalanceHistoryBottomSheet
 import com.miassolutions.milkledger.presentation.supplier.supplierdetail.toPurchaseRecordList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -168,7 +168,7 @@ class PurchaseFragment :
 
     private fun showBalanceHistory(supplierId: String, supplierName: String) {
 
-        val btmSheet = TransactionHistoryBottomSheet.newInstance(supplierId, supplierName)
+        val btmSheet = SupplierBalanceHistoryBottomSheet.newInstance(supplierId, supplierName)
 
         btmSheet.show(childFragmentManager, null)
     }
