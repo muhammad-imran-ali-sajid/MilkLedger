@@ -17,7 +17,6 @@
         android:gravity="center"
         android:padding="8dp"
         android:textColor="@color/white"
-        android:background="@drawable/bg_sale"
         android:text="12/10/2025"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -9,7 +9,6 @@
         android:id="@+id/tv_selected_date"
         style="@style/TitleText"
         android:layout_width="0dp"
-        android:background="@drawable/bg_purchase"
         android:padding="8dp"
         android:text="22 Oct 2025"
         android:textColor="@color/white"

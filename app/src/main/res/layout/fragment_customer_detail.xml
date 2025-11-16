@@ -11,7 +11,6 @@
         style="@style/TitleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_sale"
         android:textSize="20sp"
         android:padding="8dp"
         android:text="22 Oct 2025"
