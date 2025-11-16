@@ -130,7 +130,7 @@
 
                 <TextView
                     style="@style/Style.InputLabel"
-                    android:text="Payment" />
+                    android:text="He paid" />
 
                 <EditText
                     android:id="@+id/etPayment"

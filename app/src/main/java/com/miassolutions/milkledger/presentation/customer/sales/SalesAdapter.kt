@@ -4,6 +4,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import com.miassolutions.milkledger.core.helper.numberFormat
+import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
@@ -52,7 +54,12 @@ class SalesEntryAdapter(
             tvNetMilk.text = item.sale.netMilk.toRoundedStr()
             tvPrice.text = item.sale.price.toPriceStr()
             tvPayment.text = item.sale.paid.toPriceStr() // Assuming full payment for simplicity
-            tvBalance.text = "0" // Placeholder, compute if needed
+
+            val balance = item.sale.price - item.sale.paid
+
+            tvBalance.text = numberFormat(balance)
+            tvBalance.setTextColor(textColor(balance))
+
 
             btnBalance.setOnClickListener {
                 onBalanceClick(item.customer.customerId, item.customer.customerName)
