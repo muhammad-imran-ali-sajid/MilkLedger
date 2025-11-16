@@ -1,9 +1,12 @@
 package com.miassolutions.milkledger.presentation.customer.details
 
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.pdf.customerreport.CustomerReportGenerator
 import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
@@ -30,6 +33,25 @@ class CustomerDetailFragment :
         setupRecyclerView()
         setupCustomRangeCalendar()
 
+    }
+
+    override fun getMenuResId(): Int? {
+        return R.menu.menu_customer_detail
+    }
+
+    override fun onMenuCreated(menu: Menu) {
+        // Use the safe call operator or an 'if' check to prevent NPE
+        menu.findItem(R.id.action_gen_pdf)?.let { pdfMenuItem ->
+            pdfMenuItem.setOnMenuItemClickListener {
+                // Note: I'm recommending a small change here.
+                // When using the menu button, you should typically show the date filter first
+                // to allow the user to select the range for the report, rather than
+                // just running 'generateReport()' with the current filter dates.
+                generateReport()
+//                showDateFilter(isGeneratingReport = true)
+                true
+            }
+        }
     }
 
     private fun setupRecyclerView() {
@@ -108,13 +130,13 @@ class CustomerDetailFragment :
         viewModel.setCustomDateRange(start, end)
         // --- NEW: Trigger confirmation after dates are set ---
         // Since this runs after *any* date selection, we now ask for confirmation to generate the report.
-        showDialog(
-            "Generate Receipt",
-            "Generate receipt for range\n${formatPeriodLabel(start, end)}?"
-        ) {
-            // Only call generateReport AFTER confirmation
-            generateReport()
-        }
+//        showDialog(
+//            "Generate Receipt",
+//            "Generate receipt for range\n${formatPeriodLabel(start, end)}?"
+//        ) {
+//            // Only call generateReport AFTER confirmation
+//            generateReport()
+//        }
     }
 
 
