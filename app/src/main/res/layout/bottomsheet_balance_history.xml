@@ -14,11 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"
-
-        android:layout_marginBottom="16dp"
         android:background="@drawable/bg_edittext_readable"
         android:backgroundTint="@color/teal_700"
-        android:padding="12dp"
+        android:padding="8dp"
         android:text="Zafar Abbas\nBalance History"
         android:textColor="@color/white"
         android:textSize="18sp" />
@@ -27,9 +25,11 @@
         android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:padding="4dp"
+        android:background="@drawable/bg_edittext_readable"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
         android:weightSum="2">
 
         <TextView
