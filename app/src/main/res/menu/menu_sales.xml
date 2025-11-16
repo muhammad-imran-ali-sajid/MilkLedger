@@ -7,4 +7,12 @@
         android:title="Edit"
         app:showAsAction="always"
         app:actionLayout="@layout/item_menu_switch" />
+
+
+    <item
+        android:id="@+id/action_sale_pdf"
+        android:title="Edit"
+        android:icon="@drawable/ic_pdf"
+        app:showAsAction="always"
+         />
 </menu>

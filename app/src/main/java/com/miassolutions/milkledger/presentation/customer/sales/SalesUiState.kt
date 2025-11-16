@@ -1,5 +1,7 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
+import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesItemRecord
+import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import java.time.LocalDate
 
@@ -9,7 +11,9 @@ data class SalesUiState(
     val grandSaleTotalForDate: Double = 0.0,
     val selectedCustomerId: String? = null,
     val navToLedgerForCustomerId: String? = null,
-    val salePdfReport: SalePdfReport = SalePdfReport(),
+    val pdfSalesSummary: PdfSalesSummary = PdfSalesSummary(),
+    val pfdSalesItemRecord: PdfSalesItemRecord = PdfSalesItemRecord(),
+//    val salePdfReport: SalePdfReport = SalePdfReport(),
     val totalMilk: Double = 0.0,
     val totalNetMilk: Double = 0.0,
     val totalDeduction: Double = 0.0,
@@ -20,18 +24,18 @@ data class SalesUiState(
 )
 
 
-data class SalePdfReport(
-    val customerName: String = "",
-    val date: String = "",
-    val receiptId: String = "",
-    val totalMilk: Double = 0.0,
-    val totalNetMilk: Double = 0.0,
-    val totalDeduction: Double = 0.0,
-    val totalAmount: Double = 0.0,
-    val totalPaid: Double = 0.0,
-    val totalBalance: Double = 0.0,
-
-    )
+//data class SalePdfReport(
+//    val customerName: String = "",
+//    val date: String = "",
+//    val receiptId: String = "",
+//    val totalMilk: Double = 0.0,
+//    val totalNetMilk: Double = 0.0,
+//    val totalDeduction: Double = 0.0,
+//    val totalAmount: Double = 0.0,
+//    val totalPaid: Double = 0.0,
+//    val totalBalance: Double = 0.0,
+//
+//    )
 
 
 sealed class SalesUiEvent {

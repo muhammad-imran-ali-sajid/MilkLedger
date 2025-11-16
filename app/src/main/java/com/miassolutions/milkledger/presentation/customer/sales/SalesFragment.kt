@@ -45,6 +45,14 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     override fun onMenuCreated(menu: Menu) {
 
+        val pdfMenuItem = menu.findItem(R.id.action_sale_pdf)
+
+        pdfMenuItem?.setOnMenuItemClickListener {
+            generateReport()
+            true
+        }
+
+
         val editModeItem = menu.findItem(R.id.action_edit_mode)
         editModeSwitch =
             editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
@@ -235,8 +243,8 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         TodaySalesPdf.generateAndSharePdf(
             context = requireContext(),
             data = data,
-            baseName = "Supplier",
-            showLogo = true,
+            baseName = "Customer",
+            showLogo = false,
         )
 
         showToast("Generating pdf report...")

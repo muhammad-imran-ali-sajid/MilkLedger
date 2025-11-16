@@ -48,7 +48,7 @@ object TodaySalesPdf {
         with(binding) {
             // tv_receipt corresponds to tvPartyName in the header
             tvReceipt.text = "Receipt Id: $receiptName"
-            tvPartyName.text = "Milk Purchase Receipt" // Static title
+            tvPartyName.text = "Milk Sales Receipt" // Static title
             tvDateRange.text = "Date: ${data.date}" // This ID was tvDateRange
             tvFooter.text = data.footerNote ?: ""
         }
@@ -75,11 +75,11 @@ object TodaySalesPdf {
         // Note: LayoutSalesReceiptBinding needs to have IDs tvSummaryTotalQty, tvSummaryTotalAmount, etc.
         with(binding) {
 
-            tvTotalQuantity.text = data.purchaseSummary.totalQty
-            tvTotalDeduction.text = data.purchaseSummary.totalDeduction
-            tvSummaryTotalAmount.text = data.purchaseSummary.totalAmount
-            tvSummaryTotalPaid.text = data.purchaseSummary.totalPaid
-            tvSummaryBalance.text = data.purchaseSummary.balanceDue
+            tvTotalQuantity.text = data.salesSummary.totalQty
+            tvTotalDeduction.text = data.salesSummary.totalDeduction
+            tvSummaryTotalAmount.text = data.salesSummary.totalAmount
+            tvSummaryTotalPaid.text = data.salesSummary.totalPaid
+            tvSummaryBalance.text = data.salesSummary.balanceDue
         }
 
 

@@ -2,7 +2,10 @@ package com.miassolutions.milkledger.presentation.customer.sales
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
+import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.repository.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -93,28 +96,36 @@ class SalesViewModel @Inject constructor(
             repository.getSalesByDate(date).collectLatest { sales ->
                 val sortedSales = sales.sortedBy { it.customer.sortOrder }
 
-                val totalMilk = sortedSales.sumOf { it.sale.volume }
+
+                val totalVolume = sortedSales.sumOf { it.sale.volume }
                 val totalDeduction = sortedSales.sumOf { it.sale.deduction }
 
                 // FIX: Use the 'price' field for the grand total,
                 // and 'price' minus 'paid' for the outstanding amount.
-                val grandTotal = sortedSales.sumOf { it.sale.price }
+                val grandTotalPrice = sortedSales.sumOf { it.sale.price }
                 val totalNetMilk = sortedSales.sumOf { it.sale.netMilk }
-                val totalAmountDue = sortedSales.sumOf { it.sale.price - it.sale.paid }
+                val totalBalance = sortedSales.sumOf { it.sale.price - it.sale.paid }
 
                 val avgRatePerLiter =
-                    if (totalMilk > 0) grandTotal / totalMilk else 0.0
+                    if (totalVolume > 0) grandTotalPrice / totalVolume else 0.0
 
                 _uiState.update {
                     it.copy(
                         currentDate = date,
                         salesForDate = sortedSales,
-                        totalMilk = totalMilk,
+                        totalMilk = totalVolume,
                         totalDeduction = totalDeduction,
-                        totalAmount = totalAmountDue, // Use totalAmountDue for consistency
+                        totalAmount = totalBalance, // Use totalAmountDue for consistency
                         totalNetMilk = totalNetMilk,
-                        grandSaleTotalForDate = grandTotal,
-                        avgRatePerLiter = avgRatePerLiter
+                        grandSaleTotalForDate = grandTotalPrice,
+                        avgRatePerLiter = avgRatePerLiter,
+                        pdfSalesSummary = PdfSalesSummary(
+                            totalQty = totalVolume.toRoundedStr(),
+                            totalDeduction = totalDeduction.toRoundedStr(),
+                            totalAmount = avgRatePerLiter.toPriceStr(),
+                            totalPaid = avgRatePerLiter.toRoundedStr(),
+                            balanceDue = avgRatePerLiter.toRoundedStr()
+                        )
                     )
                 }
             }

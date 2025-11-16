@@ -9,19 +9,19 @@ data class SalesReportPdf(
 )
 
 data class PdfSalesSummary(
-    val totalQty: String,
-    val totalDeduction : String,
-    val totalAmount: String,
-    val totalPaid: String,
-    val balanceDue: String
+    val totalQty: String = "",
+    val totalDeduction: String = "",
+    val totalAmount: String = "",
+    val totalPaid: String = "",
+    val balanceDue: String = ""
 )
 
 data class PdfSalesItemRecord(
-    val customerName: String,
-    val milkVolume: String,
-    val deduction: String,
-    val rate : String,
-    val amount: String,
-    val paid: String,
-    val balance: String,
+    val customerName: String = "",
+    val milkVolume: String = "",
+    val deduction: String = "",
+    val rate: String = "",
+    val amount: String = "",
+    val paid: String = "",
+    val balance: String = "",
 )
