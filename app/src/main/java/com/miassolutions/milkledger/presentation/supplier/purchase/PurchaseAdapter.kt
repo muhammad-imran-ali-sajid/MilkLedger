@@ -18,7 +18,7 @@ import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 class PurchaseAdapter(
     private val onEditClick: (PurchaseWithSupplier) -> Unit,
     private val onItemDetailClick: (PurchaseWithSupplier) -> Unit,
-    private val onBalanceClick: (String) -> Unit
+    private val onBalanceClick: (String, String) -> Unit
 ) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.ViewHolder>(DiffCallback()) {
 
 
@@ -60,12 +60,17 @@ class PurchaseAdapter(
             tvPrice.text = item.purchase.milkPrice.toPriceStr()
             tvPaid.text = item.purchase.payment.toPriceStr()
 
-            val balance = item.purchase.milkPrice - item.purchase.payment
+            val balance = item.purchase.payment - item.purchase.milkPrice
 
             tvBalance.text = numberFormat(balance)
             tvBalance.setTextColor(textColor(balance))
 
-            btnBalance.setOnLongClickListener { onBalanceClick(item.supplier.supplierId); true }
+            btnBalance.setOnLongClickListener {
+                onBalanceClick(
+                    item.supplier.supplierId,
+                    item.supplier.supplierName
+                ); true
+            }
 
 
             btnEditForm.setOnClickListener { onEditClick(item) }

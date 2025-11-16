@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.BottomsheetBalanceHistoryBinding
 import com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,10 +24,12 @@ class TransactionHistoryBottomSheet : BottomSheetDialogFragment() {
 
     companion object {
         const val ARG_SUPPLIER_ID = "supplier_id"
+        const val ARG_SUPPLIER_NAME = "supplier_name"
 
-        fun newInstance(supplierId: String): TransactionHistoryBottomSheet {
+        fun newInstance(supplierId: String, supplierName: String): TransactionHistoryBottomSheet {
             val args = Bundle().apply {
                 putString(ARG_SUPPLIER_ID, supplierId)
+                putString(ARG_SUPPLIER_NAME, supplierName)
             }
 
             val fragment = TransactionHistoryBottomSheet()
@@ -51,6 +54,7 @@ class TransactionHistoryBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         val supplierId = arguments?.getString(ARG_SUPPLIER_ID)
+        val supplierName = arguments?.getString(ARG_SUPPLIER_NAME)
 
         if (supplierId.isNullOrEmpty()) {
             return
@@ -68,7 +72,8 @@ class TransactionHistoryBottomSheet : BottomSheetDialogFragment() {
                     Log.d("TransactionHistory", "$it")
 
                     val totalBalance = it.sumOf { balanceHistory -> balanceHistory.balance }
-                    binding.tvBalance.text = totalBalance.toString()
+                    binding.tvBalance.text = totalBalance.toPriceStr()
+                    binding.tvTitle.text = "$supplierName\nBalance History"
                     adapter.submitList(it)
                 }
             }

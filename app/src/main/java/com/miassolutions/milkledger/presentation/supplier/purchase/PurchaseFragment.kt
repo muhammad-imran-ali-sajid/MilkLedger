@@ -157,7 +157,7 @@ class PurchaseFragment :
         purchaseAdapter = PurchaseAdapter(
             ::showEditBottomSheet,
             ::navToSupplierDetail,
-            { it: String -> showBalanceHistory(it) }
+            { id, name -> showBalanceHistory(id, name) }
         )
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
@@ -166,9 +166,9 @@ class PurchaseFragment :
         }
     }
 
-    private fun showBalanceHistory(supplierId: String) {
+    private fun showBalanceHistory(supplierId: String, supplierName: String) {
 
-        val btmSheet = TransactionHistoryBottomSheet.newInstance(supplierId)
+        val btmSheet = TransactionHistoryBottomSheet.newInstance(supplierId, supplierName)
 
         btmSheet.show(childFragmentManager, null)
     }

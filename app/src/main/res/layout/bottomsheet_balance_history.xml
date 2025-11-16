@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@drawable/bg_milk_overview">
+    android:background="@drawable/bg_milk_overview"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/tvDate"
+        android:id="@+id/tvTitle"
         style="@style/TextLabel"
-        android:textSize="24sp"
-        android:backgroundTint="@color/teal_700"
-        android:textColor="@color/white"
-        android:padding="12dp"
-        android:background="@drawable/bg_edittext_readable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
+
         android:layout_marginBottom="16dp"
-        android:text="Balance History" />
+        android:background="@drawable/bg_edittext_readable"
+        android:backgroundTint="@color/teal_700"
+        android:padding="12dp"
+        android:text="Zafar Abbas\nBalance History"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -67,21 +68,21 @@
 
         <TextView
             style="@style/TextValue"
-            android:textSize="24sp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Total" />
+            android:text="Total"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/tvBalance"
             style="@style/TextValue"
             android:layout_width="0dp"
-            android:textSize="24sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="0000" />
+            android:text="0000"
+            android:textSize="24sp" />
     </LinearLayout>
 
 </LinearLayout>
