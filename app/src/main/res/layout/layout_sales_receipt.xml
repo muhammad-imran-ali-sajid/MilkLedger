@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
+            android:textColor="@color/black"
             android:textSize="10sp"
             tools:text="23 Oct - 25 Oct" />
 
@@ -54,7 +55,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#EEEEEE"
+            android:background="@color/blue_100"
             android:orientation="horizontal"
             android:paddingHorizontal="2dp"
             android:paddingVertical="2dp">
@@ -65,6 +66,7 @@
                 android:layout_weight="2"
                 android:gravity="start"
                 android:text="Date"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -74,6 +76,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Qty"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -82,7 +85,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Deduction"
+                android:text="Deduc."
+                android:textColor="@color/black"
+                android:textSize="8sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Net Milk"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -92,6 +106,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Rate"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -101,6 +116,7 @@
                 android:layout_weight="1"
                 android:gravity="end"
                 android:text="Amount"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -110,6 +126,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Paid"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
@@ -119,6 +136,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Balance"
+                android:textColor="@color/black"
                 android:textSize="8sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -138,108 +156,135 @@
             android:layout_marginTop="4dp"
             android:background="#000" />
 
+
+        <!-- Summary -->
+        <TextView
+            style="@style/PdfSummaryTextStyle"
+            android:text="Summary"
+            android:textColor="#2E7D32"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/summaryContainer"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:layout_gravity="end">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:gravity="end"
-                android:orientation="vertical"
-                android:weightSum="4">
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    android:text="Total Amount:"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    android:text="Total Paid:"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    android:text="Total Balance:"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
+            android:orientation="horizontal"
+            android:padding="4dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:orientation="vertical"
-                android:weightSum="4">
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvTotal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    android:text="100000"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-
-                    android:background="#000" />
+                    style="@style/PdfSummaryTextStyle"
+                    android:text="Tot. Qty"
+                    android:textColor="#616161" />
 
                 <TextView
-                    android:id="@+id/tv_total_paid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    android:text="0000"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000" />
-
-                <TextView
-                    android:id="@+id/tv_total_balance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:layout_marginTop="8dp"
-                    android:text="0"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#000" />
-
+                    android:id="@+id/tvSummaryTotalQty"
+                    style="@style/PdfSummaryTextStyle"
+                    android:textColor="#000000"
+                    tools:text="150.50 L" />
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
+                <TextView
+                    style="@style/PdfSummaryTextStyle"
+                    android:text="Tot. Ded"
+                    android:textColor="#616161" />
+
+                <TextView
+                    android:id="@+id/tvSummaryDeduction"
+                    style="@style/PdfSummaryTextStyle"
+                    android:textColor="#000000"
+                    tools:text="24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/PdfSummaryTextStyle"
+                    android:text="Net Milk"
+                    android:textColor="#616161" />
+
+                <TextView
+                    android:id="@+id/tvSummaryNetMilk"
+                    style="@style/PdfSummaryTextStyle"
+                    android:textColor="#000000"
+                    tools:text="24" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/PdfSummaryTextStyle"
+                    android:text="Total Amount"
+                    android:textColor="#616161" />
+
+                <TextView
+                    android:id="@+id/tvSummaryTotalAmount"
+                    style="@style/PdfSummaryTextStyle"
+                    android:textColor="#000000"
+                    tools:text="15,050.00" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/PdfSummaryTextStyle"
+                    android:text="Total Paid"
+                    android:textColor="#616161" />
+
+                <TextView
+                    android:id="@+id/tvSummaryTotalPaid"
+                    style="@style/PdfSummaryTextStyle"
+                    android:textColor="#2E7D32"
+                    tools:text="10,000.00" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/PdfSummaryTextStyle"
+                    android:text="Balance"
+                    android:textColor="#616161" />
+
+                <TextView
+                    android:id="@+id/tvSummaryBalance"
+                    style="@style/PdfSummaryTextStyle"
+                    android:textColor="#C62828"
+                    tools:text="5,050.00" />
+            </LinearLayout>
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -261,7 +306,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="8dp"
-                    android:text="Payer Signature:"
+                    android:text="Payer Sign:"
+                    android:textColor="@color/black"
                     android:textSize="10sp"
                     android:textStyle="bold" />
 
@@ -287,7 +333,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginTop="8dp"
-                    android:text="Payee Signature:"
+                    android:text="Payee Sign:"
+                    android:textColor="@color/black"
                     android:textSize="10sp"
                     android:textStyle="bold" />
 

@@ -156,6 +156,9 @@ class CustomerDetailFragment :
         Log.d("SupplierDetailFragment", "Report Date Range: $dateRange")
 
         val recordList = filteredList.toRecordList()
+        val totalVolume = recordList.sumOf { it.quantity }
+        val totalDeduction = recordList.sumOf { it.deduction }
+        val totalNetMilk = recordList.sumOf { it.netMilk }
         val totalAmount = recordList.sumOf { it.amount }
         val totalPaid = recordList.sumOf { it.paid }
         val totalBalance = recordList.sumOf { it.balance }
@@ -165,11 +168,14 @@ class CustomerDetailFragment :
             dateRange = dateRange,
             partyName = args.customerName,
             recordList = recordList,
+
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             totalBalance = totalBalance.toRoundedStr(),
-            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}"
-
+            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}",
+            totalVolume = totalVolume.toRoundedStr(),
+            totalDeduction = totalDeduction.toRoundedStr(),
+            totalNetMilk = totalNetMilk.toRoundedStr()
         )
 
         CustomerReportGenerator.generateAndSharePdf(

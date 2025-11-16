@@ -122,9 +122,9 @@ object SupplierReportGenerator {
             tvReceipt.text = "Receipt Id: $receiptName"
             tvPartyName.text = "Party: ${data.partyName}"
             tvDateRange.text = "Date Range: ${data.dateRange}"
-            tvTotal.text = data.totalAmount
-            tvTotalPaid.text = data.totalPaid
-            tvTotalBalance.text = data.totalBalance
+            tvSummaryTotalAmount.text = data.totalAmount
+            tvSummaryTotalPaid.text = data.totalPaid
+            tvSummaryBalance.text = data.totalBalance
             tvFooter.text = data.footerNote ?: ""
         }
 

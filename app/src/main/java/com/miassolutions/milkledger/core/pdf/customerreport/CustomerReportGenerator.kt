@@ -39,11 +39,14 @@ object CustomerReportGenerator {
         // Header info
         with(binding) {
             tvReceipt.text = "Receipt Id: $receiptName"
-            tvPartyName.text = "Party: ${data.partyName}"
+            tvPartyName.text = "${data.partyName}"
             tvDateRange.text = "Date Range: ${data.dateRange}"
-            tvTotal.text = data.totalAmount
-            tvTotalPaid.text = data.totalPaid
-            tvTotalBalance.text = data.totalBalance
+            tvSummaryTotalQty.text = data.totalVolume
+            tvSummaryDeduction.text = data.totalDeduction
+            tvSummaryNetMilk.text = data.totalNetMilk
+            tvSummaryTotalAmount.text = data.totalAmount
+            tvSummaryTotalPaid.text = data.totalPaid
+            tvSummaryBalance.text = data.totalBalance
             tvFooter.text = data.footerNote ?: ""
         }
 
@@ -55,6 +58,7 @@ object CustomerReportGenerator {
             rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
             rowBinding.tvDeduction.text = item.deduction.toRoundedStr()
+            rowBinding.tvNetMilk.text = item.netMilk.toRoundedStr()
             rowBinding.tvRate.text = item.rate.toString()
             rowBinding.tvAmount.text = item.amount.toRoundedStr()
             rowBinding.tvPaid.text = item.paid.toRoundedStr()

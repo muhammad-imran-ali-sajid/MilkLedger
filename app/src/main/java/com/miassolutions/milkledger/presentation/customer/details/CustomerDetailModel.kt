@@ -59,12 +59,13 @@ fun List<CustomerDetailModel>.toRecordList(): List<SalesItemRecord> {
     return this.map { item ->
         SalesItemRecord(
             date = item.date.toDisplayFormat(),
-            quantity = item.netMilk, // Use netMilk for quantity
+            quantity = item.milkAmount, // Use netMilk for quantity
             deduction = 0.0, // N/A for customer, or use a placeholder
             rate = item.rateUsed,
             amount = item.milkPrice, // Total amount/price
             paid = item.payment,
-            balance = item.balance
+            balance = item.balance,
+            netMilk = item.netMilk
         )
     }
 }
