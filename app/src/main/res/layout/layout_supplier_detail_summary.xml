@@ -51,7 +51,7 @@
             style="@style/Text.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Volume" />
+            android:text="Total Volume" />
 
         <TextView
             android:id="@+id/tv_total_milk"
@@ -153,7 +153,7 @@
             style="@style/Text.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total Amount" />
+            android:text="Total Price" />
 
         <TextView
             android:id="@+id/tv_total_amount"
@@ -176,7 +176,7 @@
             style="@style/TextViewSummaryStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Paid Amount"
+            android:text="Total Paid"
 
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_total_price_label" />
@@ -208,7 +208,7 @@
             style="@style/TextViewSummaryStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Balance Due"
+            android:text="Balance"
 
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"

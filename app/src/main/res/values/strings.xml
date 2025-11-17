@@ -10,7 +10,7 @@
     <string name="purchases">Purchases</string>
     <string name="sales">Sales</string>
     <string name="expenses">Expenses</string>
-    <string name="stats">Stats</string>
+    <string name="stats">Payment Overview</string>
     <string name="backup_restore">Backup/Restore</string>
     <string name="logout">Logout</string>
     <string name="add_supplier">Add Supplier</string>

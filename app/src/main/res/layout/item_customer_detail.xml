@@ -49,7 +49,7 @@
                 android:gravity="center">
 
                 <TextView
-                    android:text="Milk"
+                    android:text="Volume"
                     style="@style/TextLabel" />
 
                 <TextView
@@ -136,7 +136,7 @@
                 android:gravity="center">
 
                 <TextView
-                    android:text="Payment"
+                    android:text="Received"
                     style="@style/TextLabel" />
 
                 <TextView
