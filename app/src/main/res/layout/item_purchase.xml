@@ -78,7 +78,7 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Milk" />
+                    android:text="Volume" />
 
                 <TextView
                     android:id="@+id/tvVolume"
@@ -163,7 +163,7 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Amount" />
+                    android:text="Price" />
 
                 <TextView
                     android:id="@+id/tvPrice"
@@ -181,7 +181,7 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Payment" />
+                    android:text="Paid" />
 
                 <TextView
                     android:id="@+id/tvPaid"
