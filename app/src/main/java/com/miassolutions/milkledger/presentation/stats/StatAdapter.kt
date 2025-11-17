@@ -1,7 +1,9 @@
 package com.miassolutions.milkledger.presentation.stats
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -102,7 +104,8 @@ class CustomerViewHolder(private val binding: ItemCustomerPaidBinding) :
     fun bind(summary: CustomerPaidSummary) {
         // e.g., Set text: Ali 199.0
         binding.customerNameTextView.text = summary.customerName
-        binding.paidAmountTextView.text = summary.paidAmount.toString()
+        binding.paidAmountTextView.setTextColor(Color.GREEN)
+        binding.paidAmountTextView.text = summary.paidAmount.toPriceStr()
     }
 }
 
@@ -111,7 +114,8 @@ class SupplierViewHolder(private val binding: ItemSupplierPaidBinding) :
     fun bind(summary: SupplierPaidSummary) {
         // e.g., Set text: Ali 199.0
         binding.supplierNameTextView.text = summary.supplierName
-        binding.paymentAmountTextView.text = summary.paidAmount.toString()
+        binding.paymentAmountTextView.setTextColor(Color.argb(255,255,152,0))
+        binding.paymentAmountTextView.text = summary.paidAmount.toPriceStr()
     }
 }
 
@@ -120,6 +124,7 @@ class ExpenseViewHolder(private val binding: ItemExpenseBinding) :
     fun bind(summary: ExpenseSummary) {
         binding.apply {
             tvExpense.text = summary.expenseTitle
+            tvExpenseAmount.setTextColor(Color.argb(255,240,240,0))
             tvExpenseAmount.text = summary.expenseAmount.toPriceStr()
         }
     }
