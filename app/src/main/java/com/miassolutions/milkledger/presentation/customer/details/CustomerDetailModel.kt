@@ -75,12 +75,12 @@ fun List<SaleWithCustomer>.toSaleRecordList(): List<PdfSalesItemRecord> {
     return this.map { item ->
         PdfSalesItemRecord(
             customerName = item.customer.customerName,
-            milkVolume = item.sale.volume.toPriceStr(),
-            deduction = item.sale.deduction.toPriceStr(),
-            rate = item.sale.rateUsed.toRoundedStr(),
-            amount = item.sale.price.toRoundedStr(),
-            paid = item.sale.paid.toPriceStr(),
-            balance = item.sale.balance.toPriceStr()
+            milkVolume = item.sale.volume,
+            deduction = item.sale.deduction,
+            rate = item.sale.rateUsed,
+            amount = item.sale.price,
+            paid = item.sale.paid,
+            balance = item.sale.balance
         )
 
     }

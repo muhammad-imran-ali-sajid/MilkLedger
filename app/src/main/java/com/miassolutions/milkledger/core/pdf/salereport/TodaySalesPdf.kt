@@ -5,6 +5,8 @@ import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
+import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemCustomerRecordRowBinding
 // NOTE: I am assuming the purchase layout is bound to LayoutPurchaseReceiptBinding
 // If you are using your old LayoutSalesReceiptBinding for the new XML, keep it,
@@ -60,12 +62,12 @@ object TodaySalesPdf {
                 ItemCustomerRecordRowBinding.inflate(inflater, binding.recordContainer, false)
 
             rowBinding.tvCustomer.text = item.customerName
-            rowBinding.tvQty.text = item.milkVolume
-            rowBinding.tvDeduction.text = item.deduction
-            rowBinding.tvRate.text = item.rate
-            rowBinding.tvAmount.text = item.amount
-            rowBinding.tvPaid.text = item.paid
-            rowBinding.tvBalance.text = item.balance
+            rowBinding.tvQty.text = item.milkVolume.toRoundedStr()
+            rowBinding.tvDeduction.text = item.deduction.toRoundedStr()
+            rowBinding.tvRate.text = item.rate.toRoundedStr()
+            rowBinding.tvAmount.text = item.amount.toPriceStr()
+            rowBinding.tvPaid.text = item.paid.toPriceStr()
+            rowBinding.tvBalance.text = item.balance.toPriceStr()
 
 
             binding.recordContainer.addView(rowBinding.root)

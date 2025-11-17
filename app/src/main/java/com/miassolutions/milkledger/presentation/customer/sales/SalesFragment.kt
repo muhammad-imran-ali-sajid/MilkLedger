@@ -262,9 +262,9 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         return PdfSalesSummary(
             totalQty = totalQty.toRoundedStr(),
             totalDeduction = totalDeduction.toRoundedStr(),
-            totalAmount = totalAmount.toRoundedStr(),
-            totalPaid = totalPaid.toRoundedStr(),
-            balanceDue = balanceDue.toRoundedStr()
+            totalAmount = totalAmount.toPriceStr(),
+            totalPaid = totalPaid.toPriceStr(),
+            balanceDue = balanceDue.toPriceStr()
         )
     }
 

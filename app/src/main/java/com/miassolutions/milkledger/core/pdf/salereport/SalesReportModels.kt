@@ -18,10 +18,10 @@ data class PdfSalesSummary(
 
 data class PdfSalesItemRecord(
     val customerName: String = "",
-    val milkVolume: String = "",
-    val deduction: String = "",
-    val rate: String = "",
-    val amount: String = "",
-    val paid: String = "",
-    val balance: String = "",
+    val milkVolume: Double = 0.0,
+    val deduction: Double = 0.0,
+    val rate: Double = 0.0,
+    val amount: Double = 0.0,
+    val paid: Double= 0.0,
+    val balance: Double= 0.0,
 )
