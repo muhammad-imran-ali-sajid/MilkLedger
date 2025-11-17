@@ -87,31 +87,7 @@ class SalesViewModel @Inject constructor(
         // 💡 Logging the input ID is crucial for debugging
         Log.d("SalesViewModel", "Loaded Balance History for ID: $customerId. Items: ${history.size}")
     }
-//    fun getBalanceHistory(customerId: String) = viewModelScope.launch {
-//        _balanceHistory.value = repository.getBalanceHistory(customerId)
-//        Log.d("SalesViewModel", "${repository.getBalanceHistory(customerId)}")
-//    }
 
-//    @OptIn(ExperimentalCoroutinesApi::class)
-//    val balanceHistory: StateFlow<List<BalanceHistory>> = _balanceCustomerId
-//        .filterNotNull() // Only process non-null IDs
-//        .flatMapLatest { id ->
-//            // Call the repository function that now returns Flow
-//            repository.getBalanceHistory(id)
-//        }
-//        // Ensure it starts with an initial value (an empty list)
-//        .onStart { emit(emptyList()) }
-//        // Convert the Flow into a StateFlow that shares the results
-//        .stateIn(
-//            scope = viewModelScope,
-//            started = SharingStarted.WhileSubscribed(5000), // Start collecting when a UI collector appears
-//            initialValue = emptyList()
-//        )
-
-//    fun setBalanceCustomerId(customerId: String) {
-//        // Update the StateFlow, which automatically triggers the flatMapLatest block above.
-//        _balanceCustomerId.value = customerId
-//    }
 
 
     // ----------------------------------------------------------
@@ -197,7 +173,7 @@ class SalesViewModel @Inject constructor(
                         salesForDate = sortedSales,
                         totalMilk = totalVolume,
                         totalDeduction = totalDeduction,
-                        totalAmount = totalBalance, // Use totalAmountDue for consistency
+                        totalBalance = totalBalance, // Use totalAmountDue for consistency
                         totalNetMilk = totalNetMilk,
                         grandSaleTotalForDate = grandTotalPrice,
                         avgRatePerLiter = avgRatePerLiter,
@@ -258,7 +234,5 @@ class SalesViewModel @Inject constructor(
         }
     }
 
-    fun onLedgerNavigated() {
-        _uiState.update { it.copy(navToLedgerForCustomerId = null) }
-    }
+
 }

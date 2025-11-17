@@ -228,7 +228,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         val pdfSummary = pdfSummary(
             totalQty = state.totalMilk,
             totalDeduction = state.totalDeduction,
-            totalAmount = state.totalAmount,
+            totalAmount = state.grandSaleTotalForDate,
             totalPaid = state.totalPaid,
             balanceDue = state.totalBalance
 
@@ -318,7 +318,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
                     milkAmount = state.totalMilk,
                     deduction = state.totalDeduction,
                     totalNetMilk = state.totalNetMilk,
-                    totalAmount = state.totalAmount,
+                    totalAmount = state.grandSaleTotalForDate,
                     avgRate = state.avgRatePerLiter
                 )
 
