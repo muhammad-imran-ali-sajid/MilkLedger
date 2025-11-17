@@ -12,47 +12,49 @@ import java.time.format.DateTimeFormatter
 
 object PdfUtils {
 
-    val DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss")
+    // Add milliseconds for guaranteed unique filenames
+    val DATE_FORMATTER = DateTimeFormatter.ofPattern("ddMMyyyy_HHmmss_SSS")
 
     private const val FOLDER_NAME = "Receipts"
 
-    fun getPdfFile(context: Context, baseName : String): File {
+    fun getPdfFile(context: Context, baseName: String): File {
         val dir = File(context.getExternalFilesDir(null), FOLDER_NAME)
-        // Ensure the directory exists
         if (!dir.exists()) dir.mkdirs()
 
-        // Get the current date and time formatted for a file name
         val timestamp = LocalDateTime.now().format(DATE_FORMATTER)
-
-        // Sanitize the base name for file system compatibility (optional but recommended)
-//        val sanitizedBaseName = baseName.replace(Regex("[^a-zA-Z0-9_-]"), "_")
-
-        // Construct the unique file name
         val fileName = "${baseName}_$timestamp.pdf"
 
         return File(dir, fileName)
     }
 
-
     fun getLogoBitmap(context: Context, resId: Int): Bitmap {
         return BitmapFactory.decodeResource(context.resources, resId)
     }
 
-
     fun sharePdf(context: Context, file: File, title: String = "Share Receipt") {
+
         val uri = FileProvider.getUriForFile(
             context,
-            context.packageName + ".provider", // defined in manifest
+            context.packageName + ".provider",
             file
+        )
+
+        // Ensure URI permission freshly granted
+        context.grantUriPermission(
+            context.packageName,
+            uri,
+            Intent.FLAG_GRANT_READ_URI_PERMISSION
         )
 
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "application/pdf"
             putExtra(Intent.EXTRA_STREAM, uri)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
-        Log.d("PDF_UTILS", "${file.absolutePath}")
+        Log.d("PDF_UTILS", "Sharing: ${file.absolutePath}")
+
         context.startActivity(Intent.createChooser(intent, title))
     }
 }
