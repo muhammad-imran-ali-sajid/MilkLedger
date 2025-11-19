@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.autoSelectOnFocus
@@ -16,14 +17,17 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
+import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import kotlin.math.roundToInt
 
 
 class SalesEditBottomSheet(
     private val entry: SaleWithCustomer,
-    private val onSave: (SalesEntity) -> Unit,
-
+    private val onSave: (SalesEntity) -> Unit
 ) : BottomSheetDialogFragment() {
+
+    private val viewModel by viewModels<SalesViewModel>()
 
     private var _binding: BottomsheetEditSalesBinding? = null
     private val binding get() = _binding!!
@@ -43,9 +47,21 @@ class SalesEditBottomSheet(
         setupRecalculation()
         setupSaveButton()
         autoSelection()
+
+        binding.btnSelectDate.setOnClickListener {
+            val id = entry.customer.customerId
+            val name = entry.customer.customerName
+            showCustomerBalanceHistory(id, name)
+        }
+
         binding.btnCancel.setOnClickListener { dismiss() }
 
 
+    }
+
+    private fun showCustomerBalanceHistory(id: String, name: String) {
+        val btmSheet = CustomerBalanceHistoryBottomSheet.newInstance(id, name)
+        btmSheet.show(childFragmentManager, null)
     }
 
     private fun setupRecalculation() {
@@ -64,9 +80,8 @@ class SalesEditBottomSheet(
             etVolume.setText(entry.sale.volume.toRoundedStr())
             etDeduction.setText(entry.sale.deduction.toRoundedStr())
             etPayment.setText(entry.sale.paid.toPriceStr())
-            tvRate.text =entry.sale.rateUsed.toRoundedStr()
+            tvRate.text = entry.sale.rateUsed.toRoundedStr()
             etNotes.setText(entry.sale.notes ?: "")
-
 
 
             // Initial calculation
@@ -80,7 +95,6 @@ class SalesEditBottomSheet(
         autoSelectOnFocus(etPayment)
         autoSelectOnFocus(etNotes)
     }
-
 
 
     private fun setupSaveButton() {
