@@ -10,7 +10,8 @@ import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
 
 class BalanceHistoryAdapter(
-    private var balanceHistoryList: List<BalanceHistory> = emptyList()
+    private var balanceHistoryList: List<BalanceHistory> = emptyList(),
+    private val onItemClick: ((BalanceHistory) -> Unit)? = null
 ) : RecyclerView.Adapter<BalanceHistoryAdapter.BalanceHistoryViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,7 +32,7 @@ class BalanceHistoryAdapter(
 
     override fun getItemCount(): Int = balanceHistoryList.size
 
-    class BalanceHistoryViewHolder(private val binding: ItemBalanceHitoryBinding) :
+    inner class BalanceHistoryViewHolder(private val binding: ItemBalanceHitoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BalanceHistory) {
             binding.tvDate.text = item.date.format(dateFormatter)
@@ -40,6 +41,9 @@ class BalanceHistoryAdapter(
             binding.tvBalance.text = numberFormat(balance)
             binding.tvBalance.setTextColor(textColor(balance))
 
+            binding.root.setOnClickListener {
+                onItemClick?.invoke(item)
+            }
 
         }
     }

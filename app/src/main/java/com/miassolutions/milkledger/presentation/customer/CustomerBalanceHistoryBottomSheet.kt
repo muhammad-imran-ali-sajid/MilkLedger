@@ -14,10 +14,14 @@ import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.databinding.BottomsheetBalanceHistoryBinding
 import com.miassolutions.milkledger.presentation.customer.sales.SalesViewModel
+import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistoryAdapter
 import com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
+
+
 
 @AndroidEntryPoint
 class CustomerBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
@@ -25,24 +29,29 @@ class CustomerBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
     private val viewModel by viewModels<SalesViewModel>()
     private lateinit var adapter: BalanceHistoryAdapter
 
+    private var onSelected: ((BalanceHistory) -> Unit)? = null
+
+    fun setOnSelectedListener(listener: (BalanceHistory) -> Unit) {
+        onSelected = listener
+    }
+
     companion object {
-        const val ARG_CUSTOMER_ID = "customer_id"
-        const val ARG_CUSTOMER_NAME = "supplier_name"
+        private const val ARG_CUSTOMER_ID = "customer_id"
+        private const val ARG_CUSTOMER_NAME = "customer_name"
 
         fun newInstance(customerId: String, customerName: String): CustomerBalanceHistoryBottomSheet {
-            val args = Bundle().apply {
-                putString(ARG_CUSTOMER_ID, customerId)
-                putString(ARG_CUSTOMER_NAME, customerName)
+            return CustomerBalanceHistoryBottomSheet().apply {
+                arguments = Bundle().apply {
+                    putString(ARG_CUSTOMER_ID, customerId)
+                    putString(ARG_CUSTOMER_NAME, customerName)
+                }
             }
-
-            val fragment = CustomerBalanceHistoryBottomSheet()
-            fragment.arguments = args
-            return fragment
         }
     }
 
     private var _binding: BottomsheetBalanceHistoryBinding? = null
     private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,32 +68,36 @@ class CustomerBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
         val customerId = arguments?.getString(ARG_CUSTOMER_ID)
         val customerName = arguments?.getString(ARG_CUSTOMER_NAME)
 
-        if (customerId.isNullOrEmpty()) {
-            return
+        if (customerId.isNullOrEmpty()) return
+
+        adapter = BalanceHistoryAdapter { item ->
+            onSelected?.invoke(item)
+            dismiss()
         }
 
-        adapter = BalanceHistoryAdapter()
         binding.rvBalanceHistory.adapter = adapter
 
-//        viewModel.setBalanceCustomerId(customerId)
         viewModel.getBalanceHistory(customerId)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.balanceHistory.collect {
-                    Log.d("TransactionHistory", "$it")
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.balanceHistory.collect { list ->
 
-                    val totalBalance = it.sumOf { balanceHistory -> balanceHistory.balance }
+                    val totalBalance = list.sumOf { it.balance }
 
                     binding.tvBalance.text = numberFormat(totalBalance)
                     binding.tvBalance.setTextColor(textColor(totalBalance))
 
                     binding.tvTitle.text = "$customerName\nBalance History"
-                    adapter.submitList(it)
+
+                    adapter.submitList(list)
                 }
             }
         }
+    }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

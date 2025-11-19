@@ -12,6 +12,8 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.autoSelectOnFocus
+import com.miassolutions.milkledger.core.util.toDisplayDate
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
@@ -61,6 +63,10 @@ class SalesEditBottomSheet(
 
     private fun showCustomerBalanceHistory(id: String, name: String) {
         val btmSheet = CustomerBalanceHistoryBottomSheet.newInstance(id, name)
+        btmSheet.setOnSelectedListener { item ->
+            binding.btnSelectDate.text = item.date.toDisplayDate()
+            binding.etPayment.setText(item.balance.toString())
+        }
         btmSheet.show(childFragmentManager, null)
     }
 
