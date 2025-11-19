@@ -177,13 +177,13 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSelectDate"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="4dp"
                     android:minHeight="20dp"
                     android:text="10 Nov"
-                    android:textSize="14sp"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/etPayment"
