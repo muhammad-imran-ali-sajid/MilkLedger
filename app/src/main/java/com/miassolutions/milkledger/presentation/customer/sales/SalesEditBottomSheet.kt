@@ -21,7 +21,8 @@ import kotlin.math.roundToInt
 
 class SalesEditBottomSheet(
     private val entry: SaleWithCustomer,
-    private val onSave: (SalesEntity) -> Unit
+    private val onSave: (SalesEntity) -> Unit,
+
 ) : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetEditSalesBinding? = null

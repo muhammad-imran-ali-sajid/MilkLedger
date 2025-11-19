@@ -7,7 +7,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:weightSum">5</item>
+        <item name="android:weightSum">6</item>
     </style>
 
     <style name="Style.InputLabel" parent="TextLabel2">
@@ -19,7 +19,7 @@
     <style name="Style.TextViewValue" parent="TextValue">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">3</item>
+        <item name="android:layout_weight">7</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">10dp</item>
         <item name="android:background">@drawable/bg_edittext_readable</item>
@@ -33,7 +33,7 @@
     <style name="Style.EditTextInput" parent="TextValue">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">3</item>
+        <item name="android:layout_weight">4</item>
         <item name="android:padding">10dp</item>
         <item name="android:background">@drawable/bg_edittext_readable</item>
     </style>
@@ -47,6 +47,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
+        <item name="backgroundTint">@color/primary</item>
         <item name="android:background">@drawable/bg_edittext_readable</item>
         <item name="android:textColor">@color/white</item>
         <item name="cornerRadius">8dp</item>

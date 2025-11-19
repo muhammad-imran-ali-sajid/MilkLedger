@@ -76,13 +76,15 @@
 
                 <TextView
                     android:id="@+id/textView"
-                    style="@style/Style.InputLabel"
-                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
                     android:text="Price"
+                    android:textColor="@color/black"
+
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.4" />
+                    app:layout_constraintWidth_percent="0.1" />
 
                 <TextView
                     android:id="@+id/tv_price"
@@ -90,6 +92,8 @@
                     android:layout_width="0dp"
                     android:paddingEnd="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_rate_header"
+                    app:layout_constraintHorizontal_bias="0.75"
                     app:layout_constraintStart_toEndOf="@id/textView"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.3" />
@@ -104,40 +108,112 @@
                     android:textSize="10sp"
                     app:layout_constraintBottom_toTopOf="@+id/tv_rate"
                     app:layout_constraintEnd_toEndOf="@+id/tv_rate"
-                    app:layout_constraintStart_toEndOf="@+id/tv_price"
+                    app:layout_constraintStart_toStartOf="@+id/tv_rate"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/tv_rate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:paddingStart="4dp"
                     android:text="000"
                     android:textColor="@color/black"
                     android:textSize="16sp"
-                    android:gravity="center"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_price"
                     app:layout_constraintTop_toBottomOf="@id/tv_rate_header"
                     app:layout_constraintWidth_percent="0.3" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                style="@style/Style.InputRow"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
 
+<!--                <FrameLayout-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="0dp"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="@+id/label"-->
+<!--                    app:layout_constraintStart_toStartOf="@+id/label"-->
+<!--                    app:layout_constraintTop_toTopOf="parent">-->
+
+<!--                    <ImageView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="end"-->
+<!--                        app:tint="@color/orange_700"-->
+<!--                        android:layout_marginEnd="20dp"-->
+<!--                        android:layout_marginTop="4dp"-->
+<!--                        android:src="@drawable/ic_arrow_pick"/>-->
+
+<!--                </FrameLayout>-->
+
                 <TextView
+                    android:id="@+id/label"
                     style="@style/Style.InputLabel"
-                    android:text="Received" />
+                    android:layout_width="0dp"
+                    android:text="Received"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.33" />
 
                 <EditText
                     android:id="@+id/etPayment"
-                    style="@style/Style.EditTextInput"
-                    android:imeOptions="actionDone"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
+                    style="@style/Style.TextViewValue"
+                    android:layout_width="0dp"
+                    android:paddingEnd="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/materialButton"
+                    app:layout_constraintHorizontal_bias="0.03"
+                    app:layout_constraintStart_toEndOf="@+id/label"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.3" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/materialButton"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="4dp"
+                    android:minHeight="20dp"
+                    android:text="10 Nov"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.Constraints
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+            </androidx.constraintlayout.widget.Constraints>
+
+<!--            <LinearLayout-->
+<!--                style="@style/Style.InputRow"-->
+<!--                android:layout_marginTop="8dp">-->
+
+<!--                <TextView-->
+<!--                    style="@style/Style.InputLabel"-->
+<!--                    android:text="Received" />-->
+
+<!--                <EditText-->
+<!--                    android:id="@+id/etPayment"-->
+<!--                    style="@style/Style.EditTextInput"-->
+<!--                    android:imeOptions="actionDone"-->
+<!--                    android:inputType="numberDecimal" />-->
+<!--                -->
+<!--                -->
+<!--                -->
+<!--            </LinearLayout>-->
 
             <LinearLayout
                 style="@style/Style.InputRow"
