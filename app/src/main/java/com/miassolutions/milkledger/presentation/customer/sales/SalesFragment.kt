@@ -170,6 +170,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         deduction: Double,
         totalNetMilk: Double,
         totalAmount: Double,
+        receivedAmount : Double,
         avgRate: Double
     ) {
 
@@ -189,8 +190,9 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
                 tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
                 tvDeduction.text = "${deduction.toRoundedStr()} L"
                 tvTotalNetMilk.text = "${totalNetMilk.toRoundedStr()} L"
-                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
                 tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
+                tvReceivedAmount.text = "Rs. ${receivedAmount.toPriceStr()}"
+                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
             }
 
         }
@@ -319,6 +321,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
                     deduction = state.totalDeduction,
                     totalNetMilk = state.totalNetMilk,
                     totalAmount = state.grandSaleTotalForDate,
+                    receivedAmount = state.receivedAmount,
                     avgRate = state.avgRatePerLiter
                 )
 

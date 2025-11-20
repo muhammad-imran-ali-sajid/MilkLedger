@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:paddingTop="8dp"
     android:paddingHorizontal="16dp">
@@ -97,7 +98,7 @@
             style="@style/Text.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total Price" />
+            android:text="Total Amount" />
 
         <TextView
             android:id="@+id/tv_total_amount"
@@ -120,9 +121,38 @@
 
         <TextView
             style="@style/Text.Title"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:autoSizeMaxTextSize="18sp"
+            android:autoSizeMinTextSize="8sp"
+            android:maxLines="1"
+            android:autoSizeStepGranularity="1sp"
+            android:text="Received" />
+
+        <TextView
+            android:id="@+id/tvReceivedAmount"
+            style="@style/Text.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:text="Rs 101"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <!-- Metric 5: Avg Amount (Label and Value Inline) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="8dp"
+        android:paddingBottom="8dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            style="@style/Text.Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Avg Amount" />
+            android:text="Avg Rate" />
 
         <TextView
             android:id="@+id/tv_avg_price"

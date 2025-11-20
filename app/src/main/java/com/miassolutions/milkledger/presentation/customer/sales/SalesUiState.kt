@@ -19,6 +19,7 @@ data class SalesUiState(
     val totalDeduction: Double = 0.0,
     val totalPaid: Double = 0.0,
     val totalBalance: Double = 0.0,
+    val receivedAmount: Double = 0.0,
     val avgRatePerLiter: Double = 0.0
 )
 

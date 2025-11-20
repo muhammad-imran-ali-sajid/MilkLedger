@@ -30,10 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SalesViewModel @Inject constructor(
     private val repository: SalesRepository,
-    private val pRepo : PurchaseRepository
+    private val pRepo: PurchaseRepository
 ) : ViewModel() {
-
-
 
 
     // ----------------------------------------------------------
@@ -51,6 +49,7 @@ class SalesViewModel @Inject constructor(
         loadPaidSales()
 
     }
+
     // State to hold the data, starting with an empty list
     private val _paidSalesList = MutableStateFlow<List<CustomerPaidSummary>>(emptyList())
     val paidSalesList: StateFlow<List<CustomerPaidSummary>> = _paidSalesList
@@ -72,10 +71,8 @@ class SalesViewModel @Inject constructor(
     }
 
 
-
-
     private val _balanceHistory = MutableStateFlow<List<BalanceHistory>>(emptyList())
-    val balanceHistory : StateFlow<List<BalanceHistory>> get() = _balanceHistory
+    val balanceHistory: StateFlow<List<BalanceHistory>> get() = _balanceHistory
 
 
     fun getBalanceHistory(customerId: String) = viewModelScope.launch {
@@ -85,9 +82,11 @@ class SalesViewModel @Inject constructor(
         _balanceHistory.value = history
 
         // 💡 Logging the input ID is crucial for debugging
-        Log.d("SalesViewModel", "Loaded Balance History for ID: $customerId. Items: ${history.size}")
+        Log.d(
+            "SalesViewModel",
+            "Loaded Balance History for ID: $customerId. Items: ${history.size}"
+        )
     }
-
 
 
     // ----------------------------------------------------------
@@ -153,11 +152,14 @@ class SalesViewModel @Inject constructor(
 
                 val validForAvg = sortedSales.filter { it.customer.customerRate > 0.0 }
                 val aTotalPrice = validForAvg.sumOf { it.sale.price }
+
+                val receivedAmount = validForAvg.sumOf { it.sale.paid }
+
                 val aTotalVolume = validForAvg.sumOf { it.sale.volume }
 
                 // as per original ledger
-                val pTotalVolume = pRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
-
+                val purchaseTotalVolume =
+                    pRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
 
 
                 val grandTotalPrice = sortedSales.sumOf { it.sale.price }
@@ -165,7 +167,7 @@ class SalesViewModel @Inject constructor(
                 val totalBalance = sortedSales.sumOf { it.sale.price - it.sale.paid }
 
                 val avgRatePerLiter =
-                    if (aTotalVolume > 0) aTotalPrice / pTotalVolume else 0.0
+                    if (aTotalVolume > 0) aTotalPrice / purchaseTotalVolume else 0.0
 
                 _uiState.update {
                     it.copy(
@@ -176,6 +178,7 @@ class SalesViewModel @Inject constructor(
                         totalBalance = totalBalance, // Use totalAmountDue for consistency
                         totalNetMilk = totalNetMilk,
                         grandSaleTotalForDate = grandTotalPrice,
+                        receivedAmount = receivedAmount,
                         avgRatePerLiter = avgRatePerLiter,
                         pdfSalesSummary = PdfSalesSummary(
                             totalQty = totalVolume.toRoundedStr(),
