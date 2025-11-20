@@ -33,6 +33,9 @@ data class SalesEntity(
     val rateUsed: Double,                    // snapshot of rate at entry time
     val notes: String? = null,
 
+    // NEW FIELDS
+    val paidDate: LocalDate? = null,
+
     val isSynced: Boolean = false,
     val updatedAt: String = LocalDateTime.now().toString(),
     val deletedAt: String? = null

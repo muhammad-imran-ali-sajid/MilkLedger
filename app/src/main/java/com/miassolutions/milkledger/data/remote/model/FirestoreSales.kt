@@ -14,6 +14,8 @@ data class FirestoreSales(
     val rateUsed: Double = 0.0,                    // snapshot of rate at entry time
     val notes: String? = null,
 
+    val paidDate: String? = null,
+
     val isSynced: Boolean = false,
     val updatedAt: String = "",
     val deletedAt: String? = null

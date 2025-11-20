@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
@@ -13,19 +12,17 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.toDisplayDate
-import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
-import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
+import com.miassolutions.milkledger.domain.model.Sale
 import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
-
 class SalesEditBottomSheet(
-    private val entry: SaleWithCustomer,
+    private val entry: Sale,
     private val onSave: (SalesEntity) -> Unit
 ) : BottomSheetDialogFragment() {
 
@@ -33,6 +30,9 @@ class SalesEditBottomSheet(
 
     private var _binding: BottomsheetEditSalesBinding? = null
     private val binding get() = _binding!!
+
+    // 🔥 Store paid date (initial = entry.receivedDate)
+    private var selectedPaidDate: LocalDate? = entry.receivedDate
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,27 +44,30 @@ class SalesEditBottomSheet(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         setupInitialData()
         setupRecalculation()
         setupSaveButton()
         autoSelection()
 
         binding.btnSelectDate.setOnClickListener {
-            val id = entry.customer.customerId
-            val name = entry.customer.customerName
+            val id = entry.customerId
+            val name = entry.name
             showCustomerBalanceHistory(id, name)
         }
 
         binding.btnCancel.setOnClickListener { dismiss() }
-
-
     }
 
     private fun showCustomerBalanceHistory(id: String, name: String) {
         val btmSheet = CustomerBalanceHistoryBottomSheet.newInstance(id, name)
         btmSheet.setOnSelectedListener { item ->
+
+            // 🔥 Set paid date
+            selectedPaidDate = item.date
+
             binding.btnSelectDate.text = item.date.toDisplayDate()
+
+            // Optional: Set payment equal to customer's chosen history balance
             binding.etPayment.setText(item.balance.toPriceStr())
         }
         btmSheet.show(childFragmentManager, null)
@@ -82,13 +85,15 @@ class SalesEditBottomSheet(
 
     private fun setupInitialData() {
         binding.apply {
-            tvCustomerName.text = entry.customer.customerName
-            etVolume.setText(entry.sale.volume.toRoundedStr())
-            etDeduction.setText(entry.sale.deduction.toRoundedStr())
-            etPayment.setText(entry.sale.paid.toPriceStr())
-            tvRate.text = entry.sale.rateUsed.toRoundedStr()
-            etNotes.setText(entry.sale.notes ?: "")
+            tvCustomerName.text = entry.name
+            etVolume.setText(entry.volume.toRoundedStr())
+            etDeduction.setText(entry.deduction.toRoundedStr())
+            etPayment.setText(entry.received.toPriceStr())
+            tvRate.text = entry.rate.toRoundedStr()
+            etNotes.setText(entry.notes ?: "")
 
+            // 🔥 Set initial paidDate display (if exists)
+            btnSelectDate.text = entry.receivedDate?.toDisplayDate() ?: "Select Date"
 
             // Initial calculation
             recalculateAll()
@@ -102,7 +107,6 @@ class SalesEditBottomSheet(
         autoSelectOnFocus(etNotes)
     }
 
-
     private fun setupSaveButton() {
         binding.btnSave.setOnClickListener {
             val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
@@ -114,49 +118,66 @@ class SalesEditBottomSheet(
 
             val deduction = binding.etDeduction.text.toString().toDoubleOrNull() ?: 0.0
             val paid = binding.etPayment.text.toString().toDoubleOrNull() ?: 0.0
-            val rate = entry.customer.customerRate
+            val rate = entry.rate
             val netMilk = (volume - deduction).coerceAtLeast(0.0)
 
-            val price = MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate)
-            val balance = price - paid
-
-            val updated = entry.sale.copy(
+            val price = MilkCalculationUtils.calculateCustomerPrice(
                 volume = volume,
                 deduction = deduction,
-                netMilk = netMilk,
+                rate = rate
+            )
+
+            val balance = price - paid
+
+            // 🔥 Updated Sale object with paidDate
+            val updated = entry.copy(
+                volume = volume,
+                deduction = deduction,
+                netVolume = netMilk,
                 price = price,
-                paid = paid,
+                received = paid,
                 balance = balance,
+                receivedDate = selectedPaidDate,   // <-- 🔥 IMPORTANT
                 notes = binding.etNotes.text.toString()
             )
 
-            onSave(updated)
+            // Convert back to entity
+            val salesEntity = SalesEntity(
+                saleId = entry.saleId, // or appropriate mapping
+                customerId = entry.customerId,
+                date = entry.saleDate, // original ledger date
+                volume = updated.volume,
+                deduction = updated.deduction,
+                netMilk = updated.netVolume,
+                price = updated.price,
+                paid = updated.received,
+                balance = updated.balance,
+                rateUsed = entry.rate,
+                notes = updated.notes,
+                paidDate = updated.receivedDate  // <-- 🔥 SAVE TO ENTITY
+            )
+
+            onSave(salesEntity)
             dismiss()
-
-
         }
     }
-
 
     private fun recalculateAll() {
         val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
         val deduction = binding.etDeduction.text.toString().toDoubleOrNull() ?: 0.0
         val paid = binding.etPayment.text.toString().toDoubleOrNull() ?: 0.0
-        val rate = entry.customer.customerRate
+        val rate = entry.rate
 
-        // 1️⃣ Net Milk
         val netMilk = (volume - deduction).coerceAtLeast(0.0)
         binding.tvNetMilk.text = "${netMilk.toRoundedStr()} L"
 
-        // 2️⃣ Price
         val price = MilkCalculationUtils.calculateCustomerPrice(
             volume = volume,
             deduction = deduction,
             rate = rate
         )
-        binding.tvPrice.text = "${price.toPriceStr()}"
+        binding.tvPrice.text = price.toPriceStr()
 
-        // 3️⃣ Balance
         val balance = price - paid
         val color = when {
             balance < 0 -> Color.RED
@@ -169,10 +190,9 @@ class SalesEditBottomSheet(
         else
             balance.roundToInt().toString()
 
-        binding.tvBalance.text = "$balanceText"
+        binding.tvBalance.text = balanceText
         binding.tvBalance.setTextColor(color)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

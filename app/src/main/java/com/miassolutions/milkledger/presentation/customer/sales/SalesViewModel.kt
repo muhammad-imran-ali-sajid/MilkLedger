@@ -8,6 +8,7 @@ import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.data.mapper.toSalesList
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.data.repository.SalesRepository
 import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
@@ -145,26 +146,27 @@ class SalesViewModel @Inject constructor(
         salesJob = viewModelScope.launch {
             repository.getSalesByDate(date).collectLatest { sales ->
                 val sortedSales = sales.sortedBy { it.customer.sortOrder }
+                val saleList = sortedSales.map { it.toSalesList() }
 
 
-                val totalVolume = sortedSales.sumOf { it.sale.volume }
-                val totalDeduction = sortedSales.sumOf { it.sale.deduction }
+                val totalVolume = saleList.sumOf { it.volume }
+                val totalDeduction = saleList.sumOf { it.deduction }
 
-                val validForAvg = sortedSales.filter { it.customer.customerRate > 0.0 }
-                val aTotalPrice = validForAvg.sumOf { it.sale.price }
+                val validForAvg = saleList.filter { it.rate > 0.0 }
+                val aTotalPrice = validForAvg.sumOf { it.price }
 
-                val receivedAmount = validForAvg.sumOf { it.sale.paid }
+                val receivedAmount = validForAvg.sumOf { it.received }
 
-                val aTotalVolume = validForAvg.sumOf { it.sale.volume }
+                val aTotalVolume = validForAvg.sumOf { it.volume }
 
                 // as per original ledger
                 val purchaseTotalVolume =
                     pRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
 
 
-                val grandTotalPrice = sortedSales.sumOf { it.sale.price }
-                val totalNetMilk = sortedSales.sumOf { it.sale.netMilk }
-                val totalBalance = sortedSales.sumOf { it.sale.price - it.sale.paid }
+                val grandTotalPrice = saleList.sumOf { it.price }
+                val totalNetMilk = saleList.sumOf { it.netVolume }
+                val totalBalance = saleList.sumOf { it.price - it.received }
 
                 val avgRatePerLiter =
                     if (aTotalVolume > 0) aTotalPrice / purchaseTotalVolume else 0.0
@@ -172,7 +174,7 @@ class SalesViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         currentDate = date,
-                        salesForDate = sortedSales,
+                        salesForDate = saleList,
                         totalMilk = totalVolume,
                         totalDeduction = totalDeduction,
                         totalBalance = totalBalance, // Use totalAmountDue for consistency

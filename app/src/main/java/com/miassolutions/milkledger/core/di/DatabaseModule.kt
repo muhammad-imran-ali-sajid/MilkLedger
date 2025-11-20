@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.data.local.AppDatabase
+import com.miassolutions.milkledger.data.local.MIGRATION_1_2
 import com.miassolutions.milkledger.data.local.StaticDataCallback
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
@@ -30,11 +31,10 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(
         @ApplicationContext appContext: Context,
-        callback: StaticDataCallback
     ): AppDatabase =
         Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
-            .fallbackToDestructiveMigration(true) //todo
-            .addCallback(callback)
+            .addMigrations(MIGRATION_1_2)
+
             .build()
 
     @Singleton

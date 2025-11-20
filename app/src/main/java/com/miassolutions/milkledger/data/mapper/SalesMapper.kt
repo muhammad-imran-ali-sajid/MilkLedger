@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.data.mapper
 
+import com.miassolutions.milkledger.core.util.toDisplayDate
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
@@ -22,22 +23,30 @@ fun SalesEntity.toFirestoreModel(): FirestoreSales {
         balance = balance,
         rateUsed = rateUsed,
         notes = notes,
+
+        paidDate = paidDate?.format(DateTimeFormatter.ISO_LOCAL_DATE),
+
         isSynced = isSynced,
         updatedAt = updatedAt,
         deletedAt = deletedAt
     )
 }
 
-fun SaleWithCustomer.toSalesList() : Sale{
+fun SaleWithCustomer.toSalesList(): Sale {
     return Sale(
-        name = this.customer.customerName,
-        volume = this.sale.volume.toRoundedStr(),
-        deduction = this.sale.deduction.toRoundedStr(),
-        netVolume = this.sale.netMilk.toRoundedStr(),
-        price = this.sale.price.toPriceStr(),
-        received = this.sale.paid.toRoundedStr(),
-        receivedDate = this.sale.updatedAt,
-        balance = this.sale.balance.toPriceStr()
+        customerId = customer.customerId,
+        saleId = sale.saleId,
+        saleDate = sale.date,
+        name = customer.customerName,
+        rate = sale.rateUsed,
+        volume = sale.volume,
+        deduction = sale.deduction,
+        netVolume = sale.netMilk,
+        price = sale.price,
+        received = sale.paid,
+        receivedDate = sale.paidDate,
+        balance = sale.balance,
+        notes = sale.notes
     )
 }
 
@@ -54,6 +63,7 @@ fun FirestoreSales.toEntityModel(): SalesEntity {
         paid = paid,
         balance = balance,
         rateUsed = rateUsed,
+        paidDate = LocalDate.parse(paidDate),
         notes = notes,
         isSynced = isSynced,
         updatedAt = updatedAt,

@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.util
+package com.miassolutions.milkledger.data.remote
 
 object SyncConfig {
     // 🔥 Turn Firestore sync ON/OFF globally

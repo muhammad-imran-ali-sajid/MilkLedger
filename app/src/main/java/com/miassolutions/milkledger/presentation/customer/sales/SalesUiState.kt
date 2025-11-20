@@ -3,11 +3,12 @@ package com.miassolutions.milkledger.presentation.customer.sales
 import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesItemRecord
 import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
+import com.miassolutions.milkledger.domain.model.Sale
 import java.time.LocalDate
 
 data class SalesUiState(
     val currentDate: LocalDate = LocalDate.now(),
-    val salesForDate: List<SaleWithCustomer> = emptyList(),
+    val salesForDate: List<Sale> = emptyList(),
     val grandSaleTotalForDate: Double = 0.0,
     val selectedCustomerId: String? = null,
     val navToLedgerForCustomerId: String? = null,

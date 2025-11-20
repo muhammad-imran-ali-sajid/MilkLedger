@@ -1,12 +1,19 @@
 package com.miassolutions.milkledger.domain.model
 
+import java.time.LocalDate
+
 data class Sale(
+    val customerId : String,
+    val saleId : String,
+    val saleDate : LocalDate,
     val name: String,
-    val volume: String,
-    val deduction: String,
-    val netVolume: String,
-    val price: String,
-    val received: String,
-    val receivedDate: String,
-    val balance: String
+    val rate : Double,
+    val volume: Double,
+    val deduction: Double,
+    val netVolume: Double,
+    val price: Double,
+    val received: Double,
+    val receivedDate: LocalDate?,
+    val balance: Double,
+    val notes : String?
 )

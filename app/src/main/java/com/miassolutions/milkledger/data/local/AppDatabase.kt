@@ -3,6 +3,8 @@ package com.miassolutions.milkledger.data.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
@@ -26,7 +28,7 @@ import com.miassolutions.milkledger.data.local.entities.SupplierEntity
         ExpensesEntity::class,
         NoteEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(LocalDateConverter::class)
@@ -39,4 +41,16 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun expensesDao(): ExpensesDao
     abstract fun reportsDao(): ReportsDao
     abstract fun noteDao(): NoteDao
+
+
 }
+
+val MIGRATION_1_2 = object : Migration(1, 2) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL(
+            "ALTER TABLE sales_table ADD COLUMN paidDate TEXT"
+        )
+    }
+}
+
+

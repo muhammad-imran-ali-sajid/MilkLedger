@@ -20,6 +20,7 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
 import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
+import com.miassolutions.milkledger.domain.model.Sale
 import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
 import com.miassolutions.milkledger.presentation.customer.details.toSaleRecordList
 import dagger.hilt.android.AndroidEntryPoint
@@ -204,7 +205,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     private fun generateReport() {
         val state = viewModel.uiState.value
-        val filteredList: List<SaleWithCustomer> = state.salesForDate
+        val filteredList: List<Sale> = state.salesForDate
 
 
         val recordList = filteredList.toSaleRecordList()
@@ -311,13 +312,13 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         }
     }
 
-    private fun showEditSaleBottomSheet(saleWithCustomer: SaleWithCustomer) {
+    private fun showEditSaleBottomSheet(sale : Sale) {
         if (!isEditable) {
             showSnackbar("Enable from the top menu switch")
             return
         }
         SalesEditBottomSheet(
-            entry = saleWithCustomer,
+            entry = sale,
             onSave = { salesEntryEntity ->
                 viewModel.updateSaleManually(salesEntryEntity)
 

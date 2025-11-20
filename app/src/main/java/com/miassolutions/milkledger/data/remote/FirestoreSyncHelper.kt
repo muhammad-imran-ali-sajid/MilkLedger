@@ -21,16 +21,17 @@ class FirestoreSyncHelper @Inject constructor(
 
     /**
      * Upload a collection of entities to Firestore.
-     *
-     * @param collectionName Firestore collection name
-     * @param dataList list of entities (must be non-nullable)
-     * @param idExtractor optional lambda to get the document id from entity. If null a reflection fallback will try common id field names.
      */
     suspend fun <T : Any> uploadCollection(
         collectionName: String,
         dataList: List<T>,
         idExtractor: ((T) -> String?)? = null
     ) {
+        if (!SyncConfig.ENABLE_FIRESTORE_SYNC) {
+            Log.d(TAG, "🔌 Firestore sync DISABLED → uploadCollection skipped ($collectionName)")
+            return
+        }
+
         if (dataList.isEmpty()) {
             Log.d(TAG, "uploadCollection: no items to upload for $collectionName")
             return
@@ -53,7 +54,6 @@ class FirestoreSyncHelper @Inject constructor(
                     } else {
                         collectionRef.document() // auto id
                     }
-                    // set uses the raw object; T : Any ensures it's allowed
                     batch.set(docRef, item, SetOptions.merge())
                 }
 
@@ -76,6 +76,11 @@ class FirestoreSyncHelper @Inject constructor(
         documentId: String?,
         data: T
     ) {
+        if (!SyncConfig.ENABLE_FIRESTORE_SYNC) {
+            Log.d(TAG, "🔌 Firestore sync DISABLED → uploadSingle skipped ($collectionName)")
+            return
+        }
+
         try {
             val docRef = if (!documentId.isNullOrBlank()) {
                 firestore.collection(collectionName).document(documentId)
@@ -97,12 +102,16 @@ class FirestoreSyncHelper @Inject constructor(
         collectionName: String,
         documentId: String
     ) {
+        if (!SyncConfig.ENABLE_FIRESTORE_SYNC) {
+            Log.d(TAG, "🔌 Firestore sync DISABLED → deleteDocument skipped ($collectionName/$documentId)")
+            return
+        }
+
         try {
             firestore.collection(collectionName).document(documentId).delete().await()
             Log.d(TAG, "Deleted $collectionName/$documentId successfully")
         } catch (e: Exception) {
             Log.e(TAG, "Error deleting doc $documentId in $collectionName: ${e.localizedMessage}", e)
-            // Propagate the exception but allow the local delete to stand (offline-first principle)
             throw e
         }
     }
@@ -113,6 +122,11 @@ class FirestoreSyncHelper @Inject constructor(
     suspend inline fun <reified T> downloadCollection(
         collectionName: String
     ): List<T> {
+        if (!SyncConfig.ENABLE_FIRESTORE_SYNC) {
+            Log.d(TAG, "🔌 Firestore sync DISABLED → downloadCollection returns EMPTY ($collectionName)")
+            return emptyList()
+        }
+
         return try {
             val snapshot = firestore.collection(collectionName).get().await()
             snapshot.toObjects(T::class.java)
@@ -123,20 +137,21 @@ class FirestoreSyncHelper @Inject constructor(
     }
 
     /**
-     * Fallback document id extraction using common field names via reflection.
+     * Fallback document id extraction using reflection.
      */
     private fun fallbackDocumentId(item: Any): String? {
         val clazz = item::class
-        val candidateNames = listOf("id", "Id", "ID", "customerId", "customer_id", "noteId", "entityId", "uid")
+        val candidateNames = listOf(
+            "id", "Id", "ID",
+            "customerId", "customer_id",
+            "noteId", "entityId", "uid"
+        )
         for (name in candidateNames) {
             try {
-                // attempt property getter
                 val prop = clazz.members.firstOrNull { it.name.equals(name, ignoreCase = true) }
                 val value = prop?.call(item)?.toString()
                 if (!value.isNullOrBlank()) return value
-            } catch (_: Exception) {
-                // ignore and continue
-            }
+            } catch (_: Exception) { }
         }
         return null
     }
