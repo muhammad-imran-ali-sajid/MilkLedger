@@ -15,6 +15,7 @@ import com.miassolutions.milkledger.core.util.toDisplayDate
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
 import com.miassolutions.milkledger.domain.model.Sale
 import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
@@ -118,49 +119,36 @@ class SalesEditBottomSheet(
 
             val deduction = binding.etDeduction.text.toString().toDoubleOrNull() ?: 0.0
             val paid = binding.etPayment.text.toString().toDoubleOrNull() ?: 0.0
-            val rate = entry.rate
             val netMilk = (volume - deduction).coerceAtLeast(0.0)
-
             val price = MilkCalculationUtils.calculateCustomerPrice(
                 volume = volume,
                 deduction = deduction,
-                rate = rate
+                rate = entry.rate
             )
-
             val balance = price - paid
 
-            // 🔥 Updated Sale object with paidDate
-            val updated = entry.copy(
+            val updatedSale = entry.copy(
                 volume = volume,
                 deduction = deduction,
                 netVolume = netMilk,
                 price = price,
                 received = paid,
                 balance = balance,
-                receivedDate = selectedPaidDate,   // <-- 🔥 IMPORTANT
+                receivedDate = selectedPaidDate,
                 notes = binding.etNotes.text.toString()
             )
 
-            // Convert back to entity
-            val salesEntity = SalesEntity(
-                saleId = entry.saleId, // or appropriate mapping
-                customerId = entry.customerId,
-                date = entry.saleDate, // original ledger date
-                volume = updated.volume,
-                deduction = updated.deduction,
-                netMilk = updated.netVolume,
-                price = updated.price,
-                paid = updated.received,
-                balance = updated.balance,
-                rateUsed = entry.rate,
-                notes = updated.notes,
-                paidDate = updated.receivedDate  // <-- 🔥 SAVE TO ENTITY
+            val entity = updatedSale.toEntity(
+                saleId = entry.saleId,
+                saleDate = entry.saleDate,
+                rateUsed = entry.rate
             )
 
-            onSave(salesEntity)
+            onSave(entity)
             dismiss()
         }
     }
+
 
     private fun recalculateAll() {
         val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0

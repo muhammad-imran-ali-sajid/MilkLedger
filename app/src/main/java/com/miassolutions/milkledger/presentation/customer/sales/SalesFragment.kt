@@ -319,8 +319,9 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         }
         SalesEditBottomSheet(
             entry = sale,
-            onSave = { salesEntryEntity ->
-                viewModel.updateSaleManually(salesEntryEntity)
+            onSave = { salesEntity ->
+
+                viewModel.updateSaleManually(salesEntity)
 
             }
         ).show(parentFragmentManager, "SaleEditBottomSheet")

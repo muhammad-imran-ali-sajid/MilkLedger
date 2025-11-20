@@ -50,6 +50,24 @@ fun SaleWithCustomer.toSalesList(): Sale {
     )
 }
 
+fun Sale.toSalesEntity(existingSaleId: String, rateUsed: Double, date: LocalDate): SalesEntity {
+    return SalesEntity(
+        saleId = existingSaleId,
+        customerId = this.customerId,
+        date = date,
+        volume = this.volume,
+        deduction = this.deduction,
+        netMilk = this.netVolume,
+        price = this.price,
+        paid = this.received,
+        balance = this.balance,
+        rateUsed = rateUsed,
+        notes = this.notes
+    )
+}
+
+
+
 
 fun FirestoreSales.toEntityModel(): SalesEntity {
     return SalesEntity(
