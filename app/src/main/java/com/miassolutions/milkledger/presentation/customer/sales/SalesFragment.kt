@@ -6,8 +6,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReportPdf
-import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
 import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
 import com.miassolutions.milkledger.core.pdf.salereport.SalesReportPdf
 import com.miassolutions.milkledger.core.pdf.salereport.TodaySalesPdf
@@ -66,48 +64,43 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
         // --- 2. SETUP LISTENER ---
         editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
-            val selectedDate = viewModel.uiState.value.currentDate
-            val isCurrentDateToday = selectedDate.isToday()
 
             // Step A: Immediately save the intended status
             SalesPrefsHelper.setEditModeActive(requireContext(), isChecked)
 
             if (isChecked) {
-                // Logic when trying to turn ON:
 
-                // If the user is NOT an admin, they are immediately blocked from turning ON.
                 if (!isAdmin) {
-                    // Revert UI and Preferences because the action is blocked
+                    // Non-admin trying to enable when disabled for today
                     editModeSwitch?.isChecked = false
                     SalesPrefsHelper.setEditModeActive(requireContext(), false)
                     showSnackbar("As a non-admin, you cannot re-enable edit mode once disabled for today.")
                     return@setOnCheckedChangeListener
                 }
 
-                // If user IS an admin:
-
-                // 1. Enable mode
+                // --- ADMIN ALLOWED FREELY ---
                 enableEditMode()
+                SalesPrefsHelper.setEditModeActive(requireContext(), true)
 
-                // 2. Remove the permanent lock (admin always overrides the lock to ON)
+                // Admin ignores lock
                 SalesPrefsHelper.setEditModeLockedForToday(requireContext(), false)
 
-
             } else {
-                // Logic when trying to turn OFF (Allowed for everyone):
+
                 disableEditMode()
+                SalesPrefsHelper.setEditModeActive(requireContext(), false)
 
-                // Apply PERMANENT LOCK: If it's today, set the lock.
-                if (isCurrentDateToday) {
+                val isToday = viewModel.uiState.value.currentDate.isToday()
+
+                if (!isAdmin && isToday) {
+                    // Apply permanent lock ONLY for non-admin
                     SalesPrefsHelper.setEditModeLockedForToday(requireContext(), true)
-
-                    if (!isAdmin) {
-                        showSnackbar("Edit mode disabled and permanently locked for today.")
-                    }
+                    showSnackbar("Edit mode disabled and permanently locked for today.")
                 } else {
                     showSnackbar("Edit mode disabled")
                 }
             }
+
         }
     }
 
@@ -122,38 +115,30 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     private fun initializeEditModeState(isAdmin: Boolean, selectedDate: LocalDate) {
 
         val isToday = selectedDate.isToday()
-        val isLocked = isToday && SalesPrefsHelper.isEditModeLockedForToday(requireContext())
+        val isLocked = SalesPrefsHelper.isEditModeLockedForToday(requireContext())
 
-        var shouldBeActive: Boolean
+        val shouldBeActive: Boolean
 
         if (isAdmin) {
-            // ADMIN LOGIC: Can use the last saved active state (shouldBeActive)
-            // but is restricted by date and temporary lock.
-
+            // --- ADMIN LOGIC ---
+            // Admin is NEVER restricted by lock OR date
             shouldBeActive = SalesPrefsHelper.isEditModeActive(requireContext())
 
-            if (isLocked || !isToday) {
-                // If permanently locked OR if it's not today, it must be OFF for the Admin
-                shouldBeActive = false
-                // Note: We don't save this 'false' state here, the admin can re-enable later.
-            }
-
         } else {
-            // NON-ADMIN LOGIC:
-            // 1. If it's today AND NOT permanently locked, they start ON.
-            // 2. Otherwise (not today OR locked), it must be OFF.
+            // --- NON-ADMIN LOGIC ---
+            // Non-admin only editable if: Today + NOT locked
             shouldBeActive = isToday && !isLocked
 
-            // Crucial: Update active pref to reflect this calculated state for the non-admin.
-            // This ensures if they navigate away and come back, they return to this state.
+            // Always store this for non-admin
             SalesPrefsHelper.setEditModeActive(requireContext(), shouldBeActive)
         }
 
-        // 2. Apply the final determined state
+        // Apply to UI
         isEditable = shouldBeActive
         adapter.isEditable = shouldBeActive
         editModeSwitch?.isChecked = shouldBeActive
     }
+
 
     private fun enableEditMode() {
         isEditable = true
@@ -170,7 +155,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         deduction: Double,
         totalNetMilk: Double,
         totalAmount: Double,
-        receivedAmount : Double,
+        receivedAmount: Double,
         avgRate: Double
     ) {
 
