@@ -108,10 +108,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
      * Determines and sets the initial state of the edit mode based on admin status,
      * persistent active state, and permanent daily lock status.
      */
-    /**
-     * Determines and sets the initial state of the edit mode based on admin status,
-     * persistent active state, and permanent daily lock status.
-     */
+
     private fun initializeEditModeState(isAdmin: Boolean, selectedDate: LocalDate) {
 
         val isToday = selectedDate.isToday()

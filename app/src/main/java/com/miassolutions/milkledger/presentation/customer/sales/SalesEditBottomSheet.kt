@@ -65,7 +65,7 @@ class SalesEditBottomSheet(
         val btmSheet = CustomerBalanceHistoryBottomSheet.newInstance(id, name)
         btmSheet.setOnSelectedListener { item ->
             binding.btnSelectDate.text = item.date.toDisplayDate()
-            binding.etPayment.setText(item.balance.toString())
+            binding.etPayment.setText(item.balance.toPriceStr())
         }
         btmSheet.show(childFragmentManager, null)
     }

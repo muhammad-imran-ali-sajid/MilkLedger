@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toDisplayDate
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
@@ -47,13 +48,18 @@ class SalesEntryAdapter(
 
     override fun bind(binding: ItemSalesBinding, item: SaleWithCustomer, position: Int) {
         binding.apply {
+
+
+            val paymentDate = item.sale.date.toDisplayDate()
+            val payment = item.sale.paid.toPriceStr()
+
             tvName.text =
                 item.customer.customerName  // You should replace this with actual customer name lookup
             tvMilk.text = item.sale.volume.toRoundedStr()
             tvDeduction.text = item.sale.deduction.toRoundedStr()
             tvNetMilk.text = item.sale.netMilk.toRoundedStr()
             tvPrice.text = item.sale.price.toPriceStr()
-            tvPayment.text = item.sale.paid.toPriceStr() // Assuming full payment for simplicity
+            tvPayment.text = "$payment (${paymentDate})"
 
             val balance = item.sale.price - item.sale.paid
 
