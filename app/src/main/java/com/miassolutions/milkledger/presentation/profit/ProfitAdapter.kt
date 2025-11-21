@@ -9,15 +9,18 @@ import com.miassolutions.milkledger.databinding.ItemProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
 
 class ProfitAdapter(
+    private val onItemClick: (String) -> Unit
 ) : RecyclerView.Adapter<ProfitAdapter.ProfitViewHolder>() {
 
     private val list: MutableList<Profit> = mutableListOf()
 
-    class ProfitViewHolder(private val binding: ItemProfitBinding) :
+    inner class ProfitViewHolder(private val binding: ItemProfitBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Profit) = with(binding) {
             tvDate.text = item.receivedDate.toDisplayDate()
             tvProfit.text = item.receivedProfit.toPriceStr()
+
+            root.setOnClickListener { onItemClick(item.profitId) }
 
         }
     }

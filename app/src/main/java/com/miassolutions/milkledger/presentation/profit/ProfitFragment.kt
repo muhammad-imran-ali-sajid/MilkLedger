@@ -16,11 +16,17 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
     override fun setupViews() {
 
-        adapter = ProfitAdapter()
-        val list = List(20){ Profit(profitId = it.toString(), receivedProfit = it.toDouble()) }
+        adapter = ProfitAdapter { id ->
+            showToast(id)
+        }
+        val list = List(20) { Profit(profitId = it.toString(), receivedProfit = it.toDouble()) }
         adapter.submitList(list)
-        binding.rvProfit.addItemDecoration(DividerItemDecoration(requireContext(),
-            DividerItemDecoration.VERTICAL))
+        binding.rvProfit.addItemDecoration(
+            DividerItemDecoration(
+                requireContext(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
         binding.rvProfit.adapter = adapter
 
 
