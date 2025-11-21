@@ -44,12 +44,12 @@ class DataRepository @Inject constructor(
         Log.d(TAG, "Setting up real-time listeners in a SupervisorScope...")
 
         // Launch each collection observer as a separate coroutine.
-        launch { observeCollectionChanges("suppliers") }
-        launch { observeCollectionChanges("customers") }
-        launch { observeCollectionChanges("sales") }
-        launch { observeCollectionChanges("purchases") }
-        launch { observeCollectionChanges("notes") }
-        launch { observeCollectionChanges("expenses") }
+//        launch { observeCollectionChanges("suppliers") }
+//        launch { observeCollectionChanges("customers") }
+//        launch { observeCollectionChanges("sales") }
+//        launch { observeCollectionChanges("purchases") }
+//        launch { observeCollectionChanges("notes") }
+//        launch { observeCollectionChanges("expenses") }
     }
 
     /**
