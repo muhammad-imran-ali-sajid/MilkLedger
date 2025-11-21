@@ -10,4 +10,6 @@ data class ProfitUiState(
     val totalProfit: Double = 0.0,
     val selectedStartDate: LocalDate? = null,
     val selectedEndDate: LocalDate? = null,
+    val isLoading: Boolean = false,
+    val error: String? = null
 )

@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -14,6 +15,9 @@ interface ProfitDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(profitList: List<ProfitEntity>)
+
+    @Delete
+    suspend fun deleteProfit(profit: ProfitEntity)
 
 
     @Upsert

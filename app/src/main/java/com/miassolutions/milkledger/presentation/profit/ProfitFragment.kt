@@ -16,28 +16,38 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
     override fun setupViews() {
 
-        adapter = ProfitAdapter { id ->
-            showToast(id)
-        }
-        val list = List(20) { Profit(profitId = it.toString(), receivedProfit = it.toDouble()) }
-        adapter.submitList(list)
+        val saveProfit = { profit: Profit -> viewModel.saveProfit(profit) }
+        val deleteProfit = { profit: Profit -> viewModel.deleteProfit(profit) }
+
+        adapter = ProfitAdapter(saveProfit, deleteProfit)
         binding.rvProfit.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),
                 DividerItemDecoration.VERTICAL
             )
         )
-        binding.rvProfit.adapter = adapter
 
 
+    }
+
+    override fun setupListeners() {
+        binding.fabAddProfit.setOnClickListener {
+            val sheet = AddEditProfitBottomSheet()
+            sheet.onSave = { profit ->
+                viewModel.saveProfit(profit)
+            }
+
+            sheet.show(parentFragmentManager, null)
+
+        }
     }
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
 
-//            adapter.submitList(state.profitList)
-//            binding.rvProfit.adapter = adapter
+            adapter.submitList(state.profitList)
         }
+        binding.rvProfit.adapter = adapter
     }
 
 

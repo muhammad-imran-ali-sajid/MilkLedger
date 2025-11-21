@@ -11,6 +11,8 @@ class ProfitRepository @Inject constructor(
 
     suspend fun upsert(profit: ProfitEntity) = dao.upsert(profit)
 
+    suspend fun delete(profit: ProfitEntity) = dao.deleteProfit(profit)
+
     suspend fun getProfitById(id: String): ProfitEntity? = dao.getProfitById(id)
 
     fun getAllProfitList(): Flow<List<ProfitEntity>> = dao.getAllProfitFlow()
