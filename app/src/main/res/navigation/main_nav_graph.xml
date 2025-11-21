@@ -101,8 +101,8 @@
             android:id="@+id/action_dashboardFragment_to_expensesFragment"
             app:destination="@id/expensesFragment" />
         <action
-            android:id="@+id/action_dashboardFragment_to_statsFragment"
-            app:destination="@id/statsFragment" />
+            android:id="@+id/action_dashboardFragment_to_profitFragment"
+            app:destination="@id/profitFragment" />
     </fragment>
     <fragment
         android:id="@+id/customerDetailFragment"
@@ -142,4 +142,9 @@
         android:name="com.miassolutions.milkledger.presentation.notes.AddEditNoteBottomSheet"
         android:label="Add New Note"
         tools:layout="@layout/bottom_sheet_add_edit_note" />
+    <fragment
+        android:id="@+id/profitFragment"
+        android:name="com.miassolutions.milkledger.presentation.profit.ProfitFragment"
+        android:label="fragment_profit"
+        tools:layout="@layout/fragment_profit" />
 </navigation>

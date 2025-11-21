@@ -181,10 +181,10 @@ class DashboardFragment :
             showDateFilter()
         }
 
-        // later will pullToRefresh TODO()
-        binding.cardProfit.setOnClickListener {
-            syncViewModel.startInitialSync()
-        }
+//        // later will pullToRefresh TODO()
+//        binding.cardProfit.setOnClickListener {
+//            syncViewModel.startInitialSync()
+//        }
 
 
         binding.saleCard.setOnClickListener {
@@ -204,8 +204,10 @@ class DashboardFragment :
         }
 
         binding.cardProfit.setOnClickListener {
-            val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
+            val dest = DashboardFragmentDirections.actionDashboardFragmentToProfitFragment()
             navigateTo(dest.actionId)
+//            val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
+//            navigateTo(dest.actionId)
         }
 
         binding.apply {
