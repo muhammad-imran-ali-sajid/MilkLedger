@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.profit
 
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
@@ -14,12 +15,11 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
     private val viewModel by viewModels<ProfitViewModel>()
     private lateinit var adapter: ProfitAdapter
 
+
     override fun setupViews() {
 
-        val saveProfit = { profit: Profit -> viewModel.saveProfit(profit) }
-        val deleteProfit = { profit: Profit -> viewModel.deleteProfit(profit) }
 
-        adapter = ProfitAdapter(saveProfit, deleteProfit)
+        adapter = ProfitAdapter(::editProfitRecord, ::showConfirmDialog)
         binding.rvProfit.addItemDecoration(
             DividerItemDecoration(
                 requireContext(),
@@ -30,7 +30,28 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
     }
 
+    private fun showConfirmDialog(profit: Profit) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Delete Entry")
+            .setMessage("Are you sure to delete this entry?")
+            .setPositiveButton("Yes") { d, _ ->
+                viewModel.deleteProfit(profit)
+                d.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun editProfitRecord(profit: Profit) {
+        val sheet = AddEditProfitBottomSheet.newInstance(profit)
+        sheet.onSave = { viewModel.saveProfit(it) }
+
+        sheet.show(parentFragmentManager, null)
+    }
+
     override fun setupListeners() {
+
+
         binding.fabAddProfit.setOnClickListener {
             val sheet = AddEditProfitBottomSheet()
             sheet.onSave = { profit ->

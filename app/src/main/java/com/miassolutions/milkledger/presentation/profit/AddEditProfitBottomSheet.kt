@@ -5,9 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
+import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayDate
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.databinding.BottomsheetEditProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
+import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -28,6 +32,8 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetEditProfitBinding? = null
     private val binding get() = _binding!!
+
+    private var receivedSelectedDate: LocalDate? = null
 
     private var existingProfit: Profit? = null
     var onSave: ((Profit) -> Unit)? = null   // callback to return data
@@ -50,13 +56,29 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupUI() = with(binding) {
         if (existingProfit != null) {
-            tvDate.text = existingProfit!!.receivedDate.toDisplayDate()
+            tvDate.text = existingProfit!!.receivedDate.toDisplayFormat()
             etProfitReceived.setText(existingProfit!!.receivedProfit.toString())
             etNotes.setText(existingProfit!!.notes)
             btnSave.text = "Update"
         } else {
             tvDate.text = LocalDate.now().toDisplayDate()
             btnSave.text = "Save"
+        }
+
+        tvDate.setOnClickListener {
+            val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+            val isUserAuthorized = isAdmin // Replace with actual auth check
+
+            showExpenseDatePicker(
+                isAuthorized = isUserAuthorized,
+                initialDate = LocalDate.now(),
+                onPicked = { selectedDate: LocalDate ->
+                    tvDate.text = selectedDate.toDisplayFormat()
+                    receivedSelectedDate = selectedDate
+                }
+            )
+
+
         }
     }
 
@@ -74,7 +96,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
             val newProfit = Profit(
                 profitId = existingProfit?.profitId ?: System.currentTimeMillis().toString(),
-                receivedDate = existingProfit?.receivedDate ?: LocalDate.now(),
+                receivedDate = receivedSelectedDate ?: LocalDate.now(),
                 receivedProfit = profitStr.toDouble(),
                 notes = notes
             )

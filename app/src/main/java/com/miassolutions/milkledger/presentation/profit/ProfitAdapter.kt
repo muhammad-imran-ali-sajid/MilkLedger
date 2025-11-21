@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.core.util.toDisplayDate
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.ItemProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
@@ -18,7 +19,7 @@ class ProfitAdapter(
     inner class ProfitViewHolder(private val binding: ItemProfitBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: Profit) = with(binding) {
-            tvDate.text = item.receivedDate.toDisplayDate()
+            tvDate.text = item.receivedDate.toDisplayFormat()
             tvProfit.text = item.receivedProfit.toPriceStr()
 
             root.setOnClickListener { onItemClick(item) }
