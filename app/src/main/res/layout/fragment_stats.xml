@@ -73,7 +73,7 @@
         android:id="@+id/tvBalance"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_edittext_readable"
+        android:background="@drawable/bg_milk_overview"
         android:gravity="end"
         android:paddingHorizontal="16dp"
         android:paddingVertical="16dp"
