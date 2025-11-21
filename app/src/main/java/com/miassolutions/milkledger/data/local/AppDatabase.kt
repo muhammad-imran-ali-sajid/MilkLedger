@@ -8,6 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
+import com.miassolutions.milkledger.data.local.daos.ProfitDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
@@ -15,6 +16,7 @@ import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
+import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
@@ -26,9 +28,10 @@ import com.miassolutions.milkledger.data.local.entities.SupplierEntity
         PurchaseEntity::class,
         SalesEntity::class,
         ExpensesEntity::class,
-        NoteEntity::class
+        NoteEntity::class,
+        ProfitEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(LocalDateConverter::class)
@@ -41,6 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun expensesDao(): ExpensesDao
     abstract fun reportsDao(): ReportsDao
     abstract fun noteDao(): NoteDao
+    abstract fun profitDao(): ProfitDao
 
 
 }
@@ -52,5 +56,28 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
         )
     }
 }
+
+val MIGRATION_2_3 = object : Migration(2, 3) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+
+        db.execSQL(
+            """
+            CREATE TABLE IF NOT EXISTS profit_table (
+                profitId TEXT NOT NULL PRIMARY KEY,
+                receivedDate TEXT NOT NULL,
+                netProfit REAL NOT NULL,
+                receivedProfit REAL NOT NULL,
+                notes TEXT,
+                isSynced INTEGER NOT NULL,
+                updatedAt TEXT NOT NULL,
+                deletedAt TEXT
+            )
+            """.trimIndent()
+        )
+    }
+}
+
+
+
 
 
