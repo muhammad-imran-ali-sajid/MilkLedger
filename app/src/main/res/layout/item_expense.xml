@@ -7,11 +7,15 @@
     android:paddingStart="16dp"
     android:paddingTop="8dp"
     android:paddingEnd="16dp"
+    android:layout_marginTop="1dp"
+    android:background="@color/white"
     android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/tvExpense"
         android:layout_width="0dp"
+        android:textColor="@color/black"
+        android:text="Fuel"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,10 +29,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="end"
+        android:textColor="@color/steel_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.4"
-        tools:text="100.0" />
+        android:text="100.0" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

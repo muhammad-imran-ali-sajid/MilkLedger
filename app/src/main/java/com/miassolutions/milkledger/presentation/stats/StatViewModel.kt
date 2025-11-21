@@ -145,4 +145,12 @@ class StatViewModel @Inject constructor(
             _targetDateFlow.value = newDate
         }
     }
+
+    fun onNextClicked() {
+        _targetDateFlow.value = _targetDateFlow.value.plusDays(1)
+    }
+
+    fun onPrevClicked() {
+        _targetDateFlow.value = _targetDateFlow.value.minusDays(1)
+    }
 }

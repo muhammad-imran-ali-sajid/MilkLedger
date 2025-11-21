@@ -42,7 +42,7 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
     }
 
     override fun setupListeners() {
-        binding.tvDate.setOnClickListener {
+        binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.targetDate.value
 
 
@@ -55,14 +55,19 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
                 onPicked = { selectedDate: LocalDate ->
 
                     viewModel.setTargetDate(selectedDate)
-                    binding.tvDate.text = selectedDate.toDisplayFormat()
+                    binding.tvSelectedDate.text = selectedDate.toDisplayFormat()
                 }
             )
 
         }
+        binding.apply {
+            btnNextDate.setOnClickListener { viewModel.onNextClicked() }
+            btnPrevDate.setOnClickListener { viewModel.onPrevClicked() }
+        }
 
 
     }
+
 
     private fun setupRecyclerView() {
         statAdapter = StatAdapter()
@@ -79,7 +84,7 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
         // This collector will run every time customerPayments, supplierPayments, or date changes.
         viewModel.dashboardState.collectState { state ->
 
-            binding.tvDate.text = state.targetDate.toDisplayFormat()
+            binding.tvSelectedDate.text = state.targetDate.toDisplayFormat()
 
             // --- 2. Calculate balance using the LATEST emitted state values ---
             val balance =
@@ -87,11 +92,6 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
             binding.tvBalance.text = "Balance: ${balance.toPriceStr()}"
 
 
-            if (state.isLoading) {
-                binding.progressBar.visibility = View.VISIBLE
-            } else {
-                binding.progressBar.visibility = View.GONE
-            }
         }
 
 
