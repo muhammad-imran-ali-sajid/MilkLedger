@@ -11,7 +11,11 @@
 
     <TextView
         android:id="@+id/tvDate"
-        android:layout_width="match_parent"
+        android:background="@drawable/bg_edittext_readable"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:padding="16dp"
+        android:backgroundTint="@color/sage_green"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/black"
@@ -67,8 +71,9 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
         style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
         android:layout_marginTop="20dp"
         android:text="Save" />
 

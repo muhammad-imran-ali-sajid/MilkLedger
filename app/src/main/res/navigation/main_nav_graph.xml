@@ -145,6 +145,6 @@
     <fragment
         android:id="@+id/profitFragment"
         android:name="com.miassolutions.milkledger.presentation.profit.ProfitFragment"
-        android:label="fragment_profit"
+        android:label="Profit Received History"
         tools:layout="@layout/fragment_profit" />
 </navigation>

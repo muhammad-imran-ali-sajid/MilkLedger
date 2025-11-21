@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.domain.model.Profit
 import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
+import java.util.UUID
 
 @AndroidEntryPoint
 class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
@@ -61,7 +62,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
             etNotes.setText(existingProfit!!.notes)
             btnSave.text = "Update"
         } else {
-            tvDate.text = LocalDate.now().toDisplayDate()
+            tvDate.text = LocalDate.now().toDisplayFormat()
             btnSave.text = "Save"
         }
 
@@ -95,7 +96,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
             val notes = etNotes.text.toString()
 
             val newProfit = Profit(
-                profitId = existingProfit?.profitId ?: System.currentTimeMillis().toString(),
+                profitId = existingProfit?.profitId ?: UUID.randomUUID().toString(),
                 receivedDate = receivedSelectedDate ?: LocalDate.now(),
                 receivedProfit = profitStr.toDouble(),
                 notes = notes
