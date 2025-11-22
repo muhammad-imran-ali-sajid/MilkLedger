@@ -217,8 +217,7 @@ class DashboardFragment :
                 showSnackbar("Only ADMIN is allowed here")
             }
 
-//            val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
-//            navigateTo(dest.actionId)
+
         }
 
         binding.apply {
