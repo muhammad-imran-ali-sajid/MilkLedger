@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,6 +53,16 @@ class ProfitViewModel @Inject constructor(
                     }
                 }
         }
+    }
+
+    fun setCustomDateRange(start: LocalDate, end: LocalDate) {
+        _uiState.update {
+            it.copy(
+                startDate = start,
+                endDate = end
+            )
+        }
+//        filterData()
     }
 
 
