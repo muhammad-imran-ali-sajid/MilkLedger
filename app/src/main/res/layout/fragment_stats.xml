@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -54,6 +53,54 @@
             app:tint="@color/white" />
     </LinearLayout>
 
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/togglePeriod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_date_header"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_daily"
+            style="@style/CompactToggleButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Daily" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnWeekly"
+            style="@style/CompactToggleButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Weekly" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMonthly"
+            style="@style/CompactToggleButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Monthly" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnYearly"
+            style="@style/CompactToggleButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Yearly"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -65,7 +112,7 @@
         app:layout_constraintBottom_toTopOf="@+id/tvBalance"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/layout_date_header"
+        app:layout_constraintTop_toBottomOf="@+id/togglePeriod"
         tools:listitem="@layout/item_customer_paid" />
 
 

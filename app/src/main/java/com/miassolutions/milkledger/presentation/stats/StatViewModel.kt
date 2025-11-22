@@ -1,152 +1,174 @@
 package com.miassolutions.milkledger.presentation.stats
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.data.mapper.toExpenseSummary
-import com.miassolutions.milkledger.data.repository.ExpensesRepository
-import com.miassolutions.milkledger.data.repository.PurchaseRepository
-import com.miassolutions.milkledger.data.repository.SalesRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
+import com.miassolutions.milkledger.core.util.DateRangeUtil
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class StatViewModel @Inject constructor(
-    private val salesRepository: SalesRepository,
-    private val purchaseRepository: PurchaseRepository,
-    private val expensesRepository: ExpensesRepository
-
+    private val repository: StatsRepository
 ) : ViewModel() {
 
-    // 1. Define the input date stream (can be changed dynamically)
+    // date stream (keeps current selected date; still useful for single-day UI)
     private val _targetDateFlow = MutableStateFlow(LocalDate.now())
-    val targetDate: StateFlow<LocalDate> = _targetDateFlow
+    val targetDate: StateFlow<LocalDate> = _targetDateFlow.asStateFlow()
 
-    // --- Data Streams from Repositories ---
+    // range list exposed to UI (RecyclerView)
+    private val _rangeList = MutableStateFlow<List<StatListItem>>(emptyList())
+    val rangeList: StateFlow<List<StatListItem>> = _rangeList.asStateFlow()
 
+    private var currentPeriod: Period = Period.DAILY
+    private var currentRange: Pair<LocalDate, LocalDate> = LocalDate.now() to LocalDate.now()
 
-    // Flow for customer payments on the target date
+    enum class Period { DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM }
 
-    private val customerPaymentsFlow: Flow<List<CustomerPaidSummary>> =
-        _targetDateFlow.flatMapLatest { date ->
-            salesRepository.getPaidSalesForDate(date)
+    // --- Loaders ---
+    fun loadDaily() {
+        currentPeriod = Period.DAILY
+        val today = LocalDate.now()
+        currentRange = today to today
+        loadRange(today, today)
+    }
+
+    fun loadWeekly() {
+        currentPeriod = Period.WEEKLY
+        currentRange = DateRangeUtil.thisWeek()
+        loadRange(currentRange.first, currentRange.second)
+    }
+
+    fun loadMonthly() {
+        currentPeriod = Period.MONTHLY
+        currentRange = DateRangeUtil.thisMonth()
+        loadRange(currentRange.first, currentRange.second)
+    }
+
+    fun loadYearly() {
+        currentPeriod = Period.YEARLY
+        currentRange = DateRangeUtil.thisYear()
+        loadRange(currentRange.first, currentRange.second)
+    }
+
+    fun loadCustom(start: LocalDate?, end: LocalDate?) {
+        currentPeriod = Period.CUSTOM
+
+        if (start == null || end == null) {
+            loadAllRecords()
+        } else {
+            currentRange = start to end
+            loadRange(start, end)
         }
+    }
 
-    // Flow for supplier payments on the target date
-    private val supplierPaymentsFlow: Flow<List<SupplierPaidSummary>> =
-        _targetDateFlow.flatMapLatest { date ->
-            purchaseRepository.getPaidToSuppliersForDate(date)
-        }
-
-    private val totalExpenseFlow: Flow<List<ExpenseSummary>> =
-        _targetDateFlow.flatMapLatest { date ->
-            expensesRepository.getAllExpensesForDate(date)
-                .map { list->
-                    list.map { it.toExpenseSummary() }
-                }
-
-        }
-
-    // --- Combine Streams into UI State ---
-
-    val dashboardState: StateFlow<StatDashboardState> =
-        combine(
-            _targetDateFlow,
-            customerPaymentsFlow,
-            supplierPaymentsFlow,
-            totalExpenseFlow
-        ) { date, customerList, supplierList, expenseList ->
-            // 2. Map the three combined results into the final State
-            val totalCustomerPayment = customerList.sumOf { it.paidAmount }
-            val totalSupplierPayment = supplierList.sumOf { it.paidAmount }
-            val totalExpense = expenseList.sumOf { it.expenseAmount }
-
-
-            Log.d("StatsViewModel", "$expenseList - $totalCustomerPayment")
-
-            StatDashboardState(
-
-                targetDate = date,
-                customerPayments = customerList,
-                supplierPayments = supplierList,
-                expenseList = expenseList,
-                isLoading = false,
-                totalCustomerPayment = totalCustomerPayment,
-                totalSupplierPayment = totalSupplierPayment,
-                totalExpenses = totalExpense
-            )
-        }
-            // 3. Convert the Flow into a StateFlow to hold the latest value
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = StatDashboardState(isLoading = true) // Initial loading state
-            )
-
-
-    val combinedList: Flow<List<StatListItem>> = dashboardState
-        .map { state ->
-            if (state.isLoading) {
-                emptyList()
-            } else {
-                // Build the final list with headers, items, and totals
-                buildList {
-                    // --- Customer Section ---
-                    add(StatListItem.Header("Customer Payments"))
-                    state.customerPayments.map { summary ->
-                        add(StatListItem.CustomerItem(summary))
-                    }
-                    // Add Customer Total Summary
-                    if (state.totalCustomerPayment > 0 || state.customerPayments.isNotEmpty()) {
-                        add(StatListItem.TotalSummary("TOTAL RECEIVED", state.totalCustomerPayment))
-                    }
-
-
-                    // --- Supplier Section ---
-                    add(StatListItem.Header("Supplier Payments"))
-                    state.supplierPayments.map { summary ->
-                        add(StatListItem.SupplierItem(summary))
-                    }
-                    // Add Supplier Total Summary
-                    if (state.totalSupplierPayment > 0 || state.supplierPayments.isNotEmpty()) {
-                        add(StatListItem.TotalSummary("TOTAL PAID", state.totalSupplierPayment))
-                    }
-
-                    // --- Expenses Section ---
-                    add(StatListItem.Header("Expenses"))
-                    state.expenseList.map { summary ->
-                        add(StatListItem.ExpenseItem(summary))
-                    }
-                    // Add Expense Total Summary
-                    if (state.totalExpenses > 0 || state.expenseList.isNotEmpty()) {
-                        add(StatListItem.TotalSummary("TOTAL EXPENSES", state.totalExpenses))
-                    }
-                }
-            }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
+    private fun loadAllRecords() {
+        // safe epoch as "all time" start
+        val epochStart = LocalDate.of(1970, 1, 1)
+        val today = LocalDate.now()
+        currentRange = epochStart to today
+        loadRange(epochStart, today)
+    }
 
     /**
-     * Function to update the date, which automatically triggers a re-query
-     * for both customer and supplier data streams.
+     * Core loader: request aggregated records from repository, convert to StatListItem
+     * and build a list with headers and totals for each section.
      */
+    fun loadRange(start: LocalDate, end: LocalDate) {
+        viewModelScope.launch {
+            // fetch everything in a single call
+            val records: List<StateRecord> = repository.getTotalsForRange(start, end)
+
+            // group records by category for building sections and totals
+            val customers = records.filter { it.category == StateRecord.Category.CUSTOMER }
+            val suppliers = records.filter { it.category == StateRecord.Category.SUPPLIER }
+            val expenses = records.filter { it.category == StateRecord.Category.EXPENSE }
+
+            val customerTotal = customers.sumOf { it.amount }
+            val supplierTotal = suppliers.sumOf { it.amount }
+            val expenseTotal = expenses.sumOf { it.amount }
+
+            val finalList = buildList {
+                // Customers section
+                add(StatListItem.Header("Customer Payments"))
+                if (customers.isEmpty()) {
+                    add(StatListItem.Empty("No customer payments"))
+                } else {
+                    customers.forEach { rec ->
+                        // convert to your domain summary type if you prefer; using simple constructor
+                        add(
+                            StatListItem.CustomerItem(
+                                CustomerPaidSummary(
+                                    customerName = rec.name,
+                                    paidAmount = rec.amount
+                                )
+                            )
+                        )
+                    }
+                    add(StatListItem.TotalSummary("TOTAL RECEIVED", customerTotal))
+                }
+
+                // Suppliers section
+                add(StatListItem.Header("Supplier Payments"))
+                if (suppliers.isEmpty()) {
+                    add(StatListItem.Empty("No supplier payments"))
+                } else {
+                    suppliers.forEach { rec ->
+                        add(
+                            StatListItem.SupplierItem(
+                                SupplierPaidSummary(
+                                    supplierName = rec.name,
+                                    paidAmount = rec.amount
+                                )
+                            )
+                        )
+                    }
+                    add(StatListItem.TotalSummary("TOTAL PAID", supplierTotal))
+                }
+
+                // Expenses section
+                add(StatListItem.Header("Expenses"))
+                if (expenses.isEmpty()) {
+                    add(StatListItem.Empty("No expenses"))
+                } else {
+                    expenses.forEach { rec ->
+                        add(
+                            StatListItem.ExpenseItem(
+                                ExpenseSummary(
+                                    expenseTitle = rec.name,
+                                    expenseAmount = rec.amount
+                                )
+                            )
+                        )
+                    }
+                    add(StatListItem.TotalSummary("TOTAL EXPENSES", expenseTotal))
+                }
+            }
+
+            // store current range and emit list
+            currentRange = start to end
+            _rangeList.value = finalList
+        }
+    }
+
+    private fun shiftRange(direction: Int) {
+        val (start, end) = currentRange
+        val newRange = when (currentPeriod) {
+            Period.DAILY -> start.plusDays(direction.toLong()) to end.plusDays(direction.toLong())
+            Period.WEEKLY -> start.plusWeeks(direction.toLong()) to end.plusWeeks(direction.toLong())
+            Period.MONTHLY -> start.plusMonths(direction.toLong()) to end.plusMonths(direction.toLong())
+            Period.YEARLY -> start.plusYears(direction.toLong()) to end.plusYears(direction.toLong())
+            Period.CUSTOM -> return // Skip shifting custom range
+        }
+        currentRange = newRange
+        loadRange(newRange.first, newRange.second)
+    }
+
+    // keep target date helpers (if UI uses them)
     fun setTargetDate(newDate: LocalDate) {
         if (newDate != _targetDateFlow.value) {
             _targetDateFlow.value = newDate

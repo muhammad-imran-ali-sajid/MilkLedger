@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.data.local.daos.ProfitDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
+import com.miassolutions.milkledger.data.local.daos.StateDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
@@ -45,6 +46,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reportsDao(): ReportsDao
     abstract fun noteDao(): NoteDao
     abstract fun profitDao(): ProfitDao
+
+    abstract fun stateDao(): StateDao
 
 
 }

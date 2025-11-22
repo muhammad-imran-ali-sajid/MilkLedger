@@ -3,12 +3,12 @@ package com.miassolutions.milkledger.presentation.stats
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
-import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentStatsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
@@ -20,52 +20,61 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
     private val viewModel: StatViewModel by viewModels()
 
     private lateinit var statAdapter: StatAdapter
+
     @Inject
     lateinit var appPreferences: AppPreferencesManager
 
-    override fun setupViews() {
 
+    override fun setupViews() {
         setupRecyclerView()
         observeViewModelData()
 
-        // Load and apply saved color at startup
         val savedColorId = appPreferences.loadBackgroundColor()
         applyBackgroundColor(savedColorId)
 
-        applyBackgroundColor(savedColorId)
-
+        setupToggleGroup()
     }
+
+
+    private fun setupToggleGroup() {
+        binding.togglePeriod.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (!isChecked) return@addOnButtonCheckedListener
+
+            when (checkedId) {
+                R.id.btn_daily -> viewModel.loadDaily()
+                R.id.btnWeekly -> viewModel.loadWeekly()
+                R.id.btnMonthly -> viewModel.loadMonthly()
+                R.id.btnYearly -> viewModel.loadYearly()
+            }
+        }
+    }
+
 
     private fun applyBackgroundColor(colorId: Int) {
         val colorInt = requireContext().getColor(colorId)
         requireActivity().window.decorView.setBackgroundColor(colorInt)
     }
 
+
     override fun setupListeners() {
+
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.targetDate.value
-
-
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-            val isUserAuthorized = isAdmin // Replace with actual auth check
 
             showExpenseDatePicker(
-                isAuthorized = isUserAuthorized,
+                isAuthorized = isAdmin,
                 initialDate = currentDate,
-                onPicked = { selectedDate: LocalDate ->
+                onPicked = { selectedDate ->
 
                     viewModel.setTargetDate(selectedDate)
                     binding.tvSelectedDate.text = selectedDate.toDisplayFormat()
                 }
             )
-
-        }
-        binding.apply {
-            btnNextDate.setOnClickListener { viewModel.onNextClicked() }
-            btnPrevDate.setOnClickListener { viewModel.onPrevClicked() }
         }
 
-
+        binding.btnNextDate.setOnClickListener { viewModel.onNextClicked() }
+        binding.btnPrevDate.setOnClickListener { viewModel.onPrevClicked() }
     }
 
 
@@ -74,34 +83,20 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = statAdapter
-            // You might want to add dividers or item decorations here
         }
     }
+
 
     private fun observeViewModelData() {
 
-        // --- 1. Collect the combined State Flow ---
-        // This collector will run every time customerPayments, supplierPayments, or date changes.
-        viewModel.dashboardState.collectState { state ->
-
-            binding.tvSelectedDate.text = state.targetDate.toDisplayFormat()
-
-            // --- 2. Calculate balance using the LATEST emitted state values ---
-            val balance =
-                state.totalCustomerPayment - (state.totalSupplierPayment + state.totalExpenses)
-            binding.tvBalance.text = "Balance: ${balance.toPriceStr()}"
-
-
+        // 1. Observe date text
+        viewModel.targetDate.collectState { date ->
+            binding.tvSelectedDate.text = date.toDisplayFormat()
         }
 
-
-        // --- Separate collector for the RecyclerView List (Keep this for the ListAdapter) ---
-
-        viewModel.combinedList.collectState { list ->
+        // 2. Observe stats list
+        viewModel.rangeList.collectState { list ->
             statAdapter.submitList(list)
         }
-
     }
-
-
 }

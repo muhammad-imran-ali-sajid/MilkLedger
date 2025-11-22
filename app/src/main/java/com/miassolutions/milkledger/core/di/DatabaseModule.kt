@@ -6,7 +6,6 @@ import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.MIGRATION_1_2
 import com.miassolutions.milkledger.data.local.MIGRATION_2_3
-import com.miassolutions.milkledger.data.local.StaticDataCallback
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
@@ -14,9 +13,8 @@ import com.miassolutions.milkledger.data.local.daos.ProfitDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
+import com.miassolutions.milkledger.data.local.daos.StateDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
-import com.miassolutions.milkledger.data.repository.AnalyticsRepository
-import com.miassolutions.milkledger.data.repository.NoteRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -69,6 +67,10 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideProfitDao(db: AppDatabase): ProfitDao = db.profitDao()
+
+    @Singleton
+    @Provides
+    fun provideStateDao(db: AppDatabase): StateDao = db.stateDao()
 
 
 }
