@@ -118,6 +118,6 @@ class ExpenseViewModel @Inject constructor(
         viewModelScope.launch { repository.updateExpense(expense) }
 
     companion object {
-        private val DEFAULT_TITLES = listOf("Fuel", "Meal")
+        private val DEFAULT_TITLES = listOf("Fuel", "Meal", "Vehicle")
     }
 }

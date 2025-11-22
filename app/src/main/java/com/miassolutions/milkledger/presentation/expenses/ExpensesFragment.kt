@@ -41,9 +41,17 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     }
 
     private fun onConfirmDeleteDialog(entry: ExpensesEntity) {
-        showDialog("Delete Expense", "Are you sure to delete this expense?") {
-            viewModel.deleteExpense(entry)
+        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+
+        if (isAdmin){
+            showDialog("Delete Expense", "Are you sure to delete this expense?") {
+                viewModel.deleteExpense(entry)
+            }
+        } else {
+            showSnackbar("Only ADMIN can delete")
         }
+
+
     }
 
 
