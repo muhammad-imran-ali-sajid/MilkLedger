@@ -132,7 +132,7 @@ class PurchaseFragment :
                     totalTS = state.totalTS,
                     totalAmount = state.grandTotalForDate,
                     avgRate = state.avgRatePerLiter,
-                    milkFatLr = state.milkFatLr
+                    milkFatLr = state.volumeWithFatLr
                 )
 
                 val isToday = state.currentDate.isToday()
@@ -249,9 +249,9 @@ class PurchaseFragment :
 
 
                 tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
-                tvAvgFat.text = "${avgFat.toRoundedStr()}% (${milkFatLr})"
-                tvAvgLr.text = "${avgLr.toRoundedStr()} (${milkFatLr})"
-                tvTotalTs.text = "${totalTS.toRoundedStr()} (${milkFatLr})"
+                tvAvgFat.text = "${avgFat?.toRoundedStr()}% (${milkFatLr})"
+                tvAvgLr.text = "${avgLr?.toRoundedStr()} (${milkFatLr})"
+                tvTotalTs.text = "${totalTS?.toRoundedStr()} (${milkFatLr})"
                 tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
                 tvAvgPrice.text = "Rs. ${avgRate.toPriceStr("%.2f")}"
             }

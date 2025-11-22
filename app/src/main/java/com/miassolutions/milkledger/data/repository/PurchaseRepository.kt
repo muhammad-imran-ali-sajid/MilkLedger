@@ -146,4 +146,9 @@ class PurchaseRepository @Inject constructor(
     // 👤 For supplier ledger details
     fun getPurchasesForSupplier(supplierId: String): Flow<List<PurchaseWithSupplier>> =
         purchaseDao.getPurchasesForSupplier(supplierId)
+
+    fun getAvgFat(date: LocalDate): Flow<Double?> = purchaseDao.getTotalFat(date)
+    fun getAvgLr(date: LocalDate): Flow<Double?> = purchaseDao.getTotalLr(date)
+    fun getAvgTs(date: LocalDate): Flow<Double?> = purchaseDao.getTotalTs(date)
+    fun getTotalMilkWithFatLR(date: LocalDate): Flow<Double?> = purchaseDao.getTotalMilkWithFatLR(date)
 }

@@ -23,7 +23,8 @@ interface PurchaseDao {
      *
      * @param targetDate The specific date (e.g., LocalDate.of(2025, 11, 17))
      */
-    @Query("""
+    @Query(
+        """
         SELECT
             T2.supplierName,
             T1.payment AS paidAmount  -- Select the amount paid from the Purchase table
@@ -39,7 +40,8 @@ interface PurchaseDao {
             AND T1.deletedAt IS NULL
         ORDER BY
             T2.supplierName ASC
-    """)
+    """
+    )
     fun getPaidAmountToSupplierForDate(targetDate: LocalDate): Flow<List<SupplierPaidSummary>>
 
     // --- Synchronization Helper Methods ---
@@ -49,7 +51,6 @@ interface PurchaseDao {
      */
     @Query("SELECT * FROM purchase_table")
     suspend fun getAllPurchasesList(): List<PurchaseEntity>
-
 
 
     /**
@@ -90,7 +91,18 @@ interface PurchaseDao {
     fun getAllSuppliers(): Flow<List<SupplierEntity>>
 
 
+    @Query("SELECT AVG(fat) FROM purchase_table WHERE date= :date AND fat > 0.0")
+    fun getTotalFat(date: LocalDate): Flow<Double?>
 
+    @Query("SELECT AVG(lr) FROM purchase_table WHERE date= :date AND lr > 0.0")
+    fun getTotalLr(date: LocalDate): Flow<Double?>
+
+
+    @Query("SELECT SUM(ts) FROM purchase_table WHERE date= :date AND fat > 0.0 AND lr > 0.0")
+    fun getTotalTs(date: LocalDate): Flow<Double?>
+
+    @Query("SELECT SUM(milkAmount) FROM purchase_table WHERE date= :date AND fat > 0.0 AND lr > 0.0")
+    fun getTotalMilkWithFatLR(date: LocalDate): Flow<Double?>
 
 
     // ✅ Get only the date and balance for a supplier (for a simple ledger/summary)
@@ -107,12 +119,10 @@ interface PurchaseDao {
     fun getAllPurchasesWithSuppliers(): Flow<List<PurchaseWithSupplier>>
 
 
-
     // ✅ Daily entries view (for your current screen)
     @Transaction
     @Query("SELECT * FROM purchase_table WHERE date = :date ORDER BY supplierId")
     fun getPurchasesByDate(date: LocalDate): Flow<List<PurchaseWithSupplier>>
-
 
 
     // ✅ Supplier ledger (date-wise history)

@@ -190,34 +190,14 @@ class PurchaseViewModel @Inject constructor(
              */
             repository.getPurchasesByDate(date).collectLatest { purchases ->
                 val sortedPurchases = purchases.sortedBy { it.supplier.sortOrder }
-                val validTsEntries = sortedPurchases.filter { it.purchase.ts > 0.0 }
-                val validFatEntries = sortedPurchases.filter { it.purchase.fat > 0.0 }
-                val validLREntries = sortedPurchases.filter { it.purchase.lr > 0.0 }
 
                 val totalVolume = sortedPurchases.sumOf { it.purchase.milkAmount }
-                val avgFat = if (validFatEntries.isNotEmpty()) {
-                    val totalFatMilk =
-                        validFatEntries.sumOf { it.purchase.fat * it.purchase.milkAmount }
-                    val totalFatVolume = validFatEntries.sumOf { it.purchase.milkAmount }
-                    totalFatMilk / totalFatVolume
-                } else 0.0
-
-                val avgLr = if (validLREntries.isNotEmpty()) {
-                    val totalLRMilk =
-                        validLREntries.sumOf { it.purchase.lr * it.purchase.milkAmount }
-                    val totalLRVolume = validFatEntries.sumOf { it.purchase.milkAmount }
-                    totalLRMilk / totalLRVolume
-                } else 0.0
 
 
-                val avgTS = if (validTsEntries.isNotEmpty()) {
-                    val totalTsMilk = validTsEntries.sumOf { it.purchase.ts }
-                    totalTsMilk
-                } else 0.0
-
-                val milkFatLr = if (avgLr > 0.0 && avgFat > 0.0){
-                    validLREntries.sumOf { it.purchase.milkAmount }
-                } else 0.0
+                val avgFat = repository.getAvgFat(date).first() ?: 0.0
+                val avgLr = repository.getAvgLr(date).first() ?: 0.0
+                val avgTS = repository.getAvgTs(date).first() ?: 0.0
+                val volumeWithFatLr = repository.getTotalMilkWithFatLR(date).first() ?: 0.0
 
                 val grandTotal = sortedPurchases.sumOf { it.purchase.milkPrice }
                 val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
@@ -231,7 +211,7 @@ class PurchaseViewModel @Inject constructor(
                         avgFat = avgFat,
                         avgLr = avgLr,
                         totalTS = avgTS,
-                        milkFatLr = milkFatLr,
+                        volumeWithFatLr = volumeWithFatLr,
                         grandTotalForDate = grandTotal,
                         avgRatePerLiter = avgRatePerLiter
                     )

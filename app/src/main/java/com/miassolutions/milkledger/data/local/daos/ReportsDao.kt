@@ -67,14 +67,14 @@ interface ReportsDao {
     @Query("SELECT SUM(milkAmount) FROM purchase_table")
     fun getTotalMilkPurchaseAll(): Flow<Double?>
 
-    @Query("SELECT AVG(fat) FROM purchase_table WHERE fat > 0.0")
+    @Query("SELECT AVG(fat) FROM purchase_table WHERE  fat > 0.0")
     fun getTotalFat(): Flow<Double?>
 
     @Query("SELECT AVG(lr) FROM purchase_table WHERE lr > 0.0")
     fun getTotalLr(): Flow<Double?>
 
 
-    @Query("SELECT SUM(ts) FROM purchase_table")
+    @Query("SELECT SUM(ts) FROM purchase_table WHERE fat > 0.0 AND lr > 0.0")
     fun getTotalTs(): Flow<Double?>
 
     @Query("SELECT SUM(milkPrice) FROM purchase_table")
