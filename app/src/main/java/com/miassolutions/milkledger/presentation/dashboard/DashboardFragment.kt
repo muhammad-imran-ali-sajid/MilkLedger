@@ -207,8 +207,16 @@ class DashboardFragment :
         }
 
         binding.cardProfit.setOnClickListener {
-            val dest = DashboardFragmentDirections.actionDashboardFragmentToProfitFragment()
-            navigateTo(dest.actionId)
+            val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+
+            if (isAdmin){
+                val dest = DashboardFragmentDirections.actionDashboardFragmentToProfitFragment()
+                navigateTo(dest.actionId)
+
+            } else{
+                showSnackbar("Only ADMIN is allowed here")
+            }
+
 //            val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
 //            navigateTo(dest.actionId)
         }
