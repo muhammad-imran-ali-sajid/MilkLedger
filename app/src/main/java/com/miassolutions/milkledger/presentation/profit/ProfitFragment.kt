@@ -7,7 +7,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
-import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
@@ -66,7 +65,8 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
         }
 
         binding.tvSelectedDate.setOnClickListener {
-            setupCustomRangeCalendar()
+            registerCustomRangeListener()
+            showCustomRangeSheet()
         }
     }
 
@@ -78,15 +78,13 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
 
 
-            adapter.submitList(state.profitList)
+            adapter.submitList(state.filteredList)
 
 
-            // 1. Get the current formatted date range from the state
-            val currentSelectedDateRange =
-                getFormattedDateRange(state.startDate, state.endDate)
+
 
             // 2. Update the UI text label with the current state value
-            binding.tvSelectedDate.text = currentSelectedDateRange
+            binding.tvSelectedDate.text = state.periodLabel
         }
         binding.rvProfit.adapter = adapter
     }
@@ -94,40 +92,32 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
     /**
      * Helper to format the date range string based on ViewModel state.
      */
-    private fun getFormattedDateRange(start: LocalDate?, end: LocalDate?): String {
-        return when {
-            start != null && end != null -> {
-                formatPeriodLabel(start, end)
-            }
-
-            else -> "All Records"
-        }
-    }
 
 
-     private fun setupCustomRangeCalendar() {
-
-        val bottomSheet = CustomDateRangeBottomSheet()
-        bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_ONLY_FILTER_DATA")
-
-        // 1. Set up the listener
+    private fun registerCustomRangeListener() {
         setFragmentResultListener(CustomDateRangeBottomSheet.REQUEST_KEY) { requestKey, bundle ->
             if (requestKey == CustomDateRangeBottomSheet.REQUEST_KEY) {
-                // 2. Extract the data
+
                 val startDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_START_DATE)
                 val endDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_END_DATE)
 
                 if (startDateString != null && endDateString != null) {
-                    // 3. Convert the String dates back to LocalDate
                     val startDate = LocalDate.parse(startDateString)
                     val endDate = LocalDate.parse(endDateString)
 
-                    viewModel.setCustomDateRange(startDate, endDate)
-
+                    viewModel.loadCustom(startDate, endDate)
                 }
             }
         }
     }
+
+    private fun showCustomRangeSheet() {
+        CustomDateRangeBottomSheet()
+            .show(parentFragmentManager, "CUSTOM_RANGE_ONLY_FILTER_DATA")
+    }
+
+
+
 
 
 }

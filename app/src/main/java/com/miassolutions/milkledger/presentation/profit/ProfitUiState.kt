@@ -10,6 +10,7 @@ data class ProfitUiState(
     val netProfit: Double = 0.0,
     val totalReceived: Double = 0.0,
     val remainingProfit : Double = 0.0,
+    val periodLabel : String = "",
     val startDate: LocalDate? = null,
     val endDate: LocalDate? = null,
     val isLoading: Boolean = false,

@@ -3,10 +3,12 @@ package com.miassolutions.milkledger.presentation.profit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.room.util.getTotalChangedRows
+import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.mapper.toProfit
 import com.miassolutions.milkledger.data.mapper.toProfitEntity
 import com.miassolutions.milkledger.data.repository.ProfitRepository
 import com.miassolutions.milkledger.domain.model.Profit
+import com.miassolutions.milkledger.presentation.dashboard.DashboardViewModel.Period
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,41 +30,29 @@ class ProfitViewModel @Inject constructor(
 
 
     init {
-        loadProfitList()
+        loadProfitDetails()
     }
 
-
-    private fun loadProfitList() {
+    private fun loadProfitDetails() {
         viewModelScope.launch {
             repository.getAllProfitList()
                 .collect { list ->
                     val profitList = list.map { it.toProfit() }
 
-                    _uiState.update { state ->
-                        val totalReceived = profitList.sumOf { it.receivedProfit }
-                        val netProfit = repository.getNetProfit().first()
+                    val totalReceived = profitList.sumOf { it.receivedProfit }
+                    val netProfit = repository.getNetProfit().first()
 
+                    _uiState.update { state ->
                         state.copy(
                             profitList = profitList,
                             filteredList = profitList,
-                            netProfit = netProfit,
                             totalReceived = totalReceived,
-                            remainingProfit = netProfit - totalReceived
-
+                            remainingProfit = netProfit - totalReceived,
+                            periodLabel = "All Records"
                         )
                     }
                 }
         }
-    }
-
-    fun setCustomDateRange(start: LocalDate, end: LocalDate) {
-        _uiState.update {
-            it.copy(
-                startDate = start,
-                endDate = end
-            )
-        }
-//        filterData()
     }
 
 
@@ -83,6 +73,65 @@ class ProfitViewModel @Inject constructor(
             }
         }
     }
+
+    fun loadRange(start: LocalDate?, end: LocalDate?) {
+        val state = _uiState.value
+        val filteredList = state.profitList
+
+        if (filteredList.isEmpty()) return
+
+        viewModelScope.launch {
+
+            var currentFilterList = filteredList
+
+            if (start != null && end != null) {
+
+                val periodLabel = getFormattedDateRange(start, end)
+
+                currentFilterList = filteredList.filter { profit ->
+                    profit.receivedDate in start..end
+                }
+
+                val totalReceived = currentFilterList.sumOf { it.receivedProfit }
+                val netProfit = repository.getNetProfit().first()
+
+                _uiState.update { it.copy(
+                    totalReceived = totalReceived,
+                    netProfit = netProfit,
+                    filteredList = currentFilterList,
+                    remainingProfit = netProfit - totalReceived,
+                    periodLabel = periodLabel,
+                    startDate = start,
+                    endDate = end
+                )}
+            }
+
+
+
+        }
+    }
+
+    fun getFormattedDateRange(start: LocalDate?, end: LocalDate?): String {
+        return when {
+            start != null && end != null -> {
+                formatPeriodLabel(start, end)
+            }
+
+            else -> "All Records"
+        }
+    }
+
+
+    fun loadCustom(start: LocalDate?, end: LocalDate?) {
+
+        if (start == null || end == null) {
+
+            loadProfitDetails()
+        } else {
+            loadRange(start, end)
+        }
+    }
+
 
     // ------------------------------------------------------------
     // DELETE PROFIT
