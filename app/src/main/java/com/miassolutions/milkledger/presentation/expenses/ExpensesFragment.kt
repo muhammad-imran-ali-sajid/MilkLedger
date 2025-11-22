@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.presentation.expenses
 
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
@@ -60,6 +61,9 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
+
+            binding.progressBar.visibility =
+                if (state.isLoading) View.VISIBLE else View.GONE
 
             // Format date
             val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")

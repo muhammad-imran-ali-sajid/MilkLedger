@@ -34,8 +34,9 @@ class ExpenseViewModel @Inject constructor(
     }
 
     private fun loadForDate(date: LocalDate) {
+
         // Update date in UiState
-        _uiState.update { it.copy(currentDate = date) }
+        _uiState.update { it.copy(currentDate = date, isLoading = true) }
 
         viewModelScope.launch {
             ensureDefaultExpenses(date)
@@ -80,7 +81,9 @@ class ExpenseViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         fixedExpenses = list,
-                        fixedTotal = total
+                        fixedTotal = total,
+                        isLoading = false
+
                     )
                 }
             }
@@ -95,7 +98,8 @@ class ExpenseViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         variableExpenses = list,
-                        variableTotal = total
+                        variableTotal = total,
+                        isLoading = false
                     )
                 }
             }
