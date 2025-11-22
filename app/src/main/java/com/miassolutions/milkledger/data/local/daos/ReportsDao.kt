@@ -91,7 +91,13 @@ interface ReportsDao {
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date BETWEEN :start AND :end AND isDefault =1")
     fun getTotalFixedExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
+    @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date BETWEEN :start AND :end AND isDefault =0")
+    fun getTotalPersonalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
+
     // ➕ All Records (Expenses)
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE isDefault = 1")
     fun getTotalFixedExpensesAll(): Flow<Double?>
+
+    @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE isDefault = 0")
+    fun getTotalPersonalExpensesAll(): Flow<Double?>
 }

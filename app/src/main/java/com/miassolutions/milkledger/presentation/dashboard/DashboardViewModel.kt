@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.DateRangeUtil
@@ -89,8 +88,9 @@ class DashboardViewModel @Inject constructor(
                 repository.getTotalFat(),
                 repository.getTotalLr(),
                 repository.getTotalTs(),
+                repository.getTotalPersonalExpense()
 
-            ) { results ->
+                ) { results ->
 
                 val milkPurchase = results[0] ?: 0.0
                 val milkSold = results[1] ?: 0.0
@@ -103,28 +103,32 @@ class DashboardViewModel @Inject constructor(
                 val totalTs = results[8] ?: 0.0
                 val avgCP: Double? = if (milkPurchase > 0) totalPurchase / milkPurchase else null
                 val avgSP: Double? = if (milkPurchase > 0) totalSales / milkPurchase else null
-                val difference: Double? = if (avgCP != null && avgSP != null) avgSP - avgCP else null
+                val difference: Double? =
+                    if (avgCP != null && avgSP != null) avgSP - avgCP else null
+                val personalExpense: Double = results[9] ?: 0.0
 
-                // 🔥 ADD LOG HERE
+                    // 🔥 ADD LOG HERE
 
 
-                AnalyticsUiState(
-                    milkPurchase = milkPurchase,
-                    milkSold = milkSold,
-                    avgSP = avgSP,
-                    avgCP = avgCP,
-                    difference = difference,
-                    salesTotal = totalSales,
-                    purchaseTotal = totalPurchase,
-                    expensesTotal = totalExpense,
-                    profit = profit,
-                    avgFat = totalFat,
-                    avgLr = totalLr,
-                    totalTs = totalTs,
-                    startDate = null,
-                    endDate = null,
-                    period = "All Records"
-                )
+                    AnalyticsUiState(
+                        milkPurchase = milkPurchase,
+                        milkSold = milkSold,
+                        avgSP = avgSP,
+                        avgCP = avgCP,
+                        difference = difference,
+                        salesTotal = totalSales,
+                        purchaseTotal = totalPurchase,
+                        fixedExpense = totalExpense,
+                        personalExpense = personalExpense,
+                        profit = profit,
+                        profitAfter = profit - personalExpense,
+                        avgFat = totalFat,
+                        avgLr = totalLr,
+                        totalTs = totalTs,
+                        startDate = null,
+                        endDate = null,
+                        period = "All Records"
+                    )
             }.collect {
                 _uiState.value = it
             }
@@ -183,8 +187,9 @@ class DashboardViewModel @Inject constructor(
                 repository.getAvgLrBetween(start, end),
                 repository.getTotalTsBetween(start, end),
                 repository.getTotalMilkWithFatAndLr(start, end),
+                repository.getTotalPersonalExpensesBetween(start, end),
 
-            ) { results ->
+                ) { results ->
                 val milkPurchase = results[0] ?: 0.0
                 val milkSold = results[1] ?: 0.0
                 val totalSales = results[2] ?: 0.0
@@ -197,7 +202,9 @@ class DashboardViewModel @Inject constructor(
                 val totalMilkWithFatAndLr = results[9] ?: 0.0
                 val avgCP: Double? = if (milkPurchase > 0) totalPurchase / milkPurchase else null
                 val avgSP: Double? = if (milkPurchase > 0) totalSales / milkPurchase else null
-                val difference: Double? = if (avgCP != null && avgSP != null) avgSP - avgCP else null
+                val difference: Double? =
+                    if (avgCP != null && avgSP != null) avgSP - avgCP else null
+                val personalExpense = results[10] ?: 0.0
 
 
 
@@ -209,8 +216,10 @@ class DashboardViewModel @Inject constructor(
                     avgSP = avgSP,
                     difference = difference,
                     purchaseTotal = totalPurchase,
-                    expensesTotal = totalExpense,
+                    fixedExpense = totalExpense,
+                    personalExpense = personalExpense,
                     profit = profit,
+                    profitAfter = profit - personalExpense,
                     avgFat = fat,
                     avgLr = lr,
                     totalTs = ts,

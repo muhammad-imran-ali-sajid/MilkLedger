@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.presentation.stats
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.DateRangeUtil
@@ -12,7 +11,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 @HiltViewModel
@@ -76,7 +74,7 @@ class AnalyticsViewModel @Inject constructor(
                 milkSold = milkSold,
                 salesTotal = totalSales,
                 purchaseTotal = totalPurchase,
-                expensesTotal = totalExpense,
+                fixedExpense = totalExpense,
                 profit = netProfit,
                 startDate = start,
                 endDate = end

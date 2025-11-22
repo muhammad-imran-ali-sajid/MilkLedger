@@ -1,8 +1,6 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
 
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -77,7 +75,7 @@ class DashboardFragment :
             tvSelectedDate.text = state.period
             tvTotalPurchases.text = state.purchaseTotal.toPriceStr()
             tvTotalSales.text = state.salesTotal.toPriceStr()
-            tvTotalExpense.text = state.expensesTotal.toPriceStr()
+            tvTotalExpense.text = state.fixedExpense.toPriceStr()
             tvNetProfit.text = state.profit.toPriceStr()
             tvMilkPurchase.text = "${state.milkPurchase.toRoundedStr()} L"
             tvMilkSold.text = "${state.milkSold.toRoundedStr()} L"
@@ -87,6 +85,8 @@ class DashboardFragment :
             tvAvgSP.text = state.avgSP?.toRoundedStr() ?: "0.0"
             tvAvgCP.text = state.avgCP?.toRoundedStr() ?: "0.0"
             tvRateDiff.text = state.difference?.toRoundedStr() ?: "0.0"
+            tvPersonalExpense.text = state.personalExpense.toPriceStr()
+            tvRemainingProfit.text = state.profitAfter.toPriceStr()
 
 
         }
