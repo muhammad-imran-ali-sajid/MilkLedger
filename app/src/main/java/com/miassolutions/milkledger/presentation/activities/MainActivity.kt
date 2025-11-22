@@ -133,10 +133,10 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                     true
                 }
 
-//                R.id.action_driveBackupFragment -> {
-//                    navController.navigate(R.id.driveBackupFragment)
-//                    true
-//                }
+                R.id.action_driveBackupFragment -> {
+                    navController.navigate(R.id.driveBackupFragment)
+                    true
+                }
 
                 R.id.action_logout -> {
                     logoutUser()

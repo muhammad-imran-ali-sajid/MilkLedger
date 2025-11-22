@@ -134,33 +134,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="20dp"
-            android:orientation="vertical"
-            android:weightSum="2">
+            android:weightSum="3">
 
+            <!-- Row 1: Purchases & Sales -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2">
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
 
-                <!-- Purchases -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/purchase_card"
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/purchase_color"
-                    app:strokeColor="@color/purchase_color">
+                    android:layout_marginEnd="6dp"
+                    app:cardBackgroundColor="@color/purchase_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_purchase"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:background="@drawable/bg_purchase">
 
                         <TextView
                             android:id="@+id/tvPurchase"
@@ -168,39 +170,34 @@
                             android:layout_height="wrap_content"
                             android:text="Purchases"
                             android:textColor="@color/white"
-                            android:textSize="20sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tvTotalPurchases"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center"
                             android:text="7,500"
                             android:textColor="@color/white"
                             android:textSize="20sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Sales -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/sale_card"
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/sale_color"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:strokeColor="@color/sale_color">
+                    android:layout_marginStart="6dp"
+                    app:cardBackgroundColor="@color/sale_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_sale"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:background="@drawable/bg_sale">
 
                         <TextView
                             android:id="@+id/tvSale"
@@ -208,7 +205,7 @@
                             android:layout_height="wrap_content"
                             android:text="Sales"
                             android:textColor="@color/white"
-                            android:textSize="20sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tvTotalSales"
@@ -222,39 +219,37 @@
 
             </LinearLayout>
 
+            <!-- Row 2: Business Expense & Profit -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2">
+                android:weightSum="2"
+                >
 
-
-                <!-- Expense -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/expense_card"
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="6dp"
                     android:layout_weight="1"
-                    app:strokeColor="@color/teal_700">
+                    android:layout_marginEnd="6dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_expense"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:background="@drawable/bg_expense">
 
                         <TextView
                             android:id="@+id/tvExpense"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Expenses"
+                            android:text="Business Expense"
                             android:textColor="@color/white"
-                            android:textSize="20sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tvTotalExpense"
@@ -266,41 +261,34 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Profit -->
                 <com.google.android.material.card.MaterialCardView
-
                     android:id="@+id/cardProfit"
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:clickable="false"
-                    android:focusable="false"
-                    app:cardBackgroundColor="@color/profit_color"
-                    app:strokeColor="@color/blue_700">
+                    android:layout_marginStart="6dp"
+                    app:cardBackgroundColor="@color/profit_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_profit"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:background="@drawable/bg_profit">
 
                         <TextView
-                            android:id="@+id/textView2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="Profit"
                             android:textColor="@color/white"
-                            android:textSize="20sp" />
+                            android:textSize="16sp" />
 
                         <TextView
                             android:id="@+id/tv_net_profit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:text="4,500"
                             android:textColor="@color/white"
                             android:textSize="20sp" />
@@ -309,8 +297,83 @@
 
             </LinearLayout>
 
+            <!-- Row 3: Personal Expense & Remaining Profit -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                >
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/DashboardCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp"
+                        android:background="#533">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Personal Expense"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tvPersonalExpense"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4,500"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/DashboardCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    app:cardBackgroundColor="@color/profit_color">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp"
+                        android:background="#22a">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Remaining Profit"
+                            android:textColor="@color/white"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/tvRemainingProfit"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4,500"
+                            android:textColor="@color/white"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
 
         </LinearLayout>
+
 
 
         <LinearLayout
