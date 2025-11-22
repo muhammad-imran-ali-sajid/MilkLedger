@@ -12,13 +12,11 @@ import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.databinding.FragmentStatsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::inflate) {
 
     private val viewModel: StatViewModel by viewModels()
-
     private lateinit var statAdapter: StatAdapter
 
     @Inject
@@ -33,6 +31,10 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
         applyBackgroundColor(savedColorId)
 
         setupToggleGroup()
+
+        // Load default period on screen open
+        binding.togglePeriod.check(R.id.btn_daily)
+        viewModel.loadDaily()
     }
 
 
@@ -58,6 +60,7 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
 
     override fun setupListeners() {
 
+        // Open calendar for custom date
         binding.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.targetDate.value
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
@@ -67,12 +70,20 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
                 initialDate = currentDate,
                 onPicked = { selectedDate ->
 
-                    viewModel.setTargetDate(selectedDate)
+                    // Update date text
                     binding.tvSelectedDate.text = selectedDate.toDisplayFormat()
+
+
+                    // And load DAILY data for that date
+                    viewModel.loadRange(selectedDate, selectedDate)
+
+                    // Highlight Daily toggle
+                    binding.togglePeriod.check(R.id.btn_daily)
                 }
             )
         }
 
+        // Next/prev buttons
         binding.btnNextDate.setOnClickListener { viewModel.onNextClicked() }
         binding.btnPrevDate.setOnClickListener { viewModel.onPrevClicked() }
     }
@@ -89,12 +100,12 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
 
     private fun observeViewModelData() {
 
-        // 1. Observe date text
+        // 1. Observe displayed date
         viewModel.targetDate.collectState { date ->
             binding.tvSelectedDate.text = date.toDisplayFormat()
         }
 
-        // 2. Observe stats list
+        // 2. Observe list data
         viewModel.rangeList.collectState { list ->
             statAdapter.submitList(list)
         }

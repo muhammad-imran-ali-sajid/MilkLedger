@@ -6,11 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.databinding.ItemCustomerPaidBinding
-import com.miassolutions.milkledger.databinding.ItemExpenseBinding
-import com.miassolutions.milkledger.databinding.ItemHeaderBinding
-import com.miassolutions.milkledger.databinding.ItemSupplierPaidBinding
-import com.miassolutions.milkledger.databinding.ItemTotalSummaryBinding
+import com.miassolutions.milkledger.databinding.*
 
 class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffCallback()) {
 
@@ -19,6 +15,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
     private val TYPE_SUPPLIER = 2
     private val TYPE_EXPENSE = 3
     private val TYPE_TOTAL_SUMMARY = 4
+    private val TYPE_EMPTY = 5   // 🔥 Added
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
@@ -27,7 +24,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.SupplierItem -> TYPE_SUPPLIER
             is StatListItem.ExpenseItem -> TYPE_EXPENSE
             is StatListItem.TotalSummary -> TYPE_TOTAL_SUMMARY
-            is StatListItem.Empty -> TODO()
+            is StatListItem.Empty -> TYPE_EMPTY   // 🔥 FIXED
         }
     }
 
@@ -36,30 +33,29 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
 
         return when (viewType) {
 
-            TYPE_HEADER -> {
-                val binding = ItemHeaderBinding.inflate(inflater, parent, false)
-                HeaderViewHolder(binding)
-            }
+            TYPE_HEADER -> HeaderViewHolder(
+                ItemHeaderBinding.inflate(inflater, parent, false)
+            )
 
-            TYPE_CUSTOMER -> {
-                val binding = ItemCustomerPaidBinding.inflate(inflater, parent, false)
-                CustomerViewHolder(binding)
-            }
+            TYPE_CUSTOMER -> CustomerViewHolder(
+                ItemCustomerPaidBinding.inflate(inflater, parent, false)
+            )
 
-            TYPE_SUPPLIER -> {
-                val binding = ItemSupplierPaidBinding.inflate(inflater, parent, false)
-                SupplierViewHolder(binding)
-            }
+            TYPE_SUPPLIER -> SupplierViewHolder(
+                ItemSupplierPaidBinding.inflate(inflater, parent, false)
+            )
 
-            TYPE_EXPENSE -> {
-                val binding = ItemExpenseBinding.inflate(inflater, parent, false)
-                ExpenseViewHolder(binding)
-            }
+            TYPE_EXPENSE -> ExpenseViewHolder(
+                ItemExpenseBinding.inflate(inflater, parent, false)
+            )
 
-            TYPE_TOTAL_SUMMARY -> {
-                val binding = ItemTotalSummaryBinding.inflate(inflater, parent, false)
-                TotalSummaryViewHolder(binding)
-            }
+            TYPE_TOTAL_SUMMARY -> TotalSummaryViewHolder(
+                ItemTotalSummaryBinding.inflate(inflater, parent, false)
+            )
+
+            TYPE_EMPTY -> EmptyViewHolder(
+                ItemEmptyBinding.inflate(inflater, parent, false) // 🔥 Add this layout
+            )
 
             else -> error("Unknown viewType: $viewType")
         }
@@ -83,22 +79,30 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.TotalSummary ->
                 (holder as TotalSummaryViewHolder).bind(item)
 
-            is StatListItem.Empty -> TODO()
+            is StatListItem.Empty ->
+                (holder as EmptyViewHolder).bind(item.message) // 🔥 FIXED
         }
     }
 }
 
+// ----------------- ViewHolders --------------------
+
 class HeaderViewHolder(private val binding: ItemHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
     fun bind(title: String) {
         binding.titleTextView.text = title
     }
 }
 
+class EmptyViewHolder(private val binding: ItemEmptyBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(message: String) {
+        binding.emptyMessage.text = message
+    }
+}
+
 class TotalSummaryViewHolder(private val binding: ItemTotalSummaryBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
     fun bind(item: StatListItem.TotalSummary) {
         binding.totalLabelTextView.text = item.label
         binding.totalAmountTextView.text = item.amount.toPriceStr()
@@ -107,32 +111,29 @@ class TotalSummaryViewHolder(private val binding: ItemTotalSummaryBinding) :
 
 class CustomerViewHolder(private val binding: ItemCustomerPaidBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
     fun bind(summary: CustomerPaidSummary) {
         binding.customerNameTextView.text = summary.customerName
         binding.paidAmountTextView.text = summary.paidAmount.toPriceStr()
     }
 }
 
-
 class SupplierViewHolder(private val binding: ItemSupplierPaidBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
     fun bind(summary: SupplierPaidSummary) {
         binding.supplierNameTextView.text = summary.supplierName
         binding.paymentAmountTextView.text = summary.paidAmount.toPriceStr()
     }
 }
 
-
 class ExpenseViewHolder(private val binding: ItemExpenseBinding) :
     RecyclerView.ViewHolder(binding.root) {
-
     fun bind(summary: ExpenseSummary) {
         binding.tvExpense.text = summary.expenseTitle
         binding.tvExpenseAmount.text = summary.expenseAmount.toPriceStr()
     }
 }
+
+// ----------------- DiffUtil --------------------
 
 class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
 
@@ -154,6 +155,9 @@ class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
             oldItem is StatListItem.TotalSummary && newItem is StatListItem.TotalSummary ->
                 oldItem.label == newItem.label
 
+            oldItem is StatListItem.Empty && newItem is StatListItem.Empty ->
+                oldItem.message == newItem.message
+
             else -> false
         }
     }
@@ -162,9 +166,3 @@ class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
         return oldItem == newItem
     }
 }
-
-
-
-
-
-
