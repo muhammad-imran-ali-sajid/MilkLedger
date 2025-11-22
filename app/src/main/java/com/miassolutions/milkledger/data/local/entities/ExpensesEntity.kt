@@ -15,6 +15,7 @@ data class ExpensesEntity(
     val expenseAmount: Double = 0.0,
     val expenseNote: String? = null,
     val isDefault: Boolean = false,
+    
 
     val createdAt: String,
     val isSynced: Boolean = false,

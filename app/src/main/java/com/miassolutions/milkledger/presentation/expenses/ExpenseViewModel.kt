@@ -21,100 +21,103 @@ class ExpenseViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ExpensesUiState())
-    val uiState: StateFlow<ExpensesUiState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     init {
-        // Start collecting expenses for the initial date (which should be today)
-        collectExpenses(_uiState.value.currentDate)
+        loadForDate(LocalDate.now())
     }
 
-    /**
-     * Ensures static expense entries exist for the given date.
-     * @param date The date to check and insert static expenses for.
-     */
-    private suspend fun ensureStaticExpensesForDate(date: LocalDate) {
-        STATIC_TITLES.forEach { title -> // Now using the constant from companion object
-            // NOTE: The repository's expenseExistsForTitleAndDate only checks title and date,
-            // not a specific ID, which is fine for this initialization logic.
-            val exists = repository.expenseExistsForTitleAndDate(title, date)
-            if (!exists) {
-                repository.insertExpense(
-                    ExpensesEntity(
-                        // FIX: Generate a unique ID (UUID) for Firestore/Room synchronization
-                        expenseId = UUID.randomUUID().toString(),
-                        createdAt = LocalDateTime.now().toString(),
-                        expenseTitle = title,
-                        expenseAmount = 0.0,
-                        date = date,
-                        // Other properties (like note) will use defaults
-                    )
-                )
-            }
+    fun onEvent(event: ExpensesUiEvent) {
+        when (event) {
+            is ExpensesUiEvent.SelectDate -> loadForDate(event.date)
         }
     }
 
-    /**
-     * Main function to start collecting expenses for a specific date.
-     * This ensures static items exist and starts the flow collection from the repository.
-     *
-     * @param date The date to load expenses for.
-     */
-    private fun collectExpenses(date: LocalDate) {
-        viewModelScope.launch {
-            // 1. Ensure static entries exist before loading
-            ensureStaticExpensesForDate(date)
+    private fun loadForDate(date: LocalDate) {
+        // Update date in UiState
+        _uiState.update { it.copy(currentDate = date) }
 
-            // 2. Start collecting the flow of expenses for the new date
-            repository.getAllExpensesForDate(date).collect { expenses ->
-                val total = expenses.sumOf { it.expenseAmount }
-                val avg = if (expenses.isNotEmpty()) total / expenses.size else 0.0
+        viewModelScope.launch {
+            ensureDefaultExpenses(date)
+        }
+
+        collectFixedExpenses(date)
+        collectVariableExpenses(date)
+    }
+
+    // --------------------------------------------------
+    // ✔ Improved Default Expenses Logic (Fast + Clean)
+    // --------------------------------------------------
+    private suspend fun ensureDefaultExpenses(date: LocalDate) {
+        val existingTitles = repository.getTitlesForDate(date).toSet()
+
+        val missingDefaults = DEFAULT_TITLES.filter { it !in existingTitles }
+
+        if (missingDefaults.isEmpty()) return
+
+        val toInsert = missingDefaults.map { title ->
+            ExpensesEntity(
+                expenseId = UUID.randomUUID().toString(),
+                createdAt = LocalDateTime.now().toString(),
+                expenseTitle = title,
+                expenseAmount = 0.0,
+                isDefault = true,
+                date = date
+            )
+        }
+
+        repository.insertAll(toInsert)
+    }
+
+    // --------------------------------------------------
+    // Separate collectors make UI simpler
+    // --------------------------------------------------
+    private fun collectFixedExpenses(date: LocalDate) {
+        viewModelScope.launch {
+            repository.getFixedExpenses(date).collect { list ->
+                val total = list.sumOf { it.expenseAmount }
 
                 _uiState.update {
                     it.copy(
-                        expensesList = expenses,
-                        todayTotalExpenses = total,
-                        todayAvgExpenses = avg
+                        fixedExpenses = list,
+                        fixedTotal = total
                     )
                 }
             }
         }
     }
 
+    private fun collectVariableExpenses(date: LocalDate) {
+        viewModelScope.launch {
+            repository.getVariableExpenses(date).collect { list ->
+                val total = list.sumOf { it.expenseAmount }
 
-    fun onEvent(event: ExpensesUiEvent) {
-        when (event) {
-
-            is ExpensesUiEvent.SelectDate -> {
-                // Update the state and trigger data collection for the newly selected date
-                _uiState.update { it.copy(currentDate = event.date) }
-                collectExpenses(event.date)
+                _uiState.update {
+                    it.copy(
+                        variableExpenses = list,
+                        variableTotal = total
+                    )
+                }
             }
         }
-
     }
 
-    /**
-     * Inserts a new expense, ensuring it has a unique ID for synchronization.
-     */
     fun insertExpense(expense: ExpensesEntity) = viewModelScope.launch {
-        // Ensure the expense has an ID before inserting and syncing
-        val expenseToInsert = if (expense.expenseId.isBlank()) {
+        val final = if (expense.expenseId.isBlank()) {
             expense.copy(expenseId = UUID.randomUUID().toString())
-        } else {
-            expense
-        }
-        repository.insertExpense(expenseToInsert)
-    }
+        } else expense
 
-    fun updateExpense(expense: ExpensesEntity) = viewModelScope.launch {
-        repository.updateExpense(expense)
+        repository.insertExpense(final)
     }
 
     fun deleteExpense(expense: ExpensesEntity) = viewModelScope.launch {
         repository.deleteExpense(expense)
     }
 
+    fun updateExpense(expense: ExpensesEntity) =
+        viewModelScope.launch { repository.updateExpense(expense) }
+
     companion object {
-        private val STATIC_TITLES = listOf("Fuel", "Meal")
+        private val DEFAULT_TITLES = listOf("Fuel", "Meal")
     }
 }

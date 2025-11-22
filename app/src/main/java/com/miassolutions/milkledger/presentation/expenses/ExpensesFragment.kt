@@ -51,22 +51,27 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
 
     override fun setupObservers() {
-        // collectState is a custom extension of collectLatest or similar
         viewModel.uiState.collectState { state ->
+
+            // Format date
             val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
             binding.tvSelectedDate.text = state.currentDate.format(formatter)
 
-            // FIX: Removed the redundant call to viewModel.collectExpenses(state.currentDate)
-            // The ViewModel is already collecting data based on its internal state changes.
+            // Merge fixed + variable for UI
+            val combinedList = state.fixedExpenses + state.variableExpenses
+            adapter.submitList(combinedList)
 
-            adapter.submitList(state.expensesList)
-
+            // Totals
             binding.apply {
-                tvTotalExpense.text = state.todayTotalExpenses.toRoundedStr()
-                tvAvgExpenses.text = state.todayAvgExpenses.toRoundedStr()
+                tvTotalExpense.text = (state.fixedTotal + state.variableTotal).toRoundedStr()
+                tvAvgExpenses.text =
+                    if (combinedList.isNotEmpty())
+                        ((state.fixedTotal + state.variableTotal) / combinedList.size).toRoundedStr()
+                    else "0"
             }
         }
     }
+
 
 
 

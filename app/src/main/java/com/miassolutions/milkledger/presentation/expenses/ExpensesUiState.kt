@@ -6,14 +6,20 @@ import java.time.LocalDate
 
 
 data class ExpensesUiState(
-    val expensesList: List<ExpensesEntity> = emptyList(),
-    // currentDate is the source of truth for the displayed date
     val currentDate: LocalDate = LocalDate.now(),
-    val todayTotalExpenses: Double = 0.0,
-    val todayAvgExpenses: Double = 0.0,
+
+    // Fixed (default) expenses
+    val fixedExpenses: List<ExpensesEntity> = emptyList(),
+    val fixedTotal: Double = 0.0,
+
+    // Variable (user-added) expenses
+    val variableExpenses: List<ExpensesEntity> = emptyList(),
+    val variableTotal: Double = 0.0,
+
     val isLoading: Boolean = false,
     val error: String? = null
 )
+
 
 
 sealed interface ExpensesUiEvent {

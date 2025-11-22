@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.data.mapper.toExpenseSummary
 import com.miassolutions.milkledger.data.repository.ExpensesRepository
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.data.repository.SalesRepository
@@ -14,9 +15,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -50,7 +53,11 @@ class StatViewModel @Inject constructor(
 
     private val totalExpenseFlow: Flow<List<ExpenseSummary>> =
         _targetDateFlow.flatMapLatest { date ->
-            expensesRepository.getTotalExpenses(date)
+            expensesRepository.getAllExpensesForDate(date)
+                .map { list->
+                    list.map { it.toExpenseSummary() }
+                }
+
         }
 
     // --- Combine Streams into UI State ---

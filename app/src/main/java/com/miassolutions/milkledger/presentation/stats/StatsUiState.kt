@@ -19,7 +19,7 @@ data class SupplierPaidSummary(val supplierName: String, val paidAmount: Double)
 
 data class ExpenseSummary(
     val expenseTitle: String,
-    val expenseAmount: Double
+    val expenseAmount: Double,
 )
 
 data class SumSummary(
