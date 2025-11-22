@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.profit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.util.getTotalChangedRows
 import com.miassolutions.milkledger.data.mapper.toProfit
 import com.miassolutions.milkledger.data.mapper.toProfitEntity
 import com.miassolutions.milkledger.data.repository.ProfitRepository
@@ -9,6 +10,7 @@ import com.miassolutions.milkledger.domain.model.Profit
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfitViewModel @Inject constructor(
     private val repository: ProfitRepository
+
 ) : ViewModel() {
 
 
@@ -35,12 +38,16 @@ class ProfitViewModel @Inject constructor(
                     val profitList = list.map { it.toProfit() }
 
                     _uiState.update { state ->
-                        val totalProfit = profitList.sumOf { it.receivedProfit }
+                        val totalReceived = profitList.sumOf { it.receivedProfit }
+                        val netProfit = repository.getNetProfit().first()
 
                         state.copy(
                             profitList = profitList,
                             filteredList = profitList,
-                            totalProfit = totalProfit
+                            netProfit = netProfit,
+                            totalReceived = totalReceived,
+                            remainingProfit = netProfit - totalReceived
+
                         )
                     }
                 }

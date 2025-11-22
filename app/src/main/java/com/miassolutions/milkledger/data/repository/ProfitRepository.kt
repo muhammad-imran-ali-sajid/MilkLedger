@@ -6,12 +6,16 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ProfitRepository @Inject constructor(
-    private val dao: ProfitDao
+    private val dao: ProfitDao,
+    private val mDao : AnalyticsRepository
+
 ) {
 
     suspend fun upsert(profit: ProfitEntity) = dao.upsert(profit)
 
     suspend fun delete(profit: ProfitEntity) = dao.deleteProfit(profit)
+
+    fun getNetProfit() = mDao.getProfitAll()
 
     suspend fun getProfitById(id: String): ProfitEntity? = dao.getProfitById(id)
 

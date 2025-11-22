@@ -4,6 +4,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,6 +66,9 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
+            binding.tvProfit.text = state.netProfit.toPriceStr()
+            binding.tvTotalReceivedProfit.text = state.totalReceived.toPriceStr()
+            binding.tvRemainingProfit.text = state.remainingProfit.toPriceStr()
 
             adapter.submitList(state.profitList)
         }
