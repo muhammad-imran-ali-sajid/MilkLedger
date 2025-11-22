@@ -127,10 +127,10 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                     true
                 }
 
-//                R.id.action_devSettingsFragment -> {
-//                    navController.navigate(R.id.devSettingsFragment)
-//                    true
-//                }
+                R.id.action_payment_overview -> {
+                    navController.navigate(R.id.statsFragment)
+                    true
+                }
 
                 R.id.action_driveBackupFragment -> {
                     navController.navigate(R.id.driveBackupFragment)
