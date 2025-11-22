@@ -16,6 +16,10 @@ class StatViewModel @Inject constructor(
     private val repository: StatsRepository
 ) : ViewModel() {
 
+    private val _balanceFlow = MutableStateFlow(0.0)
+    val balanceFlow: StateFlow<Double> = _balanceFlow
+
+
     private val _targetDateFlow = MutableStateFlow(LocalDate.now())
     val targetDate: StateFlow<LocalDate> = _targetDateFlow.asStateFlow()
 
@@ -80,8 +84,8 @@ class StatViewModel @Inject constructor(
 
     fun loadRange(start: LocalDate, end: LocalDate) {
         viewModelScope.launch {
-            val records: List<StateRecord> =
-                repository.getTotalsForRange(start, end)
+
+            val records: List<StateRecord> = repository.getTotalsForRange(start, end)
 
             val customers = records.filter { it.category == StateRecord.Category.CUSTOMER }
             val suppliers = records.filter { it.category == StateRecord.Category.SUPPLIER }
@@ -91,56 +95,43 @@ class StatViewModel @Inject constructor(
             val supplierTotal = suppliers.sumOf { it.amount }
             val expenseTotal = expenses.sumOf { it.amount }
 
-            val finalList = buildList {
+            // 🔥 Calculate balance dynamically
+            _balanceFlow.value = customerTotal - supplierTotal - expenseTotal
 
-                // Customers Section -----------------------
+            val finalList = buildList {
                 add(StatListItem.Header("Customer Payments"))
-                if (customers.isEmpty()) {
-                    add(StatListItem.Empty("No customer payments"))
-                } else {
+                if (customers.isEmpty()) add(StatListItem.Empty("No customer payments"))
+                else {
                     customers.forEach { rec ->
                         add(
                             StatListItem.CustomerItem(
-                                CustomerPaidSummary(
-                                    customerName = rec.name,
-                                    paidAmount = rec.amount
-                                )
+                                CustomerPaidSummary(rec.name, rec.amount)
                             )
                         )
                     }
                     add(StatListItem.TotalSummary("TOTAL RECEIVED", customerTotal))
                 }
 
-                // Suppliers Section -----------------------
                 add(StatListItem.Header("Supplier Payments"))
-                if (suppliers.isEmpty()) {
-                    add(StatListItem.Empty("No supplier payments"))
-                } else {
+                if (suppliers.isEmpty()) add(StatListItem.Empty("No supplier payments"))
+                else {
                     suppliers.forEach { rec ->
                         add(
                             StatListItem.SupplierItem(
-                                SupplierPaidSummary(
-                                    supplierName = rec.name,
-                                    paidAmount = rec.amount
-                                )
+                                SupplierPaidSummary(rec.name, rec.amount)
                             )
                         )
                     }
                     add(StatListItem.TotalSummary("TOTAL PAID", supplierTotal))
                 }
 
-                // Expenses Section ------------------------
                 add(StatListItem.Header("Expenses"))
-                if (expenses.isEmpty()) {
-                    add(StatListItem.Empty("No expenses"))
-                } else {
+                if (expenses.isEmpty()) add(StatListItem.Empty("No expenses"))
+                else {
                     expenses.forEach { rec ->
                         add(
                             StatListItem.ExpenseItem(
-                                ExpenseSummary(
-                                    expenseTitle = rec.name,
-                                    expenseAmount = rec.amount
-                                )
+                                ExpenseSummary(rec.name, rec.amount)
                             )
                         )
                     }
@@ -152,6 +143,7 @@ class StatViewModel @Inject constructor(
             _rangeList.value = finalList
         }
     }
+
 
     // ------------------------------------------------------------------------
     // NEXT / PREV navigation handling

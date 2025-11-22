@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentStatsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
@@ -109,6 +110,10 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
         viewModel.rangeList.collectState { list ->
             statAdapter.submitList(list)
             updateDateLabel()     // 🔥 update label whenever range changes
+        }
+
+        viewModel.balanceFlow.collectState { balance ->
+            binding.tvBalance.text = "Balance: ${balance.toPriceStr()}"
         }
     }
 
