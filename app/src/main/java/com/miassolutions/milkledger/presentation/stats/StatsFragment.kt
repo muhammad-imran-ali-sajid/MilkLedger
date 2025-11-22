@@ -32,7 +32,7 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
 
         setupToggleGroup()
 
-        // Load default period on screen open
+        // default = daily
         binding.togglePeriod.check(R.id.btn_daily)
         viewModel.loadDaily()
     }
@@ -60,8 +60,9 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
 
     override fun setupListeners() {
 
-        // Open calendar for custom date
+        // Date picker (used only for daily or custom)
         binding.tvSelectedDate.setOnClickListener {
+
             val currentDate = viewModel.targetDate.value
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
 
@@ -70,22 +71,21 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
                 initialDate = currentDate,
                 onPicked = { selectedDate ->
 
-                    // Update date text
-                    binding.tvSelectedDate.text = selectedDate.toDisplayFormat()
-
-
-                    // And load DAILY data for that date
-                    viewModel.loadRange(selectedDate, selectedDate)
-
-                    // Highlight Daily toggle
+                    // Load DAILY mode for selected date
                     binding.togglePeriod.check(R.id.btn_daily)
+                    viewModel.loadRange(selectedDate, selectedDate)
                 }
             )
         }
 
-        // Next/prev buttons
-        binding.btnNextDate.setOnClickListener { viewModel.onNextClicked() }
-        binding.btnPrevDate.setOnClickListener { viewModel.onPrevClicked() }
+        // Next/Prev buttons
+        binding.btnNextDate.setOnClickListener {
+            viewModel.onNextClicked()
+        }
+
+        binding.btnPrevDate.setOnClickListener {
+            viewModel.onPrevClicked()
+        }
     }
 
 
@@ -100,14 +100,53 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
 
     private fun observeViewModelData() {
 
-        // 1. Observe displayed date
-        viewModel.targetDate.collectState { date ->
-            binding.tvSelectedDate.text = date.toDisplayFormat()
+        // TARGET DATE (used for daily navigation)
+        viewModel.targetDate.collectState {
+            updateDateLabel()
         }
 
-        // 2. Observe list data
+        // LIST DATA
         viewModel.rangeList.collectState { list ->
             statAdapter.submitList(list)
+            updateDateLabel()     // 🔥 update label whenever range changes
         }
+    }
+
+
+    /**
+     * Updates TV LABEL based on selected mode:
+     * DAILY: Jan 3, 2025
+     * WEEKLY: Jan 1 – Jan 7, 2025
+     * MONTHLY: January 2025
+     * YEARLY: 2025
+     */
+    private fun updateDateLabel() {
+        val (start, end) = viewModel.currentRange
+        val period = viewModel.currentPeriod
+
+        val label = when (period) {
+
+            StatViewModel.Period.DAILY ->
+                start.toDisplayFormat()
+
+            StatViewModel.Period.WEEKLY ->
+                "${start.toDisplayFormat()} - ${end.toDisplayFormat()}"
+
+            StatViewModel.Period.MONTHLY -> {
+                val monthName = start.month.name.lowercase().replaceFirstChar { it.uppercase() }
+                "$monthName ${start.year}"
+            }
+
+            StatViewModel.Period.YEARLY ->
+                start.year.toString()
+
+            StatViewModel.Period.CUSTOM ->
+                if (start == end)
+                    start.toDisplayFormat()
+                else
+                    "${start.toDisplayFormat()} - ${end.toDisplayFormat()}"
+        }
+
+        binding.tvSelectedDate.text = label
     }
 }

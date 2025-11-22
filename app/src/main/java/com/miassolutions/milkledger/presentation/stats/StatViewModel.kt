@@ -22,8 +22,8 @@ class StatViewModel @Inject constructor(
     private val _rangeList = MutableStateFlow<List<StatListItem>>(emptyList())
     val rangeList: StateFlow<List<StatListItem>> = _rangeList.asStateFlow()
 
-    private var currentPeriod: Period = Period.DAILY
-    private var currentRange: Pair<LocalDate, LocalDate> =
+    var currentPeriod: Period = Period.DAILY
+    var currentRange: Pair<LocalDate, LocalDate> =
         LocalDate.now() to LocalDate.now()
 
     enum class Period { DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM }
