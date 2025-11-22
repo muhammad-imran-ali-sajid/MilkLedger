@@ -49,7 +49,7 @@ interface SalesDao {
      * Required for uploading all local data to Firestore during sync.
      * Renamed from getAllSync to be clearer.
      */
-    @Query("SELECT * FROM sales_table")
+    @Query("SELECT * FROM sales_table ORDER BY date DESC")
     suspend fun getAllSalesList(): List<SalesEntity>
 
     /**
@@ -98,7 +98,7 @@ interface SalesDao {
 
     // 👤 Customer ledger (date-wise history)
     @Transaction
-    @Query("SELECT * FROM sales_table WHERE customerId = :customerId ORDER BY date ASC")
+    @Query("SELECT * FROM sales_table WHERE customerId = :customerId ORDER BY date DESC")
     fun getSalesForCustomer(customerId: String): Flow<List<SaleWithCustomer>>
 
     // ✅ Get sales for a specific date once (e.g. for one-time report export)
