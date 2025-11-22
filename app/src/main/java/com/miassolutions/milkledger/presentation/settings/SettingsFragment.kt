@@ -4,15 +4,21 @@ import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentSettingsBinding
+import com.miassolutions.milkledger.presentation.expenses.ExpenseEditBottomSheet
+import com.miassolutions.milkledger.presentation.expenses.ExpenseViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class SettingsFragment :
     BaseFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
 
     private val viewModel by viewModels<SettingsViewModel>()
+    private val expenseViewModel by viewModels<ExpenseViewModel>()
 
     // Inject AppPreferencesManager using Hilt
     @Inject
@@ -24,7 +30,6 @@ class SettingsFragment :
         // Load and apply saved color at startup
         val savedColorId = appPreferences.loadBackgroundColor()
         applyBackgroundColor(savedColorId)
-
 
 
         // --- Background Color Buttons ---
@@ -51,6 +56,10 @@ class SettingsFragment :
         binding.btnSoftBlack.setOnClickListener {
             saveAndApplyColor(R.color.soft_black)
         }
+
+        binding.btnAddDefaultExpense.setOnClickListener {
+            showBottomSheet()
+        }
     }
 
     /**
@@ -59,6 +68,23 @@ class SettingsFragment :
     private fun saveAndApplyColor(colorId: Int) {
         appPreferences.saveBackgroundColor(colorId)
         applyBackgroundColor(colorId)
+    }
+
+
+    private fun showBottomSheet() {
+        ExpenseEditBottomSheet(
+            entry = ExpensesEntity(
+                expenseTitle = "",
+                expenseAmount = 0.0,
+                isDefault = true,
+                createdAt = LocalDateTime.now().toString(),
+                date = LocalDate.now(), // Use current date
+            ),
+            onSave = {
+                expenseViewModel.insertExpense(it)
+            },
+            isNewExpense = true
+        ).show(parentFragmentManager, null)
     }
 
     /**
