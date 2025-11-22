@@ -351,8 +351,7 @@
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="6dp"
-                        app:strokeColor="@color/orange_200">
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -384,8 +383,7 @@
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="6dp"
-                        app:strokeColor="@color/green_200">
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -416,8 +414,8 @@
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="6dp"
-                        app:strokeColor="@color/green">
+
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -448,8 +446,7 @@
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="6dp"
-                        app:strokeColor="@color/green">
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -480,8 +477,7 @@
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="6dp"
-                        app:strokeColor="@color/green">
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -513,8 +509,8 @@
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="6dp"
-                        app:strokeColor="@color/green">
+
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -546,8 +542,7 @@
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="6dp"
-                        app:strokeColor="@color/teal_200">
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -579,8 +574,7 @@
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginVertical="6dp"
-                        app:strokeColor="@color/blue_700">
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
