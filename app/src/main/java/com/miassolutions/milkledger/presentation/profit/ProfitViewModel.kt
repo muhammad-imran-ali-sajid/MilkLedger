@@ -42,8 +42,10 @@ class ProfitViewModel @Inject constructor(
                     val totalReceived = profitList.sumOf { it.receivedProfit }
                     val netProfit = repository.getNetProfit().first()
 
+
                     _uiState.update { state ->
                         state.copy(
+                            netProfit = netProfit,
                             profitList = profitList,
                             filteredList = profitList,
                             totalReceived = totalReceived,
@@ -82,6 +84,7 @@ class ProfitViewModel @Inject constructor(
 
         viewModelScope.launch {
 
+
             var currentFilterList = filteredList
 
             if (start != null && end != null) {
@@ -92,20 +95,22 @@ class ProfitViewModel @Inject constructor(
                     profit.receivedDate in start..end
                 }
 
+
                 val totalReceived = currentFilterList.sumOf { it.receivedProfit }
-                val netProfit = repository.getNetProfit().first()
+                val netProfit = repository.getProfitBetween(start, end).first()
 
-                _uiState.update { it.copy(
-                    totalReceived = totalReceived,
-                    netProfit = netProfit,
-                    filteredList = currentFilterList,
-                    remainingProfit = netProfit - totalReceived,
-                    periodLabel = periodLabel,
-                    startDate = start,
-                    endDate = end
-                )}
+                _uiState.update {
+                    it.copy(
+                        totalReceived = totalReceived,
+                        netProfit = netProfit,
+                        filteredList = currentFilterList,
+                        remainingProfit = netProfit - totalReceived,
+                        periodLabel = periodLabel,
+                        startDate = start,
+                        endDate = end
+                    )
+                }
             }
-
 
 
         }
