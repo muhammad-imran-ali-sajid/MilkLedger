@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.customer.sales
 
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -287,8 +288,9 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
-            Log.d("SalesFragment", "${state.salesForDate}")
 
+            binding.progressBar.visibility =
+                if (state.isLoading) View.VISIBLE else View.GONE
 
             adapter.submitList(state.salesForDate)
 

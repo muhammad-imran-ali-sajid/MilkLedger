@@ -16,6 +16,8 @@ data class PurchaseUiState(
     val totalTS : Double = 0.0,
     val volumeWithFatLr : Double = 0.0,
     val avgRatePerLiter: Double = 0.0,
+
+    val isLoading : Boolean = false
 )
 
 

@@ -139,11 +139,14 @@ class SalesViewModel @Inject constructor(
         // 1. **CRITICAL FIX:** Perform the initial data setup/insertion OUTSIDE of the Flow collection.
         // This ensures the local write does not immediately trigger the flow again.
         viewModelScope.launch {
+
             ensureSalesEntriesExist(date)
-        }
+
 
         // 2. Start the real-time observation job
-        salesJob = viewModelScope.launch {
+
+            _uiState.update { it.copy(isLoading = true) } // START LOADING
+
             repository.getSalesByDate(date).collectLatest { sales ->
                 val sortedSales = sales.sortedBy { it.customer.sortOrder }
                 val saleList = sortedSales.map { it.toSalesList() }
@@ -182,6 +185,7 @@ class SalesViewModel @Inject constructor(
                         grandSaleTotalForDate = grandTotalPrice,
                         receivedAmount = receivedAmount,
                         avgRatePerLiter = avgRatePerLiter,
+                        isLoading = false,
                         pdfSalesSummary = PdfSalesSummary(
                             totalQty = totalVolume.toRoundedStr(),
                             totalDeduction = totalDeduction.toRoundedStr(),

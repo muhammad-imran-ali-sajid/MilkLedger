@@ -122,6 +122,10 @@ class PurchaseFragment :
     private fun observeUiState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiState.collectLatest { state ->
+
+                binding.progressBar.visibility =
+                    if (state.isLoading) View.VISIBLE else View.GONE
+
                 purchaseAdapter.submitList(state.purchasesForDate)
                 binding.tvSelectedDate.text = state.currentDate.toDisplayFormat()
 

@@ -119,6 +119,9 @@ class PurchaseViewModel @Inject constructor(
     fun observeForDate(date: LocalDate) {
         purchasesJob?.cancel()
         purchasesJob = viewModelScope.launch {
+
+            _uiState.update { it.copy(isLoading = true) } // START LOADING
+
             val sortedSuppliers = repository.getAllSuppliers().first()
             val existingPurchasesWithSupplier = repository.getPurchasesByDateOnce(date)
 
@@ -178,7 +181,8 @@ class PurchaseViewModel @Inject constructor(
                     milkPrice = 0.0,
                     payment = 0.0,
                     balance = 0.0,
-                    rateUsed = supplier.supplierRate
+                    rateUsed = supplier.supplierRate,
+
                 )
                 repository.insertPurchase(newEntry)
             }
@@ -213,7 +217,8 @@ class PurchaseViewModel @Inject constructor(
                         totalTS = avgTS,
                         volumeWithFatLr = volumeWithFatLr,
                         grandTotalForDate = grandTotal,
-                        avgRatePerLiter = avgRatePerLiter
+                        avgRatePerLiter = avgRatePerLiter,
+                        isLoading = false
                     )
                 }
             }
