@@ -84,7 +84,7 @@ class DashboardViewModel @Inject constructor(
                 repository.getTotalMilkSoldAll(),
                 repository.getTotalSalesAll(),
                 repository.getTotalPurchasesAll(),
-                repository.getTotalExpensesAll(),
+                repository.getTotalFixedExpenses(),
                 repository.getProfitAll(),
                 repository.getTotalFat(),
                 repository.getTotalLr(),
@@ -177,7 +177,7 @@ class DashboardViewModel @Inject constructor(
                 repository.getTotalMilkSoldBetween(start, end),
                 repository.getTotalSalesBetween(start, end),
                 repository.getTotalPurchasesBetween(start, end),
-                repository.getTotalExpensesBetween(start, end),
+                repository.getTotalFixedExpensesBetween(start, end),
                 repository.getProfitBetween(start, end),
                 repository.getAvgFatBetween(start, end),
                 repository.getAvgLrBetween(start, end),
@@ -199,20 +199,7 @@ class DashboardViewModel @Inject constructor(
                 val avgSP: Double? = if (milkPurchase > 0) totalSales / milkPurchase else null
                 val difference: Double? = if (avgCP != null && avgSP != null) avgSP - avgCP else null
 
-                Log.d("AnalyticsViewModel", """
-                milkPurchase = $milkPurchase
-                milkSold     = $milkSold
-                totalSales   = $totalSales
-                totalPurchase= $totalPurchase
-                totalExpense = $totalExpense
-                profit       = $profit
-                totalFat     = $fat
-                totalLr      = $lr
-                totalTs      = $ts
-                avgSP        = ${totalSales/milkPurchase}
-                avgCP        = ${totalPurchase/milkPurchase}
-                difference   = ${difference}
-            """.trimIndent())
+
 
                 AnalyticsUiState(
                     milkPurchase = milkPurchase,
