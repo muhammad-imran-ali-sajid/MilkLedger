@@ -29,20 +29,30 @@ class DashboardFragment :
 
         syncViewModel.startInitialSync()
 
-        RemoteConfigHelper.fetchAndActivate(viewLifecycleOwner) {
-            val isTrial = RemoteConfigHelper.applyButtonState(binding.purchaseCard)
-            RemoteConfigHelper.applyButtonState(binding.saleCard)
-            RemoteConfigHelper.applyButtonState(binding.expenseCard)
+        RemoteConfigHelper.fetchValue(viewLifecycleOwner) { isTrialVersion ->
 
-            binding.apply {
-                val pText = if (!isTrial) "Trial Expire" else "Purchases"
-                val sText = if (!isTrial) "Trial Expire" else "Sales"
-                val eText = if (!isTrial) "Trial Expire" else "Expenses"
-                tvPurchase.text = pText
-                tvSale.text = sText
-                tvExpense.text = eText
+            // If Remote Config says trial is active, enable UI; else disable UI
+            val isTrialExpired = !isTrialVersion
+
+            if (isTrialExpired) {
+                binding.apply {
+                    purchaseCard.isEnabled = false
+                    saleCard.isEnabled = false
+                    expenseCard.isEnabled = false
+                    cardProfit.isEnabled = false
+                    tvTrial.show() // or tvTrial.visibility = View.VISIBLE
+                }
+            } else {
+                binding.apply {
+                    purchaseCard.isEnabled = true
+                    saleCard.isEnabled = true
+                    expenseCard.isEnabled = true
+                    cardProfit.isEnabled = true
+                    tvTrial.hide() // or tvTrial.visibility = View.GONE
+                }
             }
         }
+
 
 
         val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
@@ -136,16 +146,15 @@ class DashboardFragment :
         // 1. Set up the listener
         setFragmentResultListener(CustomDateRangeBottomSheet.REQUEST_KEY) { requestKey, bundle ->
             if (requestKey == CustomDateRangeBottomSheet.REQUEST_KEY) {
-                // 2. Extract the data
+
                 val startDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_START_DATE)
                 val endDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_END_DATE)
 
                 if (startDateString != null && endDateString != null) {
-                    // 3. Convert the String dates back to LocalDate
+
                     val startDate = LocalDate.parse(startDateString)
                     val endDate = LocalDate.parse(endDateString)
 
-                    // 4. Use the selected dates -> Call ViewModel to update state
                     handleSelectedDateRange(startDate, endDate)
                 }
             }
@@ -209,11 +218,11 @@ class DashboardFragment :
         binding.cardProfit.setOnClickListener {
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
 
-            if (isAdmin){
+            if (isAdmin) {
                 val dest = DashboardFragmentDirections.actionDashboardFragmentToProfitFragment()
                 navigateTo(dest.actionId)
 
-            } else{
+            } else {
                 showSnackbar("Only ADMIN is allowed here")
             }
 

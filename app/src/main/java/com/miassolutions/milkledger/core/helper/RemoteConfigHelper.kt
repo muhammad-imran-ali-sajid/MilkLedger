@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.core.helper
 
 import android.util.Log
-import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -13,6 +12,7 @@ import kotlinx.coroutines.launch
 object RemoteConfigHelper {
     private const val TAG = "RemoteConfigHelper"
     private const val BUTTON_ENABLED_KEY = "isTrialVersion"
+
     private val remoteConfig: FirebaseRemoteConfig by lazy { FirebaseRemoteConfig.getInstance() }
 
     /**
@@ -20,41 +20,32 @@ object RemoteConfigHelper {
      */
     fun init(defaults: Map<String, Any> = mapOf(BUTTON_ENABLED_KEY to true)) {
         val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(0) // 0 = debug, use 3600 for production
+            .setMinimumFetchIntervalInSeconds(0) // 0 for debug; increase for production
             .build()
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.setDefaultsAsync(defaults)
     }
 
     /**
-     * Lifecycle-safe fetch and activate.
-     * Executes callback only if lifecycle is at least STARTED.
+     * Fetch and activate the Remote Config values lifecycle-safely.
+     * Returns the value of the specified key via callback.
      */
-    fun fetchAndActivate(
+    fun fetchValue(
         lifecycleOwner: LifecycleOwner,
-        onComplete: (Boolean) -> Unit
+        key: String = BUTTON_ENABLED_KEY,
+        onResult: (Boolean) -> Unit
     ) {
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener { task ->
-                // Execute only if the fragment/activity is still active
                 if (lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                     lifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-                        onComplete(task.isSuccessful)
+                        val value = remoteConfig.getBoolean(key)
+                        Log.d(TAG, "RemoteConfig [$key] = $value (fetch success: ${task.isSuccessful})")
+                        onResult(value)
                     }
                 } else {
-                    Log.w(TAG, "fetchAndActivate ignored: lifecycle not active")
+                    Log.w(TAG, "fetchValue ignored: lifecycle not active")
                 }
             }
-    }
-
-    /**
-     * Apply enable/disable state to a button/card based on Remote Config value.
-     */
-    fun applyButtonState(button: ViewGroup, key: String = BUTTON_ENABLED_KEY): Boolean {
-        val isEnabled = remoteConfig.getBoolean(key)
-        button.isEnabled = isEnabled
-        button.alpha = if (isEnabled) 1.0f else 0.5f
-        Log.d(TAG, "RemoteConfig [$key] = $isEnabled")
-        return isEnabled
     }
 }

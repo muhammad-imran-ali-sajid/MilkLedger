@@ -5,6 +5,24 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+
+    <TextView
+        android:id="@+id/tvTrial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:rotation="-45"
+        android:visibility="gone"
+        android:text="Trial Version Expired"
+        android:textColor="#ff0000"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <LinearLayout
         android:id="@+id/layout_date_header"
         android:layout_width="match_parent"
@@ -132,11 +150,12 @@
         <!-- ====== DASHBOARD CARDS (VERTICAL, LABEL + VALUE HORIZONTAL) ====== -->
 
         <LinearLayout
+            android:id="@+id/cardGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="20dp"
+            android:orientation="vertical"
             android:weightSum="3">
 
             <!-- Row 1: Purchases & Sales -->
@@ -144,25 +163,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
-                >
+                android:weightSum="2">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/purchase_card"
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/purchase_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/bg_purchase"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp"
-                        android:background="@drawable/bg_purchase">
+                        android:padding="12dp">
 
                         <TextView
                             android:id="@+id/tvPurchase"
@@ -187,17 +205,17 @@
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="6dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/sale_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/bg_sale"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp"
-                        android:background="@drawable/bg_sale">
+                        android:padding="12dp">
 
                         <TextView
                             android:id="@+id/tvSale"
@@ -224,24 +242,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
-                >
+                android:weightSum="2">
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/expense_card"
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp">
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/bg_expense"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp"
-                        android:background="@drawable/bg_expense">
+                        android:padding="12dp">
 
                         <TextView
                             android:id="@+id/tvExpense"
@@ -266,17 +283,17 @@
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="6dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/profit_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/bg_profit"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp"
-                        android:background="@drawable/bg_profit">
+                        android:padding="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -302,23 +319,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
-                >
+                android:weightSum="2">
 
                 <com.google.android.material.card.MaterialCardView
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="6dp">
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="#533"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp"
-                        android:background="#533">
+                        android:padding="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -341,17 +357,17 @@
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginStart="6dp"
+                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/profit_color">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="#22a"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="12dp"
-                        android:background="#22a">
+                        android:padding="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -373,7 +389,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
 
 
         <LinearLayout
@@ -413,8 +428,7 @@
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -445,8 +459,7 @@
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -508,8 +521,7 @@
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -539,8 +551,7 @@
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -604,8 +615,7 @@
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -636,8 +646,7 @@
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="match_parent"
