@@ -39,7 +39,6 @@ interface ReportsDao {
     fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
 
-
     // ➕ All Records (Sales)
     @Query("SELECT SUM(netMilk) FROM sales_table")
     fun getTotalMilkSoldAll(): Flow<Double?>
@@ -48,9 +47,7 @@ interface ReportsDao {
     fun getTotalSalesAll(): Flow<Double?>
 
     @Query("SELECT paid FROM sales_table WHERE customerId =:customerId AND paid > 0.0")
-    fun getPaymentReceived(customerId: String) : Double
-
-
+    fun getPaymentReceived(customerId: String): Double
 
 
     // ───────────────────────────────
@@ -75,6 +72,7 @@ interface ReportsDao {
 
     @Query("SELECT AVG(lr) FROM purchase_table WHERE lr > 0.0")
     fun getTotalLr(): Flow<Double?>
+
 
     @Query("SELECT SUM(ts) FROM purchase_table")
     fun getTotalTs(): Flow<Double?>

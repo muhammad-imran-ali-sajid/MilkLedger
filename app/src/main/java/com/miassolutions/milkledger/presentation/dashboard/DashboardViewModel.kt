@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.DateRangeUtil
@@ -87,9 +88,10 @@ class DashboardViewModel @Inject constructor(
                 repository.getProfitAll(),
                 repository.getTotalFat(),
                 repository.getTotalLr(),
-                repository.getTotalTs()
+                repository.getTotalTs(),
 
             ) { results ->
+
                 val milkPurchase = results[0] ?: 0.0
                 val milkSold = results[1] ?: 0.0
                 val totalSales = results[2] ?: 0.0
@@ -99,10 +101,19 @@ class DashboardViewModel @Inject constructor(
                 val totalFat = results[6] ?: 0.0
                 val totalLr = results[7] ?: 0.0
                 val totalTs = results[8] ?: 0.0
+                val avgCP: Double? = if (milkPurchase > 0) totalPurchase / milkPurchase else null
+                val avgSP: Double? = if (milkPurchase > 0) totalSales / milkPurchase else null
+                val difference: Double? = if (avgCP != null && avgSP != null) avgSP - avgCP else null
+
+                // 🔥 ADD LOG HERE
+
 
                 AnalyticsUiState(
                     milkPurchase = milkPurchase,
                     milkSold = milkSold,
+                    avgSP = avgSP,
+                    avgCP = avgCP,
+                    difference = difference,
                     salesTotal = totalSales,
                     purchaseTotal = totalPurchase,
                     expensesTotal = totalExpense,
@@ -119,6 +130,7 @@ class DashboardViewModel @Inject constructor(
             }
         }
     }
+
 
     // --- Date Navigation ---
     fun onNextClicked() {
@@ -170,7 +182,8 @@ class DashboardViewModel @Inject constructor(
                 repository.getAvgFatBetween(start, end),
                 repository.getAvgLrBetween(start, end),
                 repository.getTotalTsBetween(start, end),
-                repository.getTotalMilkWithFatAndLr(start, end)
+                repository.getTotalMilkWithFatAndLr(start, end),
+
             ) { results ->
                 val milkPurchase = results[0] ?: 0.0
                 val milkSold = results[1] ?: 0.0
@@ -182,11 +195,32 @@ class DashboardViewModel @Inject constructor(
                 val lr = results[7] ?: 0.0
                 val ts = results[8] ?: 0.0
                 val totalMilkWithFatAndLr = results[9] ?: 0.0
+                val avgCP: Double? = if (milkPurchase > 0) totalPurchase / milkPurchase else null
+                val avgSP: Double? = if (milkPurchase > 0) totalSales / milkPurchase else null
+                val difference: Double? = if (avgCP != null && avgSP != null) avgSP - avgCP else null
+
+                Log.d("AnalyticsViewModel", """
+                milkPurchase = $milkPurchase
+                milkSold     = $milkSold
+                totalSales   = $totalSales
+                totalPurchase= $totalPurchase
+                totalExpense = $totalExpense
+                profit       = $profit
+                totalFat     = $fat
+                totalLr      = $lr
+                totalTs      = $ts
+                avgSP        = ${totalSales/milkPurchase}
+                avgCP        = ${totalPurchase/milkPurchase}
+                difference   = ${difference}
+            """.trimIndent())
 
                 AnalyticsUiState(
                     milkPurchase = milkPurchase,
                     milkSold = milkSold,
                     salesTotal = totalSales,
+                    avgCP = avgCP,
+                    avgSP = avgSP,
+                    difference = difference,
                     purchaseTotal = totalPurchase,
                     expensesTotal = totalExpense,
                     profit = profit,

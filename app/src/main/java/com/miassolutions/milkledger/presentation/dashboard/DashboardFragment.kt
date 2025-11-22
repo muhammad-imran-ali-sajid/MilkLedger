@@ -84,6 +84,9 @@ class DashboardFragment :
             tvAvgFat.text = "${state.avgFat.toRoundedStr()}% ($milkFatLr)"
             tvAvgLr.text = "${state.avgLr.toRoundedStr()} ($milkFatLr)"
             tvTotalTs.text = "${state.totalTs.toRoundedStr()} ($milkFatLr)"
+            tvAvgSP.text = state.avgSP?.toRoundedStr()
+            tvAvgCP.text = state.avgCP?.toRoundedStr()
+            tvRateDiff.text = state.difference?.toRoundedStr()
 
 
         }

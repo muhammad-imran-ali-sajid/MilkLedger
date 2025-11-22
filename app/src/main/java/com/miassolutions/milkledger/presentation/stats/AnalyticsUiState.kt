@@ -8,6 +8,9 @@ data class AnalyticsUiState(
     val endDate: LocalDate? = null,
     val milkPurchase: Double = 0.0,
     val milkSold: Double = 0.0,
+    val avgSP: Double ?= 0.0,
+    val avgCP: Double? = 0.0,
+    val difference: Double? = 0.0,
     val salesTotal: Double = 0.0,
     val expensesTotal: Double = 0.0,
     val purchaseTotal: Double = 0.0,
@@ -15,6 +18,6 @@ data class AnalyticsUiState(
     val avgFat: Double = 0.0,
     val avgLr: Double = 0.0,
     val totalTs: Double = 0.0,
-    val totalMilkWithFatAndLr : Double = 0.0
+    val totalMilkWithFatAndLr: Double = 0.0
 )
 
