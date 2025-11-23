@@ -58,7 +58,7 @@ interface StateDao {
     @Query("""
         SELECT e.expenseTitle AS name,
                SUM(e.expenseAmount) AS amount,
-               'EXPENSE' AS category
+               'OTHER' AS category
         FROM expense_table e
         WHERE e.date BETWEEN :start AND :end AND e.isDefault = 0
         GROUP BY e.expenseAmount
