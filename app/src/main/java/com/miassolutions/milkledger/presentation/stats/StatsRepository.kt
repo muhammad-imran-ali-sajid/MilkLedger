@@ -14,12 +14,16 @@ class StatsRepository @Inject constructor(
     suspend fun getTotalsForRange(start: LocalDate, end: LocalDate): List<StateRecord> {
         val customers = dao.getCustomerTotals(start, end)
         val suppliers = dao.getSupplierTotals(start, end)
-        val expenses = dao.getExpenseTotals(start, end)
+        val expenses = dao.getBusinessExpenseTotals(start, end)
+        val personalExpenses = dao.getPersonalExpenseTotals(start, end)
+        val profits = dao.getProfitTotals(start, end)
 
         return buildList {
             addAll(customers)
             addAll(suppliers)
             addAll(expenses)
+            addAll(personalExpenses)
+            addAll(profits)
         }
     }
 

@@ -4,7 +4,6 @@ package com.miassolutions.milkledger.data.local.daos
 import androidx.room.Dao
 import androidx.room.Query
 import com.miassolutions.milkledger.presentation.stats.StateRecord
-import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 @Dao
@@ -50,9 +49,31 @@ interface StateDao {
                SUM(e.expenseAmount) AS amount,
                'EXPENSE' AS category
         FROM expense_table e
-        WHERE e.date BETWEEN :start AND :end
+        WHERE e.date BETWEEN :start AND :end AND e.isDefault = 1
         GROUP BY e.expenseAmount
     """)
-    suspend fun getExpenseTotals(start: LocalDate, end: LocalDate): List<StateRecord>
+    suspend fun getBusinessExpenseTotals(start: LocalDate, end: LocalDate): List<StateRecord>
+
+
+    @Query("""
+        SELECT e.expenseTitle AS name,
+               SUM(e.expenseAmount) AS amount,
+               'EXPENSE' AS category
+        FROM expense_table e
+        WHERE e.date BETWEEN :start AND :end AND e.isDefault = 0
+        GROUP BY e.expenseAmount
+    """)
+    suspend fun getPersonalExpenseTotals(start: LocalDate, end: LocalDate): List<StateRecord>
+
+
+    @Query("""
+        SELECT p.receivedDate AS name,
+               SUM(p.receivedProfit) AS amount,
+               'PROFIT' AS category
+        FROM profit_table p
+        WHERE p.receivedDate BETWEEN :start AND :end
+        GROUP BY p.receivedProfit
+    """)
+    suspend fun getProfitTotals(start: LocalDate, end: LocalDate): List<StateRecord>
 }
 

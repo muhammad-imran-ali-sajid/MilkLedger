@@ -90,13 +90,18 @@ class StatViewModel @Inject constructor(
             val customers = records.filter { it.category == StateRecord.Category.CUSTOMER }
             val suppliers = records.filter { it.category == StateRecord.Category.SUPPLIER }
             val expenses = records.filter { it.category == StateRecord.Category.EXPENSE }
+            val personalExpense = records.filter { it.category == StateRecord.Category.OTHER }
+            val profits = records.filter { it.category == StateRecord.Category.PROFIT }
+
 
             val customerTotal = customers.sumOf { it.amount }
             val supplierTotal = suppliers.sumOf { it.amount }
-            val expenseTotal = expenses.sumOf { it.amount }
+            val businessExpenseTotal = expenses.sumOf { it.amount }
+            val personalExpenseTotal = personalExpense.sumOf { it.amount }
+            val profitTotal = profits.sumOf { it.amount }
 
             // 🔥 Calculate balance dynamically
-            _balanceFlow.value = customerTotal - supplierTotal - expenseTotal
+            _balanceFlow.value = customerTotal - supplierTotal - businessExpenseTotal
 
             val finalList = buildList {
                 add(StatListItem.Header("Customer Payments"))
@@ -135,8 +140,32 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.TotalSummary("TOTAL EXPENSES", expenseTotal))
+                    add(StatListItem.TotalSummary("TOTAL EXPENSES", businessExpenseTotal))
                 }
+                add(StatListItem.Header("Personal Expenses"))
+                if (personalExpense.isEmpty()) add(StatListItem.Empty("No personal expenses"))
+                else {
+                    expenses.forEach { record ->
+                        add(
+                            StatListItem.PersonalExpenseItem(
+                                PersonalExpenseSummary(record.name, record.amount)
+                            )
+                        )
+                    }
+                    add(StatListItem.TotalSummary("TOTAL PERSONAL EXPENSES",personalExpenseTotal))
+                }
+                add(StatListItem.Header("Profit"))
+                if (profits.isEmpty()) add(StatListItem.Empty("No profit yet"))
+                else {
+                    profits.forEach { r ->
+                        add(
+                            StatListItem.ProfitItem(
+                                ProfitSummary(r.name,r.amount)
+                            )
+                        )
+                    }
+                }
+                add(StatListItem.TotalSummary("TOTAL PROFIT", profitTotal))
             }
 
             currentRange = start to end

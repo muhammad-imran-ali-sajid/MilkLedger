@@ -22,6 +22,16 @@ data class ExpenseSummary(
     val expenseAmount: Double,
 )
 
+data class PersonalExpenseSummary(
+    val expenseTitle: String,
+    val expenseAmount: Double,
+)
+
+data class ProfitSummary(
+    val date: String,
+    val profitAmount: Double,
+)
+
 data class SumSummary(
     val title: String,
     val sum: Double
@@ -41,4 +51,6 @@ sealed class StatListItem {
     data class SupplierItem(val summary: SupplierPaidSummary) : StatListItem()
 
     data class ExpenseItem(val summary: ExpenseSummary) : StatListItem()
+    data class PersonalExpenseItem(val summary: PersonalExpenseSummary) : StatListItem()
+    data class ProfitItem(val summary: ProfitSummary) : StatListItem()
 }

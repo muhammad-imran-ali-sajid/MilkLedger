@@ -7,7 +7,7 @@ data class StateRecord(
     val category: Category
 ) {
     enum class Category {
-        CUSTOMER, SUPPLIER, EXPENSE
+        CUSTOMER, SUPPLIER, EXPENSE, OTHER, PROFIT
     }
 }
 

@@ -14,8 +14,11 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
     private val TYPE_CUSTOMER = 1
     private val TYPE_SUPPLIER = 2
     private val TYPE_EXPENSE = 3
-    private val TYPE_TOTAL_SUMMARY = 4
-    private val TYPE_EMPTY = 5   // 🔥 Added
+    private val TYPE_PERSONAL_EXPENSE = 4
+    private val TYPE_PROFIT = 5
+
+    private val TYPE_TOTAL_SUMMARY = 6
+    private val TYPE_EMPTY = 7
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
@@ -23,8 +26,10 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.CustomerItem -> TYPE_CUSTOMER
             is StatListItem.SupplierItem -> TYPE_SUPPLIER
             is StatListItem.ExpenseItem -> TYPE_EXPENSE
+            is StatListItem.PersonalExpenseItem -> TYPE_PERSONAL_EXPENSE
+            is StatListItem.ProfitItem -> TYPE_PROFIT
             is StatListItem.TotalSummary -> TYPE_TOTAL_SUMMARY
-            is StatListItem.Empty -> TYPE_EMPTY   // 🔥 FIXED
+            is StatListItem.Empty -> TYPE_EMPTY
         }
     }
 
@@ -48,14 +53,24 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             TYPE_EXPENSE -> ExpenseViewHolder(
                 ItemExpenseBinding.inflate(inflater, parent, false)
             )
+            TYPE_PERSONAL_EXPENSE -> PersonalExpenseViewHolder(
+                ItemOtherExpenseBinding.inflate(inflater, parent, false)
+            )
+
+            TYPE_PROFIT -> ProfitViewHolder(
+                ItemProfitOverviewBinding.inflate(inflater, parent, false)
+            )
+
 
             TYPE_TOTAL_SUMMARY -> TotalSummaryViewHolder(
                 ItemTotalSummaryBinding.inflate(inflater, parent, false)
             )
 
             TYPE_EMPTY -> EmptyViewHolder(
-                ItemEmptyBinding.inflate(inflater, parent, false) // 🔥 Add this layout
+                ItemEmptyBinding.inflate(inflater, parent, false) //
             )
+
+
 
             else -> error("Unknown viewType: $viewType")
         }
@@ -76,11 +91,17 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.ExpenseItem ->
                 (holder as ExpenseViewHolder).bind(item.summary)
 
+            is StatListItem.PersonalExpenseItem ->
+                (holder as PersonalExpenseViewHolder).bind(item.summary)
+
+            is StatListItem.ProfitItem ->
+                (holder as ProfitViewHolder).bind(item.summary)
+
             is StatListItem.TotalSummary ->
                 (holder as TotalSummaryViewHolder).bind(item)
 
             is StatListItem.Empty ->
-                (holder as EmptyViewHolder).bind(item.message) // 🔥 FIXED
+                (holder as EmptyViewHolder).bind(item.message)
         }
     }
 }
@@ -133,6 +154,24 @@ class ExpenseViewHolder(private val binding: ItemExpenseBinding) :
     }
 }
 
+
+class PersonalExpenseViewHolder(private val binding: ItemOtherExpenseBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(summary: PersonalExpenseSummary) {
+        binding.tvExpense.text = summary.expenseTitle
+        binding.tvExpenseAmount.text = summary.expenseAmount.toPriceStr()
+    }
+}
+
+class ProfitViewHolder(private val binding: ItemProfitOverviewBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(summary: ProfitSummary) {
+        binding.tvDate.text = summary.date
+        binding.tvProfitReceived.text = summary.profitAmount.toPriceStr()
+    }
+}
+
+
 // ----------------- DiffUtil --------------------
 
 class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
@@ -157,6 +196,12 @@ class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
 
             oldItem is StatListItem.Empty && newItem is StatListItem.Empty ->
                 oldItem.message == newItem.message
+
+            oldItem is StatListItem.PersonalExpenseItem && newItem is StatListItem.PersonalExpenseItem ->
+                oldItem.summary.expenseTitle == newItem.summary.expenseTitle
+
+            oldItem is StatListItem.ProfitItem && newItem is StatListItem.ProfitItem ->
+                oldItem.summary.date  == newItem.summary.date
 
             else -> false
         }
