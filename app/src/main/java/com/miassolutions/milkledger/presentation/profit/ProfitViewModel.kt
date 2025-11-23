@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,7 +43,7 @@ class ProfitViewModel @Inject constructor(
             is DatePeriod.Yearly -> fetchYearly(period.year)
             DatePeriod.All -> fetchAll()
             is DatePeriod.Custom -> fetchCustom(period.start, period.end)
-            else -> {}
+
         }
     }
 
@@ -125,18 +126,23 @@ class ProfitViewModel @Inject constructor(
     private fun fetchMonthly(yearMonth: YearMonth) {
         viewModelScope.launch {
 
-            // Convert YearMonth → first & last date
             val start = yearMonth.atDay(1)
             val end = yearMonth.atEndOfMonth()
 
-            val list = repository.getMonthly(start)  // your repo expects LocalDate (start)
+            // Repo expects a LocalDate or start/end – adjust as needed
+            val list = repository.getMonthly(start)
             val profits = list.map { it.toProfit() }
 
             val totalReceived = profits.sumOf { it.receivedProfit }
+
             val netProfit = repository.getNetProfitMonthly(
                 yearMonth.year,
                 yearMonth.monthValue
             )
+
+            // Custom label for Month + Year
+            val monthLabel = yearMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy"))
+
 
             _uiState.update {
                 it.copy(
@@ -144,13 +150,14 @@ class ProfitViewModel @Inject constructor(
                     totalReceived = totalReceived,
                     netProfit = netProfit,
                     remainingProfit = netProfit - totalReceived,
-                    periodLabel = formatPeriodLabel(start, end),
+                    periodLabel = monthLabel,
                     startDate = start,
                     endDate = end
                 )
             }
         }
     }
+
 
 //    private fun fetchMonthly(month: LocalDate) {
 //        viewModelScope.launch {
