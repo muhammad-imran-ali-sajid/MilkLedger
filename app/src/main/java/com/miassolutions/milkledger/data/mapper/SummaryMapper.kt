@@ -1,10 +1,10 @@
 package com.miassolutions.milkledger.data.mapper
 
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.presentation.stats.ExpenseSummary
+import com.miassolutions.milkledger.presentation.stats.BusinessExpenseSummary
 
 fun ExpensesEntity.toExpenseSummary() = with(this){
-    ExpenseSummary(
+    BusinessExpenseSummary(
         expenseTitle = expenseTitle,
         expenseAmount = expenseAmount,
     )

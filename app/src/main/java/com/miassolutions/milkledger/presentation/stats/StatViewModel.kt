@@ -89,14 +89,14 @@ class StatViewModel @Inject constructor(
 
             val customers = records.filter { it.category == StateRecord.Category.CUSTOMER }
             val suppliers = records.filter { it.category == StateRecord.Category.SUPPLIER }
-            val expenses = records.filter { it.category == StateRecord.Category.EXPENSE }
+            val businessExpense = records.filter { it.category == StateRecord.Category.EXPENSE }
             val personalExpense = records.filter { it.category == StateRecord.Category.OTHER }
             val profits = records.filter { it.category == StateRecord.Category.PROFIT }
 
 
             val customerTotal = customers.sumOf { it.amount }
             val supplierTotal = suppliers.sumOf { it.amount }
-            val businessExpenseTotal = expenses.sumOf { it.amount }
+            val businessExpenseTotal = businessExpense.sumOf { it.amount }
             val personalExpenseTotal = personalExpense.sumOf { it.amount }
             val profitTotal = profits.sumOf { it.amount }
 
@@ -130,22 +130,23 @@ class StatViewModel @Inject constructor(
                     add(StatListItem.TotalSummary("TOTAL PAID", supplierTotal))
                 }
 
-                add(StatListItem.Header("Expenses"))
-                if (expenses.isEmpty()) add(StatListItem.Empty("No expenses"))
+                add(StatListItem.Header("Business Expenses"))
+                if (businessExpense.isEmpty()) add(StatListItem.Empty("No expenses"))
                 else {
-                    expenses.forEach { rec ->
+                    businessExpense.forEach { rec ->
                         add(
-                            StatListItem.ExpenseItem(
-                                ExpenseSummary(rec.name, rec.amount)
+                            StatListItem.BusinessExpenseItem(
+                                BusinessExpenseSummary(rec.name, rec.amount)
                             )
                         )
                     }
                     add(StatListItem.TotalSummary("TOTAL EXPENSES", businessExpenseTotal))
                 }
+
                 add(StatListItem.Header("Personal Expenses"))
                 if (personalExpense.isEmpty()) add(StatListItem.Empty("No personal expenses"))
                 else {
-                    expenses.forEach { record ->
+                    personalExpense.forEach { record ->
                         add(
                             StatListItem.PersonalExpenseItem(
                                 PersonalExpenseSummary(record.name, record.amount)
@@ -154,6 +155,7 @@ class StatViewModel @Inject constructor(
                     }
                     add(StatListItem.TotalSummary("TOTAL PERSONAL EXPENSES",personalExpenseTotal))
                 }
+
                 add(StatListItem.Header("Profit"))
                 if (profits.isEmpty()) add(StatListItem.Empty("No profit yet"))
                 else {
@@ -165,6 +167,7 @@ class StatViewModel @Inject constructor(
                         )
                     }
                 }
+
                 add(StatListItem.TotalSummary("TOTAL PROFIT", profitTotal))
             }
 

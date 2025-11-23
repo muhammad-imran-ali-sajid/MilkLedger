@@ -42,26 +42,32 @@ interface StateDao {
 
 
     // -------------------------
-    // EXPENSE SUMMARIES
+    // BUSINESS EXPENSES
     // -------------------------
     @Query("""
         SELECT e.expenseTitle AS name,
                SUM(e.expenseAmount) AS amount,
                'EXPENSE' AS category
         FROM expense_table e
-        WHERE e.date BETWEEN :start AND :end AND e.isDefault = 1
-        GROUP BY e.expenseAmount
+        WHERE e.date BETWEEN :start AND :end
+          AND e.isDefault = 1
+        GROUP BY e.expenseId, e.expenseTitle
+        ORDER BY e.expenseTitle ASC
     """)
     suspend fun getBusinessExpenseTotals(start: LocalDate, end: LocalDate): List<StateRecord>
 
-
+    // -------------------------
+    // PERSONAL EXPENSES
+    // -------------------------
     @Query("""
         SELECT e.expenseTitle AS name,
                SUM(e.expenseAmount) AS amount,
                'OTHER' AS category
         FROM expense_table e
-        WHERE e.date BETWEEN :start AND :end AND e.isDefault = 0
-        GROUP BY e.expenseAmount
+        WHERE e.date BETWEEN :start AND :end
+          AND e.isDefault = 0
+        GROUP BY e.expenseId, e.expenseTitle
+        ORDER BY e.expenseTitle ASC
     """)
     suspend fun getPersonalExpenseTotals(start: LocalDate, end: LocalDate): List<StateRecord>
 

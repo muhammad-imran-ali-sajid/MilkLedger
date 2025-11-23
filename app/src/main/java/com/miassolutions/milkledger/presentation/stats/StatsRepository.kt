@@ -27,18 +27,5 @@ class StatsRepository @Inject constructor(
         }
     }
 
-    suspend fun getDaily(date: LocalDate) =
-        getTotalsForRange(date, date)
 
-    suspend fun getWeekly(range: Pair<LocalDate, LocalDate>) =
-        getTotalsForRange(range.first, range.second)
-
-    suspend fun getMonthly(range: Pair<LocalDate, LocalDate>) =
-        getTotalsForRange(range.first, range.second)
-
-    suspend fun getYearly(range: Pair<LocalDate, LocalDate>) =
-        getTotalsForRange(range.first, range.second)
-
-    suspend fun getCustom(start: LocalDate, end: LocalDate) =
-        getTotalsForRange(start, end)
 }

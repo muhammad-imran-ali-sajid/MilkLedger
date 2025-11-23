@@ -6,7 +6,8 @@ data class StatDashboardState(
     val targetDate: LocalDate = LocalDate.now(),
     val customerPayments: List<CustomerPaidSummary> = emptyList(),
     val supplierPayments: List<SupplierPaidSummary> = emptyList(),
-    val expenseList: List<ExpenseSummary> = emptyList(),
+    val businessExpenseList: List<BusinessExpenseSummary> = emptyList(),
+    val personalExpenseList: List<PersonalExpenseSummary> = emptyList(),
     val totalCustomerPayment: Double = 0.0,
     val totalSupplierPayment: Double = 0.0,
     val totalExpenses: Double = 0.0,
@@ -17,7 +18,7 @@ data class StatDashboardState(
 data class CustomerPaidSummary(val customerName: String, val paidAmount: Double)
 data class SupplierPaidSummary(val supplierName: String, val paidAmount: Double)
 
-data class ExpenseSummary(
+data class BusinessExpenseSummary(
     val expenseTitle: String,
     val expenseAmount: Double,
 )
@@ -43,14 +44,9 @@ sealed class StatListItem {
     data class Header(val title: String) : StatListItem()
     data class Empty(val message: String) : StatListItem()
     data class TotalSummary(val label: String, val amount: Double) : StatListItem()
-
-    // 2. For Customer Data
     data class CustomerItem(val summary: CustomerPaidSummary) : StatListItem()
-
-    // 3. For Supplier Data
     data class SupplierItem(val summary: SupplierPaidSummary) : StatListItem()
-
-    data class ExpenseItem(val summary: ExpenseSummary) : StatListItem()
+    data class BusinessExpenseItem(val summary: BusinessExpenseSummary) : StatListItem()
     data class PersonalExpenseItem(val summary: PersonalExpenseSummary) : StatListItem()
     data class ProfitItem(val summary: ProfitSummary) : StatListItem()
 }

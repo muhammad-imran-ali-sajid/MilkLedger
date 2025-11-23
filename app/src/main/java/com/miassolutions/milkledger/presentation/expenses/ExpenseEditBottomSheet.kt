@@ -39,6 +39,9 @@ class ExpenseEditBottomSheet(
 
         autoFocusNext()
 
+        val isDefault = entry.isDefault
+        val fixed =  if (isDefault) "*" else ""
+
         if (isNewExpense) {
             binding.nameLayout.visibility = View.VISIBLE
             binding.tvExpenseTitle.visibility = View.GONE
@@ -46,7 +49,7 @@ class ExpenseEditBottomSheet(
         } else {
             binding.nameLayout.visibility = View.GONE
             binding.tvExpenseTitle.visibility = View.VISIBLE
-            binding.tvExpenseTitle.text = entry.expenseTitle
+            binding.tvExpenseTitle.text = "${entry.expenseTitle} $fixed"
         }
 
         binding.etExpenseAmount.setText(entry.expenseAmount.toString())
@@ -62,9 +65,10 @@ class ExpenseEditBottomSheet(
             val amount = binding.etExpenseAmount.text?.toString()?.toDoubleOrNull()
             val notes = binding.etNotes.text?.toString()?.trim()
 
+
             if (!name.isNullOrEmpty() && amount != null) {
                 val updatedEntry = entry.copy(
-                    expenseTitle = name,
+                    expenseTitle = "$name $fixed",
                     expenseAmount = amount,
                     expenseNote = notes
                 )

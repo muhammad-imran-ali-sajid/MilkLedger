@@ -58,7 +58,6 @@ class ExpenseViewModel @Inject constructor(
 
         val toInsert = missingDefaults.map { title ->
             ExpensesEntity(
-                expenseId = UUID.randomUUID().toString(),
                 createdAt = LocalDateTime.now().toString(),
                 expenseTitle = title,
                 expenseAmount = 0.0,

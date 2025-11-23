@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.*
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.presentation.stats.ExpenseSummary
+import com.miassolutions.milkledger.presentation.stats.BusinessExpenseSummary
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
@@ -55,7 +55,7 @@ interface ExpensesDao {
         ORDER BY expenseAmount DESC
     """
     )
-    fun getTotalExpenses(date: LocalDate): Flow<List<ExpenseSummary>>
+    fun getTotalExpenses(date: LocalDate): Flow<List<BusinessExpenseSummary>>
 
     @Query(
         """

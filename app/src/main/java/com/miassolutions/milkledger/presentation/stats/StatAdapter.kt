@@ -25,7 +25,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.Header -> TYPE_HEADER
             is StatListItem.CustomerItem -> TYPE_CUSTOMER
             is StatListItem.SupplierItem -> TYPE_SUPPLIER
-            is StatListItem.ExpenseItem -> TYPE_EXPENSE
+            is StatListItem.BusinessExpenseItem -> TYPE_EXPENSE
             is StatListItem.PersonalExpenseItem -> TYPE_PERSONAL_EXPENSE
             is StatListItem.ProfitItem -> TYPE_PROFIT
             is StatListItem.TotalSummary -> TYPE_TOTAL_SUMMARY
@@ -88,7 +88,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.SupplierItem ->
                 (holder as SupplierViewHolder).bind(item.summary)
 
-            is StatListItem.ExpenseItem ->
+            is StatListItem.BusinessExpenseItem ->
                 (holder as ExpenseViewHolder).bind(item.summary)
 
             is StatListItem.PersonalExpenseItem ->
@@ -148,7 +148,7 @@ class SupplierViewHolder(private val binding: ItemSupplierPaidBinding) :
 
 class ExpenseViewHolder(private val binding: ItemExpenseBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(summary: ExpenseSummary) {
+    fun bind(summary: BusinessExpenseSummary) {
         binding.tvExpense.text = summary.expenseTitle
         binding.tvExpenseAmount.text = summary.expenseAmount.toPriceStr()
     }
@@ -188,7 +188,7 @@ class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
             oldItem is StatListItem.SupplierItem && newItem is StatListItem.SupplierItem ->
                 oldItem.summary.supplierName == newItem.summary.supplierName
 
-            oldItem is StatListItem.ExpenseItem && newItem is StatListItem.ExpenseItem ->
+            oldItem is StatListItem.BusinessExpenseItem && newItem is StatListItem.BusinessExpenseItem ->
                 oldItem.summary.expenseTitle == newItem.summary.expenseTitle
 
             oldItem is StatListItem.TotalSummary && newItem is StatListItem.TotalSummary ->
