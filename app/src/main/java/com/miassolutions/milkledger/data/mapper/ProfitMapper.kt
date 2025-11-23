@@ -1,7 +1,9 @@
 package com.miassolutions.milkledger.data.mapper
 
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
+import com.miassolutions.milkledger.data.remote.model.FirestoreProfit
 import com.miassolutions.milkledger.domain.model.Profit
+import java.time.LocalDate
 
 
 fun ProfitEntity.toProfit() = with(this) {
@@ -22,6 +24,32 @@ fun Profit.toProfitEntity() = with(this) {
     ProfitEntity(
         profitId = profitId,
         receivedDate = receivedDate,
+        netProfit = netProfit,
+        receivedProfit = receivedProfit,
+        notes = notes,
+        isSynced = isSynced,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+}
+
+fun ProfitEntity.toFirestore() = with(this) {
+    FirestoreProfit(
+        profitId = profitId,
+        receivedDate = receivedDate.toString(),
+        netProfit = netProfit,
+        receivedProfit = receivedProfit,
+        notes = notes,
+        isSynced = isSynced,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+}
+
+fun FirestoreProfit.toEntity() = with(this) {
+    ProfitEntity(
+        profitId = profitId,
+        receivedDate = LocalDate.parse(receivedDate),
         netProfit = netProfit,
         receivedProfit = receivedProfit,
         notes = notes,

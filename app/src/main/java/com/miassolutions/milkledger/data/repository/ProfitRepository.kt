@@ -1,7 +1,11 @@
 package com.miassolutions.milkledger.data.repository
 
+import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.ProfitDao
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
+import com.miassolutions.milkledger.data.mapper.toFirestore
+import com.miassolutions.milkledger.data.mapper.toProfit
+import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.firstOrNull
@@ -10,17 +14,84 @@ import javax.inject.Inject
 
 class ProfitRepository @Inject constructor(
     private val dao: ProfitDao,
+    private val firestoreSyncHelper: FirestoreSyncHelper,
     private val mDao: AnalyticsRepository
 ) {
+
+
+    private companion object {
+        private const val TAG = "ProfitRepository"
+        private const val PROFIT_COLLECTION = "profits"
+    }
 
     // --------------------------------------------------------------------
     // CRUD
     // --------------------------------------------------------------------
-    suspend fun upsert(profit: ProfitEntity) = dao.upsert(profit)
+    suspend fun upsert(profit: ProfitEntity) {
 
-    suspend fun delete(profit: ProfitEntity) = dao.deleteProfit(profit)
+        dao.upsert(profit)
+        try {
+            val firestoreModel = profit.toFirestore()
+            firestoreSyncHelper.uploadSingle(
+                collectionName = PROFIT_COLLECTION,
+                documentId = profit.profitId,
+                data = firestoreModel
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to sync insertOrUpdate for profit ID: ${profit.profitId}", e)
+        }
 
-    suspend fun upsertAll(profitList: List<ProfitEntity>) = dao.upsertAll(profitList)
+    }
+
+    suspend fun delete(profit: ProfitEntity) {
+
+        dao.deleteProfit(profit)
+
+        try {
+            firestoreSyncHelper.deleteDocument(
+                collectionName = PROFIT_COLLECTION,
+                documentId = profit.profitId,
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to sync delete for profit ID: ${profit.profitId}", e)
+        }
+    }
+
+
+    suspend fun synchronizationProfits() {
+        Log.d(TAG, "Starting full profits synchronization...")
+
+        try {
+            val remoteProfits =
+                firestoreSyncHelper.downloadCollection<ProfitEntity>(PROFIT_COLLECTION)
+            if (remoteProfits.isNotEmpty()) {
+
+                dao.upsertAll(remoteProfits)
+                Log.d(TAG, "Downloaded and merged from the firestore")
+            } else {
+                Log.d(TAG, "No remote item found")
+            }
+
+            val allLocalProfits = dao.getAll()
+            if (allLocalProfits.isNotEmpty()) {
+                firestoreSyncHelper.uploadCollection(
+                    collectionName = PROFIT_COLLECTION,
+                    dataList = allLocalProfits,
+                    idExtractor = { it.profitId }
+                )
+                Log.d(TAG, "Uploaded All profits")
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Full note sync failed ${e.localizedMessage}", e)
+        }
+    }
+
+    suspend fun upsertAll(profitList: List<ProfitEntity>) {
+
+        dao.upsertAll(profitList)
+
+
+    }
 
     suspend fun getProfitById(id: String): ProfitEntity? = dao.getProfitById(id)
 
@@ -105,4 +176,6 @@ class ProfitRepository @Inject constructor(
     private suspend fun Flow<Double?>.firstOrZero(): Double {
         return this.firstOrNull() ?: 0.0
     }
+
+
 }

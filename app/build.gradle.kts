@@ -53,6 +53,9 @@ android {
             )
         }
     }
+    kotlinOptions {
+        freeCompilerArgs = listOf("-XXLanguage:+PropertyParamAnnotationDefaultTargetMode")
+    }
 
 }
 
