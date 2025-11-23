@@ -69,7 +69,7 @@ class ProfitRepository @Inject constructor(
             val totalPurchases = p ?: 0.0
             val totalExpenses = e ?: 0.0
 
-            totalSales - (totalPurchases + totalPurchases)
+            totalSales - (totalPurchases + totalExpenses)
         }
 
     // Weekly / Custom

@@ -96,7 +96,7 @@ class AnalyticsRepository @Inject constructor(
         reportsDao.getTotalPurchasesDaily(date)
 
     fun getTotalExpensesDaily(date: LocalDate): Flow<Double?> =
-        reportsDao.getTotalExpensesDaily(date)
+        reportsDao.getTotalFixedExpensesDaily(date)
 
 
 

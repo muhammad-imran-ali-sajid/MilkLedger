@@ -109,7 +109,11 @@ interface ReportsDao {
     @Query("SELECT SUM(milkPrice) FROM purchase_table WHERE date = :date")
     fun getTotalPurchasesDaily(date: LocalDate): Flow<Double?>
 
+    @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date = :date AND isDefault = 1")
+    fun getTotalFixedExpensesDaily(date: LocalDate): Flow<Double?>
+
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date = :date")
     fun getTotalExpensesDaily(date: LocalDate): Flow<Double?>
+
 
 }
