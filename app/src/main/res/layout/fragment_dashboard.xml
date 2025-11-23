@@ -486,6 +486,37 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
+
+                    <com.google.android.material.card.MaterialCardView
+                        style="@style/DashboardCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="12dp">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Qty Diff"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                android:id="@+id/tvQtyDiff"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="end"
+                                android:text="Rs. 8,200"
+                                android:textSize="20sp" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
                         android:layout_width="match_parent"
@@ -534,7 +565,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Avg C.P."
+                                android:text="Avg P.P."
                                 android:textSize="20sp" />
 
                             <TextView
@@ -564,11 +595,11 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:text="Difference"
+                                android:text="Avg Price Diff"
                                 android:textSize="20sp" />
 
                             <TextView
-                                android:id="@+id/tvRateDiff"
+                                android:id="@+id/tvAvgPriceDiff"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"

@@ -82,19 +82,22 @@ class DashboardFragment :
         viewModel.uiState.collectState { state ->
             val milkFatLr = state.totalMilkWithFatAndLr
 
+            val qtyDiff = state.milkSold - state.milkPurchase
+
             tvSelectedDate.text = state.period
             tvTotalPurchases.text = state.purchaseTotal.toPriceStr()
             tvTotalSales.text = state.salesTotal.toPriceStr()
             tvTotalExpense.text = state.fixedExpense.toPriceStr()
             tvNetProfit.text = state.profit.toPriceStr()
-            tvMilkPurchase.text = "${state.milkPurchase.toRoundedStr()} L"
-            tvMilkSold.text = "${state.milkSold.toRoundedStr()} L"
+            tvMilkPurchase.text = "${state.milkPurchase.toRoundedStr("%.0f")} L"
+            tvMilkSold.text = "${state.milkSold.toRoundedStr("%.0f")} L"
+            tvQtyDiff.text = "${qtyDiff.toRoundedStr(" % .0f")} L"
             tvAvgFat.text = "${state.avgFat.toRoundedStr()}% ($milkFatLr)"
             tvAvgLr.text = "${state.avgLr.toRoundedStr()} ($milkFatLr)"
             tvTotalTs.text = "${state.totalTs.toRoundedStr()} ($milkFatLr)"
             tvAvgSP.text = state.avgSP?.toRoundedStr() ?: "0.0"
             tvAvgCP.text = state.avgCP?.toRoundedStr() ?: "0.0"
-            tvRateDiff.text = state.difference?.toRoundedStr() ?: "0.0"
+            tvAvgPriceDiff.text = state.difference?.toRoundedStr() ?: "0.0"
             tvPersonalExpense.text = state.personalExpense.toPriceStr()
             tvRemainingProfit.text = state.profitAfter.toPriceStr()
 
