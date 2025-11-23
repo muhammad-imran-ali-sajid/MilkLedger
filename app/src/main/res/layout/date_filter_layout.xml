@@ -59,13 +59,7 @@
             style="@style/CompactToggleButton"
             android:text="All" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCustomRange"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            style="@style/CompactToggleButton"
-            android:text="Custom" />
+
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <!-- Selected Period Display -->

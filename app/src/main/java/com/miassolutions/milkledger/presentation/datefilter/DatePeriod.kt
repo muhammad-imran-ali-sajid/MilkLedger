@@ -10,4 +10,5 @@ sealed class DatePeriod {
     data class Yearly(val year: Int) : DatePeriod()
     data object All : DatePeriod()
     data class Custom(val start: LocalDate, val end: LocalDate) : DatePeriod()
+
 }

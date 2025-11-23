@@ -42,6 +42,7 @@ class ProfitViewModel @Inject constructor(
             is DatePeriod.Yearly -> fetchYearly(period.year)
             DatePeriod.All -> fetchAll()
             is DatePeriod.Custom -> fetchCustom(period.start, period.end)
+            else -> {}
         }
     }
 
