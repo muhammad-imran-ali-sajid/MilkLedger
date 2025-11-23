@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dateFilterRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+
+    android:padding="12dp">
+
+    <!-- Toggle Group -->
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/togglePeriod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        android:clipToPadding="false">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDaily"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/CompactToggleButton"
+            android:text="Daily" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnWeekly"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/CompactToggleButton"
+            android:text="Weekly" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMonthly"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/CompactToggleButton"
+            android:text="Monthly" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnYearly"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/CompactToggleButton"
+            android:text="Yearly" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAll"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/CompactToggleButton"
+            android:text="All" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCustomRange"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            style="@style/CompactToggleButton"
+            android:text="Custom" />
+    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    <!-- Selected Period Display -->
+    <LinearLayout
+        android:id="@+id/layout_date_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:weightSum="8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <ImageButton
+            android:id="@+id/btnPrevDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_left"
+            app:tint="@color/white" />
+
+        <TextView
+            android:id="@+id/tvSelectedDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:text="12-10-2025"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnNextDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+</LinearLayout>
