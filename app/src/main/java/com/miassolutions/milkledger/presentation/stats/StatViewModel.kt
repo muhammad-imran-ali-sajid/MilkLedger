@@ -101,7 +101,7 @@ class StatViewModel @Inject constructor(
             val profitTotal = profits.sumOf { it.amount }
 
             // 🔥 Calculate balance dynamically
-            _balanceFlow.value = customerTotal - supplierTotal - businessExpenseTotal
+            _balanceFlow.value = customerTotal - supplierTotal - businessExpenseTotal - personalExpenseTotal
 
             val finalList = buildList {
                 add(StatListItem.Header("Customer Payments"))
