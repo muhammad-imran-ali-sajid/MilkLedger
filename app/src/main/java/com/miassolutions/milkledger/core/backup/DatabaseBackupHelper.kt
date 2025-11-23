@@ -15,6 +15,7 @@ import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
+import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
@@ -82,7 +83,8 @@ class DatabaseBackupHelper @Inject constructor(
         val purchases: List<PurchaseEntity>,
         val sales: List<SalesEntity>,
         val expenses: List<ExpensesEntity>,
-        val notes: List<NoteEntity>
+        val notes: List<NoteEntity>,
+        val profits: List<ProfitEntity>
     )
 
     // Backup database to URI
@@ -97,7 +99,8 @@ class DatabaseBackupHelper @Inject constructor(
             purchases = db.purchaseDao().getAllPurchasesList(),
             sales = db.salesDao().getAllSalesList(),
             expenses = db.expensesDao().getAllExpensesList(),
-            notes = db.noteDao().getAllNotesList()
+            notes = db.noteDao().getAllNotesList(),
+            profits = db.profitDao().getAll(),
         )
 
         val json = gson.toJson(data)
@@ -158,6 +161,9 @@ class DatabaseBackupHelper @Inject constructor(
 
             db.noteDao().clearAll()
             db.noteDao().upsertAll(backupData.notes)
+
+            db.profitDao().clearAll()
+            db.profitDao().upsertAll(backupData.profits)
         }
 
         true

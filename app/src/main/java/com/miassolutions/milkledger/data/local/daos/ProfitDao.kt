@@ -16,6 +16,9 @@ interface ProfitDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(profitList: List<ProfitEntity>)
 
+    @Query("DELETE FROM profit_table")
+    suspend fun clearAll()
+
     @Delete
     suspend fun deleteProfit(profit: ProfitEntity)
 
@@ -43,22 +46,26 @@ interface ProfitDao {
     // -------------------------------
     // MONTHLY (yyyy-MM)
     // -------------------------------
-    @Query("""
+    @Query(
+        """
         SELECT * FROM profit_table 
         WHERE receivedDate LIKE :yearMonth || '%'
         ORDER BY receivedDate ASC
-    """)
+    """
+    )
     suspend fun getMonthly(yearMonth: String): List<ProfitEntity>
     // Input example → "2025-01"
 
     // -------------------------------
     // YEARLY (yyyy)
     // -------------------------------
-    @Query("""
+    @Query(
+        """
         SELECT * FROM profit_table 
         WHERE receivedDate LIKE :year || '%'
         ORDER BY receivedDate ASC
-    """)
+    """
+    )
     suspend fun getYearly(year: String): List<ProfitEntity>
     // Input example → "2025"
 
