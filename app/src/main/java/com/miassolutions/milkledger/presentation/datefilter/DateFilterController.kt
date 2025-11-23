@@ -24,8 +24,14 @@ class DateFilterController(
         setupPrevNext()
         setupCustomRangeListener()
         setupTvSelectedClick()
+
+        // Set Daily as default selection
+        binding.togglePeriod.check(R.id.btnAll)
+
         render()
+        callback.onPeriodChanged(currentPeriod)
     }
+
 
     /** Toggle Group for Daily, Weekly, Monthly, Yearly, All */
     private fun setupToggleGroup() = with(binding) {
