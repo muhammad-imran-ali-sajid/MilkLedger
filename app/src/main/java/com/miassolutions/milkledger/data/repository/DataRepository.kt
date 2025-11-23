@@ -6,15 +6,24 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
+import com.miassolutions.milkledger.data.local.daos.ProfitDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.mapper.toEntityModel
 import com.miassolutions.milkledger.data.mapper.toRoomEntity
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.CUSTOMERS
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.EXPENSES
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.NOTES
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.PROFITS
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.PURCHASES
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.SALES
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.SUPPLIERS
 import com.miassolutions.milkledger.data.remote.model.FirestoreCustomer
 import com.miassolutions.milkledger.data.remote.model.FirestoreExpense
 import com.miassolutions.milkledger.data.remote.model.FirestoreNotes
+import com.miassolutions.milkledger.data.remote.model.FirestoreProfit
 import com.miassolutions.milkledger.data.remote.model.FirestorePurchase
 import com.miassolutions.milkledger.data.remote.model.FirestoreSales
 import com.miassolutions.milkledger.data.remote.model.FirestoreSupplier
@@ -33,7 +42,8 @@ class DataRepository @Inject constructor(
     private val expenseDao: ExpensesDao,
     private val salesDao: SalesDao,
     private val purchaseDao: PurchaseDao,
-    private val notesDao: NoteDao
+    private val notesDao: NoteDao,
+    private val profitDao: ProfitDao
 ) {
     private val TAG = "DataRepository"
 
@@ -44,12 +54,13 @@ class DataRepository @Inject constructor(
         Log.d(TAG, "Setting up real-time listeners in a SupervisorScope...")
 
         // Launch each collection observer as a separate coroutine.
-//        launch { observeCollectionChanges("suppliers") }
-//        launch { observeCollectionChanges("customers") }
-//        launch { observeCollectionChanges("sales") }
-//        launch { observeCollectionChanges("purchases") }
-//        launch { observeCollectionChanges("notes") }
-//        launch { observeCollectionChanges("expenses") }
+        launch { observeCollectionChanges(SUPPLIERS) }
+        launch { observeCollectionChanges(CUSTOMERS) }
+        launch { observeCollectionChanges(SALES) }
+        launch { observeCollectionChanges(PURCHASES) }
+        launch { observeCollectionChanges(NOTES) }
+        launch { observeCollectionChanges(EXPENSES) }
+        launch { observeCollectionChanges(PROFITS) }
     }
 
     /**
@@ -112,28 +123,32 @@ class DataRepository @Inject constructor(
         val cloudModel = change.document.toObject(modelClass)
 
         when (collectionPath) {
-            "suppliers" -> (cloudModel as FirestoreSupplier).toRoomEntity().apply {
+            SUPPLIERS -> (cloudModel as FirestoreSupplier).toRoomEntity().apply {
                 supplierDao.upsertAll(listOf(this))
             }
 
-            "customers" -> (cloudModel as FirestoreCustomer).toRoomEntity().apply {
+            CUSTOMERS -> (cloudModel as FirestoreCustomer).toRoomEntity().apply {
                 customerDao.upsertAll(listOf(this))
             }
 
-            "sales" -> (cloudModel as FirestoreSales).toEntityModel().apply {
+            SALES -> (cloudModel as FirestoreSales).toEntityModel().apply {
                 salesDao.upsertAll(listOf(this))
             }
 
-            "purchases" -> (cloudModel as FirestorePurchase).toEntityModel().apply {
+            PURCHASES -> (cloudModel as FirestorePurchase).toEntityModel().apply {
                 purchaseDao.upsertAll(listOf(this))
             }
 
-            "notes" -> (cloudModel as FirestoreNotes).toEntity().apply {
+            NOTES -> (cloudModel as FirestoreNotes).toEntity().apply {
                 notesDao.upsertAll(listOf(this))
             }
 
-            "expenses" -> (cloudModel as FirestoreExpense).toEntityModel().apply {
+            EXPENSES -> (cloudModel as FirestoreExpense).toEntityModel().apply {
                 expenseDao.upsertAll(listOf(this))
+            }
+
+            PROFITS -> (cloudModel as FirestoreProfit).toEntity().apply {
+                profitDao.upsertAll(listOf(this))
             }
         }
         Log.d(TAG, "UPSERTED: $collectionPath/${change.document.id}")
@@ -143,40 +158,88 @@ class DataRepository @Inject constructor(
     private suspend fun deleteRemovedDocument(collectionPath: String, change: DocumentChange) {
         val docId = change.document.id
         when (collectionPath) {
-            "suppliers" -> {
+            SUPPLIERS -> {
                 supplierDao.deleteById(docId)
-                firestore.collection("purchases")
+                firestore.collection(PURCHASES)
                     .whereEqualTo("supplierId", docId)
                     .get()
                     .addOnSuccessListener { snapshots ->
-                        snapshots?.forEach {doc ->
-                            firestore.collection("purchases").document(doc.id).delete()
+                        snapshots?.forEach { doc ->
+                            firestore.collection(PURCHASES).document(doc.id).delete()
 
                         }
                     }
                     .addOnFailureListener { exception ->
-                        Log.e(TAG, "Failed to delete Firestore purchase for supplier $docId : ${exception.message}")
+                        Log.e(
+                            TAG,
+                            "Failed to delete Firestore purchase for supplier $docId : ${exception.message}"
+                        )
                     }
                 Log.d(TAG, "Deleted supplier $docId and their sales locally and in Firestore")
             }
-            "customers" -> {
+
+            CUSTOMERS -> {
                 // Delete customer locally (Room cascade will remove local sales)
                 customerDao.deleteById(docId)
 
                 // Also delete Firestore sales belonging to this customer
-                firestore.collection("sales")
+                firestore.collection(SALES)
                     .whereEqualTo("customerId", docId)
                     .get()
                     .addOnSuccessListener { snapshot ->
                         snapshot?.forEach { doc ->
-                            firestore.collection("sales").document(doc.id).delete()
+                            firestore.collection(SALES).document(doc.id).delete()
                         }
                     }
                     .addOnFailureListener { e ->
-                        Log.e(TAG, "Failed to delete Firestore sales for customer $docId: ${e.message}")
+                        Log.e(
+                            TAG,
+                            "Failed to delete Firestore sales for customer $docId: ${e.message}"
+                        )
                     }
 
                 Log.d(TAG, "Deleted customer $docId and their sales locally and in Firestore")
+            }
+
+            EXPENSES -> {
+                expenseDao.deleteById(docId)
+                //also from the firestore
+                firestore.collection(EXPENSES)
+                    .whereEqualTo("expenseId", docId)
+                    .get()
+                    .addOnSuccessListener { snapshots ->
+                        snapshots?.forEach { doc ->
+                            firestore.collection(EXPENSES).document(doc.id).delete()
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e(
+                            TAG,
+                            "Failed to delete Firestore expense  $docId: ${e.message}"
+                        )
+                    }
+
+                Log.d(TAG, "Deleted expense $docId from locally and in Firestore")
+            }
+
+            PROFITS -> {
+                profitDao.getProfitById(docId)
+
+                firestore.collection(PROFITS)
+                    .whereEqualTo("profitId", docId)
+                    .get()
+                    .addOnSuccessListener { snapshots ->
+                        snapshots?.forEach { doc ->
+                            firestore.collection(PROFITS).document(doc.id).delete()
+                        }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e(
+                            TAG,
+                            "Failed to delete Firestore profit  $docId: ${e.message}"
+                        )
+                    }
+                Log.d(TAG, "Deleted profit $docId from locally and in Firestore")
             }
 //            "sales" -> salesDao.deleteById(docId)
 //            "notes" -> notesDao.deleteById(docId)
@@ -190,12 +253,13 @@ class DataRepository @Inject constructor(
     @Suppress("UNCHECKED_CAST")
     private fun getModelClass(collectionPath: String): Class<*> {
         return when (collectionPath) {
-            "suppliers" -> FirestoreSupplier::class.java
-            "customers" -> FirestoreCustomer::class.java
-            "sales" -> FirestoreSales::class.java
-            "purchases" -> FirestorePurchase::class.java
-            "notes" -> FirestoreNotes::class.java
-            "expenses" -> FirestoreExpense::class.java
+            SUPPLIERS -> FirestoreSupplier::class.java
+            CUSTOMERS -> FirestoreCustomer::class.java
+            SALES -> FirestoreSales::class.java
+            PURCHASES -> FirestorePurchase::class.java
+            NOTES -> FirestoreNotes::class.java
+            EXPENSES -> FirestoreExpense::class.java
+            PROFITS -> FirestoreProfit::class.java
             else -> throw IllegalArgumentException("Unknown collection path: $collectionPath")
         }
     }

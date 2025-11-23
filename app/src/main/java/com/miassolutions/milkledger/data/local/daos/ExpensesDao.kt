@@ -29,11 +29,16 @@ interface ExpensesDao {
     @Delete
     suspend fun deleteExpense(expense: ExpensesEntity)
 
+    @Query("DELETE FROM expense_table WHERE expenseId = :id")
+    suspend fun deleteById(id: String)
+
     // All expenses for a specific date
-    @Query("""
+    @Query(
+        """
         SELECT * FROM expense_table 
         WHERE date = :date AND deletedAt IS NULL
-    """)
+    """
+    )
     fun getAllExpenses(date: LocalDate): Flow<List<ExpensesEntity>>
 
 
@@ -41,25 +46,28 @@ interface ExpensesDao {
     suspend fun getTitlesForDate(date: LocalDate): List<String>
 
 
-
-
     // Summary for charts/list
-    @Query("""
+    @Query(
+        """
         SELECT expenseTitle, expenseAmount 
         FROM expense_table 
         WHERE date = :date AND deletedAt IS NULL
         ORDER BY expenseAmount DESC
-    """)
+    """
+    )
     fun getTotalExpenses(date: LocalDate): Flow<List<ExpenseSummary>>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM expense_table 
         WHERE expenseId = :id 
         LIMIT 1
-    """)
+    """
+    )
     suspend fun getExpenseById(id: String): ExpensesEntity?
 
-    @Query("""
+    @Query(
+        """
         SELECT EXISTS(
             SELECT 1 FROM expense_table 
             WHERE expenseTitle = :title 
@@ -67,19 +75,21 @@ interface ExpensesDao {
               AND deletedAt IS NULL
             LIMIT 1
         )
-    """)
+    """
+    )
     suspend fun expenseExistsForTitleAndDate(title: String, date: LocalDate): Boolean
 
 
     // Total between dates
-    @Query("""
+    @Query(
+        """
         SELECT SUM(expenseAmount) 
         FROM expense_table 
         WHERE date BETWEEN :start AND :end 
           AND deletedAt IS NULL
-    """)
+    """
+    )
     suspend fun getExpensesTotalBetween(start: LocalDate, end: LocalDate): Double?
-
 
 
     // -------------------------------------------------------------
@@ -87,39 +97,47 @@ interface ExpensesDao {
     // -------------------------------------------------------------
 
     // FIXED EXPENSES (Fuel, Meal…)
-    @Query("""
+    @Query(
+        """
         SELECT * FROM expense_table
         WHERE isDefault = 1 
           AND date = :date 
           AND deletedAt IS NULL
-    """)
+    """
+    )
     fun getFixedExpenses(date: LocalDate): Flow<List<ExpensesEntity>>
 
-    @Query("""
+    @Query(
+        """
         SELECT SUM(expenseAmount) 
         FROM expense_table
         WHERE isDefault = 1
           AND date = :date
           AND deletedAt IS NULL
-    """)
+    """
+    )
     fun getFixedExpensesTotal(date: LocalDate): Flow<Double?>
 
 
     // VARIABLE EXPENSES
-    @Query("""
+    @Query(
+        """
         SELECT * FROM expense_table
         WHERE isDefault = 0 
           AND date = :date 
           AND deletedAt IS NULL
-    """)
+    """
+    )
     fun getVariableExpenses(date: LocalDate): Flow<List<ExpensesEntity>>
 
-    @Query("""
+    @Query(
+        """
         SELECT SUM(expenseAmount) 
         FROM expense_table
         WHERE isDefault = 0
           AND date = :date
           AND deletedAt IS NULL
-    """)
+    """
+    )
     fun getVariableExpensesTotal(date: LocalDate): Flow<Double?>
 }
