@@ -8,17 +8,16 @@ import androidx.room.Query
 import androidx.room.Upsert
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @Dao
 interface ProfitDao {
-
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(profitList: List<ProfitEntity>)
 
     @Delete
     suspend fun deleteProfit(profit: ProfitEntity)
-
 
     @Upsert
     suspend fun upsert(profit: ProfitEntity)
@@ -28,4 +27,41 @@ interface ProfitDao {
 
     @Query("SELECT * FROM profit_table WHERE profitId = :profitId LIMIT 1")
     suspend fun getProfitById(profitId: String): ProfitEntity?
+
+    // -------------------------------
+    // DAILY
+    // -------------------------------
+    @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
+    suspend fun getDaily(date: LocalDate): List<ProfitEntity>
+
+    // -------------------------------
+    // RANGE (WEEKLY / CUSTOM)
+    // -------------------------------
+    @Query("SELECT * FROM profit_table WHERE receivedDate BETWEEN :start AND :end")
+    suspend fun getBetween(start: LocalDate, end: LocalDate): List<ProfitEntity>
+
+    // -------------------------------
+    // MONTHLY (yyyy-MM)
+    // -------------------------------
+    @Query("""
+        SELECT * FROM profit_table 
+        WHERE receivedDate LIKE :yearMonth || '%'
+        ORDER BY receivedDate ASC
+    """)
+    suspend fun getMonthly(yearMonth: String): List<ProfitEntity>
+    // Input example → "2025-01"
+
+    // -------------------------------
+    // YEARLY (yyyy)
+    // -------------------------------
+    @Query("""
+        SELECT * FROM profit_table 
+        WHERE receivedDate LIKE :year || '%'
+        ORDER BY receivedDate ASC
+    """)
+    suspend fun getYearly(year: String): List<ProfitEntity>
+    // Input example → "2025"
+
+    @Query("SELECT * FROM profit_table")
+    suspend fun getAll(): List<ProfitEntity>
 }

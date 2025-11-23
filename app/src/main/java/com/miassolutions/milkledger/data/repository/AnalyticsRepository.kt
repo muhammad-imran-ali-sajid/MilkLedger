@@ -89,6 +89,17 @@ class AnalyticsRepository @Inject constructor(
     fun getTotalPersonalExpense(): Flow<Double?> = reportsDao.getTotalPersonalExpensesAll()
 
 
+    fun getTotalSalesDaily(date: LocalDate): Flow<Double?> =
+        reportsDao.getTotalSalesDaily(date)
+
+    fun getTotalPurchasesDaily(date: LocalDate): Flow<Double?> =
+        reportsDao.getTotalPurchasesDaily(date)
+
+    fun getTotalExpensesDaily(date: LocalDate): Flow<Double?> =
+        reportsDao.getTotalExpensesDaily(date)
+
+
+
     fun getProfitAll(): Flow<Double> =
         combine(
             reportsDao.getTotalSalesAll(),

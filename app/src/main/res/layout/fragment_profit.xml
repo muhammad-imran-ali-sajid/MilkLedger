@@ -8,36 +8,32 @@
 
     tools:context=".presentation.profit.ProfitFragment">
 
-    <TextView
-        android:id="@+id/tv_selected_date"
-        style="@style/TitleText"
-        android:layout_width="0dp"
+    <include
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:padding="8dp"
-        android:text="22 Oct 2025"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/dateFilterLayout"
+        layout="@layout/date_filter_layout" />
+
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
+        app:layout_constraintTop_toBottomOf="@id/dateFilterLayout"
         app:cardBackgroundColor="#eee"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_selected_date"
-        >
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
             android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="8dp">
 
 
             <LinearLayout

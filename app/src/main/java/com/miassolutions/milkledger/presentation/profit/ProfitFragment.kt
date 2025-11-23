@@ -6,18 +6,24 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.DatePickerLogic
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
+import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
+import com.miassolutions.milkledger.presentation.datefilter.DateFilterController
+import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
 
 @AndroidEntryPoint
-class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding::inflate) {
+class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding::inflate),
+    DateFilterCallback {
 
     private val viewModel by viewModels<ProfitViewModel>()
+    private lateinit var controller: DateFilterController
     private lateinit var adapter: ProfitAdapter
 
 
@@ -29,6 +35,13 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
                 DividerItemDecoration.VERTICAL
             )
         )
+
+        controller = DateFilterController(
+            this,
+            binding.dateFilterLayout,
+            callback = this
+        )
+        controller.init()
     }
 
     private fun showConfirmDialog(profit: Profit) {
@@ -64,10 +77,6 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
         }
 
-        binding.tvSelectedDate.setOnClickListener {
-            registerCustomRangeListener()
-            showCustomRangeSheet()
-        }
     }
 
     override fun setupObservers() {
@@ -81,43 +90,16 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
             adapter.submitList(state.filteredList)
 
 
-
-
             // 2. Update the UI text label with the current state value
-            binding.tvSelectedDate.text = state.periodLabel
+            binding.dateFilterLayout.tvSelectedDate.text = state.periodLabel
         }
         binding.rvProfit.adapter = adapter
     }
 
-    /**
-     * Helper to format the date range string based on ViewModel state.
-     */
 
-
-    private fun registerCustomRangeListener() {
-        setFragmentResultListener(CustomDateRangeBottomSheet.REQUEST_KEY) { requestKey, bundle ->
-            if (requestKey == CustomDateRangeBottomSheet.REQUEST_KEY) {
-
-                val startDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_START_DATE)
-                val endDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_END_DATE)
-
-                if (startDateString != null && endDateString != null) {
-                    val startDate = LocalDate.parse(startDateString)
-                    val endDate = LocalDate.parse(endDateString)
-
-                    viewModel.loadCustom(startDate, endDate)
-                }
-            }
-        }
+    override fun onPeriodChanged(period: DatePeriod) {
+        viewModel.loadData(period)
     }
-
-    private fun showCustomRangeSheet() {
-        CustomDateRangeBottomSheet()
-            .show(parentFragmentManager, "CUSTOM_RANGE_ONLY_FILTER_DATA")
-    }
-
-
-
 
 
 }

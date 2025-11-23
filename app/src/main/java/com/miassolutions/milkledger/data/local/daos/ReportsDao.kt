@@ -100,4 +100,16 @@ interface ReportsDao {
 
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE isDefault = 0")
     fun getTotalPersonalExpensesAll(): Flow<Double?>
+
+
+
+    @Query("SELECT SUM(price) FROM sales_table WHERE date = :date")
+    fun getTotalSalesDaily(date: LocalDate): Flow<Double?>
+
+    @Query("SELECT SUM(milkPrice) FROM purchase_table WHERE date = :date")
+    fun getTotalPurchasesDaily(date: LocalDate): Flow<Double?>
+
+    @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date = :date")
+    fun getTotalExpensesDaily(date: LocalDate): Flow<Double?>
+
 }
