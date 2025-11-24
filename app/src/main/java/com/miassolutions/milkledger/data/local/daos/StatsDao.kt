@@ -51,7 +51,7 @@ interface StateDao {
         FROM expense_table e
         WHERE e.date BETWEEN :start AND :end
           AND e.isDefault = 1
-        GROUP BY e.expenseId, e.expenseTitle
+        GROUP BY  e.expenseTitle
         ORDER BY e.expenseTitle ASC
     """)
     suspend fun getBusinessExpenseTotals(start: LocalDate, end: LocalDate): List<StateRecord>
@@ -66,7 +66,7 @@ interface StateDao {
         FROM expense_table e
         WHERE e.date BETWEEN :start AND :end
           AND e.isDefault = 0
-        GROUP BY e.expenseId, e.expenseTitle
+        GROUP BY e.expenseTitle
         ORDER BY e.expenseTitle ASC
     """)
     suspend fun getPersonalExpenseTotals(start: LocalDate, end: LocalDate): List<StateRecord>
