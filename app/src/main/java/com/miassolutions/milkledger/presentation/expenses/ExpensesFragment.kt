@@ -37,7 +37,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
         ExpenseEditBottomSheet(
             entry = entry,
             onSave = { viewModel.updateExpense(it) },
-            isNewExpense = false
+
         ).show(parentFragmentManager, null)
     }
 
@@ -94,7 +94,6 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
             val selectedDate = viewModel.uiState.value.currentDate
             ExpenseEditBottomSheet(
                 entry = ExpensesEntity(
-                    expenseTitle = "New Title",
                     expenseAmount = 0.0,
                     createdAt = LocalDateTime.now().toString(),
                     date = selectedDate, // Use current date
@@ -102,7 +101,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
                 onSave = {
                     viewModel.insertExpense(it)
                 },
-                isNewExpense = true
+
             ).show(parentFragmentManager, null)
         }
 

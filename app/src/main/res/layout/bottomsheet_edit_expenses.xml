@@ -9,28 +9,41 @@
     android:orientation="vertical"
     android:padding="24dp">
 
-    <TextView
-        android:id="@+id/tvExpenseTitle"
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:text="Expense Title"
-        android:visibility="gone" />
+        android:hint="Expense Date">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="date"
+            android:text="20 Nov 2025"
+            android:textColor="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Expense Title">
+        android:layout_marginTop="12dp"
+        android:hint="Expense Type"
+        app:endIconMode="dropdown_menu">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etName"
-            android:inputType="text"
-            android:imeOptions="actionNext"
+        <AutoCompleteTextView
+            android:id="@+id/etExpenseType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:focusable="false"
+            android:clickable="true" />
     </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/etExpenseAmountLayout"
@@ -42,8 +55,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etExpenseAmount"
             android:layout_width="match_parent"
-            android:imeOptions="actionNext"
             android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,10 +70,10 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNotes"
-            android:inputType="text"
-            android:imeOptions="actionDone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
