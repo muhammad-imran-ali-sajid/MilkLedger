@@ -20,11 +20,10 @@ interface ExpensesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(expenses: List<ExpensesEntity>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertExpense(expense: ExpensesEntity)
 
-    @Update
-    suspend fun updateExpense(expense: ExpensesEntity)
+
+    @Upsert
+    suspend fun upsert(expense: ExpensesEntity)
 
     @Delete
     suspend fun deleteExpense(expense: ExpensesEntity)

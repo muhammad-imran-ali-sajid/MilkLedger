@@ -81,7 +81,7 @@ class SettingsFragment :
                 date = LocalDate.now(), // Use current date
             ),
             onSave = {
-                expenseViewModel.insertExpense(it)
+                expenseViewModel.saveExpense(it)
             },
         ).show(parentFragmentManager, null)
     }

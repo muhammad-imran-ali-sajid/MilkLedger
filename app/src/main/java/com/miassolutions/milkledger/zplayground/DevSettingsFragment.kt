@@ -109,7 +109,8 @@ class DevSettingsFragment : Fragment() {
                     expenseTitle = expenseTitles[i - 1],
                     expenseAmount = Random.nextDouble(500.0, 2000.0),
                     createdAt = LocalDateTime.now().toString(),
-                    expenseNote = "Dummy expense for ${expenseTitles[i - 1]}"
+                    expenseNote = "Dummy expense for ${expenseTitles[i - 1]}",
+                    isDefault = true
                 )
             )
         }

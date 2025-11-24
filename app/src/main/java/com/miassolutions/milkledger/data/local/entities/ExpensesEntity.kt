@@ -14,12 +14,10 @@ data class ExpensesEntity(
     val expenseTitle: String = "",
     val expenseAmount: Double = 0.0,
     val expenseNote: String? = null,
-    val isDefault: Boolean = false,
-    
-
-    val createdAt: String,
+    val isDefault: Boolean = true,
+    val createdAt: String = LocalDateTime.now().toString(),
     val isSynced: Boolean = false,
     val updatedAt: String = LocalDateTime.now().toString(),
     val deletedAt: LocalDateTime? = null
-
 )
+

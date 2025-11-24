@@ -39,7 +39,7 @@ class ExpenseViewModel @Inject constructor(
         _uiState.update { it.copy(currentDate = date, isLoading = true) }
 
         viewModelScope.launch {
-            ensureDefaultExpenses(date)
+//            ensureDefaultExpenses(date)
         }
 
         collectFixedExpenses(date)
@@ -49,25 +49,25 @@ class ExpenseViewModel @Inject constructor(
     // --------------------------------------------------
     // ✔ Improved Default Expenses Logic (Fast + Clean)
     // --------------------------------------------------
-    private suspend fun ensureDefaultExpenses(date: LocalDate) {
-        val existingTitles = repository.getTitlesForDate(date).toSet()
-
-        val missingDefaults = DEFAULT_TITLES.filter { it !in existingTitles }
-
-        if (missingDefaults.isEmpty()) return
-
-        val toInsert = missingDefaults.map { title ->
-            ExpensesEntity(
-                createdAt = LocalDateTime.now().toString(),
-                expenseTitle = title,
-                expenseAmount = 0.0,
-                isDefault = true,
-                date = date
-            )
-        }
-
-        repository.insertAll(toInsert)
-    }
+//    private suspend fun ensureDefaultExpenses(date: LocalDate) {
+//        val existingTitles = repository.getTitlesForDate(date).toSet()
+//
+//        val missingDefaults = DEFAULT_TITLES.filter { it !in existingTitles }
+//
+//        if (missingDefaults.isEmpty()) return
+//
+//        val toInsert = missingDefaults.map { title ->
+//            ExpensesEntity(
+//                createdAt = LocalDateTime.now().toString(),
+//                expenseTitle = title,
+//                expenseAmount = 0.0,
+//                isDefault = true,
+//                date = date
+//            )
+//        }
+//
+//        repository.insertAll(toInsert)
+//    }
 
     // --------------------------------------------------
     // Separate collectors make UI simpler
@@ -105,22 +105,14 @@ class ExpenseViewModel @Inject constructor(
         }
     }
 
-    fun insertExpense(expense: ExpensesEntity) = viewModelScope.launch {
-        val final = if (expense.expenseId.isBlank()) {
-            expense.copy(expenseId = UUID.randomUUID().toString())
-        } else expense
-
-        repository.insertExpense(final)
-    }
-
     fun deleteExpense(expense: ExpensesEntity) = viewModelScope.launch {
         repository.deleteExpense(expense)
     }
 
-    fun updateExpense(expense: ExpensesEntity) =
-        viewModelScope.launch { repository.updateExpense(expense) }
 
-    companion object {
-        private val DEFAULT_TITLES = listOf("Fuel", "Meal", "Vehicle")
+    fun saveExpense(expense: ExpensesEntity) = viewModelScope.launch {
+        repository.upsertExpense(expense)
     }
+
+
 }

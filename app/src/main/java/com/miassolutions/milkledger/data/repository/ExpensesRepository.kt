@@ -59,39 +59,58 @@ class ExpensesRepository @Inject constructor(
         }
     }
 
-    suspend fun insertExpense(expense: ExpensesEntity) {
-        dao.insertExpense(expense)
-
-        try {
-            firestore.uploadSingle(
-                collectionName = COLLECTION,
-                documentId = expense.expenseId,
-                data = expense.toFirestoreModel()
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "Sync failed for insert: ${expense.expenseId}", e)
-        }
-    }
-
-    suspend fun updateExpense(expense: ExpensesEntity) {
-        val existing = dao.getExpenseById(expense.expenseId) ?: return
-
-        val updated = expense.copy(
+    suspend fun upsertExpense(expense: ExpensesEntity) {
+        val final = expense.copy(
             updatedAt = LocalDateTime.now().toString()
         )
 
-        dao.updateExpense(updated)
+        dao.upsert(final)  // Upsert will insert or update correctly
 
         try {
             firestore.uploadSingle(
                 collectionName = COLLECTION,
-                documentId = updated.expenseId,
-                data = updated.toFirestoreModel()
+                documentId = final.expenseId,
+                data = final.toFirestoreModel()
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Sync failed for update: ${expense.expenseId}", e)
+            Log.e(TAG, "Sync failed for upsert: ${expense.expenseId}", e)
         }
     }
+
+    suspend fun upsertAllExpenses(expenses: List<ExpensesEntity>) {
+        dao.upsertAll(expenses)
+
+        try {
+            firestore.uploadCollection(
+                collectionName = COLLECTION,
+                dataList = expenses,
+                idExtractor = { it.expenseId }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Batch sync failed", e)
+        }
+    }
+
+
+//    suspend fun updateExpense(expense: ExpensesEntity) {
+//        val existing = dao.getExpenseById(expense.expenseId) ?: return
+//
+//        val updated = expense.copy(
+//            updatedAt = LocalDateTime.now().toString()
+//        )
+//
+//        dao.updateExpense(updated)
+//
+//        try {
+//            firestore.uploadSingle(
+//                collectionName = COLLECTION,
+//                documentId = updated.expenseId,
+//                data = updated.toFirestoreModel()
+//            )
+//        } catch (e: Exception) {
+//            Log.e(TAG, "Sync failed for update: ${expense.expenseId}", e)
+//        }
+//    }
 
     suspend fun deleteExpense(expense: ExpensesEntity) {
         dao.deleteExpense(expense)
