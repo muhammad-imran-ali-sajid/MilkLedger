@@ -144,7 +144,8 @@ class FirestoreSyncHelper @Inject constructor(
         val candidateNames = listOf(
             "id", "Id", "ID",
             "customerId", "customer_id",
-            "noteId", "entityId", "uid"
+            "noteId", "entityId", "uid",
+            "expenseId","profitId","purchaseId", "saleId","supplierId"
         )
         for (name in candidateNames) {
             try {
