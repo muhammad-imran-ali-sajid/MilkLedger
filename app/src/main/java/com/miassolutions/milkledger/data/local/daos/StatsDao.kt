@@ -15,6 +15,7 @@ interface StateDao {
     @Query("""
         SELECT c.customerName AS name,
                SUM(s.paid) AS amount,
+               SUM(s.volume) AS volume,
                'CUSTOMER' AS category
         FROM sales_table s
         INNER JOIN customer_table c 
@@ -31,6 +32,7 @@ interface StateDao {
     @Query("""
         SELECT sup.supplierName AS name,
                SUM(p.payment) AS amount,
+               SUM(p.milkAmount) AS volume,
                'SUPPLIER' AS category
         FROM purchase_table p
         INNER JOIN supplier_table sup

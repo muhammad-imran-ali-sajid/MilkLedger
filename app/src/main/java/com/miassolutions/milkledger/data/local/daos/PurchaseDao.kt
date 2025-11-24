@@ -27,7 +27,8 @@ interface PurchaseDao {
         """
         SELECT
             T2.supplierName,
-            T1.payment AS paidAmount  -- Select the amount paid from the Purchase table
+            T1.payment AS paidAmount,  -- Select the amount paid from the Purchase table
+            T1.milkAmount AS volume
         FROM
             purchase_table AS T1
         LEFT JOIN

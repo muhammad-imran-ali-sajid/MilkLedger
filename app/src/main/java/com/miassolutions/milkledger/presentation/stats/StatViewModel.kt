@@ -110,7 +110,7 @@ class StatViewModel @Inject constructor(
                     customers.forEach { rec ->
                         add(
                             StatListItem.CustomerItem(
-                                CustomerPaidSummary(rec.name, rec.amount)
+                                CustomerPaidSummary(rec.name, rec.amount, rec.volume)
                             )
                         )
                     }
@@ -123,7 +123,7 @@ class StatViewModel @Inject constructor(
                     suppliers.forEach { rec ->
                         add(
                             StatListItem.SupplierItem(
-                                SupplierPaidSummary(rec.name, rec.amount)
+                                SupplierPaidSummary(rec.name, rec.amount, rec.volume)
                             )
                         )
                     }

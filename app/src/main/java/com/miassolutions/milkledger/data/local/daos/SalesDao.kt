@@ -23,7 +23,8 @@ interface SalesDao {
     @Query("""
         SELECT
             T2.customerName,
-            T1.paid AS paidAmount  -- Select the paid amount for that sale
+            T1.paid AS paidAmount,  -- Select the paid amount for that sale
+            T1.volume AS volume
         FROM
             sales_table AS T1
         LEFT JOIN

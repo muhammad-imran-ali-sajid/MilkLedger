@@ -134,7 +134,7 @@ class CustomerViewHolder(private val binding: ItemCustomerPaidBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: CustomerPaidSummary) {
         binding.customerNameTextView.text = summary.customerName
-        binding.paidAmountTextView.text = summary.paidAmount.toPriceStr()
+        binding.paidAmountTextView.text = "${summary.paidAmount.toPriceStr()}(${summary.volume})"
     }
 }
 
@@ -142,7 +142,7 @@ class SupplierViewHolder(private val binding: ItemSupplierPaidBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: SupplierPaidSummary) {
         binding.supplierNameTextView.text = summary.supplierName
-        binding.paymentAmountTextView.text = summary.paidAmount.toPriceStr()
+        binding.paymentAmountTextView.text = "${summary.paidAmount.toPriceStr()}(${summary.volume})"
     }
 }
 

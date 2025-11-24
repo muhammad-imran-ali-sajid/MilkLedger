@@ -15,8 +15,8 @@ data class StatDashboardState(
 )
 
 // Data classes for the summaries (re-used)
-data class CustomerPaidSummary(val customerName: String, val paidAmount: Double)
-data class SupplierPaidSummary(val supplierName: String, val paidAmount: Double)
+data class CustomerPaidSummary(val customerName: String, val paidAmount: Double, val volume: Double?)
+data class SupplierPaidSummary(val supplierName: String, val paidAmount: Double, val volume: Double?)
 
 data class BusinessExpenseSummary(
     val expenseTitle: String,
