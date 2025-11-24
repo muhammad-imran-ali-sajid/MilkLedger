@@ -8,7 +8,7 @@ data class FirestoreExpense(
     val title: String = "",
     val amount: Double = 0.0,
     val expenseNote: String = "",
-    val isDefault: Boolean = false,
+    val isDefault: Boolean = true,
 
 
     val isSynced: Boolean = false,

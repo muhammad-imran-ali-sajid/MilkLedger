@@ -1,11 +1,13 @@
 package com.miassolutions.milkledger.data.local.entities
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
-
+@Parcelize
 @Entity(tableName = "expense_table")
 data class ExpensesEntity(
     @PrimaryKey
@@ -19,5 +21,5 @@ data class ExpensesEntity(
     val isSynced: Boolean = false,
     val updatedAt: String = LocalDateTime.now().toString(),
     val deletedAt: LocalDateTime? = null
-)
+) : Parcelable
 

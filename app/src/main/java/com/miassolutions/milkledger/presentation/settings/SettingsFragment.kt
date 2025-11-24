@@ -72,18 +72,18 @@ class SettingsFragment :
 
 
     private fun showBottomSheet() {
-        ExpenseEditBottomSheet(
-            entry = ExpensesEntity(
-
-                expenseAmount = 0.0,
-                isDefault = true,
-                createdAt = LocalDateTime.now().toString(),
-                date = LocalDate.now(), // Use current date
-            ),
-            onSave = {
-                expenseViewModel.saveExpense(it)
-            },
-        ).show(parentFragmentManager, null)
+//        ExpenseEditBottomSheet(
+//            entry = ExpensesEntity(
+//
+//                expenseAmount = 0.0,
+//                isDefault = true,
+//                createdAt = LocalDateTime.now().toString(),
+//                date = LocalDate.now(), // Use current date
+//            ),
+//            onSave = {
+//                expenseViewModel.saveExpense(it)
+//            },
+//        ).show(parentFragmentManager, null)
     }
 
     /**

@@ -1,19 +1,17 @@
 package com.miassolutions.milkledger.presentation.expenses
 
-import android.view.MenuItem
 import android.view.View
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
@@ -25,103 +23,110 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     override fun setupViews() {
         setToolbarTitle(getString(R.string.expenses))
         setupRecyclerView()
+        setupBottomSheetResultListener()
     }
 
     private fun setupRecyclerView() {
-        adapter =
-            ExpensesAdapter(onClick = ::showBottomSheet, onLongClick = ::onConfirmDeleteDialog)
+        adapter = ExpensesAdapter(
+            onClick = ::openEditSheet,
+            onLongClick = ::onConfirmDeleteDialog
+        )
         binding.rvExpenses.adapter = adapter
     }
 
-    private fun showBottomSheet(entry: ExpensesEntity) {
-        ExpenseEditBottomSheet(
-            entry = entry,
-            onSave = { viewModel.saveExpense(it) },
-
-        ).show(parentFragmentManager, null)
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Listen for results from BottomSheet
+    // ─────────────────────────────────────────────────────────────────────────────
+    private fun setupBottomSheetResultListener() {
+        setFragmentResultListener(ExpenseEditBottomSheet.RESULT_KEY) { _, bundle ->
+            val updated = bundle.getParcelable<ExpensesEntity>(
+                ExpenseEditBottomSheet.RESULT_ENTRY
+            )
+            if (updated != null) {
+                viewModel.saveExpense(updated)
+            }
+        }
     }
 
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Edit existing entry
+    // ─────────────────────────────────────────────────────────────────────────────
+    private fun openEditSheet(entry: ExpensesEntity) {
+        ExpenseEditBottomSheet
+            .newInstance(entry)
+            .show(parentFragmentManager, null)
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Delete entry
+    // ─────────────────────────────────────────────────────────────────────────────
     private fun onConfirmDeleteDialog(entry: ExpensesEntity) {
         val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
 
-        if (isAdmin){
+        if (isAdmin) {
             showDialog("Delete Expense", "Are you sure to delete this expense?") {
                 viewModel.deleteExpense(entry)
             }
         } else {
             showSnackbar("Only ADMIN can delete")
         }
-
-
     }
 
-
-
-
-
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Observers
+    // ─────────────────────────────────────────────────────────────────────────────
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
 
             binding.progressBar.visibility =
                 if (state.isLoading) View.VISIBLE else View.GONE
 
-            // Format date
             val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
             binding.tvSelectedDate.text = state.currentDate.format(formatter)
 
-            // Merge fixed + variable for UI
-            val combinedList = state.fixedExpenses + state.variableExpenses
-            adapter.submitList(combinedList)
+            val combined = state.fixedExpenses + state.variableExpenses
+            adapter.submitList(combined)
 
-            // Totals
             binding.apply {
-                tvTotalExpense.text = (state.fixedTotal + state.variableTotal).toRoundedStr()
+                val total = state.fixedTotal + state.variableTotal
+                tvTotalExpense.text = total.toRoundedStr()
                 tvAvgExpenses.text =
-                    if (combinedList.isNotEmpty())
-                        ((state.fixedTotal + state.variableTotal) / combinedList.size).toRoundedStr()
-                    else "0"
+                    if (combined.isNotEmpty()) (total / combined.size).toRoundedStr() else "0"
             }
         }
     }
 
-
-
-
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Listeners
+    // ─────────────────────────────────────────────────────────────────────────────
     override fun setupListeners() = with(binding) {
 
-
         fabAddExpense.setOnClickListener {
-            val selectedDate = viewModel.uiState.value.currentDate
-            ExpenseEditBottomSheet(
-                entry = ExpensesEntity(date = LocalDate.now(), isDefault = true),
-                onSave = {
-                    viewModel.saveExpense(it)
-                },
+            val newEntry = ExpensesEntity(
+                
+                expenseTitle = "",
+                expenseAmount = 0.0,
+                date = LocalDate.now(),
+                expenseNote = "",
+                isDefault = true
+            )
 
-            ).show(parentFragmentManager, null)
+            ExpenseEditBottomSheet
+                .newInstance(newEntry)
+                .show(parentFragmentManager, null)
         }
 
-
         tvSelectedDate.setOnClickListener {
-            val admin = SharedPrefsHelper.getUserRole(requireContext())
-            val isAuth = admin == "admin"
-            // Assume you fetch the authorization status dynamically
-            val isUserAuthorized = isAuth // Replace with actual auth check
-
-            // Pass the current date as the pre-selected date for better UX
-            val initialDate = viewModel.uiState.value!!.currentDate
+            val isAuth = SharedPrefsHelper.getUserRole(requireContext()) == "admin"
+            val initialDate = viewModel.uiState.value.currentDate
 
             showExpenseDatePicker(
-
-                isAuthorized = isUserAuthorized,
+                isAuthorized = isAuth,
                 initialDate = initialDate,
-                // The selectedDate (LocalDate) is available here!
-                onPicked = { selectedDate: LocalDate ->
-                    // This is where you pass the result to your ViewModel
-                    viewModel.onEvent(ExpensesUiEvent.SelectDate(selectedDate))
+                onPicked = { selected ->
+                    viewModel.onEvent(ExpensesUiEvent.SelectDate(selected))
                 }
             )
         }
-
     }
 }
