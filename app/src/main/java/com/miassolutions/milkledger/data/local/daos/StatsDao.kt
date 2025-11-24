@@ -22,6 +22,7 @@ interface StateDao {
             ON c.customerId = s.customerId
         WHERE s.date BETWEEN :start AND :end
         GROUP BY c.customerId
+        ORDER BY c.sortOrder
     """)
     suspend fun getCustomerTotals(start: LocalDate, end: LocalDate): List<StateRecord>
 
@@ -39,6 +40,7 @@ interface StateDao {
             ON sup.supplierId = p.supplierId
         WHERE p.date BETWEEN :start AND :end
         GROUP BY sup.supplierId
+        ORDER BY sup.sortOrder
     """)
     suspend fun getSupplierTotals(start: LocalDate, end: LocalDate): List<StateRecord>
 
