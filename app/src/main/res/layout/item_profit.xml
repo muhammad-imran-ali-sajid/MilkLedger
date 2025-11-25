@@ -9,29 +9,54 @@
 
     android:layout_marginHorizontal="8dp"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/tvDate"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="21 Nov 2025"
-        android:textColor="@color/black" />
+        android:layout_weight="1"
+        android:text="21 Nov 2025 "
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
 
     <TextView
         android:id="@+id/tvProfit"
         android:layout_width="0dp"
-        android:gravity="center"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="100.0"
+        android:layout_weight="1"
+        android:gravity="center"
         android:paddingEnd="16dp"
+        android:text="100.0"
         android:textColor="@color/blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_percent="0.4" />
+
+
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvProfitReceived"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingEnd="16dp"
+        android:text="100.0"
+        android:textColor="@color/blue"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tvBalance"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:paddingEnd="16dp"
+        android:text="100.0"
+        android:textColor="@color/blue"
+
+
+        android:textSize="16sp" />
 
 
 </LinearLayout>
