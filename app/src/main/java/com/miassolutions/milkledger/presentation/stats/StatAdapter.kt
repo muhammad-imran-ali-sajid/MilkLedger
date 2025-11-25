@@ -20,6 +20,8 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
     private val TYPE_TOTAL_SUMMARY = 6
     private val TYPE_EMPTY = 7
 
+    private val TYPE_TOTAL_MILK_SUMMARY = 8
+
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is StatListItem.Header -> TYPE_HEADER
@@ -30,6 +32,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
             is StatListItem.ProfitItem -> TYPE_PROFIT
             is StatListItem.TotalSummary -> TYPE_TOTAL_SUMMARY
             is StatListItem.Empty -> TYPE_EMPTY
+            is StatListItem.MilkTotalSummary -> TYPE_TOTAL_MILK_SUMMARY
         }
     }
 
@@ -64,6 +67,9 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
 
             TYPE_TOTAL_SUMMARY -> TotalSummaryViewHolder(
                 ItemTotalSummaryBinding.inflate(inflater, parent, false)
+            )
+            TYPE_TOTAL_MILK_SUMMARY -> MilkTotalSummaryViewHolder(
+                ItemTotalMilkSummaryBinding.inflate(inflater, parent, false)
             )
 
             TYPE_EMPTY -> EmptyViewHolder(
@@ -102,6 +108,8 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
 
             is StatListItem.Empty ->
                 (holder as EmptyViewHolder).bind(item.message)
+
+            is StatListItem.MilkTotalSummary -> (holder as MilkTotalSummaryViewHolder).bind(item)
         }
     }
 }
@@ -125,8 +133,17 @@ class EmptyViewHolder(private val binding: ItemEmptyBinding) :
 class TotalSummaryViewHolder(private val binding: ItemTotalSummaryBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(item: StatListItem.TotalSummary) {
-        binding.totalLabelTextView.text = item.label
-        binding.totalAmountTextView.text = item.amount.toPriceStr()
+        binding.tvLabel.text = item.label
+        binding.tvVolume.text = item.amount.toPriceStr()
+    }
+}
+
+class MilkTotalSummaryViewHolder(private val binding: ItemTotalMilkSummaryBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(item: StatListItem.MilkTotalSummary) {
+        binding.tvLabel.text = item.label
+        binding.tvPaidAmount.text = item.amount.toPriceStr()
+        binding.tvVolume.text = item.amount.toPriceStr()
     }
 }
 
@@ -194,6 +211,9 @@ class StatDiffCallback : DiffUtil.ItemCallback<StatListItem>() {
                 oldItem.summary.expenseTitle == newItem.summary.expenseTitle
 
             oldItem is StatListItem.TotalSummary && newItem is StatListItem.TotalSummary ->
+                oldItem.label == newItem.label
+
+            oldItem is StatListItem.MilkTotalSummary && newItem is StatListItem.MilkTotalSummary ->
                 oldItem.label == newItem.label
 
             oldItem is StatListItem.Empty && newItem is StatListItem.Empty ->

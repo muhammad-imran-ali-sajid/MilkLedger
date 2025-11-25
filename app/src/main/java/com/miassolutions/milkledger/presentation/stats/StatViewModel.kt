@@ -3,11 +3,11 @@ package com.miassolutions.milkledger.presentation.stats
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.DateRangeUtil
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -95,13 +95,15 @@ class StatViewModel @Inject constructor(
 
 
             val customerTotal = customers.sumOf { it.amount }
+            val customerVolume: Double = customers.sumOf { it.volume ?: 0.0 }
+            val supplierVolume: Double = suppliers.sumOf { it.volume ?: 0.0 }
             val supplierTotal = suppliers.sumOf { it.amount }
             val businessExpenseTotal = businessExpense.sumOf { it.amount }
             val personalExpenseTotal = personalExpense.sumOf { it.amount }
             val profitTotal = profits.sumOf { it.amount }
 
             // 🔥 Calculate balance dynamically
-            _balanceFlow.value = customerTotal - supplierTotal - businessExpenseTotal - personalExpenseTotal
+            _balanceFlow.value = customerTotal - supplierTotal - businessExpenseTotal - personalExpenseTotal - profitTotal
 
             val finalList = buildList {
                 add(StatListItem.Header("Customer Payments"))
@@ -114,7 +116,7 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.TotalSummary("TOTAL RECEIVED", customerTotal))
+                    add(StatListItem.MilkTotalSummary("TOTAL", customerVolume,customerTotal))
                 }
 
                 add(StatListItem.Header("Supplier Payments"))
@@ -127,7 +129,7 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.TotalSummary("TOTAL PAID", supplierTotal))
+                    add(StatListItem.MilkTotalSummary("TOTAL", supplierVolume,supplierTotal))
                 }
 
                 add(StatListItem.Header("Business Expenses"))
@@ -140,7 +142,7 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.TotalSummary("TOTAL EXPENSES", businessExpenseTotal))
+                    add(StatListItem.TotalSummary("TOTAL",businessExpenseTotal))
                 }
 
                 add(StatListItem.Header("Personal Expenses"))
@@ -153,7 +155,7 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.TotalSummary("TOTAL PERSONAL EXPENSES",personalExpenseTotal))
+                    add(StatListItem.TotalSummary("TOTAL",personalExpenseTotal))
                 }
 
                 add(StatListItem.Header("Profit"))
@@ -168,7 +170,7 @@ class StatViewModel @Inject constructor(
                     }
                 }
 
-                add(StatListItem.TotalSummary("TOTAL PROFIT", profitTotal))
+                add(StatListItem.TotalSummary("TOTAL",profitTotal))
             }
 
             currentRange = start to end

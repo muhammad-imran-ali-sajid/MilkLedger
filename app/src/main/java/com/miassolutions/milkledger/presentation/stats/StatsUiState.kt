@@ -43,6 +43,7 @@ sealed class StatListItem {
     // 1. For Section Headers (e.g., "Customer Payments")
     data class Header(val title: String) : StatListItem()
     data class Empty(val message: String) : StatListItem()
+    data class MilkTotalSummary(val label: String, val volume: Double, val amount: Double) : StatListItem()
     data class TotalSummary(val label: String, val amount: Double) : StatListItem()
     data class CustomerItem(val summary: CustomerPaidSummary) : StatListItem()
     data class SupplierItem(val summary: SupplierPaidSummary) : StatListItem()
