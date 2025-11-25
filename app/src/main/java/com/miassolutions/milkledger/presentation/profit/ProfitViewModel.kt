@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.presentation.profit
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
@@ -9,10 +10,16 @@ import com.miassolutions.milkledger.data.repository.ProfitRepository
 import com.miassolutions.milkledger.domain.model.Profit
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -32,17 +39,32 @@ class ProfitViewModel @Inject constructor(
         loadProfitDetails()
     }
 
+    val _selectedDate = MutableStateFlow<LocalDate>(LocalDate.now())
+
+    fun setDate(date: LocalDate) {
+        _selectedDate.value = date
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val todayNetProfit: StateFlow<Double> = _selectedDate
+
+        .flatMapLatest { date ->
+            repository.getNetProfitDaily(date)
+        }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
+
     private val _todayProfit = MutableStateFlow(1000.0)
     val todayProfit = _todayProfit.asStateFlow()
+
 
     fun calculateProfit(date: LocalDate?) {
 
         if (date != null)
             viewModelScope.launch {
-                repository.getProfitToday(date = date).collectLatest { d ->
-                    d?.let { _todayProfit.value = it }
-                }
-            }.start()
+                val netProfit = repository.getNetProfitDaily(date).first()
+                _todayProfit.value = netProfit
+
+            }
 
 
     }
@@ -91,6 +113,8 @@ class ProfitViewModel @Inject constructor(
         viewModelScope.launch {
             val list = repository.getDaily(date)
             val netProfit = repository.getNetProfitDaily(date).first()
+
+            Log.d("ProfitViewModel", netProfit.toString())
 
             val profits = list.map { it.toProfit() }
 

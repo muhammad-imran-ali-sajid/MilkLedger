@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.BottomsheetEditProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,7 +69,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupUI() = with(binding) {
         if (existingProfit != null) {
-            etTodayProfit.setText( existingProfit!!.netProfit.toString())
+            etTodayProfit.setText(existingProfit!!.netProfit.toString())
             tvDate.text = existingProfit!!.receivedDate.toDisplayFormat()
             etProfitReceived.setText(existingProfit!!.receivedProfit.toString())
             etNotes.setText(existingProfit!!.notes)
@@ -78,13 +79,13 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
             btnSave.text = "Save"
         }
 
-        viewModel.calculateProfit(receivedSelectedDate)
+
 
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.todayProfit.collectLatest {
-                    binding.etTodayProfit.setText(it.toString())
+                viewModel.todayNetProfit.collectLatest {
+                    binding.etTodayProfit.setText(it.toPriceStr())
                 }
             }
 
@@ -100,6 +101,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
                 onPicked = { selectedDate: LocalDate ->
                     tvDate.text = selectedDate.toDisplayFormat()
                     receivedSelectedDate = selectedDate
+                    viewModel.setDate(selectedDate)
                 }
             )
 
@@ -119,8 +121,6 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
             }
 
             val todayProfit = etTodayProfit.text.toString().toDouble()
-
-
 
 
             val notes = etNotes.text.toString()
