@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.mapper.toProfit
 import com.miassolutions.milkledger.data.mapper.toProfitEntity
-import com.miassolutions.milkledger.data.mapper.toProfitList
 import com.miassolutions.milkledger.data.repository.ProfitRepository
 import com.miassolutions.milkledger.domain.model.Profit
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
@@ -33,6 +32,21 @@ class ProfitViewModel @Inject constructor(
         loadProfitDetails()
     }
 
+    private val _todayProfit = MutableStateFlow(1000.0)
+    val todayProfit = _todayProfit.asStateFlow()
+
+    fun calculateProfit(date: LocalDate?) {
+
+        if (date != null)
+            viewModelScope.launch {
+                repository.getProfitToday(date = date).collectLatest { d ->
+                    d?.let { _todayProfit.value = it }
+                }
+            }.start()
+
+
+    }
+
     // -------------------------------------------------------------------------
     // MAIN ENTRY — Called by your date filter
     // -------------------------------------------------------------------------
@@ -54,8 +68,8 @@ class ProfitViewModel @Inject constructor(
     private fun loadProfitDetails() {
         viewModelScope.launch {
             repository.getAllProfitList().collectLatest { list ->
-                val profitList = list.map { it.toProfitList() }
-                val totalReceived = profitList.sumOf { it.profitReceived }
+                val profitList = list.map { it.toProfit() }
+                val totalReceived = profitList.sumOf { it.receivedProfit }
                 val netProfit = repository.getNetProfit().first()
 
                 _uiState.value = _uiState.value.copy(
@@ -76,10 +90,11 @@ class ProfitViewModel @Inject constructor(
     private fun fetchDaily(date: LocalDate) {
         viewModelScope.launch {
             val list = repository.getDaily(date)
-            val profits = list.map { it.toProfitList() }
-
-            val totalReceived = profits.sumOf { it.profitReceived }
             val netProfit = repository.getNetProfitDaily(date).first()
+
+            val profits = list.map { it.toProfit() }
+
+            val totalReceived = profits.sumOf { it.receivedProfit }
 
             _uiState.update {
                 it.copy(
@@ -100,15 +115,14 @@ class ProfitViewModel @Inject constructor(
     // -------------------------------------------------------------------------
     private fun fetchWeekly(start: LocalDate, end: LocalDate) {
         viewModelScope.launch {
-            val list = repository.getWeekly(start, end)
-            val profits = list.map { it.toProfitList() }
+            val list = repository.getWeeklyWithNetProfit(start, end)
 
-            val totalReceived = profits.sumOf { it.profitReceived }
+            val totalReceived = list.sumOf { it.receivedProfit }
             val netProfit = repository.getNetProfitWeekly(start, end)
 
             _uiState.update {
                 it.copy(
-                    filteredList = profits,
+                    filteredList = list,
                     totalReceived = totalReceived,
                     netProfit = netProfit,
                     remainingProfit = netProfit - totalReceived,
@@ -132,9 +146,9 @@ class ProfitViewModel @Inject constructor(
 
             // Repo expects a LocalDate or start/end – adjust as needed
             val list = repository.getMonthly(start)
-            val profits = list.map { it.toProfitList() }
+            val profits = list.map { it.toProfit() }
 
-            val totalReceived = profits.sumOf { it.profitReceived }
+            val totalReceived = profits.sumOf { it.receivedProfit }
 
             val netProfit = repository.getNetProfitMonthly(
                 yearMonth.year,
@@ -191,9 +205,9 @@ class ProfitViewModel @Inject constructor(
     private fun fetchYearly(year: Int) {
         viewModelScope.launch {
             val list = repository.getYearly(LocalDate.of(year, 1, 1))
-            val profits = list.map { it.toProfitList() }
+            val profits = list.map { it.toProfit() }
 
-            val totalReceived = profits.sumOf { it.profitReceived }
+            val totalReceived = profits.sumOf { it.receivedProfit }
             val netProfit = repository.getNetProfitYearly(year)
 
             _uiState.update {
@@ -229,9 +243,9 @@ class ProfitViewModel @Inject constructor(
     private fun loadRange(start: LocalDate, end: LocalDate) {
         viewModelScope.launch {
             val list = repository.getCustom(start, end)
-            val profits = list.map { it.toProfitList() }
+            val profits = list.map { it.toProfit() }
 
-            val totalReceived = profits.sumOf { it.profitReceived }
+            val totalReceived = profits.sumOf { it.receivedProfit }
             val netProfit = repository.getNetProfitCustom(start, end)
 
             _uiState.update {

@@ -1,6 +1,10 @@
 package com.miassolutions.milkledger.data.repository
 
+import android.util.Log
+import androidx.room.Insert
+import androidx.room.util.copy
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
+import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +15,7 @@ import java.time.LocalDate
 class AnalyticsRepository @Inject constructor(
     private val reportsDao: ReportsDao
 ) {
+
 
     // ───────────────────────────────
     // 📅 RANGE-BASED QUERIES
@@ -99,6 +104,18 @@ class AnalyticsRepository @Inject constructor(
         reportsDao.getTotalFixedExpensesDaily(date)
 
 
+    fun getProfitToday(date: LocalDate): Flow<Double?> = combine(
+        reportsDao.getTotalSalesDaily(date),
+        reportsDao.getTotalFixedExpensesDaily(date),
+        reportsDao.getTotalPurchasesDaily(date)
+    ) { s, e, p ->
+        val sales = s ?: 0.0
+        val purchases = p ?: 0.0
+        val expenses = e ?: 0.0
+Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
+        sales - (purchases + expenses)
+    }
+
 
     fun getProfitAll(): Flow<Double> =
         combine(
@@ -109,6 +126,10 @@ class AnalyticsRepository @Inject constructor(
             val totalSales = sales ?: 0.0
             val totalPurchases = purchases ?: 0.0
             val totalExpenses = expenses ?: 0.0
+
+
+
             totalSales - (totalPurchases + totalExpenses)
+
         }
 }

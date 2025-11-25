@@ -11,23 +11,33 @@ fun ProfitEntity.toProfit() = with(this) {
     Profit(
         profitId = profitId,
         receivedDate = receivedDate,
-        netProfit = netProfit,
+
         receivedProfit = receivedProfit,
         notes = notes,
         isSynced = isSynced,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        netProfit = netProfit
     )
 }
 
 
-fun ProfitEntity.toProfitList() = with(this){
+fun ProfitEntity.toProfitList() = with(this) {
     ProfitListModel(
         id = profitId,
-        date = receivedDate.toString(),
+        date = receivedDate,
         profit = netProfit,
         profitReceived = receivedProfit,
         balance = netProfit - receivedProfit
+    )
+}
+
+fun ProfitListModel.toEntity() = with(this) {
+    ProfitEntity(
+
+        receivedDate = date,
+        netProfit = profit,
+        receivedProfit = profitReceived,
     )
 }
 

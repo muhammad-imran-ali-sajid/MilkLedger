@@ -6,9 +6,12 @@ import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.mapper.toFirestore
 import com.miassolutions.milkledger.data.mapper.toProfit
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
+import com.miassolutions.milkledger.domain.model.Profit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -27,6 +30,9 @@ class ProfitRepository @Inject constructor(
     // --------------------------------------------------------------------
     // CRUD
     // --------------------------------------------------------------------
+
+    suspend fun upsertProfit(profitEntity: ProfitEntity) = dao.upsert(profitEntity)
+
     suspend fun upsert(profit: ProfitEntity) {
 
         dao.upsert(profit)
@@ -107,8 +113,30 @@ class ProfitRepository @Inject constructor(
     suspend fun getDaily(date: LocalDate): List<ProfitEntity> =
         dao.getDaily(date)
 
+
+//    fun getDailyProfit(date: LocalDate): Flow<List<Profit>> = combine(
+//        dao.getDailyFlow(date),
+//        mDao.getProfitToday(date)
+//    ) { a, b ->
+//        val x = a
+//        val y = b
+//
+//
+//
+//    }
+
     suspend fun getWeekly(start: LocalDate, end: LocalDate): List<ProfitEntity> =
-        dao.getBetween(start, end) // FIXED bug (you used start, start)
+        dao.getBetween(start, end)
+
+
+    suspend fun getWeeklyWithNetProfit(start: LocalDate, end: LocalDate): List<Profit> {
+        val np = mDao.getProfitBetween(start, end).first()
+        val rp = dao.getBetween(start, end).map { it.toProfit().copy(netProfit = np) }
+
+        return buildList {
+            addAll(rp)
+        }
+    }
 
     suspend fun getMonthly(date: LocalDate): List<ProfitEntity> {
         val ym = "${date.year}-${"%02d".format(date.monthValue)}"
@@ -127,6 +155,10 @@ class ProfitRepository @Inject constructor(
     // --------------------------------------------------------------------
 
     fun getNetProfit(): Flow<Double> = mDao.getProfitAll()
+
+    fun getProfitToday(date: LocalDate): Flow<Double?> = mDao.getProfitToday(date)
+
+    suspend fun getNetProfitOnce(): Double = getNetProfit().firstOrZero()
 
     // Daily
     fun getNetProfitDaily(date: LocalDate): Flow<Double> =

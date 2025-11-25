@@ -10,19 +10,19 @@ import com.miassolutions.milkledger.databinding.ItemProfitBinding
 import com.miassolutions.milkledger.domain.model.Profit
 
 class ProfitAdapter(
-    private val onItemClick: (ProfitListModel) -> Unit,
-    private val onItemLongClick: (ProfitListModel) -> Unit
+    private val onItemClick: (Profit) -> Unit,
+    private val onItemLongClick: (Profit) -> Unit
 ) : RecyclerView.Adapter<ProfitAdapter.ProfitViewHolder>() {
 
-    private val list: MutableList<ProfitListModel> = mutableListOf()
+    private val list: MutableList<Profit> = mutableListOf()
 
     inner class ProfitViewHolder(private val binding: ItemProfitBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: ProfitListModel) = with(binding) {
-            tvDate.text = item.date
-            tvProfit.text = item.profit.toPriceStr()
-            tvProfitReceived.text = item.profitReceived.toPriceStr()
-            tvBalance.text = (item.profit - item.profitReceived).toPriceStr()
+        fun bind(item: Profit) = with(binding) {
+            tvDate.text = item.receivedDate.toString()
+            tvProfit.text = item.netProfit.toPriceStr()
+            tvProfitReceived.text = item.receivedProfit.toPriceStr()
+            tvBalance.text = (item.netProfit - item.receivedProfit).toPriceStr()
 
             root.setOnClickListener { onItemClick(item) }
             root.setOnLongClickListener { onItemLongClick(item); true }
@@ -51,7 +51,7 @@ class ProfitAdapter(
         return list.size
     }
 
-    fun submitList(newList: List<ProfitListModel>) {
+    fun submitList(newList: List<Profit>) {
         list.clear()
         list.addAll(newList)
         notifyDataSetChanged()

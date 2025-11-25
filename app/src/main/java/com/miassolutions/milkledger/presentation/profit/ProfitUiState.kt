@@ -5,8 +5,8 @@ import com.miassolutions.milkledger.domain.model.Profit
 import java.time.LocalDate
 
 data class ProfitUiState(
-    val profitList: List<ProfitListModel> = emptyList(),
-    val filteredList: List<ProfitListModel> = emptyList(),
+    val profitList: List<Profit> = emptyList(),
+    val filteredList: List<Profit> = emptyList(),
     val netProfit: Double = 0.0,
     val totalReceived: Double = 0.0,
     val remainingProfit : Double = 0.0,

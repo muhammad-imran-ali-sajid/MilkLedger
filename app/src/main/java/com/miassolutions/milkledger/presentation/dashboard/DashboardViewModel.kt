@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.DateRangeUtil
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
+import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
 import com.miassolutions.milkledger.data.repository.DataRepository
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
@@ -11,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -30,7 +32,10 @@ class DashboardViewModel @Inject constructor(
 
     init {
         loadDaily()
+
     }
+
+
 
 
     enum class Period { DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM }
@@ -73,6 +78,7 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
+
     /**
      * Load all records without date range limits.
      */
@@ -90,7 +96,7 @@ class DashboardViewModel @Inject constructor(
                 repository.getTotalTs(),
                 repository.getTotalPersonalExpense()
 
-                ) { results ->
+            ) { results ->
 
                 val milkPurchase = results[0] ?: 0.0
                 val milkSold = results[1] ?: 0.0
@@ -107,28 +113,28 @@ class DashboardViewModel @Inject constructor(
                     if (avgCP != null && avgSP != null) avgSP - avgCP else null
                 val personalExpense: Double = results[9] ?: 0.0
 
-                    // 🔥 ADD LOG HERE
+                // 🔥 ADD LOG HERE
 
 
-                    AnalyticsUiState(
-                        milkPurchase = milkPurchase,
-                        milkSold = milkSold,
-                        avgSP = avgSP,
-                        avgCP = avgCP,
-                        difference = difference,
-                        salesTotal = totalSales,
-                        purchaseTotal = totalPurchase,
-                        fixedExpense = totalExpense,
-                        personalExpense = personalExpense,
-                        profit = profit,
-                        profitAfter = profit - personalExpense,
-                        avgFat = totalFat,
-                        avgLr = totalLr,
-                        totalTs = totalTs,
-                        startDate = null,
-                        endDate = null,
-                        period = "All Records"
-                    )
+                AnalyticsUiState(
+                    milkPurchase = milkPurchase,
+                    milkSold = milkSold,
+                    avgSP = avgSP,
+                    avgCP = avgCP,
+                    difference = difference,
+                    salesTotal = totalSales,
+                    purchaseTotal = totalPurchase,
+                    fixedExpense = totalExpense,
+                    personalExpense = personalExpense,
+                    profit = profit,
+                    profitAfter = profit - personalExpense,
+                    avgFat = totalFat,
+                    avgLr = totalLr,
+                    totalTs = totalTs,
+                    startDate = null,
+                    endDate = null,
+                    period = "All Records"
+                )
             }.collect {
                 _uiState.value = it
             }

@@ -44,24 +44,24 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
         controller.init()
     }
 
-    private fun showConfirmDialog(profit: ProfitListModel) {
+    private fun showConfirmDialog(profit: Profit) {
         MaterialAlertDialogBuilder(requireContext())
-//            .setTitle("Delete Entry")
-//            .setMessage("Are you sure to delete this entry?")
-//            .setPositiveButton("Yes") { d, _ ->
-//                viewModel.deleteProfit(profit)
-//                d.dismiss()
-//            }
-//            .setNegativeButton("Cancel", null)
-//            .show()
+            .setTitle("Delete Entry")
+            .setMessage("Are you sure to delete this entry?")
+            .setPositiveButton("Yes") { d, _ ->
+                viewModel.deleteProfit(profit)
+                d.dismiss()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
     }
 
-    private fun editProfitRecord(profit: ProfitListModel) {
+    private fun editProfitRecord(profit: Profit) {
 
-//        val sheet = AddEditProfitBottomSheet.newInstance(profit)
-//        sheet.onSave = { viewModel.saveProfit(it) }
-//
-//        sheet.show(parentFragmentManager, null)
+        val sheet = AddEditProfitBottomSheet.newInstance(profit)
+        sheet.onSave = { viewModel.saveProfit(it) }
+
+        sheet.show(parentFragmentManager, null)
     }
 
     override fun setupListeners() {

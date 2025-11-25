@@ -1,7 +1,10 @@
 package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.Dao
+import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Upsert
+import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import kotlinx.coroutines.flow.Flow
@@ -10,6 +13,8 @@ import java.time.LocalDate
 @Dao
 interface ReportsDao {
 
+    @Upsert
+    suspend fun upsertProfit(profitEntity: ProfitEntity)
     // ───────────────────────────────
     // 🧾 SALES
     // ───────────────────────────────
@@ -103,6 +108,8 @@ interface ReportsDao {
 
 
 
+
+
     @Query("SELECT SUM(price) FROM sales_table WHERE date = :date")
     fun getTotalSalesDaily(date: LocalDate): Flow<Double?>
 
@@ -114,6 +121,8 @@ interface ReportsDao {
 
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date = :date")
     fun getTotalExpensesDaily(date: LocalDate): Flow<Double?>
+
+
 
 
 }

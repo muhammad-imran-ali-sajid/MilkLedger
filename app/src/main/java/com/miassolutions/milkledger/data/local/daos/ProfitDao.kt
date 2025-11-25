@@ -37,11 +37,17 @@ interface ProfitDao {
     @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
     suspend fun getDaily(date: LocalDate): List<ProfitEntity>
 
+    @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
+    fun getDailyFlow(date: LocalDate): Flow<List<ProfitEntity>>
+
     // -------------------------------
     // RANGE (WEEKLY / CUSTOM)
     // -------------------------------
     @Query("SELECT * FROM profit_table WHERE receivedDate BETWEEN :start AND :end")
     suspend fun getBetween(start: LocalDate, end: LocalDate): List<ProfitEntity>
+
+    @Query("SELECT * FROM profit_table WHERE receivedDate BETWEEN :start AND :end")
+    fun getBetweenFlow(start: LocalDate, end: LocalDate): Flow<List<ProfitEntity>>
 
     // -------------------------------
     // MONTHLY (yyyy-MM)
