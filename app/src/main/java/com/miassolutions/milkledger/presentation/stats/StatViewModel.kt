@@ -103,10 +103,11 @@ class StatViewModel @Inject constructor(
             val profitTotal = profits.sumOf { it.amount }
 
             // 🔥 Calculate balance dynamically
-            _balanceFlow.value = customerTotal - supplierTotal - businessExpenseTotal - personalExpenseTotal - profitTotal
+            _balanceFlow.value =
+                customerTotal - supplierTotal - businessExpenseTotal - personalExpenseTotal - profitTotal
 
             val finalList = buildList {
-                add(StatListItem.Header("Customer Payments"))
+                add(StatListItem.Header("Customers", "Volume", "Amount"))
                 if (customers.isEmpty()) add(StatListItem.Empty("No customer payments"))
                 else {
                     customers.forEach { rec ->
@@ -116,10 +117,10 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.MilkTotalSummary("TOTAL", customerVolume,customerTotal))
+                    add(StatListItem.MilkTotalSummary("TOTAL", customerVolume, customerTotal))
                 }
 
-                add(StatListItem.Header("Supplier Payments"))
+                add(StatListItem.Header("Suppliers", "Volume", "Amount"))
                 if (suppliers.isEmpty()) add(StatListItem.Empty("No supplier payments"))
                 else {
                     suppliers.forEach { rec ->
@@ -129,10 +130,15 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.MilkTotalSummary("TOTAL", supplierVolume,supplierTotal))
+                    add(StatListItem.MilkTotalSummary("TOTAL", supplierVolume, supplierTotal))
                 }
 
-                add(StatListItem.Header("Business Expenses"))
+                add(
+                    StatListItem.Header(
+                        title = "Business Expenses",
+                        amount = "Amount"
+                    )
+                )
                 if (businessExpense.isEmpty()) add(StatListItem.Empty("No expenses"))
                 else {
                     businessExpense.forEach { rec ->
@@ -142,10 +148,15 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.TotalSummary("TOTAL",businessExpenseTotal))
+                    add(StatListItem.TotalSummary("TOTAL", businessExpenseTotal))
                 }
 
-                add(StatListItem.Header("Personal Expenses"))
+                add(
+                    StatListItem.Header(
+                        title = "Personal Expenses",
+                        amount = "Amount"
+                    )
+                )
                 if (personalExpense.isEmpty()) add(StatListItem.Empty("No personal expenses"))
                 else {
                     personalExpense.forEach { record ->
@@ -155,22 +166,27 @@ class StatViewModel @Inject constructor(
                             )
                         )
                     }
-                    add(StatListItem.TotalSummary("TOTAL",personalExpenseTotal))
+                    add(StatListItem.TotalSummary("TOTAL", personalExpenseTotal))
                 }
 
-                add(StatListItem.Header("Profit"))
+                add(
+                    StatListItem.Header(
+                        title = "Profit",
+                        amount = "Amount"
+                    )
+                )
                 if (profits.isEmpty()) add(StatListItem.Empty("No profit yet"))
                 else {
                     profits.forEach { r ->
                         add(
                             StatListItem.ProfitItem(
-                                ProfitSummary(r.name,r.amount)
+                                ProfitSummary(r.name, r.amount)
                             )
                         )
                     }
                 }
 
-                add(StatListItem.TotalSummary("TOTAL",profitTotal))
+                add(StatListItem.TotalSummary("TOTAL", profitTotal))
             }
 
             currentRange = start to end

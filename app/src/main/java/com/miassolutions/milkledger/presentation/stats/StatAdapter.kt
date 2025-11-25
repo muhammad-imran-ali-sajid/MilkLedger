@@ -1,10 +1,13 @@
 package com.miassolutions.milkledger.presentation.stats
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.util.hide
+import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.*
 
@@ -86,7 +89,7 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
         when (val item = getItem(position)) {
 
             is StatListItem.Header ->
-                (holder as HeaderViewHolder).bind(item.title)
+                (holder as HeaderViewHolder).bind(item)
 
             is StatListItem.CustomerItem ->
                 (holder as CustomerViewHolder).bind(item.summary)
@@ -118,8 +121,15 @@ class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffC
 
 class HeaderViewHolder(private val binding: ItemHeaderBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(title: String) {
-        binding.titleTextView.text = title
+    fun bind(item: StatListItem.Header) {
+        if(item.volume == null)
+            binding.tvTitle2.hide()
+        else
+            binding.tvTitle2.show()
+
+        binding.tvTitle.text = item.title
+        binding.tvTitle2.text = item.volume ?: ""
+        binding.tvTitle3.text = item.amount
     }
 }
 
@@ -143,7 +153,7 @@ class MilkTotalSummaryViewHolder(private val binding: ItemTotalMilkSummaryBindin
     fun bind(item: StatListItem.MilkTotalSummary) {
         binding.tvLabel.text = item.label
         binding.tvPaidAmount.text = item.amount.toPriceStr()
-        binding.tvVolume.text = item.amount.toPriceStr()
+        binding.tvVolume.text = item.volume.toString()
     }
 }
 
