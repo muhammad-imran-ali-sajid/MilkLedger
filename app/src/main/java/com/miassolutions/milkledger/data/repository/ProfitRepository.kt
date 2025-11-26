@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class ProfitRepository @Inject constructor(
@@ -32,6 +33,18 @@ class ProfitRepository @Inject constructor(
     // --------------------------------------------------------------------
 
     suspend fun upsertProfit(profitEntity: ProfitEntity) = dao.upsert(profitEntity)
+
+
+    suspend fun saveProfit(profitDouble: Double) {
+
+        val entity = ProfitEntity(
+            netProfit = profitDouble,
+            updatedAt = LocalDateTime.now().toString(),
+        )
+
+        dao.upsert(entity)
+
+    }
 
     suspend fun upsert(profit: ProfitEntity) {
 

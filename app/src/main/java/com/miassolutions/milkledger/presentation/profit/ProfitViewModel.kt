@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -29,7 +30,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfitViewModel @Inject constructor(
-    private val repository: ProfitRepository
+    private val repository: ProfitRepository,
+    private val sRepository: StatisticsRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfitUiState())
@@ -39,6 +41,7 @@ class ProfitViewModel @Inject constructor(
         loadProfitDetails()
     }
 
+    val tp = sRepository.observeNetProfit()
     val _selectedDate = MutableStateFlow<LocalDate>(LocalDate.now())
 
     fun setDate(date: LocalDate) {

@@ -18,6 +18,10 @@ import java.time.LocalDate
 @Dao
 interface PurchaseDao {
 
+
+    @Query("SELECT IFNULL(SUM(payment), 0) FROM purchase_table")
+    fun observePurchases(): Flow<Double>
+
     /**
      * Retrieves a list of supplier names and the amount paid to them on a specific date.
      *

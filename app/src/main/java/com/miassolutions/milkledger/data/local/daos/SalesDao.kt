@@ -17,6 +17,9 @@ import java.time.LocalDate
 @Dao
 interface SalesDao {
 
+    @Query("SELECT IFNULL(SUM(paid), 0) FROM sales_table")
+    fun observeSales(): Flow<Double>
+
     /*
     * @param targetDate The specific date (e.g., LocalDate.of(2025, 11, 17))
     */
