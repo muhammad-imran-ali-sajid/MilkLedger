@@ -9,13 +9,13 @@
     tools:context=".presentation.profit.ProfitFragment">
 
     <include
+        android:id="@+id/dateFilterLayout"
+        layout="@layout/date_filter_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/dateFilterLayout"
-        layout="@layout/date_filter_layout" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <com.google.android.material.card.MaterialCardView
@@ -23,10 +23,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@id/dateFilterLayout"
         app:cardBackgroundColor="#eee"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateFilterLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -112,45 +112,45 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/profitHeader"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="4dp"-->
-<!--        android:layout_marginHorizontal="8dp"-->
-<!--        android:background="@drawable/bg_edittext_readable"-->
-<!--        android:clickable="true"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:padding="16dp"-->
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/profitHeader"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="4dp"-->
+    <!--        android:layout_marginHorizontal="8dp"-->
+    <!--        android:background="@drawable/bg_edittext_readable"-->
+    <!--        android:clickable="true"-->
+    <!--        android:orientation="horizontal"-->
+    <!--        android:padding="16dp"-->
 
 
-<!--        app:layout_constraintTop_toBottomOf="@id/cardView"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        >-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/cardView"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        >-->
 
-<!--        <TextView-->
+    <!--        <TextView-->
 
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:text="Date"-->
-<!--            android:textColor="@color/black" />-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:text="Date"-->
+    <!--            android:textColor="@color/black" />-->
 
-<!--        <TextView-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_weight="1"-->
-<!--            android:gravity="center"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Profit Received"-->
-<!--            android:textColor="@color/soft_black"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--             />-->
+    <!--        <TextView-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_weight="1"-->
+    <!--            android:gravity="center"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="Profit Received"-->
+    <!--            android:textColor="@color/soft_black"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent"-->
+    <!--             />-->
 
 
-<!--    </LinearLayout>-->
+    <!--    </LinearLayout>-->
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -163,6 +163,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView"
         tools:itemCount="5"
@@ -170,18 +171,29 @@
 
     />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabPDF"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_pdf"
+        app:layout_constraintBottom_toBottomOf="@+id/fabAddProfit"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddProfit"
         style="@style/ExtendedFABStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Add New Profit"
+        android:text="Add Received Profit"
         android:textColor="@color/white"
         app:icon="@drawable/ic_add"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/fabPDF" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

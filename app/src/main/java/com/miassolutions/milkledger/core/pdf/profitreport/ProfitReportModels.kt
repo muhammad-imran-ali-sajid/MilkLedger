@@ -16,3 +16,9 @@ data class PdfProfitItemRecord(
     val profitReceived: Double,
     val balance: Double
 )
+
+data class PdfProfitSummary(
+    val totalProfit : Double,
+    val totalReceived: Double,
+    val balance : Double
+)

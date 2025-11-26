@@ -26,79 +26,79 @@ object ProfitReportGenerator {
      * Generates the PDF document from the layout, saves it to a file, and returns the file.
      * The file naming uses the improved logic from PdfUtils (BaseName_YYYYMMDD_HHMMSS.pdf).
      */
-    private fun generatePurchaseReceiptPdf(
-        context: Context,
-        data: ProfitReceiptPdf,
-        baseName: String,
-        showLogo: Boolean = false,
-        logoResId: Int? = null
-    ): File {
-        val inflater = LayoutInflater.from(context)
-        val binding = LayoutProfitReceiptBinding.inflate(inflater)
-
-        // Show/hide logo
-        if (showLogo && logoResId != null) {
-            binding.imgLogo.visibility = View.VISIBLE
-            binding.imgLogo.setImageBitmap(PdfUtils.getLogoBitmap(context, logoResId))
-        } else {
-            binding.imgLogo.visibility = View.GONE
-        }
-        val file = PdfUtils.getPdfFile(context, baseName)
-        val receiptName = file.name.removeSuffix(".pdf")
-        // Header info
-        with(binding) {
-
-
-            tvDateRange.text = "Date Range: ${data.dateRange}"
-            tvTotalProfit.text = data.totalProfit
-            tvTotalProfitReceived.text = data.totalReceived
-            tvTotalBalance.text = data.totalBalance
-
-
-            tvFooter.text = data.footerNote ?: ""
-        }
-
-
-        // Add rows using item_record_row.xml via ViewBinding
-        data.recordList.forEach { item ->
-            val rowBinding = ItemProfitRecordRowBinding.inflate(inflater, binding.recordContainer, false)
-            rowBinding.tvDate.text = item.date
-            rowBinding.tvProfit.text = item.profit.toString()
-            rowBinding.tvProfitReceived.text = item.profitReceived.toRoundedStr()
-            rowBinding.tvBalance.text = item.balance.toPriceStr()
-            binding.recordContainer.addView(rowBinding.root)
-        }
-
-        // Measure + layout the root view
-        val view = binding.root
-        val displayMetrics = context.resources.displayMetrics
-        val width = displayMetrics.widthPixels
-        val height = displayMetrics.heightPixels
-        view.measure(
-            View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.UNSPECIFIED)
-        )
-        view.layout(0, 0, width, view.measuredHeight)
-
-        val pdfDoc = PdfDocument()
-        val pageInfo = PdfDocument.PageInfo.Builder(width, view.measuredHeight, 1).create()
-        val page = pdfDoc.startPage(pageInfo)
-
-        view.draw(page.canvas)
-        pdfDoc.finishPage(page)
-
-        FileOutputStream(file).use { pdfDoc.writeTo(it) }
-        pdfDoc.close()
-
-        return file
-    }
+//    private fun generateProfitReceiptPdf(
+//        context: Context,
+//        data: ProfitReceiptPdf,
+//        baseName: String,
+//        showLogo: Boolean = false,
+//        logoResId: Int? = null
+//    ): File {
+//        val inflater = LayoutInflater.from(context)
+//        val binding = LayoutProfitReceiptBinding.inflate(inflater)
+//
+//        // Show/hide logo
+//        if (showLogo && logoResId != null) {
+//            binding.imgLogo.visibility = View.VISIBLE
+//            binding.imgLogo.setImageBitmap(PdfUtils.getLogoBitmap(context, logoResId))
+//        } else {
+//            binding.imgLogo.visibility = View.GONE
+//        }
+//        val file = PdfUtils.getPdfFile(context, baseName)
+//        val receiptName = file.name.removeSuffix(".pdf")
+//        // Header info
+//        with(binding) {
+//
+//
+//            tvDateRange.text = "Date Range: ${data.dateRange}"
+//            tvTotalProfit.text = data.totalProfit
+//            tvTotalProfitReceived.text = data.totalReceived
+//            tvTotalBalance.text = data.totalBalance
+//
+//
+//            tvFooter.text = data.footerNote ?: ""
+//        }
+//
+//
+//        // Add rows using item_record_row.xml via ViewBinding
+//        data.recordList.forEach { item ->
+//            val rowBinding = ItemProfitRecordRowBinding.inflate(inflater, binding.recordContainer, false)
+//            rowBinding.tvDate.text = item.date
+//            rowBinding.tvProfit.text = item.profit.toString()
+//            rowBinding.tvProfitReceived.text = item.profitReceived.toRoundedStr()
+//            rowBinding.tvBalance.text = item.balance.toPriceStr()
+//            binding.recordContainer.addView(rowBinding.root)
+//        }
+//
+//        // Measure + layout the root view
+//        val view = binding.root
+//        val displayMetrics = context.resources.displayMetrics
+//        val width = displayMetrics.widthPixels
+//        val height = displayMetrics.heightPixels
+//        view.measure(
+//            View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+//            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.UNSPECIFIED)
+//        )
+//        view.layout(0, 0, width, view.measuredHeight)
+//
+//        val pdfDoc = PdfDocument()
+//        val pageInfo = PdfDocument.PageInfo.Builder(width, view.measuredHeight, 1).create()
+//        val page = pdfDoc.startPage(pageInfo)
+//
+//        view.draw(page.canvas)
+//        pdfDoc.finishPage(page)
+//
+//        FileOutputStream(file).use { pdfDoc.writeTo(it) }
+//        pdfDoc.close()
+//
+//        return file
+//    }
 
 
     /**
      * Generates the PDF document from the layout, saves it to a file, and returns the file.
      * The file naming uses the improved logic from PdfUtils (BaseName_YYYYMMDD_HHMMSS.pdf).
      */
-    private fun generateSalesReceiptPdf(
+    private fun generateProfitReceiptPdf(
         context: Context,
         data: ProfitReceiptPdf,
         baseName: String,
@@ -180,7 +180,7 @@ object ProfitReportGenerator {
         logoResId: Int? = null
     ) {
         // Generate the file first
-        val file = generatePurchaseReceiptPdf(context, data, baseName, showLogo, logoResId)
+        val file = generateProfitReceiptPdf(context, data, baseName, showLogo, logoResId)
 
         // Then share it
         PdfUtils.sharePdf(context, file)
