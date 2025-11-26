@@ -257,5 +257,20 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="SummaryPdfStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:weightSum">2</item>
+    </style>
+
+    <style name="SummaryPdfLabelStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
 
 </resources>

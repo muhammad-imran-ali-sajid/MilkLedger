@@ -1,0 +1,257 @@
+<!-- res/layout/receipt_layout.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Summary"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Date Range:"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="100"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:text="Payment Overview"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Total Purchase Price" />
+
+
+            <TextView
+
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Total Sale Price" />
+
+
+            <TextView
+
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Business Expenses" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Profit" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Personal Expenses" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Remaining Profit" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:text="Milk Overview"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Milk Purchased" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Milk Sold" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Quantity Difference" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Average Fat" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Average LR" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Average Sale Price" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Average Cost Price" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+
+        <LinearLayout style="@style/SummaryPdfStyle">
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="Average Price Difference" />
+
+
+            <TextView
+                style="@style/SummaryPdfLabelStyle"
+                android:text="100" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>
