@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.presentation.dashboard
 
 
+import android.view.Menu
 import android.view.View
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -8,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.helper.RemoteConfigHelper
+import com.miassolutions.milkledger.core.pdf.dashboardreport.DashboardReportGenerator
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.hide
@@ -15,6 +17,7 @@ import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
+import com.miassolutions.milkledger.presentation.stats.toPdfSummary
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -24,6 +27,10 @@ class DashboardFragment :
 
     private val viewModel by viewModels<DashboardViewModel>()
     private val syncViewModel by viewModels<SyncViewModel>()
+
+    override fun getMenuResId(): Int {
+        return R.menu.menu_dashboard
+    }
 
     override fun setupViews() {
 
@@ -54,7 +61,6 @@ class DashboardFragment :
         }
 
 
-
         val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
 
         if (!isAdmin) {
@@ -65,6 +71,38 @@ class DashboardFragment :
 
         setupToggleGroup()
         setupCustomRangeCalendar()
+
+    }
+
+    override fun onMenuCreated(menu: Menu) {
+        val pdfMenu = menu.findItem(R.id.action_dashboard_pdf)
+
+        pdfMenu.setOnMenuItemClickListener {
+
+            showDialog(
+                "Dashboard Pdf Report",
+                message = "Do you want to generate pdf report?",
+                onAction = {
+
+                    generatePdfReport()
+
+                    showToast("Pdf menu clicked")
+                }
+            )
+            true
+        }
+    }
+
+    private fun generatePdfReport() {
+        val state = viewModel.uiState.value
+
+        val data = state.toPdfSummary()
+
+        DashboardReportGenerator.generateAndSharePdf(
+            context = requireContext(),
+            data = data,
+            baseName = "dashboard",
+        )
 
     }
 
