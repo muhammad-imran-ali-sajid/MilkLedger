@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.R
@@ -15,6 +16,7 @@ import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.BottomsheetEditExpensesBinding
+import com.miassolutions.milkledger.databinding.DialogExpenseBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -96,6 +98,33 @@ class ExpenseEditBottomSheet : BottomSheetDialogFragment() {
         etNotes.setText(entry.expenseNote ?: "")
     }
 
+
+    private fun showPersonalTitleDialog(onResult: (String?) -> Unit) {
+
+        val view = DialogExpenseBinding.inflate(LayoutInflater.from(requireContext()))
+
+
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Personal Expense Title")
+            .setView(view.root)
+            .setPositiveButton("Save") { _, _ ->
+                val text = view.etTitle.text?.toString()?.trim()
+                if (text.isNullOrEmpty()) {
+                    Toast.makeText(requireContext(), "Enter title", Toast.LENGTH_SHORT).show()
+                    onResult(null)
+                } else {
+                    onResult(text)
+                }
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+                onResult(null)
+            }
+            .show()
+    }
+
+
     // ─────────────────────────────────────────────────────────────────────────────
     // Save logic
     // ─────────────────────────────────────────────────────────────────────────────
@@ -103,13 +132,9 @@ class ExpenseEditBottomSheet : BottomSheetDialogFragment() {
         binding.btnSave.setOnClickListener {
 
             val expenseTypeText = binding.etExpenseType.text?.toString()?.trim()
-            val expenseTypeEnum = ExpenseType.entries.find {
-                it.label == expenseTypeText
-            }
+            val expenseTypeEnum = ExpenseType.entries.find { it.label == expenseTypeText }
 
-            val dateText = binding.etDate.text.toString()
-            val date = LocalDate.parse(dateText)
-
+            val date = LocalDate.parse(binding.etDate.text.toString())
             val amount = binding.etExpenseAmount.text?.toString()?.toDoubleOrNull()
             val notes = binding.etNotes.text?.toString()?.trim()
 
@@ -125,31 +150,63 @@ class ExpenseEditBottomSheet : BottomSheetDialogFragment() {
                 binding.etExpenseAmountLayout.error = null
             }
 
-            Toast.makeText(
-                requireContext(),
-                "${expenseTypeEnum != ExpenseType.PERSONAL}",
-                Toast.LENGTH_SHORT
-            ).show()
+            // ─────────────────────────────────────
+            // PERSONAL → Ask for custom title
+            // ─────────────────────────────────────
+            if (expenseTypeEnum == ExpenseType.PERSONAL) {
+                showPersonalTitleDialog { customTitle ->
+                    if (customTitle != null) {
+                        saveUpdatedExpense(
+                            title = customTitle,
+                            amount = amount,
+                            notes = notes,
+                            date = date,
+                            isDefault = false
+                        )
+                    }
+                }
+                return@setOnClickListener
+            }
 
-            val updated = entry.copy(
-                expenseTitle = expenseTypeEnum.label,
-                expenseAmount = amount,
+            // ─────────────────────────────────────
+            // Non-personal → Direct save
+            // ─────────────────────────────────────
+            saveUpdatedExpense(
+                title = expenseTypeEnum.label,
+                amount = amount,
+                notes = notes,
                 date = date,
-                expenseNote = notes,
-                isDefault = expenseTypeEnum != ExpenseType.PERSONAL
+                isDefault = true
             )
-
-            viewModel.saveExpense(updated)
-            Log.d("ExpenseEditBottomSheet", updated.toString())
-
-            parentFragmentManager.setFragmentResult(
-                RESULT_KEY,
-                Bundle().apply { putParcelable(RESULT_ENTRY, updated) }
-            )
-
-            dismiss()
         }
+
     }
+
+    private fun saveUpdatedExpense(
+        title: String,
+        amount: Double,
+        notes: String?,
+        date: LocalDate,
+        isDefault: Boolean
+    ) {
+        val updated = entry.copy(
+            expenseTitle = title,
+            expenseAmount = amount,
+            date = date,
+            expenseNote = notes,
+            isDefault = isDefault
+        )
+
+        viewModel.saveExpense(updated)
+
+        parentFragmentManager.setFragmentResult(
+            RESULT_KEY,
+            Bundle().apply { putParcelable(RESULT_ENTRY, updated) }
+        )
+
+        dismiss()
+    }
+
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Date Picker

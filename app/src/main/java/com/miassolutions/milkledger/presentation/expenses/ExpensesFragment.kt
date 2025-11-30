@@ -1,6 +1,10 @@
 package com.miassolutions.milkledger.presentation.expenses
 
+import android.app.AlertDialog
+import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
@@ -9,6 +13,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.databinding.DialogExpenseBinding
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -96,6 +101,13 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
         }
     }
 
+
+
+
+
+
+
+
     // ─────────────────────────────────────────────────────────────────────────────
     // Listeners
     // ─────────────────────────────────────────────────────────────────────────────
@@ -103,7 +115,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
         fabAddExpense.setOnClickListener {
             val newEntry = ExpensesEntity(
-                
+
                 expenseTitle = "",
                 expenseAmount = 0.0,
                 date = LocalDate.now(),

@@ -9,6 +9,9 @@ import java.time.LocalDate
 @Dao
 interface ExpensesDao {
 
+    @Query("SELECT * FROM expense_table")
+    suspend fun getListOfExpense() : List<ExpensesEntity>
+
     @Query("SELECT IFNULL(SUM(expenseAmount), 0) FROM expense_table WHERE isDefault = 1")
     fun observeBusinessExpenses(): Flow<Double>
 
