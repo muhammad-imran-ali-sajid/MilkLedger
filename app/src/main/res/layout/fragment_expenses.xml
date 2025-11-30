@@ -14,19 +14,13 @@
         app:layout_constraintBottom_toBottomOf="@+id/rvExpenses"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
+        app:layout_constraintTop_toBottomOf="@+id/dateFilterLayout" />
 
-    <!-- Include merge layout -->
-    <TextView
-        android:id="@+id/tv_selected_date"
-        android:layout_width="0dp"
+    <include
+        android:id="@+id/dateFilterLayout"
+        layout="@layout/date_filter_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="6"
-        android:gravity="center"
-        android:padding="8dp"
-        android:backgroundTint="@color/primary"
-        android:text="📅 12-10-2025"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,13 +30,13 @@
         android:id="@+id/rvExpenses"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="78dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/expensesSummary"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateFilterLayout"
         app:layout_constraintStart_toStartOf="parent"
-        android:paddingBottom="78dp"
-        android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/tv_selected_date"
         tools:listitem="@layout/item_expenses" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

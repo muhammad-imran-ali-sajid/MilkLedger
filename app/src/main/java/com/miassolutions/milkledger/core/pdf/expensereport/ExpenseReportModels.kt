@@ -1,11 +1,11 @@
 package com.miassolutions.milkledger.core.pdf.expensereport
 
-import com.miassolutions.milkledger.presentation.expenses.ExpenseType
-
 data class ExpenseReceiptPdf(
     val dateRange: String,
     val recordList: List<ExpenseItemRecord>,
-    val totalExpenses:String,
+    val totalExpenses:Double,
+    val businessExpenses: Double,
+    val personalExpenses : Double,
     val footerNote: String? = null
 )
 

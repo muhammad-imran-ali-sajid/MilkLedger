@@ -117,8 +117,6 @@ class ProfitViewModel @Inject constructor(
             val list = repository.getDaily(date)
             val netProfit = repository.getNetProfitDaily(date).first()
 
-            Log.d("ProfitViewModel", netProfit.toString())
-
             val profits = list.map { it.toProfit() }
 
             val totalReceived = profits.sumOf { it.receivedProfit }
@@ -200,31 +198,6 @@ class ProfitViewModel @Inject constructor(
         }
     }
 
-
-//    private fun fetchMonthly(month: LocalDate) {
-//        viewModelScope.launch {
-//            val list = repository.getMonthly(month)
-//            val profits = list.map { it.toProfit() }
-//
-//            val totalReceived = profits.sumOf { it.receivedProfit }
-//            val netProfit = repository.getNetProfitMonthly(month.year, month.monthValue)
-//
-//            val start = month.withDayOfMonth(1)
-//            val end = month.withDayOfMonth(month.lengthOfMonth())
-//
-//            _uiState.update {
-//                it.copy(
-//                    filteredList = profits,
-//                    totalReceived = totalReceived,
-//                    netProfit = netProfit,
-//                    remainingProfit = netProfit - totalReceived,
-//                    periodLabel = formatPeriodLabel(start, end),
-//                    startDate = start,
-//                    endDate = end
-//                )
-//            }
-//        }
-//    }
 
     // -------------------------------------------------------------------------
     // YEARLY

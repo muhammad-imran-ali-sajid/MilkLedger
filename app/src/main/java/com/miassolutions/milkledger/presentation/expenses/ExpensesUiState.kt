@@ -1,6 +1,9 @@
 package com.miassolutions.milkledger.presentation.expenses
 
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.presentation.stats.BusinessExpenseSummary
+import com.miassolutions.milkledger.presentation.stats.PersonalExpenseSummary
+import com.miassolutions.milkledger.presentation.stats.StatListItem
 import java.time.LocalDate
 
 
@@ -8,17 +11,19 @@ import java.time.LocalDate
 data class ExpensesUiState(
     val currentDate: LocalDate = LocalDate.now(),
 
-    // Fixed (default) expenses
-    val fixedExpenses: List<ExpensesEntity> = emptyList(),
-    val fixedTotal: Double = 0.0,
+    val expensesList: List<ExpensesEntity> = emptyList(),
+    val filteredList: List<ExpensesEntity> = emptyList(),
 
-    // Variable (user-added) expenses
-    val variableExpenses: List<ExpensesEntity> = emptyList(),
-    val variableTotal: Double = 0.0,
-
+    val businessTotalExpenses: Double = 0.0,
+    val personalTotalExpenses: Double = 0.0,
+    val periodLabel : String = "",
+    val startDate: LocalDate? = null,
+    val endDate: LocalDate? = null,
     val isLoading: Boolean = false,
     val error: String? = null
 )
+
+
 
 
 

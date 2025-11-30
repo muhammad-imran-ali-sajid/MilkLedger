@@ -5,12 +5,11 @@ import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.presentation.stats.BusinessExpenseSummary
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
+import java.time.YearMonth
 
 @Dao
 interface ExpensesDao {
 
-    @Query("SELECT * FROM expense_table")
-    suspend fun getListOfExpense() : List<ExpensesEntity>
 
     @Query("SELECT IFNULL(SUM(expenseAmount), 0) FROM expense_table WHERE isDefault = 1")
     fun observeBusinessExpenses(): Flow<Double>
@@ -29,7 +28,6 @@ interface ExpensesDao {
     // Inserts a list of entities, replacing existing ones (upsert)
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(expenses: List<ExpensesEntity>)
-
 
 
     @Upsert
@@ -149,4 +147,18 @@ interface ExpensesDao {
     """
     )
     fun getVariableExpensesTotal(date: LocalDate): Flow<Double?>
+
+
+    @Query("SELECT * FROM expense_table WHERE date= :date")
+    suspend fun getDailyExpenses(date: LocalDate): List<ExpensesEntity>
+
+
+    @Query(
+        """
+        SELECT * FROM expense_table
+        WHERE date LIKE :yearMonth || '%'
+        ORDER BY date DESC
+        """
+    )
+    suspend fun getMonthlyExpenses(yearMonth: String): List<ExpensesEntity>
 }

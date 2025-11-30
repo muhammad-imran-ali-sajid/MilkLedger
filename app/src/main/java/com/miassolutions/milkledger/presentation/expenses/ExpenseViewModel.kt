@@ -1,18 +1,23 @@
 package com.miassolutions.milkledger.presentation.expenses
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.data.mapper.toProfit
 import com.miassolutions.milkledger.data.repository.ExpensesRepository
+import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.util.UUID // <-- Added UUID import
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,86 +29,218 @@ class ExpenseViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadForDate(LocalDate.now())
+//        loadForDate(LocalDate.now())
+
+        fetchDaily(LocalDate.now())
     }
 
-    fun onEvent(event: ExpensesUiEvent) {
-        when (event) {
-            is ExpensesUiEvent.SelectDate -> loadForDate(event.date)
+
+    fun loadData(period: DatePeriod) {
+        when (period) {
+            is DatePeriod.Daily -> fetchDaily(period.date)
+            is DatePeriod.Weekly -> fetchWeekly(period.start, period.end)
+            is DatePeriod.Monthly -> fetchMonthly(period.month)
+            is DatePeriod.Yearly -> fetchYearly(period.year)
+            DatePeriod.All -> fetchAll()
+            is DatePeriod.Custom -> fetchCustom(period.start, period.end)
+
         }
     }
 
-    private fun loadForDate(date: LocalDate) {
-
-        // Update date in UiState
-        _uiState.update { it.copy(currentDate = date, isLoading = true) }
-
+    // -------------------------------------------------------------------------
+    // DAILY
+    // -------------------------------------------------------------------------
+    private fun fetchDaily(date: LocalDate) {
         viewModelScope.launch {
-//            ensureDefaultExpenses(date)
-        }
+            _uiState.update { it.copy(isLoading = true) }
 
-        collectFixedExpenses(date)
-        collectVariableExpenses(date)
+            delay(2000)
+
+            val list = repository.getDailyExpenses(date)
+
+            val totalExpenses = list.sumOf { it.expenseAmount }
+            val personalList = list.filter { entity -> entity.isDefault }
+            val netBusinessExpenses = personalList.sumOf { it.expenseAmount }
+
+            _uiState.update {
+                it.copy(
+                    filteredList = list,
+                    businessTotalExpenses = netBusinessExpenses,
+                    personalTotalExpenses = totalExpenses - netBusinessExpenses,
+                    periodLabel = formatPeriodLabel(date, date),
+                    startDate = date,
+                    endDate = date,
+                    isLoading = false
+
+                )
+            }
+        }
     }
 
-    // --------------------------------------------------
-    // ✔ Improved Default Expenses Logic (Fast + Clean)
-    // --------------------------------------------------
-//    private suspend fun ensureDefaultExpenses(date: LocalDate) {
-//        val existingTitles = repository.getTitlesForDate(date).toSet()
+    // -------------------------------------------------------------------------
+    // WEEKLY
+    // -------------------------------------------------------------------------
+    private fun fetchWeekly(start: LocalDate, end: LocalDate) {
+//        viewModelScope.launch {
+//            val list = repository.getWeeklyWithNetProfit(start, end)
 //
-//        val missingDefaults = DEFAULT_TITLES.filter { it !in existingTitles }
+//            val totalReceived = list.sumOf { it.receivedProfit }
+//            val netProfit = repository.getNetProfitWeekly(start, end)
 //
-//        if (missingDefaults.isEmpty()) return
+//            _uiState.update {
+//                it.copy(
+//                    filteredList = list,
+//                    totalReceived = totalReceived,
+//                    netProfit = netProfit,
+//                    remainingProfit = netProfit - totalReceived,
+//                    periodLabel = formatPeriodLabel(start, end),
+//                    startDate = start,
+//                    endDate = end
+//                )
+//            }
+//        }
+    }
+
+    // -------------------------------------------------------------------------
+    // MONTHLY
+    // -------------------------------------------------------------------------
+
+    private fun fetchMonthly(yearMonth: YearMonth) {
+        viewModelScope.launch {
+
+            val start = yearMonth.atDay(1)
+            val end = yearMonth.atEndOfMonth()
+
+            // Repo expects a LocalDate or start/end – adjust as needed
+            val list = repository.getMonthlyExpenses(start)
+
+            val totalExpenses = list.sumOf { it.expenseAmount }
+            val personalList = list.filter { entity -> entity.isDefault }
+            val netBusinessExpenses = personalList.sumOf { it.expenseAmount }
+
+            // Custom label for Month + Year
+            val monthLabel = yearMonth.format(DateTimeFormatter.ofPattern("MMMM yyyy"))
+
+
+            _uiState.update {
+                it.copy(
+                    filteredList = list,
+                    businessTotalExpenses = netBusinessExpenses,
+                    personalTotalExpenses = totalExpenses - netBusinessExpenses,
+                    periodLabel = monthLabel,
+                    startDate = start,
+                    endDate = end,
+                    isLoading = false
+                )
+            }
+        }
+    }
+
+
+    // -------------------------------------------------------------------------
+    // YEARLY
+    // -------------------------------------------------------------------------
+    private fun fetchYearly(year: Int) {
+//        viewModelScope.launch {
+//            val list = repository.getYearly(LocalDate.of(year, 1, 1))
+//            val profits = list.map { it.toProfit() }
 //
-//        val toInsert = missingDefaults.map { title ->
-//            ExpensesEntity(
-//                createdAt = LocalDateTime.now().toString(),
-//                expenseTitle = title,
-//                expenseAmount = 0.0,
-//                isDefault = true,
-//                date = date
-//            )
+//            val totalReceived = profits.sumOf { it.receivedProfit }
+//            val netProfit = repository.getNetProfitYearly(year)
+//
+//            _uiState.update {
+//                it.copy(
+//                    filteredList = profits,
+//                    totalReceived = totalReceived,
+//                    netProfit = netProfit,
+//                    remainingProfit = netProfit - totalReceived,
+//                    periodLabel = year.toString(),
+//                    startDate = LocalDate.of(year, 1, 1),
+//                    endDate = LocalDate.of(year, 12, 31)
+//                )
+//            }
+//        }
+    }
+
+    // -------------------------------------------------------------------------
+    // ALL RECORDS
+    // -------------------------------------------------------------------------
+    private fun fetchAll() {
+//        loadProfitDetails()
+    }
+
+    // -------------------------------------------------------------------------
+    // CUSTOM
+    // -------------------------------------------------------------------------
+    private fun fetchCustom(start: LocalDate?, end: LocalDate?) {
+//        if (start == null || end == null) {
+//            loadProfitDetails()
+//            return
+//        }
+//        loadRange(start, end)
+    }
+
+    private fun loadRange(start: LocalDate, end: LocalDate) {
+//        viewModelScope.launch {
+//            val list = repository.getCustom(start, end)
+//            val profits = list.map { it.toProfit() }
+//
+//            val totalReceived = profits.sumOf { it.receivedProfit }
+//            val netProfit = repository.getNetProfitCustom(start, end)
+//
+//            _uiState.update {
+//                it.copy(
+//                    filteredList = profits,
+//                    totalReceived = totalReceived,
+//                    netProfit = netProfit,
+//                    remainingProfit = netProfit - totalReceived,
+//                    periodLabel = formatPeriodLabel(start, end),
+//                    startDate = start,
+//                    endDate = end
+//                )
+//            }
+//        }
+    }
+
+//    fun onEvent(event: ExpensesUiEvent) {
+//        when (event) {
+//            is ExpensesUiEvent.SelectDate -> loadForDate(event.date)
+//        }
+//    }
+
+//    private fun loadForDate(date: LocalDate) {
+//
+//        // Update date in UiState
+//        _uiState.update { it.copy(currentDate = date, isLoading = true) }
+//
+//        viewModelScope.launch {
+////            ensureDefaultExpenses(date)
 //        }
 //
-//        repository.insertAll(toInsert)
+//        collectFixedExpenses(date)
 //    }
+
 
     // --------------------------------------------------
     // Separate collectors make UI simpler
     // --------------------------------------------------
-    private fun collectFixedExpenses(date: LocalDate) {
-        viewModelScope.launch {
-            repository.getFixedExpenses(date).collect { list ->
-                val total = list.sumOf { it.expenseAmount }
+//    private fun collectFixedExpenses(date: LocalDate) {
+//        viewModelScope.launch {
+//            repository.getFixedExpenses(date).collect { list ->
+//                val total = list.sumOf { it.expenseAmount }
+//
+//                _uiState.update {
+//                    it.copy(
+//                        businessExpenses = list,
+//                        businessTotalExpenses = total,
+//                        isLoading = false
+//
+//                    )
+//                }
+//            }
+//        }
+//    }
 
-                _uiState.update {
-                    it.copy(
-                        fixedExpenses = list,
-                        fixedTotal = total,
-                        isLoading = false
-
-                    )
-                }
-            }
-        }
-    }
-
-    private fun collectVariableExpenses(date: LocalDate) {
-        viewModelScope.launch {
-            repository.getVariableExpenses(date).collect { list ->
-                val total = list.sumOf { it.expenseAmount }
-
-                _uiState.update {
-                    it.copy(
-                        variableExpenses = list,
-                        variableTotal = total,
-                        isLoading = false
-                    )
-                }
-            }
-        }
-    }
 
     fun deleteExpense(expense: ExpensesEntity) = viewModelScope.launch {
         repository.deleteExpense(expense)
