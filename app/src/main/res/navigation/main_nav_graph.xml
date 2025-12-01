@@ -24,7 +24,11 @@
         android:id="@+id/expensesFragment"
         android:name="com.miassolutions.milkledger.presentation.expenses.ExpensesFragment"
         android:label="Expenses"
-        tools:layout="@layout/fragment_expenses" />
+        tools:layout="@layout/fragment_expenses" >
+        <action
+            android:id="@+id/action_expensesFragment_to_expenseAddEditFragment"
+            app:destination="@id/expenseAddEditFragment" />
+    </fragment>
     <fragment
         android:id="@+id/salesFragment"
         android:name="com.miassolutions.milkledger.presentation.customer.sales.SalesFragment"
@@ -147,4 +151,10 @@
         android:name="com.miassolutions.milkledger.presentation.profit.ProfitFragment"
         android:label="Profit Received History"
         tools:layout="@layout/fragment_profit" />
+    <fragment
+        android:id="@+id/expenseAddEditFragment"
+
+        tools:layout="@layout/fragment_add_edit_expense"
+        android:name="com.miassolutions.milkledger.presentation.expenses.ExpenseAddFragment"
+        android:label="Add Expenses" />
 </navigation>

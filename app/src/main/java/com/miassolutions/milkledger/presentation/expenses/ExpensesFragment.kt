@@ -4,6 +4,7 @@ import android.view.Menu
 import android.view.View
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -41,9 +42,11 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     // Edit existing entry
     // ─────────────────────────────────────────────────────────────────────────────
     private fun openEditSheet(entry: ExpensesEntity) {
-        ExpenseEditBottomSheet
-            .newEditInstance(entry)
-            .show(parentFragmentManager, null)
+//        findNavController().navigate(
+//            R.id.action_expensesFragment_to_expenseAddEditFragment,
+//            ExpenseAddEditFragment.createBundleForEdit(entry)
+//        )
+
     }
 
 
@@ -118,9 +121,9 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     override fun setupListeners() = with(binding) {
 
         fabAddExpense.setOnClickListener {
-            ExpenseEditBottomSheet
-                .newAddInstance()
-                .show(parentFragmentManager, null)
+            findNavController().navigate(
+                R.id.action_expensesFragment_to_expenseAddEditFragment
+            )
         }
 
 
