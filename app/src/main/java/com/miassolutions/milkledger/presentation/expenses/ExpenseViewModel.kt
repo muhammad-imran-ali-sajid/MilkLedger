@@ -34,6 +34,16 @@ class ExpenseViewModel @Inject constructor(
         fetchDaily(LocalDate.now())
     }
 
+    // ADD MODE → Save multiple new expenses at once
+    fun saveExpenses(list: List<ExpensesEntity>) = viewModelScope.launch {
+        repository.upsertAllExpenses(list)
+    }
+
+    // EDIT MODE → Update single expense
+    fun saveExpense(entry: ExpensesEntity) = viewModelScope.launch {
+        repository.upsertExpense(entry)
+    }
+
 
     fun loadData(period: DatePeriod) {
         when (period) {
@@ -54,26 +64,30 @@ class ExpenseViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            delay(2000)
 
-            val list = repository.getDailyExpenses(date)
+             repository.getDailyExpenses(date).collect { list ->
 
-            val totalExpenses = list.sumOf { it.expenseAmount }
-            val personalList = list.filter { entity -> entity.isDefault }
-            val netBusinessExpenses = personalList.sumOf { it.expenseAmount }
+                val totalExpenses = list.sumOf { it.expenseAmount }
+                val personalList = list.filter { entity -> entity.isDefault }
+                val netBusinessExpenses = personalList.sumOf { it.expenseAmount }
 
-            _uiState.update {
-                it.copy(
-                    filteredList = list,
-                    businessTotalExpenses = netBusinessExpenses,
-                    personalTotalExpenses = totalExpenses - netBusinessExpenses,
-                    periodLabel = formatPeriodLabel(date, date),
-                    startDate = date,
-                    endDate = date,
-                    isLoading = false
 
-                )
+                _uiState.update {
+                    it.copy(
+                        filteredList = list,
+                        businessTotalExpenses = netBusinessExpenses,
+                        personalTotalExpenses = totalExpenses - netBusinessExpenses,
+                        periodLabel = formatPeriodLabel(date, date),
+                        startDate = date,
+                        endDate = date,
+                        isLoading = false
+
+                    )
+                }
             }
+
+
+
         }
     }
 
@@ -247,9 +261,7 @@ class ExpenseViewModel @Inject constructor(
     }
 
 
-    fun saveExpense(expense: ExpensesEntity) = viewModelScope.launch {
-        repository.upsertExpense(expense)
-    }
+
 
 
 }

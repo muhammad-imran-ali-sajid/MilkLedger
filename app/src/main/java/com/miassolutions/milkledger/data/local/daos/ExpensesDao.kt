@@ -99,6 +99,10 @@ interface ExpensesDao {
     suspend fun getExpensesTotalBetween(start: LocalDate, end: LocalDate): Double?
 
 
+
+
+
+
     // -------------------------------------------------------------
     // 🔥 NEW: FIXED vs VARIABLE expenses using isDefault
     // -------------------------------------------------------------
@@ -150,7 +154,7 @@ interface ExpensesDao {
 
 
     @Query("SELECT * FROM expense_table WHERE date= :date")
-    suspend fun getDailyExpenses(date: LocalDate): List<ExpensesEntity>
+    fun getDailyExpenses(date: LocalDate): Flow<List<ExpensesEntity>>
 
 
     @Query(

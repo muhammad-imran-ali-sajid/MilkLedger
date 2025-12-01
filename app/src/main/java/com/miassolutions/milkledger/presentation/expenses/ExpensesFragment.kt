@@ -24,7 +24,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     override fun setupViews() {
         setToolbarTitle(getString(R.string.expenses))
         setupRecyclerView()
-        setupBottomSheetResultListener()
+
     }
 
     private fun setupRecyclerView() {
@@ -35,28 +35,17 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
         binding.rvExpenses.adapter = adapter
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // Listen for results from BottomSheet
-    // ─────────────────────────────────────────────────────────────────────────────
-    private fun setupBottomSheetResultListener() {
-        setFragmentResultListener(ExpenseEditBottomSheet.RESULT_KEY) { _, bundle ->
-            val updated = bundle.getParcelable<ExpensesEntity>(
-                ExpenseEditBottomSheet.RESULT_ENTRY
-            )
-            if (updated != null) {
-                viewModel.saveExpense(updated)
-            }
-        }
-    }
+
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Edit existing entry
     // ─────────────────────────────────────────────────────────────────────────────
     private fun openEditSheet(entry: ExpensesEntity) {
         ExpenseEditBottomSheet
-            .newInstance(entry)
+            .newEditInstance(entry)
             .show(parentFragmentManager, null)
     }
+
 
     // ─────────────────────────────────────────────────────────────────────────────
     // Delete entry
@@ -129,21 +118,13 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     override fun setupListeners() = with(binding) {
 
         fabAddExpense.setOnClickListener {
-            val newEntry = ExpensesEntity(
-
-                expenseTitle = "",
-                expenseAmount = 0.0,
-                date = LocalDate.now(),
-                expenseNote = "",
-                isDefault = true
-            )
-
             ExpenseEditBottomSheet
-                .newInstance(newEntry)
+                .newAddInstance()
                 .show(parentFragmentManager, null)
         }
 
-            dateFilterLayout.tvSelectedDate.setOnClickListener {
+
+        dateFilterLayout.tvSelectedDate.setOnClickListener {
             val isAuth = SharedPrefsHelper.getUserRole(requireContext()) == "admin"
             val initialDate = viewModel.uiState.value.currentDate
 

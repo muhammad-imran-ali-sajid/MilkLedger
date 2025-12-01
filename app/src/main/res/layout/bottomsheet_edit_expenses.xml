@@ -29,34 +29,64 @@
             android:textColor="@color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
+
+
+
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameLayout"
+        android:id="@+id/fuelLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="Expense Type"
-        app:endIconMode="dropdown_menu">
+        android:hint="Fuel">
 
-        <AutoCompleteTextView
-            android:id="@+id/etExpenseType"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etFuelAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
-            android:padding="12dp"
-            android:focusable="false"
-            android:clickable="true" />
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/etExpenseAmountLayout"
+        android:id="@+id/vehicleLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="Amount">
+        android:hint="Vehicle">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etExpenseAmount"
+            android:id="@+id/etVehicleAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/refreshmentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Refreshment">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etRefreshmentAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="numberDecimal" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/personalLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Personal">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etPersonalAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionNext"
@@ -74,6 +104,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNotes"
             android:layout_width="match_parent"
+
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:inputType="text" />
