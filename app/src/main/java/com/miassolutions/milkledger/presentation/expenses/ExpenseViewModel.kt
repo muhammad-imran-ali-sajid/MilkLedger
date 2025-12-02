@@ -34,6 +34,20 @@ class ExpenseViewModel @Inject constructor(
         fetchDaily(LocalDate.now())
     }
 
+    fun onEvent(event: ExpensesUiEvent) {
+        when (event) {
+
+            is ExpensesUiEvent.SelectDate -> {
+                // Update the state and trigger data collection for the newly selected date
+                _uiState.update { it.copy(currentDate = event.date) }
+//                collectExpenses(event.date)
+                fetchDaily(event.date)
+            }
+        }
+
+    }
+
+
     // ADD MODE → Save multiple new expenses at once
     fun saveExpenses(list: List<ExpensesEntity>) = viewModelScope.launch {
         repository.upsertAllExpenses(list)
@@ -65,7 +79,7 @@ class ExpenseViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true) }
 
 
-             repository.getDailyExpenses(date).collect { list ->
+            repository.getDailyExpenses(date).collect { list ->
 
                 val totalExpenses = list.sumOf { it.expenseAmount }
                 val personalList = list.filter { entity -> entity.isDefault }
@@ -85,7 +99,6 @@ class ExpenseViewModel @Inject constructor(
                     )
                 }
             }
-
 
 
         }
@@ -259,9 +272,6 @@ class ExpenseViewModel @Inject constructor(
     fun deleteExpense(expense: ExpensesEntity) = viewModelScope.launch {
         repository.deleteExpense(expense)
     }
-
-
-
 
 
 }

@@ -139,6 +139,7 @@ class SalesViewModel @Inject constructor(
         // 1. **CRITICAL FIX:** Perform the initial data setup/insertion OUTSIDE of the Flow collection.
         // This ensures the local write does not immediately trigger the flow again.
         viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) } // START LOADING
 
             ensureSalesEntriesExist(date)
 
