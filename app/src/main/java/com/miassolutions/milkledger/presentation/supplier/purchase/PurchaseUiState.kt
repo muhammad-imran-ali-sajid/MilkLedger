@@ -1,10 +1,12 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
+import com.miassolutions.milkledger.domain.model.Supplier
 import java.time.LocalDate
 
 data class PurchaseUiState(
     val currentDate: LocalDate = LocalDate.now(),
+
     val purchasesForDate: List<PurchaseWithSupplier> = emptyList(),
     val grandTotalForDate: Double = 0.0,
     val selectedSupplierId: String? = null,
@@ -13,11 +15,11 @@ data class PurchaseUiState(
     val totalVolume: Double = 0.0,
     val avgFat: Double = 0.0,
     val avgLr: Double = 0.0,
-    val totalTS : Double = 0.0,
-    val volumeWithFatLr : Double = 0.0,
+    val totalTS: Double = 0.0,
+    val volumeWithFatLr: Double = 0.0,
     val avgRatePerLiter: Double = 0.0,
 
-    val isLoading : Boolean = false
+    val isLoading: Boolean = false
 )
 
 

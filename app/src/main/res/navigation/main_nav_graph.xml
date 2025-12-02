@@ -19,6 +19,9 @@
             app:popExitAnim="@anim/slide_out_right"
 
             />
+        <action
+            android:id="@+id/action_purchaseFragment_to_purchaseAddFragment"
+            app:destination="@id/purchaseAddFragment" />
     </fragment>
     <fragment
         android:id="@+id/expensesFragment"
@@ -157,4 +160,9 @@
         tools:layout="@layout/fragment_add_edit_expense"
         android:name="com.miassolutions.milkledger.presentation.expenses.ExpenseAddFragment"
         android:label="Add Expenses" />
+    <fragment
+        android:id="@+id/purchaseAddFragment"
+        tools:layout="@layout/bottomsheet_add_purchase"
+        android:name="com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseAddFragment"
+        android:label="PurchaseAddFragment" />
 </navigation>

@@ -71,6 +71,14 @@ class PurchaseFragment :
 
     }
 
+    override fun setupListeners() {
+
+        binding.fabAddPurchase.setOnClickListener {
+            val dest = PurchaseFragmentDirections.actionPurchaseFragmentToPurchaseAddFragment()
+            findNavController().navigate(dest)
+        }
+    }
+
     override fun onMenuCreated(menu: Menu) {
         val editModeItem = menu.findItem(R.id.action_edit_mode)
         val pdfMenuItem = menu.findItem(R.id.action_gen_pdf)
@@ -264,7 +272,7 @@ class PurchaseFragment :
 
     private fun navToSupplierDetail(supplier: PurchaseWithSupplier) {
         val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-        if (!isAdmin){
+        if (!isAdmin) {
             showSnackbar("Only ADMIN is allowed")
             return
         }

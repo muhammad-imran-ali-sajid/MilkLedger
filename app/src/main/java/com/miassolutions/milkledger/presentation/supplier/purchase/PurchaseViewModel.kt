@@ -33,6 +33,8 @@ class PurchaseViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(PurchaseUiState())
     val uiState: StateFlow<PurchaseUiState> = _uiState.asStateFlow()
 
+
+
     private val _balanceSupplierId = MutableStateFlow<String?>(null)
 
     // 2. Public StateFlow (Derived Data)
@@ -107,6 +109,14 @@ class PurchaseViewModel @Inject constructor(
 
             // Now start the new observation
             observeForDate(date)
+        }
+    }
+
+    fun observerPurchasesForDate(date: LocalDate){
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) } // START LOADING
+
+            val sortedSuppliers = repository.getAllSuppliers()
         }
     }
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
@@ -110,15 +111,16 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.4" />
+                    app:layout_constraintWidth_percent="0.309" />
 
                 <TextView
                     android:id="@+id/tv_price"
                     style="@style/Style.TextViewValue"
                     android:layout_width="0dp"
+                    android:layout_marginStart="10dp"
                     android:paddingEnd="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/textView"
+                    app:layout_constraintStart_toEndOf="@+id/textView"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.3" />
 
@@ -132,7 +134,7 @@
                     android:textSize="10sp"
                     app:layout_constraintBottom_toTopOf="@+id/tv_rate"
                     app:layout_constraintEnd_toEndOf="@+id/tv_rate"
-                    app:layout_constraintStart_toEndOf="@+id/tv_price"
+                    app:layout_constraintStart_toStartOf="@+id/tv_rate"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView

@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.data.mapper.toFirestoreModel
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
+import com.miassolutions.milkledger.domain.model.Supplier
 import com.miassolutions.milkledger.presentation.stats.SupplierPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import kotlinx.coroutines.flow.Flow
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class PurchaseRepository @Inject constructor(
     private val purchaseDao: PurchaseDao,
+
     private val firestoreSyncHelper: FirestoreSyncHelper // Used for local-write-first remote PUSH
 ) {
 
@@ -28,6 +30,8 @@ class PurchaseRepository @Inject constructor(
     fun getPaidToSuppliersForDate(targetDate: LocalDate): Flow<List<SupplierPaidSummary>> {
         return purchaseDao.getPaidAmountToSupplierForDate(targetDate)
     }
+
+    fun observeSuppliersList(): Flow<List<SupplierEntity>> = purchaseDao.observeSuppliersList()
 
     fun getBalanceHistory(supplierId: String): Flow<List<BalanceHistory>> {
         return purchaseDao.getSupplierBalanceHistory(supplierId)
@@ -150,5 +154,6 @@ class PurchaseRepository @Inject constructor(
     fun getAvgFat(date: LocalDate): Flow<Double?> = purchaseDao.getTotalFat(date)
     fun getAvgLr(date: LocalDate): Flow<Double?> = purchaseDao.getTotalLr(date)
     fun getAvgTs(date: LocalDate): Flow<Double?> = purchaseDao.getTotalTs(date)
-    fun getTotalMilkWithFatLR(date: LocalDate): Flow<Double?> = purchaseDao.getTotalMilkWithFatLR(date)
+    fun getTotalMilkWithFatLR(date: LocalDate): Flow<Double?> =
+        purchaseDao.getTotalMilkWithFatLR(date)
 }
