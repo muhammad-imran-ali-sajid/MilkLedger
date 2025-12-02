@@ -158,40 +158,47 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:orientation="vertical">
-
+                android:paddingVertical="6dp">
 
                 <TextView
-                    style="@style/TextLabel"
-                    android:text="Received" />
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Received"
+                    android:textColor="@color/black"
+                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                    android:gravity="center"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:paddingTop="4dp">
 
                     <TextView
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
                         android:id="@+id/tvPayment"
-                        style="@style/TextValue"
-                        android:text="10000"
-                        app:layout_constraintEnd_toStartOf="@id/tvReceiveDate"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        android:text="10,000"
+                        android:textColor="@color/black"
+                        android:textAppearance="?attr/textAppearanceTitleSmall"/>
 
                     <TextView
+                        android:textColor="@color/black"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
                         android:id="@+id/tvReceiveDate"
-                        style="@style/TextValue"
-                        android:paddingStart="2dp"
                         android:text="(20/11)"
                         android:visibility="gone"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                        android:paddingStart="4dp"
+                        android:textAppearance="?attr/textAppearanceBodySmall"/>
+                </LinearLayout>
 
             </LinearLayout>
+
+
 
             <!-- Balance -->
             <LinearLayout
