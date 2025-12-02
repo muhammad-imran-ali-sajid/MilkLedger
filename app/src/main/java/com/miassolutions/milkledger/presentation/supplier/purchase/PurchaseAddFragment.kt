@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -207,7 +208,7 @@ class PurchaseAddFragment : Fragment() {
         val purchase = PurchaseEntity(
             purchaseId = "${supplier.supplierId}_${LocalDate.now().toString()}",
             supplierId = supplier.supplierId,
-            date = LocalDate.now(),
+            date = LocalDate.now().minusMonths(1),
             milkAmount = volume,
             fat = fat ?: 0.0,
             lr = lr ?: 0.0,
@@ -220,7 +221,7 @@ class PurchaseAddFragment : Fragment() {
         )
 
         viewModel.addPurchase(purchase)
-        requireActivity().onBackPressedDispatcher.onBackPressed()
+        Toast.makeText(requireContext(), "$purchase is saved in db", Toast.LENGTH_SHORT).show()
     }
 
     private fun autoSelectOnFocus(editText: EditText) {
