@@ -132,7 +132,6 @@ class PurchaseAddFragment : Fragment() {
     // ---------------------------------------------------------------------
 
 
-
     private fun setupListeners() = binding.apply {
 
         val recalc = { recalcAll() }
@@ -160,8 +159,9 @@ class PurchaseAddFragment : Fragment() {
                     return@checkDuplicate
                 }
 
-                savePurchase()
-                findNavController().navigateUp()
+                if (savePurchase()) {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
             }
         }
 
@@ -313,33 +313,49 @@ class PurchaseAddFragment : Fragment() {
     // SAVE PURCHASE
     // ---------------------------------------------------------------------
 
-    private fun savePurchase() {
+    private fun savePurchase() : Boolean {
         val supplier = selectedSupplier
         if (supplier == null) {
             binding.tilSupplierName.error = "Select a supplier"
             binding.actvSupplierName.requestFocus()
-            return
+            return false
         }
 
         val volume = binding.etVolume.text.toString().toDoubleOrNull()
         val fat = binding.etFat.text.toString().toDoubleOrNull()
         val lr = binding.etLr.text.toString().toDoubleOrNull()
+        val payment = binding.etPaid.text.toString().toDoubleOrNull()
 
-        if (volume == null || volume <= 0.0) {
-            binding.etVolume.error = "Volume required"
-            return
+        // -------------------------------
+        // VALIDATION: Volume or Payment (at least one)
+        // -------------------------------
+        val isVolumeEmpty = (volume == null || volume == 0.0)
+        val isPaymentEmpty = (payment == null || payment == 0.0)
+
+        if (isVolumeEmpty && isPaymentEmpty) {
+            binding.etVolume.error = "Enter volume or payment"
+            binding.etPaid.error = "Enter volume or payment"
+            binding.etVolume.requestFocus()
+            return false
         }
 
+        // -------------------------------
+        // Fat Validation
+        // -------------------------------
         if (!binding.etFat.text.isNullOrEmpty() && (fat == null || fat !in 3.0..7.0)) {
             binding.etFat.error = "Fat must be 3.0 - 7.0"
-            return
+            return false
         }
 
+        // -------------------------------
+        // LR Validation
+        // -------------------------------
         if (!binding.etLr.text.isNullOrEmpty() && (lr == null || lr !in 15.0..32.0)) {
             binding.etLr.error = "LR must be 15.0 - 32.0"
-            return
+            return false
         }
 
+        val finalVolume = volume ?: 0.0
         val price = binding.tvPrice.text.toString().toDoubleOrNull() ?: 0.0
         val ts = binding.tvTs.text.toString().toDoubleOrNull() ?: 0.0
 
@@ -347,21 +363,24 @@ class PurchaseAddFragment : Fragment() {
             purchaseId = "${supplier.supplierId}_${(dateSelected ?: LocalDate.now())}",
             supplierId = supplier.supplierId,
             date = dateSelected ?: LocalDate.now(),
-            milkAmount = volume,
+            milkAmount = finalVolume,
             fat = fat ?: 0.0,
             lr = lr ?: 0.0,
             ts = ts,
             milkPrice = price,
             balance = currentBalance,
             rateUsed = supplier.supplierRate,
-            payment = binding.etPaid.text.toString().toDoubleOrNull() ?: 0.0,
+            payment = payment ?: 0.0,
             notes = binding.etNotes.text.toString()
         )
 
         viewModel.addPurchase(purchase)
 
         Toast.makeText(requireContext(), "$purchase is saved in db", Toast.LENGTH_SHORT).show()
+
+        return true
     }
+
 
     private fun autoSelectOnFocus(editText: EditText) {
         editText.setSelectAllOnFocus(true)
