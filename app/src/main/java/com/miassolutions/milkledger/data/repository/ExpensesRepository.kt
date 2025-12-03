@@ -98,25 +98,7 @@ class ExpensesRepository @Inject constructor(
     }
 
 
-//    suspend fun updateExpense(expense: ExpensesEntity) {
-//        val existing = dao.getExpenseById(expense.expenseId) ?: return
-//
-//        val updated = expense.copy(
-//            updatedAt = LocalDateTime.now().toString()
-//        )
-//
-//        dao.updateExpense(updated)
-//
-//        try {
-//            firestore.uploadSingle(
-//                collectionName = COLLECTION,
-//                documentId = updated.expenseId,
-//                data = updated.toFirestoreModel()
-//            )
-//        } catch (e: Exception) {
-//            Log.e(TAG, "Sync failed for update: ${expense.expenseId}", e)
-//        }
-//    }
+
 
     suspend fun deleteExpense(expense: ExpensesEntity) {
         dao.deleteExpense(expense)

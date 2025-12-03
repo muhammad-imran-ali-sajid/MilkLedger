@@ -13,9 +13,13 @@ import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.showExpenseDatePicker
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
@@ -37,6 +41,8 @@ class PurchaseAddFragment : Fragment() {
 
     private var selectedSupplier: SupplierEntity? = null
     private var currentBalance: Double = 0.0
+
+    private var dateSelected: LocalDate? = null
 
 
     override fun onCreateView(
@@ -101,9 +107,71 @@ class PurchaseAddFragment : Fragment() {
         listOf(etVolume, etFat, etLr, etPaid, etNotes)
             .forEach { autoSelectOnFocus(it) }
 
-        btnSave.setOnClickListener { savePurchase() }
+        btnSave.setOnClickListener {
+            savePurchase()
+            findNavController().navigateUp()
+        }
+
+        btnSaveNew.setOnClickListener {
+            savePurchase()
+            resetForm()
+            //field should be empty form will be filled from the start by selecting supplier
+        }
         btnCancel.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+        binding.btnDate.text = LocalDate.now().toDisplayFormat()
+
+        binding.btnDate.setOnClickListener {
+            val role = SharedPrefsHelper.getUserRole(requireContext())
+            // Assume you fetch the authorization status dynamically
+            val isUserAuthorized = role == "admin"
+
+            showExpenseDatePicker(
+
+                isAuthorized = isUserAuthorized,
+                initialDate = LocalDate.now(),
+
+                // The selectedDate (LocalDate) is available here!
+                onPicked = { selectedDate: LocalDate ->
+                    dateSelected = selectedDate
+                    binding.btnDate.text = selectedDate.toDisplayFormat()
+
+                }
+            )
+        }
     }
+
+
+    private fun resetForm() = binding.apply {
+        // Clear input fields
+        etVolume.setText("")
+        etFat.setText("")
+        etLr.setText("")
+        etPaid.setText("")
+        etNotes.setText("")
+
+        // Reset supplier selection
+        actvSupplierName.setText("")
+        selectedSupplier = null
+        tilSupplierName.error = null
+
+        // Reset calculated UI
+        tvPrice.text = "0.00"
+        tvTs.text = "--"
+        tvBalance.text = "0.00"
+        tvBalance.setTextColor(Color.BLACK)
+        tvAdvanceAmount.text = ""
+        tilAdvance.hide()
+
+        // DO NOT reset dateSelected — keep it as user chose
+        // Just re-show the last selected date
+        dateSelected?.let {
+            btnDate.text = it.toDisplayFormat()
+        }
+
+        // Scroll to top if needed
+        scrollView?.scrollTo(0, 0)
+    }
+
 
     // ---------------------------------------------------------------------
     // CALCULATIONS
@@ -206,9 +274,9 @@ class PurchaseAddFragment : Fragment() {
         val ts = binding.tvTs.text.toString().toDoubleOrNull() ?: 0.0
 
         val purchase = PurchaseEntity(
-            purchaseId = "${supplier.supplierId}_${LocalDate.now().toString()}",
+            purchaseId = "${supplier.supplierId}_${(dateSelected ?: LocalDate.now())}",
             supplierId = supplier.supplierId,
-            date = LocalDate.now().minusMonths(1),
+            date = dateSelected ?: LocalDate.now(),
             milkAmount = volume,
             fat = fat ?: 0.0,
             lr = lr ?: 0.0,
@@ -221,6 +289,7 @@ class PurchaseAddFragment : Fragment() {
         )
 
         viewModel.addPurchase(purchase)
+
         Toast.makeText(requireContext(), "$purchase is saved in db", Toast.LENGTH_SHORT).show()
     }
 
