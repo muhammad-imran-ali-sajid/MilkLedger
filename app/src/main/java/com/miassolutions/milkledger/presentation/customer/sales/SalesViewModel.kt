@@ -27,13 +27,13 @@ class SalesViewModel @Inject constructor(
 ) : ViewModel() {
 
     // -------------------------------------------------------------------------
-    // UI State — Clean Like PurchaseUiState
+    // UI State — like PurchaseUiState
     // -------------------------------------------------------------------------
     private val _uiState = MutableStateFlow(SalesUiState())
     val uiState: StateFlow<SalesUiState> = _uiState.asStateFlow()
 
     // -------------------------------------------------------------------------
-    // Paid sales for the selected date
+    // Paid sales for selected date
     // -------------------------------------------------------------------------
     private val _paidSalesList = MutableStateFlow<List<CustomerPaidSummary>>(emptyList())
     val paidSalesList: StateFlow<List<CustomerPaidSummary>> = _paidSalesList.asStateFlow()
@@ -45,7 +45,7 @@ class SalesViewModel @Inject constructor(
     val balanceHistory: StateFlow<List<BalanceHistory>> = _balanceHistory.asStateFlow()
 
     // -------------------------------------------------------------------------
-    // Init — Same pattern as PurchaseViewModel
+    // Init
     // -------------------------------------------------------------------------
     init {
         observeSalesForDate(_uiState.value.currentDate)
@@ -62,7 +62,7 @@ class SalesViewModel @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
-    // Observe paid sales for specific date
+    // Observe paid sales
     // -------------------------------------------------------------------------
     private fun observePaidSales(date: LocalDate) {
         repository.getPaidSalesForDate(date)
@@ -72,7 +72,7 @@ class SalesViewModel @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
-    // Update sale manually (same pattern as updatePurchaseManually)
+    // Update sale manually
     // -------------------------------------------------------------------------
     fun updateSaleManually(updated: SalesEntity) {
         viewModelScope.launch {
@@ -94,7 +94,7 @@ class SalesViewModel @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
-    // Handle Date Selection (Same logic as PurchaseViewModel.onDateSelected)
+    // Date changed
     // -------------------------------------------------------------------------
     fun onDateSelected(date: LocalDate) {
         if (date != _uiState.value.currentDate) {
@@ -105,7 +105,7 @@ class SalesViewModel @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
-    // Clean Observe Logic — SAME STYLE AS PurchaseViewModel.observeForDate()
+    // Observe sales for date (CLEAN — NO auto-generation logic)
     // -------------------------------------------------------------------------
     private var salesJob: Job? = null
 
@@ -113,11 +113,7 @@ class SalesViewModel @Inject constructor(
         salesJob?.cancel()
         salesJob = viewModelScope.launch {
 
-            // Set loading
             _uiState.update { it.copy(isLoading = true) }
-
-            // Ensure all customers have an entry
-            ensureSalesEntriesExist(date)
 
             repository.getSalesByDate(date).collectLatest { list ->
 
@@ -163,37 +159,7 @@ class SalesViewModel @Inject constructor(
     }
 
     // -------------------------------------------------------------------------
-    // Ensure each customer has an entry — SAME STYLE AS Purchase Ensure Logic
-    // -------------------------------------------------------------------------
-    private suspend fun ensureSalesEntriesExist(date: LocalDate) {
-        val allCustomers = repository.getAllCustomers().first()
-        val existing = repository.getSalesByDateOnce(date)
-
-        val missing = allCustomers.filterNot { customer ->
-            existing.any { it.customer.customerId == customer.customerId }
-        }
-
-        missing.forEach { c ->
-            val sale = SalesEntity(
-                saleId = "${c.customerId}_$date",
-                customerId = c.customerId,
-                date = date,
-                volume = 0.0,
-                deduction = 0.0,
-                netMilk = 0.0,
-                price = 0.0,
-                paid = 0.0,
-                rateUsed = c.customerRate,
-                balance = 0.0
-            )
-            repository.insertSale(sale)
-        }
-    }
-
-
-
-    // -------------------------------------------------------------------------
-    // Handle UI Events — Same Style As Purchase
+    // Handle UI Events
     // -------------------------------------------------------------------------
     fun onEvent(event: SalesUiEvent) {
         when (event) {
