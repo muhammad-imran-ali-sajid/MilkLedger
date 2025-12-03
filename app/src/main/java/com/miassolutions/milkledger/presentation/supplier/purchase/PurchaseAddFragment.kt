@@ -13,6 +13,7 @@ import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
@@ -27,6 +28,7 @@ import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.databinding.BottomsheetAddPurchaseBinding
 import com.miassolutions.milkledger.presentation.profit.ProfitViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.math.roundToInt
@@ -58,6 +60,22 @@ class PurchaseAddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupSupplierDropdown()
         setupListeners()
+
+        viewModel.isDuplicatePurchase(
+            selectedSupplier?.supplierId,
+            dateSelected
+        )
+
+        viewModel.isDuplicate.observe(viewLifecycleOwner) { isDuplicate ->
+            if (isDuplicate) {
+                Toast.makeText(
+                    requireContext(),
+                    "${selectedSupplier?.supplierName} is already exist for ${dateSelected?.toDisplayFormat()}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
     }
 
     // ---------------------------------------------------------------------
@@ -84,6 +102,24 @@ class PurchaseAddFragment : Fragment() {
         }
     }
 
+    fun checkDuplication() {
+        viewModel.isDuplicatePurchase(
+            selectedSupplier?.supplierId,
+            dateSelected
+        )
+
+        viewModel.isDuplicate.observe(viewLifecycleOwner) { isDuplicate ->
+            if (isDuplicate) {
+                Toast.makeText(
+                    requireContext(),
+                    "${selectedSupplier?.supplierName} is already exist for ${dateSelected?.toDisplayFormat()}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+        }
+    }
+
     private fun updateSupplierUI() {
         val s = selectedSupplier ?: return
         binding.tvAdvanceAmount.text = s.advanceAmount.toPriceStr()
@@ -94,6 +130,8 @@ class PurchaseAddFragment : Fragment() {
     // ---------------------------------------------------------------------
     // LISTENERS
     // ---------------------------------------------------------------------
+
+
 
     private fun setupListeners() = binding.apply {
 
@@ -108,15 +146,47 @@ class PurchaseAddFragment : Fragment() {
             .forEach { autoSelectOnFocus(it) }
 
         btnSave.setOnClickListener {
-            savePurchase()
-            findNavController().navigateUp()
+            val supplier = selectedSupplier ?: return@setOnClickListener
+            val date = dateSelected ?: LocalDate.now()
+
+            viewModel.checkDuplicate(supplier.supplierId, date) { isDuplicate ->
+
+                if (isDuplicate) {
+                    Toast.makeText(
+                        requireContext(),
+                        "${supplier.supplierName} already exists for ${date.toDisplayFormat()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@checkDuplicate
+                }
+
+                savePurchase()
+                findNavController().navigateUp()
+            }
         }
 
+
         btnSaveNew.setOnClickListener {
-            savePurchase()
-            resetForm()
-            //field should be empty form will be filled from the start by selecting supplier
+            val supplier = selectedSupplier ?: return@setOnClickListener
+            val date = dateSelected ?: LocalDate.now()
+
+            viewModel.checkDuplicate(supplier.supplierId, date) { isDuplicate ->
+
+                if (isDuplicate) {
+                    Toast.makeText(
+                        requireContext(),
+                        "${supplier.supplierName} already exists for ${date.toDisplayFormat()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@checkDuplicate
+                }
+
+                savePurchase()
+                resetForm()
+            }
         }
+
+
         btnCancel.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
         binding.btnDate.text = LocalDate.now().toDisplayFormat()
 

@@ -31,6 +31,9 @@ class PurchaseRepository @Inject constructor(
         return purchaseDao.getPaidAmountToSupplierForDate(targetDate)
     }
 
+    suspend fun isDuplicatePurchase(supplierId: String, date: LocalDate): Boolean =
+        purchaseDao.countPurchaseForDate(supplierId, date) > 0
+
     fun observeSuppliersList(): Flow<List<SupplierEntity>> = purchaseDao.observeSuppliersList()
 
     fun getBalanceHistory(supplierId: String): Flow<List<BalanceHistory>> {

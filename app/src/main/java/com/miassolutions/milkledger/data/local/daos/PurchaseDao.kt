@@ -25,6 +25,14 @@ interface PurchaseDao {
 
 
     @Query("""
+    SELECT COUNT(*) FROM purchase_table 
+    WHERE supplierId = :supplierId AND date = :date
+""")
+    suspend fun countPurchaseForDate(supplierId: String, date: LocalDate): Int
+
+
+
+    @Query("""
         SELECT *
         FROM supplier_table
     """)

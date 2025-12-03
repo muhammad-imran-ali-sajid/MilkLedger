@@ -34,7 +34,7 @@ class DashboardFragment :
 
     override fun setupViews() {
 
-        syncViewModel.startInitialSync()
+//        syncViewModel.startInitialSync() //todo
 
         RemoteConfigHelper.fetchValue(viewLifecycleOwner) { isTrialVersion ->
 
