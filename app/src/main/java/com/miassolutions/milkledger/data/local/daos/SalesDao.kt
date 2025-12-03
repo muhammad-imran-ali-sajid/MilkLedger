@@ -8,6 +8,7 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
@@ -19,6 +20,20 @@ interface SalesDao {
 
     @Query("SELECT IFNULL(SUM(paid), 0) FROM sales_table")
     fun observeSales(): Flow<Double>
+
+
+    @Query("""
+        SELECT *
+        FROM customer_table
+    """)
+    fun observeCustomersList() : Flow<List<CustomerEntity>>
+
+
+    @Query("""
+    SELECT COUNT(*) FROM sales_table 
+    WHERE customerId = :customerId AND date = :date
+""")
+    suspend fun countSalesForDate(customerId: String, date: LocalDate): Int
 
     /*
     * @param targetDate The specific date (e.g., LocalDate.of(2025, 11, 17))

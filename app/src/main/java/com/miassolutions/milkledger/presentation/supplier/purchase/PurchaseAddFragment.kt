@@ -84,7 +84,8 @@ class PurchaseAddFragment : Fragment() {
 
     private fun setupSupplierDropdown() {
         viewModel.suppliers.observe(viewLifecycleOwner) { list ->
-            val names = list.map { it.supplierName }
+            val sorted = list.sortedBy { it.sortOrder }
+            val names = sorted.map { it.supplierName }
 
             val adapter = ArrayAdapter(
                 requireContext(),

@@ -30,6 +30,11 @@ class SalesRepository @Inject constructor(
         return salesDao.getCustomerBalanceHistory(customerId)
     }
 
+    fun observeCustomersList(): Flow<List<CustomerEntity>> = salesDao.observeCustomersList()
+
+    suspend fun isDuplicateSale(customerId: String, date: LocalDate): Boolean =
+        salesDao.countSalesForDate(customerId, date) > 0
+
 
     private companion object {
         private const val TAG = "SalesRepository"
