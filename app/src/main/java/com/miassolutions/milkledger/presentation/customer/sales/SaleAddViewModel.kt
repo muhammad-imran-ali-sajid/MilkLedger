@@ -46,6 +46,8 @@ class SaleAddViewModel @Inject constructor(
         }
     }
 
+
+
     fun addSale(sale: SalesEntity) {
         viewModelScope.launch {
             repository.insertSale(sale)

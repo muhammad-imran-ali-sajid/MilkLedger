@@ -21,6 +21,7 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.databinding.BottomsheetAddSalesBinding
+import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import kotlin.math.roundToInt
@@ -61,6 +62,22 @@ class SaleAddFragment : Fragment() {
         }
     }
 
+
+    private fun showCustomerBalanceHistory(id: String, name: String) {
+        val btmSheet = CustomerBalanceHistoryBottomSheet.newInstance(id, name)
+        btmSheet.setOnSelectedListener { item ->
+
+            // 🔥 Set paid date
+            dateSelected = item.date
+
+            binding.btnSelectDate.text = item.date.toDisplayDate()
+
+            // Optional: Set payment equal to customer's chosen history balance
+            binding.etPayment.setText(item.balance.toPriceStr())
+        }
+        btmSheet.show(childFragmentManager, null)
+    }
+
     // ---------------------------------------------------------------------
     // CUSTOMER DROPDOWN
     // ---------------------------------------------------------------------
@@ -87,6 +104,7 @@ class SaleAddFragment : Fragment() {
 
     private fun updateCustomerUI() {
         val c = selectedCustomer ?: return
+
         binding.tvRate.text = c.customerRate.toRoundedStr()
     }
 
@@ -94,6 +112,12 @@ class SaleAddFragment : Fragment() {
     // LISTENERS
     // ---------------------------------------------------------------------
     private fun setupListeners() = binding.apply {
+
+        btnSelectDate.setOnClickListener {
+            val id = selectedCustomer?.customerId ?: ""
+            val name = selectedCustomer?.customerName ?: ""
+            showCustomerBalanceHistory(id, name)
+        }
 
         val recalc = { recalcAll() }
 
@@ -159,19 +183,7 @@ class SaleAddFragment : Fragment() {
         // initial date label
         btnSelectDate.text = LocalDate.now().toDisplayDate()
 
-        btnSelectDate.setOnClickListener {
-            val role = SharedPrefsHelper.getUserRole(requireContext())
-            val isUserAuthorized = role == "admin"
 
-            showExpenseDatePicker(
-                isAuthorized = isUserAuthorized,
-                initialDate = LocalDate.now(),
-                onPicked = { selectedDate: LocalDate ->
-                    dateSelected = selectedDate
-                    btnSelectDate.text = selectedDate.toDisplayDate()
-                }
-            )
-        }
     }
 
     // ---------------------------------------------------------------------
