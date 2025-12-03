@@ -15,15 +15,7 @@ import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -31,218 +23,189 @@ import javax.inject.Inject
 @HiltViewModel
 class SalesViewModel @Inject constructor(
     private val repository: SalesRepository,
-    private val pRepo: PurchaseRepository
+    private val purchaseRepo: PurchaseRepository
 ) : ViewModel() {
 
-
-    // ----------------------------------------------------------
-    // 🌟 UI State
-    // ----------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // UI State — Clean Like PurchaseUiState
+    // -------------------------------------------------------------------------
     private val _uiState = MutableStateFlow(SalesUiState())
     val uiState: StateFlow<SalesUiState> = _uiState.asStateFlow()
 
-    // ----------------------------------------------------------
-    // ⚙️ Initialize with today's sales
-    // ----------------------------------------------------------
-    init {
-        // Start observing for today's date
-        observeSalesForDate(_uiState.value.currentDate)
-        loadPaidSales()
+    // -------------------------------------------------------------------------
+    // Paid sales for the selected date
+    // -------------------------------------------------------------------------
+    private val _paidSalesList = MutableStateFlow<List<CustomerPaidSummary>>(emptyList())
+    val paidSalesList: StateFlow<List<CustomerPaidSummary>> = _paidSalesList.asStateFlow()
 
+    // -------------------------------------------------------------------------
+    // Balance History
+    // -------------------------------------------------------------------------
+    private val _balanceHistory = MutableStateFlow<List<BalanceHistory>>(emptyList())
+    val balanceHistory: StateFlow<List<BalanceHistory>> = _balanceHistory.asStateFlow()
+
+    // -------------------------------------------------------------------------
+    // Init — Same pattern as PurchaseViewModel
+    // -------------------------------------------------------------------------
+    init {
+        observeSalesForDate(_uiState.value.currentDate)
+        observePaidSales(_uiState.value.currentDate)
     }
 
-    // State to hold the data, starting with an empty list
-    private val _paidSalesList = MutableStateFlow<List<CustomerPaidSummary>>(emptyList())
-    val paidSalesList: StateFlow<List<CustomerPaidSummary>> = _paidSalesList
+    // -------------------------------------------------------------------------
+    // Load Balance History
+    // -------------------------------------------------------------------------
+    fun loadBalanceHistory(customerId: String) = viewModelScope.launch {
+        val list = repository.getBalanceHistory(customerId)
+        _balanceHistory.value = list
+        Log.d("SalesVM", "Balance history loaded for: $customerId size=${list.size}")
+    }
 
-
-    private fun loadPaidSales() {
-        repository.getPaidSalesForDate(_uiState.value.currentDate)
-            // Use onEach to update the StateFlow whenever the data changes in the DB
-            .onEach { list ->
-                _paidSalesList.value = list
-                Log.d("SalesViewModel", "loadPaidSales: $list")
-            }
-            .catch { exception ->
-                // Handle errors, e.g., log them or update a separate error StateFlow
-                println("Error loading paid sales: $exception")
-            }
-            // Start collecting the Flow in the ViewModel's scope
+    // -------------------------------------------------------------------------
+    // Observe paid sales for specific date
+    // -------------------------------------------------------------------------
+    private fun observePaidSales(date: LocalDate) {
+        repository.getPaidSalesForDate(date)
+            .onEach { list -> _paidSalesList.value = list }
+            .catch { Log.e("SalesVM", "Paid sales error: $it") }
             .launchIn(viewModelScope)
     }
 
-
-    private val _balanceHistory = MutableStateFlow<List<BalanceHistory>>(emptyList())
-    val balanceHistory: StateFlow<List<BalanceHistory>> get() = _balanceHistory
-
-
-    fun getBalanceHistory(customerId: String) = viewModelScope.launch {
-        // ⚠️ Redundancy Fix: Call the repository once
-        val history = repository.getBalanceHistory(customerId)
-
-        _balanceHistory.value = history
-
-        // 💡 Logging the input ID is crucial for debugging
-        Log.d(
-            "SalesViewModel",
-            "Loaded Balance History for ID: $customerId. Items: ${history.size}"
-        )
-    }
-
-
-    // ----------------------------------------------------------
-    // 🧮 Update Sale Entry Manually
-    // ----------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Update sale manually (same pattern as updatePurchaseManually)
+    // -------------------------------------------------------------------------
     fun updateSaleManually(updated: SalesEntity) {
         viewModelScope.launch {
-            // Recalculate price based on milk parameters
             val newPrice = MilkCalculationUtils.calculateCustomerPrice(
-                rate = updated.rateUsed,
                 volume = updated.volume,
                 deduction = updated.deduction,
+                rate = updated.rateUsed
             )
 
-            // NOTE: The 'deduction' is usually a volume/quantity deduction before pricing,
-            // so we calculate netMilk here, which is essential for the calculation utility.
             val netMilk = updated.volume - updated.deduction
 
-            val finalEntry = updated.copy(
+            val final = updated.copy(
                 price = newPrice,
-                netMilk = netMilk // Ensure netMilk is correctly calculated
+                netMilk = netMilk
             )
-            repository.updateSale(finalEntry)
+
+            repository.updateSale(final)
         }
     }
 
-    // ----------------------------------------------------------
-    // 📅 When date changes
-    // ----------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Handle Date Selection (Same logic as PurchaseViewModel.onDateSelected)
+    // -------------------------------------------------------------------------
     fun onDateSelected(date: LocalDate) {
         if (date != _uiState.value.currentDate) {
-            // 1. Update the UI state date immediately
             _uiState.update { it.copy(currentDate = date) }
-
-            // 2. Start the combined setup and observation logic
             observeSalesForDate(date)
+            observePaidSales(date)
         }
     }
 
-    // ----------------------------------------------------------
-    // 🔁 Combined logic for setup (once) and observation (real-time)
-    // ----------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // Clean Observe Logic — SAME STYLE AS PurchaseViewModel.observeForDate()
+    // -------------------------------------------------------------------------
     private var salesJob: Job? = null
 
-    // Renamed for clarity: observeForDate -> observeSalesForDate
     private fun observeSalesForDate(date: LocalDate) {
         salesJob?.cancel()
+        salesJob = viewModelScope.launch {
 
-        // 1. **CRITICAL FIX:** Perform the initial data setup/insertion OUTSIDE of the Flow collection.
-        // This ensures the local write does not immediately trigger the flow again.
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) } // START LOADING
+            // Set loading
+            _uiState.update { it.copy(isLoading = true) }
 
+            // Ensure all customers have an entry
             ensureSalesEntriesExist(date)
 
+            repository.getSalesByDate(date).collectLatest { list ->
 
-        // 2. Start the real-time observation job
+                val sorted = list.sortedBy { it.customer.sortOrder }
+                val salesList = sorted.map { it.toSalesList() }
 
-            _uiState.update { it.copy(isLoading = true) } // START LOADING
+                val totalVolume = salesList.sumOf { it.volume }
+                val totalDeduction = salesList.sumOf { it.deduction }
+                val totalNet = salesList.sumOf { it.netVolume }
+                val totalPrice = salesList.sumOf { it.price }
+                val received = salesList.sumOf { it.received }
+                val totalBalance = salesList.sumOf { it.price - it.received }
 
-            repository.getSalesByDate(date).collectLatest { sales ->
-                val sortedSales = sales.sortedBy { it.customer.sortOrder }
-                val saleList = sortedSales.map { it.toSalesList() }
-
-
-                val totalVolume = saleList.sumOf { it.volume }
-                val totalDeduction = saleList.sumOf { it.deduction }
-
-                val validForAvg = saleList.filter { it.rate > 0.0 }
-                val aTotalPrice = validForAvg.sumOf { it.price }
-
-                val receivedAmount = validForAvg.sumOf { it.received }
-
-                val aTotalVolume = validForAvg.sumOf { it.volume }
-
-                // as per original ledger
                 val purchaseTotalVolume =
-                    pRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
+                    purchaseRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
 
-
-                val grandTotalPrice = saleList.sumOf { it.price }
-                val totalNetMilk = saleList.sumOf { it.netVolume }
-                val totalBalance = saleList.sumOf { it.price - it.received }
-
-                val avgRatePerLiter =
-                    if (aTotalVolume > 0) aTotalPrice / purchaseTotalVolume else 0.0
+                val avgRate =
+                    if (purchaseTotalVolume > 0) totalPrice / purchaseTotalVolume else 0.0
 
                 _uiState.update {
                     it.copy(
                         currentDate = date,
-                        salesForDate = saleList,
+                        salesForDate = salesList,
                         totalMilk = totalVolume,
                         totalDeduction = totalDeduction,
-                        totalBalance = totalBalance, // Use totalAmountDue for consistency
-                        totalNetMilk = totalNetMilk,
-                        grandSaleTotalForDate = grandTotalPrice,
-                        receivedAmount = receivedAmount,
-                        avgRatePerLiter = avgRatePerLiter,
-                        isLoading = false,
+                        totalNetMilk = totalNet,
+                        grandSaleTotalForDate = totalPrice,
+                        receivedAmount = received,
+                        totalBalance = totalBalance,
+                        avgRatePerLiter = avgRate,
                         pdfSalesSummary = PdfSalesSummary(
                             totalQty = totalVolume.toRoundedStr(),
                             totalDeduction = totalDeduction.toRoundedStr(),
-                            totalAmount = avgRatePerLiter.toPriceStr(),
-                            totalPaid = avgRatePerLiter.toRoundedStr(),
-                            balanceDue = avgRatePerLiter.toRoundedStr()
-                        )
+                            totalAmount = totalPrice.toPriceStr(),
+                            totalPaid = received.toPriceStr(),
+                            balanceDue = totalBalance.toPriceStr()
+                        ),
+                        isLoading = false
                     )
                 }
             }
         }
     }
 
-    /**
-     * Helper function to check if all customers have a sales entry for the given date,
-     * and inserts a blank entry if one is missing.
-     */
+    // -------------------------------------------------------------------------
+    // Ensure each customer has an entry — SAME STYLE AS Purchase Ensure Logic
+    // -------------------------------------------------------------------------
     private suspend fun ensureSalesEntriesExist(date: LocalDate) {
         val allCustomers = repository.getAllCustomers().first()
-        val existingSales = repository.getSalesByDateOnce(date)
+        val existing = repository.getSalesByDateOnce(date)
 
-        val missingCustomers = allCustomers.filterNot { customer ->
-            existingSales.any { it.customer.customerId == customer.customerId }
+        val missing = allCustomers.filterNot { customer ->
+            existing.any { it.customer.customerId == customer.customerId }
         }
 
-        missingCustomers.forEach { customer ->
-            val newSale = SalesEntity(
-                saleId = "${customer.customerId}_${date.toString()}",
-                customerId = customer.customerId,
+        missing.forEach { c ->
+            val sale = SalesEntity(
+                saleId = "${c.customerId}_$date",
+                customerId = c.customerId,
                 date = date,
                 volume = 0.0,
                 deduction = 0.0,
                 netMilk = 0.0,
                 price = 0.0,
                 paid = 0.0,
-                rateUsed = customer.customerRate,
+                rateUsed = c.customerRate,
                 balance = 0.0
             )
-            repository.insertSale(newSale)
+            repository.insertSale(sale)
         }
     }
 
 
-    // ----------------------------------------------------------
-    // ⚡ Handle UI Events
-    // ----------------------------------------------------------
+
+    // -------------------------------------------------------------------------
+    // Handle UI Events — Same Style As Purchase
+    // -------------------------------------------------------------------------
     fun onEvent(event: SalesUiEvent) {
         when (event) {
             is SalesUiEvent.OnCustomerSelected ->
                 _uiState.update { it.copy(navToLedgerForCustomerId = event.supplierId) }
 
-            // SelectDate event now just updates the date and triggers the observation logic
             is SalesUiEvent.SelectDate ->
                 onDateSelected(event.date)
         }
     }
 
-
+    fun onLedgerNavigated() {
+        _uiState.update { it.copy(navToLedgerForCustomerId = null) }
+    }
 }

@@ -45,6 +45,15 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_selected_date"
         tools:listitem="@layout/item_sales" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddSale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/rvSales"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <com.miassolutions.milkledger.core.util.CollapsibleCardView
         android:id="@+id/cardSalesSummary"

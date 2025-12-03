@@ -77,7 +77,7 @@ class CustomerBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
 
         binding.rvBalanceHistory.adapter = adapter
 
-        viewModel.getBalanceHistory(customerId)
+        viewModel.loadBalanceHistory(customerId)
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

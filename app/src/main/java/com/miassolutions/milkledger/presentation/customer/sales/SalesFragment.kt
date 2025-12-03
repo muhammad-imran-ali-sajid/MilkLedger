@@ -45,6 +45,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         return R.menu.menu_sales
     }
 
+
     override fun onMenuCreated(menu: Menu) {
 
         val pdfMenuItem = menu.findItem(R.id.action_sale_pdf)
@@ -200,6 +201,10 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
         }
 
+        binding.fabAddSale.setOnClickListener {
+            findNavController().navigate(SalesFragmentDirections.actionSalesFragmentToSaleAddFragment())
+        }
+
 
     }
 
@@ -314,7 +319,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         }
     }
 
-    private fun showEditSaleBottomSheet(sale : Sale) {
+    private fun showEditSaleBottomSheet(sale: Sale) {
         if (!isEditable) {
             showSnackbar("Enable from the top menu switch")
             return

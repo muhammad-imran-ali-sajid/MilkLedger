@@ -44,6 +44,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_salesFragment_to_saleAddFragment"
+            app:destination="@id/saleAddFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -165,4 +168,9 @@
         tools:layout="@layout/bottomsheet_add_purchase"
         android:name="com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseAddFragment"
         android:label="PurchaseAddFragment" />
+    <fragment
+        android:id="@+id/saleAddFragment"
+        tools:layout="@layout/bottomsheet_add_sales"
+        android:name="com.miassolutions.milkledger.presentation.customer.sales.SaleAddFragment"
+        android:label="SaleAddFragment" />
 </navigation>
