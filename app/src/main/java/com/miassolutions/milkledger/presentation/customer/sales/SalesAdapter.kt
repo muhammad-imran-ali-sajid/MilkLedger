@@ -76,8 +76,9 @@ class SalesEntryAdapter(
             tvBalance.setTextColor(textColor(balance))
 
 
-            btnBalance.setOnClickListener {
+            btnBalance.setOnLongClickListener {
                 onBalanceClick(item.customerId, item.name)
+                true
             }
 
             if (item.notes.isNullOrBlank()) {
