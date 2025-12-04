@@ -80,6 +80,11 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
 
             adapter.submitList(state.filteredList)
 
+
+            val isEmpty = state.filteredList.isEmpty()
+            binding.emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.rvExpenses.visibility = if (isEmpty) View.GONE else View.VISIBLE
+
             binding.apply {
                 val total = state.businessTotalExpenses + state.personalTotalExpenses
                 tvTotalExpense.text = total.toRoundedStr()
