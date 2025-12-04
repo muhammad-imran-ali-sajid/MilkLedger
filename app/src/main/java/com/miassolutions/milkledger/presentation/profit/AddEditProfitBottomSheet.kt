@@ -1,13 +1,11 @@
 package com.miassolutions.milkledger.presentation.profit
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -16,10 +14,8 @@ import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.BottomsheetEditProfitBinding
-import com.miassolutions.milkledger.domain.model.Profit
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
@@ -43,6 +39,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private var _binding: BottomsheetEditProfitBinding? = null
     private val binding get() = _binding!!
+
 
     private var receivedSelectedDate: LocalDate? = null
 
@@ -69,7 +66,8 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupUI() = with(binding) {
         if (existingProfit != null) {
-            etTodayProfit.setText(existingProfit!!.profit.toString())
+            tvNetProfit.text = existingProfit!!.profit.toString()
+
             tvDate.text = existingProfit!!.date.toDisplayFormat()
             etProfitReceived.setText(existingProfit!!.profitReceived.toString())
             etNotes.setText(existingProfit!!.notes)
@@ -84,19 +82,29 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.todayNetProfit.collectLatest {
-                    binding.etTodayProfit.setText(it.toPriceStr())
+                launch {
+                    viewModel.todayNetProfit.collectLatest {
+                        binding.tvNetProfit.text = it.toPriceStr()
+                    }
+                }
+
+                launch {
+                    viewModel.profitAfterPersonal.collectLatest { value ->
+
+                        binding.tvProfitAfterPersonal.text = value.toPriceStr()
+                        binding.etProfitReceived.setHint(value.toPriceStr())
+                        binding.etProfitLayout.isExpandedHintEnabled = false
+                    }
                 }
             }
-
         }
+
 
         tvDate.setOnClickListener {
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-            val isUserAuthorized = isAdmin // Replace with actual auth check
 
             showExpenseDatePicker(
-                isAuthorized = isUserAuthorized,
+                isAuthorized = isAdmin,
                 initialDate = LocalDate.now(),
                 onPicked = { selectedDate: LocalDate ->
                     tvDate.text = selectedDate.toDisplayFormat()
@@ -120,18 +128,11 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
 
-            val todayProfit = etTodayProfit.text.toString().toDouble()
+            val todayProfit = tvNetProfit.text.toString().toDouble()
 
 
             val notes = etNotes.text.toString()
 
-//            val newProfit = ProfitListModel(
-//                netProfit = todayProfit,
-//                profitId = existingProfit?.id ?: UUID.randomUUID().toString(),
-//                receivedDate = receivedSelectedDate ?: LocalDate.now(),
-//                receivedProfit = profitStr.toDouble(),
-//                notes = notes
-//            )
 
             val newProfit = ProfitListModel(
                 id = existingProfit?.id ?: UUID.randomUUID().toString(),

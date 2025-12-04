@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -33,6 +34,16 @@ class ProfitViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private val _selectedDate = MutableStateFlow(LocalDate.now())
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val profitAfterPersonal: StateFlow<Double> = _selectedDate
+        .flatMapLatest { date ->
+            repository.getProfitAfterPersonalExpenses(date)
+        }
+        .map { it ?: 0.0 }   // <-- FIX: handle null values
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
+
 
     init {
         loadProfitDetails()
