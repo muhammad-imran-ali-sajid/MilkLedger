@@ -19,33 +19,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
+        android:layout_marginBottom="4dp"
         android:text="Add Purchases"
         android:textColor="@color/white"
         app:icon="@drawable/ic_add"
         app:iconTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/rv_purchases"
+        app:layout_constraintBottom_toTopOf="@+id/card_summary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+
 
 
     <include
         layout="@layout/date_header_layout"
         android:id="@+id/dateHeader"/>
-    <!-- Date Text -->
-<!--    <TextView-->
-<!--        android:id="@+id/tv_selected_date"-->
-<!--        android:layout_width="0dp"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:clickable="true"-->
-<!--        android:focusable="true"-->
-<!--        android:padding="8dp"-->
-<!--        android:gravity="center_horizontal"-->
-<!--        android:text="12-10-2025"-->
-<!--        android:textSize="20sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+
+    <include
+        android:id="@+id/emptyLayout"
+        layout="@layout/layout_empty_box"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_purchases"

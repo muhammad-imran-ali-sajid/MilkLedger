@@ -27,18 +27,6 @@ data class SalesUiState(
 )
 
 
-//data class SalePdfReport(
-//    val customerName: String = "",
-//    val date: String = "",
-//    val receiptId: String = "",
-//    val totalMilk: Double = 0.0,
-//    val totalNetMilk: Double = 0.0,
-//    val totalDeduction: Double = 0.0,
-//    val totalAmount: Double = 0.0,
-//    val totalPaid: Double = 0.0,
-//    val totalBalance: Double = 0.0,
-//
-//    )
 
 
 sealed class SalesUiEvent {

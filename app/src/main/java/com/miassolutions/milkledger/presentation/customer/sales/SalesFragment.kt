@@ -319,6 +319,10 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
             adapter.submitList(state.salesForDate)
 
+            val isEmpty = state.salesForDate.isEmpty()
+            binding.emptyLayout.emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.rvSales.visibility = if (isEmpty) View.GONE else View.VISIBLE
+
             binding.apply {
                 dateHeader.tvSelectedDate.text = state.currentDate.toDisplayFormat()
 

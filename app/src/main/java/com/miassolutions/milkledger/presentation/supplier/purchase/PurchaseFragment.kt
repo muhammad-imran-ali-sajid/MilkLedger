@@ -143,6 +143,17 @@ class PurchaseFragment :
                     if (state.isLoading) View.VISIBLE else View.GONE
 
                 purchaseAdapter.submitList(state.purchasesForDate)
+
+
+                val isEmpty = state.purchasesForDate.isEmpty()
+
+                binding.emptyLayout.emptyTitle.text = "No purchase yet"
+                binding.emptyLayout.emptySubtitle.text = "Tap the + button to add your first purchase"
+
+                binding.emptyLayout.emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                binding.rvPurchases.visibility = if (isEmpty) View.GONE else View.VISIBLE
+
+
                 binding.dateHeader.tvSelectedDate.text = state.currentDate.toDisplayFormat()
 
 

@@ -8,8 +8,8 @@
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="200dp"
-        android:visibility="gone"
         android:layout_height="200dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/rvSales"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,23 +17,32 @@
 
 
     <include
-        layout="@layout/date_header_layout"
-        android:id="@+id/dateHeader"/>
+        android:id="@+id/emptyLayout"
+        layout="@layout/layout_empty_box"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <include
+        android:id="@+id/dateHeader"
+        layout="@layout/date_header_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSales"
         style="@style/RecyclerViewStyle"
-        android:paddingHorizontal="8dp"
-
         android:layout_width="0dp"
+
         android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="62dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/cardSalesSummary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        android:paddingBottom="62dp"
-        android:clipToPadding="false"
         app:layout_constraintTop_toBottomOf="@+id/dateHeader"
         tools:listitem="@layout/item_sales" />
 
@@ -41,16 +50,15 @@
         android:id="@+id/fabAddSale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
 
+        android:layout_marginBottom="4dp"
         android:text="Add Sales"
         android:textColor="@color/white"
         app:icon="@drawable/ic_add"
         app:iconTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/rvSales"
+        app:layout_constraintBottom_toTopOf="@id/cardSalesSummary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 
     <com.miassolutions.milkledger.core.util.CollapsibleCardView
