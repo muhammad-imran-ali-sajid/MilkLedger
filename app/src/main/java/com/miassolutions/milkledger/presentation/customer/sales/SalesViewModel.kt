@@ -105,6 +105,16 @@ class SalesViewModel @Inject constructor(
         }
     }
 
+    fun goToNextDate() {
+        val next = _uiState.value.currentDate.plusDays(1)
+        onDateSelected(next)
+    }
+
+    fun goToPreviousDate() {
+        val prev = _uiState.value.currentDate.minusDays(1)
+        onDateSelected(prev)
+    }
+
     // -------------------------------------------------------------------------
     // Observe sales for date (CLEAN — NO auto-generation logic)
     // -------------------------------------------------------------------------

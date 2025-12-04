@@ -184,7 +184,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     }
 
     override fun setupListeners() {
-        binding.tvSelectedDate.setOnClickListener {
+        binding.dateHeader.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
 
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
@@ -203,6 +203,15 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
         binding.fabAddSale.setOnClickListener {
             findNavController().navigate(SalesFragmentDirections.actionSalesFragmentToSaleAddFragment())
+        }
+
+
+        binding.dateHeader.btnPrevDate.setOnClickListener {
+            viewModel.goToPreviousDate()
+        }
+
+        binding.dateHeader.btnNextDate.setOnClickListener {
+            viewModel.goToNextDate()
         }
 
 
@@ -311,7 +320,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             adapter.submitList(state.salesForDate)
 
             binding.apply {
-                tvSelectedDate.text = state.currentDate.toDisplayFormat()
+                dateHeader.tvSelectedDate.text = state.currentDate.toDisplayFormat()
 
                 val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
                 initializeEditModeState(isAdmin, state.currentDate)

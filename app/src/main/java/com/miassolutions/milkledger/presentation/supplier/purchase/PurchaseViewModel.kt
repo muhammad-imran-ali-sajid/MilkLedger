@@ -88,6 +88,16 @@ class PurchaseViewModel @Inject constructor(
         }
     }
 
+    fun goToNextDate() {
+        val next = _uiState.value.currentDate.plusDays(1)
+        onDateSelected(next)
+    }
+
+    fun goToPreviousDate() {
+        val prev = _uiState.value.currentDate.minusDays(1)
+        onDateSelected(prev)
+    }
+
     fun onDateSelected(date: LocalDate) {
         if (date != _uiState.value.currentDate) {
             _uiState.update { it.copy(currentDate = date) }

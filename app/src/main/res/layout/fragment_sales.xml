@@ -13,24 +13,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/rvSales"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
+        app:layout_constraintTop_toBottomOf="@+id/dateHeader" />
 
 
-    <TextView
-        android:id="@+id/tv_selected_date"
-        style="@style/TextLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:padding="8dp"
-        android:textColor="@color/white"
-        android:text="12/10/2025"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include
+        layout="@layout/date_header_layout"
+        android:id="@+id/dateHeader"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSales"
@@ -46,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:paddingBottom="62dp"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date"
+        app:layout_constraintTop_toBottomOf="@+id/dateHeader"
         tools:listitem="@layout/item_sales" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

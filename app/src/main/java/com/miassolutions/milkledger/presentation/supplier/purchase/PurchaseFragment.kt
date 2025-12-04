@@ -50,7 +50,7 @@ class PurchaseFragment :
 
         val role = SharedPrefsHelper.getUserRole(requireContext())
 
-        binding.tvSelectedDate.setOnClickListener {
+        binding.dateHeader.tvSelectedDate.setOnClickListener {
             val currentDate = viewModel.uiState.value.currentDate
             // Assume you fetch the authorization status dynamically
             isUserAuthorized = role == "admin"
@@ -76,6 +76,14 @@ class PurchaseFragment :
         binding.fabAddPurchase.setOnClickListener {
             val dest = PurchaseFragmentDirections.actionPurchaseFragmentToPurchaseAddFragment()
             findNavController().navigate(dest)
+        }
+
+        binding.dateHeader.btnPrevDate.setOnClickListener {
+            viewModel.goToPreviousDate()
+        }
+
+        binding.dateHeader.btnNextDate.setOnClickListener {
+            viewModel.goToNextDate()
         }
     }
 
@@ -135,7 +143,9 @@ class PurchaseFragment :
                     if (state.isLoading) View.VISIBLE else View.GONE
 
                 purchaseAdapter.submitList(state.purchasesForDate)
-                binding.tvSelectedDate.text = state.currentDate.toDisplayFormat()
+                binding.dateHeader.tvSelectedDate.text = state.currentDate.toDisplayFormat()
+
+
 
                 showSummary(
                     milkAmount = state.totalVolume,

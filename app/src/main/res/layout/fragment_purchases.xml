@@ -12,7 +12,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/rv_purchases"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
+        app:layout_constraintTop_toBottomOf="@+id/dateHeader" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddPurchase"
@@ -28,21 +28,24 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
+    <include
+        layout="@layout/date_header_layout"
+        android:id="@+id/dateHeader"/>
     <!-- Date Text -->
-    <TextView
-        android:id="@+id/tv_selected_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="8dp"
-        android:gravity="center_horizontal"
-        android:text="12-10-2025"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_selected_date"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:clickable="true"-->
+<!--        android:focusable="true"-->
+<!--        android:padding="8dp"-->
+<!--        android:gravity="center_horizontal"-->
+<!--        android:text="12-10-2025"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_purchases"
@@ -55,7 +58,7 @@
         app:layout_constraintBottom_toTopOf="@id/card_summary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date"
+        app:layout_constraintTop_toBottomOf="@+id/dateHeader"
         tools:listitem="@layout/item_purchase" />
 
     <com.miassolutions.milkledger.core.util.CollapsibleCardView
