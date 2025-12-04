@@ -14,14 +14,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_selected_date" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddPurchase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+
+        android:text="Add Purchases"
+        android:textColor="@color/white"
+        app:icon="@drawable/ic_add"
+        app:iconTint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/rv_purchases"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <!-- Date Text -->
     <TextView
@@ -42,13 +47,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_purchases"
         android:layout_width="0dp"
+        style="@style/RecyclerViewStyle"
         android:layout_height="0dp"
-        android:scrollbars="vertical"
-        android:clipToPadding="false"
-        android:padding="4dp"
-        android:fadeScrollbars="true"
-        android:scrollbarSize="10dp"
-        android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_long_2"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="62dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/card_summary"
         app:layout_constraintEnd_toEndOf="parent"
