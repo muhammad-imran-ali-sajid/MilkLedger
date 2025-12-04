@@ -67,6 +67,8 @@ interface ReportsDao {
     @Query("SELECT SUM(milkPrice) FROM purchase_table WHERE date BETWEEN :start AND :end")
     fun getTotalPurchasesBetween(start: LocalDate, end: LocalDate): Flow<Double?>
 
+
+
     // ➕ All Records (Purchases)
     @Query("SELECT SUM(milkAmount) FROM purchase_table")
     fun getTotalMilkPurchaseAll(): Flow<Double?>
@@ -105,6 +107,8 @@ interface ReportsDao {
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE isDefault = 0")
     fun getTotalPersonalExpensesAll(): Flow<Double?>
 
+    @Query("SELECT SUM(expenseAmount) FROM expense_table")
+    fun getTotalExpensesAll(): Flow<Double?>
 
 
 
@@ -122,6 +126,9 @@ interface ReportsDao {
 
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date = :date")
     fun getTotalExpensesDaily(date: LocalDate): Flow<Double?>
+
+
+
 
 
 

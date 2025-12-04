@@ -127,7 +127,21 @@ class AnalyticsRepository @Inject constructor(
     }
 
 
-    fun getProfitAll(): Flow<Double> =
+    fun getProfitAfterPersonalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        combine(
+            reportsDao.getTotalSalesBetween(start, end),
+            reportsDao.getTotalExpensesBetween(start, end),
+            reportsDao.getTotalPurchasesBetween(start, end)
+        ) { s, e, p ->
+            val sales = s ?: 0.0
+            val purchases = p ?: 0.0
+            val expenses = e ?: 0.0
+            Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
+            sales - (purchases + expenses)
+        }
+
+
+    fun getBusinessProfitAll(): Flow<Double> =
         combine(
             reportsDao.getTotalSalesAll(),
             reportsDao.getTotalPurchasesAll(),
@@ -143,5 +157,19 @@ class AnalyticsRepository @Inject constructor(
 
         }
 
+    fun getProfitAllAfterPersonal(): Flow<Double> =
+        combine(
+            reportsDao.getTotalSalesAll(),
+            reportsDao.getTotalPurchasesAll(),
+            reportsDao.getTotalExpensesAll()
+        ) { sales, purchases, expenses ->
+            val totalSales = sales ?: 0.0
+            val totalPurchases = purchases ?: 0.0
+            val totalExpenses = expenses ?: 0.0
 
+
+
+            totalSales - (totalPurchases + totalExpenses)
+
+        }
 }

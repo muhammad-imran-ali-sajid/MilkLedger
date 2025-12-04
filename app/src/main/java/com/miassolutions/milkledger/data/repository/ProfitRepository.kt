@@ -115,7 +115,7 @@ class ProfitRepository @Inject constructor(
 
     fun getAllProfitList(): Flow<List<ProfitEntity>> = dao.getAllProfitFlow()
 
-    suspend fun getAll(): Flow<List<ProfitEntity>> = dao.getAllFlow()
+     fun getAllNetProfit(): Flow<List<ProfitEntity>> = dao.getAllFlow()
 
 
     // --------------------------------------------------------------------
@@ -166,13 +166,19 @@ class ProfitRepository @Inject constructor(
     // NET PROFIT CALCULATIONS (Sales - Purchases - Expenses)
     // --------------------------------------------------------------------
 
-    fun getNetProfit(): Flow<Double> = mDao.getProfitAll()
+    fun getNetBusinessProfit(): Flow<Double> = mDao.getBusinessProfitAll()
+
+    fun getNetProfitAfterPersonal() : Flow<Double> = mDao.getProfitAllAfterPersonal()
 
     fun getProfitToday(date: LocalDate): Flow<Double?> = mDao.getProfitToday(date)
 
-    fun getProfitAfterPersonalExpenses(date: LocalDate) : Flow<Double?> = mDao.getProfitAfterPersonalExpensesToday(date)
+    fun getProfitAfterPersonalExpenses(date: LocalDate): Flow<Double?> =
+        mDao.getProfitAfterPersonalExpensesToday(date)
 
-    suspend fun getNetProfitOnce(): Double = getNetProfit().firstOrZero()
+    fun getProfitAfterPersonalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+        mDao.getProfitAfterPersonalExpensesBetween(start, end)
+
+    suspend fun getNetProfitOnce(): Double = getNetBusinessProfit().firstOrZero()
 
     // Daily
     fun getNetBusinessProfitDaily(date: LocalDate): Flow<Double> =
