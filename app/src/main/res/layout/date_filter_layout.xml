@@ -84,7 +84,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:src="@drawable/ic_arrow_left"
-            app:tint="@color/white" />
+            app:tint="@color/black" />
 
         <TextView
             android:id="@+id/tvSelectedDate"
@@ -94,7 +94,6 @@
             android:gravity="center_horizontal"
             android:padding="8dp"
             android:text="12-10-2025"
-            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -106,7 +105,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:src="@drawable/ic_arrow_right"
-            app:tint="@color/white" />
+            app:tint="@color/black" />
     </LinearLayout>
 
 </LinearLayout>
