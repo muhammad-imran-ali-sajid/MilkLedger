@@ -103,23 +103,7 @@ class PurchaseAddFragment : Fragment() {
         }
     }
 
-    fun checkDuplication() {
-        viewModel.isDuplicatePurchase(
-            selectedSupplier?.supplierId,
-            dateSelected
-        )
 
-        viewModel.isDuplicate.observe(viewLifecycleOwner) { isDuplicate ->
-            if (isDuplicate) {
-                Toast.makeText(
-                    requireContext(),
-                    "${selectedSupplier?.supplierName} is already exist for ${dateSelected?.toDisplayFormat()}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-
-        }
-    }
 
     private fun updateSupplierUI() {
         val s = selectedSupplier ?: return

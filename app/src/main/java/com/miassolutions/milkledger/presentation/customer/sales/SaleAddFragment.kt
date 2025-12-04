@@ -16,6 +16,7 @@ import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayDate
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
@@ -37,6 +38,8 @@ class SaleAddFragment : Fragment() {
     private var selectedCustomer: CustomerEntity? = null
     private var currentBalance: Double = 0.0
     private var dateSelected: LocalDate? = null
+
+    private var balanceHistoryDate : LocalDate? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,7 +71,7 @@ class SaleAddFragment : Fragment() {
         btmSheet.setOnSelectedListener { item ->
 
             // 🔥 Set paid date
-            dateSelected = item.date
+            balanceHistoryDate = item.date
 
             binding.btnSelectDate.text = item.date.toDisplayDate()
 
@@ -85,6 +88,7 @@ class SaleAddFragment : Fragment() {
         viewModel.customers.observe(viewLifecycleOwner) { list ->
             val sorted = list.sortedBy { it.sortOrder }
             val names = sorted.map { it.customerName }
+
 
             val adapter = ArrayAdapter(
                 requireContext(),
@@ -117,6 +121,27 @@ class SaleAddFragment : Fragment() {
             val id = selectedCustomer?.customerId ?: ""
             val name = selectedCustomer?.customerName ?: ""
             showCustomerBalanceHistory(id, name)
+        }
+
+        binding.btnDate.text = LocalDate.now().toDisplayFormat()
+
+        binding.btnDate.setOnClickListener {
+            val role = SharedPrefsHelper.getUserRole(requireContext())
+            // Assume you fetch the authorization status dynamically
+            val isUserAuthorized = role == "admin"
+
+            showExpenseDatePicker(
+
+                isAuthorized = isUserAuthorized,
+                initialDate = LocalDate.now(),
+
+                // The selectedDate (LocalDate) is available here!
+                onPicked = { selectedDate: LocalDate ->
+                    dateSelected = selectedDate
+                    binding.btnDate.text = selectedDate.toDisplayFormat()
+
+                }
+            )
         }
 
         val recalc = { recalcAll() }
@@ -321,7 +346,7 @@ class SaleAddFragment : Fragment() {
             paid = paid,
             balance = balance,
             rateUsed = customer.customerRate,
-            paidDate = dateSelected,
+            paidDate = balanceHistoryDate,
             notes = binding.etNotes.text.toString()
         )
 
