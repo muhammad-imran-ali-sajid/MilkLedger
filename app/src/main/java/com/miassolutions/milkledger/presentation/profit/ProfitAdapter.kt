@@ -23,7 +23,7 @@ class ProfitAdapter(
             tvProfit.text = item.profit.toPriceStr()
             tvRemainingProfit.text = item.profitAfterPersonalExpenses?.toPriceStr()
             tvReceivedProfit.text = item.profitReceived.toPriceStr()
-            tvBalance.text = (item.profit - item.profitReceived).toPriceStr()
+            tvBalance.text = (item.profitAfterPersonalExpenses?.minus(item.profitReceived))?.toPriceStr()
 
             root.setOnClickListener { onItemClick(item) }
             root.setOnLongClickListener { onItemLongClick(item); true }

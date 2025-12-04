@@ -3,13 +3,9 @@ package com.miassolutions.milkledger.presentation.profit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
-import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.mapper.toEntity
-import com.miassolutions.milkledger.data.mapper.toProfit
-import com.miassolutions.milkledger.data.mapper.toProfitEntity
 import com.miassolutions.milkledger.data.mapper.toProfitList
 import com.miassolutions.milkledger.data.repository.ProfitRepository
-import com.miassolutions.milkledger.domain.model.Profit
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -120,13 +116,13 @@ class ProfitViewModel @Inject constructor(
                 repository.getDaily(date),
                 repository.getNetBusinessProfitDaily(date),
                 repository.getProfitAfterPersonalExpenses(date)
-            ) { dailyList, businessNet, personalExpenses ->
+            ) { dailyList, businessNet, profitAfterPersonal ->
 
-                val pae = personalExpenses ?: 0.0
+                val pae = profitAfterPersonal ?: 0.0
 
                 val profits = dailyList.map { it.toProfitList(pae) }
                 val totalReceived = profits.sumOf { it.profitReceived }
-                val remaining = businessNet - totalReceived
+                val remaining = profitAfterPersonal?.minus(totalReceived)
 
                 ProfitDailyResult(
                     list = profits,
@@ -142,7 +138,7 @@ class ProfitViewModel @Inject constructor(
                         netBusinessProfit = result.netBusinessProfit,
                         netProfitAfterPersonalExpenses = result.personalExpenses,
                         totalReceived = result.totalReceived,
-                        remainingProfit = result.remainingProfit,
+                        remainingProfit = result.remainingProfit ?: 0.0,
                         periodLabel = formatPeriodLabel(date, date),
                         startDate = date,
                         endDate = date
@@ -157,7 +153,7 @@ class ProfitViewModel @Inject constructor(
         val netBusinessProfit: Double,
         val personalExpenses: Double,
         val totalReceived: Double,
-        val remainingProfit: Double
+        val remainingProfit: Double?
     )
 
     // ------------------------------------------------------------------------------
