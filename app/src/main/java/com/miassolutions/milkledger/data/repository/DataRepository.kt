@@ -1,40 +1,30 @@
 package com.miassolutions.milkledger.data.repository
 
+import android.content.SharedPreferences
 import android.util.Log
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.miassolutions.milkledger.data.local.daos.CustomerDao
-import com.miassolutions.milkledger.data.local.daos.ExpensesDao
-import com.miassolutions.milkledger.data.local.daos.NoteDao
-import com.miassolutions.milkledger.data.local.daos.ProfitDao
-import com.miassolutions.milkledger.data.local.daos.PurchaseDao
-import com.miassolutions.milkledger.data.local.daos.SalesDao
-import com.miassolutions.milkledger.data.local.daos.SupplierDao
+import com.google.firebase.firestore.ListenerRegistration
+import com.miassolutions.milkledger.core.di.IoDispatcher
+import com.miassolutions.milkledger.data.local.daos.*
 import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.mapper.toEntityModel
 import com.miassolutions.milkledger.data.mapper.toRoomEntity
-import com.miassolutions.milkledger.data.remote.FirestoreCollections.CUSTOMERS
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.PROFITS
 import com.miassolutions.milkledger.data.remote.FirestoreCollections.EXPENSES
 import com.miassolutions.milkledger.data.remote.FirestoreCollections.NOTES
-import com.miassolutions.milkledger.data.remote.FirestoreCollections.PROFITS
-import com.miassolutions.milkledger.data.remote.FirestoreCollections.PURCHASES
 import com.miassolutions.milkledger.data.remote.FirestoreCollections.SALES
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.PURCHASES
 import com.miassolutions.milkledger.data.remote.FirestoreCollections.SUPPLIERS
-import com.miassolutions.milkledger.data.remote.model.FirestoreCustomer
-import com.miassolutions.milkledger.data.remote.model.FirestoreExpense
-import com.miassolutions.milkledger.data.remote.model.FirestoreNotes
-import com.miassolutions.milkledger.data.remote.model.FirestoreProfit
-import com.miassolutions.milkledger.data.remote.model.FirestorePurchase
-import com.miassolutions.milkledger.data.remote.model.FirestoreSales
-import com.miassolutions.milkledger.data.remote.model.FirestoreSupplier
-import dagger.hilt.android.scopes.ActivityRetainedScoped
-import jakarta.inject.Inject
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
+import com.miassolutions.milkledger.data.remote.FirestoreCollections.CUSTOMERS
+import com.miassolutions.milkledger.data.remote.model.*
+import kotlinx.coroutines.*
+import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@ActivityRetainedScoped
+@Singleton
 class DataRepository @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val supplierDao: SupplierDao,
@@ -43,226 +33,217 @@ class DataRepository @Inject constructor(
     private val salesDao: SalesDao,
     private val purchaseDao: PurchaseDao,
     private val notesDao: NoteDao,
-    private val profitDao: ProfitDao
+    private val profitDao: ProfitDao,
+    private val prefs: SharedPreferences,
+    @IoDispatcher private val io: CoroutineDispatcher
 ) {
-    private val TAG = "DataRepository"
 
-    /**
-     * Sets up real-time listeners for all necessary collections.
-     */
-    suspend fun setupRealtimeListeners() = supervisorScope {
-        Log.d(TAG, "Setting up real-time listeners in a SupervisorScope...")
+    private val TAG = "RepoOptimized"
 
-        // Launch each collection observer as a separate coroutine.
-        launch { observeCollectionChanges(SUPPLIERS) }
-        launch { observeCollectionChanges(CUSTOMERS) }
-        launch { observeCollectionChanges(SALES) }
-        launch { observeCollectionChanges(PURCHASES) }
-        launch { observeCollectionChanges(NOTES) }
-        launch { observeCollectionChanges(EXPENSES) }
-        launch { observeCollectionChanges(PROFITS) }
+    private val PREF_INITIAL_SYNC = "initial_sync_done"
+
+    private val listenerMap = ConcurrentHashMap<String, ListenerRegistration>()
+    private val skipFirstSnapshot = ConcurrentHashMap<String, Boolean>()
+
+    private val job = SupervisorJob()
+    private val scope = CoroutineScope(io + job)
+
+    @Volatile private var initialized = false
+
+    /** Call this ONCE per app start (Application.onCreate). */
+    fun initialize() {
+        if (initialized) return
+        initialized = true
+
+        scope.launch {
+            val firstSyncNeeded = !prefs.getBoolean(PREF_INITIAL_SYNC, false)
+
+            if (firstSyncNeeded) {
+                Log.d(TAG, "Initial sync required → performing full sync")
+                performInitialFullSync()
+                prefs.edit().putBoolean(PREF_INITIAL_SYNC, true).apply()
+            }
+
+            Log.d(TAG, "Attaching real-time listeners")
+            attachAllListeners()
+        }
     }
 
-    /**
-     * A generic function to set up a robust, real-time Firestore listener and update Room.
-     */
-    private suspend fun observeCollectionChanges(collectionPath: String) {
-        callbackFlow {
-            Log.d(TAG, "Starting listener for $collectionPath...")
+    // ----------------------------------------------------------------------
+    // INITIAL FULL SYNC
+    // ----------------------------------------------------------------------
 
-            val collectionRef = firestore.collection(collectionPath)
+    private suspend fun performInitialFullSync() = withContext(io) {
+        val jobs = listOf(
+            launch { syncOnce(SUPPLIERS) },
+            launch { syncOnce(CUSTOMERS) },
+            launch { syncOnce(SALES) },
+            launch { syncOnce(PURCHASES) },
+            launch { syncOnce(NOTES) },
+            launch { syncOnce(EXPENSES) },
+            launch { syncOnce(PROFITS) }
+        )
+        jobs.joinAll()
+    }
 
-            val listenerRegistration = collectionRef.addSnapshotListener { snapshot, e ->
+    private suspend fun syncOnce(collectionPath: String) = withContext(io) {
+        try {
+            Log.d(TAG, "syncOnce: $collectionPath")
+            val snapshot = Tasks.await(firestore.collection(collectionPath).get())
+
+            val docs = snapshot.documents
+            Log.d(TAG, "syncOnce: fetched ${docs.size} docs for $collectionPath")
+
+            when (collectionPath) {
+
+                SUPPLIERS -> supplierDao.upsertAll(
+                    docs.mapNotNull { it.toObject(FirestoreSupplier::class.java)?.toRoomEntity() }
+                )
+
+                CUSTOMERS -> customerDao.upsertAll(
+                    docs.mapNotNull { it.toObject(FirestoreCustomer::class.java)?.toRoomEntity() }
+                )
+
+                SALES -> salesDao.upsertAll(
+                    docs.mapNotNull { it.toObject(FirestoreSales::class.java)?.toEntityModel() }
+                )
+
+                PURCHASES -> purchaseDao.upsertAll(
+                    docs.mapNotNull { it.toObject(FirestorePurchase::class.java)?.toEntityModel() }
+                )
+
+                NOTES -> notesDao.upsertAll(
+                    docs.mapNotNull { it.toObject(FirestoreNotes::class.java)?.toEntity() }
+                )
+
+                EXPENSES -> expenseDao.upsertAll(
+                    docs.mapNotNull { it.toObject(FirestoreExpense::class.java)?.toEntityModel() }
+                )
+
+                PROFITS -> profitDao.upsertAll(
+                    docs.mapNotNull { it.toObject(FirestoreProfit::class.java)?.toEntity() }
+                )
+            }
+
+            skipFirstSnapshot[collectionPath] = true
+
+        } catch (e: Exception) {
+            Log.e(TAG, "syncOnce failed for $collectionPath: ${e.message}", e)
+        }
+    }
+
+    // ----------------------------------------------------------------------
+    // REAL-TIME LISTENERS
+    // ----------------------------------------------------------------------
+
+    private fun attachAllListeners() {
+        attachListener(SUPPLIERS)
+        attachListener(CUSTOMERS)
+        attachListener(SALES)
+        attachListener(PURCHASES)
+        attachListener(NOTES)
+        attachListener(EXPENSES)
+        attachListener(PROFITS)
+    }
+
+    private fun attachListener(collectionPath: String) {
+        if (listenerMap.containsKey(collectionPath)) return
+
+        Log.d(TAG, "Starting listener for $collectionPath")
+
+        val reg = firestore.collection(collectionPath)
+            .addSnapshotListener { snapshot, e ->
+
                 if (e != null) {
-                    Log.e(TAG, "Listen failed for $collectionPath: ${e.message}", e)
-                    // Close the flow with the exception to stop the collector
-                    close(e)
+                    Log.e(TAG, "Listen failed for $collectionPath: ${e.message}")
+                    return@addSnapshotListener
+                }
+                if (snapshot == null) return@addSnapshotListener
+
+                // Skip initial snapshot (we already synced data)
+                if (skipFirstSnapshot.remove(collectionPath) == true) {
+                    Log.d(TAG, "Skipping first snapshot for $collectionPath")
                     return@addSnapshotListener
                 }
 
-                if (snapshot != null) {
-                    val changes = snapshot.documentChanges
-                    Log.d(TAG, "Received ${changes.size} changes for $collectionPath.")
+                val changes = snapshot.documentChanges
+                if (changes.isEmpty()) return@addSnapshotListener
 
-                    // Launch in the flow's scope to perform the suspend DAO calls
-                    launch {
-                        try { // Robust error handling for DAO operations
-                            changes.forEach { change ->
-                                when (change.type) {
-                                    DocumentChange.Type.ADDED, DocumentChange.Type.MODIFIED -> {
-                                        upsertChangedDocument(collectionPath, change)
-                                    }
+                scope.launch {
+                    changes.forEach { change ->
+                        when (change.type) {
+                            DocumentChange.Type.ADDED,
+                            DocumentChange.Type.MODIFIED -> upsertChanged(collectionPath, change)
 
-                                    DocumentChange.Type.REMOVED -> {
-                                        deleteRemovedDocument(collectionPath, change)
-                                    }
-                                }
-                            }
-                        } catch (e: Exception) {
-                            // Log the database error but allow the listener to stay active
-                            Log.e(TAG, "DAO operation failed for $collectionPath: ${e.message}", e)
+                            DocumentChange.Type.REMOVED -> deleteChanged(collectionPath, change)
                         }
-                        trySend(Unit)
                     }
                 }
             }
 
-            // Clean up when the flow is cancelled
-            awaitClose {
-                Log.d(TAG, "Stopping listener for $collectionPath.")
-                listenerRegistration.remove()
-            }
-        }.collect {
-            // Keep the flow alive by collecting it
-        }
+        listenerMap[collectionPath] = reg
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private suspend fun upsertChangedDocument(collectionPath: String, change: DocumentChange) {
-        val modelClass = getModelClass(collectionPath) as Class<Any>
-        val cloudModel = change.document.toObject(modelClass)
-
-        when (collectionPath) {
-            SUPPLIERS -> (cloudModel as FirestoreSupplier).toRoomEntity().apply {
-                supplierDao.upsertAll(listOf(this))
-            }
-
-            CUSTOMERS -> (cloudModel as FirestoreCustomer).toRoomEntity().apply {
-                customerDao.upsertAll(listOf(this))
-            }
-
-            SALES -> (cloudModel as FirestoreSales).toEntityModel().apply {
-                salesDao.upsertAll(listOf(this))
-            }
-
-            PURCHASES -> (cloudModel as FirestorePurchase).toEntityModel().apply {
-                purchaseDao.upsertAll(listOf(this))
-            }
-
-            NOTES -> (cloudModel as FirestoreNotes).toEntity().apply {
-                notesDao.upsertAll(listOf(this))
-            }
-
-            EXPENSES -> (cloudModel as FirestoreExpense).toEntityModel().apply {
-                expenseDao.upsertAll(listOf(this))
-            }
-
-            PROFITS -> (cloudModel as FirestoreProfit).toEntity().apply {
-                profitDao.upsertAll(listOf(this))
-            }
-        }
-        Log.d(TAG, "UPSERTED: $collectionPath/${change.document.id}")
+    fun stopListeners() {
+        listenerMap.values.forEach { it.remove() }
+        listenerMap.clear()
+        Log.d(TAG, "All listeners stopped")
     }
 
-    // ✅ IMPLEMENTED: Delete the Room entry corresponding to the removed Firestore document.
-    private suspend fun deleteRemovedDocument(collectionPath: String, change: DocumentChange) {
-        val docId = change.document.id
-        when (collectionPath) {
-            SUPPLIERS -> {
-                supplierDao.deleteById(docId)
-                firestore.collection(PURCHASES)
-                    .whereEqualTo("supplierId", docId)
-                    .get()
-                    .addOnSuccessListener { snapshots ->
-                        snapshots?.forEach { doc ->
-                            firestore.collection(PURCHASES).document(doc.id).delete()
+    // ----------------------------------------------------------------------
+    // UPSERT & DELETE HANDLERS
+    // ----------------------------------------------------------------------
 
-                        }
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.e(
-                            TAG,
-                            "Failed to delete Firestore purchase for supplier $docId : ${exception.message}"
-                        )
-                    }
-                Log.d(TAG, "Deleted supplier $docId and their sales locally and in Firestore")
-            }
+    private suspend fun upsertChanged(collection: String, change: DocumentChange) = withContext(io) {
+        val doc = change.document
 
-            CUSTOMERS -> {
-                // Delete customer locally (Room cascade will remove local sales)
-                customerDao.deleteById(docId)
+        when (collection) {
 
-                // Also delete Firestore sales belonging to this customer
-                firestore.collection(SALES)
-                    .whereEqualTo("customerId", docId)
-                    .get()
-                    .addOnSuccessListener { snapshot ->
-                        snapshot?.forEach { doc ->
-                            firestore.collection(SALES).document(doc.id).delete()
-                        }
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e(
-                            TAG,
-                            "Failed to delete Firestore sales for customer $docId: ${e.message}"
-                        )
-                    }
+            SUPPLIERS -> supplierDao.upsertAll(
+                listOf(doc.toObject(FirestoreSupplier::class.java).toRoomEntity())
+            )
 
-                Log.d(TAG, "Deleted customer $docId and their sales locally and in Firestore")
-            }
+            CUSTOMERS -> customerDao.upsertAll(
+                listOf(doc.toObject(FirestoreCustomer::class.java).toRoomEntity())
+            )
 
-            EXPENSES -> {
-                expenseDao.deleteById(docId)
-                //also from the firestore
-                firestore.collection(EXPENSES)
-                    .whereEqualTo("expenseId", docId)
-                    .get()
-                    .addOnSuccessListener { snapshots ->
-                        snapshots?.forEach { doc ->
-                            firestore.collection(EXPENSES).document(doc.id).delete()
-                        }
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e(
-                            TAG,
-                            "Failed to delete Firestore expense  $docId: ${e.message}"
-                        )
-                    }
+            SALES -> salesDao.upsertAll(
+                listOf(doc.toObject(FirestoreSales::class.java).toEntityModel())
+            )
 
-                Log.d(TAG, "Deleted expense $docId from locally and in Firestore")
-            }
+            PURCHASES -> purchaseDao.upsertAll(
+                listOf(doc.toObject(FirestorePurchase::class.java).toEntityModel())
+            )
 
-            PROFITS -> {
-                profitDao.getProfitById(docId)
+            NOTES -> notesDao.upsertAll(
+                listOf(doc.toObject(FirestoreNotes::class.java).toEntity())
+            )
 
-                firestore.collection(PROFITS)
-                    .whereEqualTo("profitId", docId)
-                    .get()
-                    .addOnSuccessListener { snapshots ->
-                        snapshots?.forEach { doc ->
-                            firestore.collection(PROFITS).document(doc.id).delete()
-                        }
-                    }
-                    .addOnFailureListener { e ->
-                        Log.e(
-                            TAG,
-                            "Failed to delete Firestore profit  $docId: ${e.message}"
-                        )
-                    }
-                Log.d(TAG, "Deleted profit $docId from locally and in Firestore")
-            }
-//            "sales" -> salesDao.deleteById(docId)
-//            "notes" -> notesDao.deleteById(docId)
-//            "expenses" -> expenseDao.deleteById(docId)
+            EXPENSES -> expenseDao.upsertAll(
+                listOf(doc.toObject(FirestoreExpense::class.java).toEntityModel())
+            )
+
+            PROFITS -> profitDao.upsertAll(
+                listOf(doc.toObject(FirestoreProfit::class.java).toEntity())
+            )
         }
-        Log.d(TAG, "DELETED: $collectionPath/$docId")
+
+        Log.d(TAG, "UPSERTED: $collection/${doc.id}")
     }
 
+    private suspend fun deleteChanged(collection: String, change: DocumentChange) = withContext(io) {
+        val id = change.document.id
 
-    /** Helper function to determine the correct class for Firestore deserialization. */
-    @Suppress("UNCHECKED_CAST")
-    private fun getModelClass(collectionPath: String): Class<*> {
-        return when (collectionPath) {
-            SUPPLIERS -> FirestoreSupplier::class.java
-            CUSTOMERS -> FirestoreCustomer::class.java
-            SALES -> FirestoreSales::class.java
-            PURCHASES -> FirestorePurchase::class.java
-            NOTES -> FirestoreNotes::class.java
-            EXPENSES -> FirestoreExpense::class.java
-            PROFITS -> FirestoreProfit::class.java
-            else -> throw IllegalArgumentException("Unknown collection path: $collectionPath")
+        when (collection) {
+            SUPPLIERS -> supplierDao.deleteById(id)
+            CUSTOMERS -> customerDao.deleteById(id)
+            SALES -> salesDao.deleteSale(id)
+            PURCHASES -> purchaseDao.deletePurchase(id)
+            NOTES -> notesDao.deleteById(id)
+            EXPENSES -> expenseDao.deleteById(id)
+            PROFITS -> profitDao.deleteProfit(id)
         }
+
+        Log.d(TAG, "DELETED: $collection/$id")
     }
-
-
 }

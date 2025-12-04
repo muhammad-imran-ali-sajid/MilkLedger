@@ -22,17 +22,17 @@ class SyncViewModel @Inject constructor(
      * Triggers the full synchronization process.
      */
     fun startInitialSync() {
-        if (_syncState.value != SyncState.Loading) {
-            _syncState.value = SyncState.Loading
-            viewModelScope.launch {
-                try {
-                    dataRepository.setupRealtimeListeners()
-                    _syncState.value = SyncState.Success
-                } catch (e: Exception) {
-                    _syncState.value = SyncState.Error("Initial sync failed: ${e.message}")
-                }
-            }
-        }
+//        if (_syncState.value != SyncState.Loading) {
+//            _syncState.value = SyncState.Loading
+//            viewModelScope.launch {
+//                try {
+//                    dataRepository.setupRealtimeListeners()
+//                    _syncState.value = SyncState.Success
+//                } catch (e: Exception) {
+//                    _syncState.value = SyncState.Error("Initial sync failed: ${e.message}")
+//                }
+//            }
+//        }
     }
 }
 

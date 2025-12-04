@@ -8,14 +8,19 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
+import com.miassolutions.milkledger.data.repository.DataRepository
 import com.miassolutions.milkledger.databinding.ActivityLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 
 /**
  * A full-screen Activity demonstrating a Material 3 login form with only
  * Email/Username and Password, and a Forgot Password recovery link.
  */
+@AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
 
+    @Inject lateinit var dataRepository: DataRepository
     // Tag for logging purposes
     private val TAG = "LoginActivity"
 
@@ -145,6 +150,9 @@ class LoginActivity : AppCompatActivity() {
 
                 val role = doc.getString("role") ?: "user" // default to "user" if missing
                 SharedPrefsHelper.saveUserRole(this, role)
+
+                dataRepository.initialize()
+
 
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("role", role)
