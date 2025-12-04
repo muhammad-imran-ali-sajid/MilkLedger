@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.databinding.FragmentAddEditExpenseBinding
+import com.miassolutions.milkledger.databinding.FragmentAddExpenseBinding
 import com.miassolutions.milkledger.databinding.ItemPersonalExpenseBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -19,13 +19,13 @@ import java.util.UUID
 @AndroidEntryPoint
 class ExpenseAddFragment : Fragment() {
 
-    private var _binding: FragmentAddEditExpenseBinding? = null
+    private var _binding: FragmentAddExpenseBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: ExpenseViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentAddEditExpenseBinding.inflate(inflater, container, false)
+        _binding = FragmentAddExpenseBinding.inflate(inflater, container, false)
         return binding.root
     }
 

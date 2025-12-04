@@ -1,18 +1,14 @@
 package com.miassolutions.milkledger.presentation.expenses
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.data.mapper.toProfit
 import com.miassolutions.milkledger.data.repository.ExpensesRepository
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -54,7 +50,7 @@ class ExpenseViewModel @Inject constructor(
     }
 
     // EDIT MODE → Update single expense
-    fun saveExpense(entry: ExpensesEntity) = viewModelScope.launch {
+    fun updateExpense(entry: ExpensesEntity) = viewModelScope.launch {
         repository.upsertExpense(entry)
     }
 

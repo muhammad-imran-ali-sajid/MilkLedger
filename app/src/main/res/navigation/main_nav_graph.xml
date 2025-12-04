@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_expensesFragment_to_expenseAddEditFragment"
             app:destination="@id/expenseAddEditFragment" />
+        <action
+            android:id="@+id/action_expensesFragment_to_expenseEditBottomSheet"
+            app:destination="@id/expenseEditBottomSheet" />
     </fragment>
     <fragment
         android:id="@+id/salesFragment"
@@ -160,7 +163,7 @@
     <fragment
         android:id="@+id/expenseAddEditFragment"
 
-        tools:layout="@layout/fragment_add_edit_expense"
+        tools:layout="@layout/fragment_add_expense"
         android:name="com.miassolutions.milkledger.presentation.expenses.ExpenseAddFragment"
         android:label="Add Expenses" />
     <fragment
@@ -173,4 +176,9 @@
         android:name="com.miassolutions.milkledger.presentation.customer.sales.SaleAddFragment"
         android:label="Add Sales"
         tools:layout="@layout/bottomsheet_add_sales" />
+    <dialog
+        tools:layout="@layout/bottomsheet_edit_expense"
+        android:id="@+id/expenseEditBottomSheet"
+        android:name="com.miassolutions.milkledger.presentation.expenses.ExpenseEditBottomSheet"
+        android:label="ExpenseEditBottomSheet" />
 </navigation>
