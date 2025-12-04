@@ -263,9 +263,20 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
         adapter = SalesEntryAdapter(
             ::showEditSaleBottomSheet,
-            ::navToDetail
-        ) { id, name -> showCustomerBalanceHistory(id, name) }
+            ::navToDetail,
+            ::deleteSale,
+            ::showCustomerBalanceHistory
+        )
         binding.rvSales.adapter = adapter
+
+    }
+
+    private fun deleteSale(saleId: String) {
+        showDialog(
+            title = "Warning!!",
+            message = "This will delete the sale record",
+            onAction = { viewModel.deleteSale(saleId) }
+        )
 
     }
 

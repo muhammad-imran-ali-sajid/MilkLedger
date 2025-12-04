@@ -20,7 +20,8 @@ import kotlin.math.truncate
 class SalesEntryAdapter(
     private val onEditClick: (Sale) -> Unit,
     private val navToDetailClick: (String, String) -> Unit,
-    private val onBalanceClick: (String, String) -> Unit
+    private val onDeleteClick: (String) -> Unit,
+    private val onBalanceClick: (String, String) -> Unit,
 ) : BaseListAdapter<Sale, ItemSalesBinding>(
     diffCallback = object : DiffUtil.ItemCallback<Sale>() {
         override fun areItemsTheSame(
@@ -94,6 +95,11 @@ class SalesEntryAdapter(
 
             btnEditForm.setOnClickListener {
                 onEditClick(item)
+            }
+
+            tvName.setOnLongClickListener {
+                onDeleteClick(item.saleId)
+                true
             }
 
 

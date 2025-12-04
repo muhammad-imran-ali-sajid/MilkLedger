@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.mapper.toSalesList
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
@@ -155,6 +156,12 @@ class SalesViewModel @Inject constructor(
                     )
                 }
             }
+        }
+    }
+
+    fun deleteSale(saleId: String){
+        viewModelScope.launch {
+            repository.deleteSale(saleId)
         }
     }
 

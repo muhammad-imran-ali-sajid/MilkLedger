@@ -91,7 +91,7 @@ class SalesRepository @Inject constructor(
         // 1. Local delete for immediate UI update
         // NOTE: This requires salesDao.deleteById(id: String) to be implemented.
         // I will assume you implement a 'deleteById' function in SalesDao.
-//        salesDao.deleteById(saleId)
+        salesDao.deleteSale(saleId)
         Log.d(TAG, "Deleted sale locally: $saleId")
 
 
