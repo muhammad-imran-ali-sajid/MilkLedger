@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 data class Profit(
     val profitId: String,
     val receivedDate: LocalDate = LocalDate.now(),
-    val netProfit : Double ,
+    val netProfit : Double,
     val receivedProfit : Double = 0.0,
     val notes : String? = null,
 

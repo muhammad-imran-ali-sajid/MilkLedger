@@ -21,7 +21,7 @@ class ProfitAdapter(
         fun bind(item: Profit) = with(binding) {
             tvDate.text = item.receivedDate.toString()
             tvProfit.text = item.netProfit.toPriceStr()
-            tvProfitReceived.text = item.receivedProfit.toPriceStr()
+            tvReceivedProfit.text = item.receivedProfit.toPriceStr()
             tvBalance.text = (item.netProfit - item.receivedProfit).toPriceStr()
 
             root.setOnClickListener { onItemClick(item) }
