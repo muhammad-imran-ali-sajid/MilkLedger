@@ -27,6 +27,7 @@ class ExpensesRepository @Inject constructor(
     // ----------------------------------------------------------
 
     fun getDailyExpenses(date: LocalDate): Flow<List<ExpensesEntity>> = dao.getDailyExpenses(date)
+
     suspend fun getMonthlyExpenses(date: LocalDate): List<ExpensesEntity> {
         val ym = "${date.year}-${"%02d".format(date.monthValue)}"
         return dao.getMonthlyExpenses(ym)

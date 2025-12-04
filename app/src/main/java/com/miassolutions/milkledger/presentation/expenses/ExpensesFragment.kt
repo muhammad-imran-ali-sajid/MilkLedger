@@ -75,7 +75,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
                 if (state.isLoading) View.VISIBLE else View.GONE
 
             val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-            binding.tvSelectedDate.text = state.currentDate.format(formatter)
+            binding.dateHeader.tvSelectedDate.text = state.currentDate.format(formatter)
 
 
             adapter.submitList(state.filteredList)
@@ -115,17 +115,14 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
         }
 
 
-        tvSelectedDate.setOnClickListener {
-            val isAuth = SharedPrefsHelper.getUserRole(requireContext()) == "admin"
-            val initialDate = viewModel.uiState.value.currentDate
 
-            showExpenseDatePicker(
-                isAuthorized = isAuth,
-                initialDate = initialDate,
-                onPicked = { selected ->
-                    viewModel.onEvent(ExpensesUiEvent.SelectDate(selected))
-                }
-            )
+
+        binding.dateHeader.btnPrevDate.setOnClickListener {
+            viewModel.goToPreviousDate()
+        }
+
+        binding.dateHeader.btnNextDate.setOnClickListener {
+            viewModel.goToNextDate()
         }
     }
 }
