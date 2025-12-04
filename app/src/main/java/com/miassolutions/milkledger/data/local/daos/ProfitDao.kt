@@ -19,8 +19,8 @@ interface ProfitDao {
     @Query("DELETE FROM profit_table")
     suspend fun clearAll()
 
-    @Delete
-    suspend fun deleteProfit(profit: ProfitEntity)
+    @Query("DELETE FROM profit_table WHERE profitId = :profitId")
+    suspend fun deleteProfit(profitId: String)
 
     @Upsert
     suspend fun upsert(profit: ProfitEntity)

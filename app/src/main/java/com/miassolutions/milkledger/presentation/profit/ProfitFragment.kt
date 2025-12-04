@@ -55,7 +55,7 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
             .setTitle("Delete Entry")
             .setMessage("Are you sure to delete this entry?")
             .setPositiveButton("Yes") { d, _ ->
-                viewModel.deleteProfit(profit)
+                viewModel.deleteProfit(profit.id)
                 d.dismiss()
             }
             .setNegativeButton("Cancel", null)

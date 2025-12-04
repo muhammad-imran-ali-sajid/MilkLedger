@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
-import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.mapper.toProfit
 import com.miassolutions.milkledger.data.mapper.toProfitEntity
 import com.miassolutions.milkledger.data.mapper.toProfitList
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -304,10 +302,10 @@ class ProfitViewModel @Inject constructor(
         }
     }
 
-    fun deleteProfit(profit: ProfitListModel) {
+    fun deleteProfit(profitId: String) {
         viewModelScope.launch {
             try {
-                repository.delete(profit.toEntity())
+                repository.deleteProfit(profitId)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = e.message) }
             }

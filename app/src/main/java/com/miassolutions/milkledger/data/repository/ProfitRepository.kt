@@ -61,17 +61,17 @@ class ProfitRepository @Inject constructor(
 
     }
 
-    suspend fun delete(profit: ProfitEntity) {
+    suspend fun deleteProfit(profitId: String) {
 
-        dao.deleteProfit(profit)
+        dao.deleteProfit(profitId)
 
         try {
             firestoreSyncHelper.deleteDocument(
                 collectionName = PROFIT_COLLECTION,
-                documentId = profit.profitId,
+                documentId = profitId,
             )
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to sync delete for profit ID: ${profit.profitId}", e)
+            Log.e(TAG, "Failed to sync delete for profit ID: ${profitId}", e)
         }
     }
 
