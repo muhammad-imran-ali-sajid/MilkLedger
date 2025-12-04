@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -41,7 +42,12 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         applySavedBackground()
         enableEdgeToEdge()
         setContentView(binding.root)
+
         windowsInsets()
+
+        WindowInsetsControllerCompat(window, window.decorView)
+            .isAppearanceLightStatusBars = false // white text in the status bar
+
 
         setupDrawerHeader()
 
