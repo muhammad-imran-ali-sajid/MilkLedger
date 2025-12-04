@@ -110,25 +110,40 @@ class SalesEditBottomSheet(
 
     private fun setupSaveButton() {
         binding.btnSave.setOnClickListener {
-            val volume = binding.etVolume.text.toString().toDoubleOrNull() ?: 0.0
-            if (volume <= 0) {
-                binding.etVolume.error = "Volume must be greater than 0"
+
+            val volume = binding.etVolume.text.toString().toDoubleOrNull()
+            val deduction = binding.etDeduction.text.toString().toDoubleOrNull() ?: 0.0
+            val payment = binding.etPayment.text.toString().toDoubleOrNull()
+
+            val isVolumeEmpty = (volume == null || volume == 0.0)
+            val isPaymentEmpty = (payment == null || payment == 0.0)
+
+            if (isVolumeEmpty && isPaymentEmpty) {
+                binding.etVolume.error = "Enter volume or payment"
+                binding.etPayment.error = "Enter volume or payment"
                 binding.etVolume.requestFocus()
                 return@setOnClickListener
             }
 
-            val deduction = binding.etDeduction.text.toString().toDoubleOrNull() ?: 0.0
+            if (volume != null && deduction > volume) {
+                binding.etDeduction.error = "Deduction cannot exceed volume"
+                return@setOnClickListener
+            }
+
+            val finalVolume = volume ?: 0.0
+
+
             val paid = binding.etPayment.text.toString().toDoubleOrNull() ?: 0.0
-            val netMilk = (volume - deduction).coerceAtLeast(0.0)
+            val netMilk = (finalVolume - deduction).coerceAtLeast(0.0)
             val price = MilkCalculationUtils.calculateCustomerPrice(
-                volume = volume,
+                volume = finalVolume,
                 deduction = deduction,
                 rate = entry.rate
             )
             val balance = price - paid
 
             val updatedSale = entry.copy(
-                volume = volume,
+                volume = finalVolume,
                 deduction = deduction,
                 netVolume = netMilk,
                 price = price,
