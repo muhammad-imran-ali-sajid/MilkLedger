@@ -165,12 +165,12 @@
         android:label="Add Expenses" />
     <fragment
         android:id="@+id/purchaseAddFragment"
-        tools:layout="@layout/bottomsheet_add_purchase"
         android:name="com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseAddFragment"
-        android:label="PurchaseAddFragment" />
+        android:label="Add Purchases"
+        tools:layout="@layout/bottomsheet_add_purchase" />
     <fragment
         android:id="@+id/saleAddFragment"
-        tools:layout="@layout/bottomsheet_add_sales"
         android:name="com.miassolutions.milkledger.presentation.customer.sales.SaleAddFragment"
-        android:label="SaleAddFragment" />
+        android:label="Add Sales"
+        tools:layout="@layout/bottomsheet_add_sales" />
 </navigation>

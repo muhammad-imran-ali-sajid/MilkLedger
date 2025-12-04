@@ -168,6 +168,7 @@
                     style="@style/Style.TextViewValue"
                     android:layout_width="0dp"
                     android:paddingEnd="0dp"
+                    android:inputType="numberDecimal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/btnSelectDate"
                     app:layout_constraintHorizontal_bias="0.03"
