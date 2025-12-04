@@ -6,12 +6,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
@@ -32,9 +31,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
     @Inject
     lateinit var appPreferences: AppPreferencesManager
 
-    private val binding by lazy {
-        ActivityMainBinding.inflate(layoutInflater)
-    }
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -46,32 +43,23 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         setContentView(binding.root)
         windowsInsets()
 
+        setupDrawerHeader()
 
-        val role = SharedPrefsHelper.getUserRole(this)
-        val email = SharedPrefsHelper.getUserMail(this)
-
-
-        val navigationView = binding.navigationView
-        val headerView = navigationView.getHeaderView(0)
-
-        val headerBinding = DrawerHeaderBinding.bind(headerView)
-        headerBinding.tvVersion.text = "${role.uppercase()} Version"
-        headerBinding.tvEmail.text = email
-
-
-
-
-
-
+        // -------------------------------------------------------------
+        // 1. Toolbar setup
+        // -------------------------------------------------------------
         setSupportActionBar(binding.toolbar)
 
-
+        // -------------------------------------------------------------
+        // 2. Init NavController
+        // -------------------------------------------------------------
         val navHost =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHost.navController
 
-        navController = navHost.findNavController()
-
-        // Configure top-level destinations (so back button shows hamburger instead of up arrow)
+        // -------------------------------------------------------------
+        // 3. App bar configuration (top-level destinations)
+        // -------------------------------------------------------------
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.dashboardFragment,
@@ -83,27 +71,71 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             binding.drawerLayout
         )
 
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+        // -------------------------------------------------------------
+        // 4. Connect toolbar + drawer with Navigation Component
+        // -------------------------------------------------------------
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
 
-        // Hook up drawer nav view with nav controller
+        // -------------------------------------------------------------
+        // 5. Tint arrow + hamburger icon always
+        // -------------------------------------------------------------
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+
+            val iconColor = ContextCompat.getColor(this, R.color.white)
+
+            // This drawable supports tint properly
+            val arrow = androidx.appcompat.graphics.drawable.DrawerArrowDrawable(this).apply {
+                color = iconColor
+            }
+
+            // Top-level destinations → hamburger icon
+            val isTopLevel = appBarConfiguration.topLevelDestinations.contains(destination.id)
+            arrow.progress = if (isTopLevel) 0f else 1f  // 0 = hamburger, 1 = back arrow
+
+            binding.toolbar.navigationIcon = arrow
+        }
+
+
+        // Drawer navigation
         binding.navigationView.setupWithNavController(navController)
 
+        setupRoleBasedMenu()
+        setupDrawerClickListener()
+    }
 
+    // ----------------------------------------------------------------------
+    // Drawer header setup
+    // ----------------------------------------------------------------------
+    private fun setupDrawerHeader() {
+        val role = SharedPrefsHelper.getUserRole(this)
+        val email = SharedPrefsHelper.getUserMail(this)
+
+        val headerBinding = DrawerHeaderBinding.bind(binding.navigationView.getHeaderView(0))
+        headerBinding.tvVersion.text = "${role.uppercase()} Version"
+        headerBinding.tvEmail.text = email
+    }
+
+    // ----------------------------------------------------------------------
+    // Role based menu hiding
+    // ----------------------------------------------------------------------
+    private fun setupRoleBasedMenu() {
         binding.navigationView.post {
             val isAdmin = SharedPrefsHelper.isAdmin(this)
             val navMenu = binding.navigationView.menu
 
             if (!isAdmin) {
-
                 navMenu.findItem(R.id.action_customersFragment)?.isVisible = false
                 navMenu.findItem(R.id.action_suppliersFragment)?.isVisible = false
                 navMenu.findItem(R.id.action_notesFragment)?.isVisible = false
                 navMenu.findItem(R.id.action_payment_overview)?.isVisible = false
             }
         }
+    }
 
-
+    // ----------------------------------------------------------------------
+    // Drawer item click listener
+    // ----------------------------------------------------------------------
+    private fun setupDrawerClickListener() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             binding.drawerLayout.closeDrawers()
 
@@ -143,17 +175,21 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                     true
                 }
 
-                else -> {
-                    val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
-                    if (handled) binding.drawerLayout.closeDrawers()
-                    handled
-                }
+                else -> NavigationUI.onNavDestinationSelected(menuItem, navController)
             }
         }
-
-
     }
 
+    // ----------------------------------------------------------------------
+    // Drawer + back button handling
+    // ----------------------------------------------------------------------
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
+    }
+
+    // ----------------------------------------------------------------------
+    // Other helper methods
+    // ----------------------------------------------------------------------
     private fun logoutUser() {
         MaterialAlertDialogBuilder(this)
             .setTitle("Logout")
@@ -162,7 +198,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                 FirebaseAuth.getInstance().signOut()
                 SharedPrefsHelper.clearUserRole(this)
                 val intent = Intent(this, LoginActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.flags =
+                    Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
             }
@@ -170,9 +207,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             .show()
     }
 
-
     private fun windowsInsets() {
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawerLayout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -184,23 +219,15 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         supportActionBar?.title = title
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-    }
-
-
     override fun attachBaseContext(newBase: Context) {
         val configuration = newBase.resources.configuration
-        configuration.fontScale = 1.0f // Prevents scaling
+        configuration.fontScale = 1.0f
         val context = newBase.createConfigurationContext(configuration)
         super.attachBaseContext(context)
     }
 
     private fun applySavedBackground() {
         val colorId = appPreferences.loadBackgroundColor()
-        val colorInt = getColor(colorId)
-        window.decorView.setBackgroundColor(colorInt)
+        window.decorView.setBackgroundColor(getColor(colorId))
     }
-
-
 }

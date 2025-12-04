@@ -45,7 +45,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
             android:src="@drawable/ic_arrow"
-            app:tint="@color/white" />
+             />
 
         <TextView
             android:id="@+id/tv_selected_date"
@@ -55,7 +55,6 @@
             android:gravity="center_horizontal"
             android:padding="8dp"
             android:text="12-10-2025"
-            android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -68,7 +67,7 @@
             android:padding="8dp"
             android:rotation="180"
             android:src="@drawable/ic_arrow"
-            app:tint="@color/white" />
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -119,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Yearly"
-                android:textSize="14sp"
+
                 android:textStyle="bold" />
 
             <com.google.android.material.button.MaterialButton

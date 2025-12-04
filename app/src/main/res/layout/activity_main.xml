@@ -5,8 +5,8 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:openDrawer="start"
-    tools:context=".presentation.activities.MainActivity">
+    tools:context=".presentation.activities.MainActivity"
+    >
 
     <!-- Main content -->
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -27,6 +27,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:navigationIconTint="@color/white"
+                app:navigationIcon="@drawable/ic_arrow_left"
                 app:titleTextAppearance="@style/Text.H1"
                 tools:title="Milk App" />
 
@@ -36,8 +37,8 @@
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:background="#eee"
                 app:defaultNavHost="true"
-
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
