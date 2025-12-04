@@ -28,7 +28,8 @@ fun ProfitEntity.toProfitList(profitAfterPersonalExpenses: Double?) = with(this)
         profit = netProfit,
         profitReceived = receivedProfit,
         balance = netProfit - receivedProfit,
-        profitAfterPersonalExpenses = profitAfterPersonalExpenses ?:0.0
+        profitAfterPersonalExpenses = profitAfterPersonalExpenses ?: 0.0,
+        notes = notes
     )
 }
 

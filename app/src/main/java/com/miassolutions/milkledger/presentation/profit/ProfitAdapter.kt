@@ -21,7 +21,7 @@ class ProfitAdapter(
         fun bind(item: ProfitListModel) = with(binding) {
             tvDate.text = item.date.toDisplayFormat()
             tvProfit.text = item.profit.toPriceStr()
-            tvRemainingProfit.text = item.profitAfterPersonalExpenses.toPriceStr()
+            tvRemainingProfit.text = item.profitAfterPersonalExpenses?.toPriceStr()
             tvReceivedProfit.text = item.profitReceived.toPriceStr()
             tvBalance.text = (item.profit - item.profitReceived).toPriceStr()
 

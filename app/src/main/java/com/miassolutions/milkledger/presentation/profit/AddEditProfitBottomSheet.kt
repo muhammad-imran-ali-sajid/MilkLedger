@@ -46,8 +46,8 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private var receivedSelectedDate: LocalDate? = null
 
-    private var existingProfit: Profit? = null
-    var onSave: ((Profit) -> Unit)? = null   // callback to return data
+    private var existingProfit: ProfitListModel? = null
+    var onSave: ((ProfitListModel) -> Unit)? = null   // callback to return data
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -69,9 +69,9 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupUI() = with(binding) {
         if (existingProfit != null) {
-            etTodayProfit.setText(existingProfit!!.netProfit.toString())
-            tvDate.text = existingProfit!!.receivedDate.toDisplayFormat()
-            etProfitReceived.setText(existingProfit!!.receivedProfit.toString())
+            etTodayProfit.setText(existingProfit!!.profit.toString())
+            tvDate.text = existingProfit!!.date.toDisplayFormat()
+            etProfitReceived.setText(existingProfit!!.profitReceived.toString())
             etNotes.setText(existingProfit!!.notes)
             btnSave.text = "Update"
         } else {
@@ -125,11 +125,19 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
             val notes = etNotes.text.toString()
 
-            val newProfit = Profit(
-                netProfit = todayProfit,
-                profitId = existingProfit?.profitId ?: UUID.randomUUID().toString(),
-                receivedDate = receivedSelectedDate ?: LocalDate.now(),
-                receivedProfit = profitStr.toDouble(),
+//            val newProfit = ProfitListModel(
+//                netProfit = todayProfit,
+//                profitId = existingProfit?.id ?: UUID.randomUUID().toString(),
+//                receivedDate = receivedSelectedDate ?: LocalDate.now(),
+//                receivedProfit = profitStr.toDouble(),
+//                notes = notes
+//            )
+
+            val newProfit = ProfitListModel(
+                id = existingProfit?.id ?: UUID.randomUUID().toString(),
+                date = receivedSelectedDate ?: LocalDate.now(),
+                profit = todayProfit,
+                profitReceived = profitStr.toDouble(),
                 notes = notes
             )
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
+import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.mapper.toProfit
 import com.miassolutions.milkledger.data.mapper.toProfitEntity
 import com.miassolutions.milkledger.data.mapper.toProfitList
@@ -291,11 +292,11 @@ class ProfitViewModel @Inject constructor(
     // -------------------------------------------------------------------------
     // SAVE / DELETE
     // -------------------------------------------------------------------------
-    fun saveProfit(profit: Profit) {
+    fun saveProfit(profit: ProfitListModel) {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoading = true) }
-                repository.upsert(profit.toProfitEntity())
+                repository.upsert(profit.toEntity())
             } finally {
                 _uiState.update { it.copy(isLoading = false) }
             }

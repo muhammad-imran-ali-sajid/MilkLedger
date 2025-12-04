@@ -21,8 +21,9 @@ data class ProfitListModel(
     val date: LocalDate,
     val profit: Double,
     val profitReceived: Double,
-    val balance: Double,
-    val profitAfterPersonalExpenses: Double
+    val balance: Double? = 0.0,
+    val profitAfterPersonalExpenses: Double? = 0.0,
+    val notes : String?
 ): Parcelable
 
 
