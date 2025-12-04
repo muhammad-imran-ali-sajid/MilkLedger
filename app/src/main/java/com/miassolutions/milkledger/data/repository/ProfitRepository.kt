@@ -115,7 +115,7 @@ class ProfitRepository @Inject constructor(
 
     fun getAllProfitList(): Flow<List<ProfitEntity>> = dao.getAllProfitFlow()
 
-    suspend fun getAll(): List<ProfitEntity> = dao.getAll()
+    suspend fun getAll(): Flow<List<ProfitEntity>> = dao.getAllFlow()
 
 
     // --------------------------------------------------------------------
@@ -137,8 +137,8 @@ class ProfitRepository @Inject constructor(
 //
 //    }
 
-    suspend fun getWeekly(start: LocalDate, end: LocalDate): List<ProfitEntity> =
-        dao.getBetween(start, end)
+    fun getWeekly(start: LocalDate, end: LocalDate): Flow<List<ProfitEntity>> =
+        dao.getBetweenFlow(start, end)
 
 
     suspend fun getWeeklyWithNetProfit(start: LocalDate, end: LocalDate): List<Profit> {
@@ -150,12 +150,12 @@ class ProfitRepository @Inject constructor(
         }
     }
 
-    suspend fun getMonthly(date: LocalDate): List<ProfitEntity> {
+    suspend fun getMonthly(date: LocalDate): Flow<List<ProfitEntity>> {
         val ym = "${date.year}-${"%02d".format(date.monthValue)}"
         return dao.getMonthly(ym)
     }
 
-    suspend fun getYearly(date: LocalDate): List<ProfitEntity> =
+    suspend fun getYearly(date: LocalDate): Flow<List<ProfitEntity>> =
         dao.getYearly(date.year.toString())
 
     suspend fun getCustom(start: LocalDate, end: LocalDate): List<ProfitEntity> =

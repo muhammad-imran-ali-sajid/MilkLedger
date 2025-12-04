@@ -59,7 +59,7 @@ interface ProfitDao {
         ORDER BY receivedDate ASC
     """
     )
-    suspend fun getMonthly(yearMonth: String): List<ProfitEntity>
+    fun getMonthly(yearMonth: String): Flow<List<ProfitEntity>>
     // Input example → "2025-01"
 
     // -------------------------------
@@ -72,9 +72,12 @@ interface ProfitDao {
         ORDER BY receivedDate ASC
     """
     )
-    suspend fun getYearly(year: String): List<ProfitEntity>
+    fun getYearly(year: String): Flow<List<ProfitEntity>>
     // Input example → "2025"
 
     @Query("SELECT * FROM profit_table")
     suspend fun getAll(): List<ProfitEntity>
+
+    @Query("SELECT * FROM profit_table")
+     fun getAllFlow(): Flow<List<ProfitEntity>>
 }

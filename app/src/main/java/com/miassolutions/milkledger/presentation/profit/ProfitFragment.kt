@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.presentation.profit
 
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -141,6 +142,14 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
 
             adapter.submitList(state.filteredList)
+
+            val isEmpty = state.filteredList.isEmpty()
+
+            binding.emptyLayout.emptyTitle.text = "No record yet"
+            binding.emptyLayout.emptySubtitle.text = "Tap the + button to add your first record"
+
+            binding.emptyLayout.emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.rvProfit.visibility = if (isEmpty) View.GONE else View.VISIBLE
 
 
             // 2. Update the UI text label with the current state value

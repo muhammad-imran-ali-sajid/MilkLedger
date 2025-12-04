@@ -59,7 +59,11 @@ class ProfitViewModel @Inject constructor(
     fun calculateProfit(date: LocalDate?) {
         if (date == null) return
         viewModelScope.launch {
-            _uiState.update { it.copy(netBusinessProfit = repository.getNetBusinessProfitDaily(date).first()) }
+            _uiState.update {
+                it.copy(
+                    netBusinessProfit = repository.getNetBusinessProfitDaily(date).first()
+                )
+            }
         }
     }
 
@@ -83,23 +87,27 @@ class ProfitViewModel @Inject constructor(
     // ------------------------------------------------------------------------------
     private fun loadProfitDetails() {
         viewModelScope.launch {
-            val list = repository.getAll()
-            val profits = list.map { it.toProfitList(0.0) }
+            repository.getAll().collect { list ->
 
-            val totalReceived = profits.sumOf { it.profitReceived }
-            val netBusinessProfit = repository.getNetProfitOnce()
-            val remaining = netBusinessProfit - totalReceived
+                val profits = list.map { it.toProfitList(0.0) }
 
-            _uiState.update {
-                it.copy(
-                    filteredList = profits,
-                    totalReceived = totalReceived,
-                    netBusinessProfit = netBusinessProfit,
-                    netProfitAfterPersonalExpenses = 0.0,
-                    remainingProfit = remaining,
-                    periodLabel = "All Records"
-                )
+                val totalReceived = profits.sumOf { it.profitReceived }
+                val netBusinessProfit = repository.getNetProfitOnce()
+                val remaining = netBusinessProfit - totalReceived
+
+                _uiState.update {
+                    it.copy(
+                        filteredList = profits,
+                        totalReceived = totalReceived,
+                        netBusinessProfit = netBusinessProfit,
+                        netProfitAfterPersonalExpenses = 0.0,
+                        remainingProfit = remaining,
+                        periodLabel = "All Records"
+                    )
+                }
             }
+
+
         }
     }
 
@@ -157,26 +165,29 @@ class ProfitViewModel @Inject constructor(
     // ------------------------------------------------------------------------------
     private fun fetchWeekly(start: LocalDate, end: LocalDate) {
         viewModelScope.launch {
-            val entities = repository.getWeekly(start, end)
-            val businessNet = repository.getNetProfitWeekly(start, end)
-            val personal = repository.getProfitAfterPersonalExpenses(start).first() ?: 0.0
+            repository.getWeekly(start, end).collect { entities ->
 
-            val profits = entities.map { it.toProfitList(personal) }
-            val totalReceived = profits.sumOf { it.profitReceived }
-            val remaining = businessNet - totalReceived
+                val businessNet = repository.getNetProfitWeekly(start, end)
+                val personal = repository.getProfitAfterPersonalExpenses(start).first() ?: 0.0
 
-            _uiState.update {
-                it.copy(
-                    filteredList = profits,
-                    netBusinessProfit = businessNet,
-                    netProfitAfterPersonalExpenses = personal,
-                    totalReceived = totalReceived,
-                    remainingProfit = remaining,
-                    periodLabel = formatPeriodLabel(start, end),
-                    startDate = start,
-                    endDate = end
-                )
+                val profits = entities.map { it.toProfitList(personal) }
+                val totalReceived = profits.sumOf { it.profitReceived }
+                val remaining = businessNet - totalReceived
+
+                _uiState.update {
+                    it.copy(
+                        filteredList = profits,
+                        netBusinessProfit = businessNet,
+                        netProfitAfterPersonalExpenses = personal,
+                        totalReceived = totalReceived,
+                        remainingProfit = remaining,
+                        periodLabel = formatPeriodLabel(start, end),
+                        startDate = start,
+                        endDate = end
+                    )
+                }
             }
+
         }
     }
 
@@ -188,27 +199,29 @@ class ProfitViewModel @Inject constructor(
             val start = yearMonth.atDay(1)
             val end = yearMonth.atEndOfMonth()
 
-            val entities = repository.getMonthly(start)
-            val businessNet = repository.getNetProfitMonthly(yearMonth.year, yearMonth.monthValue)
-            val personal = repository.getProfitAfterPersonalExpenses(start).first() ?: 0.0
+            repository.getMonthly(start).collect { entities ->
+                val businessNet =
+                    repository.getNetProfitMonthly(yearMonth.year, yearMonth.monthValue)
+                val personal = repository.getProfitAfterPersonalExpenses(start).first() ?: 0.0
 
-            val profits = entities.map { it.toProfitList(personal) }
-            val totalReceived = profits.sumOf { it.profitReceived }
-            val remaining = businessNet - totalReceived
+                val profits = entities.map { it.toProfitList(personal) }
+                val totalReceived = profits.sumOf { it.profitReceived }
+                val remaining = businessNet - totalReceived
 
-            val label = "${yearMonth.month} ${yearMonth.year}"
+                val label = "${yearMonth.month} ${yearMonth.year}"
 
-            _uiState.update {
-                it.copy(
-                    filteredList = profits,
-                    netBusinessProfit = businessNet,
-                    netProfitAfterPersonalExpenses = personal,
-                    totalReceived = totalReceived,
-                    remainingProfit = remaining,
-                    periodLabel = label,
-                    startDate = start,
-                    endDate = end
-                )
+                _uiState.update {
+                    it.copy(
+                        filteredList = profits,
+                        netBusinessProfit = businessNet,
+                        netProfitAfterPersonalExpenses = personal,
+                        totalReceived = totalReceived,
+                        remainingProfit = remaining,
+                        periodLabel = label,
+                        startDate = start,
+                        endDate = end
+                    )
+                }
             }
         }
     }
@@ -221,25 +234,26 @@ class ProfitViewModel @Inject constructor(
             val start = LocalDate.of(year, 1, 1)
             val end = LocalDate.of(year, 12, 31)
 
-            val entities = repository.getYearly(start)
-            val businessNet = repository.getNetProfitYearly(year)
-            val personal = repository.getProfitAfterPersonalExpenses(start).first() ?: 0.0
+            repository.getYearly(start).collect { entities ->
+                val businessNet = repository.getNetProfitYearly(year)
+                val personal = repository.getProfitAfterPersonalExpenses(start).first() ?: 0.0
 
-            val profits = entities.map { it.toProfitList(personal) }
-            val totalReceived = profits.sumOf { it.profitReceived }
-            val remaining = businessNet - totalReceived
+                val profits = entities.map { it.toProfitList(personal) }
+                val totalReceived = profits.sumOf { it.profitReceived }
+                val remaining = businessNet - totalReceived
 
-            _uiState.update {
-                it.copy(
-                    filteredList = profits,
-                    netBusinessProfit = businessNet,
-                    netProfitAfterPersonalExpenses = personal,
-                    totalReceived = totalReceived,
-                    remainingProfit = remaining,
-                    periodLabel = year.toString(),
-                    startDate = start,
-                    endDate = end
-                )
+                _uiState.update {
+                    it.copy(
+                        filteredList = profits,
+                        netBusinessProfit = businessNet,
+                        netProfitAfterPersonalExpenses = personal,
+                        totalReceived = totalReceived,
+                        remainingProfit = remaining,
+                        periodLabel = year.toString(),
+                        startDate = start,
+                        endDate = end
+                    )
+                }
             }
         }
     }

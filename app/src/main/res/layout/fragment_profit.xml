@@ -9,6 +9,15 @@
     tools:context=".presentation.profit.ProfitFragment">
 
     <include
+        android:id="@+id/emptyLayout"
+        layout="@layout/layout_empty_box"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <include
         android:id="@+id/dateFilterLayout"
         layout="@layout/date_filter_layout"
         android:layout_width="match_parent"
@@ -27,6 +36,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dateFilterLayout">
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
