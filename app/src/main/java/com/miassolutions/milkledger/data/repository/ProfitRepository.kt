@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -123,7 +122,7 @@ class ProfitRepository @Inject constructor(
     // LIST FILTERS
     // --------------------------------------------------------------------
 
-    suspend fun getDaily(date: LocalDate): List<ProfitEntity> =
+    fun getDaily(date: LocalDate): Flow<List<ProfitEntity>> =
         dao.getDaily(date)
 
 
@@ -171,14 +170,16 @@ class ProfitRepository @Inject constructor(
 
     fun getProfitToday(date: LocalDate): Flow<Double?> = mDao.getProfitToday(date)
 
+    fun getProfitAfterPersonalExpenses(date: LocalDate) : Flow<Double?> = mDao.getProfitAfterPersonalExpensesToday(date)
+
     suspend fun getNetProfitOnce(): Double = getNetProfit().firstOrZero()
 
     // Daily
-    fun getNetProfitDaily(date: LocalDate): Flow<Double> =
+    fun getNetBusinessProfitDaily(date: LocalDate): Flow<Double> =
         combine(
             mDao.getTotalSalesDaily(date),
             mDao.getTotalPurchasesDaily(date),
-            mDao.getTotalExpensesDaily(date),
+            mDao.getTotalBusinessExpensesDaily(date),
         ) { s, p, e ->
 
             val totalSales = s ?: 0.0

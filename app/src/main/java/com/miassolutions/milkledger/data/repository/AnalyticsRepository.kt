@@ -1,10 +1,7 @@
 package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
-import androidx.room.Insert
-import androidx.room.util.copy
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
-import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
@@ -100,19 +97,32 @@ class AnalyticsRepository @Inject constructor(
     fun getTotalPurchasesDaily(date: LocalDate): Flow<Double?> =
         reportsDao.getTotalPurchasesDaily(date)
 
-    fun getTotalExpensesDaily(date: LocalDate): Flow<Double?> =
-        reportsDao.getTotalFixedExpensesDaily(date)
+    fun getTotalBusinessExpensesDaily(date: LocalDate): Flow<Double?> =
+        reportsDao.getTotalBusinessExpensesDaily(date)
 
 
     fun getProfitToday(date: LocalDate): Flow<Double?> = combine(
         reportsDao.getTotalSalesDaily(date),
-        reportsDao.getTotalFixedExpensesDaily(date),
+        reportsDao.getTotalBusinessExpensesDaily(date),
         reportsDao.getTotalPurchasesDaily(date)
     ) { s, e, p ->
         val sales = s ?: 0.0
         val purchases = p ?: 0.0
         val expenses = e ?: 0.0
-Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
+        Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
+        sales - (purchases + expenses)
+    }
+
+
+    fun getProfitAfterPersonalExpensesToday(date: LocalDate): Flow<Double?> = combine(
+        reportsDao.getTotalSalesDaily(date),
+        reportsDao.getTotalExpensesDaily(date),
+        reportsDao.getTotalPurchasesDaily(date)
+    ) { s, e, p ->
+        val sales = s ?: 0.0
+        val purchases = p ?: 0.0
+        val expenses = e ?: 0.0
+        Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
         sales - (purchases + expenses)
     }
 
@@ -132,4 +142,6 @@ Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
             totalSales - (totalPurchases + totalExpenses)
 
         }
+
+
 }

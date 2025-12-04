@@ -6,14 +6,25 @@ import com.miassolutions.milkledger.domain.model.Profit
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
+
+//data class ProfitListModel(
+//    val id : String,
+//    val date : LocalDate,
+//    val profit : Double,
+//    val profitReceived : Double,
+//    val profitAfterPersonalExpenses: Long,
+//    val balance : Double
+//)
 @Parcelize
 data class ProfitListModel(
-    val id : String,
-    val date : LocalDate,
-    val profit : Double,
-    val profitReceived : Double,
-    val balance : Double
+    val id: String,
+    val date: LocalDate,
+    val profit: Double,
+    val profitReceived: Double,
+    val balance: Double,
+    val profitAfterPersonalExpenses: Double
 ): Parcelable
+
 
 
 

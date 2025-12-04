@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Upsert
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
@@ -117,7 +116,9 @@ interface ReportsDao {
     fun getTotalPurchasesDaily(date: LocalDate): Flow<Double?>
 
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date = :date AND isDefault = 1")
-    fun getTotalFixedExpensesDaily(date: LocalDate): Flow<Double?>
+    fun getTotalBusinessExpensesDaily(date: LocalDate): Flow<Double?>
+
+
 
     @Query("SELECT SUM(expenseAmount) FROM expense_table WHERE date = :date")
     fun getTotalExpensesDaily(date: LocalDate): Flow<Double?>

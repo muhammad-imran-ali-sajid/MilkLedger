@@ -21,16 +21,19 @@ fun ProfitEntity.toProfit() = with(this) {
     )
 }
 
-
-fun ProfitEntity.toProfitList() = with(this) {
+fun ProfitEntity.toProfitList(profitAfterPersonalExpenses: Double?) = with(this) {
     ProfitListModel(
         id = profitId,
         date = receivedDate,
         profit = netProfit,
         profitReceived = receivedProfit,
-        balance = netProfit - receivedProfit
+        balance = netProfit - receivedProfit,
+        profitAfterPersonalExpenses = profitAfterPersonalExpenses ?:0.0
     )
 }
+
+
+
 
 fun ProfitListModel.toEntity() = with(this) {
     ProfitEntity(

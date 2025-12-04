@@ -35,7 +35,7 @@ interface ProfitDao {
     // DAILY
     // -------------------------------
     @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
-    suspend fun getDaily(date: LocalDate): List<ProfitEntity>
+    fun getDaily(date: LocalDate): Flow<List<ProfitEntity>>
 
     @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
     fun getDailyFlow(date: LocalDate): Flow<List<ProfitEntity>>

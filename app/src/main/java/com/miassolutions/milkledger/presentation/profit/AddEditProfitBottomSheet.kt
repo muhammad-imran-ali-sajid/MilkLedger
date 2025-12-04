@@ -32,7 +32,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
     companion object {
         const val ARG_PROFIT = "arg_profit"
 
-        fun newInstance(profit: Profit? = null): AddEditProfitBottomSheet {
+        fun newInstance(profit: ProfitListModel? = null): AddEditProfitBottomSheet {
             return AddEditProfitBottomSheet().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_PROFIT, profit)

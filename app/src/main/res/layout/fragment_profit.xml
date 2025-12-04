@@ -46,11 +46,35 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Net Profit"
+                    android:text="Net Business Profit"
                     android:textColor="@color/black" />
 
                 <TextView
-                    android:id="@+id/tvProfit"
+                    android:id="@+id/tvBusinessProfit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rs. 10000"
+                    android:textColor="@color/black" />
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Net Profit (After Personal)"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/tvNetProfitAfterPersonal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Rs. 10000"

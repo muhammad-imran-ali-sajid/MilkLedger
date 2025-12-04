@@ -50,7 +50,7 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
         controller.init()
     }
 
-    private fun showConfirmDialog(profit: Profit) {
+    private fun showConfirmDialog(profit: ProfitListModel) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Delete Entry")
             .setMessage("Are you sure to delete this entry?")
@@ -63,48 +63,48 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
     }
 
     private fun generateReport() {
-        val state = viewModel.uiState.value
-        val filteredList: List<Profit> = state.filteredList
-
-        val startDate = state.startDate ?: LocalDate.now()
-        val endDate = state.endDate ?: LocalDate.now()
-
-        val fromDate = startDate.toDisplayFormat()
-        val toDate = endDate.toDisplayFormat()
-
-        val dateRange = "$fromDate - $toDate"
-        Log.d("SupplierDetailFragment", "Report Date Range: $dateRange")
-
-        val recordList = filteredList.toProfitRecordList()
-
-        val totalNetProfit = state.netProfit
-        val totalReceived = state.totalReceived
-        val totalBalance = state.remainingProfit
-
-        val data = ProfitReceiptPdf(
-            dateRange = dateRange,
-            profitReceiver = "Shahid Afzaal",
-            recordList = recordList,
-            totalProfit = totalNetProfit.toPriceStr(),
-            totalReceived = totalReceived.toPriceStr(),
-            totalBalance = totalBalance.toPriceStr(),
-            footerNote = "MIAS SOLUTIONS"
-        )
-
-        ProfitReportGenerator.generateAndSharePdf(
-            requireContext(),
-            data,
-            "Profit",
-            false
-        )
-
-        showToast("Generating pdf report...")
+//        val state = viewModel.uiState.value
+//        val filteredList: List<ProfitListModel> = state.filteredList
+//
+//        val startDate = state.startDate ?: LocalDate.now()
+//        val endDate = state.endDate ?: LocalDate.now()
+//
+//        val fromDate = startDate.toDisplayFormat()
+//        val toDate = endDate.toDisplayFormat()
+//
+//        val dateRange = "$fromDate - $toDate"
+//        Log.d("SupplierDetailFragment", "Report Date Range: $dateRange")
+//
+//        val recordList = filteredList.toProfitRecordList()
+//
+//        val totalNetProfit = state.netProfit
+//        val totalReceived = state.totalReceived
+//        val totalBalance = state.remainingProfit
+//
+//        val data = ProfitReceiptPdf(
+//            dateRange = dateRange,
+//            profitReceiver = "Shahid Afzaal",
+//            recordList = recordList,
+//            totalProfit = totalNetProfit.toPriceStr(),
+//            totalReceived = totalReceived.toPriceStr(),
+//            totalBalance = totalBalance.toPriceStr(),
+//            footerNote = "MIAS SOLUTIONS"
+//        )
+//
+//        ProfitReportGenerator.generateAndSharePdf(
+//            requireContext(),
+//            data,
+//            "Profit",
+//            false
+//        )
+//
+//        showToast("Generating pdf report...")
 
 
     }
 
 
-    private fun editProfitRecord(profit: Profit) {
+    private fun editProfitRecord(profit: ProfitListModel) {
 
         val sheet = AddEditProfitBottomSheet.newInstance(profit)
         sheet.onSave = { viewModel.saveProfit(it) }
@@ -133,7 +133,8 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
-            binding.tvProfit.text = state.netProfit.toPriceStr()
+            binding.tvBusinessProfit.text = state.netBusinessProfit.toPriceStr()
+            binding.tvNetProfitAfterPersonal.text = state.netProfitAfterPersonalExpenses.toPriceStr()
             binding.tvTotalReceivedProfit.text = state.totalReceived.toPriceStr()
             binding.tvRemainingProfit.text = state.remainingProfit.toPriceStr()
 
