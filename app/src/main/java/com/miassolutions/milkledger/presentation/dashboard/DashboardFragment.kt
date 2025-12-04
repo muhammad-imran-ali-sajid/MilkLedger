@@ -239,6 +239,11 @@ class DashboardFragment :
 //            syncViewModel.startInitialSync()
 //        }
 
+        binding.cashFlowCard.setOnClickListener {
+            val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
+            navigateTo(dest.actionId)
+        }
+
 
         binding.saleCard.setOnClickListener {
             val dest = DashboardFragmentDirections.actionDashboardFragmentToSalesFragment()

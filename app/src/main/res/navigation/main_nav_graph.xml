@@ -59,7 +59,7 @@
     <fragment
         android:id="@+id/statsFragment"
         android:name="com.miassolutions.milkledger.presentation.stats.StatsFragment"
-        android:label="@string/stats"
+        android:label="Cash Flow"
         tools:layout="@layout/fragment_stats" />
     <fragment
         android:id="@+id/customersFragment"
@@ -116,6 +116,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_profitFragment"
             app:destination="@id/profitFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_statsFragment"
+            app:destination="@id/statsFragment" />
     </fragment>
     <fragment
         android:id="@+id/customerDetailFragment"
