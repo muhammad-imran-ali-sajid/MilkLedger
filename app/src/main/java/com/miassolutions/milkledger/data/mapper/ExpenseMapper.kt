@@ -20,6 +20,9 @@ fun ExpensesEntity.toFirestoreModel(): FirestoreExpense {
     )
 }
 
+fun List<ExpensesEntity>.toFirestoreModelList(): List<FirestoreExpense> {
+    return this.map { it.toFirestoreModel() }
+}
 
 fun FirestoreExpense.toEntityModel(): ExpensesEntity {
     return ExpensesEntity(

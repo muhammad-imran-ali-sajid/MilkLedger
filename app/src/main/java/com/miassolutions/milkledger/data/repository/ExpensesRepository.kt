@@ -4,6 +4,7 @@ import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.mapper.toFirestoreModel
+import com.miassolutions.milkledger.data.mapper.toFirestoreModelList
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -90,13 +91,14 @@ class ExpensesRepository @Inject constructor(
         try {
             firestore.uploadCollection(
                 collectionName = COLLECTION,
-                dataList = expenses,
-                idExtractor = { it.expenseId }
+                dataList = expenses.toFirestoreModelList(), // ✅ mapped list
+                idExtractor = { it.id } // now using FirestoreExpense id
             )
         } catch (e: Exception) {
             Log.e(TAG, "Batch sync failed", e)
         }
     }
+
 
 
 
