@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
-import android.R
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,8 +12,7 @@ import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.hide
@@ -26,11 +24,8 @@ import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.databinding.BottomsheetAddPurchaseBinding
-import com.miassolutions.milkledger.presentation.profit.ProfitViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.LocalDateTime
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -89,7 +84,7 @@ class PurchaseAddFragment : Fragment() {
 
             val adapter = ArrayAdapter(
                 requireContext(),
-                R.layout.simple_list_item_1,
+                R.layout.layout_drop_down_list,
                 names
             )
 

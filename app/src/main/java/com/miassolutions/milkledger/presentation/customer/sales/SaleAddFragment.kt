@@ -11,6 +11,7 @@ import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.autoSelectOnFocus
@@ -92,7 +93,7 @@ class SaleAddFragment : Fragment() {
 
             val adapter = ArrayAdapter(
                 requireContext(),
-                android.R.layout.simple_list_item_1,
+                R.layout.layout_drop_down_list,
                 names
             )
 
