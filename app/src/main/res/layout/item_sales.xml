@@ -64,9 +64,10 @@
         <!-- Row 1: Labels and Values -->
         <LinearLayout
             android:layout_width="match_parent"
+            android:backgroundTint="@color/textview_bg_tint"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@drawable/bg_edittext_readable"
+            android:orientation="horizontal"
             android:weightSum="3">
 
             <!-- Volume -->
@@ -124,18 +125,19 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_marginVertical="4dp"
-            android:layout_height="1dp" />
+        <!--        <com.google.android.material.divider.MaterialDivider-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_marginVertical="4dp"-->
+        <!--            android:layout_height="1dp" />-->
         <!-- Row 2: Urdu Labels -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_edittext_readable"
+
             android:orientation="horizontal"
             android:paddingBottom="8dp"
-            android:backgroundTint="@color/blue_100"
-            android:background="@drawable/bg_edittext_readable"
             android:weightSum="4">
 
             <!-- Price -->
@@ -161,46 +163,40 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:orientation="vertical"
                 android:gravity="center"
-                >
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="Received"
-                    android:textColor="@color/black"
-                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:gravity="center"/>
+                    style="@style/TextLabel"
+                    android:gravity="center"
+
+                    android:text="Received" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center"
-                    android:paddingTop="4dp">
+                    android:orientation="horizontal"
+                    >
 
                     <TextView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
+
                         android:id="@+id/tvPayment"
+
+                        style="@style/TextValue"
                         android:text="10,000"
-                        android:textColor="@color/black"
-                        android:textAppearance="?attr/textAppearanceTitleSmall"/>
+
+                        />
 
                     <TextView
-                        android:textColor="@color/black"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
+                        style="@style/TextValue"
                         android:id="@+id/tvReceiveDate"
-                        android:text="(20/11)"
-                        android:visibility="gone"
                         android:paddingStart="4dp"
-                        android:textAppearance="?attr/textAppearanceBodySmall"/>
+                        android:text="(20/11)"
+                        android:visibility="gone" />
                 </LinearLayout>
 
             </LinearLayout>
-
 
 
             <!-- Balance -->

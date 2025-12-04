@@ -54,6 +54,13 @@ class PurchaseViewModel @Inject constructor(
         _balanceSupplierId.value = supplierId
     }
 
+    fun deletePurchase(purchaseId: String) {
+        viewModelScope.launch {
+
+            repository.deletePurchase(purchaseId)
+        }
+    }
+
     fun updatePurchaseManually(updated: PurchaseEntity) {
         viewModelScope.launch {
             val newTs = MilkCalculationUtils.calculateTS(

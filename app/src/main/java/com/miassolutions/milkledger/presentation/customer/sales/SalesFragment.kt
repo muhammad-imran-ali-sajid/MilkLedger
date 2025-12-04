@@ -273,7 +273,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     private fun deleteSale(saleId: String) {
         showDialog(
-            title = "Warning!!",
+            title = "WARNING!!",
             message = "This will delete the sale record",
             onAction = { viewModel.deleteSale(saleId) }
         )

@@ -168,13 +168,25 @@ class PurchaseFragment :
     private fun setupRecyclerView() {
         purchaseAdapter = PurchaseAdapter(
             ::showEditBottomSheet,
-            ::navToSupplierDetail
-        ) { id, name -> showBalanceHistory(id, name) }
+            ::navToSupplierDetail,
+            ::deletePurchase,
+            ::showBalanceHistory
+        )
         binding.rvPurchases.apply {
             adapter = purchaseAdapter
             itemAnimator = null
             setHasFixedSize(true)
         }
+    }
+
+    private fun deletePurchase(purchaseId: String) {
+        showDialog(
+            title = "WARNING!!",
+            message = "This will delete the purchase record",
+            onAction = {
+                viewModel.deletePurchase(purchaseId)
+            }
+        )
     }
 
     private fun showBalanceHistory(supplierId: String, supplierName: String) {

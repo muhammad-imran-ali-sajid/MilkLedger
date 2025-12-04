@@ -18,6 +18,7 @@ import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 class PurchaseAdapter(
     private val onEditClick: (PurchaseWithSupplier) -> Unit,
     private val onItemDetailClick: (PurchaseWithSupplier) -> Unit,
+    private val onDeleteClick: (String) -> Unit,
     private val onBalanceClick: (String, String) -> Unit
 ) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.ViewHolder>(DiffCallback()) {
 
@@ -41,6 +42,8 @@ class PurchaseAdapter(
 
         fun bind(item: PurchaseWithSupplier) = with(binding) {
             tvName.text = item.supplier.supplierName
+
+
 
             tvVolume.text = item.purchase.milkAmount.toRoundedStr()
 
@@ -75,6 +78,11 @@ class PurchaseAdapter(
 
             btnEditForm.setOnClickListener { onEditClick(item) }
             btnSupplierDetail.setOnClickListener { onItemDetailClick(item) }
+
+            tvName.setOnLongClickListener {
+                onDeleteClick(item.purchase.purchaseId)
+                true
+            }
         }
     }
 

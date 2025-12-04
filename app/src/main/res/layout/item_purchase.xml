@@ -63,7 +63,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/textview_bg_tint"
+            android:background="@drawable/bg_edittext_readable"
             android:orientation="horizontal"
             android:weightSum="4">
 
@@ -142,15 +144,16 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="2dp" />
+<!--        <com.google.android.material.divider.MaterialDivider-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="2dp" />-->
 
         <!-- Row 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="@drawable/bg_edittext_readable"
             android:weightSum="3">
 
             <!-- Price -->

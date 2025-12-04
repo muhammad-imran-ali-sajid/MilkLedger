@@ -101,7 +101,7 @@ class PurchaseRepository @Inject constructor(
         // 1. Local delete for immediate UI update
         try {
             // NOTE: Must ensure purchaseDao has 'deleteById(id: String)'
-//            purchaseDao.deleteById(purchaseId)
+            purchaseDao.deletePurchase(purchaseId)
             Log.d(TAG, "Deleted purchase locally: $purchaseId")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to delete purchase locally: $purchaseId", e)
