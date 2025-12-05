@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentAddExpenseBinding
 import com.miassolutions.milkledger.databinding.ItemPersonalExpenseBinding
@@ -32,7 +33,7 @@ class ExpenseAddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.etDate.setText(LocalDate.now().toString())
+        binding.etDate.setText(LocalDate.now().toDisplayFormat())
 
         binding.btnAddPersonal.setOnClickListener { addPersonalField() }
         binding.btnSave.setOnClickListener { saveNew() }

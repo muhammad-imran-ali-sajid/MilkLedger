@@ -132,7 +132,9 @@ class ProfitViewModel @Inject constructor(
 
                 val pae = profitAfterPersonal
 
-                val profits = netList.map { it.toProfitList(pae) }
+                val sorted = netList.sortedByDescending { it.receivedDate }
+                val profits = sorted.map { it.toProfitList(pae) }
+
                 val totalReceived = profits.sumOf { it.profitReceived }
                 val remaining = profitAfterPersonal.minus(totalReceived)
 
@@ -179,7 +181,8 @@ class ProfitViewModel @Inject constructor(
 
                 val pae = profitAfterPersonal ?: 0.0
 
-                val profits = dailyList.map { it.toProfitList(pae) }
+                val sorted = dailyList.sortedByDescending { it.receivedDate }
+                val profits = sorted.map { it.toProfitList(pae) }
                 val totalReceived = profits.sumOf { it.profitReceived }
                 val remaining = profitAfterPersonal?.minus(totalReceived)
 
@@ -226,7 +229,8 @@ class ProfitViewModel @Inject constructor(
                 val personal =
                     repository.getProfitAfterPersonalExpensesBetween(start, end).first() ?: 0.0
 
-                val profits = entities.map { it.toProfitList(personal) }
+                val sorted = entities.sortedByDescending { it.receivedDate }
+                val profits = sorted.map { it.toProfitList(personal) }
                 val totalReceived = profits.sumOf { it.profitReceived }
                 val remaining = businessNet - totalReceived
 
@@ -260,8 +264,8 @@ class ProfitViewModel @Inject constructor(
                     repository.getNetProfitMonthly(yearMonth.year, yearMonth.monthValue)
                 val personal =
                     repository.getProfitAfterPersonalExpensesBetween(start, end).first() ?: 0.0
-
-                val profits = entities.map { it.toProfitList(personal) }
+                val sorted = entities.sortedByDescending { it.receivedDate }
+                val profits = sorted.map { it.toProfitList(personal) }
                 val totalReceived = profits.sumOf { it.profitReceived }
                 val remaining = businessNet - totalReceived
 
@@ -296,7 +300,8 @@ class ProfitViewModel @Inject constructor(
                 val personal =
                     repository.getProfitAfterPersonalExpensesBetween(start, end).first() ?: 0.0
 
-                val profits = entities.map { it.toProfitList(personal) }
+                val sorted = entities.sortedByDescending { it.receivedDate }
+                val profits = sorted.map { it.toProfitList(personal) }
                 val totalReceived = profits.sumOf { it.profitReceived }
                 val remaining = businessNet - totalReceived
 
@@ -334,7 +339,8 @@ class ProfitViewModel @Inject constructor(
             val personal =
                 repository.getProfitAfterPersonalExpensesBetween(start, end).first() ?: 0.0
 
-            val profits = entities.map { it.toProfitList(personal) }
+            val sorted = entities.sortedByDescending { it.receivedDate }
+            val profits = sorted.map { it.toProfitList(personal) }
             val totalReceived = profits.sumOf { it.profitReceived }
             val remaining = businessNet - totalReceived
 
