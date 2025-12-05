@@ -91,7 +91,7 @@ class PurchaseAddFragment : Fragment() {
             binding.actvSupplierName.setAdapter(adapter)
 
             binding.actvSupplierName.setOnItemClickListener { _, _, pos, _ ->
-                selectedSupplier = list[pos]
+                selectedSupplier = sorted[pos]
                 updateSupplierUI()
                 recalcAll()
             }
@@ -356,7 +356,7 @@ class PurchaseAddFragment : Fragment() {
 
         viewModel.addPurchase(purchase)
 
-        Toast.makeText(requireContext(), "$purchase is saved in db", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Purchased saved in db", Toast.LENGTH_SHORT).show()
 
         return true
     }

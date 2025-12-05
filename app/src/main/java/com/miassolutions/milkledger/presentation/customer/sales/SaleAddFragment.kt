@@ -353,7 +353,7 @@ class SaleAddFragment : Fragment() {
 
         viewModel.addSale(sale)
 
-        Toast.makeText(requireContext(), "Sale saved", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Sale saved in db", Toast.LENGTH_SHORT).show()
         return true
     }
 
