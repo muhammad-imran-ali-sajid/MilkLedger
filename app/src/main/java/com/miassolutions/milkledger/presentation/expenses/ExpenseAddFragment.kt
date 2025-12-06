@@ -15,6 +15,7 @@ import com.miassolutions.milkledger.databinding.FragmentAddExpenseBinding
 import com.miassolutions.milkledger.databinding.ItemPersonalExpenseBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @AndroidEntryPoint
@@ -23,7 +24,11 @@ class ExpenseAddFragment : Fragment() {
     private var _binding: FragmentAddExpenseBinding? = null
     private val binding get() = _binding!!
 
+
+
     private val viewModel: ExpenseViewModel by viewModels()
+
+    private var selectedDate: LocalDate = LocalDate.now()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentAddExpenseBinding.inflate(inflater, container, false)
@@ -33,7 +38,7 @@ class ExpenseAddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.etDate.setText(LocalDate.now().toDisplayFormat())
+        binding.etDate.setText(selectedDate.toDisplayFormat())
 
         binding.btnAddPersonal.setOnClickListener { addPersonalField() }
         binding.btnSave.setOnClickListener { saveNew() }
@@ -55,34 +60,21 @@ class ExpenseAddFragment : Fragment() {
         binding.personalContainer.addView(itemBinding.root)
     }
 
-    // ─────────────────────────────────────────────────────────────────────────────
-    // Parse Selected Date
-    // ─────────────────────────────────────────────────────────────────────────────
-    private fun getSelectedDate(): LocalDate? {
-        return try {
-            LocalDate.parse(binding.etDate.text.toString())
-        } catch (_: Exception) {
-            null
-        }
-    }
+
 
     // ─────────────────────────────────────────────────────────────────────────────
     // SAVE NEW EXPENSES
     // ─────────────────────────────────────────────────────────────────────────────
     private fun saveNew() {
-        val date = getSelectedDate()
-        if (date == null) {
-            Toast.makeText(requireContext(), "Select valid date", Toast.LENGTH_SHORT).show()
-            return
-        }
+        val date = selectedDate
 
         val note = binding.etNotes.text?.toString()?.trim()
         val list = mutableListOf<ExpensesEntity>()
 
         // Add static expenses
-        addStaticExpense("Fuel", binding.etFuelAmount.text.toString(), date, note, list)
-        addStaticExpense("Vehicle", binding.etVehicleAmount.text.toString(), date, note, list)
-        addStaticExpense("Refreshment", binding.etRefreshmentAmount.text.toString(), date, note, list)
+        addStaticExpense("Fuel", binding.etFuelAmount.text.toString(), date, list)
+        addStaticExpense("Vehicle", binding.etVehicleAmount.text.toString(), date, list)
+        addStaticExpense("Refreshment", binding.etRefreshmentAmount.text.toString(), date,  list)
 
         // Add dynamic personal expenses (static + dynamic saved in list)
         for (i in 0 until binding.personalContainer.childCount) {
@@ -121,7 +113,6 @@ class ExpenseAddFragment : Fragment() {
         title: String,
         amountStr: String?,
         date: LocalDate,
-        note: String?,
         list: MutableList<ExpensesEntity>
     ) {
         val amount = amountStr?.toDoubleOrNull() ?: return
@@ -132,7 +123,7 @@ class ExpenseAddFragment : Fragment() {
                     date = date,
                     expenseTitle = title,
                     expenseAmount = amount,
-                    expenseNote = note,
+
                     isDefault = true
                 )
             )
@@ -146,9 +137,10 @@ class ExpenseAddFragment : Fragment() {
         binding.etDate.setOnClickListener {
             showExpenseDatePicker(
                 isAuthorized = true,
-                initialDate = getSelectedDate() ?: LocalDate.now(),
+                initialDate = selectedDate,
                 onPicked = { picked ->
-                    binding.etDate.setText(picked.toString())
+                    selectedDate = picked
+                    binding.etDate.setText(picked.toDisplayFormat())
                 }
             )
         }

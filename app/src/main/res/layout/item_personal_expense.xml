@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -8,11 +9,13 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
         android:layout_weight="1"
+
         android:layout_height="wrap_content"
         android:hint="Title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPersonalTitle"
+            android:inputType="textCapWords"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -21,6 +24,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
         android:layout_weight="1"
+        android:layout_marginStart="4dp"
         android:layout_height="wrap_content"
         android:hint="Amount">
 
@@ -34,10 +38,11 @@
 
     <ImageView
         android:id="@+id/btnRemove"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:padding="8dp"
+
         android:src="@drawable/ic_delete"
-        android:tint="@color/red" />
+        app:tint="@color/red" />
 
 </LinearLayout>
