@@ -1,19 +1,15 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
 import android.graphics.Color
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
+import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
@@ -23,16 +19,15 @@ import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
-import com.miassolutions.milkledger.databinding.BottomsheetAddPurchaseBinding
+import com.miassolutions.milkledger.databinding.FragmentAddPurchaseBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class PurchaseAddFragment : Fragment() {
+class PurchaseAddFragment :
+    BaseFragment<FragmentAddPurchaseBinding>(FragmentAddPurchaseBinding::inflate) {
 
-    private var _binding: BottomsheetAddPurchaseBinding? = null
-    private val binding get() = _binding!!
 
     private val viewModel: PurchaseAddViewModel by viewModels()
 
@@ -42,17 +37,7 @@ class PurchaseAddFragment : Fragment() {
     private var dateSelected: LocalDate? = null
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = BottomsheetAddPurchaseBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun setupViews() {
         setupSupplierDropdown()
         setupListeners()
 
@@ -72,6 +57,7 @@ class PurchaseAddFragment : Fragment() {
 
         }
     }
+
 
     // ---------------------------------------------------------------------
     // SUPPLIER DROPDOWN
@@ -99,7 +85,6 @@ class PurchaseAddFragment : Fragment() {
     }
 
 
-
     private fun updateSupplierUI() {
         val s = selectedSupplier ?: return
         binding.tvAdvanceAmount.text = s.advanceAmount.toPriceStr()
@@ -112,81 +97,85 @@ class PurchaseAddFragment : Fragment() {
     // ---------------------------------------------------------------------
 
 
-    private fun setupListeners() = binding.apply {
+    override fun setupListeners() {
+        binding.apply {
 
-        val recalc = { recalcAll() }
+            val recalc = { recalcAll() }
 
-        etVolume.doOnTextChanged { _, _, _, _ -> recalc() }
-        etFat.doOnTextChanged { _, _, _, _ -> recalc() }
-        etLr.doOnTextChanged { _, _, _, _ -> recalc() }
-        etPaid.doOnTextChanged { _, _, _, _ -> recalcBalance() }
+            etVolume.doOnTextChanged { _, _, _, _ -> recalc() }
+            etFat.doOnTextChanged { _, _, _, _ -> recalc() }
+            etLr.doOnTextChanged { _, _, _, _ -> recalc() }
+            etPaid.doOnTextChanged { _, _, _, _ -> recalcBalance() }
 
-        listOf(etVolume, etFat, etLr, etPaid, etNotes)
-            .forEach { autoSelectOnFocus(it) }
+            listOf(etVolume, etFat, etLr, etPaid, etNotes)
+                .forEach { autoSelectOnFocus(it) }
 
-        btnSave.setOnClickListener {
-            val supplier = selectedSupplier ?: return@setOnClickListener
-            val date = dateSelected ?: LocalDate.now()
+            btnSave.setOnClickListener {
+                val supplier = selectedSupplier ?: return@setOnClickListener
+                val date = dateSelected ?: LocalDate.now()
 
-            viewModel.checkDuplicate(supplier.supplierId, date) { isDuplicate ->
+                viewModel.checkDuplicate(supplier.supplierId, date) { isDuplicate ->
 
-                if (isDuplicate) {
-                    Toast.makeText(
-                        requireContext(),
-                        "${supplier.supplierName} already exists for ${date.toDisplayFormat()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@checkDuplicate
-                }
+                    if (isDuplicate) {
+                        Toast.makeText(
+                            requireContext(),
+                            "${supplier.supplierName} already exists for ${date.toDisplayFormat()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@checkDuplicate
+                    }
 
-                if (savePurchase()) {
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    if (savePurchase()) {
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    }
                 }
             }
-        }
 
 
-        btnSaveNew.setOnClickListener {
-            val supplier = selectedSupplier ?: return@setOnClickListener
-            val date = dateSelected ?: LocalDate.now()
 
-            viewModel.checkDuplicate(supplier.supplierId, date) { isDuplicate ->
+            btnSaveNew.setOnClickListener {
+                val supplier = selectedSupplier ?: return@setOnClickListener
+                val date = dateSelected ?: LocalDate.now()
 
-                if (isDuplicate) {
-                    Toast.makeText(
-                        requireContext(),
-                        "${supplier.supplierName} already exists for ${date.toDisplayFormat()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@checkDuplicate
+                viewModel.checkDuplicate(supplier.supplierId, date) { isDuplicate ->
+
+                    if (isDuplicate) {
+                        Toast.makeText(
+                            requireContext(),
+                            "${supplier.supplierName} already exists for ${date.toDisplayFormat()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@checkDuplicate
+                    }
+
+                    savePurchase()
+                    resetForm()
                 }
-
-                savePurchase()
-                resetForm()
             }
-        }
 
 
-        btnCancel.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-        binding.btnDate.text = LocalDate.now().toDisplayFormat()
 
-        binding.btnDate.setOnClickListener {
-            val role = SharedPrefsHelper.getUserRole(requireContext())
-            // Assume you fetch the authorization status dynamically
-            val isUserAuthorized = role == "admin"
+            btnCancel.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+            binding.btnDate.text = LocalDate.now().toDisplayFormat()
 
-            showExpenseDatePicker(
+            binding.btnDate.setOnClickListener {
+                val role = SharedPrefsHelper.getUserRole(requireContext())
+                // Assume you fetch the authorization status dynamically
+                val isUserAuthorized = role == "admin"
 
-                isAuthorized = isUserAuthorized,
-                initialDate = LocalDate.now(),
+                showExpenseDatePicker(
 
-                // The selectedDate (LocalDate) is available here!
-                onPicked = { selectedDate: LocalDate ->
-                    dateSelected = selectedDate
-                    binding.btnDate.text = selectedDate.toDisplayFormat()
+                    isAuthorized = isUserAuthorized,
+                    initialDate = LocalDate.now(),
 
-                }
-            )
+                    // The selectedDate (LocalDate) is available here!
+                    onPicked = { selectedDate: LocalDate ->
+                        dateSelected = selectedDate
+                        binding.btnDate.text = selectedDate.toDisplayFormat()
+
+                    }
+                )
+            }
         }
     }
 
@@ -293,7 +282,7 @@ class PurchaseAddFragment : Fragment() {
     // SAVE PURCHASE
     // ---------------------------------------------------------------------
 
-    private fun savePurchase() : Boolean {
+    private fun savePurchase(): Boolean {
         val supplier = selectedSupplier
         if (supplier == null) {
             binding.tilSupplierName.error = "Select a supplier"
@@ -369,8 +358,5 @@ class PurchaseAddFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }
