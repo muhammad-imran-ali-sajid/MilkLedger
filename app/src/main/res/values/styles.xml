@@ -97,7 +97,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#333</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -321,7 +321,7 @@
 
     <style name="DashboardCard">
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginTop">6dp</item>
         <item name="android:elevation">4dp</item>
         <item name="cardBackgroundColor">@color/blue_100</item>
         <item name="android:radius">12dp</item>
@@ -352,6 +352,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/white</item>
         <item name="android:textSize">18sp</item>
+
         <item name="android:textStyle">bold</item>
     </style>
 

@@ -1,28 +1,18 @@
 package com.miassolutions.milkledger.presentation.profit
 
-import android.util.Log
 import android.view.View
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
-import com.miassolutions.milkledger.core.pdf.profitreport.PdfProfitSummary
-import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReceiptPdf
-import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReportGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.DatePickerLogic
-import com.miassolutions.milkledger.core.util.formatPeriodLabel
-import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
-import com.miassolutions.milkledger.domain.model.Profit
+import com.miassolutions.milkledger.databinding.LayoutSummaryProfitBinding
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterController
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
-import com.miassolutions.milkledger.presentation.stats.ProfitSummary
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 
 
 @AndroidEntryPoint
@@ -61,6 +51,38 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+
+    private fun showSummary(
+        businessProfit: Double,
+        netProfitAfterPersonal: Double,
+        receivedProfit: Double,
+        remainingProfit: Double,
+
+        ) {
+
+
+        binding.apply {
+            cardProfitSummary.setTitle("Summary")
+
+            val summaryBinding by lazy {
+                LayoutSummaryProfitBinding.inflate(layoutInflater)
+            }
+
+            cardProfitSummary.setContent(summaryBinding.root)
+            cardProfitSummary.collapse()
+
+
+            summaryBinding.apply {
+                tvBusinessProfit.text = businessProfit.toRoundedStr()
+                tvNetProfitAfterPersonal.text = netProfitAfterPersonal.toRoundedStr()
+                tvTotalReceivedProfit.text = receivedProfit.toPriceStr()
+                tvRemainingProfit.text = remainingProfit.toRoundedStr()
+
+            }
+
+        }
     }
 
     private fun generateReport() {
@@ -134,10 +156,14 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
     override fun setupObservers() {
         viewModel.uiState.collectState { state ->
-            binding.tvBusinessProfit.text = state.netBusinessProfit.toPriceStr()
-            binding.tvNetProfitAfterPersonal.text = state.netProfitAfterPersonalExpenses.toPriceStr()
-            binding.tvTotalReceivedProfit.text = state.totalReceived.toPriceStr()
-            binding.tvRemainingProfit.text = state.remainingProfit.toPriceStr()
+
+
+            showSummary(
+                businessProfit = state.netBusinessProfit,
+                netProfitAfterPersonal = state.netProfitAfterPersonalExpenses,
+                receivedProfit = state.totalReceived,
+                remainingProfit = state.remainingProfit
+            )
 
 
 
@@ -148,7 +174,8 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
             binding.emptyLayout.emptyTitle.text = "No record yet"
             binding.emptyLayout.emptySubtitle.text = "Tap the + button to add your first record"
 
-            binding.emptyLayout.emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.emptyLayout.emptyStateLayout.visibility =
+                if (isEmpty) View.VISIBLE else View.GONE
             binding.rvProfit.visibility = if (isEmpty) View.GONE else View.VISIBLE
 
 

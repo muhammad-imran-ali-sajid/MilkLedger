@@ -297,7 +297,7 @@
 
                         <TextView
                             style="@style/DashboardLabel"
-                            android:text="Profit" />
+                            android:text="Gross Profit" />
 
                         <TextView
                             android:id="@+id/tv_net_profit"
@@ -320,7 +320,7 @@
 
                         <TextView
                             style="@style/DashboardLabel"
-                            android:text="Personal Exp" />
+                            android:text="Prsnl Exp" />
 
                         <TextView
                             android:id="@+id/tvPersonalExpense"
@@ -342,7 +342,7 @@
 
                         <TextView
                             style="@style/DashboardLabel"
-                            android:text="Rem. Profit" />
+                            android:text="Net Profit" />
 
                         <TextView
                             android:id="@+id/tvRemainingProfit"

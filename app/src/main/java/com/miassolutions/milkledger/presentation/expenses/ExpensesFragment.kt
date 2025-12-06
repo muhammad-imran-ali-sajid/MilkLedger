@@ -8,10 +8,14 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
+import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
+import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
@@ -33,6 +37,8 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
         )
         binding.rvExpenses.adapter = adapter
     }
+
+
 
 
     // ─────────────────────────────────────────────────────────────────────────────
@@ -115,6 +121,22 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
         }
 
 
+        binding.dateHeader.tvSelectedDate.setOnClickListener {
+            val currentDate = viewModel.uiState.value.currentDate
+
+            val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+            val isUserAuthorized = isAdmin // Replace with actual auth check
+
+            showExpenseDatePicker(
+                isAuthorized = isUserAuthorized,
+                initialDate = currentDate,
+                onPicked = { selectedDate: LocalDate ->
+
+                    viewModel.onDateSelected(selectedDate)
+                }
+            )
+
+        }
 
 
         binding.dateHeader.btnPrevDate.setOnClickListener {
