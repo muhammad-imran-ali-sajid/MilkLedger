@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
@@ -39,7 +40,7 @@ class ProfitViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val profitAfterPersonal: StateFlow<Double> = _selectedDate
         .flatMapLatest { date ->
-            repository.getProfitAfterPersonalExpenses(date)
+            repository.getNetProfitDaily(date)
         }
         .map { it ?: 0.0 }   // <-- FIX: handle null values
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
@@ -59,7 +60,7 @@ class ProfitViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val todayNetProfit: StateFlow<Double> =
         _selectedDate.flatMapLatest { date ->
-            repository.getNetBusinessProfitDaily(date)
+            repository.getGrossProfitDaily(date)
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
 
@@ -68,7 +69,7 @@ class ProfitViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    netBusinessProfit = repository.getNetBusinessProfitDaily(date).first()
+                    netBusinessProfit = repository.getGrossProfitDaily(date).first()
                 )
             }
         }
@@ -128,7 +129,7 @@ class ProfitViewModel @Inject constructor(
                 repository.getAllNetProfit(),
                 repository.getNetBusinessProfit(),
                 repository.getNetProfitAfterPersonal()
-            ){ netList, businessNet, profitAfterPersonal ->
+            ) { netList, businessNet, profitAfterPersonal ->
 
                 val pae = profitAfterPersonal
 
@@ -161,10 +162,6 @@ class ProfitViewModel @Inject constructor(
             }
 
 
-
-
-
-
         }
     }
 
@@ -174,21 +171,21 @@ class ProfitViewModel @Inject constructor(
     private fun fetchDaily(date: LocalDate) {
         viewModelScope.launch {
             combine(
-                repository.getDaily(date),
-                repository.getNetBusinessProfitDaily(date),
-                repository.getProfitAfterPersonalExpenses(date)
-            ) { dailyList, businessNet, profitAfterPersonal ->
+                repository.getDailyReceivedProfit(date),
+                repository.getGrossProfitDaily(date),
+                repository.getNetProfitDaily(date)
+            ) { receivedProfitList, grossProfit, netProfit ->
 
-                val pae = profitAfterPersonal ?: 0.0
+                val pae = netProfit ?: 0.0
 
-                val sorted = dailyList.sortedByDescending { it.receivedDate }
+                val sorted = receivedProfitList.sortedByDescending { it.receivedDate }
                 val profits = sorted.map { it.toProfitList(pae) }
                 val totalReceived = profits.sumOf { it.profitReceived }
-                val remaining = profitAfterPersonal?.minus(totalReceived)
+                val remaining = netProfit?.minus(totalReceived)
 
                 ProfitDailyResult(
                     list = profits,
-                    netBusinessProfit = businessNet,
+                    netBusinessProfit = grossProfit,
                     personalExpenses = pae,
                     totalReceived = totalReceived,
                     remainingProfit = remaining
@@ -223,22 +220,23 @@ class ProfitViewModel @Inject constructor(
     // ------------------------------------------------------------------------------
     private fun fetchWeekly(start: LocalDate, end: LocalDate) {
         viewModelScope.launch {
-            repository.getWeekly(start, end).collect { entities ->
+            combine(
+                repository.getReceivedProfitBetween(start, end),
+                repository.getGrossProfitBetween(start, end),
+                repository.getNetProfitBetween(start, end),
 
-                val businessNet = repository.getNetProfitWeekly(start, end)
-                val personal =
-                    repository.getProfitAfterPersonalExpensesBetween(start, end).first() ?: 0.0
+            ) { rpList, grossProfit, netProfit ->
 
-                val sorted = entities.sortedByDescending { it.receivedDate }
-                val profits = sorted.map { it.toProfitList(personal) }
+                val sorted = rpList.sortedByDescending { it.receivedDate }
+                val profits = sorted.map { it.toProfitList(netProfit) }
                 val totalReceived = profits.sumOf { it.profitReceived }
-                val remaining = businessNet - totalReceived
+                val remaining = grossProfit - totalReceived
 
                 _uiState.update {
                     it.copy(
                         filteredList = profits,
-                        netBusinessProfit = businessNet,
-                        netProfitAfterPersonalExpenses = personal,
+                        netBusinessProfit = grossProfit,
+                        netProfitAfterPersonalExpenses = netProfit,
                         totalReceived = totalReceived,
                         remainingProfit = remaining,
                         periodLabel = formatPeriodLabel(start, end),
@@ -246,7 +244,7 @@ class ProfitViewModel @Inject constructor(
                         endDate = end
                     )
                 }
-            }
+            }.collect()
 
         }
     }
@@ -263,7 +261,7 @@ class ProfitViewModel @Inject constructor(
                 val businessNet =
                     repository.getNetProfitMonthly(yearMonth.year, yearMonth.monthValue)
                 val personal =
-                    repository.getProfitAfterPersonalExpensesBetween(start, end).first() ?: 0.0
+                    repository.getNetProfitBetween(start, end).first() ?: 0.0
                 val sorted = entities.sortedByDescending { it.receivedDate }
                 val profits = sorted.map { it.toProfitList(personal) }
                 val totalReceived = profits.sumOf { it.profitReceived }
@@ -298,7 +296,7 @@ class ProfitViewModel @Inject constructor(
             repository.getYearly(start).collect { entities ->
                 val businessNet = repository.getNetProfitYearly(year)
                 val personal =
-                    repository.getProfitAfterPersonalExpensesBetween(start, end).first() ?: 0.0
+                    repository.getNetProfitBetween(start, end).first() ?: 0.0
 
                 val sorted = entities.sortedByDescending { it.receivedDate }
                 val profits = sorted.map { it.toProfitList(personal) }
@@ -337,7 +335,7 @@ class ProfitViewModel @Inject constructor(
             val entities = repository.getCustom(start, end)
             val businessNet = repository.getNetProfitCustom(start, end)
             val personal =
-                repository.getProfitAfterPersonalExpensesBetween(start, end).first() ?: 0.0
+                repository.getNetProfitBetween(start, end).first() ?: 0.0
 
             val sorted = entities.sortedByDescending { it.receivedDate }
             val profits = sorted.map { it.toProfitList(personal) }

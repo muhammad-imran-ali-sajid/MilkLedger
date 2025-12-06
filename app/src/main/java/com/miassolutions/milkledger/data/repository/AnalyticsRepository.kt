@@ -114,7 +114,7 @@ class AnalyticsRepository @Inject constructor(
     }
 
 
-    fun getProfitAfterPersonalExpensesToday(date: LocalDate): Flow<Double?> = combine(
+    fun getNetProfitDaily(date: LocalDate): Flow<Double?> = combine(
         reportsDao.getTotalSalesDaily(date),
         reportsDao.getTotalExpensesDaily(date),
         reportsDao.getTotalPurchasesDaily(date)
@@ -127,7 +127,7 @@ class AnalyticsRepository @Inject constructor(
     }
 
 
-    fun getProfitAfterPersonalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
+    fun getNetProfitBetween(start: LocalDate, end: LocalDate): Flow<Double> =
         combine(
             reportsDao.getTotalSalesBetween(start, end),
             reportsDao.getTotalExpensesBetween(start, end),

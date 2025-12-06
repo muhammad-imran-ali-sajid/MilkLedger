@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -122,8 +123,8 @@ class ProfitRepository @Inject constructor(
     // LIST FILTERS
     // --------------------------------------------------------------------
 
-    fun getDaily(date: LocalDate): Flow<List<ProfitEntity>> =
-        dao.getDaily(date)
+    fun getDailyReceivedProfit(date: LocalDate): Flow<List<ProfitEntity>> =
+        dao.getDailyReceivedProfit(date)
 
 
 //    fun getDailyProfit(date: LocalDate): Flow<List<Profit>> = combine(
@@ -137,8 +138,8 @@ class ProfitRepository @Inject constructor(
 //
 //    }
 
-    fun getWeekly(start: LocalDate, end: LocalDate): Flow<List<ProfitEntity>> =
-        dao.getBetweenFlow(start, end)
+    fun getReceivedProfitBetween(start: LocalDate, end: LocalDate): Flow<List<ProfitEntity>> =
+        dao.getReceivedProfitBetweenFlow(start, end)
 
 
     suspend fun getWeeklyWithNetProfit(start: LocalDate, end: LocalDate): List<Profit> {
@@ -172,16 +173,16 @@ class ProfitRepository @Inject constructor(
 
     fun getProfitToday(date: LocalDate): Flow<Double?> = mDao.getProfitToday(date)
 
-    fun getProfitAfterPersonalExpenses(date: LocalDate): Flow<Double?> =
-        mDao.getProfitAfterPersonalExpensesToday(date)
+    fun getNetProfitDaily(date: LocalDate): Flow<Double?> =
+        mDao.getNetProfitDaily(date)
 
-    fun getProfitAfterPersonalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        mDao.getProfitAfterPersonalExpensesBetween(start, end)
+    fun getNetProfitBetween(start: LocalDate, end: LocalDate): Flow<Double> =
+        mDao.getNetProfitBetween(start, end)
 
     suspend fun getNetProfitOnce(): Double = getNetBusinessProfit().firstOrZero()
 
     // Daily
-    fun getNetBusinessProfitDaily(date: LocalDate): Flow<Double> =
+    fun getGrossProfitDaily(date: LocalDate): Flow<Double> =
         combine(
             mDao.getTotalSalesDaily(date),
             mDao.getTotalPurchasesDaily(date),
@@ -202,6 +203,19 @@ class ProfitRepository @Inject constructor(
         val expenses = mDao.getTotalExpensesBetween(start, end).firstOrZero()
         return sales - (purchases + expenses)
     }
+
+
+
+    fun getGrossProfitBetween(start: LocalDate, end: LocalDate): Flow<Double> = flow {
+        val sales = mDao.getTotalSalesBetween(start, end).firstOrZero()
+        val purchases = mDao.getTotalPurchasesBetween(start, end).firstOrZero()
+        val expenses = mDao.getTotalExpensesBetween(start, end).firstOrZero()
+
+        val netProfit = sales - (purchases + expenses)
+
+        emit(netProfit) // Emit the net profit as a flow
+    }
+
 
     suspend fun getNetProfitCustom(start: LocalDate, end: LocalDate): Double =
         getNetProfitWeekly(start, end) // Same logic

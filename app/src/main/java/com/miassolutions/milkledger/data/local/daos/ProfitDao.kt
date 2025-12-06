@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -35,7 +34,7 @@ interface ProfitDao {
     // DAILY
     // -------------------------------
     @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
-    fun getDaily(date: LocalDate): Flow<List<ProfitEntity>>
+    fun getDailyReceivedProfit(date: LocalDate): Flow<List<ProfitEntity>>
 
     @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
     fun getDailyFlow(date: LocalDate): Flow<List<ProfitEntity>>
@@ -47,7 +46,7 @@ interface ProfitDao {
     suspend fun getBetween(start: LocalDate, end: LocalDate): List<ProfitEntity>
 
     @Query("SELECT * FROM profit_table WHERE receivedDate BETWEEN :start AND :end")
-    fun getBetweenFlow(start: LocalDate, end: LocalDate): Flow<List<ProfitEntity>>
+    fun getReceivedProfitBetweenFlow(start: LocalDate, end: LocalDate): Flow<List<ProfitEntity>>
 
     // -------------------------------
     // MONTHLY (yyyy-MM)
