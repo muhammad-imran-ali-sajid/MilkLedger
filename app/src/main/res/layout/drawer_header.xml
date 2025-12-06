@@ -5,6 +5,7 @@
     android:layout_height="200dp"
     android:background="@drawable/drawer_header_background"
     android:gravity="bottom"
+    android:id="@+id/drawerLayout"
     android:orientation="vertical"
     android:padding="16dp">
 

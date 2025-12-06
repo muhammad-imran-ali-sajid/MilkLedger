@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
     @Inject
     lateinit var appPreferences: AppPreferencesManager
 
-    @Inject lateinit var dataRepository: DataRepository
+    @Inject
+    lateinit var dataRepository: DataRepository
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -120,6 +121,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         val email = SharedPrefsHelper.getUserMail(this)
 
         val headerBinding = DrawerHeaderBinding.bind(binding.navigationView.getHeaderView(0))
+        headerBinding.drawerLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.primary))
         headerBinding.tvVersion.text = "${role.uppercase()} Version"
         headerBinding.tvEmail.text = email
     }

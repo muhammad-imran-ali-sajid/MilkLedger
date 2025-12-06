@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:background="@drawable/bg_edittext_readable"
-    android:backgroundTint="@color/white"
+    android:backgroundTint="#efefef"
 
 android:layout_marginVertical="4dp"
     android:clickable="true"
