@@ -111,13 +111,13 @@
                     app:cornerRadius="8dp" />
 
                 <Button
-                    android:id="@+id/btnSoftBlack"
+                    android:id="@+id/btnPrimaryColor"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
                     android:layout_marginStart="8dp"
-                    android:backgroundTint="#17202A"
-                    android:text="Soft Black"
+                    android:backgroundTint="@color/primary"
+                    android:text="Primary"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
                     app:cornerRadius="8dp" />

@@ -53,8 +53,8 @@ class SettingsFragment :
             saveAndApplyColor(R.color.sage_green)
         }
 
-        binding.btnSoftBlack.setOnClickListener {
-            saveAndApplyColor(R.color.soft_black)
+        binding.btnPrimaryColor.setOnClickListener {
+            saveAndApplyColor(R.color.primary)
         }
 
         binding.btnAddDefaultExpense.setOnClickListener {

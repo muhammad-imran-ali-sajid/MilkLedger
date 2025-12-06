@@ -13,6 +13,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReportPdf
 import com.miassolutions.milkledger.core.pdf.purchasereport.PdfPurchaseSummary
 import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
+import com.miassolutions.milkledger.core.prefs.SalesPrefsHelper
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.isToday
@@ -88,49 +89,60 @@ class PurchaseFragment :
     }
 
     override fun onMenuCreated(menu: Menu) {
-        val editModeItem = menu.findItem(R.id.action_edit_mode)
+//        val editModeItem = menu.findItem(R.id.action_edit_mode)
         val pdfMenuItem = menu.findItem(R.id.action_gen_pdf)
-        editModeSwitch = editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
+//        editModeSwitch = editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
 
         pdfMenuItem?.setOnMenuItemClickListener {
-            generateReport()
+            showDialog(
+                title = "Confirmation",
+                message = "Do you want to generate pdf report?",
+                onAction = { generateReport() }
+            )
+
             true
         }
 
         // Fetch the user role once for the switch logic
-        val role = SharedPrefsHelper.getUserRole(requireContext())
+//        val role = SharedPrefsHelper.getUserRole(requireContext())
 
-        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
-            val selectedDate = viewModel.uiState.value.currentDate
-            val isToday = selectedDate.isToday()
-            val isLockedToday = isEditModeLockedForToday() // Check lock state
-
-            if (isChecked) {
-                // Check 1: Block non-admins from enabling at all times.
-                if (role != "admin") {
-                    // Revert the switch state to off and show a message
-                    editModeSwitch?.isChecked = false
-                    showSnackbar("Only administrators are allowed to enable edit mode.")
-                    return@setOnCheckedChangeListener
-                }
-
-                // If we reach here, the user IS an admin. Admin can always enable.
-                showSnackbar("Edit mode enabled")
-
-                setEditModeLockedForToday(false)
-                enableEditMode()
-
-            } else {
-                // Allow anyone to disable (turn off) the switch
-                showSnackbar("Edit mode disabled")
-                disableEditMode()
-
-                // Apply PERMANENT LOCK: If it's today, set the lock to prevent re-enabling by non-admins.
-                if (isToday) {
-                    setEditModeLockedForToday(true)
-                }
-            }
-        }
+//        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
+//
+//            SalesPrefsHelper.setEditModeActive(requireContext(), isChecked)
+//
+//            val selectedDate = viewModel.uiState.value.currentDate
+//            val isToday = selectedDate.isToday()
+//            val isLockedToday = isEditModeLockedForToday() // Check lock state
+//
+//            if (isChecked) {
+//                // Check 1: Block non-admins from enabling at all times.
+//                if (role != "admin") {
+//                    // Revert the switch state to off and show a message
+//                    editModeSwitch?.isChecked = false
+//                    SalesPrefsHelper.setEditModeActive(requireContext(), false)
+//                    showSnackbar("Only administrators are allowed to enable edit mode.")
+//                    return@setOnCheckedChangeListener
+//                }
+//
+//                // If we reach here, the user IS an admin. Admin can always enable.
+//                showSnackbar("Edit mode enabled")
+//
+//                enableEditMode()
+//                SalesPrefsHelper.setEditModeActive(requireContext(), true)
+//
+//                setEditModeLockedForToday(false)
+//            } else {
+//                // Allow anyone to disable (turn off) the switch
+//                showSnackbar("Edit mode disabled")
+//                disableEditMode()
+//                SalesPrefsHelper.setEditModeActive(requireContext(), false)
+//
+//                // Apply PERMANENT LOCK: If it's today, set the lock to prevent re-enabling by non-admins.
+//                if (isToday) {
+//                    setEditModeLockedForToday(true)
+//                }
+//            }
+//        }
 
 
     }
@@ -148,9 +160,11 @@ class PurchaseFragment :
                 val isEmpty = state.purchasesForDate.isEmpty()
 
                 binding.emptyLayout.emptyTitle.text = "No purchase yet"
-                binding.emptyLayout.emptySubtitle.text = "Tap the + button to add your first purchase"
+                binding.emptyLayout.emptySubtitle.text =
+                    "Tap the + button to add your first purchase"
 
-                binding.emptyLayout.emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
+                binding.emptyLayout.emptyStateLayout.visibility =
+                    if (isEmpty) View.VISIBLE else View.GONE
                 binding.rvPurchases.visibility = if (isEmpty) View.GONE else View.VISIBLE
 
 
@@ -223,6 +237,13 @@ class PurchaseFragment :
 
 
         val recordList = filteredList.toPurchaseRecordList()
+
+
+        if (recordList.isEmpty()) {
+
+            showSnackbar("The record is empty. PDF can't be generated.")
+            return
+        }
 
         val pdfSummary = pdfSummary(
             totalQty = state.totalVolume,

@@ -51,60 +51,65 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         val pdfMenuItem = menu.findItem(R.id.action_sale_pdf)
 
         pdfMenuItem?.setOnMenuItemClickListener {
-            generateReport()
+            showDialog(
+                title = "Confirmation",
+                message = "Do you want to generate pdf report?",
+                onAction = { generateReport() }
+            )
+
             true
         }
 
 
-        val editModeItem = menu.findItem(R.id.action_edit_mode)
-        editModeSwitch =
-            editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
+//        val editModeItem = menu.findItem(R.id.action_edit_mode)
+//        editModeSwitch =
+//            editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
 
-        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-
-        // --- 1. INITIALIZE SWITCH STATE ---
-        initializeEditModeState(isAdmin, viewModel.uiState.value.currentDate)
-
-        // --- 2. SETUP LISTENER ---
-        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
-
-            // Step A: Immediately save the intended status
-            SalesPrefsHelper.setEditModeActive(requireContext(), isChecked)
-
-            if (isChecked) {
-
-                if (!isAdmin) {
-                    // Non-admin trying to enable when disabled for today
-                    editModeSwitch?.isChecked = false
-                    SalesPrefsHelper.setEditModeActive(requireContext(), false)
-                    showSnackbar("As a non-admin, you cannot re-enable edit mode once disabled for today.")
-                    return@setOnCheckedChangeListener
-                }
-
-                // --- ADMIN ALLOWED FREELY ---
-                enableEditMode()
-                SalesPrefsHelper.setEditModeActive(requireContext(), true)
-
-                // Admin ignores lock
-                SalesPrefsHelper.setEditModeLockedForToday(requireContext(), false)
-
-            } else {
-
-                disableEditMode()
-                SalesPrefsHelper.setEditModeActive(requireContext(), false)
-
-                val isToday = viewModel.uiState.value.currentDate.isToday()
-
-                if (!isAdmin && isToday) {
-                    // Apply permanent lock ONLY for non-admin
-                    SalesPrefsHelper.setEditModeLockedForToday(requireContext(), true)
-                    showSnackbar("Edit mode disabled and permanently locked for today.")
-                } else {
-                    showSnackbar("Edit mode disabled")
-                }
-            }
-
-        }
+//        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+//
+//        // --- 1. INITIALIZE SWITCH STATE ---
+//        initializeEditModeState(isAdmin, viewModel.uiState.value.currentDate)
+//
+//        // --- 2. SETUP LISTENER ---
+//        editModeSwitch?.setOnCheckedChangeListener { _, isChecked ->
+//
+//            // Step A: Immediately save the intended status
+//            SalesPrefsHelper.setEditModeActive(requireContext(), isChecked)
+//
+//            if (isChecked) {
+//
+//                if (!isAdmin) {
+//                    // Non-admin trying to enable when disabled for today
+//                    editModeSwitch?.isChecked = false
+//                    SalesPrefsHelper.setEditModeActive(requireContext(), false)
+//                    showSnackbar("As a non-admin, you cannot re-enable edit mode once disabled for today.")
+//                    return@setOnCheckedChangeListener
+//                }
+//
+//                // --- ADMIN ALLOWED FREELY ---
+//                enableEditMode()
+//                SalesPrefsHelper.setEditModeActive(requireContext(), true)
+//
+//                // Admin ignores lock
+//                SalesPrefsHelper.setEditModeLockedForToday(requireContext(), false)
+//
+//            } else {
+//
+//                disableEditMode()
+//                SalesPrefsHelper.setEditModeActive(requireContext(), false)
+//
+//                val isToday = viewModel.uiState.value.currentDate.isToday()
+//
+//                if (!isAdmin && isToday) {
+//                    // Apply permanent lock ONLY for non-admin
+//                    SalesPrefsHelper.setEditModeLockedForToday(requireContext(), true)
+//                    showSnackbar("Edit mode disabled and permanently locked for today.")
+//                } else {
+//                    showSnackbar("Edit mode disabled")
+//                }
+//            }
+//
+//        }
     }
 
     /**
@@ -224,6 +229,12 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
 
         val recordList = filteredList.toSaleRecordList()
+
+        if (recordList.isEmpty()) {
+
+            showSnackbar("The record is empty. PDF can't be generated.")
+            return
+        }
 
         val pdfSummary = pdfSummary(
             totalQty = state.totalMilk,
