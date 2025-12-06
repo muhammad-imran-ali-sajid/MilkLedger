@@ -1,13 +1,9 @@
 package com.miassolutions.milkledger.presentation.expenses
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
@@ -15,29 +11,18 @@ import com.miassolutions.milkledger.databinding.FragmentAddExpenseBinding
 import com.miassolutions.milkledger.databinding.ItemPersonalExpenseBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 @AndroidEntryPoint
-class ExpenseAddFragment : Fragment() {
-
-    private var _binding: FragmentAddExpenseBinding? = null
-    private val binding get() = _binding!!
-
+class ExpenseAddFragment :
+    BaseFragment<FragmentAddExpenseBinding>(FragmentAddExpenseBinding::inflate) {
 
 
     private val viewModel: ExpenseViewModel by viewModels()
 
     private var selectedDate: LocalDate = LocalDate.now()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = FragmentAddExpenseBinding.inflate(inflater, container, false)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun setupViews() {
         binding.etDate.setText(selectedDate.toDisplayFormat())
 
         binding.btnAddPersonal.setOnClickListener { addPersonalField() }
@@ -46,11 +31,13 @@ class ExpenseAddFragment : Fragment() {
         setupDatePicker()
     }
 
+
     // ─────────────────────────────────────────────────────────────────────────────
     // Add Dynamic Personal Row via ViewBinding (NO findViewById)
     // ─────────────────────────────────────────────────────────────────────────────
     private fun addPersonalField() {
-        val itemBinding = ItemPersonalExpenseBinding.inflate(layoutInflater, binding.personalContainer, false)
+        val itemBinding =
+            ItemPersonalExpenseBinding.inflate(layoutInflater, binding.personalContainer, false)
 
         // Remove this row
         itemBinding.btnRemove.setOnClickListener {
@@ -59,7 +46,6 @@ class ExpenseAddFragment : Fragment() {
 
         binding.personalContainer.addView(itemBinding.root)
     }
-
 
 
     // ─────────────────────────────────────────────────────────────────────────────
@@ -74,7 +60,7 @@ class ExpenseAddFragment : Fragment() {
         // Add static expenses
         addStaticExpense("Fuel", binding.etFuelAmount.text.toString(), date, list)
         addStaticExpense("Vehicle", binding.etVehicleAmount.text.toString(), date, list)
-        addStaticExpense("Refreshment", binding.etRefreshmentAmount.text.toString(), date,  list)
+        addStaticExpense("Refreshment", binding.etRefreshmentAmount.text.toString(), date, list)
 
         // Add dynamic personal expenses (static + dynamic saved in list)
         for (i in 0 until binding.personalContainer.childCount) {
@@ -146,8 +132,5 @@ class ExpenseAddFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

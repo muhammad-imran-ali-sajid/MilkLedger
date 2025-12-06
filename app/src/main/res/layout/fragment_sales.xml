@@ -22,7 +22,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <include
@@ -48,14 +48,12 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddSale"
+        style="@style/ExtendedFABStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:backgroundTint="@color/primary"
         android:layout_marginBottom="4dp"
         android:text="Add Sales"
-        android:textColor="@color/white"
         app:icon="@drawable/ic_add"
-        app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@id/cardSalesSummary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

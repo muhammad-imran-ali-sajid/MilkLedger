@@ -1,18 +1,14 @@
 package com.miassolutions.milkledger.presentation.customer.sales
 
 import android.graphics.Color
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
+import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
@@ -22,17 +18,15 @@ import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
-import com.miassolutions.milkledger.databinding.BottomsheetAddSalesBinding
+import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
 import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class SaleAddFragment : Fragment() {
+class SaleAddFragment : BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBinding::inflate) {
 
-    private var _binding: BottomsheetAddSalesBinding? = null
-    private val binding get() = _binding!!
 
     private val viewModel: SaleAddViewModel by viewModels()
 
@@ -40,20 +34,13 @@ class SaleAddFragment : Fragment() {
     private var currentBalance: Double = 0.0
     private var dateSelected: LocalDate? = null
 
-    private var balanceHistoryDate : LocalDate? = null
+    private var balanceHistoryDate: LocalDate? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = BottomsheetAddSalesBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun setupViews() {
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupCustomerDropdown()
         setupListeners()
+
 
         viewModel.isDuplicate.observe(viewLifecycleOwner) { isDuplicate ->
             if (isDuplicate) {
@@ -116,100 +103,102 @@ class SaleAddFragment : Fragment() {
     // ---------------------------------------------------------------------
     // LISTENERS
     // ---------------------------------------------------------------------
-    private fun setupListeners() = binding.apply {
+    override fun setupListeners() {
+        binding.apply {
 
-        btnSelectDate.setOnClickListener {
-            val id = selectedCustomer?.customerId ?: ""
-            val name = selectedCustomer?.customerName ?: ""
-            showCustomerBalanceHistory(id, name)
-        }
-
-        binding.btnDate.text = LocalDate.now().toDisplayFormat()
-
-        binding.btnDate.setOnClickListener {
-            val role = SharedPrefsHelper.getUserRole(requireContext())
-            // Assume you fetch the authorization status dynamically
-            val isUserAuthorized = role == "admin"
-
-            showExpenseDatePicker(
-
-                isAuthorized = isUserAuthorized,
-                initialDate = LocalDate.now(),
-
-                // The selectedDate (LocalDate) is available here!
-                onPicked = { selectedDate: LocalDate ->
-                    dateSelected = selectedDate
-                    binding.btnDate.text = selectedDate.toDisplayFormat()
-
-                }
-            )
-        }
-
-        val recalc = { recalcAll() }
-
-        etVolume.doOnTextChanged { _, _, _, _ -> recalc() }
-        etDeduction.doOnTextChanged { _, _, _, _ -> recalc() }
-        etPayment.doOnTextChanged { _, _, _, _ -> recalcBalance() }
-
-        listOf(etVolume, etDeduction, etPayment, etNotes)
-            .forEach { autoSelectOnFocus(it) }
-
-        btnSave.setOnClickListener {
-            val customer = selectedCustomer ?: run {
-                tilCustomerName.error = "Select a customer"
-                actvCustomerName.requestFocus()
-                return@setOnClickListener
+            btnSelectDate.setOnClickListener {
+                val id = selectedCustomer?.customerId ?: ""
+                val name = selectedCustomer?.customerName ?: ""
+                showCustomerBalanceHistory(id, name)
             }
-            val date = dateSelected ?: LocalDate.now()
 
-            viewModel.checkDuplicate(customer.customerId, date) { isDuplicate ->
-                if (isDuplicate) {
-                    Toast.makeText(
-                        requireContext(),
-                        "${customer.customerName} already exists for ${date.toDisplayDate()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@checkDuplicate
-                }
+            binding.btnDate.text = LocalDate.now().toDisplayFormat()
 
-                if (saveSale()) {
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
-                }
+            binding.btnDate.setOnClickListener {
+                val role = SharedPrefsHelper.getUserRole(requireContext())
+                // Assume you fetch the authorization status dynamically
+                val isUserAuthorized = role == "admin"
+
+                showExpenseDatePicker(
+
+                    isAuthorized = isUserAuthorized,
+                    initialDate = LocalDate.now(),
+
+                    // The selectedDate (LocalDate) is available here!
+                    onPicked = { selectedDate: LocalDate ->
+                        dateSelected = selectedDate
+                        binding.btnDate.text = selectedDate.toDisplayFormat()
+
+                    }
+                )
             }
-        }
 
-        btnSaveNew.setOnClickListener {
-            val customer = selectedCustomer ?: run {
-                tilCustomerName.error = "Select a customer"
-                actvCustomerName.requestFocus()
-                return@setOnClickListener
-            }
-            val date = dateSelected ?: LocalDate.now()
+            val recalc = { recalcAll() }
 
-            viewModel.checkDuplicate(customer.customerId, date) { isDuplicate ->
-                if (isDuplicate) {
-                    Toast.makeText(
-                        requireContext(),
-                        "${customer.customerName} already exists for ${date.toDisplayDate()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@checkDuplicate
+            etVolume.doOnTextChanged { _, _, _, _ -> recalc() }
+            etDeduction.doOnTextChanged { _, _, _, _ -> recalc() }
+            etPayment.doOnTextChanged { _, _, _, _ -> recalcBalance() }
+
+            listOf(etVolume, etDeduction, etPayment, etNotes)
+                .forEach { autoSelectOnFocus(it) }
+
+            btnSave.setOnClickListener {
+                val customer = selectedCustomer ?: run {
+                    tilCustomerName.error = "Select a customer"
+                    actvCustomerName.requestFocus()
+                    return@setOnClickListener
                 }
+                val date = dateSelected ?: LocalDate.now()
 
-                if (saveSale()) {
-                    resetForm()
+                viewModel.checkDuplicate(customer.customerId, date) { isDuplicate ->
+                    if (isDuplicate) {
+                        Toast.makeText(
+                            requireContext(),
+                            "${customer.customerName} already exists for ${date.toDisplayDate()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@checkDuplicate
+                    }
+
+                    if (saveSale()) {
+                        requireActivity().onBackPressedDispatcher.onBackPressed()
+                    }
                 }
             }
+
+            btnSaveNew.setOnClickListener {
+                val customer = selectedCustomer ?: run {
+                    tilCustomerName.error = "Select a customer"
+                    actvCustomerName.requestFocus()
+                    return@setOnClickListener
+                }
+                val date = dateSelected ?: LocalDate.now()
+
+                viewModel.checkDuplicate(customer.customerId, date) { isDuplicate ->
+                    if (isDuplicate) {
+                        Toast.makeText(
+                            requireContext(),
+                            "${customer.customerName} already exists for ${date.toDisplayDate()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@checkDuplicate
+                    }
+
+                    if (saveSale()) {
+                        resetForm()
+                    }
+                }
+            }
+
+            btnCancel.setOnClickListener {
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            // initial date label
+            btnSelectDate.text = LocalDate.now().toDisplayDate()
+
+
         }
-
-        btnCancel.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-
-        // initial date label
-        btnSelectDate.text = LocalDate.now().toDisplayDate()
-
-
     }
 
     // ---------------------------------------------------------------------
@@ -357,8 +346,5 @@ class SaleAddFragment : Fragment() {
         return true
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

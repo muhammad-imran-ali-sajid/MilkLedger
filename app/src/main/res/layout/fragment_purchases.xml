@@ -20,10 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:text="Add Purchases"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/primary"
+        style="@style/ExtendedFABStyle"
         app:icon="@drawable/ic_add"
-        app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/card_summary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

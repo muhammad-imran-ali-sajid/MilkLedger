@@ -11,6 +11,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_date"
+        style="@style/MaterialButtonStyle"
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -187,6 +188,8 @@
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
+                    app:strokeColor="@color/primary"
+                    android:textColor="@color/primary"
                     android:layout_marginHorizontal="4dp"
                     android:text="Date"
                     android:textSize="20sp"
@@ -260,6 +263,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_cancel"
+            style="@style/MaterialButtonStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -270,6 +274,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
             android:layout_width="0dp"
+            style="@style/MaterialButtonStyle"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
@@ -279,6 +284,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_saveNew"
+            style="@style/MaterialButtonStyle"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="10sp"

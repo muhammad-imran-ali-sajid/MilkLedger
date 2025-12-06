@@ -178,7 +178,7 @@
         android:id="@+id/saleAddFragment"
         android:name="com.miassolutions.milkledger.presentation.customer.sales.SaleAddFragment"
         android:label="Add Sales"
-        tools:layout="@layout/bottomsheet_add_sales" />
+        tools:layout="@layout/fragment_add_sale" />
     <dialog
         tools:layout="@layout/bottomsheet_edit_expense"
         android:id="@+id/expenseEditBottomSheet"
