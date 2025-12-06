@@ -155,7 +155,7 @@ class PurchaseAddFragment :
 
 
 
-            btnCancel.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
+
             binding.btnDate.text = LocalDate.now().toDisplayFormat()
 
             binding.btnDate.setOnClickListener {

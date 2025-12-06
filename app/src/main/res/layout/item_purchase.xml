@@ -80,7 +80,7 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Volume" />
+                    android:text="Vol." />
 
                 <TextView
                     android:id="@+id/tvVolume"

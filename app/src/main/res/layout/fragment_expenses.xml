@@ -6,8 +6,8 @@
     android:layout_height="match_parent">
 
     <include
-        layout="@layout/date_header_layout"
-        android:id="@+id/dateHeader"/>
+        android:id="@+id/dateHeader"
+        layout="@layout/date_header_layout" />
 
     <LinearLayout
         android:id="@+id/emptyStateLayout"
@@ -21,7 +21,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
 
 
         <ImageView
@@ -55,7 +54,6 @@
         app:layout_constraintTop_toBottomOf="@+id/dateHeader" />
 
 
-
     <!-- RecyclerView below -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvExpenses"
@@ -78,8 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add New Expense"
-                app:icon="@drawable/ic_add"
-                app:layout_constraintBottom_toTopOf="@+id/expensesSummary"
+        app:icon="@drawable/ic_add"
+        app:layout_constraintBottom_toTopOf="@+id/expensesSummary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -103,22 +101,21 @@
             android:orientation="vertical">
 
             <TextView
-                style="@style/Text.Title"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Avg Expense"
-                android:textColor="#444444"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+
+
+                />
 
             <TextView
                 android:id="@+id/tvAvgExpenses"
-                style="@style/Text.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rs. 84.3"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -129,22 +126,18 @@
             android:orientation="vertical">
 
             <TextView
-                style="@style/Text.Title"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Expenses"
-                android:textColor="#444444"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:text="Total Expenses" />
 
             <TextView
                 android:id="@+id/tvTotalExpense"
-                style="@style/Text.Title"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rs. 10500"
-                android:textColor="#000000"
-                android:textSize="16sp" />
+                 />
         </LinearLayout>
     </LinearLayout>
 

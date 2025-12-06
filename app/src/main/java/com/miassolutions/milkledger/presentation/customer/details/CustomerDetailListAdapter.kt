@@ -40,7 +40,7 @@ class CustomerDetailListAdapter :
         tvPayment.text = item.payment.toString()
 
         if (item.rateChanged) {
-            rateAlert.text = "Rate Change Alert (${item.rateUsed.toPriceStr()})"
+            rateAlert.text = "RCA (${item.rateUsed.toPriceStr()})"
             rateAlert.show()
             root.setCardBackgroundColor("#ccff00".toColorInt())
         } else {

@@ -80,7 +80,7 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Volume" />
+                    android:text="Vol." />
 
                 <TextView
                     android:id="@+id/tvMilk"
@@ -98,7 +98,8 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Deduction" />
+                    android:text="Deduction"
+                    android:textSize="20sp"/>
 
                 <TextView
                     android:id="@+id/tv_deduction"
@@ -210,13 +211,13 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Balance" />
+                    android:text="Bal." />
 
                 <TextView
                     android:id="@+id/tvBalance"
                     style="@style/TextValue"
                     android:text="10000"
-                    android:textDirection="ltr" />
+                     />
             </LinearLayout>
         </LinearLayout>
 

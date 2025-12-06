@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             style="@style/CompactToggleButton"
-            android:text="Daily" />
+            android:text="D" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnWeekly"
@@ -33,7 +33,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             style="@style/CompactToggleButton"
-            android:text="Weekly" />
+            android:text="W" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnMonthly"
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             style="@style/CompactToggleButton"
-            android:text="Monthly" />
+            android:text="M" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnYearly"
@@ -49,7 +49,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             style="@style/CompactToggleButton"
-            android:text="Yearly" />
+            android:text="Y" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAll"

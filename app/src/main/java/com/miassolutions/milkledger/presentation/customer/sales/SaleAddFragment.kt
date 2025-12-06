@@ -190,9 +190,7 @@ class SaleAddFragment : BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBind
                 }
             }
 
-            btnCancel.setOnClickListener {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-            }
+
 
             // initial date label
             btnSelectDate.text = LocalDate.now().toDisplayDate()
