@@ -161,13 +161,13 @@
                 android:layout_height="40dp"
 
                 android:layout_weight="1"
-                app:cardBackgroundColor="@color/blue_100">
+                app:cardBackgroundColor="#fa0">
 
                 <TextView
                     style="@style/DashboardValue"
                     android:layout_gravity="center"
                     android:text="Cash Flow"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/white" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -186,6 +186,14 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/purchase_color">
+
+                    <ImageView
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:tint="@color/white"
+                        android:src="@drawable/ic_arrow_right"/>
 
                     <LinearLayout style="@style/DashboardInnerRow">
 
@@ -209,6 +217,14 @@
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/sale_color">
 
+                    <ImageView
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:tint="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_right"/>
+
                     <LinearLayout style="@style/DashboardInnerRow">
 
                         <TextView
@@ -231,11 +247,19 @@
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/expense_color">
 
+                    <ImageView
+                        android:layout_gravity="end"
+                        android:layout_margin="8dp"
+                        android:tint="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_right"/>
+
                     <LinearLayout style="@style/DashboardInnerRow">
 
                         <TextView
                             style="@style/DashboardLabel"
-                            android:text="Business" />
+                            android:text="Expenses" />
 
                         <TextView
                             android:id="@+id/tvTotalExpense"
@@ -260,6 +284,14 @@
 
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/blue_700">
+
+                    <ImageView
+                        android:layout_gravity="end"
+                        android:tint="@color/white"
+                        android:layout_margin="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_right"/>
 
                     <LinearLayout style="@style/DashboardInnerRow">
 
@@ -288,7 +320,7 @@
 
                         <TextView
                             style="@style/DashboardLabel"
-                            android:text="Personal" />
+                            android:text="Personal Exp" />
 
                         <TextView
                             android:id="@+id/tvPersonalExpense"

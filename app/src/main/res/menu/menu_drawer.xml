@@ -21,12 +21,12 @@
             app:showAsAction="never" />
 
 
-        <item
-            android:id="@+id/action_payment_overview"
-            android:icon="@drawable/ic_expense"
-            android:orderInCategory="102"
-            android:title="Payment Overview"
-            app:showAsAction="never" />
+<!--        <item-->
+<!--            android:id="@+id/action_payment_overview"-->
+<!--            android:icon="@drawable/ic_expense"-->
+<!--            android:orderInCategory="102"-->
+<!--            android:title="Payment Overview"-->
+<!--            app:showAsAction="never" />-->
 
 
 

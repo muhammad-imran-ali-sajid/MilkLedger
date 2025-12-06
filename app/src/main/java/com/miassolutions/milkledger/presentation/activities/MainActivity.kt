@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                 navMenu.findItem(R.id.action_customersFragment)?.isVisible = false
                 navMenu.findItem(R.id.action_suppliersFragment)?.isVisible = false
                 navMenu.findItem(R.id.action_notesFragment)?.isVisible = false
-                navMenu.findItem(R.id.action_payment_overview)?.isVisible = false
+//                navMenu.findItem(R.id.action_payment_overview)?.isVisible = false
             }
         }
     }
@@ -171,10 +171,10 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                     true
                 }
 
-                R.id.action_payment_overview -> {
-                    navController.navigate(R.id.statsFragment)
-                    true
-                }
+//                R.id.action_payment_overview -> {
+//                    navController.navigate(R.id.statsFragment)
+//                    true
+//                }
 
                 R.id.action_driveBackupFragment -> {
                     navController.navigate(R.id.driveBackupFragment)

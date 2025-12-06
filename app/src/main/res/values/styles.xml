@@ -327,7 +327,7 @@
         <item name="android:orientation">vertical</item>
 
         <item name="android:gravity">center_vertical</item>
-        <item name="android:padding">12dp</item>
+        <item name="android:padding">8dp</item>
     </style>
 
     <style name="DashboardLabel">
