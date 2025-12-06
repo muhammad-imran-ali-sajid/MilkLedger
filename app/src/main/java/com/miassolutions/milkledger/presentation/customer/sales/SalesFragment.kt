@@ -355,10 +355,10 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     }
 
     private fun showEditSaleBottomSheet(sale: Sale) {
-        if (!isEditable) {
-            showSnackbar("Enable from the top menu switch")
-            return
-        }
+//        if (!isEditable) {
+//            showSnackbar("Enable from the top menu switch")
+//            return
+//        }
         SalesEditBottomSheet(
             entry = sale,
             onSave = { salesEntity ->

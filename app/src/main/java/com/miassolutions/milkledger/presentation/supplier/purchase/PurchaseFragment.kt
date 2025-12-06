@@ -340,10 +340,10 @@ class PurchaseFragment :
     }
 
     private fun showEditBottomSheet(purchaseWithSupplier: PurchaseWithSupplier) {
-        if (!isEditable) {
-            showSnackbar("Enable from the top menu switch")
-            return
-        }
+//        if (!isEditable) {
+//            showSnackbar("Enable from the top menu switch")
+//            return
+//        }
 
         val bottomSheet = PurchaseEditBottomSheet(
             entry = purchaseWithSupplier,

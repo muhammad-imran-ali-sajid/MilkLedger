@@ -75,10 +75,10 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
 
             summaryBinding.apply {
-                tvBusinessProfit.text = businessProfit.toRoundedStr()
-                tvNetProfitAfterPersonal.text = netProfitAfterPersonal.toRoundedStr()
+                tvBusinessProfit.text = businessProfit.toPriceStr()
+                tvNetProfitAfterPersonal.text = netProfitAfterPersonal.toPriceStr()
                 tvTotalReceivedProfit.text = receivedProfit.toPriceStr()
-                tvRemainingProfit.text = remainingProfit.toRoundedStr()
+                tvRemainingProfit.text = remainingProfit.toPriceStr()
 
             }
 
