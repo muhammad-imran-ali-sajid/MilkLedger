@@ -161,7 +161,7 @@
                 android:layout_height="40dp"
 
                 android:layout_weight="1"
-                app:cardBackgroundColor="#fa0">
+                app:cardBackgroundColor="@color/midnight_blue">
 
                 <TextView
                     style="@style/DashboardValue"
@@ -245,7 +245,7 @@
 
 
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/expense_color">
+                    app:cardBackgroundColor="@color/red">
 
                     <ImageView
                         android:layout_gravity="end"
@@ -283,7 +283,7 @@
 
 
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/blue_700">
+                    app:cardBackgroundColor="@color/deep_forest_green">
 
                     <ImageView
                         android:layout_gravity="end"
@@ -314,7 +314,7 @@
 
 
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/orange_700">
+                    app:cardBackgroundColor="@color/red">
 
                     <LinearLayout style="@style/DashboardInnerRow">
 
@@ -336,7 +336,7 @@
                     android:layout_width="0dp"
 
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/blue_300">
+                    app:cardBackgroundColor="@color/blue_700">
 
                     <LinearLayout style="@style/DashboardInnerRow">
 
