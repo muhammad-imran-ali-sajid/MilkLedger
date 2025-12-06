@@ -141,7 +141,7 @@ class AnalyticsRepository @Inject constructor(
         }
 
 
-    fun getBusinessProfitAll(): Flow<Double> =
+    fun getGrossProfitAll(): Flow<Double> =
         combine(
             reportsDao.getTotalSalesAll(),
             reportsDao.getTotalPurchasesAll(),

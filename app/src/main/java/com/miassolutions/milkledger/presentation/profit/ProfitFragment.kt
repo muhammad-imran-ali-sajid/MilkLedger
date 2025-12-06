@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
 import com.miassolutions.milkledger.databinding.LayoutSummaryProfitBinding
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
@@ -159,8 +158,8 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
 
             showSummary(
-                businessProfit = state.netBusinessProfit,
-                netProfitAfterPersonal = state.netProfitAfterPersonalExpenses,
+                businessProfit = state.grossProfit,
+                netProfitAfterPersonal = state.netProfit,
                 receivedProfit = state.totalReceived,
                 remainingProfit = state.remainingProfit
             )

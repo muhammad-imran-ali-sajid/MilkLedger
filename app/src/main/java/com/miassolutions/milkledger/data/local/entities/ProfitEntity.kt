@@ -12,6 +12,7 @@ data class ProfitEntity(
     val profitId: String = UUID.randomUUID().toString(),
     val receivedDate: LocalDate = LocalDate.now(),
     val netProfit : Double = 0.0,
+    val grossProfit: Double = 0.0,
     val receivedProfit : Double = 0.0,
     val notes : String? = null,
 

@@ -88,7 +88,7 @@ class DashboardViewModel @Inject constructor(
                 repository.getTotalSalesAll(),
                 repository.getTotalPurchasesAll(),
                 repository.getTotalFixedExpenses(),
-                repository.getBusinessProfitAll(),
+                repository.getGrossProfitAll(),
                 repository.getTotalFat(),
                 repository.getTotalLr(),
                 repository.getTotalTs(),

@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 class ProfitRepository @Inject constructor(
@@ -28,23 +27,6 @@ class ProfitRepository @Inject constructor(
         private const val PROFIT_COLLECTION = "profits"
     }
 
-    // --------------------------------------------------------------------
-    // CRUD
-    // --------------------------------------------------------------------
-
-    suspend fun upsertProfit(profitEntity: ProfitEntity) = dao.upsert(profitEntity)
-
-
-    suspend fun saveProfit(profitDouble: Double) {
-
-        val entity = ProfitEntity(
-            netProfit = profitDouble,
-            updatedAt = LocalDateTime.now().toString(),
-        )
-
-        dao.upsert(entity)
-
-    }
 
     suspend fun upsert(profit: ProfitEntity) {
 
@@ -127,16 +109,6 @@ class ProfitRepository @Inject constructor(
         dao.getDailyReceivedProfit(date)
 
 
-//    fun getDailyProfit(date: LocalDate): Flow<List<Profit>> = combine(
-//        dao.getDailyFlow(date),
-//        mDao.getProfitToday(date)
-//    ) { a, b ->
-//        val x = a
-//        val y = b
-//
-//
-//
-//    }
 
     fun getReceivedProfitBetween(start: LocalDate, end: LocalDate): Flow<List<ProfitEntity>> =
         dao.getReceivedProfitBetweenFlow(start, end)
@@ -151,15 +123,15 @@ class ProfitRepository @Inject constructor(
         }
     }
 
-    suspend fun getMonthly(date: LocalDate): Flow<List<ProfitEntity>> {
+    fun getReceivedProfitMonthly(date: LocalDate): Flow<List<ProfitEntity>> {
         val ym = "${date.year}-${"%02d".format(date.monthValue)}"
-        return dao.getMonthly(ym)
+        return dao.getReceivedProfitMonthly(ym)
     }
 
-    suspend fun getYearly(date: LocalDate): Flow<List<ProfitEntity>> =
-        dao.getYearly(date.year.toString())
+    fun getReceivedProfitYearly(date: LocalDate): Flow<List<ProfitEntity>> =
+        dao.getReceivedProfitYearly(date.year.toString())
 
-    suspend fun getCustom(start: LocalDate, end: LocalDate): List<ProfitEntity> =
+    suspend fun getReceivedProfitCustom(start: LocalDate, end: LocalDate): List<ProfitEntity> =
         dao.getBetween(start, end)
 
 
@@ -167,11 +139,10 @@ class ProfitRepository @Inject constructor(
     // NET PROFIT CALCULATIONS (Sales - Purchases - Expenses)
     // --------------------------------------------------------------------
 
-    fun getNetBusinessProfit(): Flow<Double> = mDao.getBusinessProfitAll()
+    fun getGrossProfitAll(): Flow<Double> = mDao.getGrossProfitAll()
 
-    fun getNetProfitAfterPersonal() : Flow<Double> = mDao.getProfitAllAfterPersonal()
+    fun getNetProfitAll() : Flow<Double> = mDao.getProfitAllAfterPersonal()
 
-    fun getProfitToday(date: LocalDate): Flow<Double?> = mDao.getProfitToday(date)
 
     fun getNetProfitDaily(date: LocalDate): Flow<Double?> =
         mDao.getNetProfitDaily(date)
@@ -179,7 +150,7 @@ class ProfitRepository @Inject constructor(
     fun getNetProfitBetween(start: LocalDate, end: LocalDate): Flow<Double> =
         mDao.getNetProfitBetween(start, end)
 
-    suspend fun getNetProfitOnce(): Double = getNetBusinessProfit().firstOrZero()
+    suspend fun getNetProfitOnce(): Double = getGrossProfitAll().firstOrZero()
 
     // Daily
     fun getGrossProfitDaily(date: LocalDate): Flow<Double> =

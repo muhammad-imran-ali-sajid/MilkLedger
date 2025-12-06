@@ -6,6 +6,7 @@ import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.MIGRATION_1_2
 import com.miassolutions.milkledger.data.local.MIGRATION_2_3
+import com.miassolutions.milkledger.data.local.Migration_3_4
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
@@ -33,7 +34,7 @@ object DatabaseModule {
         @ApplicationContext appContext: Context,
     ): AppDatabase =
         Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, Migration_3_4)
             .build()
 
     @Singleton

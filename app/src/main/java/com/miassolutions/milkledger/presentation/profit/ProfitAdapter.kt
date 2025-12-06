@@ -3,11 +3,9 @@ package com.miassolutions.milkledger.presentation.profit
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.core.util.toDisplayDate
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.ItemProfitBinding
-import com.miassolutions.milkledger.domain.model.Profit
 
 class ProfitAdapter(
     private val onItemClick: (ProfitListModel) -> Unit,
@@ -20,10 +18,10 @@ class ProfitAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ProfitListModel) = with(binding) {
             tvDate.text = item.date.toDisplayFormat()
-            tvProfit.text = item.profit.toPriceStr()
-            tvRemainingProfit.text = item.profitAfterPersonalExpenses?.toPriceStr()
+            tvGrossProfit.text = item.grossProfit.toPriceStr()
+            tvNetProfit.text = item.netProfit?.toPriceStr()
             tvReceivedProfit.text = item.profitReceived.toPriceStr()
-            tvBalance.text = (item.profitAfterPersonalExpenses?.minus(item.profitReceived))?.toPriceStr()
+            tvBalance.text = (item.netProfit?.minus(item.profitReceived))?.toPriceStr()
 
             root.setOnClickListener { onItemClick(item) }
             root.setOnLongClickListener { onItemLongClick(item); true }

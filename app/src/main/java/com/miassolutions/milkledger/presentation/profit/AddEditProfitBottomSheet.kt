@@ -66,9 +66,9 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupUI() = with(binding) {
         if (existingProfit != null) {
-            tvNetProfit.text = existingProfit!!.profit.toString()
-
             tvDate.text = existingProfit!!.date.toDisplayFormat()
+            tvGrossProfit.text = existingProfit!!.grossProfit.toPriceStr()
+            tvNetProfit.text = existingProfit!!.netProfit?.toPriceStr()
             etProfitReceived.setText(existingProfit!!.profitReceived.toString())
             etNotes.setText(existingProfit!!.notes)
             btnSave.text = "Update"
@@ -83,16 +83,16 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.todayNetProfit.collectLatest {
-                        binding.tvNetProfit.text = it.toPriceStr()
+                    viewModel.todayGrossProfit.collectLatest {
+                        binding.tvGrossProfit.text = it.toPriceStr()
                     }
                 }
 
                 launch {
-                    viewModel.profitAfterPersonal.collectLatest { value ->
+                    viewModel.todayNetProfit.collectLatest {
 
-                        binding.tvProfitAfterPersonal.text = value.toPriceStr()
-                        binding.etProfitReceived.setHint(value.toPriceStr())
+                        binding.tvNetProfit.text = it.toPriceStr()
+                        binding.etProfitReceived.setHint(it.toPriceStr())
                         binding.etProfitLayout.isExpandedHintEnabled = false
                     }
                 }
@@ -128,7 +128,8 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
 
-            val todayProfit = tvNetProfit.text.toString().toDouble()
+            val todayGrossProfit = tvGrossProfit.text.toString().toDouble()
+            val todayNetProfit = tvNetProfit.text.toString().toDouble()
 
 
             val notes = etNotes.text.toString()
@@ -137,7 +138,8 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
             val newProfit = ProfitListModel(
                 id = existingProfit?.id ?: UUID.randomUUID().toString(),
                 date = receivedSelectedDate ?: LocalDate.now(),
-                profit = todayProfit,
+                netProfit = todayNetProfit,
+                grossProfit = todayGrossProfit,
                 profitReceived = profitStr.toDouble(),
                 notes = notes
             )

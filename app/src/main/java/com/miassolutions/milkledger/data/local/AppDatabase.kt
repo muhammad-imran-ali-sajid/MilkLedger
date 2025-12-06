@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.work.impl.Migration_3_4
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
@@ -32,7 +33,7 @@ import com.miassolutions.milkledger.data.local.entities.SupplierEntity
         NoteEntity::class,
         ProfitEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(LocalDateConverter::class)
@@ -77,6 +78,15 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
             )
             """.trimIndent()
         )
+    }
+}
+
+val Migration_3_4 = object : Migration(3,4){
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("""
+            ALTER TABLE profit_table
+            ADD COLUMN grossProfit REAL NOT NULL DEFAULT 0.0
+        """.trimIndent())
     }
 }
 
