@@ -20,6 +20,10 @@ interface CustomerDao {
     @Query("SELECT * FROM customer_table")
     suspend fun getAllCustomersList(): List<CustomerEntity>
 
+    @Query("SELECT customerRate FROM customer_table WHERE customerId = :id")
+    fun observeCustomerRate(id: String): Flow<Double>
+
+
     /**
      * Batch upsert (Insert or Replace) used for merging remote data into the local database.
      */

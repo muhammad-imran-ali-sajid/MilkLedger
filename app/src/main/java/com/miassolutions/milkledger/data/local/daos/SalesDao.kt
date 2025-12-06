@@ -21,6 +21,8 @@ interface SalesDao {
     @Query("SELECT IFNULL(SUM(paid), 0) FROM sales_table")
     fun observeSales(): Flow<Double>
 
+    @Query("SELECT customerRate FROM customer_table WHERE customerId = :id")
+    fun observeCustomerRate(id: String): Flow<Double>
 
     @Query("""
         SELECT *

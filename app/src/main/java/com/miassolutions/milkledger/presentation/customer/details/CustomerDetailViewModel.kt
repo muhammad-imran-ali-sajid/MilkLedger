@@ -30,23 +30,38 @@ class CustomerDetailViewModel @Inject constructor(
     private fun loadDetails() {
         viewModelScope.launch {
             val id = _uiState.value.selectedCustomerId ?: return@launch
+
             repository.getSalesForCustomer(id).collect { list ->
 
-                val initialDetail = list.map { it.toCustomerDetailModel() }
+                // 1️⃣ Convert + Sort ASC (oldest → newest)
+                val sortedAsc = list
+                    .map { it.toCustomerDetailModel() }
+                    .sortedBy { it.date }
 
-                val finalDetail = initialDetail.flagPriceChangeStarts()
+                // 2️⃣ Detect rate changes correctly
+                val withRateChange = sortedAsc.mapIndexed { index, model ->
+                    if (index == 0) model.copy(rateChanged = false)
+                    else {
+                        val prev = sortedAsc[index - 1]
+                        model.copy(rateChanged = model.rateUsed != prev.rateUsed)
+                    }
+                }
 
+                // 3️⃣ Reverse list for UI (newest → oldest)
+                val finalDescending = withRateChange.reversed()
+
+                // 4️⃣ Update UI
                 _uiState.update {
                     it.copy(
-                        customerDetailList = finalDetail,
-                        filteredList = finalDetail
+                        customerDetailList = finalDescending,
+                        filteredList = finalDescending
                     )
                 }
-                filterData() // immediately filter after loading
+
+                filterData()
             }
         }
     }
-
 
 
 

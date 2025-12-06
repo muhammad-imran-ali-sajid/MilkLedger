@@ -21,6 +21,8 @@ class SalesRepository @Inject constructor(
     private val firestoreSyncHelper: FirestoreSyncHelper
 ) {
 
+    fun observeCustomerRate(id: String) : Flow<Double> = salesDao.observeCustomerRate(id)
+
     fun getPaidSalesForDate(targetDate: LocalDate): Flow<List<CustomerPaidSummary>> {
         // Simple pass-through call to the DAO
         return salesDao.getPaidAmountForDate(targetDate)

@@ -33,6 +33,8 @@ class SalesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SalesUiState())
     val uiState: StateFlow<SalesUiState> = _uiState.asStateFlow()
 
+
+
     // -------------------------------------------------------------------------
     // Paid sales for selected date
     // -------------------------------------------------------------------------

@@ -2,12 +2,14 @@ package com.miassolutions.milkledger.presentation.customer.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding
 
 class CustomerDetailListAdapter :
@@ -29,12 +31,21 @@ class CustomerDetailListAdapter :
         item: CustomerDetailModel,
         position: Int
     ) = with(binding) {
-        tvDate.text = item.date.toString()
+        tvDate.text = item.date.toDisplayFormat()
         tvMilk.text = item.milkAmount.toString()
         tvDeduction.text = item.deduction.toString()
         tvNetMilk.text = item.netMilk.toString()
         tvPrice.text = item.milkPrice.toString()
         tvPayment.text = item.payment.toString()
+
+        if (item.rateChanged) {
+            rateAlert.show()
+            root.setBackgroundColor("#FFF7C2".toColorInt())
+        } else {
+            rateAlert.hide()
+            root.setBackgroundColor("#FFFFFF".toColorInt())   // reset to white
+        }
+
 
 
         val balance = item.milkPrice - item.payment

@@ -8,23 +8,23 @@ import com.miassolutions.milkledger.domain.model.Sale
 import java.time.LocalDate
 
 
-data class CustomerDetailModel(
-    val date: LocalDate,
-    val milkAmount: Double,
-    val deduction: Double,
-    val netMilk: Double,
-    val milkPrice: Double, // This is the total price/amount (Price * NetMilk)
-    val payment: Double,
-    val balance: Double,
-
-    // 💡 Added fields for rate tracking (analogous to SupplierDetailModel)
-    val rateUsed: Double,
-    val newRate: Double,
-    val isRateChanged: Boolean,
-    val isRateChangeStart: Boolean = false, // Will be set by the extension function
-
-    val notes: String? = null
-)
+//data class CustomerDetailModel(
+//    val date: LocalDate,
+//    val milkAmount: Double,
+//    val deduction: Double,
+//    val netMilk: Double,
+//    val milkPrice: Double, // This is the total price/amount (Price * NetMilk)
+//    val payment: Double,
+//    val balance: Double,
+//
+//    // 💡 Added fields for rate tracking (analogous to SupplierDetailModel)
+//    val rateUsed: Double,
+//    val newRate: Double,
+//    val isRateChanged: Boolean,
+//
+//
+//    val notes: String? = null
+//)
 
 
 // Assuming SaleWithCustomer has access to:
@@ -41,12 +41,25 @@ fun SaleWithCustomer.toCustomerDetailModel(): CustomerDetailModel = CustomerDeta
     balance = this.sale.balance,
 
     // 💡 Added Rate Logic
-    newRate = this.customer.customerRate,
     rateUsed = this.sale.rateUsed,
-    isRateChanged = this.sale.rateUsed != this.customer.customerRate,
 
     notes = this.sale.notes
 )
+
+data class CustomerDetailModel(
+    val date: LocalDate,
+    val rateUsed: Double,
+    val milkAmount: Double,
+    val netMilk: Double,
+    val payment: Double,
+    val balance: Double,
+    val deduction: Double,
+    val milkPrice: Double,
+
+    val rateChanged: Boolean = false,
+    val notes: String?
+)
+
 
 
 // Assumes you have a similar RecordItem structure for Customer
@@ -89,32 +102,32 @@ fun List<Sale>.toSaleRecordList(): List<PdfSalesItemRecord> {
 /**
  * Flags the first entry on which the rateUsed differs from the rateUsed on the previous day.
  */
-fun List<CustomerDetailModel>.flagPriceChangeStarts(): List<CustomerDetailModel> {
-    if (this.isEmpty()) return this
-
-    val mutableList = this.toMutableList()
-
-    // 1. Handle the first item: Flag it as a rate change start if its rateUsed
-    // is different from the customer's current default (isRateChanged is true).
-    if (mutableList[0].isRateChanged) {
-        mutableList[0] = mutableList[0].copy(isRateChangeStart = true)
-    }
-
-    // 2. Iterate from the second item
-    for (i in 1 until mutableList.size) {
-        val current = mutableList[i]
-        val previous = mutableList[i - 1]
-
-        // Check if the current rateUsed is different from the previous rateUsed
-        val hasRateChangedFromPreviousDay = current.rateUsed != previous.rateUsed
-
-        if (hasRateChangedFromPreviousDay) {
-            // This is the start of a new rate block. Flag it.
-            mutableList[i] = current.copy(isRateChangeStart = true)
-        }
-    }
-
-    return mutableList.toList()
-}
+//fun List<CustomerDetailModel>.flagPriceChangeStarts(): List<CustomerDetailModel> {
+//    if (this.isEmpty()) return this
+//
+//    val mutableList = this.toMutableList()
+//
+//    // 1. Handle the first item: Flag it as a rate change start if its rateUsed
+//    // is different from the customer's current default (isRateChanged is true).
+//    if (mutableList[0].isRateChanged) {
+//        mutableList[0] = mutableList[0].copy(isRateChangeStart = true)
+//    }
+//
+//    // 2. Iterate from the second item
+//    for (i in 1 until mutableList.size) {
+//        val current = mutableList[i]
+//        val previous = mutableList[i - 1]
+//
+//        // Check if the current rateUsed is different from the previous rateUsed
+//        val hasRateChangedFromPreviousDay = current.rateUsed != previous.rateUsed
+//
+//        if (hasRateChangedFromPreviousDay) {
+//            // This is the start of a new rate block. Flag it.
+//            mutableList[i] = current.copy(isRateChangeStart = true)
+//        }
+//    }
+//
+//    return mutableList.toList()
+//}
 
 

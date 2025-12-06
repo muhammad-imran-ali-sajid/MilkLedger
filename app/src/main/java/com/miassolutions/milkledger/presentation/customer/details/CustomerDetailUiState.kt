@@ -5,6 +5,7 @@ import java.time.LocalDate
 data class CustomerDetailUiState(
     val selectedCustomerId: String? = null,
     val customerName: String = "",
+    val isRateChanged: Boolean = false,
     val customerDetailList: List<CustomerDetailModel> = emptyList(),
     val filteredList: List<CustomerDetailModel> = emptyList(), //  filtered copy
 //    val currentFilter: FilterOptions = FilterOptions(),//  remember current filter
