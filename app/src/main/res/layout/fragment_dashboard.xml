@@ -54,7 +54,7 @@
             android:gravity="center_horizontal"
             android:padding="8dp"
             android:text="12-10-2025"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <ImageButton
@@ -91,7 +91,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Daily" />
+                android:text="D" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWeekly"
@@ -99,7 +99,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Weekly" />
+                android:text="W" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnMonthly"
@@ -107,7 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Monthly" />
+                android:text="M" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnYearly"
@@ -115,7 +115,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Yearly"
+                android:text="Y"
 
                 android:textStyle="bold" />
 
@@ -176,7 +176,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
 
                 <!-- Purchases -->
@@ -238,6 +238,17 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+
+
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/expense_card"
                     style="@style/DashboardCard"
@@ -267,13 +278,8 @@
                             android:text="4,500" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
+
 
                 <!-- Profit -->
                 <com.google.android.material.card.MaterialCardView
@@ -305,16 +311,23 @@
                             android:text="4,500" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
 
                 <!-- Personal Expense -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/card_personal_expense"
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
-
-
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@color/red">
+                    app:cardBackgroundColor="@color/orange_700"
+                    >
 
                     <LinearLayout style="@style/DashboardInnerRow">
 
@@ -375,7 +388,7 @@
                 android:padding="12dp"
                 android:text="Milk Overview"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="22sp" />
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
