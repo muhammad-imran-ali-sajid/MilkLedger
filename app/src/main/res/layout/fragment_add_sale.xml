@@ -37,11 +37,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="Supplier Name">
+                android:hint="Customer Name">
 
                 <AutoCompleteTextView
                     android:id="@+id/actv_customer_name"
-                    style="@style/Style.EditTextInput"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
