@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
-    android:background="@color/white"
+    android:background="@drawable/bg_edittext_readable"
+    android:backgroundTint="@color/white"
+
 android:layout_marginVertical="4dp"
     android:clickable="true"
     android:orientation="vertical"
@@ -17,6 +19,7 @@ android:layout_marginVertical="4dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_edittext_readable"
         android:text="21 Nov 2025 "
+        android:backgroundTint="@color/blue_100"
         android:padding="8dp"
         android:textColor="@color/black"
         android:textSize="18sp" />
@@ -24,15 +27,16 @@ android:layout_marginVertical="4dp"
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+
+        android:orientation="horizontal"
+        android:padding="4dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Business Profit"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
 
 
         <TextView
@@ -43,7 +47,7 @@ android:layout_marginVertical="4dp"
             android:gravity="center"
             android:text="100.0"
             android:textColor="@color/blue"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
 
     </LinearLayout>
@@ -52,14 +56,15 @@ android:layout_marginVertical="4dp"
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+
+        android:padding="4dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Profit (After Expense)"
+            android:text="Profit (After Personal)"
             android:textColor="@color/black"/>
 
 
@@ -71,7 +76,7 @@ android:layout_marginVertical="4dp"
             android:gravity="center"
             android:text="100.0"
             android:textColor="@color/blue"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
 
     </LinearLayout>
@@ -80,15 +85,16 @@ android:layout_marginVertical="4dp"
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal">
+
+        android:orientation="horizontal"
+        android:padding="4dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Profit Received"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
 
 
         <TextView
@@ -99,7 +105,7 @@ android:layout_marginVertical="4dp"
             android:gravity="center"
             android:text="100.0"
             android:textColor="@color/blue"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
 
     </LinearLayout>
@@ -107,16 +113,17 @@ android:layout_marginVertical="4dp"
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
+
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="4dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Balance"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
 
 
         <TextView
@@ -127,7 +134,7 @@ android:layout_marginVertical="4dp"
             android:gravity="center"
             android:text="100.0"
             android:textColor="@color/blue"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
 
     </LinearLayout>

@@ -18,10 +18,10 @@
         android:id="@+id/fabAddPurchase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginBottom="4dp"
         android:text="Add Purchases"
         android:textColor="@color/white"
+        app:backgroundTint="@color/primary"
         app:icon="@drawable/ic_add"
         app:iconTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/card_summary"
@@ -29,11 +29,9 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-
-
     <include
-        layout="@layout/date_header_layout"
-        android:id="@+id/dateHeader"/>
+        android:id="@+id/dateHeader"
+        layout="@layout/date_header_layout" />
 
 
     <include
@@ -42,13 +40,13 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_purchases"
-        android:layout_width="0dp"
         style="@style/RecyclerViewStyle"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingHorizontal="8dp"
         android:paddingBottom="62dp"
@@ -65,5 +63,5 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

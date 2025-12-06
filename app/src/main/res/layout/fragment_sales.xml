@@ -50,7 +50,7 @@
         android:id="@+id/fabAddSale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        app:backgroundTint="@color/primary"
         android:layout_marginBottom="4dp"
         android:text="Add Sales"
         android:textColor="@color/white"
