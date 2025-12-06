@@ -4,6 +4,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -113,7 +114,10 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
         }
 
         viewModel.balanceFlow.collectState { balance ->
+
+
             binding.tvBalance.text = "Balance: ${balance.toPriceStr()}"
+            binding.tvBalance.setTextColor(textColor(balance))
         }
     }
 
