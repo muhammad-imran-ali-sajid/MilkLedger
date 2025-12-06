@@ -11,8 +11,6 @@
         android:layout_width="0dp"
         android:padding="8dp"
         android:text="22 Oct 2025"
-        android:textColor="@color/white"
-
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -10,6 +10,7 @@ import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding
 
 class CustomerDetailListAdapter :
@@ -39,11 +40,13 @@ class CustomerDetailListAdapter :
         tvPayment.text = item.payment.toString()
 
         if (item.rateChanged) {
+            rateAlert.text = "Rate Change Alert (${item.rateUsed.toPriceStr()})"
             rateAlert.show()
-            root.setBackgroundColor("#FFF7C2".toColorInt())
+            root.setCardBackgroundColor("#ccff00".toColorInt())
         } else {
-            rateAlert.hide()
-            root.setBackgroundColor("#FFFFFF".toColorInt())   // reset to white
+            rateAlert.text = "Rate: (${item.rateUsed.toPriceStr()})"
+            rateAlert.setTextColor("#000000".toColorInt())
+            root.setCardBackgroundColor("#ffffff".toColorInt())
         }
 
 

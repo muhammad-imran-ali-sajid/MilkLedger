@@ -12,7 +12,6 @@ import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierReceiptPdf
 import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierReportGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.RateChangeUtils
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toRoundedStr
@@ -106,7 +105,7 @@ class SupplierDetailFragment :
         val totalPaid = recordList.sumOf { it.paid }
         val totalBalance = recordList.sumOf { it.balance }
 
-        val flaggedList = RateChangeUtils.flagRateChangeStarts(filteredList)
+
 
         val data = SupplierReceiptPdf(
 
@@ -114,7 +113,7 @@ class SupplierDetailFragment :
             supplierName = args.supplierName,
             totalQty = totalQty.toRoundedStr(),
             avgTs = avgTS.toRoundedStr(),
-            recordList = flaggedList.toRecordList(),
+            recordList = filteredList.toRecordList(),
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             totalBalance = totalBalance.toRoundedStr(),

@@ -38,16 +38,25 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
 
             repository.getPurchasesForSupplier(id).collect { list ->
                 // 1. Convert raw data to detail models
-                val initialDetails = list.map { it.toSupplierDetailModel() }
+                val sortedAsc = list.map { it.toSupplierDetailModel() }.sortedBy { it.date }
+
+                val withRateChange = sortedAsc.mapIndexed { idx, item ->
+                    if (idx == 0) item.copy(isRateChanged = false)
+                    else {
+                        val prev = sortedAsc[idx - 1]
+                        item.copy(isRateChanged = item.rateUsed != prev.rateUsed)
+                    }
+                }
+
+                val finalDescList = withRateChange.reversed()
 
 
-                // 2. Apply the consecutive change logic
-                val finalDetails = initialDetails.flagRateChangeStartsUniversal()
+
 
                 _uiState.update {
                     it.copy(
-                        supplierDetailList = finalDetails,
-                        filteredList = finalDetails,
+                        supplierDetailList = finalDescList,
+                        filteredList = finalDescList,
 
 
                         )

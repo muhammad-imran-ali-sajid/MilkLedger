@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="New Rate Applied"
                 android:textColor="@color/red"
-                android:visibility="gone" />
+                 />
 
 
         </LinearLayout>

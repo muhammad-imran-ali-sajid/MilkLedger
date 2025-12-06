@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import com.miassolutions.milkledger.core.helper.handleZeroData
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
@@ -54,28 +55,14 @@ class SupplierDetailListAdapter :
             tvNotes.text = "Note: ${item.notes}"
         }
 
-        // 1. Reset default appearance for rate and date
-        tvDate.setTextColor(Color.BLACK)
-        tvRate.hide()
-
-        // 2. Use the new flag to show the alert only once
-        if (item.isRateChangeStart) {
-            // Use RED for the alert (or BLUE for consecutive if you keep that logic)
-
-            tvRate.show()
-
-        }
-
-        // 3. OPTIONAL: Keep the logic for highlighting today's entry if it's special
-        val isToday = item.date == LocalDate.now()
-        if (isToday && item.isRateChanged && !item.isRateChangeStart) {
-            // You might still want to highlight today's entry even if the change started previously
-            // This is application-specific visual preference.
-            // Example: Highlight today's entry, even if the rate started yesterday
-            // tvDate.setTextColor(Color.GREEN)
-
-            tvRate.show()
-
+        if (item.isRateChanged) {
+            rateAlert.text = "Rate Change Alert (${item.rateUsed.toPriceStr()})"
+            rateAlert.show()
+            root.setCardBackgroundColor("#ccff00".toColorInt())
+        } else {
+            rateAlert.text = "Rate: (${item.rateUsed.toPriceStr()})"
+            rateAlert.setTextColor("#000000".toColorInt())
+            root.setCardBackgroundColor("#ffffff".toColorInt())
         }
 
 

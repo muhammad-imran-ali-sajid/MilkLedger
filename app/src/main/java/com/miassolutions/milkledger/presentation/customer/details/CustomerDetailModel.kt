@@ -8,28 +8,7 @@ import com.miassolutions.milkledger.domain.model.Sale
 import java.time.LocalDate
 
 
-//data class CustomerDetailModel(
-//    val date: LocalDate,
-//    val milkAmount: Double,
-//    val deduction: Double,
-//    val netMilk: Double,
-//    val milkPrice: Double, // This is the total price/amount (Price * NetMilk)
-//    val payment: Double,
-//    val balance: Double,
-//
-//    // 💡 Added fields for rate tracking (analogous to SupplierDetailModel)
-//    val rateUsed: Double,
-//    val newRate: Double,
-//    val isRateChanged: Boolean,
-//
-//
-//    val notes: String? = null
-//)
 
-
-// Assuming SaleWithCustomer has access to:
-// - this.sale.rateUsed (price used for this specific sale)
-// - this.customer.customerRate (current price for the customer)
 
 fun SaleWithCustomer.toCustomerDetailModel(): CustomerDetailModel = CustomerDetailModel(
     date = this.sale.date,

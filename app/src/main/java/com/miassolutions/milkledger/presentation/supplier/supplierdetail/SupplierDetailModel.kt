@@ -18,9 +18,7 @@ data class SupplierDetailModel(
     val payment: Double,
     val balance: Double,
     val rateUsed: Double,
-    val newRate: Double,
-    val isRateChanged: Boolean,
-    val isRateChangeStart: Boolean = false,
+    val isRateChanged: Boolean = false,
     val notes: String? = null,
 
     )
@@ -36,9 +34,9 @@ fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = Supplier
     milkPrice = this.purchase.milkPrice,
     payment = this.purchase.payment,
     balance = this.purchase.balance,
-    newRate = this.supplier.supplierRate,
+
     rateUsed = this.purchase.rateUsed,
-    isRateChanged = this.purchase.rateUsed != this.supplier.supplierRate,
+
     notes = this.purchase.notes
 )
 
@@ -76,50 +74,50 @@ fun List<PurchaseWithSupplier>.toPurchaseRecordList(): List<PdfPurchaseItemRecor
 
 // NEW or REPLACED FUNCTION to be used in the ViewModel after initial mapping
 
-/**
- * Flags the first entry on which the rateUsed differs from the rateUsed on the previous day.
- * This should replace or augment the flagConsecutiveRateChanges logic.
- */
-fun List<SupplierDetailModel>.flagRateChangeStartsUniversal(): List<SupplierDetailModel> {
-    if (this.size <= 1) return this
-
-    // Detect sorting order using the first and last comparable item (date)
-    val firstDate = this.first().date
-    val lastDate = this.last().date
-    val isDescending = firstDate.isAfter(lastDate)
-
-    val mutableList = this.toMutableList()
-
-    // Depending on order, adjust the iteration logic
-    if (!isDescending) {
-        // ASCENDING (oldest → newest)
-        // Compare current with previous
-        if (mutableList.first().isRateChanged) {
-            mutableList[0] = mutableList.first().copy(isRateChangeStart = true)
-        }
-
-        for (i in 1 until mutableList.size) {
-            val prev = mutableList[i - 1]
-            val curr = mutableList[i]
-            val changed = curr.rateUsed != prev.rateUsed
-            mutableList[i] = curr.copy(isRateChangeStart = changed)
-        }
-    } else {
-        // DESCENDING (newest → oldest)
-        // Compare current with next
-        if (mutableList.first().isRateChanged) {
-            mutableList[0] = mutableList.first().copy(isRateChangeStart = true)
-        }
-
-        for (i in 0 until mutableList.size - 1) {
-            val curr = mutableList[i]
-            val next = mutableList[i + 1]
-            val changed = curr.rateUsed != next.rateUsed
-            mutableList[i] = curr.copy(isRateChangeStart = changed)
-        }
-    }
-
-    return mutableList
-}
+///**
+// * Flags the first entry on which the rateUsed differs from the rateUsed on the previous day.
+// * This should replace or augment the flagConsecutiveRateChanges logic.
+// */
+//fun List<SupplierDetailModel>.flagRateChangeStartsUniversal(): List<SupplierDetailModel> {
+//    if (this.size <= 1) return this
+//
+//    // Detect sorting order using the first and last comparable item (date)
+//    val firstDate = this.first().date
+//    val lastDate = this.last().date
+//    val isDescending = firstDate.isAfter(lastDate)
+//
+//    val mutableList = this.toMutableList()
+//
+//    // Depending on order, adjust the iteration logic
+//    if (!isDescending) {
+//        // ASCENDING (oldest → newest)
+//        // Compare current with previous
+//        if (mutableList.first().isRateChanged) {
+//            mutableList[0] = mutableList.first().copy(isRateChangeStart = true)
+//        }
+//
+//        for (i in 1 until mutableList.size) {
+//            val prev = mutableList[i - 1]
+//            val curr = mutableList[i]
+//            val changed = curr.rateUsed != prev.rateUsed
+//            mutableList[i] = curr.copy(isRateChangeStart = changed)
+//        }
+//    } else {
+//        // DESCENDING (newest → oldest)
+//        // Compare current with next
+//        if (mutableList.first().isRateChanged) {
+//            mutableList[0] = mutableList.first().copy(isRateChangeStart = true)
+//        }
+//
+//        for (i in 0 until mutableList.size - 1) {
+//            val curr = mutableList[i]
+//            val next = mutableList[i + 1]
+//            val changed = curr.rateUsed != next.rateUsed
+//            mutableList[i] = curr.copy(isRateChangeStart = changed)
+//        }
+//    }
+//
+//    return mutableList
+//}
 
 
