@@ -168,7 +168,7 @@
     </style>
 
     <style name="ExtendedFABStyle" parent="Widget.Material3.ExtendedFloatingActionButton.Secondary">
-        <item name="backgroundTint">@color/teal_700</item>
+        <item name="backgroundTint">@color/primary</item>
         <item name="android:layout_margin">16dp</item>
         <item name="elevation">8dp</item>
 

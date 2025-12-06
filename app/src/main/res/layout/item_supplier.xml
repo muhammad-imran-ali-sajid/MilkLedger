@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_purchase"
+    android:backgroundTint="@color/white"
+    android:background="@drawable/bg_edittext_readable"
     android:orientation="vertical"
 
     >
@@ -49,13 +50,13 @@
         <!-- Expand Arrow -->
         <ImageView
             android:id="@+id/imgArrow"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:src="@drawable/ic_arrow_down"
-            app:layout_constraintBaseline_toBaselineOf="@id/tvSupplierName"
+            app:layout_constraintBottom_toBottomOf="@+id/tvSupplierRate"
             app:layout_constraintEnd_toEndOf="parent"
-            app:tint="@android:color/white" />
+            app:layout_constraintTop_toTopOf="@+id/tvSupplierRate"
+            app:tint="@android:color/black" />
 
         <!-- Expandable Section -->
         <LinearLayout
@@ -91,6 +92,6 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginStart="40dp"
-        android:background="@color/teal_200" />
+        android:background="@color/orange_700" />
 
 </LinearLayout>
