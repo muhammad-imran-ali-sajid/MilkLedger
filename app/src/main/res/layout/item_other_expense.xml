@@ -21,18 +21,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.6"
-        tools:text="Akram" />
+        android:text="Akram" />
 
     <TextView
         android:id="@+id/tvExpenseAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="end"
+
         android:textColor="@color/orange_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.4"
-        tools:text="100.0" />
+        android:text="100.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

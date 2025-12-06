@@ -8,8 +8,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class StatAdapter : ListAdapter<StatListItem, RecyclerView.ViewHolder>(StatDiffCallback()) {
 
@@ -195,7 +199,8 @@ class PersonalExpenseViewHolder(private val binding: ItemOtherExpenseBinding) :
 class ProfitViewHolder(private val binding: ItemProfitOverviewBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: ProfitSummary) {
-        binding.tvDate.text = summary.date
+        val date = LocalDate.parse(summary.date)
+        binding.tvDate.text = date.toDisplayFormat()
         binding.tvProfitReceived.text = summary.profitAmount.toPriceStr()
     }
 }

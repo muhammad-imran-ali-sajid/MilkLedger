@@ -21,16 +21,14 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
     private val viewModel: StatViewModel by viewModels()
     private lateinit var statAdapter: StatAdapter
 
-    @Inject
-    lateinit var appPreferences: AppPreferencesManager
+
 
 
     override fun setupViews() {
         setupRecyclerView()
         observeViewModelData()
 
-        val savedColorId = appPreferences.loadBackgroundColor()
-        applyBackgroundColor(savedColorId)
+
 
         setupToggleGroup()
 
@@ -54,10 +52,7 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
     }
 
 
-    private fun applyBackgroundColor(colorId: Int) {
-        val colorInt = requireContext().getColor(colorId)
-        requireActivity().window.decorView.setBackgroundColor(colorInt)
-    }
+
 
 
     override fun setupListeners() {
