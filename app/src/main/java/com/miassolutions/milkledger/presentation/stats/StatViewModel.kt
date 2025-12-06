@@ -135,7 +135,7 @@ class StatViewModel @Inject constructor(
 
                 add(
                     StatListItem.Header(
-                        title = "Business Expenses",
+                        title = "Business Exp",
                         amount = "Amount"
                     )
                 )
@@ -153,7 +153,7 @@ class StatViewModel @Inject constructor(
 
                 add(
                     StatListItem.Header(
-                        title = "Personal Expenses",
+                        title = "Personal Exp",
                         amount = "Amount"
                     )
                 )

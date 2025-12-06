@@ -22,7 +22,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+
         tools:text="Ali Ahmed long name that gets clipped" />
 
     <!-- 2. Volume/Status: Fixed width of 80dp, centered text. -->
@@ -35,7 +35,7 @@
         android:layout_weight="1"
         android:gravity="center"
         android:textColor="@color/black"
-        android:textSize="18sp"
+
         tools:text="15.5 kg" />
 
     <!-- 3. Paid Amount: Fixed width of 80dp, text aligned to the end (right). -->
@@ -46,7 +46,7 @@
         android:layout_weight="1"
         android:gravity="end"
         android:textColor="@color/green_700"
-        android:textSize="18sp"
+
         android:textStyle="bold"
         tools:text="199.00" />
 

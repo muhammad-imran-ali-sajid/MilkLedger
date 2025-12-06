@@ -20,7 +20,7 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+
         android:maxLines="1"
         android:ellipsize="end"
         tools:text="Ali Ahmed long name that gets clipped" />
@@ -35,7 +35,7 @@
         android:layout_marginEnd="8dp"
         android:gravity="center"
         android:textColor="@color/black"
-        android:textSize="18sp"
+
         tools:text="15.5 kg" />
 
     <!-- 3. Paid Amount: Fixed width of 80dp, text aligned to the end (right). -->
@@ -47,7 +47,7 @@
         android:layout_weight="1"
         android:textColor="@color/orange_700"
         android:textStyle="bold"
-        android:textSize="18sp"
+
         tools:text="199.00" />
 
 </LinearLayout>

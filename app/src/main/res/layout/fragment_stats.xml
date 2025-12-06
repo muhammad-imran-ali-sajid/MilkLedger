@@ -70,7 +70,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Daily" />
+            android:text="D" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnWeekly"
@@ -78,7 +78,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Weekly" />
+            android:text="W" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnMonthly"
@@ -86,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Monthly" />
+            android:text="M" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnYearly"
@@ -94,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Yearly"
+            android:text="Y"
 
             android:textStyle="bold" />
 
