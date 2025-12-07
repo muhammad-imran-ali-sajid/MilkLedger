@@ -20,7 +20,9 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.feature.FeatureManager
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collect
@@ -31,6 +33,12 @@ import kotlinx.coroutines.launch
 abstract class BaseFragment<VB : ViewBinding>(
     private val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
 ) : Fragment() {
+
+    @Inject
+    lateinit var featureManager: FeatureManager
+
+    protected var isPremiumEnabled: Boolean = false
+
 
     private var _binding: VB? = null
     protected val binding get() = _binding!!
@@ -44,8 +52,15 @@ abstract class BaseFragment<VB : ViewBinding>(
         return binding.root
     }
 
+    private fun observePremiumFlag() {
+        featureManager.isPremiumEnabled().collectState { enabled ->
+            isPremiumEnabled = enabled
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observePremiumFlag()
         setupViews()
         setupObservers()
         setupListeners()

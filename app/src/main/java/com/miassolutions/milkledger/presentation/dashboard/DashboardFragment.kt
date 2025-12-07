@@ -75,23 +75,22 @@ class DashboardFragment :
     }
 
     override fun onMenuCreated(menu: Menu) {
-        val pdfMenu = menu.findItem(R.id.action_dashboard_pdf)
+        val item = menu.findItem(R.id.action_dashboard_pdf)
 
-        pdfMenu.setOnMenuItemClickListener {
+        item.setOnMenuItemClickListener {
+            if (!isPremiumEnabled) {
+                showSnackbar("Premium feature")
+                return@setOnMenuItemClickListener true
+            }
 
-            showDialog(
-                "Dashboard Pdf Report",
-                message = "Do you want to generate pdf report?",
-                onAction = {
+            showDialog("Generate PDF?", "Do you want to create PDF?") {
+                generatePdfReport()
+            }
 
-                    generatePdfReport()
-
-                    showToast("Pdf menu clicked")
-                }
-            )
             true
         }
     }
+
 
     private fun generatePdfReport() {
         val state = viewModel.uiState.value
@@ -240,9 +239,18 @@ class DashboardFragment :
 //        }
 
         binding.cashFlowCard.setOnClickListener {
+
+            if (!isPremiumEnabled) {
+                showSnackbar("This feature requires Premium")
+                return@setOnClickListener
+            }
+
             val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
             navigateTo(dest.actionId)
         }
+
+
+
 
 
         binding.saleCard.setOnClickListener {
