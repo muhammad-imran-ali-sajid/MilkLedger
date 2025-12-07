@@ -42,12 +42,11 @@ class CustomerDetailFragment :
         // Use the safe call operator or an 'if' check to prevent NPE
         menu.findItem(R.id.action_profit_gen_pdf)?.let { pdfMenuItem ->
             pdfMenuItem.setOnMenuItemClickListener {
-                // Note: I'm recommending a small change here.
-                // When using the menu button, you should typically show the date filter first
-                // to allow the user to select the range for the report, rather than
-                // just running 'generateReport()' with the current filter dates.
-                generateReport()
-//                showDateFilter(isGeneratingReport = true)
+                showDialog(
+                    title = "Confirmation",
+                    message = "Do you want to generate pdf report?",
+                    onAction = { generateReport() }
+                )
                 true
             }
         }

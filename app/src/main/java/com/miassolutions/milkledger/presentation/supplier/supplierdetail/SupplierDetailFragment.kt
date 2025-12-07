@@ -69,7 +69,11 @@ class SupplierDetailFragment :
         val sortMenu = menu.findItem(R.id.menu_sort_item)
 
         sortMenu.setOnMenuItemClickListener {
-            generateReport()
+            showDialog(
+                title = "Confirmation",
+                message = "Do you want to generate pdf report?",
+                onAction = { generateReport() }
+            )
             true
         }
     }
