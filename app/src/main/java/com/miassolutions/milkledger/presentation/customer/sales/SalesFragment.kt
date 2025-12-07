@@ -51,11 +51,14 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         val pdfMenuItem = menu.findItem(R.id.action_sale_pdf)
 
         pdfMenuItem?.setOnMenuItemClickListener {
-            showDialog(
-                title = "Confirmation",
-                message = "Do you want to generate pdf report?",
-                onAction = { generateReport() }
-            )
+            if (!isPremiumEnabled) {
+                showSnackbar("Premium feature")
+                return@setOnMenuItemClickListener true
+            }
+
+            showDialog("Generate PDF?", "Do you want to create PDF?") {
+                generateReport()
+            }
 
             true
         }
@@ -301,14 +304,25 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     }
 
     private fun showCustomerBalanceHistory(id: String, name: String) {
+        if (!isPremiumEnabled){
+            showSnackbar("Premium Feature")
+            return
+        }
         val btmSheet = CustomerBalanceHistoryBottomSheet.newInstance(id, name)
         btmSheet.show(childFragmentManager, null)
     }
 
     private fun navToDetail(id: String, name: String) {
+
+
         val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
         if (!isAdmin) {
             showSnackbar("Only ADMIN is allowed")
+            return
+        }
+
+        if (!isPremiumEnabled){
+            showSnackbar("Premium Feature")
             return
         }
 

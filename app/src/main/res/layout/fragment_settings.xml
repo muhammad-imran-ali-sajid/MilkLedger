@@ -8,15 +8,6 @@
     android:orientation="vertical">
 
 
-    <Button
-        android:id="@+id/btnAddDefaultExpense"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add New Default Expense"
-        android:backgroundTint="#17202A"
-        android:textColor="@android:color/white" />
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

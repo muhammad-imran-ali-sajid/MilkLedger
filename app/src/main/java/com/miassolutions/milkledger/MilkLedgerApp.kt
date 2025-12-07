@@ -20,8 +20,7 @@ class MilkLedgerApp : Application() {
     @Inject
     lateinit var dataRepository: DataRepository
 
-    @Inject
-    lateinit var featureManager: FeatureManager
+
 
     override fun onCreate() {
         super.onCreate()
@@ -29,9 +28,7 @@ class MilkLedgerApp : Application() {
         FirebaseApp.initializeApp(this)
         RemoteConfigHelper.init()
 
-        CoroutineScope(Dispatchers.IO).launch {
-            featureManager.refreshFlags()
-        }
+
 
 
 //        dataRepository.initialize()

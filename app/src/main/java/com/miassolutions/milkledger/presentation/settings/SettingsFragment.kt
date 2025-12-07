@@ -57,9 +57,7 @@ class SettingsFragment :
             saveAndApplyColor(R.color.primary)
         }
 
-        binding.btnAddDefaultExpense.setOnClickListener {
-            showBottomSheet()
-        }
+
     }
 
     /**

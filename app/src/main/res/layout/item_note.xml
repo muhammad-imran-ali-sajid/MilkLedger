@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="4dp"
-    android:background="@drawable/bg_notes"
+android:background="@drawable/bg_edittext_readable"
     android:orientation="vertical"
     android:padding="12dp">
 
@@ -17,10 +17,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:textColor="@color/teal_700"
         tools:text="2 Nov 2025" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tillTitle"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -29,19 +31,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cbDone"
+
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Meeting Notes" />
 
-        <CheckBox
-            android:id="@+id/cbDone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/tvNoteTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/tvNoteTitle" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -51,7 +47,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:ellipsize="end"
-        android:maxLines="2"
+        android:maxLines="3"
+        android:padding="8dp"
         tools:text="Discuss project milestones, deadlines, and team updates." />
 
     <View

@@ -63,11 +63,14 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
     override fun onMenuCreated(menu: Menu) {
         val menuItem = menu.findItem(R.id.action_profit_gen_pdf)
         menuItem?.setOnMenuItemClickListener {
-            showDialog(
-                title = "Confirmation",
-                message = "Do you want to generate pdf report?",
-                onAction = { generateReport() }
-            )
+            if (!isPremiumEnabled) {
+                showSnackbar("Premium feature")
+                return@setOnMenuItemClickListener true
+            }
+
+            showDialog("Generate PDF?", "Do you want to create PDF?") {
+                generateReport()
+            }
 
             true
         }

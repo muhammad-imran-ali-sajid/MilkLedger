@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 class NotesListAdapter(
     private val onItemClick: (NoteEntity) -> Unit,
     private val onDeleteClick: (NoteEntity) -> Unit,
-    private val onCheckChanged: (NoteEntity, Boolean) -> Unit
+
 ) : ListAdapter<NoteEntity, NotesListAdapter.NoteViewHolder>(DiffCallback),
     FilterableList<NoteEntity> {
 
@@ -33,9 +33,9 @@ class NotesListAdapter(
         fun bind(note: NoteEntity) = with(binding) {
             tvNoteTitle.text = note.title
             tvNoteContent.text = note.content
-            tvNoteDate.text = note.createdDate.format(dateFormatter)
+            tvNoteDate.text = "Dated: ${note.createdDate.format(dateFormatter)}"
             tvAlarm.text = note.alarmDateTime?.format(dateTimeFormatter) ?: "No Alarm"
-            cbDone.isChecked = note.isDone
+
 
             val pastColor = "#FF9100".toColorInt()
 
@@ -47,11 +47,7 @@ class NotesListAdapter(
 
             root.setOnLongClickListener { onDeleteClick(note); true }
 
-            cbDone.setOnCheckedChangeListener(null)
-            cbDone.isChecked = note.isDone
-            cbDone.setOnCheckedChangeListener { _, isChecked ->
-                onCheckChanged(note, isChecked)
-            }
+
         }
     }
 

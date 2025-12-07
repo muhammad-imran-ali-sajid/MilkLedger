@@ -41,12 +41,7 @@
         android:textSize="18sp"
         tools:text="Discuss project milestones and deadlines." />
 
-    <!-- Divider -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginVertical="12dp"
-        android:background="#666" />
+
 
 
     <LinearLayout

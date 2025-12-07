@@ -63,9 +63,7 @@ class NotesListFragment :
             onDeleteClick = { note ->
                 showDeleteConfirmation(note)
             },
-            onCheckChanged = { note, isChecked ->
-                viewModel.toggleIsDone(note.id, isChecked)
-            }
+
         )
 
         binding.rvNotes.apply {

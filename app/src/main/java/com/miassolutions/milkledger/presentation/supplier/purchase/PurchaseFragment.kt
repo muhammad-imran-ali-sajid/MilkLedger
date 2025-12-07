@@ -93,11 +93,14 @@ class PurchaseFragment :
 //        editModeSwitch = editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
 
         pdfMenuItem?.setOnMenuItemClickListener {
-            showDialog(
-                title = "Confirmation",
-                message = "Do you want to generate pdf report?",
-                onAction = { generateReport() }
-            )
+            if (!isPremiumEnabled) {
+                showSnackbar("Premium feature")
+                return@setOnMenuItemClickListener true
+            }
+
+            showDialog("Generate PDF?", "Do you want to create PDF?") {
+                generateReport()
+            }
 
             true
         }
@@ -225,6 +228,11 @@ class PurchaseFragment :
 
     private fun showBalanceHistory(supplierId: String, supplierName: String) {
 
+        if (!isPremiumEnabled){
+            showSnackbar("Premium Feature")
+            return
+        }
+
         val btmSheet = SupplierBalanceHistoryBottomSheet.newInstance(supplierId, supplierName)
 
         btmSheet.show(childFragmentManager, null)
@@ -327,6 +335,11 @@ class PurchaseFragment :
         val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
         if (!isAdmin) {
             showSnackbar("Only ADMIN is allowed")
+            return
+        }
+
+        if (!isPremiumEnabled){
+            showSnackbar("Premium Feature")
             return
         }
 

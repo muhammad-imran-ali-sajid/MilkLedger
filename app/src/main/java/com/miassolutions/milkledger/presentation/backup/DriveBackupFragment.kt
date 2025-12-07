@@ -53,12 +53,33 @@ class DriveBackupFragment :
 
     override fun setupViews() {
         binding.btnBackup.setOnClickListener {
-            val timestamp =
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
-            createBackupFileLauncher.launch("milk_ledger_backup_$timestamp.json")
+            if (!isPremiumEnabled) {
+                showSnackbar("This feature requires Premium")
+                return@setOnClickListener
+            }
+
+            showDialog(
+                title = "Confirmation",
+                message = "Do you want backup",
+                onAction = {
+
+                    val timestamp =
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
+                    createBackupFileLauncher.launch("milk_ledger_backup_$timestamp.json")
+                }
+            )
+
+
         }
 
         binding.btnRestore.setOnClickListener {
+
+            if (!isPremiumEnabled) {
+                showSnackbar("This feature requires Premium")
+                return@setOnClickListener
+            }
+
+
             showDialog(
                 title = "WARNING!!",
                 message = "Are you sure? This will overwrite you existing database.",
