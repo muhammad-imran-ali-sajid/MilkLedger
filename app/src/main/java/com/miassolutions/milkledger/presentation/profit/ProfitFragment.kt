@@ -1,10 +1,15 @@
 package com.miassolutions.milkledger.presentation.profit
 
+import android.view.Menu
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReceiptPdf
+import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReportGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
 import com.miassolutions.milkledger.databinding.LayoutSummaryProfitBinding
@@ -12,6 +17,7 @@ import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterController
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 
 @AndroidEntryPoint
@@ -52,6 +58,21 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
             .show()
     }
 
+    override fun getMenuResId(): Int = R.menu.profit_menu
+
+    override fun onMenuCreated(menu: Menu) {
+        val menuItem = menu.findItem(R.id.action_profit_gen_pdf)
+        menuItem?.setOnMenuItemClickListener {
+            showDialog(
+                title = "Confirmation",
+                message = "Do you want to generate pdf report?",
+                onAction = { generateReport() }
+            )
+
+            true
+        }
+    }
+
 
     private fun showSummary(
         businessProfit: Double,
@@ -85,42 +106,44 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
     }
 
     private fun generateReport() {
-//        val state = viewModel.uiState.value
-//        val filteredList: List<ProfitListModel> = state.filteredList
-//
-//        val startDate = state.startDate ?: LocalDate.now()
-//        val endDate = state.endDate ?: LocalDate.now()
-//
-//        val fromDate = startDate.toDisplayFormat()
-//        val toDate = endDate.toDisplayFormat()
-//
-//        val dateRange = "$fromDate - $toDate"
-//        Log.d("SupplierDetailFragment", "Report Date Range: $dateRange")
-//
-//        val recordList = filteredList.toProfitRecordList()
-//
-//        val totalNetProfit = state.netProfit
-//        val totalReceived = state.totalReceived
-//        val totalBalance = state.remainingProfit
-//
-//        val data = ProfitReceiptPdf(
-//            dateRange = dateRange,
-//            profitReceiver = "Shahid Afzaal",
-//            recordList = recordList,
-//            totalProfit = totalNetProfit.toPriceStr(),
-//            totalReceived = totalReceived.toPriceStr(),
-//            totalBalance = totalBalance.toPriceStr(),
-//            footerNote = "MIAS SOLUTIONS"
-//        )
-//
-//        ProfitReportGenerator.generateAndSharePdf(
-//            requireContext(),
-//            data,
-//            "Profit",
-//            false
-//        )
-//
-//        showToast("Generating pdf report...")
+        val state = viewModel.uiState.value
+        val filteredList: List<ProfitListModel> = state.filteredList
+
+        val startDate = state.startDate ?: LocalDate.now()
+        val endDate = state.endDate ?: LocalDate.now()
+
+        val fromDate = startDate.toDisplayFormat()
+        val toDate = endDate.toDisplayFormat()
+
+        val dateRange = "$fromDate - $toDate"
+
+
+        val recordList = filteredList.toProfitRecordList()
+
+        val totalGrossProfit = state.grossProfit
+        val totalNetProfit = state.netProfit
+        val totalReceived = state.totalReceived
+        val totalBalance = state.remainingProfit
+
+        val data = ProfitReceiptPdf(
+            dateRange = dateRange,
+            profitReceiver = "Shahid Afzaal",
+            recordList = recordList,
+            accGrossProfit = totalGrossProfit.toPriceStr(),
+            accNetProfit = totalNetProfit.toPriceStr(),
+            accReceived = totalReceived.toPriceStr(),
+            accBalance = totalBalance.toPriceStr(),
+            footerNote = "MIAS SOLUTIONS"
+        )
+
+        ProfitReportGenerator.generateAndSharePdf(
+            requireContext(),
+            data,
+            "Profit",
+            false
+        )
+
+        showToast("Generating pdf report...")
 
 
     }
@@ -147,9 +170,6 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
         }
 
-        binding.fabPDF.setOnClickListener {
-            generateReport()
-        }
 
     }
 

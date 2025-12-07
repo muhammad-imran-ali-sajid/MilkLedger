@@ -5,99 +5,15 @@ import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
-import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
 import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.databinding.ItemProfitBinding
 import com.miassolutions.milkledger.databinding.ItemProfitRecordRowBinding
-import com.miassolutions.milkledger.databinding.ItemPurchaseRecordRowBinding
-import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
-import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
 import com.miassolutions.milkledger.databinding.LayoutProfitReceiptBinding
 
-import com.miassolutions.milkledger.databinding.LayoutSalesReceiptBinding
-import com.miassolutions.milkledger.databinding.LayoutSupplierReceiptBinding
 import java.io.File
 import java.io.FileOutputStream
 
 object ProfitReportGenerator {
 
-    /**
-     * Generates the PDF document from the layout, saves it to a file, and returns the file.
-     * The file naming uses the improved logic from PdfUtils (BaseName_YYYYMMDD_HHMMSS.pdf).
-     */
-//    private fun generateProfitReceiptPdf(
-//        context: Context,
-//        data: ProfitReceiptPdf,
-//        baseName: String,
-//        showLogo: Boolean = false,
-//        logoResId: Int? = null
-//    ): File {
-//        val inflater = LayoutInflater.from(context)
-//        val binding = LayoutProfitReceiptBinding.inflate(inflater)
-//
-//        // Show/hide logo
-//        if (showLogo && logoResId != null) {
-//            binding.imgLogo.visibility = View.VISIBLE
-//            binding.imgLogo.setImageBitmap(PdfUtils.getLogoBitmap(context, logoResId))
-//        } else {
-//            binding.imgLogo.visibility = View.GONE
-//        }
-//        val file = PdfUtils.getPdfFile(context, baseName)
-//        val receiptName = file.name.removeSuffix(".pdf")
-//        // Header info
-//        with(binding) {
-//
-//
-//            tvDateRange.text = "Date Range: ${data.dateRange}"
-//            tvTotalProfit.text = data.totalProfit
-//            tvTotalProfitReceived.text = data.totalReceived
-//            tvTotalBalance.text = data.totalBalance
-//
-//
-//            tvFooter.text = data.footerNote ?: ""
-//        }
-//
-//
-//        // Add rows using item_record_row.xml via ViewBinding
-//        data.recordList.forEach { item ->
-//            val rowBinding = ItemProfitRecordRowBinding.inflate(inflater, binding.recordContainer, false)
-//            rowBinding.tvDate.text = item.date
-//            rowBinding.tvProfit.text = item.profit.toString()
-//            rowBinding.tvProfitReceived.text = item.profitReceived.toRoundedStr()
-//            rowBinding.tvBalance.text = item.balance.toPriceStr()
-//            binding.recordContainer.addView(rowBinding.root)
-//        }
-//
-//        // Measure + layout the root view
-//        val view = binding.root
-//        val displayMetrics = context.resources.displayMetrics
-//        val width = displayMetrics.widthPixels
-//        val height = displayMetrics.heightPixels
-//        view.measure(
-//            View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
-//            View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.UNSPECIFIED)
-//        )
-//        view.layout(0, 0, width, view.measuredHeight)
-//
-//        val pdfDoc = PdfDocument()
-//        val pageInfo = PdfDocument.PageInfo.Builder(width, view.measuredHeight, 1).create()
-//        val page = pdfDoc.startPage(pageInfo)
-//
-//        view.draw(page.canvas)
-//        pdfDoc.finishPage(page)
-//
-//        FileOutputStream(file).use { pdfDoc.writeTo(it) }
-//        pdfDoc.close()
-//
-//        return file
-//    }
-
-
-    /**
-     * Generates the PDF document from the layout, saves it to a file, and returns the file.
-     * The file naming uses the improved logic from PdfUtils (BaseName_YYYYMMDD_HHMMSS.pdf).
-     */
     private fun generateProfitReceiptPdf(
         context: Context,
         data: ProfitReceiptPdf,
@@ -122,10 +38,11 @@ object ProfitReportGenerator {
 
 
             tvDateRange.text = "Date Range: ${data.dateRange}"
-            tvTotalProfit.text = data.totalProfit
-            tvTotalProfitReceived.text = data.totalReceived
-            tvTotalBalance.text = data.totalBalance
-//            tvFooter.text = data.footerNote ?: ""
+            tvAccGrossProfit.text = data.accGrossProfit
+            tvAccNetProfit.text = data.accNetProfit
+            tvAccReceived.text = data.accReceived
+            tvTotalBalance.text = data.accBalance
+
         }
 
 
@@ -134,7 +51,8 @@ object ProfitReportGenerator {
             val rowBinding =
                 ItemProfitRecordRowBinding.inflate(inflater, binding.recordContainer, false)
             rowBinding.tvDate.text = item.date
-            rowBinding.tvProfit.text = item.profit.toPriceStr()
+            rowBinding.tvGrossProfit.text = item.grossProfit.toPriceStr()
+            rowBinding.tvNetProfit.text = item.netProfit.toPriceStr()
             rowBinding.tvProfitReceived.text = item.profitReceived.toPriceStr()
             rowBinding.tvBalance.text = item.balance.toPriceStr()
             binding.recordContainer.addView(rowBinding.root)
@@ -151,9 +69,6 @@ object ProfitReportGenerator {
         )
         view.layout(0, 0, width, view.measuredHeight)
 
-//        // Create PDF
-//        // 👇 This call utilizes the improved file naming logic in PdfUtils
-//        val baseName = data.receipt.replace(" ", "_").replace(Regex("[^a-zA-Z0-9_-]"), "")
 
 
         val pdfDoc = PdfDocument()

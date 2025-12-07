@@ -2,7 +2,6 @@ package com.miassolutions.milkledger.presentation.customer.details
 
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -41,7 +40,7 @@ class CustomerDetailFragment :
 
     override fun onMenuCreated(menu: Menu) {
         // Use the safe call operator or an 'if' check to prevent NPE
-        menu.findItem(R.id.action_gen_pdf)?.let { pdfMenuItem ->
+        menu.findItem(R.id.action_profit_gen_pdf)?.let { pdfMenuItem ->
             pdfMenuItem.setOnMenuItemClickListener {
                 // Note: I'm recommending a small change here.
                 // When using the menu button, you should typically show the date filter first

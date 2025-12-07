@@ -61,17 +61,6 @@
         tools:itemCount="5"
         tools:listitem="@layout/item_profit" />
 
-    />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabPDF"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/ic_pdf"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/fabAddProfit"
-        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddProfit"
@@ -83,8 +72,7 @@
         app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@+id/cardProfitSummary"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/fabPDF" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.miassolutions.milkledger.core.util.CollapsibleCardView
         android:id="@+id/cardProfitSummary"

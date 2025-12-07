@@ -13,7 +13,6 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReportPdf
 import com.miassolutions.milkledger.core.pdf.purchasereport.PdfPurchaseSummary
 import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
-import com.miassolutions.milkledger.core.prefs.SalesPrefsHelper
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.isToday
@@ -90,7 +89,7 @@ class PurchaseFragment :
 
     override fun onMenuCreated(menu: Menu) {
 //        val editModeItem = menu.findItem(R.id.action_edit_mode)
-        val pdfMenuItem = menu.findItem(R.id.action_gen_pdf)
+        val pdfMenuItem = menu.findItem(R.id.action_profit_gen_pdf)
 //        editModeSwitch = editModeItem.actionView?.findViewById(R.id.switch_toolbar_edit_mode)
 
         pdfMenuItem?.setOnMenuItemClickListener {
