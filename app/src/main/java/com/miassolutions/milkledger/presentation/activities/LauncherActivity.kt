@@ -16,34 +16,16 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class LauncherActivity : AppCompatActivity() {
 
-    @Inject lateinit var featureManager: FeatureManager
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Safe startup coroutine
-        CoroutineScope(Dispatchers.Main).launch {
-            try {
-                featureManager.refreshFlags()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            navigateToNext()
-        }
-    }
-
-    private fun navigateToNext() {
         val currentUser = FirebaseAuth.getInstance().currentUser
-
-        val target = if (currentUser != null)
-            MainActivity::class.java
-        else
-            LoginActivity::class.java
+        val target = if (currentUser != null) MainActivity::class.java else LoginActivity::class.java
 
         startActivity(Intent(this, target))
         finish()
     }
 }
+
 
 

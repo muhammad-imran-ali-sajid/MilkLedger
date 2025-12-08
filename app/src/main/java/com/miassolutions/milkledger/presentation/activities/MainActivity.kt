@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -18,6 +19,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.feature.FeatureManager
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
@@ -26,10 +28,12 @@ import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ToolbarOwner {
 
+    @Inject lateinit var featureManager: FeatureManager
     @Inject
     lateinit var appPreferences: AppPreferencesManager
 
@@ -43,6 +47,12 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            featureManager.refreshFlags()  // runs silently in background
+        }
+
+
         applySavedBackground()
         enableEdgeToEdge()
         setContentView(binding.root)
