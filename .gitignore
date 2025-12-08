@@ -12,4 +12,9 @@
 /captures
 .externalNativeBuild
 .cxx
+
+# APKs and outputs
+*.apk
+*.ap_
+*.aab
 local.properties
