@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.presentation.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -49,7 +50,11 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            featureManager.refreshFlags()  // runs silently in background
+            try {
+                featureManager.refreshFlags()
+            } catch (e: Exception) {
+                Log.e("FeatureFlags", "Failed to refresh flags", e)
+            }
         }
 
 
