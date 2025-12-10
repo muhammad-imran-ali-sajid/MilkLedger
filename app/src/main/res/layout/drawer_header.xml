@@ -24,8 +24,8 @@
             android:layout_height="60dp"
             android:importantForAccessibility="no"
             android:padding="8dp"
-            android:scaleType="center"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:scaleType="fitXY"
+            android:src="@drawable/gmslogo02" />
     </com.google.android.material.card.MaterialCardView>
 
 

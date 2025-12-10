@@ -178,7 +178,7 @@ class DashboardViewModel @Inject constructor(
         loadRange(newRange.first, newRange.second)
     }
 
-    private fun loadRange(start: LocalDate, end: LocalDate) {
+     fun loadRange(start: LocalDate, end: LocalDate) {
         viewModelScope.launch {
             combine(
                 repository.getTotalMilkPurchaseBetween(start, end),

@@ -14,9 +14,11 @@ import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
+import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import com.miassolutions.milkledger.presentation.stats.toPdfSummary
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -122,6 +124,7 @@ class DashboardFragment :
             val qtyDiff = state.milkSold - state.milkPurchase
 
             tvSelectedDate.text = state.period
+
             tvTotalPurchases.text = state.purchaseTotal.toPriceStr()
             tvTotalSales.text = state.salesTotal.toPriceStr()
             tvTotalExpense.text = state.fixedExpense.toPriceStr()
@@ -141,6 +144,8 @@ class DashboardFragment :
 
         }
     }
+
+
 
     private fun setupToggleGroup() {
         binding.togglePeriod.addOnButtonCheckedListener { _, checkedId, isChecked ->
@@ -206,6 +211,9 @@ class DashboardFragment :
 
         if (startDate != null && endDate != null)
             viewModel.loadCustom(startDate, endDate)
+
+
+
     }
 
     private fun btnVisibilityControl(toShow: Boolean = false) {
@@ -237,6 +245,23 @@ class DashboardFragment :
 //        binding.cardProfit.setOnClickListener {
 //            syncViewModel.startInitialSync()
 //        }
+
+        binding.tvSelectedDate.setOnClickListener {
+
+
+            val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
+            val isUserAuthorized = isAdmin // Replace with actual auth check
+
+            showExpenseDatePicker(
+                isAuthorized = isUserAuthorized,
+                initialDate = LocalDate.now(),
+                onPicked = { selectedDate: LocalDate ->
+                    // Load DAILY mode for selected date
+                    binding.togglePeriod.check(R.id.btn_daily)
+                    viewModel.loadRange(selectedDate, selectedDate)
+                }
+            )
+        }
 
         binding.cashFlowCard.setOnClickListener {
 
