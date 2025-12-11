@@ -19,15 +19,20 @@ import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
 import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
+import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
+import com.miassolutions.milkledger.presentation.datefilter.DateFilterController
+import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import com.miassolutions.milkledger.presentation.stats.toPdfSummary
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
 @AndroidEntryPoint
 class DashboardFragment :
-    BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
+    BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate), DateFilterCallback {
 
     private val viewModel by viewModels<DashboardViewModel>()
+
+    private lateinit var controller: DateFilterController
     private val syncViewModel by viewModels<SyncViewModel>()
 
     override fun getMenuResId(): Int {
@@ -37,6 +42,13 @@ class DashboardFragment :
     override fun setupViews() {
 
         syncViewModel.startInitialSync() //todo
+
+        controller = DateFilterController(
+            this,
+            binding.dateFilterLayout,
+            callback = this
+        )
+        controller.init()
 
         RemoteConfigHelper.fetchValue(viewLifecycleOwner) { isTrialVersion ->
 
@@ -71,8 +83,6 @@ class DashboardFragment :
 
 
 
-        setupToggleGroup()
-        setupCustomRangeCalendar()
 
     }
 
@@ -123,7 +133,7 @@ class DashboardFragment :
 
             val qtyDiff = state.milkSold - state.milkPurchase
 
-            tvSelectedDate.text = state.period
+            dateFilterLayout.tvSelectedDate.text = state.period
 
             tvTotalPurchases.text = state.purchaseTotal.toPriceStr()
             tvTotalSales.text = state.salesTotal.toPriceStr()
@@ -142,126 +152,16 @@ class DashboardFragment :
             tvRemainingProfit.text = state.profitAfter.toPriceStr()
 
 
+
+
+
         }
     }
 
-
-
-    private fun setupToggleGroup() {
-        binding.togglePeriod.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (!isChecked) return@addOnButtonCheckedListener
-
-            when (checkedId) {
-                R.id.btn_daily -> {
-                    btnVisibilityControl()
-                    viewModel.loadDaily()
-                }
-
-                R.id.btnWeekly -> {
-                    btnVisibilityControl()
-                    viewModel.loadWeekly()
-                }
-
-                R.id.btnMonthly -> {
-                    btnVisibilityControl()
-                    viewModel.loadMonthly()
-                }
-
-                R.id.btnYearly -> {
-                    btnVisibilityControl()
-                    viewModel.loadYearly()
-                }
-
-                R.id.btn_all -> {
-                    btnVisibilityControl(true)
-                    viewModel.loadCustom(null, null)
-
-
-                }
-            }
-        }
-    }
-
-    private fun showDateFilter() {
-        val bottomSheet = CustomDateRangeBottomSheet()
-        bottomSheet.show(parentFragmentManager, "CUSTOM_RANGE_ONLY_FILTER_DATA")
-    }
-
-    private fun setupCustomRangeCalendar() {
-        // 1. Set up the listener
-        setFragmentResultListener(CustomDateRangeBottomSheet.REQUEST_KEY) { requestKey, bundle ->
-            if (requestKey == CustomDateRangeBottomSheet.REQUEST_KEY) {
-
-                val startDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_START_DATE)
-                val endDateString = bundle.getString(CustomDateRangeBottomSheet.BUNDLE_END_DATE)
-
-                if (startDateString != null && endDateString != null) {
-
-                    val startDate = LocalDate.parse(startDateString)
-                    val endDate = LocalDate.parse(endDateString)
-
-                    handleSelectedDateRange(startDate, endDate)
-                }
-            }
-        }
-    }
-
-
-    private fun handleSelectedDateRange(startDate: LocalDate?, endDate: LocalDate?) {
-
-        if (startDate != null && endDate != null)
-            viewModel.loadCustom(startDate, endDate)
-
-
-
-    }
-
-    private fun btnVisibilityControl(toShow: Boolean = false) {
-        if (toShow) {
-            binding.apply {
-                btnCustomRange.show()
-                btnNextDate.visibility = View.INVISIBLE
-                btnPrevDate.visibility = View.INVISIBLE
-
-
-            }
-        } else {
-            binding.apply {
-                btnCustomRange.hide()
-                btnNextDate.show()
-                btnPrevDate.show()
-
-            }
-        }
-    }
 
 
     override fun setupListeners() {
-        binding.btnCustomRange.setOnClickListener {
-            showDateFilter()
-        }
 
-//        // later will pullToRefresh TODO()
-//        binding.cardProfit.setOnClickListener {
-//            syncViewModel.startInitialSync()
-//        }
-
-        binding.tvSelectedDate.setOnClickListener {
-
-
-            val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-            val isUserAuthorized = isAdmin // Replace with actual auth check
-
-            showExpenseDatePicker(
-                isAuthorized = isUserAuthorized,
-                initialDate = LocalDate.now(),
-                onPicked = { selectedDate: LocalDate ->
-                    // Load DAILY mode for selected date
-                    binding.togglePeriod.check(R.id.btn_daily)
-                    viewModel.loadRange(selectedDate, selectedDate)
-                }
-            )
-        }
 
         binding.cashFlowCard.setOnClickListener {
 
@@ -308,15 +208,15 @@ class DashboardFragment :
 
         }
 
-        binding.apply {
-            btnNextDate.setOnClickListener { viewModel.onNextClicked() }
-            btnPrevDate.setOnClickListener { viewModel.onPrevClicked() }
-        }
 
     }
 
 
     private fun navigateTo(destinationId: Int) {
         findNavController().navigate(destinationId)
+    }
+
+    override fun onPeriodChanged(period: DatePeriod) {
+        viewModel.loadData(period)
     }
 }

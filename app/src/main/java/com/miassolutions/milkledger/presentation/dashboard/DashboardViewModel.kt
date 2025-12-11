@@ -2,84 +2,53 @@ package com.miassolutions.milkledger.presentation.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.util.DateRangeUtil
 import com.miassolutions.milkledger.core.util.formatPeriodLabel
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
-import com.miassolutions.milkledger.data.repository.DataRepository
+import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import java.time.LocalDate
+import java.time.YearMonth
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val repository: AnalyticsRepository,
-    private val dataRepository: DataRepository
+    private val repository: AnalyticsRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AnalyticsUiState())
     val uiState = _uiState.asStateFlow()
 
-
-    private var currentPeriod: Period = Period.DAILY
-    private var currentRange: Pair<LocalDate, LocalDate> = Pair(LocalDate.now(), LocalDate.now())
-
+    // -------------------------------------------------------------------------
+    // INIT
+    // -------------------------------------------------------------------------
     init {
-        loadDaily()
-
+        loadAllRecords()
     }
 
-
-
-
-    enum class Period { DAILY, WEEKLY, MONTHLY, YEARLY, CUSTOM }
-
-    // --- Loaders ---
-    fun loadDaily() {
-        currentPeriod = Period.DAILY
-        val today = LocalDate.now()
-        currentRange = today to today
-        loadRange(today, today)
-    }
-
-    fun loadWeekly() {
-        currentPeriod = Period.WEEKLY
-        currentRange = DateRangeUtil.thisWeek()
-        loadRange(currentRange.first, currentRange.second)
-    }
-
-    fun loadMonthly() {
-        currentPeriod = Period.MONTHLY
-        currentRange = DateRangeUtil.thisMonth()
-        loadRange(currentRange.first, currentRange.second)
-    }
-
-    fun loadYearly() {
-        currentPeriod = Period.YEARLY
-        currentRange = DateRangeUtil.thisYear()
-        loadRange(currentRange.first, currentRange.second)
-    }
-
-    fun loadCustom(start: LocalDate?, end: LocalDate?) {
-        currentPeriod = Period.CUSTOM
-
-        if (start == null || end == null) {
-
-            loadAllRecords()
-        } else {
-            currentRange = start to end
-            loadRange(start, end)
+    // -------------------------------------------------------------------------
+    // PUBLIC ROUTER (Just like ProfitViewModel)
+    // -------------------------------------------------------------------------
+    fun loadData(period: DatePeriod) {
+        when (period) {
+            is DatePeriod.Daily -> fetchDaily(period.date)
+            is DatePeriod.Weekly -> fetchWeekly(period.start, period.end)
+            is DatePeriod.Monthly -> fetchMonthly(period.month)
+            is DatePeriod.Yearly -> fetchYearly(period.year)
+            DatePeriod.All -> loadAllRecords()
+            is DatePeriod.Custom -> fetchCustom(period.start, period.end)
         }
     }
 
-
-    /**
-     * Load all records without date range limits.
-     */
+    // -------------------------------------------------------------------------
+    // ALL RECORDS
+    // -------------------------------------------------------------------------
     private fun loadAllRecords() {
         viewModelScope.launch {
             combine(
@@ -93,92 +62,76 @@ class DashboardViewModel @Inject constructor(
                 repository.getTotalLr(),
                 repository.getTotalTs(),
                 repository.getTotalPersonalExpense()
-
             ) { results ->
 
-                val milkPurchase = results[0] ?: 0.0
-                val milkSold = results[1] ?: 0.0
-                val totalSales = results[2] ?: 0.0
-                val totalPurchase = results[3] ?: 0.0
-                val totalExpense = results[4] ?: 0.0
-                val profit = results[5] as Double
-                val totalFat = results[6] ?: 0.0
-                val totalLr = results[7] ?: 0.0
-                val totalTs = results[8] ?: 0.0
-                val avgCP: Double? = if (milkPurchase > 0) totalPurchase / milkPurchase else null
-                val avgSP: Double? = if (milkPurchase > 0) totalSales / milkPurchase else null
-                val difference: Double? =
-                    if (avgCP != null && avgSP != null) avgSP - avgCP else null
-                val personalExpense: Double = results[9] ?: 0.0
-
-                // 🔥 ADD LOG HERE
-
-
-                AnalyticsUiState(
-                    milkPurchase = milkPurchase,
-                    milkSold = milkSold,
-                    avgSP = avgSP,
-                    avgCP = avgCP,
-                    difference = difference,
-                    salesTotal = totalSales,
-                    purchaseTotal = totalPurchase,
-                    fixedExpense = totalExpense,
-                    personalExpense = personalExpense,
-                    profit = profit,
-                    profitAfter = profit - personalExpense,
-                    avgFat = totalFat,
-                    avgLr = totalLr,
-                    totalTs = totalTs,
-                    startDate = null,
-                    endDate = null,
-                    period = "All Records"
+                mapAnalyticsResults(
+                    milkPurchase = results[0] ?: 0.0,
+                    milkSold = results[1] ?: 0.0,
+                    totalSales = results[2] ?: 0.0,
+                    totalPurchase = results[3] ?: 0.0,
+                    totalExpense = results[4] ?: 0.0,
+                    profit = results[5] as Double,
+                    fat = results[6] ?: 0.0,
+                    lr = results[7] ?: 0.0,
+                    ts = results[8] ?: 0.0,
+                    personalExpense = results[9] ?: 0.0,
+                    start = null,
+                    end = null,
+                    periodLabel = "All Records"
                 )
-            }.collect {
-                _uiState.value = it
+            }.collect { ui ->
+                _uiState.update { ui }
             }
         }
     }
 
-
-    // --- Date Navigation ---
-    fun onNextClicked() {
-        shiftRange(+1)
+    // -------------------------------------------------------------------------
+    // DAILY
+    // -------------------------------------------------------------------------
+    private fun fetchDaily(date: LocalDate) {
+        loadRange(date, date)
     }
 
-    fun onPrevClicked() {
-        shiftRange(-1)
+    // -------------------------------------------------------------------------
+    // WEEKLY
+    // -------------------------------------------------------------------------
+    private fun fetchWeekly(start: LocalDate, end: LocalDate) {
+        loadRange(start, end)
     }
 
-    private fun shiftRange(direction: Int) {
-        val (start, end) = currentRange
-        val newRange = when (currentPeriod) {
-            Period.DAILY -> Pair(
-                start.plusDays(direction.toLong()),
-                end.plusDays(direction.toLong())
-            )
+    // -------------------------------------------------------------------------
+    // MONTHLY
+    // -------------------------------------------------------------------------
+    private fun fetchMonthly(yearMonth: YearMonth) {
+        val start = yearMonth.atDay(1)
+        val end = yearMonth.atEndOfMonth()
+        loadRange(start, end)
+    }
 
-            Period.WEEKLY -> Pair(
-                start.plusWeeks(direction.toLong()),
-                end.plusWeeks(direction.toLong())
-            )
+    // -------------------------------------------------------------------------
+    // YEARLY
+    // -------------------------------------------------------------------------
+    private fun fetchYearly(year: Int) {
+        val start = LocalDate.of(year, 1, 1)
+        val end = LocalDate.of(year, 12, 31)
+        loadRange(start, end)
+    }
 
-            Period.MONTHLY -> Pair(
-                start.plusMonths(direction.toLong()),
-                end.plusMonths(direction.toLong())
-            )
-
-            Period.YEARLY -> Pair(
-                start.plusYears(direction.toLong()),
-                end.plusYears(direction.toLong())
-            )
-
-            Period.CUSTOM -> return // Skip shifting custom range
+    // -------------------------------------------------------------------------
+    // CUSTOM
+    // -------------------------------------------------------------------------
+    private fun fetchCustom(start: LocalDate?, end: LocalDate?) {
+        if (start == null || end == null) {
+            loadAllRecords()
+            return
         }
-        currentRange = newRange
-        loadRange(newRange.first, newRange.second)
+        loadRange(start, end)
     }
 
-     fun loadRange(start: LocalDate, end: LocalDate) {
+    // -------------------------------------------------------------------------
+    // SHARED RANGE LOADER (Your combine block consolidated)
+    // -------------------------------------------------------------------------
+    private fun loadRange(start: LocalDate, end: LocalDate) {
         viewModelScope.launch {
             combine(
                 repository.getTotalMilkPurchaseBetween(start, end),
@@ -191,52 +144,74 @@ class DashboardViewModel @Inject constructor(
                 repository.getAvgLrBetween(start, end),
                 repository.getTotalTsBetween(start, end),
                 repository.getTotalMilkWithFatAndLr(start, end),
-                repository.getTotalPersonalExpensesBetween(start, end),
+                repository.getTotalPersonalExpensesBetween(start, end)
+            ) { results ->
 
-                ) { results ->
-                val milkPurchase = results[0] ?: 0.0
-                val milkSold = results[1] ?: 0.0
-                val totalSales = results[2] ?: 0.0
-                val totalPurchase = results[3] ?: 0.0
-                val totalExpense = results[4] ?: 0.0
-                val profit = results[5] as Double
-                val fat = results[6] ?: 0.0
-                val lr = results[7] ?: 0.0
-                val ts = results[8] ?: 0.0
-                val totalMilkWithFatAndLr = results[9] ?: 0.0
-                val avgCP: Double? = if (milkPurchase > 0) totalPurchase / milkPurchase else null
-                val avgSP: Double? = if (milkPurchase > 0) totalSales / milkPurchase else null
-                val difference: Double? =
-                    if (avgCP != null && avgSP != null) avgSP - avgCP else null
-                val personalExpense = results[10] ?: 0.0
-
-
-
-                AnalyticsUiState(
-                    milkPurchase = milkPurchase,
-                    milkSold = milkSold,
-                    salesTotal = totalSales,
-                    avgCP = avgCP,
-                    avgSP = avgSP,
-                    difference = difference,
-                    purchaseTotal = totalPurchase,
-                    fixedExpense = totalExpense,
-                    personalExpense = personalExpense,
-                    profit = profit,
-                    profitAfter = profit - personalExpense,
-                    avgFat = fat,
-                    avgLr = lr,
-                    totalTs = ts,
-                    totalMilkWithFatAndLr = totalMilkWithFatAndLr,
-                    startDate = start,
-                    endDate = end,
-                    period = formatPeriodLabel(start, end)
+                mapAnalyticsResults(
+                    milkPurchase = results[0] ?: 0.0,
+                    milkSold = results[1] ?: 0.0,
+                    totalSales = results[2] ?: 0.0,
+                    totalPurchase = results[3] ?: 0.0,
+                    totalExpense = results[4] ?: 0.0,
+                    profit = results[5] as Double,
+                    fat = results[6] ?: 0.0,
+                    lr = results[7] ?: 0.0,
+                    ts = results[8] ?: 0.0,
+                    totalMilkWithFatAndLr = results[9] ?: 0.0,
+                    personalExpense = results[10] ?: 0.0,
+                    start = start,
+                    end = end,
+                    periodLabel = formatPeriodLabel(start, end)
                 )
-            }.collect {
-                _uiState.value = it
+            }.collect { ui ->
+                _uiState.update { ui }
             }
         }
     }
 
+    // -------------------------------------------------------------------------
+    // CLEAN MAPPING FUNCTION (Removes repeated code)
+    // -------------------------------------------------------------------------
+    private fun mapAnalyticsResults(
+        milkPurchase: Double,
+        milkSold: Double,
+        totalSales: Double,
+        totalPurchase: Double,
+        totalExpense: Double,
+        profit: Double,
+        fat: Double,
+        lr: Double,
+        ts: Double,
+        personalExpense: Double,
+        start: LocalDate?,
+        end: LocalDate?,
+        periodLabel: String,
+        totalMilkWithFatAndLr: Double = 0.0,
+    ): AnalyticsUiState {
 
+        val avgCP = if (milkPurchase > 0) totalPurchase / milkPurchase else null
+        val avgSP = if (milkPurchase > 0) totalSales / milkPurchase else null
+        val difference = if (avgCP != null && avgSP != null) avgSP - avgCP else null
+
+        return AnalyticsUiState(
+            milkPurchase = milkPurchase,
+            milkSold = milkSold,
+            avgCP = avgCP,
+            avgSP = avgSP,
+            difference = difference,
+            salesTotal = totalSales,
+            purchaseTotal = totalPurchase,
+            fixedExpense = totalExpense,
+            personalExpense = personalExpense,
+            profit = profit,
+            profitAfter = profit - personalExpense,
+            avgFat = fat,
+            avgLr = lr,
+            totalTs = ts,
+            totalMilkWithFatAndLr = totalMilkWithFatAndLr,
+            startDate = start,
+            endDate = end,
+            period = periodLabel
+        )
+    }
 }
