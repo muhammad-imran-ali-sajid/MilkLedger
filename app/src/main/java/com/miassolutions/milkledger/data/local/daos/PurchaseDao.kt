@@ -131,6 +131,10 @@ interface PurchaseDao {
     fun getSupplierBalanceHistory(supplierId: String): Flow<List<BalanceHistory>>
 
     @Transaction
+    @Query("SELECT * FROM purchase_table WHERE supplierId = :supplierId ORDER BY date ASC")
+    suspend fun getSupplierHistoryOnce(supplierId: String): List<PurchaseWithSupplier>
+
+    @Transaction
     @Query("SELECT * FROM purchase_table WHERE date = :date")
     suspend fun getPurchasesByDateOnce(date: LocalDate): List<PurchaseWithSupplier>
 

@@ -7,7 +7,12 @@ import java.time.LocalDate
 data class PurchaseUiState(
     val currentDate: LocalDate = LocalDate.now(),
 
+    // keep original list type for DB results
     val purchasesForDate: List<PurchaseWithSupplier> = emptyList(),
+
+    // list for adapter that includes accumulated balances
+    val purchasesUi: List<PurchaseUi> = emptyList(),
+
     val grandTotalForDate: Double = 0.0,
     val selectedSupplierId: String? = null,
     val navigateToLedgerForSupplierId: String? = null,
@@ -21,6 +26,8 @@ data class PurchaseUiState(
 
     val isLoading: Boolean = false
 )
+
+
 
 
 sealed class PurchaseUiEvent {

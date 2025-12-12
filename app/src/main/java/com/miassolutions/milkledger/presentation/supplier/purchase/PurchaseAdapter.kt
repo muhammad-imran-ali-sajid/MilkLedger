@@ -20,7 +20,7 @@ class PurchaseAdapter(
     private val onItemDetailClick: (PurchaseWithSupplier) -> Unit,
     private val onDeleteClick: (String) -> Unit,
     private val onBalanceClick: (String, String) -> Unit
-) : ListAdapter<PurchaseWithSupplier, PurchaseAdapter.ViewHolder>(DiffCallback()) {
+) : ListAdapter<PurchaseUi, PurchaseAdapter.ViewHolder>(DiffCallback()) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,59 +40,60 @@ class PurchaseAdapter(
         private val binding: ItemPurchaseBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: PurchaseWithSupplier) = with(binding) {
-            tvName.text = item.supplier.supplierName
+        fun bind(item: PurchaseUi) = with(binding) {
+
+            tvName.text = item.data.supplier.supplierName
 
 
 
-            tvVolume.text = item.purchase.milkAmount.toRoundedStr()
+            tvVolume.text = item.data.purchase.milkAmount.toRoundedStr()
 
-            tvFat.text = handleZeroData(item.purchase.fat)
-            tvLr.text = handleZeroData(item.purchase.lr)
-            tvTs.text = handleZeroData(item.purchase.ts)
+            tvFat.text = handleZeroData(item.data.purchase.fat)
+            tvLr.text = handleZeroData(item.data.purchase.lr)
+            tvTs.text = handleZeroData(item.data.purchase.ts)
 
 
-            if (item.purchase.notes.isNullOrBlank()) {
+            if (item.data.purchase.notes.isNullOrBlank()) {
                 tvNotes.hide()
                 divider.hide()
             } else {
                 tvNotes.show()
                 divider.show()
-                tvNotes.text = "Note: ${item.purchase.notes}"
+                tvNotes.text = "Note: ${item.data.purchase.notes}"
             }
-            tvPrice.text = item.purchase.milkPrice.toPriceStr()
-            tvPaid.text = item.purchase.payment.toPriceStr()
+            tvPrice.text = item.data.purchase.milkPrice.toPriceStr()
+            tvPaid.text = item.data.purchase.payment.toPriceStr()
 
-            val balance = item.purchase.payment - item.purchase.milkPrice
+            val balance = item.accumulatedBalance
 
             tvBalance.text = numberFormat(balance)
             tvBalance.setTextColor(textColor(balance))
 
             btnBalance.setOnLongClickListener {
                 onBalanceClick(
-                    item.supplier.supplierId,
-                    item.supplier.supplierName
+                    item.data.supplier.supplierId,
+                    item.data.supplier.supplierName
                 ); true
             }
 
 
-            btnEditForm.setOnClickListener { onEditClick(item) }
-            btnSupplierDetail.setOnClickListener { onItemDetailClick(item) }
+            btnEditForm.setOnClickListener { onEditClick(item.data) }
+            btnSupplierDetail.setOnClickListener { onItemDetailClick(item.data) }
 
             tvName.setOnLongClickListener {
-                onDeleteClick(item.purchase.purchaseId)
+                onDeleteClick(item.data.purchase.purchaseId)
                 true
             }
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<PurchaseWithSupplier>() {
-        override fun areItemsTheSame(oldItem: PurchaseWithSupplier, newItem: PurchaseWithSupplier) =
-            oldItem.purchase.purchaseId == newItem.purchase.purchaseId
+    class DiffCallback : DiffUtil.ItemCallback<PurchaseUi>() {
+        override fun areItemsTheSame(oldItem: PurchaseUi, newItem: PurchaseUi) =
+            oldItem.data.purchase.purchaseId == newItem.data.purchase.purchaseId
 
         override fun areContentsTheSame(
-            oldItem: PurchaseWithSupplier,
-            newItem: PurchaseWithSupplier
+            oldItem: PurchaseUi,
+            newItem: PurchaseUi
         ) =
             oldItem == newItem
     }

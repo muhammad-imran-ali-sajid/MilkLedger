@@ -156,7 +156,7 @@ class PurchaseFragment :
                 binding.progressBar.visibility =
                     if (state.isLoading) View.VISIBLE else View.GONE
 
-                purchaseAdapter.submitList(state.purchasesForDate)
+                purchaseAdapter.submitList(state.purchasesUi)
 
 
                 val isEmpty = state.purchasesForDate.isEmpty()
