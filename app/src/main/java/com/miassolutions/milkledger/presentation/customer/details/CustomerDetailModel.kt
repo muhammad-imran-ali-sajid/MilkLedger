@@ -5,6 +5,7 @@ import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesItemRecord
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.domain.model.Sale
+import com.miassolutions.milkledger.presentation.customer.sales.SaleUi
 import java.time.LocalDate
 
 
@@ -60,16 +61,17 @@ fun List<CustomerDetailModel>.toRecordList(): List<SalesItemRecord> {
 }
 
 
-fun List<Sale>.toSaleRecordList(): List<PdfSalesItemRecord> {
+fun List<SaleUi>.toSaleRecordList(): List<PdfSalesItemRecord> {
     return this.map { item ->
+
         PdfSalesItemRecord(
-            customerName = item.name,
-            milkVolume = item.volume,
-            deduction = item.deduction,
-            rate = item.rate,
-            amount = item.price,
-            paid = item.received,
-            balance = item.balance
+            customerName = item.data.name,
+            milkVolume = item.data.volume,
+            deduction = item.data.deduction,
+            rate = item.data.rate,
+            amount = item.data.price,
+            paid = item.data.received,
+            balance = item.accumulatedBalance
         )
 
     }

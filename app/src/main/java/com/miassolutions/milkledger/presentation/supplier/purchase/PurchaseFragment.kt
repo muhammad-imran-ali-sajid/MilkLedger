@@ -258,13 +258,13 @@ class PurchaseFragment :
             avgLr = state.avgLr,
             totalTs = state.totalTS,
             totalAmount = state.grandTotalForDate,
-            totalPaid = state.grandTotalForDate,
-            balanceDue = state.grandTotalForDate
+            totalPaid = state.totalPaid,
+            balanceDue = state.totalBalance
 
         )
 
         val data = PurchaseReportPdf(
-            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}",
+            footerNote = "Developed by: miassolutions contact no: 03127430906",
             date = state.currentDate.toDisplayFormat(),
             recordList = recordList,
             pdfPurchaseSummary = pdfSummary

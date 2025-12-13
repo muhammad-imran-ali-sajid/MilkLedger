@@ -14,6 +14,8 @@ data class PurchaseUiState(
     val purchasesUi: List<PurchaseUi> = emptyList(),
 
     val grandTotalForDate: Double = 0.0,
+    val totalPaid: Double = 0.0,
+    val totalBalance: Double = 0.0,
     val selectedSupplierId: String? = null,
     val navigateToLedgerForSupplierId: String? = null,
 

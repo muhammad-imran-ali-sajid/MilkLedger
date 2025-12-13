@@ -133,6 +133,7 @@ class SalesViewModel @Inject constructor(
                 val sorted = list.sortedBy { it.customer.sortOrder }
                 val salesList = sorted.map { it.toSalesList() }
 
+
                 val historyCache = mutableMapOf<String, List<SaleWithCustomer>>()
 
                 val uiList = mutableListOf<SaleUi>()
@@ -159,12 +160,15 @@ class SalesViewModel @Inject constructor(
                 }
 
 
+                val allRunningBalance = uiList.sumOf { it.accumulatedBalance }
+
+
                 val totalVolume = salesList.sumOf { it.volume }
                 val totalDeduction = salesList.sumOf { it.deduction }
                 val totalNet = salesList.sumOf { it.netVolume }
                 val totalPrice = salesList.sumOf { it.price }
                 val received = salesList.sumOf { it.received }
-                val totalBalance = salesList.sumOf { it.price - it.received }
+                val totalBalance = salesList.sumOf { it.balance }
 
                 val purchaseTotalVolume =
                     purchaseRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
@@ -182,7 +186,7 @@ class SalesViewModel @Inject constructor(
                         totalNetMilk = totalNet,
                         grandSaleTotalForDate = totalPrice,
                         receivedAmount = received,
-                        totalBalance = totalBalance,
+                        totalBalance = allRunningBalance,
                         avgRatePerLiter = avgRate,
                         pdfSalesSummary = PdfSalesSummary(
                             totalQty = totalVolume.toRoundedStr(),

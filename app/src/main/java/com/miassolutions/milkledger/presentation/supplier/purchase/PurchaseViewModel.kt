@@ -159,6 +159,8 @@ class PurchaseViewModel @Inject constructor(
                     )
                 }
 
+                val allRunningBalance = uiList.sumOf { it.accumulatedBalance }
+
                 val totalVolume = sorted.sumOf { it.purchase.milkAmount }
 
                 val avgFat = repository.getAvgFat(date).first() ?: 0.0
@@ -167,6 +169,7 @@ class PurchaseViewModel @Inject constructor(
                 val volumeWithFatLr = repository.getTotalMilkWithFatLR(date).first() ?: 0.0
 
                 val grandTotal = sorted.sumOf { it.purchase.milkPrice }
+                val totalPaid = sorted.sumOf { it.purchase.payment }
                 val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
 
                 _uiState.update {
@@ -180,6 +183,8 @@ class PurchaseViewModel @Inject constructor(
                         totalTS = avgTS,
                         volumeWithFatLr = volumeWithFatLr,
                         grandTotalForDate = grandTotal,
+                        totalPaid =totalPaid,
+                        totalBalance = allRunningBalance,
                         avgRatePerLiter = avgRatePerLiter,
                         isLoading = false
                     )

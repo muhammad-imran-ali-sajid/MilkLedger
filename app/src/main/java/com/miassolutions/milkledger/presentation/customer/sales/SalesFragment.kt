@@ -228,7 +228,8 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
     private fun generateReport() {
         val state = viewModel.uiState.value
-        val filteredList: List<Sale> = state.salesForDate
+        val filteredList: List<SaleUi> = state.salesUi
+
 
 
         val recordList = filteredList.toSaleRecordList()
@@ -249,7 +250,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         )
 
         val data = SalesReportPdf(
-            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}",
+            footerNote = "Developed by: miassolutions contact no: 03127430906",
             date = state.currentDate.toDisplayFormat(),
             recordList = recordList,
             salesSummary = pdfSummary
