@@ -64,6 +64,9 @@ interface SalesDao {
     @Query("SELECT date, balance FROM sales_table WHERE customerId = :customerId ORDER BY date DESC")
     suspend fun getCustomerBalanceHistory(customerId: String): List<BalanceHistory>
 
+    @Query("SELECT * FROM sales_table WHERE customerId = :customerId ORDER BY date ASC")
+    suspend fun getCustomerBalanceHistoryOnce(customerId: String): List<SaleWithCustomer>
+
     // --- Synchronization Helper Functions (Used by Repository's synchronizeSales()) ---
 
     /**

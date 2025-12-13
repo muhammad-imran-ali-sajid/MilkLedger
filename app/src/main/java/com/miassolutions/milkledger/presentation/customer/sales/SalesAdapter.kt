@@ -22,18 +22,18 @@ class SalesEntryAdapter(
     private val navToDetailClick: (String, String) -> Unit,
     private val onDeleteClick: (String) -> Unit,
     private val onBalanceClick: (String, String) -> Unit,
-) : BaseListAdapter<Sale, ItemSalesBinding>(
-    diffCallback = object : DiffUtil.ItemCallback<Sale>() {
+) : BaseListAdapter<SaleUi, ItemSalesBinding>(
+    diffCallback = object : DiffUtil.ItemCallback<SaleUi>() {
         override fun areItemsTheSame(
-            oldItem: Sale,
-            newItem: Sale
+            oldItem: SaleUi,
+            newItem: SaleUi
         ): Boolean {
-            return oldItem.customerId == newItem.customerId
+            return oldItem.data.customerId == newItem.data.customerId
         }
 
         override fun areContentsTheSame(
-            oldItem: Sale,
-            newItem: Sale
+            oldItem: SaleUi,
+            newItem: SaleUi
         ): Boolean {
             return oldItem == newItem
         }
@@ -48,64 +48,63 @@ class SalesEntryAdapter(
         return ItemSalesBinding.inflate(inflater, parent, false)
     }
 
-    override fun bind(binding: ItemSalesBinding, item: Sale, position: Int) {
+    override fun bind(binding: ItemSalesBinding, item: SaleUi, position: Int) {
         binding.apply {
+            item.data.apply {
+
+                if (receivedDate != null) {
+                    tvReceiveDate.show()
+                    tvReceiveDate.text = "(${receivedDate.toDisplayDate()})"
+                } else {
+                    tvReceiveDate.hide()
+                }
+
+                val payment = received.toPriceStr()
+
+                tvName.text = name
+                tvMilk.text = volume.toRoundedStr()
+                tvDeduction.text = deduction.toRoundedStr()
+                tvNetMilk.text = netVolume.toRoundedStr()
+                tvPrice.text = price.toPriceStr()
+                tvPayment.text = payment
 
 
-            if (item.receivedDate != null) {
-                tvReceiveDate.show()
-                tvReceiveDate.text = "(${item.receivedDate.toDisplayDate()})"
-            } else {
-                tvReceiveDate.hide()
+                val balance = item.accumulatedBalance
+
+                tvBalance.text = numberFormat(balance)
+                tvBalance.setTextColor(textColor(balance))
+
+
+                btnBalance.setOnLongClickListener {
+                    onBalanceClick(customerId, name)
+                    true
+                }
+
+                if (notes.isNullOrBlank()) {
+                    tvNotes.hide()
+                } else {
+                    tvNotes.show()
+                    tvNotes.text = "Note: ${notes}"
+                }
+
+
+                btnCustomerDetail.setOnClickListener {
+                    navToDetailClick(customerId, name)
+
+                }
+
+                btnEditForm.setOnClickListener {
+                    onEditClick(item.data)
+                }
+
+                tvName.setOnLongClickListener {
+                    onDeleteClick(item.data.saleId)
+                    true
+                }
+
+
             }
-
-            val payment = item.received.toPriceStr()
-
-            tvName.text =
-                item.name
-            tvMilk.text = item.volume.toRoundedStr()
-            tvDeduction.text = item.deduction.toRoundedStr()
-            tvNetMilk.text = item.netVolume.toRoundedStr()
-            tvPrice.text = item.price.toPriceStr()
-            tvPayment.text = payment
-
-
-            val balance = item.balance
-
-            tvBalance.text = numberFormat(balance)
-            tvBalance.setTextColor(textColor(balance))
-
-
-            btnBalance.setOnLongClickListener {
-                onBalanceClick(item.customerId, item.name)
-                true
-            }
-
-            if (item.notes.isNullOrBlank()) {
-                tvNotes.hide()
-            } else {
-                tvNotes.show()
-                tvNotes.text = "Note: ${item.notes}"
-            }
-
-
-            btnCustomerDetail.setOnClickListener {
-                navToDetailClick(item.customerId, item.name)
-
-            }
-
-            btnEditForm.setOnClickListener {
-                onEditClick(item)
-            }
-
-            tvName.setOnLongClickListener {
-                onDeleteClick(item.saleId)
-                true
-            }
-
-
         }
+
     }
-
-
 }

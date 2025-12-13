@@ -9,6 +9,7 @@ import java.time.LocalDate
 data class SalesUiState(
     val currentDate: LocalDate = LocalDate.now(),
     val salesForDate: List<Sale> = emptyList(),
+    val salesUi: List<SaleUi> = emptyList(),
     val grandSaleTotalForDate: Double = 0.0,
     val selectedCustomerId: String? = null,
     val navToLedgerForCustomerId: String? = null,

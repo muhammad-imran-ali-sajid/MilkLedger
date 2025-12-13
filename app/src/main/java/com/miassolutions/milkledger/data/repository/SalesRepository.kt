@@ -32,6 +32,10 @@ class SalesRepository @Inject constructor(
         return salesDao.getCustomerBalanceHistory(customerId)
     }
 
+    suspend fun getBalanceHistoryOnce(customerId: String): List<SaleWithCustomer> {
+        return salesDao.getCustomerBalanceHistoryOnce(customerId)
+    }
+
     fun observeCustomersList(): Flow<List<CustomerEntity>> = salesDao.observeCustomersList()
 
     suspend fun isDuplicateSale(customerId: String, date: LocalDate): Boolean =

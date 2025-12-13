@@ -40,7 +40,8 @@ class PurchaseRepository @Inject constructor(
         return purchaseDao.getSupplierBalanceHistory(supplierId)
     }
 
-    suspend fun getBalanceHistoryOnce(supplierId: String): List<PurchaseWithSupplier> = purchaseDao.getSupplierHistoryOnce(supplierId)
+    suspend fun getBalanceHistoryOnce(supplierId: String): List<PurchaseWithSupplier> =
+        purchaseDao.getSupplierHistoryOnce(supplierId)
 
     // --- Write/Update/Delete Operations (Local Write First, Then Remote Sync) ---
     // Actions that originate from the local user MUST push data to Firestore.

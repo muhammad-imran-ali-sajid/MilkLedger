@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.data.mapper.toSalesList
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.data.repository.SalesRepository
@@ -32,7 +33,6 @@ class SalesViewModel @Inject constructor(
     // -------------------------------------------------------------------------
     private val _uiState = MutableStateFlow(SalesUiState())
     val uiState: StateFlow<SalesUiState> = _uiState.asStateFlow()
-
 
 
     // -------------------------------------------------------------------------
@@ -133,6 +133,32 @@ class SalesViewModel @Inject constructor(
                 val sorted = list.sortedBy { it.customer.sortOrder }
                 val salesList = sorted.map { it.toSalesList() }
 
+                val historyCache = mutableMapOf<String, List<SaleWithCustomer>>()
+
+                val uiList = mutableListOf<SaleUi>()
+
+                for (item in salesList) {
+                    val customerId = item.customerId
+
+                    val history = historyCache.getOrPut(customerId) {
+                        repository.getBalanceHistoryOnce(customerId)
+                    }
+
+                    var runningBalance = 0.0
+                    for (entry in history) {
+                        if (!entry.sale.date.isAfter(item.saleDate)) {
+                            runningBalance += entry.sale.balance
+                        } else {
+                            break
+                        }
+                    }
+
+                    uiList.add(
+                        SaleUi(item, runningBalance)
+                    )
+                }
+
+
                 val totalVolume = salesList.sumOf { it.volume }
                 val totalDeduction = salesList.sumOf { it.deduction }
                 val totalNet = salesList.sumOf { it.netVolume }
@@ -150,6 +176,7 @@ class SalesViewModel @Inject constructor(
                     it.copy(
                         currentDate = date,
                         salesForDate = salesList,
+                        salesUi = uiList,
                         totalMilk = totalVolume,
                         totalDeduction = totalDeduction,
                         totalNetMilk = totalNet,
@@ -171,7 +198,7 @@ class SalesViewModel @Inject constructor(
         }
     }
 
-    fun deleteSale(saleId: String){
+    fun deleteSale(saleId: String) {
         viewModelScope.launch {
             repository.deleteSale(saleId)
         }

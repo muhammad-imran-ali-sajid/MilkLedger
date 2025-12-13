@@ -342,7 +342,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
             binding.progressBar.visibility =
                 if (state.isLoading) View.VISIBLE else View.GONE
 
-            adapter.submitList(state.salesForDate)
+            adapter.submitList(state.salesUi)
 
             val isEmpty = state.salesForDate.isEmpty()
             binding.emptyLayout.emptyStateLayout.visibility = if (isEmpty) View.VISIBLE else View.GONE
