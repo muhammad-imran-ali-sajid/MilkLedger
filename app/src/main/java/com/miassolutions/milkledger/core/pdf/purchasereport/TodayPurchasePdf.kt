@@ -81,6 +81,7 @@ object TodayPurchasePdf {
             tvSummaryAvgFat.text = data.pdfPurchaseSummary.avgFat
             tvSummaryAvgLr.text = data.pdfPurchaseSummary.avgLr
             tvTotalTs.text = data.pdfPurchaseSummary.totalTs
+            tvAvgRate.text = data.pdfPurchaseSummary.avgRate
             tvSummaryTotalAmount.text = data.pdfPurchaseSummary.totalAmount
             tvSummaryTotalPaid.text = data.pdfPurchaseSummary.totalPaid
             tvSummaryBalance.text = data.pdfPurchaseSummary.balanceDue

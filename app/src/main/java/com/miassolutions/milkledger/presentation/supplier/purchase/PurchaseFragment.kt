@@ -257,6 +257,7 @@ class PurchaseFragment :
             avgFat = state.avgFat,
             avgLr = state.avgLr,
             totalTs = state.totalTS,
+            avgRate = state.avgRatePerLiter,
             totalAmount = state.grandTotalForDate,
             totalPaid = state.totalPaid,
             balanceDue = state.totalBalance
@@ -287,6 +288,7 @@ class PurchaseFragment :
         avgFat: Double,
         avgLr: Double,
         totalTs: Double,
+        avgRate : Double,
         totalAmount: Double,
         totalPaid: Double,
         balanceDue: Double
@@ -296,6 +298,7 @@ class PurchaseFragment :
             avgFat = avgFat.toRoundedStr(),
             avgLr = avgLr.toRoundedStr(),
             totalTs = totalTs.toRoundedStr(),
+            avgRate =avgRate.toRoundedStr(),
             totalAmount = totalAmount.toRoundedStr(),
             totalPaid = totalPaid.toRoundedStr(),
             balanceDue = balanceDue.toRoundedStr()

@@ -357,8 +357,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-
-
+    <style name="PDFRowRecordStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">9sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
 
 </resources>

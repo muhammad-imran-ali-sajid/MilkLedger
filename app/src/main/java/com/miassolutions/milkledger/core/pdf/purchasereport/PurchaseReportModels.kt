@@ -12,6 +12,7 @@ data class PdfPurchaseSummary(
     val avgFat : String,
     val avgLr : String,
     val totalTs : String,
+    val avgRate : String,
     val totalAmount: String,
     val totalPaid: String,
     val balanceDue: String
