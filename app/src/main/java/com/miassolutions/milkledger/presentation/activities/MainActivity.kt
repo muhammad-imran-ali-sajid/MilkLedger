@@ -19,8 +19,10 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.feature.FeatureManager
+import com.miassolutions.milkledger.core.feature.RemoteConfigManager
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
@@ -34,7 +36,11 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), ToolbarOwner {
 
-    @Inject lateinit var featureManager: FeatureManager
+    @Inject
+    lateinit var featureManager: FeatureManager
+    @Inject
+    lateinit var remote: RemoteConfigManager
+
     @Inject
     lateinit var appPreferences: AppPreferencesManager
 
@@ -52,6 +58,17 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         lifecycleScope.launch {
             try {
                 featureManager.refreshFlags()
+                val minVersion = remote.getMinSupportedVersion()
+                if (BuildConfig.VERSION_CODE < minVersion) {
+                    startActivity(
+                        Intent(this@MainActivity, ForceUpdateActivity::class.java).apply {
+                            putExtra("message", remote.getUpdateMessage())
+                            putExtra("url", remote.getApkUrl())
+                        }
+                    )
+                    finish()
+                    return@launch
+                }
             } catch (e: Exception) {
                 Log.e("FeatureFlags", "Failed to refresh flags", e)
             }

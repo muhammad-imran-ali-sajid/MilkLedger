@@ -10,6 +10,7 @@ class FeatureManager(
     suspend fun refreshFlags() {
         remote.fetch()
         prefs.setIsPremiumEnabled(remote.isPremiumRemote())
+
     }
 
     fun isPremiumEnabled(): Flow<Boolean> = prefs.isPremiumEnabled

@@ -5,14 +5,17 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+
+    <!-- Required for APK install on Android 8+ -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"
+        tools:ignore="RequestInstallPackagesPolicy" />
+
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-
-
-
-
 
     <application
         android:name=".MilkLedgerApp"
@@ -24,40 +27,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MilkLedger">
-
-        <activity android:name=".presentation.activities.LoginActivity"
-            android:theme="@style/Theme.Auth"
-            android:exported="false">
-
-
-
-        </activity>
-
-        <activity android:name=".presentation.activities.LauncherActivity"
-            android:theme="@style/Theme.Launcher"
-            android:exported="true">
-
+        <activity
+            android:name=".presentation.activities.ForceUpdateActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.activities.LoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Auth"></activity>
+        <activity
+            android:name=".presentation.activities.LauncherActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
         </activity>
         <activity
             android:name=".presentation.activities.MainActivity"
-            android:screenOrientation="portrait"
             android:exported="true"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity">
-
-
-
-        </activity>
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity"></activity>
 
         <receiver android:name=".core.alarm.AlarmReceiver" />
-
-
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -69,15 +62,11 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-
         <service
             android:name="androidx.work.impl.background.systemjob.SystemJobService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
             tools:replace="android:exported" />
-
     </application>
-
-
 
 </manifest>

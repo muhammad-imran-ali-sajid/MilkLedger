@@ -3,4 +3,9 @@
     <external-files-path
         name="receipts"
         path="Receipts/" />
+
+    <external-files-path
+        name="apk"
+        path="." />
+
 </paths>
