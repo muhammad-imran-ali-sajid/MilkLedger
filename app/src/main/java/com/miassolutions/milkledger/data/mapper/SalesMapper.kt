@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.data.mapper
 
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.data.remote.model.FirestoreSales
 import com.miassolutions.milkledger.domain.model.Sale

@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.presentation.profit
 
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
-import com.miassolutions.milkledger.data.local.daos.SalesDao
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesDao
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject

@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customer.sales
+package com.miassolutions.milkledger.presentation.customer.sales.ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -7,12 +7,12 @@ import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.data.mapper.toSalesList
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
-import com.miassolutions.milkledger.data.repository.SalesRepository
+import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi
+import com.miassolutions.milkledger.presentation.customer.sales.repository.SalesRepository
 import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,7 +39,6 @@ class SalesViewModel @Inject constructor(
     // Paid sales for selected date
     // -------------------------------------------------------------------------
     private val _paidSalesList = MutableStateFlow<List<CustomerPaidSummary>>(emptyList())
-    val paidSalesList: StateFlow<List<CustomerPaidSummary>> = _paidSalesList.asStateFlow()
 
     // -------------------------------------------------------------------------
     // Balance History
@@ -221,7 +220,4 @@ class SalesViewModel @Inject constructor(
         }
     }
 
-    fun onLedgerNavigated() {
-        _uiState.update { it.copy(navToLedgerForCustomerId = null) }
-    }
 }

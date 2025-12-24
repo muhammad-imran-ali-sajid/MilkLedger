@@ -1,7 +1,6 @@
-package com.miassolutions.milkledger.presentation.customer
+package com.miassolutions.milkledger.presentation.customer.sales.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,15 +12,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.databinding.BottomsheetBalanceHistoryBinding
-import com.miassolutions.milkledger.presentation.customer.sales.SalesViewModel
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistoryAdapter
-import com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
-
-
 
 @AndroidEntryPoint
 class CustomerBalanceHistoryBottomSheet : BottomSheetDialogFragment() {

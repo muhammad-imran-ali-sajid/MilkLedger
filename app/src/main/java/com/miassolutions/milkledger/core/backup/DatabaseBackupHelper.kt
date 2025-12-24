@@ -17,7 +17,7 @@ import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

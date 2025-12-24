@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customer.sales
+package com.miassolutions.milkledger.presentation.customer.sales.ui
 
 import android.graphics.Color
 import android.os.Bundle
@@ -14,11 +14,11 @@ import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.toDisplayDate
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
 import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
 import com.miassolutions.milkledger.domain.model.Sale
-import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
+import com.miassolutions.milkledger.presentation.customer.sales.ui.CustomerBalanceHistoryBottomSheet
 import java.time.LocalDate
 import kotlin.math.roundToInt
 

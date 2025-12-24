@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customer.sales
+package com.miassolutions.milkledger.presentation.customer.sales.ui
 
 import android.graphics.Color
 import android.widget.ArrayAdapter
@@ -17,9 +17,9 @@ import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
-import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
+import com.miassolutions.milkledger.presentation.customer.sales.ui.CustomerBalanceHistoryBottomSheet
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import kotlin.math.roundToInt

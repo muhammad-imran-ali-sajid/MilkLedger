@@ -25,12 +25,6 @@ class DashboardViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AnalyticsUiState())
     val uiState = _uiState.asStateFlow()
 
-    // -------------------------------------------------------------------------
-    // INIT
-    // -------------------------------------------------------------------------
-    init {
-        loadAllRecords()
-    }
 
     // -------------------------------------------------------------------------
     // PUBLIC ROUTER (Just like ProfitViewModel)

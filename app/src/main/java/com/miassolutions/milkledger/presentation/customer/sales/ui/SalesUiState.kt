@@ -1,9 +1,9 @@
-package com.miassolutions.milkledger.presentation.customer.sales
+package com.miassolutions.milkledger.presentation.customer.sales.ui
 
 import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesItemRecord
 import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesSummary
-import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.domain.model.Sale
+import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi
 import java.time.LocalDate
 
 data class SalesUiState(

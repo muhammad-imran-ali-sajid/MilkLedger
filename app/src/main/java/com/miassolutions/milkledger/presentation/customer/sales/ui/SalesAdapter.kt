@@ -1,6 +1,5 @@
-package com.miassolutions.milkledger.presentation.customer.sales
+package com.miassolutions.milkledger.presentation.customer.sales.ui
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -12,10 +11,9 @@ import com.miassolutions.milkledger.core.util.show
 import com.miassolutions.milkledger.core.util.toDisplayDate
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import com.miassolutions.milkledger.domain.model.Sale
-import kotlin.math.truncate
+import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi
 
 class SalesEntryAdapter(
     private val onEditClick: (Sale) -> Unit,

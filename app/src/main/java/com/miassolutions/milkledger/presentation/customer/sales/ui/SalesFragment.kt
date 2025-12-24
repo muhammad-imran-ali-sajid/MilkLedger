@@ -1,6 +1,5 @@
-package com.miassolutions.milkledger.presentation.customer.sales
+package com.miassolutions.milkledger.presentation.customer.sales.ui
 
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -18,12 +17,12 @@ import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toDisplayFormat
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
 import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
 import com.miassolutions.milkledger.domain.model.Sale
-import com.miassolutions.milkledger.presentation.customer.CustomerBalanceHistoryBottomSheet
+import com.miassolutions.milkledger.presentation.customer.sales.ui.CustomerBalanceHistoryBottomSheet
 import com.miassolutions.milkledger.presentation.customer.details.toSaleRecordList
+import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 

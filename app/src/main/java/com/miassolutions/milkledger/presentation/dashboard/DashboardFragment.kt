@@ -2,29 +2,23 @@ package com.miassolutions.milkledger.presentation.dashboard
 
 
 import android.view.Menu
-import android.view.View
-import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.helper.RemoteConfigHelper
 import com.miassolutions.milkledger.core.pdf.dashboardreport.DashboardReportGenerator
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.hide
 import com.miassolutions.milkledger.core.util.show
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
-import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterController
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import com.miassolutions.milkledger.presentation.stats.toPdfSummary
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class DashboardFragment :

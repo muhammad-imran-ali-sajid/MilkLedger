@@ -1,9 +1,10 @@
-package com.miassolutions.milkledger.data.local.entities
+package com.miassolutions.milkledger.presentation.customer.sales.db
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.UUID
@@ -15,7 +16,7 @@ import java.util.UUID
             entity = CustomerEntity::class,
             parentColumns = ["customerId"],
             childColumns = ["customerId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.Companion.CASCADE
         )
     ],
     indices = [Index("customerId"), Index("date")]
@@ -41,4 +42,3 @@ data class SalesEntity(
     val deletedAt: String? = null
 
 )
-

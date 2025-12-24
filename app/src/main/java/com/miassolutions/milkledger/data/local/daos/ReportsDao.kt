@@ -5,7 +5,7 @@ import androidx.room.Query
 import androidx.room.Upsert
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 

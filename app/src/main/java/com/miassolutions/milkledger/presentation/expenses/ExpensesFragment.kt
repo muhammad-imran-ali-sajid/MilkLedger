@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.presentation.expenses
 
-import android.view.Menu
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -8,12 +7,9 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.core.util.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
-import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
-import com.miassolutions.milkledger.presentation.customer.sales.SalesUiEvent
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.data.local.daos
+package com.miassolutions.milkledger.presentation.customer.sales.db
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -7,8 +7,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
-import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
@@ -80,7 +78,7 @@ interface SalesDao {
      * Required for merging downloaded remote data into the local database.
      * Uses REPLACE strategy to handle updates/inserts efficiently (the 'upsert' function).
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun upsertAll(sales: List<SalesEntity>)
 
     @Query("DELETE FROM sales_table")
@@ -90,7 +88,7 @@ interface SalesDao {
     // --- CRUD Operations (Used by Repository's insert/update/deleteSale()) ---
 
     // 🟢 Insert or replace a single sale (used for new local entries)
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertSale(sale: SalesEntity)
 
     // 🟡 Update a single sale

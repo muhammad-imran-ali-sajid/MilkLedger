@@ -13,7 +13,7 @@ import com.miassolutions.milkledger.data.local.daos.NoteDao
 import com.miassolutions.milkledger.data.local.daos.ProfitDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
-import com.miassolutions.milkledger.data.local.daos.SalesDao
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesDao
 import com.miassolutions.milkledger.data.local.daos.StateDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import dagger.Module

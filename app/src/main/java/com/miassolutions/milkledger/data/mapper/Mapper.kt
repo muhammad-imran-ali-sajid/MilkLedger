@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.data.mapper
 
 
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
 import com.miassolutions.milkledger.domain.model.Sale
 import java.time.LocalDate
 

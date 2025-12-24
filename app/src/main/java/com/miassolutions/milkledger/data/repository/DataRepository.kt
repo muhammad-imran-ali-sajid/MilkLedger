@@ -19,6 +19,7 @@ import com.miassolutions.milkledger.data.remote.FirestoreCollections.PURCHASES
 import com.miassolutions.milkledger.data.remote.FirestoreCollections.SUPPLIERS
 import com.miassolutions.milkledger.data.remote.FirestoreCollections.CUSTOMERS
 import com.miassolutions.milkledger.data.remote.model.*
+import com.miassolutions.milkledger.presentation.customer.sales.db.SalesDao
 import kotlinx.coroutines.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
