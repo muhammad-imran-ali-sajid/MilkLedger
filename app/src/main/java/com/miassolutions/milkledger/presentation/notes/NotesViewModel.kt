@@ -50,7 +50,7 @@ class NotesViewModel @Inject constructor(
     fun addOrUpdateNote(note: NoteEntity) {
         viewModelScope.launch {
             try {
-                repository.insertOrUpdate(note)
+                repository.upsert(note)
                 _eventFlow.emit(NoteUiEvent.NoteSaved)
             } catch (e: Exception) {
                 _eventFlow.emit(NoteUiEvent.ShowMessage("Failed to save note"))

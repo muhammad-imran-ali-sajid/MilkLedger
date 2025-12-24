@@ -27,7 +27,8 @@ class ExpensesRepository @Inject constructor(
     // READ OPERATIONS
     // ----------------------------------------------------------
 
-    fun getDailyExpenses(date: LocalDate): Flow<List<ExpensesEntity>> = dao.getDailyExpenses(date)
+    fun getDailyExpenses(date: LocalDate): Flow<List<ExpensesEntity>> =
+        dao.getDailyExpenses(date)
 
     suspend fun getMonthlyExpenses(date: LocalDate): List<ExpensesEntity> {
         val ym = "${date.year}-${"%02d".format(date.monthValue)}"
@@ -40,39 +41,25 @@ class ExpensesRepository @Inject constructor(
     fun getVariableExpenses(date: LocalDate): Flow<List<ExpensesEntity>> =
         dao.getVariableExpenses(date)
 
-    suspend fun getTitlesForDate(date: LocalDate): List<String> =
-        dao.getTitlesForDate(date)
-
     suspend fun getExpenseById(id: String): ExpensesEntity? =
         dao.getExpenseById(id)
 
     fun getAllExpensesForDate(date: LocalDate): Flow<List<ExpensesEntity>> =
         dao.getAllExpenses(date)
 
+    suspend fun getAllExpensesList(): List<ExpensesEntity> =
+        dao.getAllExpensesList()
+
     // ----------------------------------------------------------
     // WRITE OPERATIONS + FIRESTORE SYNC
     // ----------------------------------------------------------
-
-    suspend fun insertAll(expenses: List<ExpensesEntity>) {
-        dao.upsertAll(expenses)
-
-        try {
-            firestore.uploadCollection(
-                collectionName = COLLECTION,
-                dataList = expenses,
-                idExtractor = { it.expenseId }
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "Batch sync failed", e)
-        }
-    }
 
     suspend fun upsertExpense(expense: ExpensesEntity) {
         val final = expense.copy(
             updatedAt = LocalDateTime.now().toString()
         )
 
-        dao.upsert(final)  // Upsert will insert or update correctly
+        dao.upsert(final) // Insert or update
 
         try {
             firestore.uploadSingle(
@@ -91,17 +78,13 @@ class ExpensesRepository @Inject constructor(
         try {
             firestore.uploadCollection(
                 collectionName = COLLECTION,
-                dataList = expenses.toFirestoreModelList(), // ✅ mapped list
-                idExtractor = { it.id } // now using FirestoreExpense id
+                dataList = expenses.toFirestoreModelList(),
+                idExtractor = { it.id } // Firestore document id
             )
         } catch (e: Exception) {
             Log.e(TAG, "Batch sync failed", e)
         }
     }
-
-
-
-
 
     suspend fun deleteExpense(expense: ExpensesEntity) {
         dao.deleteExpense(expense)
@@ -116,25 +99,58 @@ class ExpensesRepository @Inject constructor(
         }
     }
 
-    // ----------------------------------------------------------
-    // FULL SYNC (Optional periodic)
-    // ----------------------------------------------------------
-    suspend fun synchronizeExpenses() {
-        Log.d(TAG, "Starting full sync...")
+    suspend fun insertAll(expenses: List<ExpensesEntity>) {
+        dao.upsertAll(expenses)
 
         try {
-            // Download remote
+            firestore.uploadCollection(
+                collectionName = COLLECTION,
+                dataList = expenses,
+                idExtractor = { it.expenseId }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Batch sync failed", e)
+        }
+    }
+
+    // ----------------------------------------------------------
+    // FULL SYNC / RESTORE
+    // ----------------------------------------------------------
+
+    /**
+     * Full restore from Firestore (useful on reinstall).
+     */
+    suspend fun restoreAllExpenses() {
+        Log.d(TAG, "Restoring expenses from Firestore...")
+        try {
+            val remoteExpenses = firestore.downloadCollection<ExpensesEntity>(COLLECTION)
+            if (remoteExpenses.isNotEmpty()) {
+                dao.upsertAll(remoteExpenses)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to restore expenses", e)
+        }
+    }
+
+    /**
+     * Full two-way sync (optional periodic backup).
+     */
+    suspend fun synchronizeExpenses() {
+        Log.d(TAG, "Starting full sync for expenses...")
+
+        try {
+            // 1️⃣ Download remote
             val remote = firestore.downloadCollection<ExpensesEntity>(COLLECTION)
             if (remote.isNotEmpty()) {
                 dao.upsertAll(remote)
             }
 
-            // Upload local
+            // 2️⃣ Upload local
             val local = dao.getAllExpensesList()
             firestore.uploadCollection(
                 collectionName = COLLECTION,
-                dataList = local,
-                idExtractor = { it.expenseId }
+                dataList = local.toFirestoreModelList(),
+                idExtractor = { it.id }
             )
 
         } catch (e: Exception) {

@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -28,8 +29,8 @@ interface CustomerDao {
     @Query("DELETE FROM customer_table WHERE customerId = :docId")
     suspend fun deleteById(docId: String)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertCustomer(customer: CustomerEntity)
+    @Upsert
+    suspend fun upsert(customer: CustomerEntity)
 
     @Update
     suspend fun updateCustomer(customer: CustomerEntity)
