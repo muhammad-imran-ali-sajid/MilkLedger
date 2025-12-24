@@ -52,9 +52,7 @@ class ProfitViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), 0.0)
 
 
-    init {
-        loadProfitDetails()
-    }
+
 
     fun setDate(date: LocalDate) {
         _selectedDate.value = date
@@ -134,7 +132,6 @@ class ProfitViewModel @Inject constructor(
     private fun fetchDaily(date: LocalDate) {
         viewModelScope.launch {
             repository.getDailyReceivedProfit(date).collect { entities ->
-
 
                 val sorted = entities.sortedByDescending { it.receivedDate }
                 val profits = sorted.map { it.toProfitList() }

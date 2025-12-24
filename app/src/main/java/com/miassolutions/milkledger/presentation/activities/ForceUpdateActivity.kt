@@ -37,9 +37,7 @@ class ForceUpdateActivity : AppCompatActivity() {
             insets
         }
 
-        onBackPressedDispatcher.addCallback(this) {
-
-        }
+        onBackPressedDispatcher.addCallback(this) {}
 
         val message = intent.getStringExtra("message")
         val url = intent.getStringExtra("url")!!
@@ -58,7 +56,7 @@ class ForceUpdateActivity : AppCompatActivity() {
         binding.progressBar.show()
         binding.tvProgress.show()
 
-        val request = DownloadManager.Request(Uri.parse(url))
+        val request = DownloadManager.Request(url.toUri())
             .setTitle("Downloading update")
             .setDescription("Please wait...")
             .setDestinationInExternalFilesDir(

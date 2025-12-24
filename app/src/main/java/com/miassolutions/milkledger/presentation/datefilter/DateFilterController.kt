@@ -26,7 +26,7 @@ class DateFilterController(
         setupTvSelectedClick()
 
         // Set Daily as default selection
-        binding.togglePeriod.check(R.id.btnAll)
+        binding.togglePeriod.check(R.id.btnDaily)
 
         render()
         callback.onPeriodChanged(currentPeriod)
