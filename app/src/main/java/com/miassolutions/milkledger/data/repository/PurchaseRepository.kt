@@ -1,15 +1,22 @@
 package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
+import com.miassolutions.milkledger.core.extensions.toMillis
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
-import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
-import com.miassolutions.milkledger.data.local.entities.SupplierEntity
-import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
-import com.miassolutions.milkledger.data.oldmapper.toFirestoreModel
+import com.miassolutions.milkledger.data.local.daos.TransactionDao
+import com.miassolutions.milkledger.data.local.entities.TransactionEntity
+import com.miassolutions.milkledger.data.local.entities.TransactionType
+import com.miassolutions.milkledger.data.mapper.toDomain
+import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
+import com.miassolutions.milkledger.data.remote.mapper.FirestorePurchaseModel
+import com.miassolutions.milkledger.domain.model.Purchase
+import com.miassolutions.milkledger.domain.model.Supplier
+import com.miassolutions.milkledger.domain.model.Transaction
 import com.miassolutions.milkledger.presentation.stats.SupplierPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,148 +24,153 @@ import javax.inject.Singleton
 @Singleton
 class PurchaseRepository @Inject constructor(
     private val purchaseDao: PurchaseDao,
-
-    private val firestoreSyncHelper: FirestoreSyncHelper // Used for local-write-first remote PUSH
+    private val transactionDao: TransactionDao,
+    private val firestore: FirestoreSyncHelper
 ) {
 
-    private companion object {
+    companion object {
         private const val TAG = "PurchaseRepository"
-        private const val PURCHASE_COLLECTION = "purchases"
+        private const val COLLECTION = "purchases"
     }
 
-    fun getPaidToSuppliersForDate(targetDate: LocalDate): Flow<List<SupplierPaidSummary>> {
-        return purchaseDao.getPaidAmountToSupplierForDate(targetDate)
-    }
+    /* ---------------------------------------------------
+       READ
+    --------------------------------------------------- */
+
+    fun getPaidToSuppliersForDate(date: LocalDate): Flow<List<SupplierPaidSummary>> =
+        purchaseDao.getPaidAmountToSupplierForDate(date.toMillis())
+
+    fun observeSuppliersList(): Flow<List<Supplier>> =
+        purchaseDao.observeSuppliersList()
+            .map { it.map { s -> s.toDomain() } }
+
+    fun getPurchasesByDate(date: LocalDate): Flow<List<Purchase>> =
+        purchaseDao.getPurchasesByDate(date.toMillis())
+            .map { list -> list.map { it.purchase.toDomain() } }
+
+    fun getPurchasesForSupplier(supplierId: String): Flow<List<Purchase>> =
+        purchaseDao.getPurchasesForSupplier(supplierId)
+            .map { list -> list.map { it.purchase.toDomain() } }
 
     suspend fun isDuplicatePurchase(supplierId: String, date: LocalDate): Boolean =
-        purchaseDao.countPurchaseForDate(supplierId, date) > 0
+        purchaseDao.countPurchaseForDate(supplierId, date.toMillis()) > 0
 
-    fun observeSuppliersList(): Flow<List<SupplierEntity>> = purchaseDao.observeSuppliersList()
+    fun getBalanceHistory(supplierId: String): Flow<List<BalanceHistory>> =
+        purchaseDao.getSupplierBalanceHistory(supplierId)
 
-    fun getBalanceHistory(supplierId: String): Flow<List<BalanceHistory>> {
-        return purchaseDao.getSupplierBalanceHistory(supplierId)
-    }
+    /* ---------------------------------------------------
+       WRITE : PURCHASE
+    --------------------------------------------------- */
 
-    suspend fun getBalanceHistoryOnce(supplierId: String): List<PurchaseWithSupplier> =
-        purchaseDao.getSupplierHistoryOnce(supplierId)
+    suspend fun insertPurchase(purchase: Purchase) {
+        val entity = purchase.toEntity()
 
-    // --- Write/Update/Delete Operations (Local Write First, Then Remote Sync) ---
-    // Actions that originate from the local user MUST push data to Firestore.
+        // 1️⃣ Save purchase
+        purchaseDao.insertPurchase(entity)
 
-    /**
-     * Inserts a new purchase: Local write first (via upsert), then initiate remote sync.
-     */
-    suspend fun insertPurchase(purchase: PurchaseEntity) {
-        // 1. Local write for immediate UI update (using upsertAll for consistency with DataRepository)
-        try {
-            purchaseDao.upsertAll(listOf(purchase)) // ⬅️ Using upsertAll
-            Log.d(TAG, "Inserted purchase locally: ${purchase.purchaseId}")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to insert purchase locally: ${purchase.purchaseId}", e)
-            return
-        }
-
-        // 2. Initiate remote write
-        try {
-            // Assumes PurchaseEntity has a toFirestoreModel() mapper
-            val firestorePurchase = purchase.toFirestoreModel()
-            firestoreSyncHelper.uploadSingle(
-                PURCHASE_COLLECTION, documentId = purchase.purchaseId,
-                data = firestorePurchase
+        // 2️⃣ Ledger entry (PURCHASE = money OUT)
+        transactionDao.insert(
+            TransactionEntity(
+                dateMillis = entity.dateMillis,
+                type = TransactionType.PURCHASE,   // 🆕
+                referenceId = entity.purchaseId,
+                debit = entity.payment,
+                credit = 0.0,
+                profitImpact = -entity.payment,
+                note = "Purchase from supplier ${entity.supplierId}"
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to sync inserted purchase to Firestore: ${purchase.purchaseId}", e)
-        }
-    }
+        )
 
-    /**
-     * Updates an existing purchase: Local write first (via upsert), then initiate remote sync.
-     */
-    suspend fun updatePurchase(purchase: PurchaseEntity) {
-        // 1. Local write for immediate UI update
-        try {
-            purchaseDao.upsertAll(listOf(purchase)) // ⬅️ Using upsertAll
-            Log.d(TAG, "Updated purchase locally: ${purchase.purchaseId}")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to update purchase locally: ${purchase.purchaseId}", e)
-            return
-        }
-
-        // 2. Initiate remote write
-        try {
-            val firestorePurchase = purchase.toFirestoreModel()
-            firestoreSyncHelper.uploadSingle(
-                PURCHASE_COLLECTION, documentId = purchase.purchaseId,
-                data = firestorePurchase
+        // 3️⃣ Firestore (best-effort)
+        syncSafely {
+            firestore.uploadSingle(
+                collectionName = COLLECTION,
+                documentId = entity.purchaseId,
+                data = FirestorePurchaseModel.fromEntity(entity) // mapper later
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to sync updated purchase to Firestore: ${purchase.purchaseId}", e)
         }
     }
 
-    /**
-     * Deletes a purchase: Local delete first, then initiate remote sync.
-     */
+    suspend fun updatePurchase(purchase: Purchase) {
+        val entity = purchase.toEntity()
+
+        purchaseDao.updatePurchase(entity)
+
+        // Append-only ledger
+        transactionDao.insert(
+            TransactionEntity(
+                dateMillis = entity.dateMillis,
+                type = TransactionType.PURCHASE,
+                referenceId = entity.purchaseId,
+                debit = entity.payment,
+                credit = 0.0,
+                profitImpact = -entity.payment,
+                note = "Purchase updated"
+            )
+        )
+    }
+
     suspend fun deletePurchase(purchaseId: String) {
-        // 1. Local delete for immediate UI update
-        try {
-            // NOTE: Must ensure purchaseDao has 'deleteById(id: String)'
-            purchaseDao.deletePurchase(purchaseId)
-            Log.d(TAG, "Deleted purchase locally: $purchaseId")
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to delete purchase locally: $purchaseId", e)
-            return
-        }
+        val deletedAt = System.currentTimeMillis()
 
-        // 2. Initiate remote delete
-        try {
-            firestoreSyncHelper.deleteDocument(PURCHASE_COLLECTION, purchaseId)
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to sync delete for purchase ID: $purchaseId", e)
+        purchaseDao.softDeletePurchase(purchaseId, deletedAt)
+
+        // 🆕 Ledger reversal
+        transactionDao.insert(
+            TransactionEntity(
+                dateMillis = deletedAt,
+                type = TransactionType.PURCHASE_REVERSAL,
+                referenceId = purchaseId,
+                debit = 0.0,
+                credit = 0.0,
+                profitImpact = 0.0,
+                note = "Purchase deleted"
+            )
+        )
+
+        syncSafely {
+            firestore.deleteDocument(COLLECTION, purchaseId)
         }
     }
 
-    // --- Bulk Sync Operations (Retained for DataRepository) ---
+    /* ---------------------------------------------------
+       ADJUSTMENTS
+    --------------------------------------------------- */
 
-    /**
-     * Batch inserts or replaces (upserts) a collection of purchases into the local database.
-     * This is called by the DataRepository's real-time listener to merge remote data.
-     */
-    suspend fun upsertAllPurchases(purchases: List<PurchaseEntity>) {
-        purchaseDao.upsertAll(purchases)
+    suspend fun addPurchaseAdjustment(
+        purchaseId: String,
+        amount: Double,
+        note: String?
+    ) {
+        if (amount == 0.0) return
+        if (purchaseDao.countPurchaseById(purchaseId) == 0) return
+
+        transactionDao.insert(
+            TransactionEntity(
+                dateMillis = System.currentTimeMillis(),
+                type = TransactionType.PROFIT_ADJUSTMENT,
+                referenceId = purchaseId,
+                debit = if (amount > 0) amount else 0.0,
+                credit = if (amount < 0) -amount else 0.0,
+                profitImpact = -amount,
+                note = note
+            )
+        )
     }
 
-    /**
-     * 🔥 REMOVED: synchronizePurchases()
-     * This function is no longer necessary. The download synchronization is handled continuously
-     * by DataRepository.setupRealtimeListeners().
-     */
+    fun observePurchaseAdjustments(purchaseId: String): Flow<List<Transaction>> =
+        transactionDao.getAdjustmentsFor(purchaseId)
+            .map { it.map { tx -> tx.toDomain() } }
 
+    /* ---------------------------------------------------
+       HELPERS
+    --------------------------------------------------- */
 
-    // --- Read Operations (Remain purely local via Room/Flow) ---
-
-    suspend fun getPurchasesByDateOnce(date: LocalDate): List<PurchaseWithSupplier> =
-        purchaseDao.getPurchasesByDateOnce(date)
-
-    fun getAllSuppliers(): Flow<List<SupplierEntity>> =
-        purchaseDao.getAllSuppliers()
-
-
-    // 🧾 All purchases for reports or dashboard
-    fun getAllPurchasesWithSuppliers(): Flow<List<PurchaseWithSupplier>> =
-        purchaseDao.getAllPurchasesWithSuppliers()
-
-    // 📅 For current date screen (daily ledger)
-    fun getPurchasesByDate(date: LocalDate): Flow<List<PurchaseWithSupplier>> =
-        purchaseDao.getPurchasesByDate(date)
-
-    // 👤 For supplier ledger details
-    fun getPurchasesForSupplier(supplierId: String): Flow<List<PurchaseWithSupplier>> =
-        purchaseDao.getPurchasesForSupplier(supplierId)
-
-    fun getAvgFat(date: LocalDate): Flow<Double?> = purchaseDao.getTotalFat(date)
-    fun getAvgLr(date: LocalDate): Flow<Double?> = purchaseDao.getTotalLr(date)
-    fun getAvgTs(date: LocalDate): Flow<Double?> = purchaseDao.getTotalTs(date)
-    fun getTotalMilkWithFatLR(date: LocalDate): Flow<Double?> =
-        purchaseDao.getTotalMilkWithFatLR(date)
+    private suspend fun syncSafely(block: suspend () -> Unit) {
+        try {
+            block()
+        } catch (e: Exception) {
+            Log.e(TAG, "Firestore sync failed", e)
+        }
+    }
 }

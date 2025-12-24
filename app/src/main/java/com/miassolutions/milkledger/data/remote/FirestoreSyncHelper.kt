@@ -156,4 +156,12 @@ class FirestoreSyncHelper @Inject constructor(
         }
         return null
     }
+
+    suspend fun syncSafely(block: suspend () -> Unit) {
+        try {
+            block()
+        } catch (e: Exception) {
+            Log.e(TAG, "Firestore sync failed", e)
+        }
+    }
 }

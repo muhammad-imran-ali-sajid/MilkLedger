@@ -139,6 +139,9 @@ interface SalesDao {
     @Update
     suspend fun updateSale(sale: SalesEntity)
 
+    @Query("SELECT COUNT(*) FROM sales_table WHERE saleId = :saleId")
+    suspend fun countSaleById(saleId: String): Int
+
     @Query("""
         UPDATE sales_table
         SET deletedAtMillis = :deletedAtMillis

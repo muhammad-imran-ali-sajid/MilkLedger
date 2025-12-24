@@ -54,6 +54,8 @@ enum class TransactionType {
     SALE,
     PURCHASE,
     EXPENSE,
-    PROFIT_ADJUSTMENT
+    PROFIT_ADJUSTMENT,
+    SALE_REVERSAL,
+    PURCHASE_REVERSAL
 }
 

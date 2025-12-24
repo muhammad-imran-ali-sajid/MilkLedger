@@ -23,6 +23,11 @@ interface PurchaseDao {
        Aggregates
     --------------------------------------------------- */
 
+    @Query("SELECT COUNT(*) FROM sales_table WHERE saleId = :saleId")
+    suspend fun countSaleById(saleId: String): Int
+    @Query("SELECT COUNT(*) FROM purchase_table WHERE purchaseId = :purchaseId")
+    suspend fun countPurchaseById(purchaseId: String) : Int
+
     @Query("""
         SELECT IFNULL(SUM(payment), 0) 
         FROM purchase_table
