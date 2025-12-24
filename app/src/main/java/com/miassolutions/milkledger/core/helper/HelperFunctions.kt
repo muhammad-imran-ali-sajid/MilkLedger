@@ -2,9 +2,8 @@ package com.miassolutions.milkledger.core.helper
 
 import android.graphics.Color
 import androidx.core.graphics.toColorInt
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
-import kotlin.math.abs
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 
 fun handleZeroData(value: Double): String {
     return if (value == 0.0) {

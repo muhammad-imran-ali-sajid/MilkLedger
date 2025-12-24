@@ -12,7 +12,7 @@ import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
-import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.databinding.FragmentDevSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint

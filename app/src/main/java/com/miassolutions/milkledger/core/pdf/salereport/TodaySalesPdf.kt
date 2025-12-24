@@ -5,8 +5,8 @@ import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemCustomerRecordRowBinding
 // NOTE: I am assuming the purchase layout is bound to LayoutPurchaseReceiptBinding
 // If you are using your old LayoutSalesReceiptBinding for the new XML, keep it,

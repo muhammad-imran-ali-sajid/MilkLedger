@@ -10,9 +10,9 @@ import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.core.pdf.customerreport.CustomerReportGenerator
 import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.formatPeriodLabel
-import com.miassolutions.milkledger.core.util.toDisplayFormat
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
 import com.miassolutions.milkledger.databinding.LayoutCustomerDetailSummaryBinding
 import dagger.hilt.android.AndroidEntryPoint

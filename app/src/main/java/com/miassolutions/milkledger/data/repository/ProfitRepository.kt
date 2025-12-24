@@ -3,8 +3,8 @@ package com.miassolutions.milkledger.data.repository
 import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.ProfitDao
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
-import com.miassolutions.milkledger.data.mapper.toFirestore
-import com.miassolutions.milkledger.data.mapper.toProfit
+import com.miassolutions.milkledger.data.oldmapper.toFirestore
+import com.miassolutions.milkledger.data.oldmapper.toProfit
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.domain.model.Profit
 import kotlinx.coroutines.flow.Flow

@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.presentation.expenses
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.util.formatPeriodLabel
+import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.data.repository.ExpensesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

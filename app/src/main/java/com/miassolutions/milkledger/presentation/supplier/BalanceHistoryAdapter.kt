@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.util.dateFormatter
-import com.miassolutions.milkledger.core.util.toPriceStr
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
 
 class BalanceHistoryAdapter(

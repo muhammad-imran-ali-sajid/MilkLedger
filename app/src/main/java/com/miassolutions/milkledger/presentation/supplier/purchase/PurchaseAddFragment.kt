@@ -11,12 +11,12 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
-import com.miassolutions.milkledger.core.util.hide
-import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.extensions.hide
+import com.miassolutions.milkledger.core.extensions.show
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.util.toDisplayFormat
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.databinding.FragmentAddPurchaseBinding

@@ -19,142 +19,236 @@ import java.time.LocalDate
 @Dao
 interface PurchaseDao {
 
+    /* ---------------------------------------------------
+       Aggregates
+    --------------------------------------------------- */
 
-    @Query("SELECT IFNULL(SUM(payment), 0) FROM purchase_table")
+    @Query("""
+        SELECT IFNULL(SUM(payment), 0) 
+        FROM purchase_table
+        WHERE deletedAtMillis IS NULL
+    """)
     fun observePurchases(): Flow<Double>
 
-
     @Query("""
-    SELECT COUNT(*) FROM purchase_table 
-    WHERE supplierId = :supplierId AND date = :date
-""")
-    suspend fun countPurchaseForDate(supplierId: String, date: LocalDate): Int
-
-
-
-    @Query("""
-        SELECT *
-        FROM supplier_table
+        SELECT COUNT(*) 
+        FROM purchase_table
+        WHERE supplierId = :supplierId
+          AND dateMillis = :dateMillis
+          AND deletedAtMillis IS NULL
     """)
-    fun observeSuppliersList() : Flow<List<SupplierEntity>>
+    suspend fun countPurchaseForDate(
+        supplierId: String,
+        dateMillis: Long
+    ): Int
 
-    /**
-     * Retrieves a list of supplier names and the amount paid to them on a specific date.
-     *
-     * @param targetDate The specific date (e.g., LocalDate.of(2025, 11, 17))
-     */
+    /* ---------------------------------------------------
+       Suppliers (read-only helpers)
+    --------------------------------------------------- */
+
+    @Query("""
+        SELECT * 
+        FROM supplier_table
+        WHERE deletedAtMillis IS NULL
+        ORDER BY sortOrder ASC
+    """)
+    fun observeSuppliersList(): Flow<List<SupplierEntity>>
+
+    /* ---------------------------------------------------
+       Paid amount summary per supplier (daily)
+    --------------------------------------------------- */
+
     @Query(
         """
         SELECT
-            T2.supplierName,
-            T1.payment AS paidAmount,  -- Select the amount paid from the Purchase table
-            T1.milkAmount AS volume
-        FROM
-            purchase_table AS T1
-        LEFT JOIN
-            supplier_table AS T2
-        ON
-            T1.supplierId = T2.supplierId
-        WHERE
-            T1.date = :targetDate  -- Filter by the specific date
-            AND T1.payment > 0     -- Only include purchase records where some payment was made
-            AND T1.deletedAt IS NULL
-        ORDER BY
-            T2.supplierName ASC
-    """
+            s.supplierName AS supplierName,
+            p.payment AS paidAmount,
+            p.milkAmount AS volume
+        FROM purchase_table p
+        LEFT JOIN supplier_table s
+            ON p.supplierId = s.supplierId
+        WHERE p.dateMillis = :dateMillis
+          AND p.payment > 0
+          AND p.deletedAtMillis IS NULL
+        ORDER BY s.supplierName ASC
+        """
     )
-    fun getPaidAmountToSupplierForDate(targetDate: LocalDate): Flow<List<SupplierPaidSummary>>
+    fun getPaidAmountToSupplierForDate(
+        dateMillis: Long
+    ): Flow<List<SupplierPaidSummary>>
 
-    // --- Synchronization Helper Methods ---
+    /* ---------------------------------------------------
+       Sync helpers
+    --------------------------------------------------- */
 
-    /**
-     * Used by the repository to get a list of all local entities for remote upload.
-     */
     @Query("SELECT * FROM purchase_table")
     suspend fun getAllPurchasesList(): List<PurchaseEntity>
 
-
-    /**
-     * Batch upsert (Insert or Replace) used for merging remote data into the local database.
-     */
     @Upsert
     suspend fun upsertAll(purchases: List<PurchaseEntity>)
 
-    /**
-     * Deletes all purchase records.
-     */
     @Query("DELETE FROM purchase_table")
     suspend fun clearAll()
 
-    /**
-     * Deletes all purchase records associated with a specific supplier ID.
-     */
-    @Query("DELETE FROM purchase_table WHERE supplierId = :supplierId")
-    suspend fun deleteAllBySupplierId(supplierId: String)
+    @Query("""
+        UPDATE purchase_table
+        SET deletedAtMillis = :deletedAtMillis
+        WHERE supplierId = :supplierId
+    """)
+    suspend fun softDeleteAllBySupplierId(
+        supplierId: String,
+        deletedAtMillis: Long
+    )
 
-    // --- Single Entity Operations (Trigger Remote Sync) ---
+    /* ---------------------------------------------------
+       Single entity ops
+    --------------------------------------------------- */
 
-    // ✅ Insert or replace for auto-save
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPurchase(purchase: PurchaseEntity)
 
-    // ✅ Update existing entry when user changes fat, lr, volume, or notes
     @Update
     suspend fun updatePurchase(purchase: PurchaseEntity)
 
-    // ✅ Delete specific purchase
-    @Query("DELETE FROM purchase_table WHERE purchaseId = :id")
-    suspend fun deletePurchase(id: String)
+    @Query("""
+        UPDATE purchase_table
+        SET deletedAtMillis = :deletedAtMillis
+        WHERE purchaseId = :id
+    """)
+    suspend fun softDeletePurchase(
+        id: String,
+        deletedAtMillis: Long
+    )
 
-    // --- Local Read Operations (Offline-First Read) ---
+    /* ---------------------------------------------------
+       Daily stats
+    --------------------------------------------------- */
 
-    @Query("SELECT * FROM supplier_table")
-    fun getAllSuppliers(): Flow<List<SupplierEntity>>
+    @Query("""
+        SELECT AVG(fat)
+        FROM purchase_table
+        WHERE dateMillis = :dateMillis
+          AND fat > 0
+          AND deletedAtMillis IS NULL
+    """)
+    fun getTotalFat(dateMillis: Long): Flow<Double?>
 
+    @Query("""
+        SELECT AVG(lr)
+        FROM purchase_table
+        WHERE dateMillis = :dateMillis
+          AND lr > 0
+          AND deletedAtMillis IS NULL
+    """)
+    fun getTotalLr(dateMillis: Long): Flow<Double?>
 
-    @Query("SELECT AVG(fat) FROM purchase_table WHERE date= :date AND fat > 0.0")
-    fun getTotalFat(date: LocalDate): Flow<Double?>
+    @Query("""
+        SELECT SUM(ts)
+        FROM purchase_table
+        WHERE dateMillis = :dateMillis
+          AND fat > 0
+          AND lr > 0
+          AND deletedAtMillis IS NULL
+    """)
+    fun getTotalTs(dateMillis: Long): Flow<Double?>
 
-    @Query("SELECT AVG(lr) FROM purchase_table WHERE date= :date AND lr > 0.0")
-    fun getTotalLr(date: LocalDate): Flow<Double?>
+    @Query("""
+        SELECT SUM(milkAmount)
+        FROM purchase_table
+        WHERE dateMillis = :dateMillis
+          AND fat > 0
+          AND lr > 0
+          AND deletedAtMillis IS NULL
+    """)
+    fun getTotalMilkWithFatLR(dateMillis: Long): Flow<Double?>
 
+    /* ---------------------------------------------------
+       Supplier ledger / history
+    --------------------------------------------------- */
 
-    @Query("SELECT SUM(ts) FROM purchase_table WHERE date= :date AND fat > 0.0 AND lr > 0.0")
-    fun getTotalTs(date: LocalDate): Flow<Double?>
-
-    @Query("SELECT SUM(milkAmount) FROM purchase_table WHERE date= :date AND fat > 0.0 AND lr > 0.0")
-    fun getTotalMilkWithFatLR(date: LocalDate): Flow<Double?>
-
-
-    // ✅ Get only the date and balance for a supplier (for a simple ledger/summary)
-    @Query("SELECT date, balance FROM purchase_table WHERE supplierId = :supplierId ORDER BY date DESC")
-    fun getSupplierBalanceHistory(supplierId: String): Flow<List<BalanceHistory>>
+    @Query("""
+        SELECT dateMillis, balance
+        FROM purchase_table
+        WHERE supplierId = :supplierId
+          AND deletedAtMillis IS NULL
+        ORDER BY dateMillis DESC
+    """)
+    fun getSupplierBalanceHistory(
+        supplierId: String
+    ): Flow<List<BalanceHistory>>
 
     @Transaction
-    @Query("SELECT * FROM purchase_table WHERE supplierId = :supplierId ORDER BY date ASC")
-    suspend fun getSupplierHistoryOnce(supplierId: String): List<PurchaseWithSupplier>
+    @Query("""
+        SELECT *
+        FROM purchase_table
+        WHERE supplierId = :supplierId
+          AND deletedAtMillis IS NULL
+        ORDER BY dateMillis ASC
+    """)
+    suspend fun getSupplierHistoryOnce(
+        supplierId: String
+    ): List<PurchaseWithSupplier>
+
+    /* ---------------------------------------------------
+       Date-based reads
+    --------------------------------------------------- */
 
     @Transaction
-    @Query("SELECT * FROM purchase_table WHERE date = :date")
-    suspend fun getPurchasesByDateOnce(date: LocalDate): List<PurchaseWithSupplier>
+    @Query("""
+        SELECT *
+        FROM purchase_table
+        WHERE dateMillis = :dateMillis
+          AND deletedAtMillis IS NULL
+        ORDER BY supplierId
+    """)
+    fun getPurchasesByDate(
+        dateMillis: Long
+    ): Flow<List<PurchaseWithSupplier>>
 
-    // ✅ Get all entries with supplier info — for reports or admin view
     @Transaction
-    @Query("SELECT * FROM purchase_table ORDER BY date DESC")
+    @Query("""
+        SELECT *
+        FROM purchase_table
+        WHERE dateMillis = :dateMillis
+          AND deletedAtMillis IS NULL
+    """)
+    suspend fun getPurchasesByDateOnce(
+        dateMillis: Long
+    ): List<PurchaseWithSupplier>
+
+    @Transaction
+    @Query("""
+        SELECT *
+        FROM purchase_table
+        WHERE deletedAtMillis IS NULL
+        ORDER BY dateMillis DESC
+    """)
     fun getAllPurchasesWithSuppliers(): Flow<List<PurchaseWithSupplier>>
 
-
-    // ✅ Daily entries view (for your current screen)
     @Transaction
-    @Query("SELECT * FROM purchase_table WHERE date = :date ORDER BY supplierId")
-    fun getPurchasesByDate(date: LocalDate): Flow<List<PurchaseWithSupplier>>
+    @Query("""
+        SELECT *
+        FROM purchase_table
+        WHERE supplierId = :supplierId
+          AND deletedAtMillis IS NULL
+        ORDER BY dateMillis DESC
+    """)
+    fun getPurchasesForSupplier(
+        supplierId: String
+    ): Flow<List<PurchaseWithSupplier>>
 
+    /* ---------------------------------------------------
+       Range totals
+    --------------------------------------------------- */
 
-    // ✅ Supplier ledger (date-wise history)
-    @Transaction
-    @Query("SELECT * FROM purchase_table WHERE supplierId = :supplierId ORDER BY date DESC")
-    fun getPurchasesForSupplier(supplierId: String): Flow<List<PurchaseWithSupplier>>
-
-    @Query("SELECT SUM(milkPrice) FROM purchase_table WHERE date BETWEEN :start AND :end")
-    suspend fun getPurchasesTotalBetween(start: LocalDate, end: LocalDate): Double?
+    @Query("""
+        SELECT IFNULL(SUM(milkPrice), 0)
+        FROM purchase_table
+        WHERE dateMillis BETWEEN :startMillis AND :endMillis
+          AND deletedAtMillis IS NULL
+    """)
+    suspend fun getPurchasesTotalBetween(
+        startMillis: Long,
+        endMillis: Long
+    ): Double
 }

@@ -2,9 +2,9 @@ package com.miassolutions.milkledger.presentation.customer.details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 
-import com.miassolutions.milkledger.presentation.customer.sales.repository.SalesRepository
+import com.miassolutions.milkledger.data.repository.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

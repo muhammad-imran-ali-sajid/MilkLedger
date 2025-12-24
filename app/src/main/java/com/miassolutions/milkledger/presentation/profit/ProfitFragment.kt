@@ -9,8 +9,8 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReceiptPdf
 import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReportGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.toDisplayFormat
-import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
+import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
 import com.miassolutions.milkledger.databinding.LayoutSummaryProfitBinding
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback

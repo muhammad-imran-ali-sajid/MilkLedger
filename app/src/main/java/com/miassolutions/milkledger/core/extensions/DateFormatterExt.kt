@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.util
+package com.miassolutions.milkledger.core.extensions
 
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

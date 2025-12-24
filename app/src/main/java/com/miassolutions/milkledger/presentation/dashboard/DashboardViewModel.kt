@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.presentation.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.util.formatPeriodLabel
+import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import java.time.LocalDate
 import java.time.YearMonth

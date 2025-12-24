@@ -2,9 +2,9 @@ package com.miassolutions.milkledger.presentation.profit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.util.formatPeriodLabel
-import com.miassolutions.milkledger.data.mapper.toEntity
-import com.miassolutions.milkledger.data.mapper.toProfitList
+import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
+import com.miassolutions.milkledger.data.oldmapper.toEntity
+import com.miassolutions.milkledger.data.oldmapper.toProfitList
 import com.miassolutions.milkledger.data.repository.ProfitRepository
 import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,8 +13,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map

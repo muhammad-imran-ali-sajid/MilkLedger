@@ -1,40 +1,28 @@
 package com.miassolutions.milkledger.data.mapper
 
+import com.miassolutions.milkledger.core.extensions.toLocalDate
+import com.miassolutions.milkledger.core.extensions.toMillis
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.data.remote.model.FirestoreExpense
-import java.time.LocalDate
-import java.time.LocalDateTime
+import com.miassolutions.milkledger.domain.model.Expense
 
-fun ExpensesEntity.toFirestoreModel(): FirestoreExpense {
-    return FirestoreExpense(
+fun ExpensesEntity.toDomain(): Expense =
+    Expense(
         id = expenseId,
-        date = date.toString(),
+        date = dateMillis.toLocalDate(),
         title = expenseTitle,
         amount = expenseAmount,
-        expenseNote = expenseNote ?: "",
-        default = isDefault,
-        isSynced = isSynced,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt?.toString()
+        note = expenseNote,
+        isDefault = isDefault
     )
-}
 
-fun List<ExpensesEntity>.toFirestoreModelList(): List<FirestoreExpense> {
-    return this.map { it.toFirestoreModel() }
-}
 
-fun FirestoreExpense.toEntityModel(): ExpensesEntity {
-    return ExpensesEntity(
+fun Expense.toEntity(): ExpensesEntity =
+    ExpensesEntity(
         expenseId = id,
-        date = LocalDate.parse(date),
+        dateMillis = date.toMillis(),
         expenseTitle = title,
         expenseAmount = amount,
-        expenseNote = expenseNote,
-        isDefault = default ?: false,
-        createdAt = createdAt,
-        isSynced = isSynced,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt.takeIf { it.isNullOrBlank() }?.let { LocalDateTime.parse(it) }
+        expenseNote = note,
+        isDefault = isDefault
     )
-}
+

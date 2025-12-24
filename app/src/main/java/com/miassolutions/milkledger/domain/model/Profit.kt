@@ -4,15 +4,24 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 import java.time.LocalDateTime
-@Parcelize
-data class Profit(
-    val profitId: String,
-    val receivedDate: LocalDate = LocalDate.now(),
-    val netProfit : Double,
-    val receivedProfit : Double = 0.0,
-    val notes : String? = null,
+//@Parcelize
+//data class Profit(
+//    val profitId: String,
+//    val receivedDate: LocalDate = LocalDate.now(),
+//    val netProfit : Double,
+//    val receivedProfit : Double = 0.0,
+//    val notes : String? = null,
+//
+//    val isSynced: Boolean = false,
+//    val updatedAt: String = LocalDateTime.now().toString(),
+//    val deletedAt: LocalDateTime? = null
+//): Parcelable
 
-    val isSynced: Boolean = false,
-    val updatedAt: String = LocalDateTime.now().toString(),
-    val deletedAt: LocalDateTime? = null
-): Parcelable
+
+data class Profit(
+    val date: LocalDate,
+    val grossProfit: Double,
+    val netProfit: Double,
+    val receivedProfit: Double,
+    val notes: String?
+)

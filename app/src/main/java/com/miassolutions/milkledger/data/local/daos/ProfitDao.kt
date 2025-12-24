@@ -12,71 +12,96 @@ import java.time.LocalDate
 @Dao
 interface ProfitDao {
 
+    /* ---------------------------
+       Sync / Raw
+    --------------------------- */
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertAll(profitList: List<ProfitEntity>)
-
-    @Query("DELETE FROM profit_table")
-    suspend fun clearAll()
-
-    @Query("DELETE FROM profit_table WHERE profitId = :profitId")
-    suspend fun deleteProfit(profitId: String)
+    suspend fun upsertAll(profits: List<ProfitEntity>)
 
     @Upsert
     suspend fun upsert(profit: ProfitEntity)
 
-    @Query("SELECT * FROM profit_table ORDER BY receivedDate DESC")
+    @Query("DELETE FROM profit_table")
+    suspend fun clearAll()
+
+    @Query("""
+        UPDATE profit_table
+        SET deletedAtMillis = :deletedAtMillis
+        WHERE profitId = :profitId
+    """)
+    suspend fun softDeleteById(profitId: String, deletedAtMillis: Long)
+
+    /* ---------------------------
+       Base Queries
+    --------------------------- */
+
+    @Query("""
+        SELECT * FROM profit_table
+        WHERE deletedAtMillis IS NULL
+        ORDER BY dateMillis DESC
+    """)
     fun getAllProfitFlow(): Flow<List<ProfitEntity>>
 
-    @Query("SELECT * FROM profit_table WHERE profitId = :profitId LIMIT 1")
+    @Query("""
+        SELECT * FROM profit_table
+        WHERE profitId = :profitId
+          AND deletedAtMillis IS NULL
+        LIMIT 1
+    """)
     suspend fun getProfitById(profitId: String): ProfitEntity?
 
-    // -------------------------------
-    // DAILY
-    // -------------------------------
-    @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
-    fun getDailyReceivedProfit(date: LocalDate): Flow<List<ProfitEntity>>
+    /* ---------------------------
+       Daily
+    --------------------------- */
 
-    @Query("SELECT * FROM profit_table WHERE receivedDate = :date")
-    fun getDailyFlow(date: LocalDate): Flow<List<ProfitEntity>>
+    @Query("""
+        SELECT * FROM profit_table
+        WHERE dateMillis = :dateMillis
+          AND deletedAtMillis IS NULL
+    """)
+    fun getDailyProfit(dateMillis: Long): Flow<List<ProfitEntity>>
 
-    // -------------------------------
-    // RANGE (WEEKLY / CUSTOM)
-    // -------------------------------
-    @Query("SELECT * FROM profit_table WHERE receivedDate BETWEEN :start AND :end")
-    suspend fun getBetween(start: LocalDate, end: LocalDate): List<ProfitEntity>
+    /* ---------------------------
+       Range (Weekly / Custom)
+    --------------------------- */
 
-    @Query("SELECT * FROM profit_table WHERE receivedDate BETWEEN :start AND :end")
-    fun getReceivedProfitBetweenFlow(start: LocalDate, end: LocalDate): Flow<List<ProfitEntity>>
+    @Query("""
+        SELECT * FROM profit_table
+        WHERE dateMillis BETWEEN :startMillis AND :endMillis
+          AND deletedAtMillis IS NULL
+        ORDER BY dateMillis ASC
+    """)
+    suspend fun getBetween(
+        startMillis: Long,
+        endMillis: Long
+    ): List<ProfitEntity>
 
-    // -------------------------------
-    // MONTHLY (yyyy-MM)
-    // -------------------------------
-    @Query(
-        """
-        SELECT * FROM profit_table 
-        WHERE receivedDate LIKE :yearMonth || '%'
-        ORDER BY receivedDate ASC
-    """
-    )
-    fun getReceivedProfitMonthly(yearMonth: String): Flow<List<ProfitEntity>>
-    // Input example → "2025-01"
+    @Query("""
+        SELECT * FROM profit_table
+        WHERE dateMillis BETWEEN :startMillis AND :endMillis
+          AND deletedAtMillis IS NULL
+        ORDER BY dateMillis ASC
+    """)
+    fun getBetweenFlow(
+        startMillis: Long,
+        endMillis: Long
+    ): Flow<List<ProfitEntity>>
 
-    // -------------------------------
-    // YEARLY (yyyy)
-    // -------------------------------
-    @Query(
-        """
-        SELECT * FROM profit_table 
-        WHERE receivedDate LIKE :year || '%'
-        ORDER BY receivedDate ASC
-    """
-    )
-    fun getReceivedProfitYearly(year: String): Flow<List<ProfitEntity>>
-    // Input example → "2025"
+    /* ---------------------------
+       Monthly / Yearly
+       (computed via millis ranges)
+    --------------------------- */
 
-    @Query("SELECT * FROM profit_table")
-    suspend fun getAll(): List<ProfitEntity>
-
-    @Query("SELECT * FROM profit_table")
-     fun getAllFlow(): Flow<List<ProfitEntity>>
+    @Query("""
+        SELECT * FROM profit_table
+        WHERE dateMillis BETWEEN :startMillis AND :endMillis
+          AND deletedAtMillis IS NULL
+        ORDER BY dateMillis ASC
+    """)
+    fun getMonthlyProfit(
+        startMillis: Long,
+        endMillis: Long
+    ): Flow<List<ProfitEntity>>
 }
+

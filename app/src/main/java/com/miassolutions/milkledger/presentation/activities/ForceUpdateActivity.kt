@@ -2,7 +2,6 @@ package com.miassolutions.milkledger.presentation.activities
 
 import android.app.DownloadManager
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -15,7 +14,7 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.util.show
+import com.miassolutions.milkledger.core.extensions.show
 import com.miassolutions.milkledger.databinding.ActivityForceUpdateBinding
 import java.io.File
 

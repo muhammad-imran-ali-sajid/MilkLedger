@@ -5,12 +5,9 @@ import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
-import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReceiptPdf
-import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.databinding.ItemExpenseRecordRowBinding
-import com.miassolutions.milkledger.databinding.ItemProfitRecordRowBinding
 import com.miassolutions.milkledger.databinding.LayoutExpenseReceiptBinding
-import com.miassolutions.milkledger.databinding.LayoutProfitReceiptBinding
 
 import java.io.File
 import java.io.FileOutputStream

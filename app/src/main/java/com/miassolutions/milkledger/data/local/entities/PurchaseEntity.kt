@@ -18,12 +18,15 @@ import java.util.UUID
             onDelete = ForeignKey.CASCADE
         )
     ],
-    indices = [Index("supplierId"), Index("date")]
+    indices = [Index("supplierId"), Index("dateMillis")]
 )
 data class PurchaseEntity(
-    @PrimaryKey val purchaseId: String = UUID.randomUUID().toString(),
+    @PrimaryKey
+    val purchaseId: String = UUID.randomUUID().toString(),
+
     val supplierId: String,
-    val date: LocalDate,
+
+    val dateMillis: Long,
     val milkAmount: Double,
     val fat: Double,
     val lr: Double,
@@ -32,11 +35,11 @@ data class PurchaseEntity(
     val payment: Double,
     val balance: Double,
     val rateUsed: Double,
-    val notes: String? = null,
+    val notes: String?,
 
+    val updatedAtMillis: Long = System.currentTimeMillis(),
     val isSynced: Boolean = false,
-    val updatedAt: String = LocalDateTime.now().toString(),
-    val deletedAt: LocalDateTime? = null
-
+    val deletedAtMillis: Long? = null
 )
+
 

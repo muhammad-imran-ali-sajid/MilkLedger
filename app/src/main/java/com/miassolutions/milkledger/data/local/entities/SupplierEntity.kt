@@ -8,16 +8,18 @@ import java.util.UUID
 
 @Entity(tableName = "supplier_table")
 data class SupplierEntity(
-    @PrimaryKey val supplierId: String = UUID.randomUUID().toString(),
+    @PrimaryKey
+    val supplierId: String = UUID.randomUUID().toString(),
+
     val supplierName: String,
     val supplierRate: Double,
-    val sortOrder: Int = 0,
-    val advanceAmount: Double = 0.0,
-    val createdAt: String = LocalDateTime.now().toString(),
-    val isDefault: Boolean = false,
+    val sortOrder: Int,
+    val advanceAmount: Double,
+    val isDefault: Boolean,
 
+    val createdAtMillis: Long = System.currentTimeMillis(),
+    val updatedAtMillis: Long = System.currentTimeMillis(),
     val isSynced: Boolean = false,
-    val updatedAt: String = LocalDateTime.now().toString(),
-    val deletedAt: Long? = null
-
+    val deletedAtMillis: Long? = null
 )
+

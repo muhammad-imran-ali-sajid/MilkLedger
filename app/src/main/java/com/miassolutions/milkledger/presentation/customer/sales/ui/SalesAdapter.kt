@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
-import com.miassolutions.milkledger.core.util.hide
-import com.miassolutions.milkledger.core.util.show
-import com.miassolutions.milkledger.core.util.toDisplayDate
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.hide
+import com.miassolutions.milkledger.core.extensions.show
+import com.miassolutions.milkledger.core.extensions.toDisplayDate
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import com.miassolutions.milkledger.domain.model.Sale
 import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi

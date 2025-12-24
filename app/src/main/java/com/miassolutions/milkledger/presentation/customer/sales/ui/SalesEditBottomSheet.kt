@@ -11,14 +11,13 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.core.util.autoSelectOnFocus
-import com.miassolutions.milkledger.core.util.toDisplayDate
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
-import com.miassolutions.milkledger.data.mapper.toEntity
+import com.miassolutions.milkledger.core.extensions.toDisplayDate
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.data.oldmapper.toEntity
 import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
 import com.miassolutions.milkledger.domain.model.Sale
-import com.miassolutions.milkledger.presentation.customer.sales.ui.CustomerBalanceHistoryBottomSheet
 import java.time.LocalDate
 import kotlin.math.roundToInt
 

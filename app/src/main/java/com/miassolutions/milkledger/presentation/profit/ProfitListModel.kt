@@ -2,8 +2,7 @@ package com.miassolutions.milkledger.presentation.profit
 
 import android.os.Parcelable
 import com.miassolutions.milkledger.core.pdf.profitreport.PdfProfitItemRecord
-import com.miassolutions.milkledger.core.util.toDisplayFormat
-import com.miassolutions.milkledger.domain.model.Profit
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 

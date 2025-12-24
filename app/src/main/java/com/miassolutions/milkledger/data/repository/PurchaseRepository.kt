@@ -5,9 +5,8 @@ import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
-import com.miassolutions.milkledger.data.mapper.toFirestoreModel
+import com.miassolutions.milkledger.data.oldmapper.toFirestoreModel
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
-import com.miassolutions.milkledger.domain.model.Supplier
 import com.miassolutions.milkledger.presentation.stats.SupplierPaidSummary
 import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
 import kotlinx.coroutines.flow.Flow

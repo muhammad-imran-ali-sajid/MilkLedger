@@ -12,9 +12,9 @@ import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierReceiptPdf
 import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierReportGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.formatPeriodLabel
-import com.miassolutions.milkledger.core.util.toDisplayFormat
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
 import com.miassolutions.milkledger.databinding.LayoutSupplierDetailSummaryBinding
 import dagger.hilt.android.AndroidEntryPoint

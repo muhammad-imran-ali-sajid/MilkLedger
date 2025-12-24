@@ -1,14 +1,14 @@
 package com.miassolutions.milkledger.presentation.stats
 
 
-import com.miassolutions.milkledger.data.local.daos.StateDao
+import com.miassolutions.milkledger.data.local.daos.StatsDao
 import javax.inject.Inject
 import javax.inject.Singleton
 import java.time.LocalDate
 
 @Singleton
 class StatsRepository @Inject constructor(
-    private val dao: StateDao
+    private val dao: StatsDao
 ) {
 
     suspend fun getTotalsForRange(start: LocalDate, end: LocalDate): List<StateRecord> {

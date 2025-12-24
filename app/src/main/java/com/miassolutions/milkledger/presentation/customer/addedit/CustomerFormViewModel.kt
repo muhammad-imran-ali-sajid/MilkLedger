@@ -7,7 +7,7 @@ import com.miassolutions.milkledger.data.repository.CustomerRepository
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.data.mapper.toEntity
+import com.miassolutions.milkledger.data.oldmapper.toEntity
 import com.miassolutions.milkledger.domain.model.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*

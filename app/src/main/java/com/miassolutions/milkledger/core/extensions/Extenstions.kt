@@ -1,8 +1,6 @@
-package com.miassolutions.milkledger.core.util
+package com.miassolutions.milkledger.core.extensions
 
-import android.graphics.Color
 import android.view.View
-import androidx.core.graphics.toColorInt
 import java.time.LocalDate
 
 

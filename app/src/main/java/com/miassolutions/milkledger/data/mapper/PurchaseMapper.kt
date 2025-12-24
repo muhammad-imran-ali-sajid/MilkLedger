@@ -1,18 +1,15 @@
 package com.miassolutions.milkledger.data.mapper
 
+import com.miassolutions.milkledger.core.extensions.toLocalDate
+import com.miassolutions.milkledger.core.extensions.toMillis
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
-import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
-import com.miassolutions.milkledger.data.remote.model.FirestorePurchase
-import com.miassolutions.milkledger.data.remote.model.FirestoreSales
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.miassolutions.milkledger.domain.model.Purchase
 
-fun PurchaseEntity.toFirestoreModel(): FirestorePurchase {
-    return FirestorePurchase(
-        purchaseId = purchaseId,
+fun PurchaseEntity.toDomain(): Purchase =
+    Purchase(
+        id = purchaseId,
         supplierId = supplierId,
-        date = date.toString(),
+        date = dateMillis.toLocalDate(),
         milkAmount = milkAmount,
         fat = fat,
         lr = lr,
@@ -21,19 +18,14 @@ fun PurchaseEntity.toFirestoreModel(): FirestorePurchase {
         payment = payment,
         balance = balance,
         rateUsed = rateUsed,
-        notes = notes,
-        isSynced = isSynced,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt?.toString()
+        notes = notes
     )
-}
 
-
-fun FirestorePurchase.toEntityModel(): PurchaseEntity {
-    return PurchaseEntity(
-        purchaseId = purchaseId,
+fun Purchase.toEntity(): PurchaseEntity =
+    PurchaseEntity(
+        purchaseId = id,
         supplierId = supplierId,
-        date = LocalDate.parse(date),
+        dateMillis = date.toMillis(),
         milkAmount = milkAmount,
         fat = fat,
         lr = lr,
@@ -42,9 +34,5 @@ fun FirestorePurchase.toEntityModel(): PurchaseEntity {
         payment = payment,
         balance = balance,
         rateUsed = rateUsed,
-        notes = notes,
-        isSynced = isSynced,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt.takeIf { it.isNullOrBlank() }?.let { LocalDateTime.parse(it) }
+        notes = notes
     )
-}

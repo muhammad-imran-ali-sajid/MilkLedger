@@ -5,11 +5,7 @@ import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
-import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
-import com.miassolutions.milkledger.core.util.toRoundedStr
-import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
 import com.miassolutions.milkledger.databinding.LayoutDashboardPdfBinding
-import com.miassolutions.milkledger.databinding.LayoutSalesReceiptBinding
 import com.miassolutions.milkledger.presentation.dashboard.DashboardSummaryPdf
 import java.io.File
 import java.io.FileOutputStream

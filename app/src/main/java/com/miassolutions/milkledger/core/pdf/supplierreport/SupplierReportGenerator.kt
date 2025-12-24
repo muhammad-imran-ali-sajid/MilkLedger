@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.core.pdf.PdfUtils
 import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
 import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
 

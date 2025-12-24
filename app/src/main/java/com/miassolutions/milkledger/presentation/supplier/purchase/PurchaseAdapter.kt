@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.core.helper.handleZeroData
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
-import com.miassolutions.milkledger.core.util.hide
-import com.miassolutions.milkledger.core.util.show
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.hide
+import com.miassolutions.milkledger.core.extensions.show
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 

@@ -1,87 +1,24 @@
 package com.miassolutions.milkledger.data.mapper
 
+import com.miassolutions.milkledger.core.extensions.toLocalDate
+import com.miassolutions.milkledger.core.extensions.toMillis
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
-import com.miassolutions.milkledger.data.remote.model.FirestoreProfit
 import com.miassolutions.milkledger.domain.model.Profit
-import com.miassolutions.milkledger.presentation.profit.ProfitListModel
-import java.time.LocalDate
 
-
-fun ProfitEntity.toProfit() = with(this) {
+fun ProfitEntity.toDomain(): Profit =
     Profit(
-        profitId = profitId,
-        receivedDate = receivedDate,
-
-        receivedProfit = receivedProfit,
-        notes = notes,
-        isSynced = isSynced,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        netProfit = netProfit
-    )
-}
-
-fun ProfitEntity.toProfitList() = with(this) {
-    ProfitListModel(
-        id = profitId,
-        date = receivedDate,
+        date = dateMillis.toLocalDate(),
         grossProfit = grossProfit,
         netProfit = netProfit,
-        profitReceived = receivedProfit,
-        balance = netProfit - receivedProfit,
+        receivedProfit = receivedProfit,
         notes = notes
     )
-}
 
-
-fun ProfitListModel.toEntity() = with(this) {
+fun Profit.toEntity(): ProfitEntity =
     ProfitEntity(
-        profitId = id,
-        receivedDate = date,
+        dateMillis = date.toMillis(),
         grossProfit = grossProfit,
-        netProfit = netProfit ?: 0.0,
-        receivedProfit = profitReceived,
-        notes = notes,
-
-        )
-}
-
-
-fun Profit.toProfitEntity() = with(this) {
-    ProfitEntity(
-        profitId = profitId,
-        receivedDate = receivedDate,
         netProfit = netProfit,
         receivedProfit = receivedProfit,
-        notes = notes,
-        isSynced = isSynced,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt
+        notes = notes
     )
-}
-
-fun ProfitEntity.toFirestore() = with(this) {
-    FirestoreProfit(
-        profitId = profitId,
-        receivedDate = receivedDate.toString(),
-        netProfit = netProfit,
-        receivedProfit = receivedProfit,
-        notes = notes,
-        isSynced = isSynced,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt
-    )
-}
-
-fun FirestoreProfit.toEntity() = with(this) {
-    ProfitEntity(
-        profitId = profitId,
-        receivedDate = LocalDate.parse(receivedDate),
-        netProfit = netProfit,
-        receivedProfit = receivedProfit,
-        notes = notes,
-        isSynced = isSynced,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt
-    )
-}

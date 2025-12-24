@@ -16,34 +16,53 @@ interface CustomerDao {
     @Query("SELECT * FROM customer_table")
     suspend fun getAllCustomersList(): List<CustomerEntity>
 
-    @Query("SELECT customerRate FROM customer_table WHERE customerId = :id")
+    @Query("""
+        SELECT customerRate 
+        FROM customer_table 
+        WHERE customerId = :id 
+          AND deletedAtMillis IS NULL
+    """)
     fun observeCustomerRate(id: String): Flow<Double>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(customers: List<CustomerEntity>)
 
-
     @Query("DELETE FROM customer_table")
     suspend fun clearAll()
 
-    @Query("DELETE FROM customer_table WHERE customerId = :docId")
-    suspend fun deleteById(docId: String)
+    @Query("DELETE FROM customer_table WHERE customerId = :id")
+    suspend fun deleteById(id: String)
 
     @Upsert
     suspend fun upsert(customer: CustomerEntity)
 
-    @Update
-    suspend fun updateCustomer(customer: CustomerEntity)
+    @Query("""
+        UPDATE customer_table 
+        SET deletedAtMillis = :deletedAtMillis 
+        WHERE customerId = :id
+    """)
+    suspend fun softDeleteById(id: String, deletedAtMillis: Long)
 
-    @Delete
-    suspend fun deleteCustomer(customer: CustomerEntity)
-
-    @Query("SELECT * FROM customer_table ORDER BY sortOrder ASC")
+    @Query("""
+        SELECT * FROM customer_table 
+        WHERE deletedAtMillis IS NULL 
+        ORDER BY sortOrder ASC
+    """)
     fun getAllCustomers(): Flow<List<CustomerEntity>>
 
-    @Query("SELECT * FROM customer_table WHERE customerId = :id LIMIT 1")
+    @Query("""
+        SELECT * FROM customer_table 
+        WHERE customerId = :id 
+          AND deletedAtMillis IS NULL
+        LIMIT 1
+    """)
     fun getCustomerById(id: String): Flow<CustomerEntity?>
 
-    @Query("SELECT * FROM customer_table WHERE customerId = :id LIMIT 1")
+    @Query("""
+        SELECT * FROM customer_table 
+        WHERE customerId = :id 
+          AND deletedAtMillis IS NULL
+        LIMIT 1
+    """)
     suspend fun getCustomerByIdOnce(id: String): CustomerEntity?
 }

@@ -5,9 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.core.util.hide
-import com.miassolutions.milkledger.core.util.show
-import com.miassolutions.milkledger.core.util.toPriceStr
+import com.miassolutions.milkledger.core.extensions.hide
+import com.miassolutions.milkledger.core.extensions.show
+import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.ItemExpensesBinding
 

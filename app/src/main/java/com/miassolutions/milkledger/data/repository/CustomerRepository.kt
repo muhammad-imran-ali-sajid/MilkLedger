@@ -2,19 +2,22 @@ package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
+import com.miassolutions.milkledger.data.local.daos.TransactionDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
+import com.miassolutions.milkledger.data.mapper.toDomain
 import com.miassolutions.milkledger.data.mapper.toEntity
-import com.miassolutions.milkledger.data.mapper.toFirestoreModel
-import com.miassolutions.milkledger.data.mapper.toFirestoreModelList
+import com.miassolutions.milkledger.data.oldmapper.toFirestoreModel
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.domain.model.Customer
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CustomerRepository @Inject constructor(
     private val dao: CustomerDao,
+
     private val firestore: FirestoreSyncHelper
 ) {
 
@@ -24,114 +27,90 @@ class CustomerRepository @Inject constructor(
     }
 
     // ----------------------------------------------------------
-    // READ OPERATIONS
+    // READ
     // ----------------------------------------------------------
 
-    fun getAllCustomers(): Flow<List<CustomerEntity>> = dao.getAllCustomers()
+    fun getAllCustomers(): Flow<List<Customer>> =
+        dao.getAllCustomers()
+            .map { list -> list.map { it.toDomain() } }
 
-    suspend fun getCustomerById(id: String): CustomerEntity? = dao.getCustomerByIdOnce(id)
+    suspend fun getCustomerById(id: String): Customer? =
+        dao.getCustomerByIdOnce(id)?.toDomain()
 
     // ----------------------------------------------------------
-    // WRITE OPERATIONS + FIRESTORE SYNC
+    // WRITE
     // ----------------------------------------------------------
 
-    suspend fun insertCustomer(customer: CustomerEntity) {
-        dao.upsert(customer)
+    suspend fun upsertCustomer(customer: Customer) {
+        val entity = customer.toEntity()
 
-        try {
+        dao.upsert(entity)
+
+        syncSafely {
             firestore.uploadSingle(
                 collectionName = COLLECTION,
-                documentId = customer.customerId,
-                data = customer.toFirestoreModel()
+                documentId = entity.customerId,
+                data = entity.toFirestoreModel()
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Sync failed for insert: ${customer.customerId}", e)
         }
     }
 
-    suspend fun insertAll(customers: List<CustomerEntity>) {
-        dao.upsertAll(customers)
-
-//        try {
-//            firestore.uploadCollection(
-//                collectionName = COLLECTION,
-//                dataList = customers.toFirestoreModelList(),
-//                idExtractor = { it.customerId }
-//            )
-//        } catch (e: Exception) {
-//            Log.e(TAG, "Batch sync failed", e)
-//        }
+    suspend fun upsertCustomers(customers: List<Customer>) {
+        val entities = customers.map { it.toEntity() }
+        dao.upsertAll(entities)
     }
 
-    suspend fun updateCustomer(customer: CustomerEntity) {
-        dao.upsert(customer)
+    suspend fun deleteCustomer(customerId: String) {
+        val deletedAt = System.currentTimeMillis()
 
-        try {
-            firestore.uploadSingle(
-                collectionName = COLLECTION,
-                documentId = customer.customerId,
-                data = customer.toFirestoreModel()
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "Sync failed for update: ${customer.customerId}", e)
-        }
-    }
+        dao.softDeleteById(customerId, deletedAt)
 
-    suspend fun deleteCustomer(customer: CustomerEntity) {
-        dao.deleteCustomer(customer)
-
-        try {
+        syncSafely {
             firestore.deleteDocument(
                 collectionName = COLLECTION,
-                documentId = customer.customerId
+                documentId = customerId
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Sync failed for delete: ${customer.customerId}", e)
         }
     }
 
     // ----------------------------------------------------------
-    // FULL SYNC / RESTORE
+    // SYNC
     // ----------------------------------------------------------
 
-    /**
-     * Restore all customers from Firestore (e.g., on reinstall).
-     */
     suspend fun restoreAllCustomers() {
-        Log.d(TAG, "Restoring customers from Firestore...")
         try {
-            val remoteCustomers = firestore.downloadCollection<CustomerEntity>(COLLECTION)
-            if (remoteCustomers.isNotEmpty()) {
-                dao.upsertAll(remoteCustomers)
+            val remote = firestore.downloadCollection<CustomerEntity>(COLLECTION)
+            if (remote.isNotEmpty()) {
+                dao.upsertAll(remote)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to restore customers", e)
+            Log.e(TAG, "Restore failed", e)
         }
     }
 
-    /**
-     * Full two-way sync (optional, for periodic backup)
-     */
     suspend fun synchronizeCustomers() {
-        Log.d(TAG, "Starting full sync for customers...")
-
         try {
-            // 1️⃣ Download remote
-            val remoteCustomers = firestore.downloadCollection<CustomerEntity>(COLLECTION)
-            if (remoteCustomers.isNotEmpty()) {
-                dao.upsertAll(remoteCustomers)
+            val remote = firestore.downloadCollection<CustomerEntity>(COLLECTION)
+            if (remote.isNotEmpty()) {
+                dao.upsertAll(remote)
             }
 
-            // 2️⃣ Upload local
-            val localCustomers = dao.getAllCustomersList()
-//            firestore.uploadCollection(
-//                collectionName = COLLECTION,
-//                dataList = localCustomers.toFirestoreModelList(),
-//                idExtractor = { it.customerId }
-//            )
-
+            val local = dao.getAllCustomersList()
+            // optional upload back
         } catch (e: Exception) {
             Log.e(TAG, "Full sync failed", e)
+        }
+    }
+
+    // ----------------------------------------------------------
+    // UTILS
+    // ----------------------------------------------------------
+
+    private suspend fun syncSafely(block: suspend () -> Unit) {
+        try {
+            block()
+        } catch (e: Exception) {
+            Log.e(TAG, "Firestore sync failed", e)
         }
     }
 }

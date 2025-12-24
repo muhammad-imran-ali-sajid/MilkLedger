@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.presentation.customer.sales.db.SalesEntity
-import com.miassolutions.milkledger.presentation.customer.sales.repository.SalesRepository
+import com.miassolutions.milkledger.data.local.entities.SalesEntity
+import com.miassolutions.milkledger.data.repository.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate

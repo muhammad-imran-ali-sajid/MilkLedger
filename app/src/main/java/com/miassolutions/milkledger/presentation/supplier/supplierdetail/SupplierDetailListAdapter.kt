@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.graphics.toColorInt
@@ -9,13 +8,12 @@ import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.ui.BaseListAdapter
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
-import com.miassolutions.milkledger.core.util.hide
-import com.miassolutions.milkledger.core.util.show
-import com.miassolutions.milkledger.core.util.toDisplayFormat
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.hide
+import com.miassolutions.milkledger.core.extensions.show
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSupplierDetailBinding
-import java.time.LocalDate
 
 class SupplierDetailListAdapter :
     BaseListAdapter<SupplierDetailModel, ItemSupplierDetailBinding>(

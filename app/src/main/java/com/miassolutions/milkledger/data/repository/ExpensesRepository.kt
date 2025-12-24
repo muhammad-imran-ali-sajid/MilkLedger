@@ -3,8 +3,8 @@ package com.miassolutions.milkledger.data.repository
 import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.data.mapper.toFirestoreModel
-import com.miassolutions.milkledger.data.mapper.toFirestoreModelList
+import com.miassolutions.milkledger.data.oldmapper.toFirestoreModel
+import com.miassolutions.milkledger.data.oldmapper.toFirestoreModelList
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate

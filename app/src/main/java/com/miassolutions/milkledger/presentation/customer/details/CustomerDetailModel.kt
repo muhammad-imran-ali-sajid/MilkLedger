@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.presentation.customer.details
 
 import com.miassolutions.milkledger.core.pdf.customerreport.SalesItemRecord
 import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesItemRecord
-import com.miassolutions.milkledger.core.util.toDisplayFormat
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi
 import java.time.LocalDate

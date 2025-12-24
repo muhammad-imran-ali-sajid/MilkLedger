@@ -9,10 +9,10 @@ import com.miassolutions.milkledger.core.helper.RemoteConfigHelper
 import com.miassolutions.milkledger.core.pdf.dashboardreport.DashboardReportGenerator
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.hide
-import com.miassolutions.milkledger.core.util.show
-import com.miassolutions.milkledger.core.util.toPriceStr
-import com.miassolutions.milkledger.core.util.toRoundedStr
+import com.miassolutions.milkledger.core.extensions.hide
+import com.miassolutions.milkledger.core.extensions.show
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
 import com.miassolutions.milkledger.presentation.datefilter.DateFilterController
