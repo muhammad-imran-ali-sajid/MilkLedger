@@ -1,5 +1,10 @@
 package com.miassolutions.milkledger.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+
+@Parcelize
 data class Customer(
     val id: String? = null, // null for new, not null for existing
     val name: String,
@@ -7,5 +12,5 @@ data class Customer(
     val sortOrder : Int,
     val advanceAmount : Double,
     var isExpanded : Boolean = false
-)
+): Parcelable
 

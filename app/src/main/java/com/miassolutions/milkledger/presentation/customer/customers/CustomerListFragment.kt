@@ -6,6 +6,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomersBinding
 import com.miassolutions.milkledger.domain.model.Customer
+import com.miassolutions.milkledger.presentation.customer.addedit.CustomerFormBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -47,18 +48,15 @@ class CustomerListFragment :
         viewModel.uiEvent.collectState { event ->
             when (event) {
                 CustomerUiEvent.ShowCustomerForm -> {
-                    CustomerFormBottomSheetFragment(
-                        customer = null,
-                        currentCustomers = adapter.currentList
-                    ) {
-                        viewModel.saveCustomer(it)
-
-                    }.show(parentFragmentManager, null)
+                    val fragment = CustomerFormBottomSheetFragment.newInstance(null, adapter.currentList).apply {
+                        onSave = { customer -> viewModel.saveCustomer(customer) }
+                    }
+                    fragment.show(parentFragmentManager, null)
                 }
-
                 is CustomerUiEvent.ShowMessage -> showToast(event.message)
             }
         }
+
     }
 
     private fun showEditDeleteDialog(customer: Customer?) {
@@ -78,28 +76,25 @@ class CustomerListFragment :
 
     private fun handleEditCustomer(customer: Customer?) {
         val currentCustomers = adapter.currentList
-        val fragment = CustomerFormBottomSheetFragment(
-            customer = customer,
-            currentCustomers = currentCustomers,
+        val fragment = CustomerFormBottomSheetFragment.newInstance(customer, currentCustomers).apply {
             onSave = { updatedCustomer ->
                 viewModel.saveCustomer(updatedCustomer)
             }
-        )
+        }
         fragment.show(parentFragmentManager, null)
     }
+
 
     private fun confirmDeleteCustomer(customer: Customer?) {
         if (customer == null) return
 
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Customer")
-            .setMessage("This will erase all records. Are you sure you want to delete ${customer.name}?")
-            .setPositiveButton("Delete") { dialog, _ ->
-                viewModel.deleteCustomer(customer)
-                dialog.dismiss()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+        showDialog(
+            "Delete Customer",
+            "This will erase all records. Are you sure you want to delete ${customer.name}?"
+        ) {
+            viewModel.deleteCustomer(customer)
+        }
+
     }
 
 

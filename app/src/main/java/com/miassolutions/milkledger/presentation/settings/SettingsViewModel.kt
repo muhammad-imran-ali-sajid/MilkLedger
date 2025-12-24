@@ -1,14 +1,12 @@
 package com.miassolutions.milkledger.presentation.settings
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.data.repository.ExpensesRepository
 import com.miassolutions.milkledger.data.repository.NoteRepository
 import com.miassolutions.milkledger.data.repository.SupplierRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import jakarta.inject.Inject
-import kotlinx.coroutines.launch
 
 
 @HiltViewModel
@@ -20,12 +18,5 @@ class SettingsViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    fun manualSync() {
-        viewModelScope.launch {
-            customerRepo.synchronizeCustomers()
-            supplierRepo.synchronizeSuppliers()
-            expensesRepo.synchronizeExpenses()
-            notesRepo.synchronizeNotes()
-        }
-    }
+
 }
