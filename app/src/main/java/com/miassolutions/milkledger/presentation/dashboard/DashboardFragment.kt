@@ -27,7 +27,7 @@ class DashboardFragment :
     private val viewModel by viewModels<DashboardViewModel>()
 
     private lateinit var controller: DateFilterController
-    private val syncViewModel by viewModels<SyncViewModel>()
+
 
     override fun getMenuResId(): Int {
         return R.menu.menu_dashboard
@@ -35,7 +35,7 @@ class DashboardFragment :
 
     override fun setupViews() {
 
-        syncViewModel.startInitialSync() //todo
+
 
         controller = DateFilterController(
             this,

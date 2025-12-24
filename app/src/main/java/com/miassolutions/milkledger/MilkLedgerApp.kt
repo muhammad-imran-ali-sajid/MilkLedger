@@ -6,7 +6,6 @@ import com.google.firebase.FirebaseApp
 import com.miassolutions.milkledger.core.feature.FeatureManager
 import com.miassolutions.milkledger.core.helper.RemoteConfigHelper
 import com.miassolutions.milkledger.data.repository.CustomerRepository
-import com.miassolutions.milkledger.data.repository.DataRepository
 import dagger.hilt.android.HiltAndroidApp
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -17,8 +16,7 @@ import kotlinx.coroutines.launch
 class MilkLedgerApp : Application() {
 
 
-    @Inject
-    lateinit var dataRepository: DataRepository
+
 
 
 

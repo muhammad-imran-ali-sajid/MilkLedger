@@ -26,7 +26,6 @@ import com.miassolutions.milkledger.core.feature.RemoteConfigManager
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
-import com.miassolutions.milkledger.data.repository.DataRepository
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -44,8 +43,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
     @Inject
     lateinit var appPreferences: AppPreferencesManager
 
-    @Inject
-    lateinit var dataRepository: DataRepository
+
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -240,7 +238,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             .setPositiveButton("Yes") { _, _ ->
                 FirebaseAuth.getInstance().signOut()
                 SharedPrefsHelper.clearUserRole(this)
-                dataRepository.stopListeners()
+
 
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags =
