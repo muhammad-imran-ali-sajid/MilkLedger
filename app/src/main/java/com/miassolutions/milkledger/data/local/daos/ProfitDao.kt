@@ -12,6 +12,12 @@ import java.time.LocalDate
 @Dao
 interface ProfitDao {
 
+    @Query("""
+        SELECT IFNULL(SUM(receivedProfit), 0)
+        FROM profit_table
+        WHERE deletedAtMillis IS NULL
+    """)
+    fun getTotalReceivedProfit(): Flow<Double?>
     /* ---------------------------
        Sync / Raw
     --------------------------- */

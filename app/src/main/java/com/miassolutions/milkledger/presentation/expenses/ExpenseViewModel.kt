@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
 import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.data.repository.ExpensesRepository
+import com.miassolutions.milkledger.data.repository.ExpenseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExpenseViewModel @Inject constructor(
-    private val repository: ExpensesRepository
+    private val repository: ExpenseRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ExpensesUiState())
@@ -50,7 +50,7 @@ class ExpenseViewModel @Inject constructor(
     }
 
     fun updateExpense(entry: ExpensesEntity) = viewModelScope.launch {
-        repository.upsertExpense(entry)
+        repository.insertExpense(entry)
     }
 
     fun deleteExpense(expense: ExpensesEntity) = viewModelScope.launch {

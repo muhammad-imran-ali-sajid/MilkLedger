@@ -1,17 +1,20 @@
 package com.miassolutions.milkledger.presentation.customer.addedit
 
+
 import androidx.lifecycle.SavedStateHandle
-import com.miassolutions.milkledger.data.repository.CustomerRepository
-
-
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.data.oldmapper.toEntity
+import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.domain.model.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -92,15 +95,16 @@ class CustomerFormViewModel @Inject constructor(
         if (!isValid) return
 
         val updatedCustomer = Customer(
-            id = customer?.id,
+            id = customer?.id ?: UUID.randomUUID().toString(),
             name = state.name.trim(),
             rate = rate!!,
             sortOrder = position!!,
-            advanceAmount = state.advanceAmount.toDoubleOrNull() ?: 0.0
+            advanceAmount = state.advanceAmount.toDoubleOrNull() ?: 0.0,
+            isDefault = true
         )
 
         viewModelScope.launch {
-            repository.insertCustomer(updatedCustomer.toEntity())
+            repository.upsertCustomer(updatedCustomer)
 
             _uiEvent.emit(CustomerFormUiEvent.Dismiss)
         }

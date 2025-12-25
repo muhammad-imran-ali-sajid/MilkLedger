@@ -1,175 +1,47 @@
 package com.miassolutions.milkledger.data.repository
 
-import android.util.Log
+import com.miassolutions.milkledger.core.extensions.toMillis
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
+import com.miassolutions.milkledger.data.local.daos.TransactionDao
+import com.miassolutions.milkledger.data.mapper.toDomain
+import com.miassolutions.milkledger.domain.model.Transaction
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 
 @Singleton
 class AnalyticsRepository @Inject constructor(
-    private val reportsDao: ReportsDao
+    private val transactionDao: TransactionDao
 ) {
 
-
-    // ───────────────────────────────
-    // 📅 RANGE-BASED QUERIES
-    // ───────────────────────────────
-
-    fun getTotalMilkPurchaseBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTotalMilkPurchaseBetween(start, end)
-
-    fun getTotalMilkSoldBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTotalMilkSoldBetween(start, end)
-
-    fun getAvgFatBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getAvgFatBetween(start, end)
-
-    fun getAvgLrBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getAvgLrBetween(start, end)
-
-    fun getTotalTsBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTsBetween(start, end)
-
-    fun getTotalSalesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTotalSalesBetween(start, end)
-
-    fun getTotalPurchasesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTotalPurchasesBetween(start, end)
-
-    fun getTotalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTotalExpensesBetween(start, end)
-
-    fun getTotalFixedExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTotalFixedExpensesBetween(start, end)
-
-    fun getTotalPersonalExpensesBetween(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTotalPersonalExpensesBetween(start, end)
-
-    fun getTotalMilkWithFatAndLr(start: LocalDate, end: LocalDate): Flow<Double?> =
-        reportsDao.getTotalMilkWithFatAndLrBetween(start, end)
-
-
-    fun getProfitBetween(start: LocalDate, end: LocalDate): Flow<Double> =
-        combine(
-            reportsDao.getTotalSalesBetween(start, end),
-            reportsDao.getTotalPurchasesBetween(start, end),
-            reportsDao.getTotalFixedExpensesBetween(start, end)
-        ) { sales, purchases, expenses ->
-            val totalSales = sales ?: 0.0
-            val totalPurchases = purchases ?: 0.0
-            val totalExpenses = expenses ?: 0.0
-            totalSales - (totalPurchases + totalExpenses)
-        }
-
-    // ───────────────────────────────
-    // 📊 ALL RECORDS QUERIES
-    // ───────────────────────────────
-
-    fun getTotalFat(): Flow<Double?> = reportsDao.getTotalFat()
-    fun getTotalLr(): Flow<Double?> = reportsDao.getTotalLr()
-    fun getTotalTs(): Flow<Double?> = reportsDao.getTotalTs()
-
-
-    fun getTotalMilkPurchaseAll(): Flow<Double?> =
-        reportsDao.getTotalMilkPurchaseAll()
-
-    fun getTotalMilkSoldAll(): Flow<Double?> =
-        reportsDao.getTotalMilkSoldAll()
-
-    fun getTotalSalesAll(): Flow<Double?> =
-        reportsDao.getTotalSalesAll()
-
-    fun getTotalPurchasesAll(): Flow<Double?> =
-        reportsDao.getTotalPurchasesAll()
-
-    fun getTotalFixedExpenses(): Flow<Double?> =
-        reportsDao.getTotalFixedExpensesAll()
-
-    fun getTotalPersonalExpense(): Flow<Double?> = reportsDao.getTotalPersonalExpensesAll()
-
-
-    fun getTotalSalesDaily(date: LocalDate): Flow<Double?> =
-        reportsDao.getTotalSalesDaily(date)
-
-    fun getTotalPurchasesDaily(date: LocalDate): Flow<Double?> =
-        reportsDao.getTotalPurchasesDaily(date)
-
-    fun getTotalBusinessExpensesDaily(date: LocalDate): Flow<Double?> =
-        reportsDao.getTotalBusinessExpensesDaily(date)
-
-
-    fun getProfitToday(date: LocalDate): Flow<Double?> = combine(
-        reportsDao.getTotalSalesDaily(date),
-        reportsDao.getTotalBusinessExpensesDaily(date),
-        reportsDao.getTotalPurchasesDaily(date)
-    ) { s, e, p ->
-        val sales = s ?: 0.0
-        val purchases = p ?: 0.0
-        val expenses = e ?: 0.0
-        Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
-        sales - (purchases + expenses)
-    }
-
-
-    fun getNetProfitDaily(date: LocalDate): Flow<Double?> = combine(
-        reportsDao.getTotalSalesDaily(date),
-        reportsDao.getTotalExpensesDaily(date),
-        reportsDao.getTotalPurchasesDaily(date)
-    ) { s, e, p ->
-        val sales = s ?: 0.0
-        val purchases = p ?: 0.0
-        val expenses = e ?: 0.0
-        Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
-        sales - (purchases + expenses)
-    }
-
+    // -------------------------
+    // CORE PROFIT
+    // -------------------------
 
     fun getNetProfitBetween(start: LocalDate, end: LocalDate): Flow<Double> =
-        combine(
-            reportsDao.getTotalSalesBetween(start, end),
-            reportsDao.getTotalExpensesBetween(start, end),
-            reportsDao.getTotalPurchasesBetween(start, end)
-        ) { s, e, p ->
-            val sales = s ?: 0.0
-            val purchases = p ?: 0.0
-            val expenses = e ?: 0.0
-            Log.d("AnalyticsRepo", "${sales - (purchases + expenses)}")
-            sales - (purchases + expenses)
-        }
+        transactionDao.sumProfitBetween(
+            startMillis = start.toMillis(),
+            endMillis = end.toMillis()
+        )
 
+    fun getNetProfitDaily(date: LocalDate): Flow<Double> =
+        transactionDao.sumProfitForDate(date.toMillis())
 
-    fun getGrossProfitAll(): Flow<Double> =
-        combine(
-            reportsDao.getTotalSalesAll(),
-            reportsDao.getTotalPurchasesAll(),
-            reportsDao.getTotalFixedExpensesAll()
-        ) { sales, purchases, expenses ->
-            val totalSales = sales ?: 0.0
-            val totalPurchases = purchases ?: 0.0
-            val totalExpenses = expenses ?: 0.0
+    fun getNetProfitAll(): Flow<Double> =
+        transactionDao.sumAllProfit()
 
+    // -------------------------
+    // OPTIONAL: RAW LEDGER (DEBUG / ADMIN)
+    // -------------------------
 
-
-            totalSales - (totalPurchases + totalExpenses)
-
-        }
-
-    fun getProfitAllAfterPersonal(): Flow<Double> =
-        combine(
-            reportsDao.getTotalSalesAll(),
-            reportsDao.getTotalPurchasesAll(),
-            reportsDao.getTotalExpensesAll()
-        ) { sales, purchases, expenses ->
-            val totalSales = sales ?: 0.0
-            val totalPurchases = purchases ?: 0.0
-            val totalExpenses = expenses ?: 0.0
-
-
-
-            totalSales - (totalPurchases + totalExpenses)
-
-        }
+    fun getLedgerBetween(start: LocalDate, end: LocalDate): Flow<List<Transaction>> =
+        transactionDao.getBetween(
+            start.toMillis(),
+            end.toMillis()
+        ).map { list -> list.map { it.toDomain() } }
 }
+
+

@@ -1,160 +1,169 @@
 package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
+import com.miassolutions.milkledger.core.extensions.toMillis
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
-import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.data.oldmapper.toFirestoreModel
-import com.miassolutions.milkledger.data.oldmapper.toFirestoreModelList
+import com.miassolutions.milkledger.data.local.daos.TransactionDao
+import com.miassolutions.milkledger.data.local.entities.TransactionEntity
+import com.miassolutions.milkledger.data.local.entities.TransactionType
+import com.miassolutions.milkledger.data.mapper.toDomain
+import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
+import com.miassolutions.milkledger.domain.model.Expense
+import com.miassolutions.milkledger.domain.model.Transaction
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ExpensesRepository @Inject constructor(
-    private val dao: ExpensesDao,
+class ExpenseRepository @Inject constructor(
+    private val expenseDao: ExpensesDao,
+    private val transactionDao: TransactionDao,
     private val firestore: FirestoreSyncHelper
 ) {
 
     companion object {
+        private const val TAG = "ExpenseRepository"
         private const val COLLECTION = "expenses"
-        private const val TAG = "ExpensesRepository"
     }
 
-    // ----------------------------------------------------------
-    // READ OPERATIONS
-    // ----------------------------------------------------------
+    /* ---------------------------------------------------
+       READ
+    --------------------------------------------------- */
 
-    fun getDailyExpenses(date: LocalDate): Flow<List<ExpensesEntity>> =
-        dao.getDailyExpenses(date)
+    fun getExpensesByDate(date: LocalDate): Flow<List<Expense>> =
+        expenseDao.getDailyExpenses(date.toMillis())
+            .map { list -> list.map { it.toDomain() } }
 
-    suspend fun getMonthlyExpenses(date: LocalDate): List<ExpensesEntity> {
-        val ym = "${date.year}-${"%02d".format(date.monthValue)}"
-        return dao.getMonthlyExpenses(ym)
-    }
+    fun getFixedExpenses(date: LocalDate): Flow<List<Expense>> =
+        expenseDao.getFixedExpenses(date.toMillis())
+            .map { list -> list.map { it.toDomain() } }
 
-    fun getFixedExpenses(date: LocalDate): Flow<List<ExpensesEntity>> =
-        dao.getFixedExpenses(date)
+    fun getVariableExpenses(date: LocalDate): Flow<List<Expense>> =
+        expenseDao.getVariableExpenses(date.toMillis())
+            .map { list -> list.map { it.toDomain() } }
 
-    fun getVariableExpenses(date: LocalDate): Flow<List<ExpensesEntity>> =
-        dao.getVariableExpenses(date)
-
-    suspend fun getExpenseById(id: String): ExpensesEntity? =
-        dao.getExpenseById(id)
-
-    fun getAllExpensesForDate(date: LocalDate): Flow<List<ExpensesEntity>> =
-        dao.getAllExpenses(date)
-
-    suspend fun getAllExpensesList(): List<ExpensesEntity> =
-        dao.getAllExpensesList()
-
-    // ----------------------------------------------------------
-    // WRITE OPERATIONS + FIRESTORE SYNC
-    // ----------------------------------------------------------
-
-    suspend fun upsertExpense(expense: ExpensesEntity) {
-        val final = expense.copy(
-            updatedAt = LocalDateTime.now().toString()
+    suspend fun expenseExists(title: String, date: LocalDate): Boolean =
+        expenseDao.expenseExistsForTitleAndDate(
+            title = title,
+            dateMillis = date.toMillis()
         )
 
-        dao.upsert(final) // Insert or update
+    /* ---------------------------------------------------
+       WRITE : EXPENSE
+    --------------------------------------------------- */
 
-        try {
-            firestore.uploadSingle(
-                collectionName = COLLECTION,
-                documentId = final.expenseId,
-                data = final.toFirestoreModel()
+    suspend fun insertExpense(expense: Expense) {
+        val entity = expense.toEntity()
+
+        // 1️⃣ Save expense
+        expenseDao.upsert(entity)
+
+        // 2️⃣ Ledger entry (EXPENSE = money OUT)
+        transactionDao.insert(
+            TransactionEntity(
+                dateMillis = entity.dateMillis,
+                type = TransactionType.EXPENSE,
+                referenceId = entity.expenseId,
+                debit = entity.expenseAmount,
+                credit = 0.0,
+                profitImpact = -entity.expenseAmount,
+                note = entity.expenseTitle
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Sync failed for upsert: ${expense.expenseId}", e)
+        )
+
+        // 3️⃣ Firestore (best-effort)
+//        syncSafely {
+//            firestore.uploadSingle(
+//                collectionName = COLLECTION,
+//                documentId = entity.expenseId,
+//                data = entity.toFirestoreModel() // mapper later
+//            )
+//        }
+    }
+
+    suspend fun updateExpense(expense: Expense) {
+        val entity = expense.toEntity()
+
+        expenseDao.upsert(entity)
+
+        // Append-only ledger
+        transactionDao.insert(
+            TransactionEntity(
+                dateMillis = entity.dateMillis,
+                type = TransactionType.EXPENSE,
+                referenceId = entity.expenseId,
+                debit = entity.expenseAmount,
+                credit = 0.0,
+                profitImpact = -entity.expenseAmount,
+                note = "Expense updated"
+            )
+        )
+    }
+
+    suspend fun deleteExpense(expenseId: String) {
+        val deletedAt = System.currentTimeMillis()
+
+        expenseDao.softDeleteById(expenseId, deletedAt)
+
+        // 🆕 Ledger reversal
+        transactionDao.insert(
+            TransactionEntity(
+                dateMillis = deletedAt,
+                type = TransactionType.EXPENSE_REVERSAL,
+                referenceId = expenseId,
+                debit = 0.0,
+                credit = 0.0,
+                profitImpact = 0.0,
+                note = "Expense deleted"
+            )
+        )
+
+        syncSafely {
+            firestore.deleteDocument(COLLECTION, expenseId)
         }
     }
 
-    suspend fun upsertAllExpenses(expenses: List<ExpensesEntity>) {
-        dao.upsertAll(expenses)
+    /* ---------------------------------------------------
+       ADJUSTMENTS
+    --------------------------------------------------- */
 
-        try {
-            firestore.uploadCollection(
-                collectionName = COLLECTION,
-                dataList = expenses.toFirestoreModelList(),
-                idExtractor = { it.id } // Firestore document id
+    suspend fun addExpenseAdjustment(
+        expenseId: String,
+        amount: Double,
+        note: String?
+    ) {
+        if (amount == 0.0) return
+        if (expenseDao.getExpenseById(expenseId) == null) return
+
+        transactionDao.insert(
+            TransactionEntity(
+                dateMillis = System.currentTimeMillis(),
+                type = TransactionType.PROFIT_ADJUSTMENT,
+                referenceId = expenseId,
+                debit = if (amount > 0) amount else 0.0,
+                credit = if (amount < 0) -amount else 0.0,
+                profitImpact = -amount,
+                note = note
             )
-        } catch (e: Exception) {
-            Log.e(TAG, "Batch sync failed", e)
-        }
+        )
     }
 
-    suspend fun deleteExpense(expense: ExpensesEntity) {
-        dao.deleteExpense(expense)
+    fun observeExpenseAdjustments(expenseId: String): Flow<List<Transaction>> =
+        transactionDao.getAdjustmentsFor(expenseId)
+            .map { list -> list.map { it.toDomain() } }
 
+    /* ---------------------------------------------------
+       HELPERS
+    --------------------------------------------------- */
+
+    private suspend fun syncSafely(block: suspend () -> Unit) {
         try {
-            firestore.deleteDocument(
-                collectionName = COLLECTION,
-                documentId = expense.expenseId
-            )
+            block()
         } catch (e: Exception) {
-            Log.e(TAG, "Sync failed for delete: ${expense.expenseId}", e)
-        }
-    }
-
-    suspend fun insertAll(expenses: List<ExpensesEntity>) {
-        dao.upsertAll(expenses)
-
-        try {
-            firestore.uploadCollection(
-                collectionName = COLLECTION,
-                dataList = expenses,
-                idExtractor = { it.expenseId }
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "Batch sync failed", e)
-        }
-    }
-
-    // ----------------------------------------------------------
-    // FULL SYNC / RESTORE
-    // ----------------------------------------------------------
-
-    /**
-     * Full restore from Firestore (useful on reinstall).
-     */
-    suspend fun restoreAllExpenses() {
-        Log.d(TAG, "Restoring expenses from Firestore...")
-        try {
-            val remoteExpenses = firestore.downloadCollection<ExpensesEntity>(COLLECTION)
-            if (remoteExpenses.isNotEmpty()) {
-                dao.upsertAll(remoteExpenses)
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to restore expenses", e)
-        }
-    }
-
-    /**
-     * Full two-way sync (optional periodic backup).
-     */
-    suspend fun synchronizeExpenses() {
-        Log.d(TAG, "Starting full sync for expenses...")
-
-        try {
-            // 1️⃣ Download remote
-            val remote = firestore.downloadCollection<ExpensesEntity>(COLLECTION)
-            if (remote.isNotEmpty()) {
-                dao.upsertAll(remote)
-            }
-
-            // 2️⃣ Upload local
-            val local = dao.getAllExpensesList()
-            firestore.uploadCollection(
-                collectionName = COLLECTION,
-                dataList = local.toFirestoreModelList(),
-                idExtractor = { it.id }
-            )
-
-        } catch (e: Exception) {
-            Log.e(TAG, "Full sync failed", e)
+            Log.e(TAG, "Firestore sync failed", e)
         }
     }
 }

@@ -10,6 +10,38 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TransactionDao {
 
+    @Query("""
+        SELECT IFNULL(SUM(profitImpact), 0)
+        FROM transaction_table
+        WHERE dateMillis BETWEEN :startMillis AND :endMillis
+          AND deletedAtMillis IS NULL
+    """)
+    fun sumProfitBetween(startMillis: Long, endMillis: Long): Flow<Double>
+
+    @Query("""
+        SELECT IFNULL(SUM(profitImpact), 0)
+        FROM transaction_table
+        WHERE dateMillis = :dateMillis
+          AND deletedAtMillis IS NULL
+    """)
+    fun sumProfitForDate(dateMillis: Long): Flow<Double>
+
+    @Query("""
+        SELECT IFNULL(SUM(profitImpact), 0)
+        FROM transaction_table
+        WHERE deletedAtMillis IS NULL
+    """)
+    fun sumAllProfit(): Flow<Double>
+
+    @Query("""
+        SELECT *
+        FROM transaction_table
+        WHERE dateMillis BETWEEN :startMillis AND :endMillis
+          AND deletedAtMillis IS NULL
+        ORDER BY dateMillis ASC
+    """)
+    fun getBetween(startMillis: Long, endMillis: Long): Flow<List<TransactionEntity>>
+
     // ------------------------------------------------
     // INSERT
     // ------------------------------------------------
