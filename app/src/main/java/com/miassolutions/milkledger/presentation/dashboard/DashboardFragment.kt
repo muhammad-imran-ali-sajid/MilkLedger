@@ -14,9 +14,9 @@ import com.miassolutions.milkledger.core.extensions.show
 import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
-import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
-import com.miassolutions.milkledger.presentation.datefilter.DateFilterController
-import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
+import com.miassolutions.milkledger.core.datefilter.DateFilterCallback
+import com.miassolutions.milkledger.core.datefilter.DateFilterController
+import com.miassolutions.milkledger.core.datefilter.DatePeriod
 import com.miassolutions.milkledger.presentation.stats.toPdfSummary
 import dagger.hilt.android.AndroidEntryPoint
 

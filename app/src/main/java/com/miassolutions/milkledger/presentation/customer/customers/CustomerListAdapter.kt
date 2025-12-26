@@ -19,32 +19,32 @@ class CustomerListAdapter(
         private val binding: ItemCustomerBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(customer: Customer) = with(binding) {
-            // Bind main info
-            tvCustomerName.text = customer.name
-            tvPosition.text = "${customer.sortOrder}"
-            tvCustomerRate.text = "${"%.2f".format(customer.rate)}"
-            tvAdvanceAmount.text = "${"%.2f".format(customer.advanceAmount)}"
-
-            // Handle expand/collapse visibility
-            layoutExpandable.visibility = if (customer.isExpanded) View.VISIBLE else View.GONE
-            imgArrow.rotation = if (customer.isExpanded) 180f else 0f
-
-            // Set click listeners
-            root.setOnClickListener {
-                val newList = currentList.toMutableList()
-                val updated = customer.copy(isExpanded = !customer.isExpanded)
-                newList[absoluteAdapterPosition] = updated
-
-                // Smooth expand/collapse animation
-                TransitionManager.beginDelayedTransition(root as ViewGroup, AutoTransition())
-                submitList(newList)
-            }
-
-            root.setOnLongClickListener {
-                onEditClick(customer)
-            }
-        }
+//        fun bind(customer: Customer) = with(binding) {
+//            // Bind main info
+//            tvCustomerName.text = customer.name
+//            tvPosition.text = "${customer.sortOrder}"
+//            tvCustomerRate.text = "${"%.2f".format(customer.rate)}"
+//            tvAdvanceAmount.text = "${"%.2f".format(customer.advanceAmount)}"
+//
+//            // Handle expand/collapse visibility
+//            layoutExpandable.visibility = if (customer.isExpanded) View.VISIBLE else View.GONE
+//            imgArrow.rotation = if (customer.isExpanded) 180f else 0f
+//
+//            // Set click listeners
+//            root.setOnClickListener {
+//                val newList = currentList.toMutableList()
+//                val updated = customer.copy(isExpanded = !customer.isExpanded)
+//                newList[absoluteAdapterPosition] = updated
+//
+//                // Smooth expand/collapse animation
+//                TransitionManager.beginDelayedTransition(root as ViewGroup, AutoTransition())
+//                submitList(newList)
+//            }
+//
+//            root.setOnLongClickListener {
+//                onEditClick(customer)
+//            }
+//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomerViewHolder {
@@ -53,7 +53,7 @@ class CustomerListAdapter(
     }
 
     override fun onBindViewHolder(holder: CustomerViewHolder, position: Int) {
-        holder.bind(getItem(position))
+//        holder.bind(getItem(position))
     }
 }
 

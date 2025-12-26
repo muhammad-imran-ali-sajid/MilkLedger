@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 import com.miassolutions.milkledger.core.pdf.purchasereport.PdfPurchaseItemRecord
 import com.miassolutions.milkledger.core.pdf.supplierreport.PdfSupplierItemRecord
 import com.miassolutions.milkledger.core.extensions.toDisplayFormat
+import com.miassolutions.milkledger.core.extensions.toLocalDate
 import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import java.time.LocalDate
@@ -26,7 +27,7 @@ data class SupplierDetailModel(
 
 fun PurchaseWithSupplier.toSupplierDetailModel(): SupplierDetailModel = SupplierDetailModel(
 
-    date = this.purchase.date,
+    date = this.purchase.dateMillis.toLocalDate(),
     milkAmount = this.purchase.milkAmount,
     fat = this.purchase.fat,
     lr = this.purchase.lr,

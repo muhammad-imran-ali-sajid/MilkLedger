@@ -50,21 +50,21 @@ class SalesEntryAdapter(
         binding.apply {
             item.data.apply {
 
-                if (receivedDate != null) {
-                    tvReceiveDate.show()
-                    tvReceiveDate.text = "(${receivedDate.toDisplayDate()})"
-                } else {
-                    tvReceiveDate.hide()
-                }
-
-                val payment = received.toPriceStr()
-
-                tvName.text = name
-                tvMilk.text = volume.toRoundedStr()
-                tvDeduction.text = deduction.toRoundedStr()
-                tvNetMilk.text = netVolume.toRoundedStr()
-                tvPrice.text = price.toPriceStr()
-                tvPayment.text = payment
+//                if (receivedDate != null) {
+//                    tvReceiveDate.show()
+//                    tvReceiveDate.text = "(${receivedDate.toDisplayDate()})"
+//                } else {
+//                    tvReceiveDate.hide()
+//                }
+//
+//                val payment = received.toPriceStr()
+//
+//                tvName.text = name
+//                tvMilk.text = volume.toRoundedStr()
+//                tvDeduction.text = deduction.toRoundedStr()
+//                tvNetMilk.text = netVolume.toRoundedStr()
+//                tvPrice.text = price.toPriceStr()
+//                tvPayment.text = payment
 
 
                 val balance = item.accumulatedBalance
@@ -73,10 +73,10 @@ class SalesEntryAdapter(
                 tvBalance.setTextColor(textColor(balance))
 
 
-                btnBalance.setOnLongClickListener {
-                    onBalanceClick(customerId, name)
-                    true
-                }
+//                btnBalance.setOnLongClickListener {
+//                    onBalanceClick(customerId, name)
+//                    true
+//                }
 
                 if (notes.isNullOrBlank()) {
                     tvNotes.hide()
@@ -86,19 +86,19 @@ class SalesEntryAdapter(
                 }
 
 
-                btnCustomerDetail.setOnClickListener {
-                    navToDetailClick(customerId, name)
-
-                }
-
-                btnEditForm.setOnClickListener {
-                    onEditClick(item.data)
-                }
-
-                tvName.setOnLongClickListener {
-                    onDeleteClick(item.data.saleId)
-                    true
-                }
+//                btnCustomerDetail.setOnClickListener {
+//                    navToDetailClick(customerId, name)
+//
+//                }
+//
+//                btnEditForm.setOnClickListener {
+//                    onEditClick(item.data)
+//                }
+//
+//                tvName.setOnLongClickListener {
+//                    onDeleteClick(item.data.saleId)
+//                    true
+//                }
 
 
             }

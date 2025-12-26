@@ -14,7 +14,7 @@ data class CustomerEntity(
     val customerRate: Double,
     val sortOrder: Int,
     val advanceAmount: Double,
-    val isDefault: Boolean,
+    val isDefault: Boolean, // permanent true; temporary false
 
     // System fields
     val createdAtMillis: Long = System.currentTimeMillis(),

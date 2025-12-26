@@ -21,7 +21,7 @@ class SaleAddViewModel @Inject constructor(
     private val _isDuplicate = MutableLiveData<Boolean>()
     val isDuplicate: LiveData<Boolean> get() = _isDuplicate
 
-    val customers : LiveData<List<CustomerEntity>> = repository.observeCustomersList().asLiveData()
+//    val customers : LiveData<List<CustomerEntity>> = repository.observeCustomersList().asLiveData()
 
     fun isDuplicateSale(customerId: String?, date: LocalDate?) {
         viewModelScope.launch {
@@ -51,8 +51,8 @@ class SaleAddViewModel @Inject constructor(
 
 
     fun addSale(sale: SalesEntity) {
-        viewModelScope.launch {
-            repository.insertSale(sale)
-        }
+//        viewModelScope.launch {
+//            repository.insertSale(sale)
+//        }
     }
 }

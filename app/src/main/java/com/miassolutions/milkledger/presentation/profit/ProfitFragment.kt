@@ -13,9 +13,9 @@ import com.miassolutions.milkledger.core.extensions.toDisplayFormat
 import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
 import com.miassolutions.milkledger.databinding.LayoutSummaryProfitBinding
-import com.miassolutions.milkledger.presentation.datefilter.DateFilterCallback
-import com.miassolutions.milkledger.presentation.datefilter.DateFilterController
-import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
+import com.miassolutions.milkledger.core.datefilter.DateFilterCallback
+import com.miassolutions.milkledger.core.datefilter.DateFilterController
+import com.miassolutions.milkledger.core.datefilter.DatePeriod
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -51,7 +51,7 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
             .setTitle("Delete Entry")
             .setMessage("Are you sure to delete this entry?")
             .setPositiveButton("Yes") { d, _ ->
-                viewModel.deleteProfit(profit.id)
+//                viewModel.deleteProfit(profit.id)
                 d.dismiss()
             }
             .setNegativeButton("Cancel", null)
@@ -155,7 +155,7 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
     private fun editProfitRecord(profit: ProfitListModel) {
 
         val sheet = AddEditProfitBottomSheet.newInstance(profit)
-        sheet.onSave = { viewModel.saveProfit(it) }
+//        sheet.onSave = { viewModel.saveProfit(it) }
 
         sheet.show(parentFragmentManager, null)
     }
@@ -166,7 +166,7 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
         binding.fabAddProfit.setOnClickListener {
             val sheet = AddEditProfitBottomSheet()
             sheet.onSave = { profit ->
-                viewModel.saveProfit(profit)
+//                viewModel.saveProfit(profit)
             }
 
             sheet.show(parentFragmentManager, null)
@@ -209,7 +209,7 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
 
 
     override fun onPeriodChanged(period: DatePeriod) {
-        viewModel.loadData(period)
+//        viewModel.loadData(period)
     }
 
 

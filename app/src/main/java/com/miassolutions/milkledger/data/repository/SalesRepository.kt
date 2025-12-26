@@ -13,8 +13,10 @@ import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.data.remote.mapper.FirestoreSaleModel
 import com.miassolutions.milkledger.domain.model.Sale
 import com.miassolutions.milkledger.domain.model.Transaction
+import com.miassolutions.milkledger.presentation.expenses.data.toDomain
+import com.miassolutions.milkledger.presentation.expenses.data.toEntity
 import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate

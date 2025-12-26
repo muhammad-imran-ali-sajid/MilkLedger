@@ -2,8 +2,6 @@ package com.miassolutions.milkledger.presentation.customer.customers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.data.oldmapper.toDomain
-import com.miassolutions.milkledger.data.oldmapper.toEntity
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.domain.model.Customer
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +9,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,6 +23,8 @@ class CustomerListViewModel @Inject constructor(
     private val _uiEvent = MutableSharedFlow<CustomerUiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
+    private var allCustomers: List<Customer> = emptyList()
+
     init {
         observeCustomers()
     }
@@ -33,14 +32,12 @@ class CustomerListViewModel @Inject constructor(
     private fun observeCustomers() {
         viewModelScope.launch {
             repository.getAllCustomers()
-                .map { list -> list.map { it.toDomain() } } // Convert to domain model
                 .collect { customers ->
                     allCustomers = customers
-                    _uiState.value =
-                        _uiState.value.copy(
-                            customers = customers,
-                            displayedCustomers = customers
-                        )
+                    _uiState.value = _uiState.value.copy(
+                        customers = customers,
+                        displayedCustomers = customers
+                    )
                 }
         }
     }
@@ -51,38 +48,11 @@ class CustomerListViewModel @Inject constructor(
         }
     }
 
-    private var allCustomers: List<Customer> = emptyList()
-
-    fun saveCustomer(customer: Customer) {
-        viewModelScope.launch {
-            try {
-                val existing = customer.id?.let { repository.getCustomerById(it) }
-
-                if (existing != null) {
-                    repository.updateCustomer(customer.toEntity())
-                    _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer updated"))
-                } else {
-                    // determine next sort order
-                    val nextSortOrder = (allCustomers.maxOfOrNull { it.sortOrder } ?: 0) + 1
-                    repository.insertCustomer(customer.toEntity().copy(sortOrder = nextSortOrder))
-                    _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer added"))
-                }
-            } catch (e: Exception) {
-                _uiEvent.emit(CustomerUiEvent.ShowMessage("Error saving customer"))
-            }
-        }
-    }
-
     fun deleteCustomer(customer: Customer) {
         viewModelScope.launch {
-            try {
-                repository.deleteCustomer(customer.toEntity())
-                _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer deleted"))
-            } catch (e: Exception) {
-                _uiEvent.emit(CustomerUiEvent.ShowMessage("Error deleting customer"))
-            }
+            repository.deleteCustomer(customer.id)
+            _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer deleted"))
         }
     }
-
-
 }
+

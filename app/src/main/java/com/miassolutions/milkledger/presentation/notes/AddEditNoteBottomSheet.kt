@@ -50,79 +50,79 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun setupUI() {
-        // Get note from arguments (for edit mode)
-        currentNote = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            arguments?.getParcelable("note", NoteEntity::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            arguments?.getParcelable("note")
-        }
-
-        currentNote?.let { note ->
-            binding.etNoteTitle.setText(note.title)
-            binding.etNoteContent.setText(note.content)
-            note.alarmDateTime?.let {
-                binding.tvAlarmDateAndTime.text = it.format(dateTimeFormatter)
-                selectedDateTime = it // restore previous alarm time
-            }
-            binding.btnSaveNote.text = "Update Note"
-        }
-
-        // Pick alarm date
-        binding.tvAlarmDateAndTime.setOnClickListener {
-            val safeDate = selectedDateTime?.toLocalDate() ?: LocalDate.now()
-            val safeTime = selectedDateTime?.toLocalTime() ?: LocalTime.now()
-
-            showFutureDatePicker(
-                initialDate = safeDate,
-                onPicked = { pickedDate ->
-                    showMaterialTimePicker(
-                        fragmentManager = parentFragmentManager,
-                        initialTime = safeTime
-                    ) { pickedTime ->
-                        val alarmDateTime = pickedDate.atTime(pickedTime)
-                        if (alarmDateTime.isBefore(LocalDateTime.now())) {
-                            showSnackbar("Please select a future time.")
-                            return@showMaterialTimePicker
-                        }
-
-                        selectedDateTime = alarmDateTime
-                        binding.tvAlarmDateAndTime.text = alarmDateTime.format(dateTimeFormatter)
-                        checkAndScheduleAlarm(alarmDateTime, binding.etNoteTitle.text.toString(), binding.etNoteContent.text.toString())
-                    }
-                }
-            )
-        }
-
-
-        // Save note
-        binding.btnSaveNote.setOnClickListener {
-            val title = binding.etNoteTitle.text.toString().trim()
-            val content = binding.etNoteContent.text.toString().trim()
-
-
-            if (title.isEmpty()) {
-                showSnackbar("Please enter a title")
-                return@setOnClickListener
-            }
-
-            if (selectedDateTime == null) {
-                showSnackbar("Please set alarm date and time")
-                return@setOnClickListener
-            }
-
-            val newNote = currentNote?.copy(
-                title = title,
-                content = content,
-                alarmDateTime = selectedDateTime
-            ) ?: NoteEntity(
-                title = title,
-                content = content,
-                alarmDateTime = selectedDateTime
-            )
-
-            viewModel.addOrUpdateNote(newNote)
-        }
+//        // Get note from arguments (for edit mode)
+//        currentNote = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            arguments?.getParcelable("note", NoteEntity::class.java)
+//        } else {
+//            @Suppress("DEPRECATION")
+//            arguments?.getParcelable("note")
+//        }
+//
+//        currentNote?.let { note ->
+//            binding.etNoteTitle.setText(note.title)
+//            binding.etNoteContent.setText(note.content)
+//            note.alarmDateTime?.let {
+//                binding.tvAlarmDateAndTime.text = it.format(dateTimeFormatter)
+//                selectedDateTime = it // restore previous alarm time
+//            }
+//            binding.btnSaveNote.text = "Update Note"
+//        }
+//
+//        // Pick alarm date
+//        binding.tvAlarmDateAndTime.setOnClickListener {
+//            val safeDate = selectedDateTime?.toLocalDate() ?: LocalDate.now()
+//            val safeTime = selectedDateTime?.toLocalTime() ?: LocalTime.now()
+//
+//            showFutureDatePicker(
+//                initialDate = safeDate,
+//                onPicked = { pickedDate ->
+//                    showMaterialTimePicker(
+//                        fragmentManager = parentFragmentManager,
+//                        initialTime = safeTime
+//                    ) { pickedTime ->
+//                        val alarmDateTime = pickedDate.atTime(pickedTime)
+//                        if (alarmDateTime.isBefore(LocalDateTime.now())) {
+//                            showSnackbar("Please select a future time.")
+//                            return@showMaterialTimePicker
+//                        }
+//
+//                        selectedDateTime = alarmDateTime
+//                        binding.tvAlarmDateAndTime.text = alarmDateTime.format(dateTimeFormatter)
+//                        checkAndScheduleAlarm(alarmDateTime, binding.etNoteTitle.text.toString(), binding.etNoteContent.text.toString())
+//                    }
+//                }
+//            )
+//        }
+//
+//
+//        // Save note
+//        binding.btnSaveNote.setOnClickListener {
+//            val title = binding.etNoteTitle.text.toString().trim()
+//            val content = binding.etNoteContent.text.toString().trim()
+//
+//
+//            if (title.isEmpty()) {
+//                showSnackbar("Please enter a title")
+//                return@setOnClickListener
+//            }
+//
+//            if (selectedDateTime == null) {
+//                showSnackbar("Please set alarm date and time")
+//                return@setOnClickListener
+//            }
+//
+//            val newNote = currentNote?.copy(
+//                title = title,
+//                content = content,
+//                alarmDateTime = selectedDateTime
+//            ) ?: NoteEntity(
+//                title = title,
+//                content = content,
+//                alarmDateTime = selectedDateTime
+//            )
+//
+//            viewModel.addOrUpdateNote(newNote)
+//        }
     }
 
     private fun checkAndScheduleAlarm(
@@ -169,7 +169,7 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
             return AddEditNoteBottomSheet().apply {
                 note?.let {
                     arguments = Bundle().apply {
-                        putParcelable("note", it)
+//                        putParcelable("note", it)
                     }
                 }
             }

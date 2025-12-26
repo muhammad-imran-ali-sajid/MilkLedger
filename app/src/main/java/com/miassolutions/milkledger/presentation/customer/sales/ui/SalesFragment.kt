@@ -20,7 +20,7 @@ import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
 import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
 import com.miassolutions.milkledger.domain.model.Sale
-import com.miassolutions.milkledger.presentation.customer.details.toSaleRecordList
+import com.miassolutions.milkledger.presentation.customer.customerdetail.toSaleRecordList
 import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -225,44 +225,44 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
 
 
     private fun generateReport() {
-        val state = viewModel.uiState.value
-        val filteredList: List<SaleUi> = state.salesUi
-
-
-
-        val recordList = filteredList.toSaleRecordList()
-
-        if (recordList.isEmpty()) {
-
-            showSnackbar("The record is empty. PDF can't be generated.")
-            return
-        }
-
-        val pdfSummary = pdfSummary(
-            totalQty = state.totalMilk,
-            totalDeduction = state.totalDeduction,
-            totalAmount = state.grandSaleTotalForDate,
-            totalPaid = state.totalPaid,
-            balanceDue = state.totalBalance
-
-        )
-
-        val data = SalesReportPdf(
-            footerNote = "Developed by: miassolutions contact no: 03127430906",
-            date = state.currentDate.toDisplayFormat(),
-            recordList = recordList,
-            salesSummary = pdfSummary
-        )
-
-
-        TodaySalesPdf.generateAndSharePdf(
-            context = requireContext(),
-            data = data,
-            baseName = "Customer",
-            showLogo = false,
-        )
-
-        showToast("Generating pdf report...")
+//        val state = viewModel.uiState.value
+//        val filteredList: List<SaleUi> = state.salesUi
+//
+//
+//
+//        val recordList = filteredList.toSaleRecordList()
+//
+//        if (recordList.isEmpty()) {
+//
+//            showSnackbar("The record is empty. PDF can't be generated.")
+//            return
+//        }
+//
+//        val pdfSummary = pdfSummary(
+//            totalQty = state.totalMilk,
+//            totalDeduction = state.totalDeduction,
+//            totalAmount = state.grandSaleTotalForDate,
+//            totalPaid = state.totalPaid,
+//            balanceDue = state.totalBalance
+//
+//        )
+//
+//        val data = SalesReportPdf(
+//            footerNote = "Developed by: miassolutions contact no: 03127430906",
+//            date = state.currentDate.toDisplayFormat(),
+//            recordList = recordList,
+//            salesSummary = pdfSummary
+//        )
+//
+//
+//        TodaySalesPdf.generateAndSharePdf(
+//            context = requireContext(),
+//            data = data,
+//            baseName = "Customer",
+//            showLogo = false,
+//        )
+//
+//        showToast("Generating pdf report...")
     }
 
     private fun pdfSummary(

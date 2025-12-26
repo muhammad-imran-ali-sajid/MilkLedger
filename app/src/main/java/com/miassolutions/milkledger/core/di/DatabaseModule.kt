@@ -4,18 +4,17 @@ import android.content.Context
 import androidx.room.Room
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.data.local.AppDatabase
-import com.miassolutions.milkledger.data.local.MIGRATION_1_2
-import com.miassolutions.milkledger.data.local.MIGRATION_2_3
-import com.miassolutions.milkledger.data.local.Migration_3_4
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
 import com.miassolutions.milkledger.data.local.daos.ProfitDao
+import com.miassolutions.milkledger.data.local.daos.ProfitReceiptDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.StatsDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
+import com.miassolutions.milkledger.data.local.daos.TransactionDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,7 +33,7 @@ object DatabaseModule {
         @ApplicationContext appContext: Context,
     ): AppDatabase =
         Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, Migration_3_4)
+            .fallbackToDestructiveMigration(true)
             .build()
 
     @Singleton
@@ -73,5 +72,12 @@ object DatabaseModule {
     @Provides
     fun provideStateDao(db: AppDatabase): StatsDao = db.stateDao()
 
+    @Singleton
+    @Provides
+    fun provideTransactionDao(db: AppDatabase): TransactionDao = db.transactionDao()
+
+    @Singleton
+    @Provides
+    fun provideProfitReceiptDao(db: AppDatabase): ProfitReceiptDao = db.profitReceiptDao()
 
 }

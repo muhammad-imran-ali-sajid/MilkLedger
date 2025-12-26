@@ -13,7 +13,7 @@ import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
 import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity

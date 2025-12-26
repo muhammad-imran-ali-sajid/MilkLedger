@@ -30,25 +30,25 @@ class NotesListAdapter(
     inner class NoteViewHolder(private val binding: ItemNoteBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(note: NoteEntity) = with(binding) {
-            tvNoteTitle.text = note.title
-            tvNoteContent.text = note.content
-            tvNoteDate.text = "Dated: ${note.createdDate.format(dateFormatter)}"
-            tvAlarm.text = note.alarmDateTime?.format(dateTimeFormatter) ?: "No Alarm"
-
-
-            val pastColor = "#FF9100".toColorInt()
-
-            if (LocalDateTime.now() > note.alarmDateTime) tillTitle.setBackgroundColor(pastColor) else {
-                tillTitle.setBackgroundColor("#00000000".toColorInt())
-            }
-
-            root.setOnClickListener { onItemClick(note) }
-
-            root.setOnLongClickListener { onDeleteClick(note); true }
-
-
-        }
+//        fun bind(note: NoteEntity) = with(binding) {
+//            tvNoteTitle.text = note.title
+//            tvNoteContent.text = note.content
+//            tvNoteDate.text = "Dated: ${note.createdDate.format(dateFormatter)}"
+//            tvAlarm.text = note.alarmDateTime?.format(dateTimeFormatter) ?: "No Alarm"
+//
+//
+//            val pastColor = "#FF9100".toColorInt()
+//
+//            if (LocalDateTime.now() > note.alarmDateTime) tillTitle.setBackgroundColor(pastColor) else {
+//                tillTitle.setBackgroundColor("#00000000".toColorInt())
+//            }
+//
+//            root.setOnClickListener { onItemClick(note) }
+//
+//            root.setOnLongClickListener { onDeleteClick(note); true }
+//
+//
+//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -59,12 +59,12 @@ class NotesListAdapter(
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-        holder.bind(getItem(position))
+//        holder.bind(getItem(position))
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<NoteEntity>() {
         override fun areItemsTheSame(oldItem: NoteEntity, newItem: NoteEntity) =
-            oldItem.id == newItem.id
+            oldItem.noteId == newItem.noteId
 
         override fun areContentsTheSame(oldItem: NoteEntity, newItem: NoteEntity) =
             oldItem == newItem

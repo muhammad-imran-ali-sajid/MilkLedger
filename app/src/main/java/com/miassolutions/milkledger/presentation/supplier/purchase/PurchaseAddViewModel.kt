@@ -27,7 +27,7 @@ class PurchaseAddViewModel @Inject constructor(
     val isDuplicate: LiveData<Boolean> get() = _isDuplicate
 
 
-    val suppliers: LiveData<List<SupplierEntity>> = repository.observeSuppliersList().asLiveData()
+//    val suppliers: LiveData<List<SupplierEntity>> = repository.observeSuppliersList().asLiveData()
 
     fun isDuplicatePurchase(supplierId: String?, date: LocalDate?) {
         viewModelScope.launch {
@@ -55,9 +55,9 @@ class PurchaseAddViewModel @Inject constructor(
 
 
     fun addPurchase(purchase: PurchaseEntity) {
-        viewModelScope.launch {
-            repository.insertPurchase(purchase)
-        }
+//        viewModelScope.launch {
+//            repository.insertPurchase(purchase)
+//        }
     }
 
 

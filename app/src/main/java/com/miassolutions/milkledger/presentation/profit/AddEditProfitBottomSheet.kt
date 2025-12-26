@@ -58,7 +58,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         existingProfit = arguments?.getParcelable(ARG_PROFIT)
 
-        viewModel.calculateProfit(receivedSelectedDate)
+//        viewModel.calculateProfit(receivedSelectedDate)
 
         setupUI()
         setupListeners()
@@ -81,22 +81,22 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.todayGrossProfit.collectLatest {
-                        binding.tvGrossProfit.text = it.toPriceStr()
-                    }
-                }
-
-                launch {
-                    viewModel.todayNetProfit.collectLatest {
-
-                        binding.tvNetProfit.text = it.toPriceStr()
-                        binding.etProfitReceived.setHint(it.toPriceStr())
-                        binding.etProfitLayout.isExpandedHintEnabled = false
-                    }
-                }
-            }
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                launch {
+//                    viewModel.todayGrossProfit.collectLatest {
+//                        binding.tvGrossProfit.text = it.toPriceStr()
+//                    }
+//                }
+//
+//                launch {
+//                    viewModel.todayNetProfit.collectLatest {
+//
+//                        binding.tvNetProfit.text = it.toPriceStr()
+//                        binding.etProfitReceived.setHint(it.toPriceStr())
+//                        binding.etProfitLayout.isExpandedHintEnabled = false
+//                    }
+//                }
+//            }
         }
 
 
@@ -109,7 +109,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
                 onPicked = { selectedDate: LocalDate ->
                     tvDate.text = selectedDate.toDisplayFormat()
                     receivedSelectedDate = selectedDate
-                    viewModel.setDate(selectedDate)
+//                    viewModel.setDate(selectedDate)
                 }
             )
 

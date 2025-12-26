@@ -9,12 +9,12 @@ import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
-import com.miassolutions.milkledger.data.oldmapper.toSalesList
+
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
 import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi
 import com.miassolutions.milkledger.data.repository.SalesRepository
 import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -77,22 +77,22 @@ class SalesViewModel @Inject constructor(
     // Update sale manually
     // -------------------------------------------------------------------------
     fun updateSaleManually(updated: SalesEntity) {
-        viewModelScope.launch {
-            val newPrice = MilkCalculationUtils.calculateCustomerPrice(
-                volume = updated.volume,
-                deduction = updated.deduction,
-                rate = updated.rateUsed
-            )
-
-            val netMilk = updated.volume - updated.deduction
-
-            val final = updated.copy(
-                price = newPrice,
-                netMilk = netMilk
-            )
-
-            repository.updateSale(final)
-        }
+//        viewModelScope.launch {
+//            val newPrice = MilkCalculationUtils.calculateCustomerPrice(
+//                volume = updated.volume,
+//                deduction = updated.deduction,
+//                rate = updated.rateUsed
+//            )
+//
+//            val netMilk = updated.volume - updated.deduction
+//
+//            val final = updated.copy(
+//                price = newPrice,
+//                netMilk = netMilk
+//            )
+//
+//            repository.updateSale(final)
+//        }
     }
 
     // -------------------------------------------------------------------------
@@ -123,82 +123,82 @@ class SalesViewModel @Inject constructor(
 
     private fun observeSalesForDate(date: LocalDate) {
         salesJob?.cancel()
-        salesJob = viewModelScope.launch {
-
-            _uiState.update { it.copy(isLoading = true) }
-
-            repository.getSalesByDate(date).collectLatest { list ->
-
-                val sorted = list.sortedBy { it.customer.sortOrder }
-                val salesList = sorted.map { it.toSalesList() }
-
-
-                val historyCache = mutableMapOf<String, List<SaleWithCustomer>>()
-
-                val uiList = mutableListOf<SaleUi>()
-
-                for (item in salesList) {
-                    val customerId = item.customerId
-
-                    val history = historyCache.getOrPut(customerId) {
-                        repository.getBalanceHistoryOnce(customerId)
-                    }
-
-                    var runningBalance = 0.0
-                    for (entry in history) {
-                        if (!entry.sale.date.isAfter(item.saleDate)) {
-                            runningBalance += entry.sale.balance
-                        } else {
-                            break
-                        }
-                    }
-
-                    uiList.add(
-                        SaleUi(item, runningBalance)
-                    )
-                }
-
-
-                val allRunningBalance = uiList.sumOf { it.accumulatedBalance }
-
-
-                val totalVolume = salesList.sumOf { it.volume }
-                val totalDeduction = salesList.sumOf { it.deduction }
-                val totalNet = salesList.sumOf { it.netVolume }
-                val totalPrice = salesList.sumOf { it.price }
-                val received = salesList.sumOf { it.received }
-                val totalBalance = salesList.sumOf { it.balance }
-
-                val purchaseTotalVolume =
-                    purchaseRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
-
-                val avgRate =
-                    if (purchaseTotalVolume > 0) totalPrice / purchaseTotalVolume else 0.0
-
-                _uiState.update {
-                    it.copy(
-                        currentDate = date,
-                        salesForDate = salesList,
-                        salesUi = uiList,
-                        totalMilk = totalVolume,
-                        totalDeduction = totalDeduction,
-                        totalNetMilk = totalNet,
-                        grandSaleTotalForDate = totalPrice,
-                        receivedAmount = received,
-                        totalBalance = allRunningBalance,
-                        avgRatePerLiter = avgRate,
-                        pdfSalesSummary = PdfSalesSummary(
-                            totalQty = totalVolume.toRoundedStr(),
-                            totalDeduction = totalDeduction.toRoundedStr(),
-                            totalAmount = totalPrice.toPriceStr(),
-                            totalPaid = received.toPriceStr(),
-                            balanceDue = totalBalance.toPriceStr()
-                        ),
-                        isLoading = false
-                    )
-                }
-            }
-        }
+//        salesJob = viewModelScope.launch {
+//
+//            _uiState.update { it.copy(isLoading = true) }
+//
+//            repository.getSalesByDate(date).collectLatest { list ->
+//
+//                val sorted = list.sortedBy { it.customer.sortOrder }
+//                val salesList = sorted.map { it.toSalesList() }
+//
+//
+//                val historyCache = mutableMapOf<String, List<SaleWithCustomer>>()
+//
+//                val uiList = mutableListOf<SaleUi>()
+//
+//                for (item in salesList) {
+//                    val customerId = item.customerId
+//
+//                    val history = historyCache.getOrPut(customerId) {
+//                        repository.getBalanceHistoryOnce(customerId)
+//                    }
+//
+//                    var runningBalance = 0.0
+//                    for (entry in history) {
+//                        if (!entry.sale.date.isAfter(item.saleDate)) {
+//                            runningBalance += entry.sale.balance
+//                        } else {
+//                            break
+//                        }
+//                    }
+//
+//                    uiList.add(
+//                        SaleUi(item, runningBalance)
+//                    )
+//                }
+//
+//
+//                val allRunningBalance = uiList.sumOf { it.accumulatedBalance }
+//
+//
+//                val totalVolume = salesList.sumOf { it.volume }
+//                val totalDeduction = salesList.sumOf { it.deduction }
+//                val totalNet = salesList.sumOf { it.netVolume }
+//                val totalPrice = salesList.sumOf { it.price }
+//                val received = salesList.sumOf { it.received }
+//                val totalBalance = salesList.sumOf { it.balance }
+//
+//                val purchaseTotalVolume =
+//                    purchaseRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
+//
+//                val avgRate =
+//                    if (purchaseTotalVolume > 0) totalPrice / purchaseTotalVolume else 0.0
+//
+//                _uiState.update {
+//                    it.copy(
+//                        currentDate = date,
+//                        salesForDate = salesList,
+//                        salesUi = uiList,
+//                        totalMilk = totalVolume,
+//                        totalDeduction = totalDeduction,
+//                        totalNetMilk = totalNet,
+//                        grandSaleTotalForDate = totalPrice,
+//                        receivedAmount = received,
+//                        totalBalance = allRunningBalance,
+//                        avgRatePerLiter = avgRate,
+//                        pdfSalesSummary = PdfSalesSummary(
+//                            totalQty = totalVolume.toRoundedStr(),
+//                            totalDeduction = totalDeduction.toRoundedStr(),
+//                            totalAmount = totalPrice.toPriceStr(),
+//                            totalPaid = received.toPriceStr(),
+//                            balanceDue = totalBalance.toPriceStr()
+//                        ),
+//                        isLoading = false
+//                    )
+//                }
+//            }
+//        }
     }
 
     fun deleteSale(saleId: String) {

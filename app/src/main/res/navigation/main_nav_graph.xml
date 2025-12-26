@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/expensesFragment"
-        android:name="com.miassolutions.milkledger.presentation.expenses.ExpensesFragment"
+        android:name="com.miassolutions.milkledger.presentation.expenses.ui.detail.ExpensesFragment"
         android:label="Expenses"
         tools:layout="@layout/fragment_expenses" >
         <action
@@ -72,7 +72,7 @@
     </fragment>
     <dialog
         android:id="@+id/supplierFormBottomSheetFragment"
-        android:name="com.miassolutions.milkledger.presentation.supplier.SupplierFormBottomSheetFragment"
+        android:name="com.miassolutions.milkledger.presentation.supplier.form.SupplierFormBottomSheetFragment"
         android:label="SupplierFormBottomSheetFragment"
         tools:layout="@layout/supplier_form_layout" />
     <dialog
@@ -122,7 +122,7 @@
     </fragment>
     <fragment
         android:id="@+id/customerDetailFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.details.CustomerDetailFragment"
+        android:name="com.miassolutions.milkledger.presentation.customer.customerdetail.CustomerDetailFragment"
         android:label="{customerName}"
         tools:layout="@layout/fragment_customer_detail" >
         <argument
@@ -167,7 +167,7 @@
         android:id="@+id/expenseAddEditFragment"
 
         tools:layout="@layout/fragment_add_expense"
-        android:name="com.miassolutions.milkledger.presentation.expenses.ExpenseAddFragment"
+        android:name="com.miassolutions.milkledger.presentation.expenses.ui.form.ExpenseAddFragment"
         android:label="Add Expenses" />
     <fragment
         android:id="@+id/purchaseAddFragment"
@@ -182,6 +182,6 @@
     <dialog
         tools:layout="@layout/bottomsheet_edit_expense"
         android:id="@+id/expenseEditBottomSheet"
-        android:name="com.miassolutions.milkledger.presentation.expenses.ExpenseEditBottomSheet"
+        android:name="com.miassolutions.milkledger.presentation.expenses.ui.form.ExpenseEditBottomSheet"
         android:label="ExpenseEditBottomSheet" />
 </navigation>

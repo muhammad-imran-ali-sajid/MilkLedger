@@ -6,7 +6,7 @@ import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -86,7 +85,7 @@ class PurchaseViewModel @Inject constructor(
                 balance = newBalance
             )
 
-            repository.updatePurchase(finalEntry)
+//            repository.updatePurchase(finalEntry)
         }
     }
 
@@ -114,83 +113,83 @@ class PurchaseViewModel @Inject constructor(
 
     fun observeForDate(date: LocalDate) {
         purchasesJob?.cancel()
-        purchasesJob = viewModelScope.launch {
-
-            _uiState.update { it.copy(isLoading = true) }
-
-            repository.getPurchasesByDate(date).collectLatest { list ->
-
-                val sorted = list.sortedBy { it.supplier.sortOrder }
-
-                // Cache supplier history to avoid repeated DB queries
-                val historyCache = mutableMapOf<String, List<PurchaseWithSupplier>>()
-
-                val uiList = mutableListOf<PurchaseUi>()
-
-                for (item in sorted) {
-
-                    val supplierId = item.supplier.supplierId
-
-                    // Fetch history from cache or DB (one-time per supplier)
-                    val history = historyCache.getOrPut(supplierId) {
-                        // make sure your repository exposes a suspend function that returns full history
-                        // Example: suspend fun getSupplierHistoryOnce(supplierId: String): List<PurchaseWithSupplier>
-                        repository.getBalanceHistoryOnce(supplierId)
-                    }
-
-                    // Compute running total for this supplier up to the date of this row
-                    var running = 0.0
-                    for (entry in history) {
-                        // include entries on or before this row's date
-                        if (!entry.purchase.date.isAfter(item.purchase.date)) {
-                            running += entry.purchase.balance
-                        } else {
-                            // since history is ordered by date ASC, we can break early
-                            break
-                        }
-                    }
-
-                    // Add a single PurchaseUi for THIS row, using the computed running total
-                    uiList.add(
-                        PurchaseUi(
-                            data = item,
-                            accumulatedBalance = running
-                        )
-                    )
-                }
-
-                val allRunningBalance = uiList.sumOf { it.accumulatedBalance }
-
-                val totalVolume = sorted.sumOf { it.purchase.milkAmount }
-
-                val avgFat = repository.getAvgFat(date).first() ?: 0.0
-                val avgLr = repository.getAvgLr(date).first() ?: 0.0
-                val avgTS = repository.getAvgTs(date).first() ?: 0.0
-                val volumeWithFatLr = repository.getTotalMilkWithFatLR(date).first() ?: 0.0
-
-                val grandTotal = sorted.sumOf { it.purchase.milkPrice }
-                val totalPaid = sorted.sumOf { it.purchase.payment }
-                val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
-
-                _uiState.update {
-                    it.copy(
-                        currentDate = date,
-                        purchasesForDate = sorted,   // List<PurchaseWithSupplier>
-                        purchasesUi = uiList,        // List<PurchaseUi> for adapter
-                        totalVolume = totalVolume,
-                        avgFat = avgFat,
-                        avgLr = avgLr,
-                        totalTS = avgTS,
-                        volumeWithFatLr = volumeWithFatLr,
-                        grandTotalForDate = grandTotal,
-                        totalPaid =totalPaid,
-                        totalBalance = allRunningBalance,
-                        avgRatePerLiter = avgRatePerLiter,
-                        isLoading = false
-                    )
-                }
-            }
-        }
+//        purchasesJob = viewModelScope.launch {
+//
+//            _uiState.update { it.copy(isLoading = true) }
+//
+//            repository.getPurchasesByDate(date).collectLatest { list ->
+//
+//                val sorted = list.sortedBy { it.supplier.sortOrder }
+//
+//                // Cache supplier history to avoid repeated DB queries
+//                val historyCache = mutableMapOf<String, List<PurchaseWithSupplier>>()
+//
+//                val uiList = mutableListOf<PurchaseUi>()
+//
+//                for (item in sorted) {
+//
+//                    val supplierId = item.supplier.supplierId
+//
+//                    // Fetch history from cache or DB (one-time per supplier)
+//                    val history = historyCache.getOrPut(supplierId) {
+//                        // make sure your repository exposes a suspend function that returns full history
+//                        // Example: suspend fun getSupplierHistoryOnce(supplierId: String): List<PurchaseWithSupplier>
+//                        repository.getBalanceHistoryOnce(supplierId)
+//                    }
+//
+//                    // Compute running total for this supplier up to the date of this row
+//                    var running = 0.0
+//                    for (entry in history) {
+//                        // include entries on or before this row's date
+//                        if (!entry.purchase.date.isAfter(item.purchase.date)) {
+//                            running += entry.purchase.balance
+//                        } else {
+//                            // since history is ordered by date ASC, we can break early
+//                            break
+//                        }
+//                    }
+//
+//                    // Add a single PurchaseUi for THIS row, using the computed running total
+//                    uiList.add(
+//                        PurchaseUi(
+//                            data = item,
+//                            accumulatedBalance = running
+//                        )
+//                    )
+//                }
+//
+//                val allRunningBalance = uiList.sumOf { it.accumulatedBalance }
+//
+//                val totalVolume = sorted.sumOf { it.purchase.milkAmount }
+//
+//                val avgFat = repository.getAvgFat(date).first() ?: 0.0
+//                val avgLr = repository.getAvgLr(date).first() ?: 0.0
+//                val avgTS = repository.getAvgTs(date).first() ?: 0.0
+//                val volumeWithFatLr = repository.getTotalMilkWithFatLR(date).first() ?: 0.0
+//
+//                val grandTotal = sorted.sumOf { it.purchase.milkPrice }
+//                val totalPaid = sorted.sumOf { it.purchase.payment }
+//                val avgRatePerLiter = if (totalVolume > 0) grandTotal / totalVolume else 0.0
+//
+//                _uiState.update {
+//                    it.copy(
+//                        currentDate = date,
+//                        purchasesForDate = sorted,   // List<PurchaseWithSupplier>
+//                        purchasesUi = uiList,        // List<PurchaseUi> for adapter
+//                        totalVolume = totalVolume,
+//                        avgFat = avgFat,
+//                        avgLr = avgLr,
+//                        totalTS = avgTS,
+//                        volumeWithFatLr = volumeWithFatLr,
+//                        grandTotalForDate = grandTotal,
+//                        totalPaid =totalPaid,
+//                        totalBalance = allRunningBalance,
+//                        avgRatePerLiter = avgRatePerLiter,
+//                        isLoading = false
+//                    )
+//                }
+//            }
+//        }
     }
 
 

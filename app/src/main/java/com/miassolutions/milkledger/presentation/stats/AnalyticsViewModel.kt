@@ -49,12 +49,12 @@ class AnalyticsViewModel @Inject constructor(
 
         // Use the combine overload for 6 flows (results array)
         combine(
-            analyticsRepository.getTotalMilkPurchaseBetween(start, end), // 1st element
-            analyticsRepository.getTotalMilkSoldBetween(start, end),     // 2nd element
-            analyticsRepository.getTotalSalesBetween(start, end),       // 3rd element
-            analyticsRepository.getTotalPurchasesBetween(start, end),   // 4th element
-            analyticsRepository.getTotalExpensesBetween(start, end),    // 5th element
-            analyticsRepository.getProfitBetween(start, end)            // 6th element
+//            analyticsRepository.getTotalMilkPurchaseBetween(start, end), // 1st element
+//            analyticsRepository.getTotalMilkSoldBetween(start, end),     // 2nd element
+//            analyticsRepository.getTotalSalesBetween(start, end),       // 3rd element
+//            analyticsRepository.getTotalPurchasesBetween(start, end),   // 4th element
+//            analyticsRepository.getTotalExpensesBetween(start, end),    // 5th element
+//            analyticsRepository.getProfitBetween(start, end)            // 6th element
         ) { results ->
 
             // Fix: Use a run block to manage variable assignment and casting cleanly

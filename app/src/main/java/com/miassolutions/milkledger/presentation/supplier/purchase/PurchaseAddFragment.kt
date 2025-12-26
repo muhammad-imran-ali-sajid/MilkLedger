@@ -64,24 +64,24 @@ class PurchaseAddFragment :
     // ---------------------------------------------------------------------
 
     private fun setupSupplierDropdown() {
-        viewModel.suppliers.observe(viewLifecycleOwner) { list ->
-            val sorted = list.sortedBy { it.sortOrder }
-            val names = sorted.map { it.supplierName }
-
-            val adapter = ArrayAdapter(
-                requireContext(),
-                R.layout.layout_drop_down_list,
-                names
-            )
-
-            binding.actvSupplierName.setAdapter(adapter)
-
-            binding.actvSupplierName.setOnItemClickListener { _, _, pos, _ ->
-                selectedSupplier = sorted[pos]
-                updateSupplierUI()
-                recalcAll()
-            }
-        }
+//        viewModel.suppliers.observe(viewLifecycleOwner) { list ->
+//            val sorted = list.sortedBy { it.sortOrder }
+//            val names = sorted.map { it.supplierName }
+//
+//            val adapter = ArrayAdapter(
+//                requireContext(),
+//                R.layout.layout_drop_down_list,
+//                names
+//            )
+//
+//            binding.actvSupplierName.setAdapter(adapter)
+//
+//            binding.actvSupplierName.setOnItemClickListener { _, _, pos, _ ->
+//                selectedSupplier = sorted[pos]
+//                updateSupplierUI()
+//                recalcAll()
+//            }
+//        }
     }
 
 
@@ -328,22 +328,22 @@ class PurchaseAddFragment :
         val price = binding.tvPrice.text.toString().toDoubleOrNull() ?: 0.0
         val ts = binding.tvTs.text.toString().toDoubleOrNull() ?: 0.0
 
-        val purchase = PurchaseEntity(
-            purchaseId = "${supplier.supplierId}_${(dateSelected ?: LocalDate.now())}",
-            supplierId = supplier.supplierId,
-            date = dateSelected ?: LocalDate.now(),
-            milkAmount = finalVolume,
-            fat = fat ?: 0.0,
-            lr = lr ?: 0.0,
-            ts = ts,
-            milkPrice = price,
-            balance = currentBalance,
-            rateUsed = supplier.supplierRate,
-            payment = payment ?: 0.0,
-            notes = binding.etNotes.text.toString()
-        )
+//        val purchase = PurchaseEntity(
+//            purchaseId = "${supplier.supplierId}_${(dateSelected ?: LocalDate.now())}",
+//            supplierId = supplier.supplierId,
+//            date = dateSelected ?: LocalDate.now(),
+//            milkAmount = finalVolume,
+//            fat = fat ?: 0.0,
+//            lr = lr ?: 0.0,
+//            ts = ts,
+//            milkPrice = price,
+//            balance = currentBalance,
+//            rateUsed = supplier.supplierRate,
+//            payment = payment ?: 0.0,
+//            notes = binding.etNotes.text.toString()
+//        )
 
-        viewModel.addPurchase(purchase)
+//        viewModel.addPurchase(purchase)
 
         Toast.makeText(requireContext(), "Purchased saved in db", Toast.LENGTH_SHORT).show()
 

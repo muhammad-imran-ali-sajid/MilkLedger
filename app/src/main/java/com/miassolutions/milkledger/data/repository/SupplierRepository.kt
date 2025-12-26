@@ -6,6 +6,8 @@ import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.mapper.toDomain
 import com.miassolutions.milkledger.data.mapper.toEntity
+import com.miassolutions.milkledger.presentation.expenses.data.toDomain
+import com.miassolutions.milkledger.presentation.expenses.data.toEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.domain.model.Supplier
 import kotlinx.coroutines.flow.Flow

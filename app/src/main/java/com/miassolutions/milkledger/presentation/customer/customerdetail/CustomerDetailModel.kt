@@ -1,0 +1,85 @@
+package com.miassolutions.milkledger.presentation.customer.customerdetail
+
+import com.miassolutions.milkledger.core.pdf.customerreport.SalesItemRecord
+import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesItemRecord
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
+import com.miassolutions.milkledger.core.extensions.toLocalDate
+import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
+import com.miassolutions.milkledger.domain.model.SaleWithCustomerModel
+import com.miassolutions.milkledger.presentation.customer.sales.model.SaleUi
+import com.miassolutions.milkledger.presentation.customer.sales.model.SaleWithCustomerUI
+import java.time.LocalDate
+
+
+
+
+fun SaleWithCustomer.toCustomerDetailModel(): CustomerDetailModel = CustomerDetailModel(
+    date = this.sale.dateMillis.toLocalDate(),
+    milkAmount = this.sale.volume,
+    deduction = this.sale.deduction,
+    netMilk = this.sale.netMilk,
+    milkPrice = this.sale.price, // Assuming this is Total Price (NetMilk * rateUsed)
+    payment = this.sale.paid,
+    balance = this.sale.balance,
+
+    // 💡 Added Rate Logic
+    rateUsed = this.sale.rateUsed,
+
+    notes = this.sale.notes
+)
+
+data class CustomerDetailModel(
+    val date: LocalDate,
+    val rateUsed: Double,
+    val milkAmount: Double,
+    val netMilk: Double,
+    val payment: Double,
+    val balance: Double,
+    val deduction: Double,
+    val milkPrice: Double,
+
+    val rateChanged: Boolean = false,
+    val notes: String?
+)
+
+
+
+// Assumes you have a similar RecordItem structure for Customer
+// Using Supplier's RecordItem for demonstration, but adjusting field names
+fun List<CustomerDetailModel>.toRecordList(): List<SalesItemRecord> {
+
+    return this.map { item ->
+        SalesItemRecord(
+            date = item.date.toDisplayFormat(),
+            quantity = item.milkAmount, // Use netMilk for quantity
+            deduction = 0.0, // N/A for customer, or use a placeholder
+            rate = item.rateUsed,
+            amount = item.milkPrice, // Total amount/price
+            paid = item.payment,
+            balance = item.balance,
+            netMilk = item.netMilk
+        )
+    }
+}
+
+
+fun List<SaleWithCustomerUI>.toSaleRecordList(): List<PdfSalesItemRecord> {
+    return this.map { item ->
+
+        PdfSalesItemRecord(
+            customerName = item.data.name,
+            milkVolume = item.data.volume,
+            deduction = item.data.deduction,
+            rate = item.data.rateUsed,
+            amount = item.data.price,
+            paid = item.data.paid,
+            balance = item.accumulatedBalance
+        )
+
+    }
+}
+
+
+
+
+

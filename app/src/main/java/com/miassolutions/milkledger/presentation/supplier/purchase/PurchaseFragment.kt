@@ -23,7 +23,7 @@ import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
 import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
-import com.miassolutions.milkledger.presentation.supplier.SupplierBalanceHistoryBottomSheet
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.SupplierBalanceHistoryBottomSheet
 import com.miassolutions.milkledger.presentation.supplier.supplierdetail.toPurchaseRecordList
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

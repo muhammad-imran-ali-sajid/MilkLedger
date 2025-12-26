@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -12,11 +13,13 @@ import java.time.LocalDate
 @Dao
 interface ProfitDao {
 
-    @Query("""
+    @Query(
+        """
         SELECT IFNULL(SUM(receivedProfit), 0)
         FROM profit_table
         WHERE deletedAtMillis IS NULL
-    """)
+    """
+    )
     fun getTotalReceivedProfit(): Flow<Double?>
     /* ---------------------------
        Sync / Raw
@@ -25,70 +28,93 @@ interface ProfitDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(profits: List<ProfitEntity>)
 
+
     @Upsert
     suspend fun upsert(profit: ProfitEntity)
 
     @Query("DELETE FROM profit_table")
     suspend fun clearAll()
 
-    @Query("""
+    @Query(
+        """
         UPDATE profit_table
         SET deletedAtMillis = :deletedAtMillis
         WHERE profitId = :profitId
-    """)
+    """
+    )
     suspend fun softDeleteById(profitId: String, deletedAtMillis: Long)
 
     /* ---------------------------
        Base Queries
     --------------------------- */
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM profit_table
         WHERE deletedAtMillis IS NULL
         ORDER BY dateMillis DESC
-    """)
+    """
+    )
     fun getAllProfitFlow(): Flow<List<ProfitEntity>>
 
-    @Query("""
+
+    @Query(
+        """
+        SELECT * FROM profit_table
+        WHERE deletedAtMillis IS NULL
+        ORDER BY dateMillis DESC
+    """
+    )
+    suspend fun getAll(): List<ProfitEntity>
+
+    @Query(
+        """
         SELECT * FROM profit_table
         WHERE profitId = :profitId
           AND deletedAtMillis IS NULL
         LIMIT 1
-    """)
+    """
+    )
     suspend fun getProfitById(profitId: String): ProfitEntity?
 
     /* ---------------------------
        Daily
     --------------------------- */
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM profit_table
         WHERE dateMillis = :dateMillis
           AND deletedAtMillis IS NULL
-    """)
+    """
+    )
     fun getDailyProfit(dateMillis: Long): Flow<List<ProfitEntity>>
 
     /* ---------------------------
        Range (Weekly / Custom)
     --------------------------- */
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM profit_table
         WHERE dateMillis BETWEEN :startMillis AND :endMillis
           AND deletedAtMillis IS NULL
         ORDER BY dateMillis ASC
-    """)
+    """
+    )
     suspend fun getBetween(
         startMillis: Long,
         endMillis: Long
     ): List<ProfitEntity>
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM profit_table
         WHERE dateMillis BETWEEN :startMillis AND :endMillis
           AND deletedAtMillis IS NULL
         ORDER BY dateMillis ASC
-    """)
+    """
+    )
     fun getBetweenFlow(
         startMillis: Long,
         endMillis: Long
@@ -99,12 +125,14 @@ interface ProfitDao {
        (computed via millis ranges)
     --------------------------- */
 
-    @Query("""
+    @Query(
+        """
         SELECT * FROM profit_table
         WHERE dateMillis BETWEEN :startMillis AND :endMillis
           AND deletedAtMillis IS NULL
         ORDER BY dateMillis ASC
-    """)
+    """
+    )
     fun getMonthlyProfit(
         startMillis: Long,
         endMillis: Long

@@ -10,11 +10,9 @@ import androidx.room.Upsert
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
-import com.miassolutions.milkledger.domain.model.Supplier
 import com.miassolutions.milkledger.presentation.stats.SupplierPaidSummary
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
 
 @Dao
 interface PurchaseDao {

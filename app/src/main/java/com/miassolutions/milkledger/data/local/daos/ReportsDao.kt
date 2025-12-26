@@ -206,7 +206,7 @@ interface ReportsDao {
         SELECT SUM(expenseAmount)
         FROM expense_table
         WHERE dateMillis BETWEEN :startMillis AND :endMillis
-          AND isDefault = 1
+          AND isBusiness = 1
           AND deletedAtMillis IS NULL
     """)
     fun getTotalFixedExpensesBetween(
@@ -218,7 +218,7 @@ interface ReportsDao {
         SELECT SUM(expenseAmount)
         FROM expense_table
         WHERE dateMillis BETWEEN :startMillis AND :endMillis
-          AND isDefault = 0
+          AND isBusiness = 0
           AND deletedAtMillis IS NULL
     """)
     fun getTotalPersonalExpensesBetween(
@@ -229,7 +229,7 @@ interface ReportsDao {
     @Query("""
         SELECT IFNULL(SUM(expenseAmount), 0)
         FROM expense_table
-        WHERE isDefault = 1
+        WHERE isBusiness = 1
           AND deletedAtMillis IS NULL
     """)
     fun getTotalFixedExpensesAll(): Flow<Double>
@@ -237,7 +237,7 @@ interface ReportsDao {
     @Query("""
         SELECT IFNULL(SUM(expenseAmount), 0)
         FROM expense_table
-        WHERE isDefault = 0
+        WHERE isBusiness = 0
           AND deletedAtMillis IS NULL
     """)
     fun getTotalPersonalExpensesAll(): Flow<Double>
@@ -253,7 +253,7 @@ interface ReportsDao {
         SELECT IFNULL(SUM(expenseAmount), 0)
         FROM expense_table
         WHERE dateMillis = :dateMillis
-          AND isDefault = 1
+          AND isBusiness = 1
           AND deletedAtMillis IS NULL
     """)
     fun getTotalBusinessExpensesDaily(

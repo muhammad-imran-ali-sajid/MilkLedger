@@ -12,8 +12,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.helper.numberFormat
 import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.databinding.BottomsheetBalanceHistoryBinding
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistoryAdapter
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistoryAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

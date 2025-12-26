@@ -8,6 +8,6 @@ data class Expense(
     val title: String,
     val amount: Double,
     val note: String?,
-    val isDefault: Boolean
+    val isBusiness: Boolean
 )
 

@@ -10,9 +10,8 @@ import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
 import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
-import com.miassolutions.milkledger.presentation.supplier.BalanceHistory
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
 
 @Dao
 interface SalesDao {

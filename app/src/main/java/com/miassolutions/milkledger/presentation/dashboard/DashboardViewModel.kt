@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
 import com.miassolutions.milkledger.data.repository.AnalyticsRepository
-import com.miassolutions.milkledger.presentation.datefilter.DatePeriod
+import com.miassolutions.milkledger.core.datefilter.DatePeriod
 import com.miassolutions.milkledger.presentation.stats.AnalyticsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,39 +43,39 @@ class DashboardViewModel @Inject constructor(
     // ALL RECORDS
     // -------------------------------------------------------------------------
     private fun loadAllRecords() {
-        viewModelScope.launch {
-            combine(
-                repository.getTotalMilkPurchaseAll(),
-                repository.getTotalMilkSoldAll(),
-                repository.getTotalSalesAll(),
-                repository.getTotalPurchasesAll(),
-                repository.getTotalFixedExpenses(),
-                repository.getGrossProfitAll(),
-                repository.getTotalFat(),
-                repository.getTotalLr(),
-                repository.getTotalTs(),
-                repository.getTotalPersonalExpense()
-            ) { results ->
-
-                mapAnalyticsResults(
-                    milkPurchase = results[0] ?: 0.0,
-                    milkSold = results[1] ?: 0.0,
-                    totalSales = results[2] ?: 0.0,
-                    totalPurchase = results[3] ?: 0.0,
-                    totalExpense = results[4] ?: 0.0,
-                    profit = results[5] as Double,
-                    fat = results[6] ?: 0.0,
-                    lr = results[7] ?: 0.0,
-                    ts = results[8] ?: 0.0,
-                    personalExpense = results[9] ?: 0.0,
-                    start = null,
-                    end = null,
-                    periodLabel = "All Records"
-                )
-            }.collect { ui ->
-                _uiState.update { ui }
-            }
-        }
+//        viewModelScope.launch {
+//            combine(
+//                repository.getTotalMilkPurchaseAll(),
+//                repository.getTotalMilkSoldAll(),
+//                repository.getTotalSalesAll(),
+//                repository.getTotalPurchasesAll(),
+//                repository.getTotalFixedExpenses(),
+//                repository.getGrossProfitAll(),
+//                repository.getTotalFat(),
+//                repository.getTotalLr(),
+//                repository.getTotalTs(),
+//                repository.getTotalPersonalExpense()
+//            ) { results ->
+//
+//                mapAnalyticsResults(
+//                    milkPurchase = results[0] ?: 0.0,
+//                    milkSold = results[1] ?: 0.0,
+//                    totalSales = results[2] ?: 0.0,
+//                    totalPurchase = results[3] ?: 0.0,
+//                    totalExpense = results[4] ?: 0.0,
+//                    profit = results[5] as Double,
+//                    fat = results[6] ?: 0.0,
+//                    lr = results[7] ?: 0.0,
+//                    ts = results[8] ?: 0.0,
+//                    personalExpense = results[9] ?: 0.0,
+//                    start = null,
+//                    end = null,
+//                    periodLabel = "All Records"
+//                )
+//            }.collect { ui ->
+//                _uiState.update { ui }
+//            }
+//        }
     }
 
     // -------------------------------------------------------------------------
@@ -125,41 +125,41 @@ class DashboardViewModel @Inject constructor(
     // SHARED RANGE LOADER (Your combine block consolidated)
     // -------------------------------------------------------------------------
     private fun loadRange(start: LocalDate, end: LocalDate) {
-        viewModelScope.launch {
-            combine(
-                repository.getTotalMilkPurchaseBetween(start, end),
-                repository.getTotalMilkSoldBetween(start, end),
-                repository.getTotalSalesBetween(start, end),
-                repository.getTotalPurchasesBetween(start, end),
-                repository.getTotalFixedExpensesBetween(start, end),
-                repository.getProfitBetween(start, end),
-                repository.getAvgFatBetween(start, end),
-                repository.getAvgLrBetween(start, end),
-                repository.getTotalTsBetween(start, end),
-                repository.getTotalMilkWithFatAndLr(start, end),
-                repository.getTotalPersonalExpensesBetween(start, end)
-            ) { results ->
-
-                mapAnalyticsResults(
-                    milkPurchase = results[0] ?: 0.0,
-                    milkSold = results[1] ?: 0.0,
-                    totalSales = results[2] ?: 0.0,
-                    totalPurchase = results[3] ?: 0.0,
-                    totalExpense = results[4] ?: 0.0,
-                    profit = results[5] as Double,
-                    fat = results[6] ?: 0.0,
-                    lr = results[7] ?: 0.0,
-                    ts = results[8] ?: 0.0,
-                    totalMilkWithFatAndLr = results[9] ?: 0.0,
-                    personalExpense = results[10] ?: 0.0,
-                    start = start,
-                    end = end,
-                    periodLabel = formatPeriodLabel(start, end)
-                )
-            }.collect { ui ->
-                _uiState.update { ui }
-            }
-        }
+//        viewModelScope.launch {
+//            combine(
+//                repository.getTotalMilkPurchaseBetween(start, end),
+//                repository.getTotalMilkSoldBetween(start, end),
+//                repository.getTotalSalesBetween(start, end),
+//                repository.getTotalPurchasesBetween(start, end),
+//                repository.getTotalFixedExpensesBetween(start, end),
+//                repository.getProfitBetween(start, end),
+//                repository.getAvgFatBetween(start, end),
+//                repository.getAvgLrBetween(start, end),
+//                repository.getTotalTsBetween(start, end),
+//                repository.getTotalMilkWithFatAndLr(start, end),
+//                repository.getTotalPersonalExpensesBetween(start, end)
+//            ) { results ->
+//
+//                mapAnalyticsResults(
+//                    milkPurchase = results[0] ?: 0.0,
+//                    milkSold = results[1] ?: 0.0,
+//                    totalSales = results[2] ?: 0.0,
+//                    totalPurchase = results[3] ?: 0.0,
+//                    totalExpense = results[4] ?: 0.0,
+//                    profit = results[5] as Double,
+//                    fat = results[6] ?: 0.0,
+//                    lr = results[7] ?: 0.0,
+//                    ts = results[8] ?: 0.0,
+//                    totalMilkWithFatAndLr = results[9] ?: 0.0,
+//                    personalExpense = results[10] ?: 0.0,
+//                    start = start,
+//                    end = end,
+//                    periodLabel = formatPeriodLabel(start, end)
+//                )
+//            }.collect { ui ->
+//                _uiState.update { ui }
+//            }
+//        }
     }
 
     // -------------------------------------------------------------------------

@@ -63,7 +63,7 @@ interface StatsDao {
                'EXPENSE' AS category
         FROM expense_table e
         WHERE e.dateMillis BETWEEN :startMillis AND :endMillis
-          AND e.isDefault = 1
+          AND e.isBusiness = 1
           AND e.deletedAtMillis IS NULL
         GROUP BY e.expenseTitle
         ORDER BY e.expenseTitle ASC
@@ -83,7 +83,7 @@ interface StatsDao {
                'OTHER' AS category
         FROM expense_table e
         WHERE e.dateMillis BETWEEN :startMillis AND :endMillis
-          AND e.isDefault = 0
+          AND e.isBusiness = 0
           AND e.deletedAtMillis IS NULL
         GROUP BY e.expenseTitle
         ORDER BY e.expenseTitle ASC

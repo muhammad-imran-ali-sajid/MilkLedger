@@ -2,11 +2,12 @@ package com.miassolutions.milkledger.data.repository
 
 import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.ProfitDao
-import com.miassolutions.milkledger.data.local.entities.ProfitEntity
 import com.miassolutions.milkledger.data.mapper.toDomain
 import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.domain.model.Profit
+import com.miassolutions.milkledger.presentation.expenses.data.toDomain
+import com.miassolutions.milkledger.presentation.expenses.data.toEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
@@ -32,6 +33,7 @@ class ProfitRepository @Inject constructor(
 
     fun getAllReceivedProfits(): Flow<List<Profit>> =
         profitDao.getAllProfitFlow()
+
             .map { it.map { e -> e.toDomain() } }
 
     suspend fun upsertReceivedProfit(profit: Profit) {

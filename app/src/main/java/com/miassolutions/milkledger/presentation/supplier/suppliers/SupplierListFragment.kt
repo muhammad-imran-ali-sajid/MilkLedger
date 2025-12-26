@@ -6,7 +6,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSuppliersBinding
 import com.miassolutions.milkledger.domain.model.Supplier
-import com.miassolutions.milkledger.presentation.supplier.SupplierFormBottomSheetFragment
+import com.miassolutions.milkledger.presentation.supplier.form.SupplierFormBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,75 +30,57 @@ class SupplierListFragment :
     override fun setupObservers() {
 
         viewModel.uiState.collectState { state ->
-            adapter.submitList(state.displayedSuppliers.toMutableList()) // Make list mutable for reordering
+            adapter.submitList(state.suppliers)
         }
 
         viewModel.uiEvent.collectState { event ->
             when (event) {
-                is SupplierUiEvent.ShowMessage -> showToast(event.message)
                 SupplierUiEvent.ShowSupplierForm -> {
-                    SupplierFormBottomSheetFragment(
-                        supplier = null,
-                        currentSuppliers = adapter.currentList,
-                        onSave = { newSupplier ->
-                            viewModel.saveSupplier(newSupplier)
-                        }
-                    ).show(parentFragmentManager, null)
-
+                    SupplierFormBottomSheetFragment
+                        .newInstance(null)
+                        .show(parentFragmentManager, null)
                 }
+
+                is SupplierUiEvent.ShowMessage ->
+                    showToast(event.message)
             }
         }
     }
 
     private fun setupRecyclerView() {
-        adapter = SupplierListAdapter(::showEditDeleteDialog)
+        adapter = SupplierListAdapter { supplier ->
+            showEditDeleteDialog(supplier)
+            true
+        }
         binding.rvSupplier.adapter = adapter
-
-
     }
 
-
-    private fun showEditDeleteDialog(supplier: Supplier?): Boolean {
-        val options = arrayOf("Edit", "Delete")
+    private fun showEditDeleteDialog(supplier: Supplier) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Select Action")
-            .setItems(options) { dialog, which ->
+            .setItems(arrayOf("Edit", "Delete")) { dialog, which ->
                 when (which) {
-                    0 -> handleEditSupplier(supplier)
+                    0 -> openEditSupplier(supplier)
                     1 -> confirmDeleteSupplier(supplier)
                 }
                 dialog.dismiss()
             }
             .show()
-
-        return true
     }
 
-    private fun handleEditSupplier(supplier: Supplier?) {
-        val currentList = adapter.currentList // ✅ latest displayed list from adapter
-
-        val fragment = SupplierFormBottomSheetFragment(
-            supplier = supplier,
-            currentSuppliers = currentList,
-            onSave = { updatedSupplier ->
-                viewModel.saveSupplier(updatedSupplier)
-            }
-        )
-        fragment.show(parentFragmentManager, null)
+    private fun openEditSupplier(supplier: Supplier) {
+        SupplierFormBottomSheetFragment
+            .newInstance(supplier)
+            .show(parentFragmentManager, null)
     }
 
-
-    private fun confirmDeleteSupplier(supplier: Supplier?) {
-        if (supplier == null) return
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Delete Supplier")
-            .setMessage("This will erase all records. Are you sure you want to delete ${supplier.name}?")
-            .setPositiveButton("Delete") { dialog, _ ->
-                viewModel.deleteSupplier(supplier)
-                dialog.dismiss()
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
+    private fun confirmDeleteSupplier(supplier: Supplier) {
+        showDialog(
+            title = "Delete Supplier",
+            message = "Delete ${supplier.name}?"
+        ) {
+            viewModel.deleteSupplier(supplier)
+        }
     }
 }
+

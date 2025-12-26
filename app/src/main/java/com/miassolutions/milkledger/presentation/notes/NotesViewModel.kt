@@ -30,43 +30,43 @@ class NotesViewModel @Inject constructor(
     }
 
     private fun getAllNotes() {
-        viewModelScope.launch {
-            repository.getAllNotes()
-                .onStart { _uiState.update { it.copy(isLoading = true) } }
-                .catch { e -> _uiState.update { it.copy(isLoading = false, error = e.message) } }
-                .collect { notes ->
-                    allNotes = notes
-                    val query = _uiState.value.searchQuery
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            notes = filterNotes(query, notes)
-                        )
-                    }
-                }
-        }
+//        viewModelScope.launch {
+//            repository.getAllNotes()
+//                .onStart { _uiState.update { it.copy(isLoading = true) } }
+//                .catch { e -> _uiState.update { it.copy(isLoading = false, error = e.message) } }
+//                .collect { notes ->
+//                    allNotes = notes
+//                    val query = _uiState.value.searchQuery
+//                    _uiState.update {
+//                        it.copy(
+//                            isLoading = false,
+//                            notes = filterNotes(query, notes)
+//                        )
+//                    }
+//                }
+//        }
     }
 
     fun addOrUpdateNote(note: NoteEntity) {
-        viewModelScope.launch {
-            try {
-                repository.upsert(note)
-                _eventFlow.emit(NoteUiEvent.NoteSaved)
-            } catch (e: Exception) {
-                _eventFlow.emit(NoteUiEvent.ShowMessage("Failed to save note"))
-            }
-        }
+//        viewModelScope.launch {
+//            try {
+//                repository.upsert(note)
+//                _eventFlow.emit(NoteUiEvent.NoteSaved)
+//            } catch (e: Exception) {
+//                _eventFlow.emit(NoteUiEvent.ShowMessage("Failed to save note"))
+//            }
+//        }
     }
 
     fun deleteNote(note: NoteEntity) {
-        viewModelScope.launch {
-            try {
-                repository.delete(note)
-                _eventFlow.emit(NoteUiEvent.NoteDeleted(note))
-            } catch (e: Exception) {
-                _eventFlow.emit(NoteUiEvent.ShowMessage("Failed to delete note"))
-            }
-        }
+//        viewModelScope.launch {
+//            try {
+//                repository.delete(note)
+//                _eventFlow.emit(NoteUiEvent.NoteDeleted(note))
+//            } catch (e: Exception) {
+//                _eventFlow.emit(NoteUiEvent.ShowMessage("Failed to delete note"))
+//            }
+//        }
     }
 
     fun toggleIsDone(noteId: String, isDone: Boolean) {

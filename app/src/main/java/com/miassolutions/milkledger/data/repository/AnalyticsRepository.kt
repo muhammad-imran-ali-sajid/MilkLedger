@@ -1,14 +1,13 @@
 package com.miassolutions.milkledger.data.repository
 
 import com.miassolutions.milkledger.core.extensions.toMillis
-import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.TransactionDao
 import com.miassolutions.milkledger.data.mapper.toDomain
+import com.miassolutions.milkledger.presentation.expenses.data.toDomain
 import com.miassolutions.milkledger.domain.model.Transaction
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 

@@ -27,21 +27,21 @@ class SupplierListAdapter(
             b.tvSupplierRate.text = "${"%.2f".format(supplier.rate)}"
             b.tvAdvanceAmount.text = "${"%.2f".format(supplier.advanceAmount)}"
 
-            // --- Expansion handling ---
-            b.layoutExpandable.visibility =
-                if (supplier.isExpanded) android.view.View.VISIBLE else android.view.View.GONE
-            b.imgArrow.rotation = if (supplier.isExpanded) 180f else 0f
-
-            // --- Click to expand/collapse ---
-            b.root.setOnClickListener {
-                val updatedSupplier = supplier.copy(isExpanded = !supplier.isExpanded)
-                val newList = currentList.toMutableList()
-                newList[position] = updatedSupplier
-
-                // Animate smooth expand/collapse
-                TransitionManager.beginDelayedTransition(b.root as ViewGroup, AutoTransition())
-                submitList(newList)
-            }
+//            // --- Expansion handling ---
+//            b.layoutExpandable.visibility =
+//                if (supplier.isExpanded) android.view.View.VISIBLE else android.view.View.GONE
+//            b.imgArrow.rotation = if (supplier.isExpanded) 180f else 0f
+//
+//            // --- Click to expand/collapse ---
+//            b.root.setOnClickListener {
+//                val updatedSupplier = supplier.copy(isExpanded = !supplier.isExpanded)
+//                val newList = currentList.toMutableList()
+//                newList[position] = updatedSupplier
+//
+//                // Animate smooth expand/collapse
+//                TransitionManager.beginDelayedTransition(b.root as ViewGroup, AutoTransition())
+//                submitList(newList)
+//            }
 
             // --- Long click listener (edit or extra action) ---
             b.root.setOnLongClickListener {

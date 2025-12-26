@@ -5,6 +5,8 @@ import com.miassolutions.milkledger.data.local.daos.NoteDao
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.data.mapper.toDomain
 import com.miassolutions.milkledger.data.mapper.toEntity
+import com.miassolutions.milkledger.presentation.expenses.data.toDomain
+import com.miassolutions.milkledger.presentation.expenses.data.toEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.domain.model.Note
 import kotlinx.coroutines.flow.Flow

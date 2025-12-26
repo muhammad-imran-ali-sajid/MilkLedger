@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.*
-import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
+import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
 import com.miassolutions.milkledger.presentation.stats.BusinessExpenseSummary
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -17,7 +17,7 @@ interface ExpensesDao {
     @Query("""
         SELECT IFNULL(SUM(expenseAmount), 0) 
         FROM expense_table 
-        WHERE isDefault = 1 
+        WHERE isBusiness = 1 
           AND deletedAtMillis IS NULL
     """)
     fun observeBusinessExpenses(): Flow<Double>
@@ -25,7 +25,7 @@ interface ExpensesDao {
     @Query("""
         SELECT IFNULL(SUM(expenseAmount), 0) 
         FROM expense_table 
-        WHERE isDefault = 0 
+        WHERE isBusiness = 0 
           AND deletedAtMillis IS NULL
     """)
     fun observePersonalExpenses(): Flow<Double>
@@ -79,7 +79,7 @@ interface ExpensesDao {
 
     @Query("""
         SELECT * FROM expense_table
-        WHERE isDefault = 1
+        WHERE isBusiness = 1
           AND dateMillis = :dateMillis
           AND deletedAtMillis IS NULL
     """)
@@ -88,7 +88,7 @@ interface ExpensesDao {
     @Query("""
         SELECT IFNULL(SUM(expenseAmount), 0)
         FROM expense_table
-        WHERE isDefault = 1
+        WHERE isBusiness = 1
           AND dateMillis = :dateMillis
           AND deletedAtMillis IS NULL
     """)
@@ -96,7 +96,7 @@ interface ExpensesDao {
 
     @Query("""
         SELECT * FROM expense_table
-        WHERE isDefault = 0
+        WHERE isBusiness = 0
           AND dateMillis = :dateMillis
           AND deletedAtMillis IS NULL
     """)
@@ -105,7 +105,7 @@ interface ExpensesDao {
     @Query("""
         SELECT IFNULL(SUM(expenseAmount), 0)
         FROM expense_table
-        WHERE isDefault = 0
+        WHERE isBusiness = 0
           AND dateMillis = :dateMillis
           AND deletedAtMillis IS NULL
     """)

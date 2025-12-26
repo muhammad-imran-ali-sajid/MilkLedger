@@ -57,10 +57,10 @@ class SaleAddFragment : BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBind
         val btmSheet = CustomerBalanceHistoryBottomSheet.newInstance(id, name)
         btmSheet.setOnSelectedListener { item ->
 
-            // 🔥 Set paid date
-            balanceHistoryDate = item.date
-
-            binding.btnSelectDate.text = item.date.toDisplayDate()
+//            // 🔥 Set paid date
+//            balanceHistoryDate = item.date
+//
+//            binding.btnSelectDate.text = item.date.toDisplayDate()
 
             // Optional: Set payment equal to customer's chosen history balance
             binding.etPayment.setText(item.balance.toPriceStr())
@@ -72,25 +72,25 @@ class SaleAddFragment : BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBind
     // CUSTOMER DROPDOWN
     // ---------------------------------------------------------------------
     private fun setupCustomerDropdown() {
-        viewModel.customers.observe(viewLifecycleOwner) { list ->
-            val sorted = list.sortedBy { it.sortOrder }
-            val names = sorted.map { it.customerName }
-
-
-            val adapter = ArrayAdapter(
-                requireContext(),
-                R.layout.layout_drop_down_list,
-                names
-            )
-
-            binding.actvCustomerName.setAdapter(adapter)
-
-            binding.actvCustomerName.setOnItemClickListener { _, _, pos, _ ->
-                selectedCustomer = sorted[pos]   // IMPORTANT: use sorted list
-                updateCustomerUI()
-                recalcAll()
-            }
-        }
+//        viewModel.customers.observe(viewLifecycleOwner) { list ->
+//            val sorted = list.sortedBy { it.sortOrder }
+//            val names = sorted.map { it.customerName }
+//
+//
+//            val adapter = ArrayAdapter(
+//                requireContext(),
+//                R.layout.layout_drop_down_list,
+//                names
+//            )
+//
+//            binding.actvCustomerName.setAdapter(adapter)
+//
+//            binding.actvCustomerName.setOnItemClickListener { _, _, pos, _ ->
+//                selectedCustomer = sorted[pos]   // IMPORTANT: use sorted list
+//                updateCustomerUI()
+//                recalcAll()
+//            }
+//        }
     }
 
     private fun updateCustomerUI() {
@@ -322,22 +322,22 @@ class SaleAddFragment : BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBind
 
         val saleDate = dateSelected ?: LocalDate.now()
 
-        val sale = SalesEntity(
-            saleId = "${customer.customerId}_$saleDate",
-            customerId = customer.customerId,
-            date = saleDate,
-            volume = finalVolume,
-            deduction = deduction,
-            netMilk = netMilk,
-            price = price,
-            paid = paid,
-            balance = balance,
-            rateUsed = customer.customerRate,
-            paidDate = balanceHistoryDate,
-            notes = binding.etNotes.text.toString()
-        )
+//        val sale = SalesEntity(
+//            saleId = "${customer.customerId}_$saleDate",
+//            customerId = customer.customerId,
+//            date = saleDate,
+//            volume = finalVolume,
+//            deduction = deduction,
+//            netMilk = netMilk,
+//            price = price,
+//            paid = paid,
+//            balance = balance,
+//            rateUsed = customer.customerRate,
+//            paidDate = balanceHistoryDate,
+//            notes = binding.etNotes.text.toString()
+//        )
 
-        viewModel.addSale(sale)
+//        viewModel.addSale(sale)
 
         Toast.makeText(requireContext(), "Sale saved in db", Toast.LENGTH_SHORT).show()
         return true

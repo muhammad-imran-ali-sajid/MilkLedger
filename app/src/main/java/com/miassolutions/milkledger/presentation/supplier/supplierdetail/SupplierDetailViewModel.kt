@@ -36,34 +36,34 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
         viewModelScope.launch {
             val id = _uiState.value.selectedSupplierId ?: return@launch
 
-            repository.getPurchasesForSupplier(id).collect { list ->
-                // 1. Convert raw data to detail models
-                val sortedAsc = list.map { it.toSupplierDetailModel() }.sortedBy { it.date }
-
-                val withRateChange = sortedAsc.mapIndexed { idx, item ->
-                    if (idx == 0) item.copy(isRateChanged = false)
-                    else {
-                        val prev = sortedAsc[idx - 1]
-                        item.copy(isRateChanged = item.rateUsed != prev.rateUsed)
-                    }
-                }
-
-                val finalDescList = withRateChange.reversed()
-
-
-
-
-                _uiState.update {
-                    it.copy(
-                        supplierDetailList = finalDescList,
-                        filteredList = finalDescList,
-
-
-                        )
-                }
-
-                filterData()
-            }
+//            repository.getPurchasesForSupplier(id).collect { list ->
+//                // 1. Convert raw data to detail models
+//                val sortedAsc = list.map { it.toSupplierDetailModel() }.sortedBy { it.date }
+//
+//                val withRateChange = sortedAsc.mapIndexed { idx, item ->
+//                    if (idx == 0) item.copy(isRateChanged = false)
+//                    else {
+//                        val prev = sortedAsc[idx - 1]
+//                        item.copy(isRateChanged = item.rateUsed != prev.rateUsed)
+//                    }
+//                }
+//
+//                val finalDescList = withRateChange.reversed()
+//
+//
+//
+//
+//                _uiState.update {
+//                    it.copy(
+//                        supplierDetailList = finalDescList,
+//                        filteredList = finalDescList,
+//
+//
+//                        )
+//                }
+//
+//                filterData()
+//            }
         }
     }
 
