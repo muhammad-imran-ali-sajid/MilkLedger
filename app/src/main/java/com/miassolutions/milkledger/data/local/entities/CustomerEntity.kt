@@ -1,10 +1,14 @@
 package com.miassolutions.milkledger.data.local.entities
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.UUID
 
-@Entity(tableName = "customer_table")
+@Entity(
+    tableName = "customer_table",
+    indices = [Index(value = ["sortOrder"], unique = true)]
+)
 data class CustomerEntity(
     @PrimaryKey
     val customerId: String = UUID.randomUUID().toString(),

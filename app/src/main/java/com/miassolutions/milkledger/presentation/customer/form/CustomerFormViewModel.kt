@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.presentation.customer.form
 
-
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,11 +7,7 @@ import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.domain.model.Customer
 import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,11 +17,7 @@ class CustomerFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val editingCustomer: CustomerUi? =
-        savedStateHandle["customer"]
-
-    private val existingCustomers: List<CustomerUi> =
-        savedStateHandle["currentCustomers"] ?: emptyList()
+    private val editingCustomer: CustomerUi? = savedStateHandle["customer"]
 
     private val _uiState = MutableStateFlow(
         CustomerFormUiState(
@@ -37,15 +28,26 @@ class CustomerFormViewModel @Inject constructor(
             isEdit = editingCustomer != null
         )
     )
-    val uiState = _uiState.asStateFlow()
+    val uiState: StateFlow<CustomerFormUiState> = _uiState.asStateFlow()
 
     private val _uiEvent = MutableSharedFlow<CustomerFormUiEvent>()
-    val uiEvent = _uiEvent.asSharedFlow()
+    val uiEvent: SharedFlow<CustomerFormUiEvent> = _uiEvent.asSharedFlow()
+
+    private var allCustomers: List<Customer> = emptyList()
+
+    init {
+        // Observe all customers for duplicate sortOrder check
+        viewModelScope.launch {
+            repository.getAllCustomers()
+                .collect { customers ->
+                    allCustomers = customers
+                }
+        }
+    }
 
     // -------------------------
-    // INPUT HANDLERS
+    // Input handlers
     // -------------------------
-
     fun onNameChanged(value: String) =
         _uiState.update { it.copy(name = value, nameError = null) }
 
@@ -59,9 +61,8 @@ class CustomerFormViewModel @Inject constructor(
         _uiState.update { it.copy(advanceAmount = value) }
 
     // -------------------------
-    // SAVE
+    // Save
     // -------------------------
-
     fun onSaveClicked() {
         val state = _uiState.value
         val rate = state.rate.toDoubleOrNull()
@@ -79,19 +80,12 @@ class CustomerFormViewModel @Inject constructor(
             valid = false
         }
 
-        when {
-            position == null -> {
-                _uiState.update { it.copy(positionError = "Invalid position") }
-                valid = false
-            }
-            existingCustomers.any {
-                it.sortOrder == position && it.id != editingCustomer?.id
-            } -> {
-                _uiState.update {
-                    it.copy(positionError = "Sort order already exists")
-                }
-                valid = false
-            }
+        if (position == null) {
+            _uiState.update { it.copy(positionError = "Invalid position") }
+            valid = false
+        } else if (allCustomers.any { it.sortOrder == position && it.id != editingCustomer?.id }) {
+            _uiState.update { it.copy(positionError = "Sort order already exists") }
+            valid = false
         }
 
         if (!valid) return
@@ -106,8 +100,13 @@ class CustomerFormViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            repository.upsertCustomer(customer)
-            _uiEvent.emit(CustomerFormUiEvent.Dismiss)
+            try {
+                repository.upsertCustomer(customer)
+                _uiEvent.emit(CustomerFormUiEvent.Dismiss)
+            } catch (e: IllegalArgumentException) {
+                // Handle duplicate sortOrder at repository level
+                _uiState.update { it.copy(positionError = e.message) }
+            }
         }
     }
 }

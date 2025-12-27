@@ -41,6 +41,12 @@ class CustomerRepository @Inject constructor(
     // -------------------------------
 
     suspend fun upsertCustomer(customer: Customer) {
+
+        val existingCount = customerDao.countWithSortOrder(customer.sortOrder, customer.id)
+        if (existingCount > 0){
+            throw IllegalArgumentException("Sort order ${customer.sortOrder} is already used by another customer")
+        }
+
         val entity = customer.toEntity()
         customerDao.upsert(entity)
 

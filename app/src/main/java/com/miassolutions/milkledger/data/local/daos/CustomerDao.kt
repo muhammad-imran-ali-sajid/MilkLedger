@@ -13,6 +13,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface CustomerDao {
 
+@Query("""
+    SELECT COUNT(*)
+    FROM customer_table
+    WHERE sortOrder = :sortOder
+    AND (:excludeId IS NULL OR customerId != :excludeId)
+    AND deletedAtMillis IS NULL
+""")
+    suspend fun countWithSortOrder(sortOder: Int, excludeId: String? = null): Int
+
     @Query("SELECT * FROM customer_table")
     suspend fun getAllCustomersList(): List<CustomerEntity>
 
