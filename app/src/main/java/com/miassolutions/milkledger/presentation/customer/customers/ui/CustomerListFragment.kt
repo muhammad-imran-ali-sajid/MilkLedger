@@ -1,10 +1,11 @@
-package com.miassolutions.milkledger.presentation.customer.customers
+package com.miassolutions.milkledger.presentation.customer.customers.ui
 
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomersBinding
 import com.miassolutions.milkledger.domain.model.Customer
+import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
 import com.miassolutions.milkledger.presentation.customer.form.CustomerFormBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -54,7 +55,7 @@ class CustomerListFragment :
         }
     }
 
-    private fun showEditDeleteDialog(customer: Customer) {
+    private fun showEditDeleteDialog(customer: CustomerUi) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Select Action")
             .setItems(arrayOf("Edit", "Delete")) { dialog, which ->
@@ -67,13 +68,13 @@ class CustomerListFragment :
             .show()
     }
 
-    private fun openEditCustomer(customer: Customer) {
+    private fun openEditCustomer(customer: CustomerUi) {
         CustomerFormBottomSheetFragment
             .newInstance(customer)
             .show(parentFragmentManager, null)
     }
 
-    private fun confirmDeleteCustomer(customer: Customer) {
+    private fun confirmDeleteCustomer(customer: CustomerUi) {
         showDialog(
             title = "Delete Customer",
             message = "Delete ${customer.name}?"

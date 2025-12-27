@@ -10,7 +10,7 @@ import com.miassolutions.milkledger.core.extensions.collectFlow
 import com.miassolutions.milkledger.core.ui.BaseBottomSheet
 import com.miassolutions.milkledger.core.util.setTextIfDifferent
 import com.miassolutions.milkledger.databinding.CustomerFormLayoutBinding
-import com.miassolutions.milkledger.domain.model.Customer
+import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +24,7 @@ class CustomerFormBottomSheetFragment : BaseBottomSheet<CustomerFormLayoutBindin
     companion object {
         private const val ARG_CUSTOMER = "customer"
 
-        fun newInstance(customer: Customer?) =
+        fun newInstance(customer: CustomerUi?) =
             CustomerFormBottomSheetFragment().apply {
                 arguments = bundleOf(ARG_CUSTOMER to customer)
             }

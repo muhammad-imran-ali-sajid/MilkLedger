@@ -63,7 +63,7 @@
         tools:layout="@layout/fragment_stats" />
     <fragment
         android:id="@+id/customersFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.customers.CustomerListFragment"
+        android:name="com.miassolutions.milkledger.presentation.customer.customers.ui.CustomerListFragment"
         android:label="CustomersFragment"
         tools:layout="@layout/fragment_customers" >
         <action

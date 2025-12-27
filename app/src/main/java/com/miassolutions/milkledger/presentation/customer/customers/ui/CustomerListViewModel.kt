@@ -1,9 +1,11 @@
-package com.miassolutions.milkledger.presentation.customer.customers
+package com.miassolutions.milkledger.presentation.customer.customers.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.domain.model.Customer
+import com.miassolutions.milkledger.presentation.customer.customers.mapper.toUI
+import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,8 +37,8 @@ class CustomerListViewModel @Inject constructor(
                 .collect { customers ->
                     allCustomers = customers
                     _uiState.value = _uiState.value.copy(
-                        customers = customers,
-                        displayedCustomers = customers
+                        customers = customers.map { it.toUI() },
+                        displayedCustomers = customers.map { it.toUI() }
                     )
                 }
         }
@@ -48,7 +50,7 @@ class CustomerListViewModel @Inject constructor(
         }
     }
 
-    fun deleteCustomer(customer: Customer) {
+    fun deleteCustomer(customer: CustomerUi) {
         viewModelScope.launch {
             repository.deleteCustomer(customer.id)
             _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer deleted"))
