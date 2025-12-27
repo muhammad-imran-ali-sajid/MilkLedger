@@ -63,7 +63,7 @@
         tools:layout="@layout/fragment_stats" />
     <fragment
         android:id="@+id/customersFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.customers.ui.CustomerListFragment"
+        android:name="com.miassolutions.milkledger.presentation.customer.customerslist.CustomerListFragment"
         android:label="CustomersFragment"
         tools:layout="@layout/fragment_customers" >
         <action
@@ -77,7 +77,7 @@
         tools:layout="@layout/supplier_form_layout" />
     <dialog
         android:id="@+id/customerFormBottomSheetFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.customers.CustomerFormBottomSheetFragment"
+        android:name="com.miassolutions.milkledger.presentation.customer.customerslist.CustomerFormBottomSheetFragment"
         android:label="CustomerFormBottomSheetFragment"
         tools:layout="@layout/customer_form_layout" />
     <fragment

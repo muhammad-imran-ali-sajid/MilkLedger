@@ -1,7 +1,6 @@
-package com.miassolutions.milkledger.presentation.customer.customers.ui
+package com.miassolutions.milkledger.presentation.customer.customerslist
 
-import com.miassolutions.milkledger.domain.model.Customer
-import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 
 data class CustomerUiState(
     val customers: List<CustomerUi> = emptyList(),

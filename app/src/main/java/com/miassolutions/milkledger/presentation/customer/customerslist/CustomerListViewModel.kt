@@ -1,11 +1,11 @@
-package com.miassolutions.milkledger.presentation.customer.customers.ui
+package com.miassolutions.milkledger.presentation.customer.customerslist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.domain.model.Customer
-import com.miassolutions.milkledger.presentation.customer.customers.mapper.toUI
-import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customer.mapper.toUI
+import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

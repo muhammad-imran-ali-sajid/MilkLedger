@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customer.customers.ui
+package com.miassolutions.milkledger.presentation.customer.customerslist
 
 import android.transition.AutoTransition
 import android.transition.TransitionManager
@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemCustomerBinding
-import com.miassolutions.milkledger.domain.model.Customer
-import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 
 class CustomerListAdapter(
     private val onEditClick: (CustomerUi) -> Boolean
@@ -25,8 +24,8 @@ class CustomerListAdapter(
             // Bind main info
             tvCustomerName.text = customer.name
             tvPosition.text = customer.sortOrder.toString()
-            tvCustomerRate.text = customer.displayRate
-            tvAdvanceAmount.text = customer.displayAdvanceAmount
+            tvCustomerRate.text = "Rs. ${customer.rate}"
+            tvAdvanceAmount.text = "Rs. ${customer.advanceAmount}"
 
 
             layoutExpandable.visibility = if (customer.isExpanded) View.VISIBLE else View.GONE

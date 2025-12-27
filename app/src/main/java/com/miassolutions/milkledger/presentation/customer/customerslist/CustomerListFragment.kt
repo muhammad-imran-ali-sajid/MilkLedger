@@ -1,11 +1,10 @@
-package com.miassolutions.milkledger.presentation.customer.customers.ui
+package com.miassolutions.milkledger.presentation.customer.customerslist
 
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomersBinding
-import com.miassolutions.milkledger.domain.model.Customer
-import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import com.miassolutions.milkledger.presentation.customer.form.CustomerFormBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 

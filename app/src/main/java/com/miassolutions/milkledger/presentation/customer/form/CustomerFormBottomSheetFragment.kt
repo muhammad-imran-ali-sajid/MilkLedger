@@ -10,7 +10,7 @@ import com.miassolutions.milkledger.core.extensions.collectFlow
 import com.miassolutions.milkledger.core.ui.BaseBottomSheet
 import com.miassolutions.milkledger.core.util.setTextIfDifferent
 import com.miassolutions.milkledger.databinding.CustomerFormLayoutBinding
-import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customer.customers.model
+package com.miassolutions.milkledger.presentation.customer.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
@@ -7,9 +7,9 @@ import kotlinx.parcelize.Parcelize
 data class CustomerUi(
     val id: String,
     val name: String,
-    val displayRate: String,
+    val rate: Double,
     val sortOrder: Int,
-    val displayAdvanceAmount: String,
+    val advanceAmount: Double,
     val isDefault: Boolean,
     val isExpanded: Boolean = false
 ) : Parcelable

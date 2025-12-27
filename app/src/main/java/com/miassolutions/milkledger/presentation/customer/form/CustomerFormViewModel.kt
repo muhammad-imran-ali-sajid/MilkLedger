@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.domain.model.Customer
-import com.miassolutions.milkledger.presentation.customer.customers.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,9 +31,9 @@ class CustomerFormViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(
         CustomerFormUiState(
             name = editingCustomer?.name.orEmpty(),
-            rate = editingCustomer?.displayRate?:"",
+            rate = editingCustomer?.rate?.toString().orEmpty(),
             position = editingCustomer?.sortOrder?.toString().orEmpty(),
-            advanceAmount = editingCustomer?.displayAdvanceAmount?.toString().orEmpty(),
+            advanceAmount = editingCustomer?.advanceAmount?.toString().orEmpty(),
             isEdit = editingCustomer != null
         )
     )
