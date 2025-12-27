@@ -9,7 +9,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.extensions.collectEvent
-import com.miassolutions.milkledger.core.extensions.collectState
+import com.miassolutions.milkledger.core.extensions.collectFlow
 import com.miassolutions.milkledger.core.util.setTextIfDifferent
 import com.miassolutions.milkledger.databinding.SupplierFormLayoutBinding
 import com.miassolutions.milkledger.domain.model.Supplier
@@ -45,7 +45,7 @@ class SupplierFormBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         // UI STATE
-        viewLifecycleOwner.collectState(viewModel.uiState) { state ->
+        collectFlow(viewModel.uiState) { state ->
             binding.etName.setTextIfDifferent(state.name)
             binding.etRate.setTextIfDifferent(state.rate)
             binding.etPosition.setTextIfDifferent(state.position)
@@ -59,7 +59,7 @@ class SupplierFormBottomSheetFragment : BottomSheetDialogFragment() {
         }
 
         // EVENTS
-        viewLifecycleOwner.collectEvent(viewModel.uiEvent) { event ->
+        collectEvent(viewModel.uiEvent) { event ->
             if (event == SupplierFormUiEvent.Dismiss) dismiss()
         }
 

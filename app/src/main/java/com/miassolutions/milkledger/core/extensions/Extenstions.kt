@@ -32,29 +32,7 @@ fun LocalDate.isToday(): Boolean = this == LocalDate.now()
 
 
 
-// Extension function to collect UI state from StateFlow or LiveData
-fun <T> LifecycleOwner.collectState(flow: kotlinx.coroutines.flow.StateFlow<T>, action: (T) -> Unit) {
-    lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.collect { state ->
-                action(state)
-            }
-        }
-    }
-}
 
-
-
-// Extension function to collect events from SharedFlow
-fun <T> LifecycleOwner.collectEvent(flow: SharedFlow<T>, action: (T) -> Unit) {
-    lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
-            flow.collect { event ->
-                action(event)
-            }
-        }
-    }
-}
 
 
 
