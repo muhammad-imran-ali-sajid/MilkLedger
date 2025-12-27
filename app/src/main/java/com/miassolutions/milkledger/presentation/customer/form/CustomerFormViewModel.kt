@@ -4,11 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.CustomerRepository
+import com.miassolutions.milkledger.data.util.CustomerSaveError
 import com.miassolutions.milkledger.domain.model.Customer
 import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,33 +19,48 @@ class CustomerFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val editingCustomer: CustomerUi? = savedStateHandle["customer"]
+    private val customerId: String? = savedStateHandle["customerId"]
 
-    private val _uiState = MutableStateFlow(
-        CustomerFormUiState(
-            name = editingCustomer?.name.orEmpty(),
-            rate = editingCustomer?.rate?.toString().orEmpty(),
-            position = editingCustomer?.sortOrder?.toString().orEmpty(),
-            advanceAmount = editingCustomer?.advanceAmount?.toString().orEmpty(),
-            isEdit = editingCustomer != null
-        )
-    )
-    val uiState: StateFlow<CustomerFormUiState> = _uiState.asStateFlow()
+
+    private val _uiState = MutableStateFlow(CustomerFormUiState())
+    val uiState = _uiState.asStateFlow()
+
 
     private val _uiEvent = MutableSharedFlow<CustomerFormUiEvent>()
     val uiEvent: SharedFlow<CustomerFormUiEvent> = _uiEvent.asSharedFlow()
 
-    private var allCustomers: List<Customer> = emptyList()
 
-    init {
-        // Observe all customers for duplicate sortOrder check
+    private fun loadCustomer(customerId: String) {
         viewModelScope.launch {
-            repository.getAllCustomers()
-                .collect { customers ->
-                    allCustomers = customers
+            repository.getCustomerById(customerId)
+                .filterNotNull()
+                .first()
+                .let { customer ->
+                    _uiState.update {
+                        it.copy(
+                            name = customer.name,
+                            rate = customer.rate.toString(),
+                            position = customer.sortOrder.toString(),
+                            advanceAmount = customer.advanceAmount.toString(),
+                            isEdit = true,
+
+                            )
+                    }
                 }
+
+
         }
     }
+
+
+    //cache
+
+
+    init {
+        customerId?.let { loadCustomer(customerId) }
+    }
+
+
 
     // -------------------------
     // Input handlers
@@ -83,29 +100,30 @@ class CustomerFormViewModel @Inject constructor(
         if (position == null) {
             _uiState.update { it.copy(positionError = "Invalid position") }
             valid = false
-        } else if (allCustomers.any { it.sortOrder == position && it.id != editingCustomer?.id }) {
-            _uiState.update { it.copy(positionError = "Sort order already exists") }
-            valid = false
         }
 
         if (!valid) return
 
         val customer = Customer(
-            id = editingCustomer?.id ?: java.util.UUID.randomUUID().toString(),
+            id = customerId ?: UUID.randomUUID().toString(),
             name = state.name.trim(),
             rate = rate!!,
             sortOrder = position!!,
             advanceAmount = state.advanceAmount.toDoubleOrNull() ?: 0.0,
-            isDefault = editingCustomer?.isDefault ?: false
+            isDefault = true
         )
 
         viewModelScope.launch {
             try {
                 repository.upsertCustomer(customer)
                 _uiEvent.emit(CustomerFormUiEvent.Dismiss)
-            } catch (e: IllegalArgumentException) {
-                // Handle duplicate sortOrder at repository level
-                _uiState.update { it.copy(positionError = e.message) }
+
+            } catch (e: CustomerSaveError.SortOrderAlreadyExists) {
+                _uiState.update {
+                    it.copy(
+                        positionError = "Position ${e.sortOrder} already exists"
+                    )
+                }
             }
         }
     }

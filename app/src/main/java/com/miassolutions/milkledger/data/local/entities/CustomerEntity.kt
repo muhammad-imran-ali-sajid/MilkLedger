@@ -7,7 +7,7 @@ import java.util.UUID
 
 @Entity(
     tableName = "customer_table",
-    indices = [Index(value = ["sortOrder"], unique = true)]
+
 )
 data class CustomerEntity(
     @PrimaryKey

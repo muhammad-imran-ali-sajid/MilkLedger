@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.customer.customerslist
 
 import androidx.fragment.app.viewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.miassolutions.milkledger.core.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomersBinding
 import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
@@ -54,31 +55,30 @@ class CustomerListFragment :
         }
     }
 
-    private fun showEditDeleteDialog(customer: CustomerUi) {
+    private fun showEditDeleteDialog(customerId: String) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Select Action")
             .setItems(arrayOf("Edit", "Delete")) { dialog, which ->
                 when (which) {
-                    0 -> openEditCustomer(customer)
-                    1 -> confirmDeleteCustomer(customer)
+                    0 -> openEditCustomer(customerId)
+                    1 -> confirmDeleteCustomer(customerId)
                 }
                 dialog.dismiss()
             }
             .show()
     }
 
-    private fun openEditCustomer(customer: CustomerUi) {
+    private fun openEditCustomer(customerId: String) {
         CustomerFormBottomSheetFragment
-            .newInstance(customer)
+            .newInstance(customerId)
             .show(parentFragmentManager, null)
     }
 
-    private fun confirmDeleteCustomer(customer: CustomerUi) {
-        showDialog(
-            title = "Delete Customer",
-            message = "Delete ${customer.name}?"
-        ) {
-            viewModel.deleteCustomer(customer)
+    private fun confirmDeleteCustomer(customerId: String) {
+        showDeleteActionDialog(message = "Be careful this will delete precious records") {
+            viewModel.deleteCustomer(
+                customerId
+            )
         }
     }
 }

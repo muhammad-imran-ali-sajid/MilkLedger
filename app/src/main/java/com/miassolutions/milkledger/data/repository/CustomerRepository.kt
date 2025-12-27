@@ -8,8 +8,10 @@ import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.presentation.expenses.data.toDomain
 import com.miassolutions.milkledger.presentation.expenses.data.toEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
+import com.miassolutions.milkledger.data.util.CustomerSaveError
 import com.miassolutions.milkledger.domain.model.Customer
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,8 +35,8 @@ class CustomerRepository @Inject constructor(
         customerDao.getAllCustomers()
             .map { it.map(CustomerEntity::toDomain) }
 
-    suspend fun getCustomerById(id: String): Customer? =
-        customerDao.getCustomerByIdOnce(id)?.toDomain()
+    fun getCustomerById(id: String): Flow<Customer?> =
+        customerDao.getCustomerById(id).map { it?.toDomain() }
 
     // -------------------------------
     // WRITE
@@ -43,8 +45,8 @@ class CustomerRepository @Inject constructor(
     suspend fun upsertCustomer(customer: Customer) {
 
         val existingCount = customerDao.countWithSortOrder(customer.sortOrder, customer.id)
-        if (existingCount > 0){
-            throw IllegalArgumentException("Sort order ${customer.sortOrder} is already used by another customer")
+        if (existingCount > 0) {
+            throw CustomerSaveError.SortOrderAlreadyExists(customer.sortOrder)
         }
 
         val entity = customer.toEntity()

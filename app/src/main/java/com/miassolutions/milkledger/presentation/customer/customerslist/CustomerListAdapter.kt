@@ -12,7 +12,7 @@ import com.miassolutions.milkledger.databinding.ItemCustomerBinding
 import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 
 class CustomerListAdapter(
-    private val onEditClick: (CustomerUi) -> Boolean
+    private val onEditClick: (String) -> Boolean
 ) : ListAdapter<CustomerUi, CustomerListAdapter.CustomerViewHolder>(CustomerDiffCallback()) {
 
     inner class CustomerViewHolder(
@@ -43,7 +43,7 @@ class CustomerListAdapter(
             }
 
             root.setOnLongClickListener {
-                onEditClick(customer)
+                onEditClick(customer.id)
             }
         }
     }

@@ -50,9 +50,9 @@ class CustomerListViewModel @Inject constructor(
         }
     }
 
-    fun deleteCustomer(customer: CustomerUi) {
+    fun deleteCustomer(customerId: String) {
         viewModelScope.launch {
-            repository.deleteCustomer(customer.id)
+            repository.deleteCustomer(customerId)
             _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer deleted"))
         }
     }
