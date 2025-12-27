@@ -77,9 +77,15 @@
         tools:layout="@layout/supplier_form_layout" />
     <dialog
         android:id="@+id/customerFormBottomSheetFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.customerslist.CustomerFormBottomSheetFragment"
+        android:name="com.miassolutions.milkledger.presentation.customer.form.CustomerFormBottomSheetFragment"
         android:label="CustomerFormBottomSheetFragment"
-        tools:layout="@layout/customer_form_layout" />
+        tools:layout="@layout/customer_form_layout" >
+        <argument
+            android:name="customerId"
+            app:argType="string"
+            android:defaultValue="@null"
+            app:nullable="true" />
+    </dialog>
     <fragment
         android:id="@+id/suppliersFragment"
         android:name="com.miassolutions.milkledger.presentation.supplier.suppliers.SupplierListFragment"

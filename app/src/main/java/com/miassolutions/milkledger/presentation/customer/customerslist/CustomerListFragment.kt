@@ -1,11 +1,11 @@
 package com.miassolutions.milkledger.presentation.customer.customerslist
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.core.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomersBinding
-import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import com.miassolutions.milkledger.presentation.customer.form.CustomerFormBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,16 +43,21 @@ class CustomerListFragment :
 
         viewModel.uiEvent.collectState { event ->
             when (event) {
-                CustomerUiEvent.ShowCustomerForm -> {
-                    CustomerFormBottomSheetFragment
-                        .newInstance(null)
-                        .show(parentFragmentManager, null)
+                CustomerUiEvent.ShowAddCustomerForm -> {
+                    openAddCustomerForm()
                 }
 
-                is CustomerUiEvent.ShowMessage ->
-                    showToast(event.message)
+                is CustomerUiEvent.ShowMessage -> showToast(event.message)
             }
         }
+    }
+
+    private fun openAddCustomerForm() {
+        val action =
+            CustomerListFragmentDirections.actionCustomersFragmentToCustomerFormBottomSheetFragment(
+                null
+            )
+        findNavController().navigate(action)
     }
 
     private fun showEditDeleteDialog(customerId: String) {
@@ -69,9 +74,11 @@ class CustomerListFragment :
     }
 
     private fun openEditCustomer(customerId: String) {
-        CustomerFormBottomSheetFragment
-            .newInstance(customerId)
-            .show(parentFragmentManager, null)
+        val action =
+            CustomerListFragmentDirections.actionCustomersFragmentToCustomerFormBottomSheetFragment(
+                customerId
+            )
+        findNavController().navigate(action)
     }
 
     private fun confirmDeleteCustomer(customerId: String) {

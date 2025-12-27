@@ -9,8 +9,7 @@ data class CustomerUiState(
 )
 
 
-sealed class CustomerUiEvent {
-    data object ShowCustomerForm : CustomerUiEvent()
-
-    data class ShowMessage(val message: String) : CustomerUiEvent()
+sealed interface CustomerUiEvent {
+    data object ShowAddCustomerForm : CustomerUiEvent
+    data class ShowMessage(val message: String) : CustomerUiEvent
 }

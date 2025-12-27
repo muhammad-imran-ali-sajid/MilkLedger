@@ -2,7 +2,6 @@ package com.miassolutions.milkledger.presentation.customer.form
 
 
 import android.os.Bundle
-import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.core.extensions.collectEvent
@@ -16,18 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CustomerFormBottomSheetFragment : BaseBottomSheet<CustomerFormLayoutBinding>(
     CustomerFormLayoutBinding::inflate
 ) {
-
-
     private val viewModel: CustomerFormViewModel by viewModels()
-
-    companion object {
-        private const val ARG_CUSTOMER_ID = "customerId"
-
-        fun newInstance(customerId : String?) = CustomerFormBottomSheetFragment().apply {
-            arguments = bundleOf(ARG_CUSTOMER_ID to customerId)
-
-        }
-    }
 
 
     override fun onViewReady(savedInstanceState: Bundle?)=with(binding) {

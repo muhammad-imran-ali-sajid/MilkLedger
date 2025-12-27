@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.domain.model.Customer
 import com.miassolutions.milkledger.presentation.customer.mapper.toUI
-import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +45,7 @@ class CustomerListViewModel @Inject constructor(
 
     fun onAddCustomerClick() {
         viewModelScope.launch {
-            _uiEvent.emit(CustomerUiEvent.ShowCustomerForm)
+            _uiEvent.emit(CustomerUiEvent.ShowAddCustomerForm)
         }
     }
 
