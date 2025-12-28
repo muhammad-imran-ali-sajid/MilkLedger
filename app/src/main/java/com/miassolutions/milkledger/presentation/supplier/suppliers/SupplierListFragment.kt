@@ -23,17 +23,17 @@ class SupplierListFragment :
 
     override fun setupListeners() = with(binding) {
         btnAddSupplier.setOnClickListener {
-            viewModel.onAddSupplierClick()
+//            viewModel.onAddSupplierClick()
         }
     }
 
     override fun setupObservers() {
 
-        viewModel.uiState.collectState { state ->
-            adapter.submitList(state.suppliers)
-        }
+//        viewModel.uiState.collectState { state ->
+//            adapter.submitList(state.suppliers)
+//        }
 
-        viewModel.uiEvent.collectState { event ->
+//        viewModel.uiEvent.collectState { event ->
 //            when (event) {
 //                SupplierUiEvent.ShowSupplierForm -> {
 //                    SupplierFormBottomSheetFragment
@@ -44,7 +44,7 @@ class SupplierListFragment :
 //                is SupplierUiEvent.ShowMessage ->
 //                    showToast(event.message)
 //            }
-        }
+//        }
     }
 
     private fun setupRecyclerView() {
@@ -69,9 +69,7 @@ class SupplierListFragment :
     }
 
     private fun openEditSupplier(supplier: Supplier) {
-//        SupplierFormBottomSheetFragment
-//            .newInstance(supplier)
-//            .show(parentFragmentManager, null)
+
     }
 
     private fun confirmDeleteSupplier(supplier: Supplier) {
@@ -79,7 +77,7 @@ class SupplierListFragment :
             title = "Delete Supplier",
             message = "Delete ${supplier.name}?"
         ) {
-            viewModel.deleteSupplier(supplier)
+//            viewModel.deleteSupplier(supplier)
         }
     }
 }

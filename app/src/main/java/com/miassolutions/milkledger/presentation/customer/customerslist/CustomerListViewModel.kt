@@ -36,6 +36,10 @@ class CustomerListViewModel @Inject constructor(
                 emitEffect(CustomerUiEffect.NavigateToAddCustomer)
             }
 
+            is CustomerUiEvent.OnCustomerItemClicked -> {
+                emitEffect(CustomerUiEffect.OpenOptionDialog(event.customerId))
+            }
+
             CustomerUiEvent.OnRetryClick -> {
                 loadCustomers()
             }
@@ -61,9 +65,9 @@ class CustomerListViewModel @Inject constructor(
                 .onStart {
                     _uiState.update { it.copy(isLoading = true, error = null) }
                 }
-                .catch {
+                .catch { e ->
                     _uiState.update {
-                        it.copy(isLoading = false, error = it.error)
+                        it.copy(isLoading = false, error = e.localizedMessage ?: "Unknown error")
                     }
                     _uiEffect.emit(
                         CustomerUiEffect.ShowMessage("Failed to load customers")
@@ -86,8 +90,14 @@ class CustomerListViewModel @Inject constructor(
 
     private fun deleteCustomer(customerId: String) {
         viewModelScope.launch {
-            repository.deleteCustomer(customerId)
-            _uiEffect.emit(CustomerUiEffect.ShowMessage("Customer deleted"))
+
+
+            try {
+                repository.deleteCustomer(customerId)
+                _uiEffect.emit(CustomerUiEffect.ShowMessage("Customer deleted"))
+            } catch (e: Exception) {
+                emitEffect(CustomerUiEffect.ShowMessage("Failed to delete: ${e.localizedMessage}"))
+            }
         }
     }
 }

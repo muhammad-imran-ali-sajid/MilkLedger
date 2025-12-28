@@ -29,8 +29,8 @@ class CustomerListFragment :
     }
 
     private fun setupRecyclerView() {
-        adapter = CustomerListAdapter { customer ->
-            showEditDeleteDialog(customer)
+        adapter = CustomerListAdapter { customerId ->
+            viewModel.onEvent(CustomerUiEvent.OnCustomerItemClicked(customerId))
             true
         }
         binding.rvCustomers.adapter = adapter
@@ -46,6 +46,9 @@ class CustomerListFragment :
             when (effect) {
                 CustomerUiEffect.NavigateToAddCustomer -> {
                     openAddCustomerForm()
+                }
+                is CustomerUiEffect.OpenOptionDialog -> {
+                    showEditDeleteDialog(effect.customerId)
                 }
 
                 is CustomerUiEffect.ShowMessage -> showToast(effect.message)

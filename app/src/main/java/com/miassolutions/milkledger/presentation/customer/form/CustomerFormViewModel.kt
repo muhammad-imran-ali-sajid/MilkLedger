@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.domain.model.Customer
 import com.miassolutions.milkledger.presentation.customer.customerdetail.CustomerUiEvent
 import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -139,6 +140,8 @@ class CustomerFormViewModel @Inject constructor(
                     rateError = null
                 )
             }
+
+            delay(1000)
 
             try {
                 repository.upsertCustomer(customer)
