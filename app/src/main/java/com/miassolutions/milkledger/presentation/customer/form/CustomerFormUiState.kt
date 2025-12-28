@@ -9,6 +9,7 @@ data class CustomerFormUiState(
     val isEdit: Boolean = false,
     val isSaving: Boolean = false,
 
+
     val nameError: String? = null,
     val rateError: String? = null,
     val positionError: String? = null

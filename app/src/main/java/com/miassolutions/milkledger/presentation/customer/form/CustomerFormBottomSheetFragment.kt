@@ -4,12 +4,11 @@ package com.miassolutions.milkledger.presentation.customer.form
 import android.os.Bundle
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import com.miassolutions.milkledger.core.extensions.collectEvent
+import com.miassolutions.milkledger.core.extensions.collectEffect
 import com.miassolutions.milkledger.core.extensions.collectFlow
 import com.miassolutions.milkledger.core.ui.BaseBottomSheet
 import com.miassolutions.milkledger.core.util.setTextIfDifferent
 import com.miassolutions.milkledger.databinding.CustomerFormLayoutBinding
-import com.miassolutions.milkledger.presentation.customer.customerslist.CustomerUiEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,11 +30,19 @@ class CustomerFormBottomSheetFragment : BaseBottomSheet<CustomerFormLayoutBindin
             etRateLayout.error = state.rateError
             etPosLayout.error = state.positionError
 
-            btnSave.text = if (state.isEdit) "Update" else "Save"
+            btnSave.apply {
+                isEnabled = !state.isSaving
+
+                text = when {
+                    state.isSaving -> "Saving..."
+                    state.isEdit -> "Update"
+                    else -> "Save"
+                }
+            }
         }
 
-        // --- EVENTS ---
-        collectEvent(viewModel.uiEffect) { effect ->
+
+        collectEffect(viewModel.uiEffect) { effect ->
             when (effect) {
                 CustomerFormUiEffect.Dismiss -> dismiss()
                 is CustomerFormUiEffect.ShowMessage -> {

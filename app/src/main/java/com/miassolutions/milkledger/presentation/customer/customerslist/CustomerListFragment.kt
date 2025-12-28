@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.presentation.customer.customerslist
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.miassolutions.milkledger.core.extensions.collectEvent
+import com.miassolutions.milkledger.core.extensions.collectEffect
 import com.miassolutions.milkledger.core.extensions.collectFlow
 import com.miassolutions.milkledger.core.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -42,7 +42,7 @@ class CustomerListFragment :
             adapter.submitList(state.visibleCustomers)
         }
 
-        collectEvent(viewModel.uiEffect) { effect ->
+        collectEffect(viewModel.uiEffect) { effect ->
             when (effect) {
                 CustomerUiEffect.NavigateToAddCustomer -> {
                     openAddCustomerForm()

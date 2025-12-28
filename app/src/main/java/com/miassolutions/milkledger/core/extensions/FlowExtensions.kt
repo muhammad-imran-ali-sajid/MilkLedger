@@ -20,7 +20,7 @@ inline fun <T> Fragment.collectFlow(
 }
 
 
-inline fun <T> Fragment.collectEvent(
+inline fun <T> Fragment.collectEffect(
     flow: Flow<T>,
     minActiveState: Lifecycle.State = Lifecycle.State.STARTED,
     crossinline collect: (T) -> Unit
