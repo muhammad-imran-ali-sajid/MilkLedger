@@ -9,7 +9,9 @@ import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.presentation.expenses.data.toDomain
 import com.miassolutions.milkledger.presentation.expenses.data.toEntity
 import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
+import com.miassolutions.milkledger.data.util.SupplierSaveError
 import com.miassolutions.milkledger.domain.model.Supplier
+import com.miassolutions.milkledger.presentation.supplier.suppliers.SupplierListUiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -43,6 +45,14 @@ class SupplierRepository @Inject constructor(
     // -------------------------------
 
     suspend fun upsertSupplier(supplier: Supplier) {
+
+        val existingCount = supplierDao.countWithSortOrder(supplier.sortOrder, supplier.id)
+
+        if (existingCount > 0){
+            throw SupplierSaveError.SortOrderAlreadyExists(supplier.sortOrder)
+        }
+
+
         val entity = supplier.toEntity()
         supplierDao.insertSupplier(entity)
 

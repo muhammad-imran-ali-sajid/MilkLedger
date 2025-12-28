@@ -16,6 +16,15 @@ interface SupplierDao {
        Sync helpers
     --------------------------------------------------- */
 
+    @Query("""
+    SELECT COUNT(*)
+    FROM supplier_table
+    WHERE sortOrder = :sortOder
+    AND (:excludeId IS NULL OR supplierId != :excludeId)
+    AND deletedAtMillis IS NULL
+""")
+    suspend fun countWithSortOrder(sortOder: Int, excludeId: String? = null): Int
+
     @Query("SELECT * FROM supplier_table")
     suspend fun getAllSuppliersList(): List<SupplierEntity>
 
