@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.data.util.CustomerSaveError
 import com.miassolutions.milkledger.domain.model.Customer
+import com.miassolutions.milkledger.presentation.customer.customerdetail.CustomerUiEvent
 import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -26,8 +27,37 @@ class CustomerFormViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
 
-    private val _uiEvent = MutableSharedFlow<CustomerFormUiEvent>()
-    val uiEvent: SharedFlow<CustomerFormUiEvent> = _uiEvent.asSharedFlow()
+    private val _uiEffect = MutableSharedFlow<CustomerFormUiEffect>()
+    val uiEffect: SharedFlow<CustomerFormUiEffect> = _uiEffect.asSharedFlow()
+
+
+    fun onEvent(event: CustomerFormUiEvent) {
+        when (event) {
+            is CustomerFormUiEvent.OnPositionChanged -> {
+                updateState { it.copy(position = event.value, positionError = null) }
+            }
+
+            is CustomerFormUiEvent.OnNameChanged -> {
+                updateState { it.copy(name = event.value, nameError = null) }
+            }
+
+            is CustomerFormUiEvent.OnRateChanged -> {
+                updateState { it.copy(rate = event.value, rateError = null) }
+            }
+
+            is CustomerFormUiEvent.OnAdvanceAmountChanged -> {
+                updateState { it.copy(advanceAmount = event.value) }
+            }
+
+            CustomerFormUiEvent.OnSaveClicked -> {
+                onSaveClicked()
+            }
+        }
+    }
+
+    private fun updateState(reducer: (CustomerFormUiState) -> CustomerFormUiState) {
+        _uiState.update(reducer)
+    }
 
 
     private fun loadCustomer(customerId: String) {
@@ -59,7 +89,6 @@ class CustomerFormViewModel @Inject constructor(
     init {
         customerId?.let { loadCustomer(customerId) }
     }
-
 
 
     // -------------------------
@@ -114,13 +143,17 @@ class CustomerFormViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
+
+            updateState { it.copy(isSaving = true) }
+
             try {
                 repository.upsertCustomer(customer)
-                _uiEvent.emit(CustomerFormUiEvent.Dismiss)
+                _uiEffect.emit(CustomerFormUiEffect.Dismiss)
 
             } catch (e: CustomerSaveError.SortOrderAlreadyExists) {
                 _uiState.update {
                     it.copy(
+                        isSaving = false,
                         positionError = "Position ${e.sortOrder} already exists"
                     )
                 }

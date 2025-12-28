@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.core.extensions.collectFlow
 import com.miassolutions.milkledger.core.ui.BaseBottomSheet
 import com.miassolutions.milkledger.core.util.setTextIfDifferent
 import com.miassolutions.milkledger.databinding.CustomerFormLayoutBinding
+import com.miassolutions.milkledger.presentation.customer.customerslist.CustomerUiEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,7 +19,7 @@ class CustomerFormBottomSheetFragment : BaseBottomSheet<CustomerFormLayoutBindin
     private val viewModel: CustomerFormViewModel by viewModels()
 
 
-    override fun onViewReady(savedInstanceState: Bundle?)=with(binding) {
+    override fun onViewReady(savedInstanceState: Bundle?) = with(binding) {
 
         collectFlow(viewModel.uiState) { state ->
             etName.setTextIfDifferent(state.name)
@@ -34,28 +35,41 @@ class CustomerFormBottomSheetFragment : BaseBottomSheet<CustomerFormLayoutBindin
         }
 
         // --- EVENTS ---
-        collectEvent(viewModel.uiEvent) { event ->
-            when (event) {
-                CustomerFormUiEvent.Dismiss -> dismiss()
+        collectEvent(viewModel.uiEffect) { effect ->
+            when (effect) {
+                CustomerFormUiEffect.Dismiss -> dismiss()
+                is CustomerFormUiEffect.ShowMessage -> {
+                    showToast(effect.message)
+                }
             }
         }
 
         // --- INPUTS ---
         etName.doAfterTextChanged {
-            viewModel.onNameChanged(it.toString())
+            viewModel.onEvent(
+                CustomerFormUiEvent.OnNameChanged(it.toString())
+            )
         }
         etRate.doAfterTextChanged {
-            viewModel.onRateChanged(it.toString())
+            viewModel.onEvent(
+                CustomerFormUiEvent.OnRateChanged(it.toString())
+            )
         }
         etPosition.doAfterTextChanged {
-            viewModel.onPositionChanged(it.toString())
+            viewModel.onEvent(
+                CustomerFormUiEvent.OnPositionChanged(it.toString())
+            )
         }
         etAdvanceAmount.doAfterTextChanged {
-            viewModel.onAdvanceAmountChanged(it.toString())
+            viewModel.onEvent(
+                CustomerFormUiEvent.OnAdvanceAmountChanged(it.toString())
+            )
         }
 
         btnSave.setOnClickListener {
-            viewModel.onSaveClicked()
+            viewModel.onEvent(
+                CustomerFormUiEvent.OnSaveClicked
+            )
         }
 
     }
