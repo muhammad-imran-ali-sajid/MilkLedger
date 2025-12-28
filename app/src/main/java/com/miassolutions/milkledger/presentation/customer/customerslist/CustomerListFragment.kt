@@ -3,10 +3,11 @@ package com.miassolutions.milkledger.presentation.customer.customerslist
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.miassolutions.milkledger.core.extensions.collectEvent
+import com.miassolutions.milkledger.core.extensions.collectFlow
 import com.miassolutions.milkledger.core.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomersBinding
-import com.miassolutions.milkledger.presentation.customer.form.CustomerFormBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,7 +24,7 @@ class CustomerListFragment :
 
     override fun setupListeners() = with(binding) {
         btnAddCustomer.setOnClickListener {
-            viewModel.onAddCustomerClick()
+            viewModel.onEvent(CustomerUiEvent.OnAddCustomerClick)
         }
     }
 
@@ -37,17 +38,17 @@ class CustomerListFragment :
 
     override fun setupObservers() {
 
-        viewModel.uiState.collectState { state ->
-            adapter.submitList(state.customers)
+        collectFlow(viewModel.uiState) { state ->
+            adapter.submitList(state.visibleCustomers)
         }
 
-        viewModel.uiEvent.collectState { event ->
-            when (event) {
-                CustomerUiEvent.ShowAddCustomerForm -> {
+        collectEvent(viewModel.uiEffect) { effect ->
+            when (effect) {
+                CustomerUiEffect.NavigateToAddCustomer -> {
                     openAddCustomerForm()
                 }
 
-                is CustomerUiEvent.ShowMessage -> showToast(event.message)
+                is CustomerUiEffect.ShowMessage -> showToast(effect.message)
             }
         }
     }
@@ -83,9 +84,7 @@ class CustomerListFragment :
 
     private fun confirmDeleteCustomer(customerId: String) {
         showDeleteActionDialog(message = "Be careful this will delete precious records") {
-            viewModel.deleteCustomer(
-                customerId
-            )
+            viewModel.onEvent(CustomerUiEvent.OnDeleteCustomer(customerId))
         }
     }
 }

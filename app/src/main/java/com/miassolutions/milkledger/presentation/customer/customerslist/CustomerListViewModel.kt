@@ -3,13 +3,15 @@ package com.miassolutions.milkledger.presentation.customer.customerslist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.CustomerRepository
-import com.miassolutions.milkledger.domain.model.Customer
 import com.miassolutions.milkledger.presentation.customer.mapper.toUI
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,38 +23,71 @@ class CustomerListViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(CustomerUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _uiEvent = MutableSharedFlow<CustomerUiEvent>()
-    val uiEvent = _uiEvent.asSharedFlow()
+    private val _uiEffect = MutableSharedFlow<CustomerUiEffect>()
+    val uiEffect = _uiEffect.asSharedFlow()
 
-    private var allCustomers: List<Customer> = emptyList()
+    private fun emitEffect(effect: CustomerUiEffect) {
+        viewModelScope.launch { _uiEffect.emit(effect) }
+    }
+
+    fun onEvent(event: CustomerUiEvent) {
+        when (event) {
+            CustomerUiEvent.OnAddCustomerClick -> {
+                emitEffect(CustomerUiEffect.NavigateToAddCustomer)
+            }
+
+            CustomerUiEvent.OnRetryClick -> {
+                loadCustomers()
+            }
+
+            is CustomerUiEvent.OnDeleteCustomer -> {
+                deleteCustomer(event.customerId)
+            }
+
+            is CustomerUiEvent.OnSearchQueryChange -> {
+                _uiState.update { it.copy(searchQuery = event.query) }
+            }
+        }
+    }
+
 
     init {
-        observeCustomers()
+        loadCustomers()
     }
 
-    private fun observeCustomers() {
+    private fun loadCustomers() {
         viewModelScope.launch {
             repository.getAllCustomers()
-                .collect { customers ->
-                    allCustomers = customers
-                    _uiState.value = _uiState.value.copy(
-                        customers = customers.map { it.toUI() },
-                        displayedCustomers = customers.map { it.toUI() }
+                .onStart {
+                    _uiState.update { it.copy(isLoading = true, error = null) }
+                }
+                .catch {
+                    _uiState.update {
+                        it.copy(isLoading = false, error = it.error)
+                    }
+                    _uiEffect.emit(
+                        CustomerUiEffect.ShowMessage("Failed to load customers")
                     )
                 }
+                .collect { customers ->
+
+                    val customersUI = customers.map { it.toUI() }
+
+                    _uiState.update {
+                        it.copy(customers = customersUI, isLoading = false)
+                    }
+
+                }
+
+
         }
     }
 
-    fun onAddCustomerClick() {
-        viewModelScope.launch {
-            _uiEvent.emit(CustomerUiEvent.ShowAddCustomerForm)
-        }
-    }
 
-    fun deleteCustomer(customerId: String) {
+    private fun deleteCustomer(customerId: String) {
         viewModelScope.launch {
             repository.deleteCustomer(customerId)
-            _uiEvent.emit(CustomerUiEvent.ShowMessage("Customer deleted"))
+            _uiEffect.emit(CustomerUiEffect.ShowMessage("Customer deleted"))
         }
     }
 }

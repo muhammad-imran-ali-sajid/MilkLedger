@@ -4,12 +4,19 @@ import com.miassolutions.milkledger.presentation.customer.model.CustomerUi
 
 data class CustomerUiState(
     val customers: List<CustomerUi> = emptyList(),
-    val displayedCustomers: List<CustomerUi> = emptyList(),
-    val isLoading: Boolean = false
-)
+    val searchQuery: String = "",
+    val isLoading: Boolean = false,
+    val error: String? = null
+) {
+    val isEmpty: Boolean
+        get() = customers.isEmpty() && !isLoading
 
-
-sealed interface CustomerUiEvent {
-    data object ShowAddCustomerForm : CustomerUiEvent
-    data class ShowMessage(val message: String) : CustomerUiEvent
+    val visibleCustomers: List<CustomerUi>
+        get() = if (searchQuery.isBlank()) {
+            customers
+        } else {
+            customers.filter { it.name.contains(searchQuery, ignoreCase = true) }
+        }
 }
+
+
