@@ -5,10 +5,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.SupplierRepository
-import com.miassolutions.milkledger.data.util.CustomerSaveError
 import com.miassolutions.milkledger.data.util.SupplierSaveError
 import com.miassolutions.milkledger.domain.model.Supplier
-import com.miassolutions.milkledger.presentation.customer.form.CustomerFormUiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

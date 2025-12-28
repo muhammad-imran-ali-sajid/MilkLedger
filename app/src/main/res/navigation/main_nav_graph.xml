@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/salesFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.sales.ui.SalesFragment"
+        android:name="com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.SalesFragment"
         android:label="Sales"
         tools:layout="@layout/fragment_sales" >
         <action
@@ -63,7 +63,7 @@
         tools:layout="@layout/fragment_stats" />
     <fragment
         android:id="@+id/customersFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.customerslist.CustomerListFragment"
+        android:name="com.miassolutions.milkledger.presentation.customerandsales.customer.customerslist.CustomerListFragment"
         android:label="CustomersFragment"
         tools:layout="@layout/fragment_customers" >
         <action
@@ -83,7 +83,7 @@
     </dialog>
     <dialog
         android:id="@+id/customerFormBottomSheetFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.form.CustomerFormBottomSheetFragment"
+        android:name="com.miassolutions.milkledger.presentation.customerandsales.customer.form.CustomerFormBottomSheetFragment"
         android:label="CustomerFormBottomSheetFragment"
         tools:layout="@layout/customer_form_layout" >
         <argument
@@ -134,7 +134,7 @@
     </fragment>
     <fragment
         android:id="@+id/customerDetailFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.customerdetail.CustomerDetailFragment"
+        android:name="com.miassolutions.milkledger.presentation.customerandsales.sales.customersalesdetail.CustomerDetailFragment"
         android:label="{customerName}"
         tools:layout="@layout/fragment_customer_detail" >
         <argument
@@ -188,7 +188,7 @@
         tools:layout="@layout/fragment_add_purchase" />
     <fragment
         android:id="@+id/saleAddFragment"
-        android:name="com.miassolutions.milkledger.presentation.customer.sales.ui.SaleAddFragment"
+        android:name="com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.SaleAddFragment"
         android:label="Add Sales"
         tools:layout="@layout/fragment_add_sale" />
     <dialog

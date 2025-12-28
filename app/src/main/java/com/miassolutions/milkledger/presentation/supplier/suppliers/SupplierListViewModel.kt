@@ -2,11 +2,8 @@ package com.miassolutions.milkledger.presentation.supplier.suppliers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.data.mapper.toEntity
 import com.miassolutions.milkledger.data.repository.SupplierRepository
-import com.miassolutions.milkledger.presentation.customer.customerslist.CustomerUiEffect
 import com.miassolutions.milkledger.presentation.supplier.mapper.toUi
-import com.miassolutions.milkledger.presentation.supplier.model.SupplierUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

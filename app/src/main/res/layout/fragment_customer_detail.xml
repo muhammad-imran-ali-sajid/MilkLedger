@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".presentation.customer.customerdetail.CustomerDetailFragment">
+    tools:context=".presentation.customerandsales.sales.customersalesdetail.CustomerDetailFragment">
 
     <TextView
         android:id="@+id/tv_selected_date"

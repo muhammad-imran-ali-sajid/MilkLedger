@@ -60,6 +60,7 @@
                     android:text="Volume" />
 
                 <EditText
+
                     android:id="@+id/etVolume"
                     style="@style/Style.EditTextInput"
                     android:inputType="numberDecimal" />
@@ -89,7 +90,6 @@
 
                 <TextView
                     android:id="@+id/tvNetMilk"
-
                     android:layout_weight="4"
                     style="@style/Style.TextViewValue.ReadOnly"
                     android:inputType="numberDecimal" />
@@ -152,6 +152,8 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_rate_header"
                     app:layout_constraintWidth_percent="0.3" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
