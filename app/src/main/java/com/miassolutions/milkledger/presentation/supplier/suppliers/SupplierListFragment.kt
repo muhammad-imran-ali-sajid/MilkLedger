@@ -1,8 +1,12 @@
 package com.miassolutions.milkledger.presentation.supplier.suppliers
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.extensions.collectEffect
+import com.miassolutions.milkledger.core.extensions.collectFlow
+import com.miassolutions.milkledger.core.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSuppliersBinding
 import com.miassolutions.milkledger.domain.model.Supplier
@@ -23,61 +27,71 @@ class SupplierListFragment :
 
     override fun setupListeners() = with(binding) {
         btnAddSupplier.setOnClickListener {
-//            viewModel.onAddSupplierClick()
+            viewModel.onEvent(SupplierListUiEvent.OnAddSupplierClick)
         }
     }
 
     override fun setupObservers() {
 
-//        viewModel.uiState.collectState { state ->
-//            adapter.submitList(state.suppliers)
-//        }
+        collectFlow(viewModel.uiState) { state ->
+            adapter.submitList(state.visibleSupplier) // show derived list here
+        }
 
-//        viewModel.uiEvent.collectState { event ->
-//            when (event) {
-//                SupplierUiEvent.ShowSupplierForm -> {
-//                    SupplierFormBottomSheetFragment
-//                        .newInstance(null)
-//                        .show(parentFragmentManager, null)
-//                }
-//
-//                is SupplierUiEvent.ShowMessage ->
-//                    showToast(event.message)
-//            }
-//        }
+        collectEffect(viewModel.uiEffect) { effect ->
+            when (effect) {
+                SupplierListUiEffect.NavToAddSupplierForm -> {
+                    val action =
+                        SupplierListFragmentDirections.actionSuppliersFragmentToSupplierFormBottomSheetFragment()
+                    findNavController().navigate(action)
+                }
+
+                is SupplierListUiEffect.OpenOptionDialog -> {
+                    showEditDeleteDialog(effect.supplierId)
+                }
+
+                is SupplierListUiEffect.ShowMessage -> {
+                    showToast(effect.message)
+                }
+            }
+        }
     }
 
     private fun setupRecyclerView() {
-        adapter = SupplierListAdapter { supplier ->
-            showEditDeleteDialog(supplier)
+        adapter = SupplierListAdapter { supplierId ->
+            viewModel.onEvent(SupplierListUiEvent.OnSupplierItemClick(supplierId))
             true
         }
         binding.rvSupplier.adapter = adapter
     }
 
-    private fun showEditDeleteDialog(supplier: Supplier) {
+    private fun showEditDeleteDialog(supplierId: String) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Select Action")
             .setItems(arrayOf("Edit", "Delete")) { dialog, which ->
                 when (which) {
-                    0 -> openEditSupplier(supplier)
-                    1 -> confirmDeleteSupplier(supplier)
+                    0 -> {
+                        openEditSupplier(supplierId)
+                    }
+
+                    1 -> confirmDeleteSupplier(supplierId)
                 }
                 dialog.dismiss()
             }
             .show()
     }
 
-    private fun openEditSupplier(supplier: Supplier) {
-
+    private fun openEditSupplier(supplierId: String) {
+        val action =
+            SupplierListFragmentDirections.actionSuppliersFragmentToSupplierFormBottomSheetFragment(
+                supplierId
+            )
+        findNavController().navigate(action)
     }
 
-    private fun confirmDeleteSupplier(supplier: Supplier) {
-        showDialog(
-            title = "Delete Supplier",
-            message = "Delete ${supplier.name}?"
-        ) {
-//            viewModel.deleteSupplier(supplier)
+    private fun confirmDeleteSupplier(supplierId: String) {
+
+        showDeleteActionDialog {
+            viewModel.onEvent(SupplierListUiEvent.OnDeleteSupplierClick(supplierId))
         }
     }
 }
