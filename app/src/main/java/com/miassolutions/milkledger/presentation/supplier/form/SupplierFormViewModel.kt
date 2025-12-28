@@ -1,18 +1,21 @@
 package com.miassolutions.milkledger.presentation.supplier.form
 
 
-
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.repository.SupplierRepository
+import com.miassolutions.milkledger.data.util.CustomerSaveError
+import com.miassolutions.milkledger.data.util.SupplierSaveError
 import com.miassolutions.milkledger.domain.model.Supplier
+import com.miassolutions.milkledger.presentation.customer.form.CustomerFormUiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -24,72 +27,136 @@ class SupplierFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val editingSupplier: Supplier? = savedStateHandle["supplier"]
+    private val supplierId: String? = savedStateHandle["supplierId"]
 
-    private val _uiState = MutableStateFlow(
-        SupplierFormUiState(
-            name = editingSupplier?.name.orEmpty(),
-            rate = editingSupplier?.rate?.toString().orEmpty(),
-            position = editingSupplier?.sortOrder?.toString().orEmpty(),
-            advanceAmount = editingSupplier?.advanceAmount?.toString().orEmpty(),
-            isEdit = editingSupplier != null
-        )
-    )
-    val uiState: StateFlow<SupplierFormUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(SupplierFormUiState())
+    val uiState = _uiState.asStateFlow()
 
-    private val _uiEvent = MutableSharedFlow<SupplierFormUiEvent>()
-    val uiEvent = _uiEvent.asSharedFlow()
+    init {
+        supplierId?.let { loadSupplier(it) }
 
-    // INPUTS
-    fun onNameChanged(value: String) =
-        _uiState.update { it.copy(name = value, nameError = null) }
+    }
 
-    fun onRateChanged(value: String) =
-        _uiState.update { it.copy(rate = value, rateError = null) }
+    private fun loadSupplier(supplierId: String) {
+        viewModelScope.launch {
+            repository.getSupplierById(supplierId)
+                .filterNotNull()
+                .first()
+                .let { supplier ->
+                    updateState {
+                        it.copy(
+                            name = supplier.name,
+                            position = supplier.sortOrder.toString(),
+                            rate = supplier.rate.toString(),
+                            advanceAmount = supplier.advanceAmount.toString(),
+                            isEdit = true
 
-    fun onPositionChanged(value: String) =
-        _uiState.update { it.copy(position = value, positionError = null) }
+                        )
+                    }
 
-    fun onAdvanceAmountChanged(value: String) =
-        _uiState.update { it.copy(advanceAmount = value) }
+                }
+        }
+    }
 
-    // SAVE
-    fun onSaveClicked() {
+
+    private val _uiEffect = MutableSharedFlow<SupplierFormUiEffect>()
+    val uiEffect = _uiEffect.asSharedFlow()
+
+    fun onEvent(event: SupplierFormUiEvent) {
+        when (event) {
+            is SupplierFormUiEvent.OnPositionChanged -> {
+                updateState { it.copy(position = event.position, positionError = null) }
+            }
+
+            is SupplierFormUiEvent.OnNameChanged -> {
+                updateState { it.copy(name = event.name, nameError = null) }
+            }
+
+            is SupplierFormUiEvent.OnRateChanged -> {
+                updateState { it.copy(rate = event.rate, rateError = null) }
+            }
+
+            is SupplierFormUiEvent.OnAdvanceAmountChanged -> {
+                updateState { it.copy(advanceAmount = event.amount) }
+            }
+
+            SupplierFormUiEvent.OnSaveClicked -> {
+                onSaveSupplier()
+            }
+
+        }
+    }
+
+    private fun onSaveSupplier() {
         val state = _uiState.value
-        val rate = state.rate.toDoubleOrNull()
+
         val position = state.position.toIntOrNull()
+        val name = state.name.trim()
+        val rate = state.rate.toDoubleOrNull()
 
-        var valid = true
+        val positionError = if (position == null) "Position is required" else null
+        val nameError = if (name.isBlank()) "Name is required" else null
+        val rateError = if (rate == null) "Rate is required" else null
 
-        if (state.name.isBlank()) {
-            _uiState.update { it.copy(nameError = "Name is required") }
-            valid = false
+        val hasError = positionError != null || nameError != null || rateError != null
+
+        if (hasError) {
+            updateState {
+                it.copy(
+                    isSaving = false,
+                    nameError = nameError,
+                    rateError = rateError,
+                    positionError = positionError
+                )
+            }
+            return
         }
-
-        if (rate == null) {
-            _uiState.update { it.copy(rateError = "Invalid rate") }
-            valid = false
-        }
-
-        if (position == null) {
-            _uiState.update { it.copy(positionError = "Invalid position") }
-            valid = false
-        }
-
-        if (!valid) return
 
         val supplier = Supplier(
-            id = editingSupplier?.id ?: UUID.randomUUID().toString(),
-            name = state.name.trim(),
-            rate = rate!!,
-            sortOrder = position!!,
+            id = supplierId ?: UUID.randomUUID().toString(),
+            name = name,
+            rate = rate ?: 0.0,
+            sortOrder = position ?: 0,
             advanceAmount = state.advanceAmount.toDoubleOrNull() ?: 0.0,
             isDefault = true
         )
 
         viewModelScope.launch {
-            repository.upsertSupplier(supplier)
-            _uiEvent.emit(SupplierFormUiEvent.Dismiss)
+            updateState {
+                it.copy(
+                    isSaving = true,
+                    nameError = null,
+                    positionError = null,
+                    rateError = null
+                )
+            }
+
+            try {
+                repository.upsertSupplier(supplier)
+                emitEffect(SupplierFormUiEffect.Dismiss)
+            } catch (e: SupplierSaveError.SortOrderAlreadyExists) {
+                updateState {
+                    it.copy(
+                        isSaving = false,
+                        positionError = "Position ${e.sortOrder} already exists"
+                    )
+                }
+            } catch (e: Exception) {
+                updateState { it.copy(isSaving = false) }
+            }
         }
+
+
+    }
+
+
+    private fun emitEffect(effect: SupplierFormUiEffect) {
+        viewModelScope.launch {
+            _uiEffect.emit(effect)
+        }
+    }
+
+    private fun updateState(reducer: (SupplierFormUiState) -> SupplierFormUiState) {
+        _uiState.update(reducer)
     }
 }

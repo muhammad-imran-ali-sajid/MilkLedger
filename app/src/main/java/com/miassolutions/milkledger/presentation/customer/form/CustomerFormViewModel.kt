@@ -72,8 +72,7 @@ class CustomerFormViewModel @Inject constructor(
                             rate = customer.rate.toString(),
                             position = customer.sortOrder.toString(),
                             advanceAmount = customer.advanceAmount.toString(),
-                            isEdit = true,
-
+                            isEdit = true
                             )
                     }
                 }
@@ -90,61 +89,56 @@ class CustomerFormViewModel @Inject constructor(
         customerId?.let { loadCustomer(customerId) }
     }
 
-
-    // -------------------------
-    // Input handlers
-    // -------------------------
-    fun onNameChanged(value: String) =
-        _uiState.update { it.copy(name = value, nameError = null) }
-
-    fun onRateChanged(value: String) =
-        _uiState.update { it.copy(rate = value, rateError = null) }
-
-    fun onPositionChanged(value: String) =
-        _uiState.update { it.copy(position = value, positionError = null) }
-
-    fun onAdvanceAmountChanged(value: String) =
-        _uiState.update { it.copy(advanceAmount = value) }
-
     // -------------------------
     // Save
     // -------------------------
-    fun onSaveClicked() {
+    private fun onSaveClicked() {
         val state = _uiState.value
+
+        val name = state.name.trim()
         val rate = state.rate.toDoubleOrNull()
         val position = state.position.toIntOrNull()
 
-        var valid = true
+        val nameError = if (name.isBlank()) "Name is required" else null
+        val rateError = if (rate == null) "Rate is required" else null
+        val positionError = if (position == null) "Positions is required" else null
 
-        if (state.name.isBlank()) {
-            _uiState.update { it.copy(nameError = "Name is required") }
-            valid = false
+        val hasError = nameError != null ||
+                rateError != null ||
+                positionError != null
+
+        if (hasError) {
+            updateState {
+                it.copy(
+                    nameError = nameError,
+                    rateError = rateError,
+                    positionError = positionError,
+                    isSaving = false
+                )
+            }
+            return
         }
 
-        if (rate == null) {
-            _uiState.update { it.copy(rateError = "Invalid rate") }
-            valid = false
-        }
-
-        if (position == null) {
-            _uiState.update { it.copy(positionError = "Invalid position") }
-            valid = false
-        }
-
-        if (!valid) return
 
         val customer = Customer(
             id = customerId ?: UUID.randomUUID().toString(),
-            name = state.name.trim(),
-            rate = rate!!,
-            sortOrder = position!!,
+            name = name,
+            rate = rate ?: 0.0,
+            sortOrder = position ?: 0,
             advanceAmount = state.advanceAmount.toDoubleOrNull() ?: 0.0,
             isDefault = true
         )
 
         viewModelScope.launch {
 
-            updateState { it.copy(isSaving = true) }
+            updateState {
+                it.copy(
+                    isSaving = true,
+                    nameError = null,
+                    positionError = null,
+                    rateError = null
+                )
+            }
 
             try {
                 repository.upsertCustomer(customer)
@@ -155,6 +149,14 @@ class CustomerFormViewModel @Inject constructor(
                     it.copy(
                         isSaving = false,
                         positionError = "Position ${e.sortOrder} already exists"
+                    )
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _uiState.update {
+                    it.copy(
+                        isSaving = false,
                     )
                 }
             }

@@ -34,16 +34,16 @@ class SupplierListFragment :
         }
 
         viewModel.uiEvent.collectState { event ->
-            when (event) {
-                SupplierUiEvent.ShowSupplierForm -> {
-                    SupplierFormBottomSheetFragment
-                        .newInstance(null)
-                        .show(parentFragmentManager, null)
-                }
-
-                is SupplierUiEvent.ShowMessage ->
-                    showToast(event.message)
-            }
+//            when (event) {
+//                SupplierUiEvent.ShowSupplierForm -> {
+//                    SupplierFormBottomSheetFragment
+//                        .newInstance(null)
+//                        .show(parentFragmentManager, null)
+//                }
+//
+//                is SupplierUiEvent.ShowMessage ->
+//                    showToast(event.message)
+//            }
         }
     }
 
@@ -69,9 +69,9 @@ class SupplierListFragment :
     }
 
     private fun openEditSupplier(supplier: Supplier) {
-        SupplierFormBottomSheetFragment
-            .newInstance(supplier)
-            .show(parentFragmentManager, null)
+//        SupplierFormBottomSheetFragment
+//            .newInstance(supplier)
+//            .show(parentFragmentManager, null)
     }
 
     private fun confirmDeleteSupplier(supplier: Supplier) {
