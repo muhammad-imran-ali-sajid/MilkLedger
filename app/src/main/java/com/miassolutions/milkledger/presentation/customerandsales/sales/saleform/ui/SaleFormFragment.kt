@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.ui
 
 import android.graphics.Color
 import android.widget.ArrayAdapter

@@ -49,7 +49,13 @@ class CustomerRepository @Inject constructor(
             throw CustomerSaveError.SortOrderAlreadyExists(customer.sortOrder)
         }
 
-        val entity = customer.toEntity()
+        val old = customerDao.getCustomerByIdOnce(customer.id)
+        val entity = customer.toEntity().copy(
+            createdAtMillis = old?.createdAtMillis ?: System.currentTimeMillis(),
+            updatedAtMillis = System.currentTimeMillis()
+        )
+
+
         customerDao.upsert(entity)
 
 //        syncSafely {

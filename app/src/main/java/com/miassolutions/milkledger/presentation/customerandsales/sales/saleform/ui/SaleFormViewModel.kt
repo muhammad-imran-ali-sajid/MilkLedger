@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
