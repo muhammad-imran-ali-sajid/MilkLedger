@@ -116,11 +116,11 @@ class SaleAddFragment :
         // Date
         btnDate.text = state.saleDate.toDisplayFormat()
 
-        if (customerAdapter == null) {
+        if (customerAdapter == null && state.customers.isNotEmpty()) {
             customerAdapter = ArrayAdapter(
                 requireContext(),
                 R.layout.layout_drop_down_list,
-                state.customers.map { it.name }.toMutableList()
+                state.customers.map { it.name }
             )
             binding.actvCustomerName.setAdapter(customerAdapter)
 

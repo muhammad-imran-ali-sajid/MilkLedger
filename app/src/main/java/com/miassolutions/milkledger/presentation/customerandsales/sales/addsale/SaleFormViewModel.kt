@@ -52,6 +52,25 @@ class SaleFormViewModel @Inject constructor(
                 updateState { it.copy(customers = customers) }
             }
             .launchIn(viewModelScope)
+
+        uiState.map {
+            calculateSale(
+                volume = it.volume,
+                deduction = it.deduction,
+                rate = it.rate,
+                received = it.receivedAmount
+            )
+        }
+            .onEach { result ->
+                updateState {
+                    it.copy(
+                        netMilk = result.netMilk,
+                        price = result.price,
+                        balance = result.balance
+                    )
+                }
+            }
+            .launchIn(viewModelScope)
     }
 
     fun onEvent(event: SaleFormUiEvent) {
