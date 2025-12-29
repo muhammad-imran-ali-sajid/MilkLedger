@@ -10,3 +10,9 @@ data class CustomerUi(
     val isDefault: Boolean = true,
     val isExpanded: Boolean = false
 )
+
+data class DropDownCustomerListUi(
+    val id: String,
+    val name: String,
+    val rate: Double
+)

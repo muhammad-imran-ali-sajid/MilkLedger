@@ -36,15 +36,14 @@ class SaleAddFragment :
     BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBinding::inflate) {
 
     private val viewModel: SaleFormViewModel by viewModels()
+    private var customerAdapter: ArrayAdapter<String>? = null
+
 
     override fun setupViews() {
         setupCollectors()
         setupListeners()
     }
 
-    // ----------------------------------------------------
-    // LISTENERS → UiEvent
-    // ----------------------------------------------------
     override fun setupListeners() = with(binding) {
 
         // Volume
@@ -96,18 +95,12 @@ class SaleAddFragment :
         }
     }
 
-    // ----------------------------------------------------
-    // COLLECTORS → render UI
-    // ----------------------------------------------------
+
     private fun setupCollectors() {
 
-        // UiState
         collectFlow(viewModel.uiState) { state ->
             renderState(state)
         }
-
-
-        // UiEffect
 
         collectEffect(viewModel.uiEffect) { effect ->
             handleEffect(effect)
@@ -123,17 +116,22 @@ class SaleAddFragment :
         // Date
         btnDate.text = state.saleDate.toDisplayFormat()
 
-        // Customer dropdown
-        if (actvCustomerName.adapter == null) {
-            val adapter = ArrayAdapter(
+        if (customerAdapter == null) {
+            customerAdapter = ArrayAdapter(
                 requireContext(),
                 R.layout.layout_drop_down_list,
-                state.customers.map { it.name }
+                state.customers.map { it.name }.toMutableList()
             )
-            actvCustomerName.setAdapter(adapter)
+            binding.actvCustomerName.setAdapter(customerAdapter)
 
-            actvCustomerName.setOnItemClickListener { _, _, pos, _ ->
-                val customer = state.customers[pos]
+
+
+        binding.actvCustomerName.setOnItemClickListener { parent, _, position, _ ->
+                val selectedName = parent.getItemAtPosition(position) as String
+
+                val customer = state.customers.firstOrNull { it.name == selectedName }
+                    ?: return@setOnItemClickListener
+
                 viewModel.onEvent(
                     SaleFormUiEvent.CustomerSelected(
                         customerId = customer.id,
@@ -142,7 +140,14 @@ class SaleAddFragment :
                     )
                 )
             }
+
         }
+
+        /* 🔥 THIS IS THE KEY LINE */
+        customerAdapter?.clear()
+        customerAdapter?.addAll(state.customers.map { it.name })
+        customerAdapter?.notifyDataSetChanged()
+
 
         // Rate
         tvRate.text = state.rate.toRoundedStr()

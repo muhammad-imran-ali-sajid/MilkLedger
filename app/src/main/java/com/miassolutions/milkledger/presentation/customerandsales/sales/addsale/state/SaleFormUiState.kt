@@ -1,14 +1,14 @@
 package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state
 
-import com.miassolutions.milkledger.presentation.customerandsales.customer.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customerandsales.customer.model.DropDownCustomerListUi
 import java.time.LocalDate
 
 data class SaleFormUiState(
     val mode: SaleMode = SaleMode.ADD,
     val saleDate: LocalDate = LocalDate.now(),
 
-    val customers: List<CustomerUi> = emptyList(),
-    val selectedCustomer: CustomerUi? = null,
+    val customers: List<DropDownCustomerListUi> = emptyList(),
+    val selectedCustomer: DropDownCustomerListUi? = null,
 
     val volume: String = "",
     val deduction: String = "",

@@ -2,8 +2,10 @@ package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.presentation.customerandsales.customer.mapper.toDropDownUi
 import com.miassolutions.milkledger.presentation.customerandsales.customer.mapper.toUI
 import com.miassolutions.milkledger.presentation.customerandsales.customer.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customerandsales.customer.model.DropDownCustomerListUi
 import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.mapper.toDomain
 import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiEffect
 import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiEvent
@@ -45,7 +47,7 @@ class SaleFormViewModel @Inject constructor(
 
     init {
         observeCustomer()
-            .map { list -> list.map { it.toUI() } }
+            .map { list -> list.map { it.toDropDownUi() } }
             .onEach { customers ->
                 updateState { it.copy(customers = customers) }
             }
@@ -57,7 +59,7 @@ class SaleFormViewModel @Inject constructor(
             is SaleFormUiEvent.CustomerSelected -> {
                 updateState {
                     it.copy(
-                        selectedCustomer = CustomerUi(
+                        selectedCustomer = DropDownCustomerListUi(
                             id = event.customerId,
                             name = event.customerName,
                             rate = event.rate

@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.customerandsales.customer.mapp
 
 import com.miassolutions.milkledger.domain.model.Customer
 import com.miassolutions.milkledger.presentation.customerandsales.customer.model.CustomerUi
+import com.miassolutions.milkledger.presentation.customerandsales.customer.model.DropDownCustomerListUi
 
 fun Customer.toUI() = CustomerUi(
     id = id,
@@ -11,7 +12,7 @@ fun Customer.toUI() = CustomerUi(
     advanceAmount = advanceAmount,
     isDefault = isDefault,
 
-)
+    )
 
 fun CustomerUi.toDomain() = Customer(
     id = id,
@@ -20,4 +21,10 @@ fun CustomerUi.toDomain() = Customer(
     sortOrder = sortOrder,
     advanceAmount = advanceAmount,
     isDefault = isDefault
+)
+
+fun Customer.toDropDownUi() = DropDownCustomerListUi(
+    id = id,
+    name = name,
+    rate = rate
 )

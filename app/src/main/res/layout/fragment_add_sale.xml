@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:clickable="true"
                     android:drawablePadding="8dp"
-                    android:focusable="false"
+
                     android:inputType="none"
                     tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
