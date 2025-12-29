@@ -179,14 +179,14 @@
                     android:paddingEnd="0dp"
                     android:inputType="numberDecimal"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btnSelectDate"
+                    app:layout_constraintEnd_toStartOf="@+id/btnReceivedDate"
                     app:layout_constraintHorizontal_bias="0.03"
                     app:layout_constraintStart_toEndOf="@+id/label"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.3" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSelectDate"
+                    android:id="@+id/btnReceivedDate"
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="48dp"

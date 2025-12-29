@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state
 
 sealed interface SaleFormUiEffect {
 

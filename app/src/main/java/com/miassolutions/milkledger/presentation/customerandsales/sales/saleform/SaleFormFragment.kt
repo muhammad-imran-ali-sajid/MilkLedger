@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform
 
 import android.graphics.Color
 import android.widget.ArrayAdapter
@@ -10,29 +10,20 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.extensions.collectEffect
 import com.miassolutions.milkledger.core.extensions.collectFlow
-import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.MilkCalculationUtils
-import com.miassolutions.milkledger.core.util.autoSelectOnFocus
 import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.extensions.toDisplayDate
 import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toMillis
 import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.core.extensions.toRoundedStr
-import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiEffect
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiEvent
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiState
-import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.CustomerBalanceHistoryBottomSheet
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiEffect
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiEvent
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiState
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
-import kotlin.math.roundToInt
 
 @AndroidEntryPoint
-class SaleAddFragment :
+class SaleFormFragment :
     BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBinding::inflate) {
 
     private val viewModel: SaleFormViewModel by viewModels()
@@ -80,7 +71,7 @@ class SaleAddFragment :
         }
 
         // Received date
-        btnSelectDate.setOnClickListener {
+        btnReceivedDate.setOnClickListener {
             viewModel.onEvent(SaleFormUiEvent.ReceivedDateClicked)
         }
 
@@ -116,6 +107,10 @@ class SaleAddFragment :
         // Date
         btnDate.text = state.saleDate.toDisplayFormat()
 
+        btnReceivedDate.text = state.receivedDate.toDisplayFormat()
+
+
+
         if (customerAdapter == null && state.customers.isNotEmpty()) {
             customerAdapter = ArrayAdapter(
                 requireContext(),
@@ -126,7 +121,7 @@ class SaleAddFragment :
 
 
 
-        binding.actvCustomerName.setOnItemClickListener { parent, _, position, _ ->
+            binding.actvCustomerName.setOnItemClickListener { parent, _, position, _ ->
                 val selectedName = parent.getItemAtPosition(position) as String
 
                 val customer = state.customers.firstOrNull { it.name == selectedName }
@@ -150,7 +145,7 @@ class SaleAddFragment :
 
 
         // Rate
-        tvRate.text = state.rate.toRoundedStr()
+        tvRate.text = state.rateUsed.toRoundedStr()
 
         // Net milk
         tvNetMilk.text =
@@ -169,6 +164,7 @@ class SaleAddFragment :
             else -> Color.BLACK
         }
         tvBalance.setTextColor(balanceColor)
+
 
         // Loading (optional)
         btnSave.isEnabled = !state.isSaving
@@ -194,13 +190,19 @@ class SaleAddFragment :
                     isAuthorized = true,
                     initialDate = LocalDate.now(),
                     onPicked = { date ->
-//                        viewModel.onEvent(SaleFormUiEvent.SaleDateClicked(date))
+                        viewModel.onEvent(SaleFormUiEvent.SaleDateSelected(date))
                     }
                 )
             }
 
             SaleFormUiEffect.OpenReceivedDatePicker -> {
-                // Hook later if you need paid-date logic
+                showExpenseDatePicker(
+                    isAuthorized = true,
+                    initialDate = LocalDate.now(),
+                    onPicked = { date ->
+                        viewModel.onEvent(SaleFormUiEvent.ReceivedDateSelected(date))
+                    }
+                )
             }
 
             SaleFormUiEffect.NavigateBack -> {

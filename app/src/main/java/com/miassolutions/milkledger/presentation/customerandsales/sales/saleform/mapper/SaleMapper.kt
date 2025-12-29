@@ -1,7 +1,7 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.mapper
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.mapper
 
 import com.miassolutions.milkledger.domain.model.Sale
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiState
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiState
 import java.util.UUID
 
 fun SaleFormUiState.toDomain(): Sale =
@@ -12,7 +12,7 @@ fun SaleFormUiState.toDomain(): Sale =
         volume = volume.toDoubleOrNull() ?: 0.0,
         deduction = deduction.toDoubleOrNull() ?: 0.0,
         netMilk = netMilk,
-        rateUsed = rate,
+        rateUsed = rateUsed,
         price = price,
         paid = receivedAmount.toDoubleOrNull() ?: 0.0,
         notes = notes.orEmpty(),

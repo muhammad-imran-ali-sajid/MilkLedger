@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state
 
 import com.miassolutions.milkledger.presentation.customerandsales.customer.model.DropDownCustomerListUi
 import java.time.LocalDate
@@ -15,11 +15,11 @@ data class SaleFormUiState(
 
     val netMilk: Double = 0.0,
 
-    val rate: Double = 0.0,
+    val rateUsed: Double = 0.0,
     val price: Double = 0.0,
 
     val receivedAmount: String = "",
-    val receivedDate: LocalDate? = null,
+    val receivedDate: LocalDate = LocalDate.now(),
 
     val balance: Double = 0.0,
 

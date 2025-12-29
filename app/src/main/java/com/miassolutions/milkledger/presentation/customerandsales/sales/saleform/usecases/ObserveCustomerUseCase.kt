@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.usecases
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.usecases
 
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import javax.inject.Inject

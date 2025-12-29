@@ -1,19 +1,17 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.presentation.customerandsales.customer.mapper.toDropDownUi
-import com.miassolutions.milkledger.presentation.customerandsales.customer.mapper.toUI
-import com.miassolutions.milkledger.presentation.customerandsales.customer.model.CustomerUi
 import com.miassolutions.milkledger.presentation.customerandsales.customer.model.DropDownCustomerListUi
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.mapper.toDomain
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiEffect
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiEvent
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state.SaleFormUiState
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.usecases.CalculateSaleUseCase
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.usecases.CheckDuplicateSaleUseCase
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.usecases.ObserveCustomerUseCase
-import com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.usecases.SaveSaleUseCase
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.mapper.toDomain
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiEffect
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiEvent
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiState
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.usecases.CalculateSaleUseCase
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.usecases.CheckDuplicateSaleUseCase
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.usecases.ObserveCustomerUseCase
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.usecases.SaveSaleUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,7 +55,7 @@ class SaleFormViewModel @Inject constructor(
             calculateSale(
                 volume = it.volume,
                 deduction = it.deduction,
-                rate = it.rate,
+                rate = it.rateUsed,
                 received = it.receivedAmount
             )
         }
@@ -83,12 +81,13 @@ class SaleFormViewModel @Inject constructor(
                             name = event.customerName,
                             rate = event.rate
                         ),
-                        rate = event.rate
+                        rateUsed = event.rate
                     )
                 }
-                recalculate()
+
 
             }
+
 
             is SaleFormUiEvent.VolumeChanged -> {
                 updateState { it.copy(volume = event.value) }
@@ -121,6 +120,15 @@ class SaleFormViewModel @Inject constructor(
             SaleFormUiEvent.SaveClicked -> {
                 save(closeAfter = false)
             }
+
+            is SaleFormUiEvent.SaleDateSelected -> {
+                updateState { it.copy(saleDate = event.date) }
+            }
+
+            is SaleFormUiEvent.ReceivedDateSelected -> {
+                updateState { it.copy(receivedDate = event.date) }
+            }
+
         }
     }
 
@@ -166,7 +174,7 @@ class SaleFormViewModel @Inject constructor(
         val result = calculateSale(
             volume = state.volume,
             deduction = state.deduction,
-            rate = state.rate,
+            rate = state.rateUsed,
             received = state.receivedAmount
         )
 

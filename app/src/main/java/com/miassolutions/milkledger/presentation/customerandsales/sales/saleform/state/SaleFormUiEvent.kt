@@ -1,4 +1,6 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.addsale.state
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state
+
+import java.time.LocalDate
 
 sealed interface SaleFormUiEvent {
 
@@ -14,6 +16,9 @@ sealed interface SaleFormUiEvent {
     data class NotesChanged(val value: String) : SaleFormUiEvent
 
     data object SaleDateClicked : SaleFormUiEvent
+
+    data class SaleDateSelected(val date: LocalDate) : SaleFormUiEvent
+    data class ReceivedDateSelected(val date: LocalDate) : SaleFormUiEvent
     data object ReceivedDateClicked : SaleFormUiEvent
 
     data object SaveClicked : SaleFormUiEvent
