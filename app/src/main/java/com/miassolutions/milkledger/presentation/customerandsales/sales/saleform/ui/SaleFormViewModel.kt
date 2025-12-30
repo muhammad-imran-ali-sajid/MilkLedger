@@ -114,11 +114,11 @@ class SaleFormViewModel @Inject constructor(
             }
 
             SaleFormUiEvent.SaveAndNewClicked -> {
-                save(closeAfter = true)
+                save(closeAfter = false)
             }
 
             SaleFormUiEvent.SaveClicked -> {
-                save(closeAfter = false)
+                save(closeAfter = true)
             }
 
             is SaleFormUiEvent.SaleDateSelected -> {
@@ -148,6 +148,15 @@ class SaleFormViewModel @Inject constructor(
             return@launch
         }
 
+
+
+        val isTrue =  state.volume.isBlank() && state.receivedAmount.isBlank()
+
+        if (isTrue) {
+            emitEffect(SaleFormUiEffect.ShowToast("Enter volume or amount"))
+            return@launch
+        }
+
         val sale = state.toDomain()
 
         saveSale(sale)
@@ -169,21 +178,5 @@ class SaleFormViewModel @Inject constructor(
         }
     }
 
-    private fun recalculate() {
-        val state = _uiState.value
-        val result = calculateSale(
-            volume = state.volume,
-            deduction = state.deduction,
-            rate = state.rateUsed,
-            received = state.receivedAmount
-        )
 
-        updateState {
-            it.copy(
-                netMilk = result.netMilk,
-                price = result.price,
-                balance = result.balance
-            )
-        }
-    }
 }

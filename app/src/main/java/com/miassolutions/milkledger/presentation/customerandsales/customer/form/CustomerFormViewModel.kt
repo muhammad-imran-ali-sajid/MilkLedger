@@ -137,6 +137,7 @@ class CustomerFormViewModel @Inject constructor(
                     positionError = null,
                     rateError = null
                 )
+                
             }
 
             delay(1000)
