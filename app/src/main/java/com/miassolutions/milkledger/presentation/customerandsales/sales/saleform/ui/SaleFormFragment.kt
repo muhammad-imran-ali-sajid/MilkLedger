@@ -178,11 +178,7 @@ class SaleFormFragment :
         when (effect) {
 
             is SaleFormUiEffect.ShowToast -> {
-                Toast.makeText(
-                    requireContext(),
-                    effect.message,
-                    Toast.LENGTH_SHORT
-                ).show()
+                showSnackbar(effect.message)
             }
 
             SaleFormUiEffect.OpenSaleDatePicker -> {

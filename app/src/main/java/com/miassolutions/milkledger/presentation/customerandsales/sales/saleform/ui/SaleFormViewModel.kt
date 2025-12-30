@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.presentation.customerandsales.sales.salefor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.presentation.customerandsales.customer.mapper.toDropDownUi
 import com.miassolutions.milkledger.presentation.customerandsales.customer.model.DropDownCustomerListUi
 import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.mapper.toDomain
@@ -31,17 +32,11 @@ class SaleFormViewModel @Inject constructor(
     private val saveSale: SaveSaleUseCase,
     private val calculateSale: CalculateSaleUseCase
 
-) : ViewModel() {
+) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(initialState = SaleFormUiState()) {
 
-    private val _uiState = MutableStateFlow(SaleFormUiState())
-    val uiState = _uiState.asStateFlow()
 
-    private val _uiEffect = MutableSharedFlow<SaleFormUiEffect>()
-    val uiEffect = _uiEffect.asSharedFlow()
 
-    fun updateState(reducer: (SaleFormUiState) -> SaleFormUiState) {
-        _uiState.update(reducer)
-    }
+
 
     init {
         observeCustomer()
@@ -71,7 +66,7 @@ class SaleFormViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-    fun onEvent(event: SaleFormUiEvent) {
+    override fun onEvent(event: SaleFormUiEvent) {
         when (event) {
             is SaleFormUiEvent.CustomerSelected -> {
                 updateState {
@@ -133,7 +128,7 @@ class SaleFormViewModel @Inject constructor(
     }
 
     private fun save(closeAfter: Boolean) = viewModelScope.launch {
-        val state = _uiState.value
+        val state = currentState
         val customer = state.selectedCustomer ?: run {
             emitEffect(SaleFormUiEffect.ShowToast("Select Customer"))
             return@launch
@@ -149,8 +144,7 @@ class SaleFormViewModel @Inject constructor(
         }
 
 
-
-        val isTrue =  state.volume.isBlank() && state.receivedAmount.isBlank()
+        val isTrue = state.volume.isBlank() && state.receivedAmount.isBlank()
 
         if (isTrue) {
             emitEffect(SaleFormUiEffect.ShowToast("Enter volume or amount"))
@@ -172,11 +166,6 @@ class SaleFormViewModel @Inject constructor(
     }
 
 
-    private fun emitEffect(effect: SaleFormUiEffect) {
-        viewModelScope.launch {
-            _uiEffect.emit(effect)
-        }
-    }
 
 
 }
