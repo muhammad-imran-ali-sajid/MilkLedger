@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui
 
 import com.miassolutions.milkledger.domain.model.SaleUi
 import java.time.LocalDate
@@ -43,7 +43,7 @@ data class SalesUiState(
 
 
 sealed interface SalesUiEvent {
-
+    data class EditClicked(val sale: SaleUi) : SalesUiEvent
     data class SelectDate(val date: LocalDate) : SalesUiEvent
     data object NextDate : SalesUiEvent
     data object PreviousDate : SalesUiEvent
@@ -56,6 +56,7 @@ sealed interface SalesUiEvent {
         val deduction: Double,
         val rate: Double,
         val paid: Double,
+        val paidAt: LocalDate?,
         val notes: String?
     ) : SalesUiEvent
 
@@ -73,6 +74,8 @@ sealed interface SalesUiEffect {
         val customerId: String,
         val name: String
     ) : SalesUiEffect
+
+    data class EditSaleRecord(val saleUi: SaleUi) :SalesUiEffect
 
     data class ShowMessage(val message: String) : SalesUiEffect
 

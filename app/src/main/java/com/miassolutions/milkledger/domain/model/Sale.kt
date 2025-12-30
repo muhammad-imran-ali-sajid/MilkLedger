@@ -1,5 +1,7 @@
 package com.miassolutions.milkledger.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
 //data class SaleWithCustomerModel(
@@ -19,12 +21,13 @@ import java.time.LocalDate
 //)
 
 
-
+@Parcelize
 data class SaleUi(
     val id: String,
     val customerId: String,
     val customerName: String,
     val date: LocalDate,
+    val paidAt: LocalDate?,
     val volume: Double,
     val deduction: Double,
     val netMilk: Double,
@@ -34,7 +37,7 @@ data class SaleUi(
     val rateUsed: Double,
     val notes: String?,
     val accumulatedBalance: Double
-)
+) : Parcelable
 
 
 data class Sale(
@@ -68,6 +71,7 @@ fun Sale.toSaleUi(
         customerId = customerId,
         customerName = customerName,
         date = date,
+        paidAt = paidAt,
         volume = volume,
         deduction = deduction,
         netMilk = netMilk,

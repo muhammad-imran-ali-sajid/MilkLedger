@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/salesFragment"
-        android:name="com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.SalesFragment"
+        android:name="com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui.SalesFragment"
         android:label="Sales"
         tools:layout="@layout/fragment_sales" >
         <action

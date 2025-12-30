@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.helper
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.extensions.toDisplayFormat
 import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
@@ -64,12 +65,12 @@ class SalesEntryAdapter(
             tvPayment.text = item.paid.toPriceStr()
 
             // Receive date (optional)
-//            if (item.paid > 0 && item.paidAt != null) {
-//                tvReceiveDate.visibility = View.VISIBLE
-//                tvReceiveDate.text = "(${item.paidAt.toDisplayFormat()})"
-//            } else {
-//                tvReceiveDate.visibility = View.GONE
-//            }
+            if (item.paid > 0 && item.paidAt != null) {
+                tvReceiveDate.visibility = View.VISIBLE
+                tvReceiveDate.text = "(${item.paidAt.toDisplayFormat()})"
+            } else {
+                tvReceiveDate.visibility = View.GONE
+            }
 
             // ---------------------------
             // Balance

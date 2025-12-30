@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.usecase
 
 import com.miassolutions.milkledger.data.repository.CustomerRepository
 import com.miassolutions.milkledger.data.repository.PurchaseRepository

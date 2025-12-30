@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui
 
 import android.view.Menu
 import android.view.View
@@ -17,6 +17,9 @@ import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
 import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
 import com.miassolutions.milkledger.domain.model.Sale
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.helper.CustomerBalanceHistoryBottomSheet
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.helper.SalesEditBottomSheet
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.helper.SalesEntryAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -178,7 +181,10 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     private fun setupSalesRV() {
 
         adapter = SalesEntryAdapter(
-            onEditClick = {},
+            onEditClick = {saleUi ->
+                viewModel.onEvent(
+                    SalesUiEvent.EditClicked(saleUi)
+                )},
             onCustomerClick = { id, name ->
                 viewModel.onEvent(
                     SalesUiEvent.OpenCustomerLedger(id, name)
@@ -200,14 +206,6 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
     }
 
 
-//    private fun deleteSale(saleId: String) {
-//        showDialog(
-//            title = "WARNING!!",
-//            message = "This will delete the sale record",
-//            onAction = { viewModel.deleteSale(saleId) }
-//        )
-//
-//    }
 
     private fun showCustomerBalanceHistory(id: String, name: String) {
         if (!isPremiumEnabled) {
@@ -218,28 +216,7 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         btmSheet.show(childFragmentManager, null)
     }
 
-    private fun navToDetail(id: String, name: String) {
 
-
-        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-        if (!isAdmin) {
-            showSnackbar("Only ADMIN is allowed")
-            return
-        }
-
-        if (!isPremiumEnabled) {
-            showSnackbar("Premium Feature")
-            return
-        }
-
-
-        findNavController().navigate(
-            SalesFragmentDirections.actionSalesFragmentToCustomerDetailFragment(
-                id,
-                name
-            )
-        )
-    }
 
 
     override fun setupObservers() {
@@ -288,9 +265,17 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
                 )
             }
 
+            is SalesUiEffect.EditSaleRecord -> {
+                SalesEditBottomSheet
+                    .newInstance(effect.saleUi)
+                    .show(childFragmentManager, "EditSaleBottomSheet")
+            }
+
             is SalesUiEffect.ShowMessage -> {
                 showSnackbar(effect.message)
             }
+
+
 
 //            is SalesUiEffect.GeneratePdf -> {
 //                generatePdf(effect.data)
@@ -298,18 +283,6 @@ class SalesFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::i
         }
     }
 
-
-    private fun showEditSaleBottomSheet(sale: Sale) {
-
-        SalesEditBottomSheet(
-            entry = sale,
-            onSave = { salesEntity ->
-
-//                viewModel.updateSaleManually(salesEntity)
-
-            }
-        ).show(parentFragmentManager, "SaleEditBottomSheet")
-    }
 
 
 }

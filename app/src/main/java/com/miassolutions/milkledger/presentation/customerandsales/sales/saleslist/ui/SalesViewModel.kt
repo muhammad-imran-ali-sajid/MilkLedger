@@ -1,11 +1,13 @@
-package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist
+package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.repository.SalesRepository
 import com.miassolutions.milkledger.domain.model.Sale
 import com.miassolutions.milkledger.domain.model.toSaleUi
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.usecase.ObserveSalesForDateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -14,7 +16,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
-import kotlin.math.acos
 
 @HiltViewModel
 class SalesViewModel @Inject constructor(
@@ -23,6 +24,11 @@ class SalesViewModel @Inject constructor(
 ) : BaseViewModel<SalesUiState, SalesUiEvent, SalesUiEffect>(initialState = SalesUiState()) {
 
     private var observeJob: Job? = null
+
+    init {
+        observeDate(currentState.currentDate)
+    }
+
 
     private fun observeDate(date: LocalDate) {
         observeJob?.cancel()
@@ -65,11 +71,16 @@ class SalesViewModel @Inject constructor(
     }
 
     private fun updateSale(event: SalesUiEvent.EditSale) = viewModelScope.launch {
+
+        val existingSaleUi =
+            currentState.sales.firstOrNull { it.id == event.saleId }
+                ?: return@launch
+
         val updatedSale = Sale(
-            id = event.saleId,
-            customerId = "", // resolved internally or already known
-            date = currentState.currentDate,
-            paidAt = null,
+            id = existingSaleUi.id,
+            customerId = existingSaleUi.customerId, // ✅ KEEP ORIGINAL
+            date = existingSaleUi.date,              // ✅ KEEP ORIGINAL
+            paidAt = event.paidAt,
             volume = event.volume,
             deduction = event.deduction,
             netMilk = event.volume - event.deduction,
@@ -79,14 +90,15 @@ class SalesViewModel @Inject constructor(
                 rate = event.rate
             ),
             paid = event.paid,
-            balance = 0.0, // recalculated via ledger
+            balance = 0.0, // ledger-controlled
             rateUsed = event.rate,
             notes = event.notes
         )
+        Log.d("SalesVM", "Updating sale: $updatedSale")
 
         salesRepository.updateSale(updatedSale)
-        emitEffect(SalesUiEffect.ShowMessage("Sale updated"))
     }
+
 
 
     override fun onEvent(event: SalesUiEvent) {
@@ -106,6 +118,13 @@ class SalesViewModel @Inject constructor(
 
             is SalesUiEvent.EditSale ->
                 updateSale(event)
+
+            is SalesUiEvent.EditClicked -> {
+                emitEffect(
+                    SalesUiEffect.EditSaleRecord(event.sale)
+                )
+            }
+
 
             is SalesUiEvent.OpenCustomerLedger ->
                 emitEffect(
