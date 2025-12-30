@@ -71,23 +71,23 @@ class CustomerBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
 
         binding.rvBalanceHistory.adapter = adapter
 
-        viewModel.loadBalanceHistory(customerId)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.balanceHistory.collect { list ->
-
-                    val totalBalance = list.sumOf { it.balance }
-
-                    binding.tvBalance.text = numberFormat(totalBalance)
-                    binding.tvBalance.setTextColor(textColor(totalBalance))
-
-                    binding.tvTitle.text = "$customerName\nBalance History"
-
-                    adapter.submitList(list)
-                }
-            }
-        }
+//        viewModel.loadBalanceHistory(customerId)
+//
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.balanceHistory.collect { list ->
+//
+//                    val totalBalance = list.sumOf { it.balance }
+//
+//                    binding.tvBalance.text = numberFormat(totalBalance)
+//                    binding.tvBalance.setTextColor(textColor(totalBalance))
+//
+//                    binding.tvTitle.text = "$customerName\nBalance History"
+//
+//                    adapter.submitList(list)
+//                }
+//            }
+//        }
     }
 
     override fun onDestroyView() {

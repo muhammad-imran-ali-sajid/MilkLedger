@@ -1,105 +1,120 @@
 package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.miassolutions.milkledger.core.helper.numberFormat
-import com.miassolutions.milkledger.core.helper.textColor
-import com.miassolutions.milkledger.core.ui.BaseListAdapter
-import com.miassolutions.milkledger.core.extensions.hide
-import com.miassolutions.milkledger.core.extensions.show
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
-import com.miassolutions.milkledger.domain.model.Sale
-import com.miassolutions.milkledger.presentation.customerandsales.sales.model.SaleUi
+import com.miassolutions.milkledger.domain.model.SaleUi
 
 class SalesEntryAdapter(
-    private val onEditClick: (Sale) -> Unit,
-    private val navToDetailClick: (String, String) -> Unit,
+    private val onEditClick: (SaleUi) -> Unit,
+    private val onCustomerClick: (String, String) -> Unit,
     private val onDeleteClick: (String) -> Unit,
-    private val onBalanceClick: (String, String) -> Unit,
-) : BaseListAdapter<SaleUi, ItemSalesBinding>(
-    diffCallback = object : DiffUtil.ItemCallback<SaleUi>() {
-        override fun areItemsTheSame(
-            oldItem: SaleUi,
-            newItem: SaleUi
-        ): Boolean {
-            return oldItem.data.customerId == newItem.data.customerId
-        }
+    private val onBalanceClick: (String, String) -> Unit
+) : ListAdapter<SaleUi, SalesEntryAdapter.SaleViewHolder>(DiffCallback) {
 
-        override fun areContentsTheSame(
-            oldItem: SaleUi,
-            newItem: SaleUi
-        ): Boolean {
-            return oldItem == newItem
-        }
-    },
-
-    inflate = ItemSalesBinding::inflate
-) {
-
-    var isEditable = false
-
-    override fun createBinding(inflater: LayoutInflater, parent: ViewGroup): ItemSalesBinding {
-        return ItemSalesBinding.inflate(inflater, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SaleViewHolder {
+        val binding = ItemSalesBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return SaleViewHolder(binding)
     }
 
-    override fun bind(binding: ItemSalesBinding, item: SaleUi, position: Int) {
-        binding.apply {
-            item.data.apply {
+    override fun onBindViewHolder(holder: SaleViewHolder, position: Int) {
+        holder.bind(getItem(position))
+    }
 
-//                if (receivedDate != null) {
-//                    tvReceiveDate.show()
-//                    tvReceiveDate.text = "(${receivedDate.toDisplayDate()})"
-//                } else {
-//                    tvReceiveDate.hide()
-//                }
-//
-//                val payment = received.toPriceStr()
-//
-//                tvName.text = name
-//                tvMilk.text = volume.toRoundedStr()
-//                tvDeduction.text = deduction.toRoundedStr()
-//                tvNetMilk.text = netVolume.toRoundedStr()
-//                tvPrice.text = price.toPriceStr()
-//                tvPayment.text = payment
+    inner class SaleViewHolder(
+        private val binding: ItemSalesBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
+        fun bind(item: SaleUi) = with(binding) {
 
-                val balance = item.accumulatedBalance
+            // ---------------------------
+            // Header
+            // ---------------------------
+            tvName.text = item.customerName
 
-                tvBalance.text = numberFormat(balance)
-                tvBalance.setTextColor(textColor(balance))
+            btnEditForm.setOnClickListener {
+                onEditClick(item)
+            }
 
+            btnCustomerDetail.setOnClickListener {
+                onCustomerClick(item.customerId, item.customerName)
+            }
 
-//                btnBalance.setOnLongClickListener {
-//                    onBalanceClick(customerId, name)
-//                    true
-//                }
+            // ---------------------------
+            // Milk Info
+            // ---------------------------
+            tvMilk.text = item.volume.toRoundedStr()
+            tvDeduction.text = item.deduction.toRoundedStr()
+            tvNetMilk.text = item.netMilk.toRoundedStr()
 
-                if (notes.isNullOrBlank()) {
-                    tvNotes.hide()
-                } else {
-                    tvNotes.show()
-                    tvNotes.text = "Note: ${notes}"
-                }
+            // ---------------------------
+            // Price / Payment
+            // ---------------------------
+            tvPrice.text = item.price.toPriceStr()
+            tvPayment.text = item.paid.toPriceStr()
 
+            // Receive date (optional)
+//            if (item.paid > 0 && item.paidAt != null) {
+//                tvReceiveDate.visibility = View.VISIBLE
+//                tvReceiveDate.text = "(${item.paidAt.toDisplayFormat()})"
+//            } else {
+//                tvReceiveDate.visibility = View.GONE
+//            }
 
-//                btnCustomerDetail.setOnClickListener {
-//                    navToDetailClick(customerId, name)
-//
-//                }
-//
-//                btnEditForm.setOnClickListener {
-//                    onEditClick(item.data)
-//                }
-//
-//                tvName.setOnLongClickListener {
-//                    onDeleteClick(item.data.saleId)
-//                    true
-//                }
+            // ---------------------------
+            // Balance
+            // ---------------------------
+            tvBalance.text = item.accumulatedBalance.toPriceStr()
 
+            btnBalance.setOnClickListener {
+                onBalanceClick(item.customerId, item.customerName)
+            }
 
+            // ---------------------------
+            // Notes
+            // ---------------------------
+            if (!item.notes.isNullOrBlank()) {
+                tvNotes.visibility = View.VISIBLE
+                tvNotes.text = item.notes
+            } else {
+                tvNotes.visibility = View.GONE
+            }
+
+            // ---------------------------
+            // Long click → delete
+            // ---------------------------
+            root.setOnLongClickListener {
+                onDeleteClick(item.id)
+                true
             }
         }
+    }
 
+    companion object {
+
+        private val DiffCallback = object : DiffUtil.ItemCallback<SaleUi>() {
+
+            override fun areItemsTheSame(
+                oldItem: SaleUi,
+                newItem: SaleUi
+            ): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(
+                oldItem: SaleUi,
+                newItem: SaleUi
+            ): Boolean =
+                oldItem == newItem
+        }
     }
 }

@@ -1,217 +1,121 @@
 package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist
 
-import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
-
-import com.miassolutions.milkledger.data.repository.PurchaseRepository
+import com.miassolutions.milkledger.core.ui.BaseViewModel
+import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.repository.SalesRepository
-import com.miassolutions.milkledger.presentation.stats.CustomerPaidSummary
-import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
+import com.miassolutions.milkledger.domain.model.Sale
+import com.miassolutions.milkledger.domain.model.toSaleUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.math.acos
 
 @HiltViewModel
 class SalesViewModel @Inject constructor(
-    private val repository: SalesRepository,
-    private val purchaseRepo: PurchaseRepository
-) : ViewModel() {
+    private val observeSalesForDate: ObserveSalesForDateUseCase,
+    private val salesRepository: SalesRepository
+) : BaseViewModel<SalesUiState, SalesUiEvent, SalesUiEffect>(initialState = SalesUiState()) {
 
-    // -------------------------------------------------------------------------
-    // UI State — like PurchaseUiState
-    // -------------------------------------------------------------------------
-    private val _uiState = MutableStateFlow(SalesUiState())
-    val uiState: StateFlow<SalesUiState> = _uiState.asStateFlow()
+    private var observeJob: Job? = null
 
+    private fun observeDate(date: LocalDate) {
+        observeJob?.cancel()
 
-    // -------------------------------------------------------------------------
-    // Paid sales for selected date
-    // -------------------------------------------------------------------------
-    private val _paidSalesList = MutableStateFlow<List<CustomerPaidSummary>>(emptyList())
+        observeJob = observeSalesForDate(date)
+            .onStart {
+                updateState {
+                    it.copy(isLoading = true, currentDate = date)
+                }
+            }
+            .onEach { summary ->
+                val saleUiList = summary.sales.map { projections ->
+                    projections.sale.toSaleUi(
+                        customerName = projections.customerName,
+                        accumulatedBalance = projections.accumulatedBalance
+                    )
+                }
 
-    // -------------------------------------------------------------------------
-    // Balance History
-    // -------------------------------------------------------------------------
-    private val _balanceHistory = MutableStateFlow<List<BalanceHistory>>(emptyList())
-    val balanceHistory: StateFlow<List<BalanceHistory>> = _balanceHistory.asStateFlow()
-
-    // -------------------------------------------------------------------------
-    // Init
-    // -------------------------------------------------------------------------
-    init {
-        observeSalesForDate(_uiState.value.currentDate)
-        observePaidSales(_uiState.value.currentDate)
-    }
-
-    // -------------------------------------------------------------------------
-    // Load Balance History
-    // -------------------------------------------------------------------------
-    fun loadBalanceHistory(customerId: String) = viewModelScope.launch {
-        val list = repository.getBalanceHistory(customerId)
-        _balanceHistory.value = list
-        Log.d("SalesVM", "Balance history loaded for: $customerId size=${list.size}")
-    }
-
-    // -------------------------------------------------------------------------
-    // Observe paid sales
-    // -------------------------------------------------------------------------
-    private fun observePaidSales(date: LocalDate) {
-        repository.getPaidSalesForDate(date)
-            .onEach { list -> _paidSalesList.value = list }
-            .catch { Log.e("SalesVM", "Paid sales error: $it") }
+                updateState {
+                    it.copy(
+                        isLoading = false,
+                        sales = saleUiList,
+                        totalMilk = summary.totalMilk,
+                        totalDeduction = summary.totalDeduction,
+                        totalNetMilk = summary.totalNetMilk,
+                        totalAmount = summary.totalAmount,
+                        receivedAmount = summary.receivedAmount,
+                        totalBalance = summary.totalBalance,
+                        avgRatePerLiter = summary.avgRate
+                    )
+                }
+            }
             .launchIn(viewModelScope)
+
     }
 
-    // -------------------------------------------------------------------------
-    // Update sale manually
-    // -------------------------------------------------------------------------
-    fun updateSaleManually(updated: SalesEntity) {
-//        viewModelScope.launch {
-//            val newPrice = MilkCalculationUtils.calculateCustomerPrice(
-//                volume = updated.volume,
-//                deduction = updated.deduction,
-//                rate = updated.rateUsed
-//            )
-//
-//            val netMilk = updated.volume - updated.deduction
-//
-//            val final = updated.copy(
-//                price = newPrice,
-//                netMilk = netMilk
-//            )
-//
-//            repository.updateSale(final)
-//        }
+    private fun deleteSale(saleId: String) = viewModelScope.launch {
+        salesRepository.deleteSale(saleId)
+        emitEffect(SalesUiEffect.ShowMessage("Sale deleted"))
     }
 
-    // -------------------------------------------------------------------------
-    // Date changed
-    // -------------------------------------------------------------------------
-    fun onDateSelected(date: LocalDate) {
-        if (date != _uiState.value.currentDate) {
-            _uiState.update { it.copy(currentDate = date) }
-            observeSalesForDate(date)
-            observePaidSales(date)
-        }
+    private fun updateSale(event: SalesUiEvent.EditSale) = viewModelScope.launch {
+        val updatedSale = Sale(
+            id = event.saleId,
+            customerId = "", // resolved internally or already known
+            date = currentState.currentDate,
+            paidAt = null,
+            volume = event.volume,
+            deduction = event.deduction,
+            netMilk = event.volume - event.deduction,
+            price = MilkCalculationUtils.calculateCustomerPrice(
+                volume = event.volume,
+                deduction = event.deduction,
+                rate = event.rate
+            ),
+            paid = event.paid,
+            balance = 0.0, // recalculated via ledger
+            rateUsed = event.rate,
+            notes = event.notes
+        )
+
+        salesRepository.updateSale(updatedSale)
+        emitEffect(SalesUiEffect.ShowMessage("Sale updated"))
     }
 
-    fun goToNextDate() {
-        val next = _uiState.value.currentDate.plusDays(1)
-        onDateSelected(next)
-    }
 
-    fun goToPreviousDate() {
-        val prev = _uiState.value.currentDate.minusDays(1)
-        onDateSelected(prev)
-    }
-
-    // -------------------------------------------------------------------------
-    // Observe sales for date (CLEAN — NO auto-generation logic)
-    // -------------------------------------------------------------------------
-    private var salesJob: Job? = null
-
-    private fun observeSalesForDate(date: LocalDate) {
-        salesJob?.cancel()
-//        salesJob = viewModelScope.launch {
-//
-//            _uiState.update { it.copy(isLoading = true) }
-//
-//            repository.getSalesByDate(date).collectLatest { list ->
-//
-//                val sorted = list.sortedBy { it.customer.sortOrder }
-//                val salesList = sorted.map { it.toSalesList() }
-//
-//
-//                val historyCache = mutableMapOf<String, List<SaleWithCustomer>>()
-//
-//                val uiList = mutableListOf<SaleUi>()
-//
-//                for (item in salesList) {
-//                    val customerId = item.customerId
-//
-//                    val history = historyCache.getOrPut(customerId) {
-//                        repository.getBalanceHistoryOnce(customerId)
-//                    }
-//
-//                    var runningBalance = 0.0
-//                    for (entry in history) {
-//                        if (!entry.sale.date.isAfter(item.saleDate)) {
-//                            runningBalance += entry.sale.balance
-//                        } else {
-//                            break
-//                        }
-//                    }
-//
-//                    uiList.add(
-//                        SaleUi(item, runningBalance)
-//                    )
-//                }
-//
-//
-//                val allRunningBalance = uiList.sumOf { it.accumulatedBalance }
-//
-//
-//                val totalVolume = salesList.sumOf { it.volume }
-//                val totalDeduction = salesList.sumOf { it.deduction }
-//                val totalNet = salesList.sumOf { it.netVolume }
-//                val totalPrice = salesList.sumOf { it.price }
-//                val received = salesList.sumOf { it.received }
-//                val totalBalance = salesList.sumOf { it.balance }
-//
-//                val purchaseTotalVolume =
-//                    purchaseRepo.getPurchasesByDateOnce(date).sumOf { it.purchase.milkAmount }
-//
-//                val avgRate =
-//                    if (purchaseTotalVolume > 0) totalPrice / purchaseTotalVolume else 0.0
-//
-//                _uiState.update {
-//                    it.copy(
-//                        currentDate = date,
-//                        salesForDate = salesList,
-//                        salesUi = uiList,
-//                        totalMilk = totalVolume,
-//                        totalDeduction = totalDeduction,
-//                        totalNetMilk = totalNet,
-//                        grandSaleTotalForDate = totalPrice,
-//                        receivedAmount = received,
-//                        totalBalance = allRunningBalance,
-//                        avgRatePerLiter = avgRate,
-//                        pdfSalesSummary = PdfSalesSummary(
-//                            totalQty = totalVolume.toRoundedStr(),
-//                            totalDeduction = totalDeduction.toRoundedStr(),
-//                            totalAmount = totalPrice.toPriceStr(),
-//                            totalPaid = received.toPriceStr(),
-//                            balanceDue = totalBalance.toPriceStr()
-//                        ),
-//                        isLoading = false
-//                    )
-//                }
-//            }
-//        }
-    }
-
-    fun deleteSale(saleId: String) {
-        viewModelScope.launch {
-            repository.deleteSale(saleId)
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // Handle UI Events
-    // -------------------------------------------------------------------------
-    fun onEvent(event: SalesUiEvent) {
+    override fun onEvent(event: SalesUiEvent) {
         when (event) {
-            is SalesUiEvent.OnCustomerSelected ->
-                _uiState.update { it.copy(navToLedgerForCustomerId = event.supplierId) }
 
             is SalesUiEvent.SelectDate ->
-                onDateSelected(event.date)
+                observeDate(event.date)
+
+            SalesUiEvent.NextDate ->
+                observeDate(currentState.currentDate.plusDays(1))
+
+            SalesUiEvent.PreviousDate ->
+                observeDate(currentState.currentDate.minusDays(1))
+
+            is SalesUiEvent.DeleteSale ->
+                deleteSale(event.saleId)
+
+            is SalesUiEvent.EditSale ->
+                updateSale(event)
+
+            is SalesUiEvent.OpenCustomerLedger ->
+                emitEffect(
+                    SalesUiEffect.NavigateToCustomerLedger(
+                        event.customerId,
+                        event.customerName
+                    )
+                )
         }
     }
+
 
 }

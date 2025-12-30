@@ -34,10 +34,6 @@ class SaleFormViewModel @Inject constructor(
 
 ) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(initialState = SaleFormUiState()) {
 
-
-
-
-
     init {
         observeCustomer()
             .map { list -> list.map { it.toDropDownUi() } }
