@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.core.helper.handleZeroData
-import com.miassolutions.milkledger.core.helper.numberFormat
-import com.miassolutions.milkledger.core.helper.textColor
-import com.miassolutions.milkledger.core.extensions.hide
-import com.miassolutions.milkledger.core.extensions.show
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.helper.handleZeroData
+import com.miassolutions.milkledger.utils.helper.numberFormat
+import com.miassolutions.milkledger.utils.helper.textColor
+import com.miassolutions.milkledger.utils.extensions.hide
+import com.miassolutions.milkledger.utils.extensions.show
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 

@@ -15,6 +15,7 @@ import com.miassolutions.milkledger.core.notification.NotificationPermissionHelp
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.FragmentNotesListBinding
+import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -98,7 +99,7 @@ class NotesListFragment :
     override fun setupObservers() {
         // Collect UI state
 
-        viewModel.uiState.collectState { state ->
+        collectFlow(viewModel.uiState) { state ->
             binding.progressBar.visibility =
                 if (state.isLoading) View.VISIBLE else View.GONE
 
@@ -110,7 +111,7 @@ class NotesListFragment :
 
         // Collect UI events
 
-        viewModel.eventFlow.collectState { event ->
+        collectFlow(viewModel.eventFlow) { event ->
             when (event) {
                 is NoteUiEvent.NoteDeleted -> {
                     showUndoSnackbar(event.noteEntity)

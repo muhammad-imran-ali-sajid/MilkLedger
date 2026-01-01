@@ -1,20 +1,16 @@
 package com.miassolutions.milkledger.presentation.customerandsales.sales.customersalesdetail
 
-import android.util.Log
 import android.view.Menu
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
-import com.miassolutions.milkledger.core.pdf.customerreport.CustomerReportGenerator
-import com.miassolutions.milkledger.core.pdf.customerreport.SalesReceiptPdf
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
+import com.miassolutions.milkledger.core.ui.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.databinding.FragmentCustomerDetailBinding
 import com.miassolutions.milkledger.databinding.LayoutCustomerDetailSummaryBinding
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.formatPeriodLabel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -45,7 +41,7 @@ class CustomerDetailFragment :
                 showDialog(
                     title = "Confirmation",
                     message = "Do you want to generate pdf report?",
-                    onAction = { generateReport() }
+                    onAction = {  }
                 )
                 true
             }
@@ -59,7 +55,7 @@ class CustomerDetailFragment :
     }
 
     override fun setupObservers() {
-        viewModel.uiState.collectState { state ->
+        collectFlow(viewModel.uiState) { state ->
 
             // 1. Get the current formatted date range from the state
             val currentSelectedDateRange =
@@ -124,72 +120,15 @@ class CustomerDetailFragment :
     }
 
     private fun handleSelectedDateRange(start: LocalDate, end: LocalDate) {
-        // This updates the ViewModel's state, which triggers setupObservers()
+
         viewModel.setCustomDateRange(start, end)
-        // --- NEW: Trigger confirmation after dates are set ---
-        // Since this runs after *any* date selection, we now ask for confirmation to generate the report.
-//        showDialog(
-//            "Generate Receipt",
-//            "Generate receipt for range\n${formatPeriodLabel(start, end)}?"
-//        ) {
-//            // Only call generateReport AFTER confirmation
-//            generateReport()
-//        }
+
     }
 
 
-    private fun generateReport() {
-        val state = viewModel.uiState.value
-        val filteredList = state.filteredList
 
-        // --- Determine the actual dates used for the current filter ---
-        val startDate = state.selectedStartDate ?: LocalDate.now()
-        val endDate = state.selectedEndDate ?: LocalDate.now()
 
-        // Format the dates (assuming formattedDate() is an extension on LocalDate)
-        val fromDate = startDate.toDisplayFormat()
-        val toDate = endDate.toDisplayFormat()
 
-        val dateRange = "$fromDate - $toDate"
-        Log.d("SupplierDetailFragment", "Report Date Range: $dateRange")
-
-        val recordList = filteredList.toRecordList()
-        val totalVolume = recordList.sumOf { it.quantity }
-        val totalDeduction = recordList.sumOf { it.deduction }
-        val totalNetMilk = recordList.sumOf { it.netMilk }
-        val totalAmount = recordList.sumOf { it.amount }
-        val totalPaid = recordList.sumOf { it.paid }
-        val totalBalance = recordList.sumOf { it.balance }
-
-        val data = SalesReceiptPdf(
-
-            dateRange = dateRange,
-            partyName = args.customerName,
-            recordList = recordList,
-
-            totalAmount = totalAmount.toRoundedStr(),
-            totalPaid = totalPaid.toRoundedStr(),
-            totalBalance = totalBalance.toRoundedStr(),
-            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}",
-            totalVolume = totalVolume.toRoundedStr(),
-            totalDeduction = totalDeduction.toRoundedStr(),
-            totalNetMilk = totalNetMilk.toRoundedStr()
-        )
-
-        CustomerReportGenerator.generateAndSharePdf(
-            context = requireContext(),
-            data = data,
-            baseName = "Customer",
-            showLogo = true,
-//                logoResId = R.drawable.ic_launcher_foreground
-        )
-
-        showToast("Generating pdf report...")
-    }
-
-    /**
-     * Helper to format the date range string based on ViewModel state.
-     */
     private fun getFormattedDateRange(start: LocalDate?, end: LocalDate?): String {
         return when {
             start != null && end != null -> {
@@ -210,24 +149,24 @@ class CustomerDetailFragment :
     ) {
 
 
-        binding.customerSummary.setTitle("Customer Summary")
-
-
-        binding.apply {
-            val summaryBinding =
-                LayoutCustomerDetailSummaryBinding.inflate(layoutInflater, root, false)
-            customerSummary.setContent(summaryBinding.root)
-            customerSummary.collapse()
-            summaryBinding.apply {
-
-                tvDateRangeValue.text = summaryPeriod
-                tvTotalMilkValue.text = "${totalVolume} L"
-                tvDeductionValue.text = "${totalDeduction} L"
-                tvTotalPriceValue.text = "Rs. ${totalPrice}"
-                tvPaymentValue.text = "Rs. ${totalPaid}"
-                tvBalanceValue.text = balance
-            }
-        }
+//        binding.customerSummary.setTitle("Customer Summary")
+//
+//
+//        binding.apply {
+//            val summaryBinding =
+//                LayoutCustomerDetailSummaryBinding.inflate(layoutInflater, root, false)
+//            customerSummary.setContent(summaryBinding.root)
+//            customerSummary.collapse()
+//            summaryBinding.apply {
+//
+//                tvDateRangeValue.text = summaryPeriod
+//                tvTotalMilkValue.text = "${totalVolume} L"
+//                tvDeductionValue.text = "${totalDeduction} L"
+//                tvTotalPriceValue.text = "Rs. ${totalPrice}"
+//                tvPaymentValue.text = "Rs. ${totalPaid}"
+//                tvBalanceValue.text = balance
+//            }
+//        }
 
     }
 

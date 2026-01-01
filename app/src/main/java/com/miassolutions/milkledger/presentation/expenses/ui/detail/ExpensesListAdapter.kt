@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.core.extensions.hide
-import com.miassolutions.milkledger.core.extensions.show
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
+import com.miassolutions.milkledger.utils.extensions.hide
+import com.miassolutions.milkledger.utils.extensions.show
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.ItemExpensesBinding
 
 class ExpensesAdapter(
@@ -33,13 +33,13 @@ class ExpensesAdapter(
             tvExpenseTitle.text = item.expenseTitle
             tvExpenseAmount.text = item.expenseAmount.toPriceStr()
 
-            if (item.expenseNote.isNullOrEmpty()) {
+            if (item.note.isNullOrEmpty()) {
                 tvExpenseNote.hide()
                 divider.hide()
             } else {
                 tvExpenseNote.show()
                 divider.show()
-                tvExpenseNote.text = "Note: ${item.expenseNote}"
+                tvExpenseNote.text = "Note: ${item.note}"
             }
 
 

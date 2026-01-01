@@ -6,16 +6,16 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReceiptPdf
-import com.miassolutions.milkledger.core.pdf.profitreport.ProfitReportGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentProfitBinding
-import com.miassolutions.milkledger.databinding.LayoutSummaryProfitBinding
-import com.miassolutions.milkledger.core.datefilter.DateFilterCallback
-import com.miassolutions.milkledger.core.datefilter.DateFilterController
-import com.miassolutions.milkledger.core.datefilter.DatePeriod
+import com.miassolutions.milkledger.utils.datefilter.DateFilterCallback
+import com.miassolutions.milkledger.utils.datefilter.DateFilterController
+import com.miassolutions.milkledger.utils.datefilter.DatePeriod
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.pdf.profitreport.ProfitReceiptPdf
+import com.miassolutions.milkledger.utils.pdf.profitreport.ProfitReportGenerator
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -86,26 +86,26 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
         ) {
 
 
-        binding.apply {
-            cardProfitSummary.setTitle("Summary")
-
-            val summaryBinding by lazy {
-                LayoutSummaryProfitBinding.inflate(layoutInflater)
-            }
-
-            cardProfitSummary.setContent(summaryBinding.root)
-            cardProfitSummary.collapse()
-
-
-            summaryBinding.apply {
-                tvBusinessProfit.text = businessProfit.toPriceStr()
-                tvNetProfitAfterPersonal.text = netProfitAfterPersonal.toPriceStr()
-                tvTotalReceivedProfit.text = receivedProfit.toPriceStr()
-                tvRemainingProfit.text = remainingProfit.toPriceStr()
-
-            }
-
-        }
+//        binding.apply {
+//            cardProfitSummary.setTitle("Summary")
+//
+//            val summaryBinding by lazy {
+//                LayoutSummaryProfitBinding.inflate(layoutInflater)
+//            }
+//
+//            cardProfitSummary.setContent(summaryBinding.root)
+//            cardProfitSummary.collapse()
+//
+//
+//            summaryBinding.apply {
+//                tvBusinessProfit.text = businessProfit.toPriceStr()
+//                tvNetProfitAfterPersonal.text = netProfitAfterPersonal.toPriceStr()
+//                tvTotalReceivedProfit.text = receivedProfit.toPriceStr()
+//                tvRemainingProfit.text = remainingProfit.toPriceStr()
+//
+//            }
+//
+//        }
     }
 
     private fun generateReport() {
@@ -177,7 +177,7 @@ class ProfitFragment : BaseFragment<FragmentProfitBinding>(FragmentProfitBinding
     }
 
     override fun setupObservers() {
-        viewModel.uiState.collectState { state ->
+        collectFlow(viewModel.uiState) { state ->
 
 
             showSummary(

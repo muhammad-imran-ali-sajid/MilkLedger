@@ -3,8 +3,8 @@ package com.miassolutions.milkledger.presentation.profit
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
 import com.miassolutions.milkledger.databinding.ItemProfitBinding
 
 class ProfitAdapter(

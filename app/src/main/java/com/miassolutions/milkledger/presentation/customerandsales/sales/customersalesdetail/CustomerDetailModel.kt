@@ -1,10 +1,10 @@
 package com.miassolutions.milkledger.presentation.customerandsales.sales.customersalesdetail
 
-import com.miassolutions.milkledger.core.pdf.customerreport.SalesItemRecord
-import com.miassolutions.milkledger.core.pdf.salereport.PdfSalesItemRecord
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toLocalDate
+
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.data.local.relations.SaleWithCustomer
+import com.miassolutions.milkledger.utils.pdf.customerreport.SalesItemRecord
 
 import java.time.LocalDate
 
@@ -16,7 +16,7 @@ fun SaleWithCustomer.toCustomerDetailModel(): CustomerDetailModel = CustomerDeta
     milkAmount = this.sale.volume,
     deduction = this.sale.deduction,
     netMilk = this.sale.netMilk,
-    milkPrice = this.sale.price, // Assuming this is Total Price (NetMilk * rateUsed)
+    milkPrice = this.sale.totalAmount, // Assuming this is Total Price (NetMilk * rateUsed)
     payment = this.sale.paid,
     balance = this.sale.balance,
 

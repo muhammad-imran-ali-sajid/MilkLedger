@@ -1,6 +1,8 @@
 package com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui
 
 import com.miassolutions.milkledger.domain.model.SaleUi
+import com.miassolutions.milkledger.presentation.customerandsales.sales.model.BalanceHistoryItem
+import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
 import java.time.LocalDate
 
 //data class SalesUiState(
@@ -29,6 +31,8 @@ data class SalesUiState(
     val currentDate: LocalDate = LocalDate.now(),
 
     val sales: List<SaleUi> = emptyList(),
+
+
 
     val totalMilk: Double = 0.0,
     val totalDeduction: Double = 0.0,
@@ -61,6 +65,14 @@ sealed interface SalesUiEvent {
     ) : SalesUiEvent
 
 
+    data class BalanceClicked(
+        val customerId: String,
+        val customerName: String
+    ) : SalesUiEvent
+
+    object DismissBalanceHistory : SalesUiEvent
+
+
     data class OpenCustomerLedger(
         val customerId: String,
         val customerName: String
@@ -75,7 +87,13 @@ sealed interface SalesUiEffect {
         val name: String
     ) : SalesUiEffect
 
-    data class EditSaleRecord(val saleUi: SaleUi) :SalesUiEffect
+    data class EditSaleRecord(val saleUi: SaleUi) : SalesUiEffect
+
+    data class ShowBalanceHistory(
+        val customerName: String,
+        val historyItem: List<BalanceHistoryItem>
+    ) :
+        SalesUiEffect
 
     data class ShowMessage(val message: String) : SalesUiEffect
 

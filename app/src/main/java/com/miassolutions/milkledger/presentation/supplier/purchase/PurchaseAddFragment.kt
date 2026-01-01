@@ -1,25 +1,22 @@
 package com.miassolutions.milkledger.presentation.supplier.purchase
 
 import android.graphics.Color
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
-import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.MilkCalculationUtils
-import com.miassolutions.milkledger.core.extensions.hide
-import com.miassolutions.milkledger.core.extensions.show
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
-import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.databinding.FragmentAddPurchaseBinding
+import com.miassolutions.milkledger.utils.extensions.hide
+import com.miassolutions.milkledger.utils.extensions.show
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import kotlin.math.roundToInt
@@ -163,7 +160,7 @@ class PurchaseAddFragment :
                 // Assume you fetch the authorization status dynamically
                 val isUserAuthorized = role == "admin"
 
-                showExpenseDatePicker(
+                showLedgerDatePicker(
 
                     isAuthorized = isUserAuthorized,
                     initialDate = LocalDate.now(),

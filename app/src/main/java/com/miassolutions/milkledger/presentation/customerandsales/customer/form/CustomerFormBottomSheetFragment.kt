@@ -4,10 +4,10 @@ package com.miassolutions.milkledger.presentation.customerandsales.customer.form
 import android.os.Bundle
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
-import com.miassolutions.milkledger.core.extensions.collectEffect
-import com.miassolutions.milkledger.core.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.collectEffect
+import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.core.ui.BaseBottomSheet
-import com.miassolutions.milkledger.core.util.setTextIfDifferent
+import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.databinding.CustomerFormLayoutBinding
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -2,23 +2,22 @@ package com.miassolutions.milkledger.presentation.customerandsales.sales.salefor
 
 import android.graphics.Color
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.extensions.collectEffect
-import com.miassolutions.milkledger.core.extensions.collectFlow
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
 import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiEffect
 import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiEvent
 import com.miassolutions.milkledger.presentation.customerandsales.sales.saleform.state.SaleFormUiState
+import com.miassolutions.milkledger.utils.extensions.collectEffect
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -182,7 +181,7 @@ class SaleFormFragment :
             }
 
             SaleFormUiEffect.OpenSaleDatePicker -> {
-                showExpenseDatePicker(
+                showLedgerDatePicker(
                     isAuthorized = true,
                     initialDate = LocalDate.now(),
                     onPicked = { date ->
@@ -192,7 +191,7 @@ class SaleFormFragment :
             }
 
             SaleFormUiEffect.OpenReceivedDatePicker -> {
-                showExpenseDatePicker(
+                showLedgerDatePicker(
                     isAuthorized = true,
                     initialDate = LocalDate.now(),
                     onPicked = { date ->

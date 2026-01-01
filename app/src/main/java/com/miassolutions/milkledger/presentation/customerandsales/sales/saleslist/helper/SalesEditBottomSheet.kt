@@ -5,22 +5,19 @@ import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
-import com.miassolutions.milkledger.core.util.MilkCalculationUtils
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
 import com.miassolutions.milkledger.databinding.BottomsheetEditSalesBinding
 import com.miassolutions.milkledger.domain.model.SaleUi
 import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui.SalesUiEvent
 import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui.SalesViewModel
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -119,7 +116,7 @@ class SalesEditBottomSheet : BottomSheetDialogFragment() {
     private fun setupListeners() = with(binding) {
 
         btnReceivedDate.setOnClickListener {
-            showExpenseDatePicker(
+            showLedgerDatePicker(
                 isAuthorized = true,
                 initialDate = selectedPaidAt ?: LocalDate.now()
             ) { date ->

@@ -16,6 +16,67 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PurchaseDao {
+//
+//    // ------------------------------------------------
+//    // 1️⃣ WRITE
+//    // ------------------------------------------------
+//    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    suspend fun insertPurchase(purchase: PurchaseEntity)
+//
+//    @Update
+//    suspend fun updatePurchase(purchase: PurchaseEntity)
+//
+//    @Query("UPDATE purchase_table SET deletedAtMillis = :deletedAt, isSynced = 0 WHERE purchaseId = :id")
+//    suspend fun softDeletePurchase(id: String, deletedAt: Long)
+//
+//    // ------------------------------------------------
+//    // 2️⃣ READ LISTS
+//    // ------------------------------------------------
+//
+//    // Daily Inward (Aaj kitna doodh aaya)
+//    @Query("""
+//        SELECT * FROM purchase_table
+//        WHERE dateMillis BETWEEN :start AND :end
+//        AND deletedAtMillis IS NULL
+//        ORDER BY createdAtMillis DESC
+//    """)
+//    fun getPurchasesByDateRange(start: Long, end: Long): Flow<List<PurchaseEntity>>
+//
+//    // Supplier History
+//    @Query("""
+//        SELECT * FROM purchase_table
+//        WHERE supplierId = :supplierId
+//        AND deletedAtMillis IS NULL
+//        ORDER BY dateMillis DESC
+//    """)
+//    fun getPurchasesForSupplier(supplierId: String): Flow<List<PurchaseEntity>>
+//
+//    @Query("SELECT * FROM purchase_table WHERE purchaseId = :id")
+//    suspend fun getPurchaseById(id: String): PurchaseEntity?
+//
+//    // ------------------------------------------------
+//    // 3️⃣ REPORTS (Stock & Quality)
+//    // ------------------------------------------------
+//
+//    // Total Purchased Milk (Liters)
+//    @Query("""
+//        SELECT SUM(milkAmount) FROM purchase_table
+//        WHERE dateMillis BETWEEN :start AND :end
+//        AND deletedAtMillis IS NULL
+//    """)
+//    fun getTotalMilkPurchasedVolume(start: Long, end: Long): Flow<Double?>
+//
+//    // Note: Average Fat/LR hum Repository mein calculate karenge (Weighted Average logic)
+//    // isliye yahan sirf raw list lene ka function kaafi hai.
+//
+//    // ------------------------------------------------
+//    // 4️⃣ SYNC
+//    // ------------------------------------------------
+//    @Query("SELECT * FROM purchase_table WHERE isSynced = 0")
+//    suspend fun getUnsyncedPurchases(): List<PurchaseEntity>
+//
+//    @Query("UPDATE purchase_table SET isSynced = 1 WHERE purchaseId = :id")
+//    suspend fun markAsSynced(id: String)
 
     /* ---------------------------------------------------
        Aggregates
@@ -168,17 +229,17 @@ interface PurchaseDao {
     /* ---------------------------------------------------
        Supplier ledger / history
     --------------------------------------------------- */
-
-    @Query("""
-        SELECT dateMillis, balance
-        FROM purchase_table
-        WHERE supplierId = :supplierId
-          AND deletedAtMillis IS NULL
-        ORDER BY dateMillis DESC
-    """)
-    fun getSupplierBalanceHistory(
-        supplierId: String
-    ): Flow<List<BalanceHistory>>
+//
+//    @Query("""
+//        SELECT dateMillis, balance
+//        FROM purchase_table
+//        WHERE supplierId = :supplierId
+//          AND deletedAtMillis IS NULL
+//        ORDER BY dateMillis DESC
+//    """)
+//    fun getSupplierBalanceHistory(
+//        supplierId: String
+//    ): Flow<List<BalanceHistory>>
 
     @Transaction
     @Query("""
@@ -244,14 +305,4 @@ interface PurchaseDao {
        Range totals
     --------------------------------------------------- */
 
-    @Query("""
-        SELECT IFNULL(SUM(milkPrice), 0)
-        FROM purchase_table
-        WHERE dateMillis BETWEEN :startMillis AND :endMillis
-          AND deletedAtMillis IS NULL
-    """)
-    suspend fun getPurchasesTotalBetween(
-        startMillis: Long,
-        endMillis: Long
-    ): Double
 }

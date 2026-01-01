@@ -13,7 +13,8 @@ interface StatsDao {
        CUSTOMER TOTALS
     ------------------------- */
 
-    @Query("""
+    @Query(
+        """
         SELECT c.customerName AS name,
                SUM(s.paid) AS amount,
                SUM(s.volume) AS volume,
@@ -25,7 +26,8 @@ interface StatsDao {
           AND s.deletedAtMillis IS NULL
         GROUP BY c.customerId
         ORDER BY c.sortOrder
-    """)
+    """
+    )
     suspend fun getCustomerTotals(
         startMillis: Long,
         endMillis: Long
@@ -35,7 +37,8 @@ interface StatsDao {
        SUPPLIER TOTALS
     ------------------------- */
 
-    @Query("""
+    @Query(
+        """
         SELECT sup.supplierName AS name,
                SUM(p.payment) AS amount,
                SUM(p.milkAmount) AS volume,
@@ -47,7 +50,8 @@ interface StatsDao {
           AND p.deletedAtMillis IS NULL
         GROUP BY sup.supplierId
         ORDER BY sup.sortOrder
-    """)
+    """
+    )
     suspend fun getSupplierTotals(
         startMillis: Long,
         endMillis: Long
@@ -97,19 +101,6 @@ interface StatsDao {
        PROFIT TOTALS (derived)
     ------------------------- */
 
-    @Query("""
-        SELECT p.dateMillis AS name,
-               SUM(p.netProfit) AS amount,
-               'PROFIT' AS category
-        FROM profit_table p
-        WHERE p.dateMillis BETWEEN :startMillis AND :endMillis
-          AND p.deletedAtMillis IS NULL
-        GROUP BY p.dateMillis
-    """)
-    suspend fun getProfitTotals(
-        startMillis: Long,
-        endMillis: Long
-    ): List<StateRecord>
 }
 
 

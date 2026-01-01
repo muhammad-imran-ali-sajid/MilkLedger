@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.data.mapper
 
-import com.miassolutions.milkledger.core.extensions.toLocalDate
-import com.miassolutions.milkledger.core.extensions.toMillis
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.domain.model.Sale
 
@@ -14,7 +14,7 @@ fun SalesEntity.toDomain(): Sale =
         volume = volume,
         deduction = deduction,
         netMilk = netMilk,
-        price = price,
+        price = totalAmount,
         paid = paid,
         balance = balance,
         rateUsed = rateUsed,
@@ -30,7 +30,7 @@ fun Sale.toEntity(): SalesEntity =
         volume = volume,
         deduction = deduction,
         netMilk = netMilk,
-        price = price,
+        totalAmount = price,
         paid = paid,
         balance = balance,
         rateUsed = rateUsed,

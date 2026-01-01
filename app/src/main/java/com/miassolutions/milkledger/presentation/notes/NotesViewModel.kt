@@ -1,12 +1,15 @@
 package com.miassolutions.milkledger.presentation.notes
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.data.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -69,15 +72,6 @@ class NotesViewModel @Inject constructor(
 //        }
     }
 
-    fun toggleIsDone(noteId: String, isDone: Boolean) {
-        viewModelScope.launch {
-            try {
-                repository.updateDoneState(noteId, isDone)
-            } catch (e: Exception) {
-                _eventFlow.emit(NoteUiEvent.ShowMessage("Failed to update status"))
-            }
-        }
-    }
 
     // ✅ Corrected search handler
     fun onSearchQueryChanged(query: String) {

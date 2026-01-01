@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.databinding.BottomsheetEditProfitBinding
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.UUID
@@ -103,7 +100,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
         tvDate.setOnClickListener {
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
 
-            showExpenseDatePicker(
+            showLedgerDatePicker(
                 isAuthorized = isAdmin,
                 initialDate = LocalDate.now(),
                 onPicked = { selectedDate: LocalDate ->

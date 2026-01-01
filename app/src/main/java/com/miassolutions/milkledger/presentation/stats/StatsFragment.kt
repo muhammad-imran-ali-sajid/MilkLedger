@@ -3,13 +3,14 @@ package com.miassolutions.milkledger.presentation.stats
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toPriceStr
 import com.miassolutions.milkledger.databinding.FragmentStatsBinding
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.helper.textColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,8 +18,6 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
 
     private val viewModel: StatViewModel by viewModels()
     private lateinit var statAdapter: StatAdapter
-
-
 
 
     override fun setupViews() {
@@ -49,9 +48,6 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
     }
 
 
-
-
-
     override fun setupListeners() {
 
         // Date picker (used only for daily or custom)
@@ -60,7 +56,7 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
             val currentDate = viewModel.targetDate.value
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
 
-            showExpenseDatePicker(
+            showLedgerDatePicker(
                 isAuthorized = isAdmin,
                 initialDate = currentDate,
                 onPicked = { selectedDate ->
@@ -95,17 +91,17 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
     private fun observeViewModelData() {
 
         // TARGET DATE (used for daily navigation)
-        viewModel.targetDate.collectState {
+        collectFlow(viewModel.targetDate) {
             updateDateLabel()
         }
 
         // LIST DATA
-        viewModel.rangeList.collectState { list ->
+        collectFlow(viewModel.rangeList) { list ->
             statAdapter.submitList(list)
             updateDateLabel()     // 🔥 update label whenever range changes
         }
 
-        viewModel.balanceFlow.collectState { balance ->
+        collectFlow(viewModel.balanceFlow) { balance ->
 
 
             binding.tvBalance.text = "Balance: ${balance.toPriceStr()}"

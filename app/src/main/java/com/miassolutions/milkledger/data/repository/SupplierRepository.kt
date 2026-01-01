@@ -1,17 +1,12 @@
 package com.miassolutions.milkledger.data.repository
 
 
-import android.util.Log
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.mapper.toDomain
 import com.miassolutions.milkledger.data.mapper.toEntity
-import com.miassolutions.milkledger.presentation.expenses.data.toDomain
-import com.miassolutions.milkledger.presentation.expenses.data.toEntity
-import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import com.miassolutions.milkledger.data.util.SupplierSaveError
 import com.miassolutions.milkledger.domain.model.Supplier
-import com.miassolutions.milkledger.presentation.supplier.suppliers.SupplierListUiState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -20,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class SupplierRepository @Inject constructor(
     private val supplierDao: SupplierDao,
-    private val firestore: FirestoreSyncHelper
+
 ) {
 
     companion object {
@@ -56,47 +51,15 @@ class SupplierRepository @Inject constructor(
         val entity = supplier.toEntity()
         supplierDao.insertSupplier(entity)
 
-//        syncSafely {
-//            firestore.uploadSingle(
-//                COLLECTION,
-//                entity.supplierId,
-//                entity.toFirestoreModel()
-//            )
-//        }
+
     }
 
     suspend fun deleteSupplier(supplierId: String) {
         val deletedAt = System.currentTimeMillis()
         supplierDao.softDeleteById(supplierId, deletedAt)
 
-        syncSafely {
-            firestore.deleteDocument(COLLECTION, supplierId)
-        }
+
     }
 
-    // -------------------------------
-    // SYNC (OPTIONAL)
-    // -------------------------------
 
-//    suspend fun restoreAllSuppliers() {
-//        try {
-//            firestore.downloadCollection<SupplierEntity>(COLLECTION)
-//                .takeIf { it.isNotEmpty() }
-//                ?.let(supplierDao::upsertAll)
-//        } catch (e: Exception) {
-//            Log.e(TAG, "Restore failed", e)
-//        }
-//    }
-
-    // -------------------------------
-    // UTILS
-    // -------------------------------
-
-    private suspend fun syncSafely(block: suspend () -> Unit) {
-        try {
-            block()
-        } catch (e: Exception) {
-            Log.e(TAG, "Firestore sync failed", e)
-        }
-    }
 }

@@ -10,21 +10,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.materialswitch.MaterialSwitch
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.pdf.purchasereport.PurchaseReportPdf
-import com.miassolutions.milkledger.core.pdf.purchasereport.PdfPurchaseSummary
-import com.miassolutions.milkledger.core.pdf.purchasereport.TodayPurchasePdf
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.extensions.isToday
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.FragmentPurchasesBinding
-import com.miassolutions.milkledger.databinding.LayoutPurchaseSummaryBinding
 import com.miassolutions.milkledger.presentation.supplier.balancehistory.SupplierBalanceHistoryBottomSheet
-import com.miassolutions.milkledger.presentation.supplier.supplierdetail.toPurchaseRecordList
+import com.miassolutions.milkledger.utils.extensions.isToday
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.pdf.purchasereport.PdfPurchaseSummary
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -55,7 +50,7 @@ class PurchaseFragment :
             // Assume you fetch the authorization status dynamically
             isUserAuthorized = role == "admin"
 
-            showExpenseDatePicker(
+            showLedgerDatePicker(
 
                 isAuthorized = isUserAuthorized, // only admin is allowed todo()
                 initialDate = currentDate,
@@ -99,7 +94,7 @@ class PurchaseFragment :
             }
 
             showDialog("Generate PDF?", "Do you want to create PDF?") {
-                generateReport()
+
             }
 
             true
@@ -238,50 +233,7 @@ class PurchaseFragment :
         btmSheet.show(childFragmentManager, null)
     }
 
-    private fun generateReport() {
-        val state = viewModel.uiState.value
-        val filteredList = state.purchasesForDate
 
-
-        val recordList = filteredList.toPurchaseRecordList()
-
-
-        if (recordList.isEmpty()) {
-
-            showSnackbar("The record is empty. PDF can't be generated.")
-            return
-        }
-
-        val pdfSummary = pdfSummary(
-            totalQty = state.totalVolume,
-            avgFat = state.avgFat,
-            avgLr = state.avgLr,
-            totalTs = state.totalTS,
-            avgRate = state.avgRatePerLiter,
-            totalAmount = state.grandTotalForDate,
-            totalPaid = state.totalPaid,
-            balanceDue = state.totalBalance
-
-        )
-
-        val data = PurchaseReportPdf(
-            footerNote = "Developed by: miassolutions contact no: 03127430906",
-            date = state.currentDate.toDisplayFormat(),
-            recordList = recordList,
-            pdfPurchaseSummary = pdfSummary
-        )
-
-
-        TodayPurchasePdf.generateAndSharePdf(
-            context = requireContext(),
-            data = data,
-            baseName = "Supplier",
-            showLogo = true,
-//                logoResId = R.drawable.ic_launcher_foreground
-        )
-
-        showToast("Generating pdf report...")
-    }
 
     private fun pdfSummary(
         totalQty: Double,
@@ -314,24 +266,24 @@ class PurchaseFragment :
         totalAmount: Double,
         avgRate: Double
     ) {
-        binding.apply {
-            cardSummary.setTitle("Today Summary")
-            cardSummary.collapse()
-
-            val summaryBinding = LayoutPurchaseSummaryBinding.inflate(layoutInflater, root, false)
-            cardSummary.setContent(summaryBinding.root)
-            // 2. Use the ViewBinding object to set the data efficiently
-            summaryBinding.apply {
-
-
-                tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
-                tvAvgFat.text = "${avgFat?.toRoundedStr()}% (${milkFatLr})"
-                tvAvgLr.text = "${avgLr?.toRoundedStr()} (${milkFatLr})"
-                tvTotalTs.text = "${totalTS?.toRoundedStr()} (${milkFatLr})"
-                tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
-                tvAvgPrice.text = "Rs. ${avgRate.toPriceStr("%.2f")}"
-            }
-        }
+//        binding.apply {
+//            cardSummary.setTitle("Today Summary")
+//            cardSummary.collapse()
+//
+//            val summaryBinding = LayoutPurchaseSummaryBinding.inflate(layoutInflater, root, false)
+//            cardSummary.setContent(summaryBinding.root)
+//            // 2. Use the ViewBinding object to set the data efficiently
+//            summaryBinding.apply {
+//
+//
+//                tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
+//                tvAvgFat.text = "${avgFat?.toRoundedStr()}% (${milkFatLr})"
+//                tvAvgLr.text = "${avgLr?.toRoundedStr()} (${milkFatLr})"
+//                tvTotalTs.text = "${totalTS?.toRoundedStr()} (${milkFatLr})"
+//                tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
+//                tvAvgPrice.text = "Rs. ${avgRate.toPriceStr("%.2f")}"
+//            }
+//        }
     }
 
     private fun navToSupplierDetail(supplier: PurchaseWithSupplier) {

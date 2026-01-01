@@ -2,28 +2,23 @@ package com.miassolutions.milkledger.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
-import com.miassolutions.milkledger.data.local.daos.ProfitDao
-import com.miassolutions.milkledger.data.local.daos.ProfitReceiptDao
+import com.miassolutions.milkledger.data.local.daos.ProfitWithdrawalDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
-import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.StatsDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
 import com.miassolutions.milkledger.data.local.daos.TransactionDao
 import com.miassolutions.milkledger.data.local.entities.CustomerEntity
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
-import com.miassolutions.milkledger.data.local.entities.ProfitEntity
-import com.miassolutions.milkledger.data.local.entities.ProfitReceiptEntity
+import com.miassolutions.milkledger.data.local.entities.ProfitWithdrawalEntity
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.entities.SalesEntity
 import com.miassolutions.milkledger.data.local.entities.SupplierEntity
 import com.miassolutions.milkledger.data.local.entities.TransactionEntity
-import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 
 @Database(
     entities = [
@@ -33,8 +28,7 @@ import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
         SalesEntity::class,
         ExpensesEntity::class,
         NoteEntity::class,
-        ProfitEntity::class,
-        ProfitReceiptEntity::class,
+        ProfitWithdrawalEntity::class,
         TransactionEntity::class
     ],
     version = 1,
@@ -48,11 +42,10 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun purchaseDao(): PurchaseDao
     abstract fun salesDao(): SalesDao
     abstract fun expensesDao(): ExpensesDao
-    abstract fun reportsDao(): ReportsDao
     abstract fun noteDao(): NoteDao
-    abstract fun profitDao(): ProfitDao
 
-    abstract fun profitReceiptDao(): ProfitReceiptDao
+
+    abstract fun profitWithdrawalDao(): ProfitWithdrawalDao
 
     abstract fun transactionDao(): TransactionDao
 

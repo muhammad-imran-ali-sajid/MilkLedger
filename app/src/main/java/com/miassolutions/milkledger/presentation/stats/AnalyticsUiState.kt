@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.presentation.stats
 
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
 import com.miassolutions.milkledger.presentation.dashboard.DashboardSummaryPdf
 import java.time.LocalDate
 

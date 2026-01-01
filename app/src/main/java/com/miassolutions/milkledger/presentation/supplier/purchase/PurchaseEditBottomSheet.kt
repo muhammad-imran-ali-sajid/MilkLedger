@@ -12,11 +12,11 @@ import android.widget.EditText
 import androidx.core.graphics.toColorInt
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.miassolutions.milkledger.core.util.MilkCalculationUtils
-import com.miassolutions.milkledger.core.extensions.hide
-import com.miassolutions.milkledger.core.extensions.show
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
+import com.miassolutions.milkledger.utils.extensions.hide
+import com.miassolutions.milkledger.utils.extensions.show
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding

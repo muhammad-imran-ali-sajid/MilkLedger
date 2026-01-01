@@ -36,19 +36,6 @@ interface NoteDao {
     """)
     fun getAllNotes(): Flow<List<NoteEntity>>
 
-    @Query("""
-        SELECT * FROM note_table
-        WHERE isDone = 1
-        ORDER BY createdAtMillis DESC
-    """)
-    fun getDoneNotes(): Flow<List<NoteEntity>>
-
-    @Query("""
-        SELECT * FROM note_table
-        WHERE isDone = 0
-        ORDER BY createdAtMillis DESC
-    """)
-    fun getPendingNotes(): Flow<List<NoteEntity>>
 
     @Query("""
         SELECT * FROM note_table
@@ -57,10 +44,5 @@ interface NoteDao {
     """)
     suspend fun getNoteById(id: String): NoteEntity?
 
-    @Query("""
-        UPDATE note_table
-        SET isDone = :isDone
-        WHERE noteId = :id
-    """)
-    suspend fun updateDoneState(id: String, isDone: Boolean)
+
 }

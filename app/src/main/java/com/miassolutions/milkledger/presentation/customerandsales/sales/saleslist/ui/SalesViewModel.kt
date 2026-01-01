@@ -3,10 +3,11 @@ package com.miassolutions.milkledger.presentation.customerandsales.sales.salesli
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
-import com.miassolutions.milkledger.core.util.MilkCalculationUtils
+import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import com.miassolutions.milkledger.data.repository.SalesRepository
 import com.miassolutions.milkledger.domain.model.Sale
 import com.miassolutions.milkledger.domain.model.toSaleUi
+import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui.SalesUiEffect.*
 import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.usecase.ObserveSalesForDateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -28,6 +29,26 @@ class SalesViewModel @Inject constructor(
     init {
         observeDate(currentState.currentDate)
     }
+
+    private fun loadBalanceHistory(
+        customerId: String,
+        customerName: String
+    ) = viewModelScope.launch {
+
+        val history = salesRepository.getCustomerBalanceHistory(customerId)
+
+        Log.d("BalanceHistory", "History size = ${history.size}")
+
+        emitEffect(
+            SalesUiEffect.ShowBalanceHistory(
+                customerName = customerName,
+                historyItem = history
+            )
+        )
+    }
+
+
+
 
 
     private fun observeDate(date: LocalDate) {
@@ -67,7 +88,7 @@ class SalesViewModel @Inject constructor(
 
     private fun deleteSale(saleId: String) = viewModelScope.launch {
         salesRepository.deleteSale(saleId)
-        emitEffect(SalesUiEffect.ShowMessage("Sale deleted"))
+        emitEffect(ShowMessage("Sale deleted"))
     }
 
     private fun updateSale(event: SalesUiEvent.EditSale) = viewModelScope.launch {
@@ -121,18 +142,24 @@ class SalesViewModel @Inject constructor(
 
             is SalesUiEvent.EditClicked -> {
                 emitEffect(
-                    SalesUiEffect.EditSaleRecord(event.sale)
+                    EditSaleRecord(event.sale)
                 )
             }
 
 
             is SalesUiEvent.OpenCustomerLedger ->
                 emitEffect(
-                    SalesUiEffect.NavigateToCustomerLedger(
+                    NavigateToCustomerLedger(
                         event.customerId,
                         event.customerName
                     )
                 )
+
+            is SalesUiEvent.BalanceClicked -> {
+                loadBalanceHistory(event.customerId, event.customerName)
+            }
+
+            SalesUiEvent.DismissBalanceHistory -> {}
         }
     }
 

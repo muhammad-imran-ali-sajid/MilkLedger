@@ -1,28 +1,21 @@
 package com.miassolutions.milkledger.presentation.notes
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
-import com.miassolutions.milkledger.core.alarm.AlarmScheduler
-import com.miassolutions.milkledger.core.util.dateTimeFormatter
-import com.miassolutions.milkledger.core.util.showFutureDatePicker
-import com.miassolutions.milkledger.core.util.showMaterialTimePicker
+import com.miassolutions.milkledger.utils.alarm.AlarmScheduler
 import com.miassolutions.milkledger.data.local.entities.NoteEntity
 import com.miassolutions.milkledger.databinding.BottomSheetAddEditNoteBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.LocalTime
 
 @AndroidEntryPoint
 class AddEditNoteBottomSheet : BottomSheetDialogFragment() {

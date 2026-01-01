@@ -1,154 +1,77 @@
 package com.miassolutions.milkledger.data.local.daos
 
 import androidx.room.*
-import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
-import com.miassolutions.milkledger.presentation.stats.BusinessExpenseSummary
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import kotlinx.coroutines.flow.Flow
-import java.time.LocalDate
-import java.time.YearMonth
 
 @Dao
 interface ExpensesDao {
 
-    /* ---------------------------------------------------
-       Aggregates
-    --------------------------------------------------- */
-
-    @Query("""
-        SELECT IFNULL(SUM(expenseAmount), 0) 
-        FROM expense_table 
-        WHERE isBusiness = 1 
-          AND deletedAtMillis IS NULL
-    """)
-    fun observeBusinessExpenses(): Flow<Double>
-
-    @Query("""
-        SELECT IFNULL(SUM(expenseAmount), 0) 
-        FROM expense_table 
-        WHERE isBusiness = 0 
-          AND deletedAtMillis IS NULL
-    """)
-    fun observePersonalExpenses(): Flow<Double>
-
-    /* ---------------------------------------------------
-       Sync / Raw access
-    --------------------------------------------------- */
-
-    @Query("SELECT * FROM expense_table")
-    suspend fun getAllExpensesList(): List<ExpensesEntity>
-
-    @Query("DELETE FROM expense_table")
-    suspend fun clearAll()
-
+    // ------------------------------------------------
+    // 1️⃣ WRITE
+    // ------------------------------------------------
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertAll(expenses: List<ExpensesEntity>)
+    suspend fun insertExpense(expense: ExpensesEntity)
 
-    @Upsert
-    suspend fun upsert(expense: ExpensesEntity)
+    @Update
+    suspend fun updateExpense(expense: ExpensesEntity)
 
+    @Query("UPDATE expense_table SET deletedAtMillis = :deletedAt, isSynced = 0 WHERE expenseId = :id")
+    suspend fun softDeleteExpense(id: String, deletedAt: Long)
+
+    // ------------------------------------------------
+    // 2️⃣ READ LISTS
+    // ------------------------------------------------
+
+    // Saare Kharche (Business + Personal mixed)
     @Query("""
-        UPDATE expense_table 
-        SET deletedAtMillis = :deletedAtMillis 
-        WHERE expenseId = :id
+        SELECT * FROM expense_table 
+        WHERE dateMillis BETWEEN :start AND :end 
+        AND deletedAtMillis IS NULL 
+        ORDER BY dateMillis DESC
     """)
-    suspend fun softDeleteById(id: String, deletedAtMillis: Long)
+    fun getExpensesByDateRange(start: Long, end: Long): Flow<List<ExpensesEntity>>
 
-    /* ---------------------------------------------------
-       Daily
-    --------------------------------------------------- */
-
+    // Sirf Dukan ke Kharche (Filter by Type)
     @Query("""
-        SELECT * FROM expense_table
-        WHERE dateMillis = :dateMillis
-          AND deletedAtMillis IS NULL
-        ORDER BY expenseAmount DESC
+        SELECT * FROM expense_table 
+        WHERE isBusiness = 1 
+        AND deletedAtMillis IS NULL 
+        ORDER BY dateMillis DESC
     """)
-    fun getDailyExpenses(dateMillis: Long): Flow<List<ExpensesEntity>>
+    fun getAllBusinessExpenses(): Flow<List<ExpensesEntity>>
 
+    // Sirf Ghar ke Kharche
     @Query("""
-        SELECT expenseTitle 
-        FROM expense_table
-        WHERE dateMillis = :dateMillis
-          AND deletedAtMillis IS NULL
+        SELECT * FROM expense_table 
+        WHERE isBusiness = 0 
+        AND deletedAtMillis IS NULL 
+        ORDER BY dateMillis DESC
     """)
-    suspend fun getTitlesForDate(dateMillis: Long): List<String>
+    fun getAllPersonalExpenses(): Flow<List<ExpensesEntity>>
 
-    /* ---------------------------------------------------
-       Fixed vs Variable
-    --------------------------------------------------- */
-
-    @Query("""
-        SELECT * FROM expense_table
-        WHERE isBusiness = 1
-          AND dateMillis = :dateMillis
-          AND deletedAtMillis IS NULL
-    """)
-    fun getFixedExpenses(dateMillis: Long): Flow<List<ExpensesEntity>>
-
-    @Query("""
-        SELECT IFNULL(SUM(expenseAmount), 0)
-        FROM expense_table
-        WHERE isBusiness = 1
-          AND dateMillis = :dateMillis
-          AND deletedAtMillis IS NULL
-    """)
-    fun getFixedExpensesTotal(dateMillis: Long): Flow<Double>
-
-    @Query("""
-        SELECT * FROM expense_table
-        WHERE isBusiness = 0
-          AND dateMillis = :dateMillis
-          AND deletedAtMillis IS NULL
-    """)
-    fun getVariableExpenses(dateMillis: Long): Flow<List<ExpensesEntity>>
-
-    @Query("""
-        SELECT IFNULL(SUM(expenseAmount), 0)
-        FROM expense_table
-        WHERE isBusiness = 0
-          AND dateMillis = :dateMillis
-          AND deletedAtMillis IS NULL
-    """)
-    fun getVariableExpensesTotal(dateMillis: Long): Flow<Double>
-
-    /* ---------------------------------------------------
-       Between dates (range queries)
-    --------------------------------------------------- */
-
-    @Query("""
-        SELECT IFNULL(SUM(expenseAmount), 0)
-        FROM expense_table
-        WHERE dateMillis BETWEEN :startMillis AND :endMillis
-          AND deletedAtMillis IS NULL
-    """)
-    suspend fun getExpensesTotalBetween(
-        startMillis: Long,
-        endMillis: Long
-    ): Double
-
-    /* ---------------------------------------------------
-       Single item
-    --------------------------------------------------- */
-
-    @Query("""
-        SELECT * FROM expense_table
-        WHERE expenseId = :id
-          AND deletedAtMillis IS NULL
-        LIMIT 1
-    """)
+    @Query("SELECT * FROM expense_table WHERE expenseId = :id")
     suspend fun getExpenseById(id: String): ExpensesEntity?
 
+    // ------------------------------------------------
+    // 3️⃣ REPORTS
+    // ------------------------------------------------
+
+    // Total Kharcha aaj ka (Repository mein Business vs Personal separate kar lenge)
     @Query("""
-        SELECT EXISTS(
-            SELECT 1 FROM expense_table
-            WHERE expenseTitle = :title
-              AND dateMillis = :dateMillis
-              AND deletedAtMillis IS NULL
-        )
+        SELECT SUM(expenseAmount) FROM expense_table 
+        WHERE dateMillis BETWEEN :start AND :end 
+        AND deletedAtMillis IS NULL
     """)
-    suspend fun expenseExistsForTitleAndDate(
-        title: String,
-        dateMillis: Long
-    ): Boolean
+    fun getTotalExpenseAmount(start: Long, end: Long): Flow<Double?>
+
+    // ------------------------------------------------
+    // 4️⃣ SYNC
+    // ------------------------------------------------
+    @Query("SELECT * FROM expense_table WHERE isSynced = 0")
+    suspend fun getUnsyncedExpenses(): List<ExpensesEntity>
+
+    @Query("UPDATE expense_table SET isSynced = 1 WHERE expenseId = :id")
+    suspend fun markAsSynced(id: String)
 }
 

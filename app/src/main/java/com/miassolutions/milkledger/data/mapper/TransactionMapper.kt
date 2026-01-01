@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.data.mapper
 
-import com.miassolutions.milkledger.core.extensions.toLocalDate
-import com.miassolutions.milkledger.core.extensions.toMillis
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.data.local.entities.TransactionEntity
 import com.miassolutions.milkledger.domain.model.Transaction
 
@@ -11,10 +11,11 @@ fun TransactionEntity.toDomain(): Transaction =
         date = dateMillis.toLocalDate(),
         type = type,
         referenceId = referenceId,
+        accountId = accountId,
         debit = debit,
         credit = credit,
         profitImpact = profitImpact,
-        note = note
+        notes = notes
     )
 
 fun Transaction.toEntity(): TransactionEntity =
@@ -23,8 +24,9 @@ fun Transaction.toEntity(): TransactionEntity =
         dateMillis = date.toMillis(),
         type = type,
         referenceId = referenceId,
+        accountId = accountId,
         debit = debit,
         credit = credit,
         profitImpact = profitImpact,
-        note = note
+        notes = notes
     )

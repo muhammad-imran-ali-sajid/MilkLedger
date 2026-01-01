@@ -4,89 +4,53 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.core.os.bundleOf
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.databinding.BottomsheetBalanceHistoryBinding
-import com.miassolutions.milkledger.presentation.customerandsales.sales.saleslist.ui.SalesViewModel
-import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
-import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistoryAdapter
+import com.miassolutions.milkledger.presentation.customerandsales.sales.model.BalanceHistoryItem
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class CustomerBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
-
-    private val viewModel by viewModels<SalesViewModel>()
-    private lateinit var adapter: BalanceHistoryAdapter
-
-    private var onSelected: ((BalanceHistory) -> Unit)? = null
-
-    fun setOnSelectedListener(listener: (BalanceHistory) -> Unit) {
-        onSelected = listener
-    }
+class CustomerBalanceHistoryBottomSheet :
+    BottomSheetDialogFragment() {
 
     companion object {
-        private const val ARG_CUSTOMER_ID = "customer_id"
-        private const val ARG_CUSTOMER_NAME = "customer_name"
+        private const val ARG_NAME = "name"
+        private const val ARG_HISTORY = "history"
 
-        fun newInstance(customerId: String, customerName: String): CustomerBalanceHistoryBottomSheet {
-            return CustomerBalanceHistoryBottomSheet().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_CUSTOMER_ID, customerId)
-                    putString(ARG_CUSTOMER_NAME, customerName)
-                }
-            }
+        fun newInstance(
+            customerName: String,
+            history: List<BalanceHistoryItem>
+        ) = CustomerBalanceHistoryBottomSheet().apply {
+            arguments = bundleOf(
+                ARG_NAME to customerName,
+                ARG_HISTORY to ArrayList(history)
+            )
         }
     }
 
-    private var _binding: BottomsheetBalanceHistoryBinding? = null
-    private val binding get() = _binding!!
-
+    private lateinit var binding: BottomsheetBalanceHistoryBinding
+    private val adapter = BalanceHistoryAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = BottomsheetBalanceHistoryBinding.inflate(inflater, container, false)
+        binding = BottomsheetBalanceHistoryBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val customerId = arguments?.getString(ARG_CUSTOMER_ID)
-        val customerName = arguments?.getString(ARG_CUSTOMER_NAME)
+        val name = requireArguments().getString(ARG_NAME)!!
+        val history =
+            requireArguments().getParcelableArrayList<BalanceHistoryItem>(ARG_HISTORY)!!
 
-        if (customerId.isNullOrEmpty()) return
+        binding.tvCustomerName.text = name
+        binding.rvHistory.adapter = adapter
 
-        adapter = BalanceHistoryAdapter { item ->
-            onSelected?.invoke(item)
-            dismiss()
-        }
-
-        binding.rvBalanceHistory.adapter = adapter
-
-//        viewModel.loadBalanceHistory(customerId)
-//
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            repeatOnLifecycle(Lifecycle.State.STARTED) {
-//                viewModel.balanceHistory.collect { list ->
-//
-//                    val totalBalance = list.sumOf { it.balance }
-//
-//                    binding.tvBalance.text = numberFormat(totalBalance)
-//                    binding.tvBalance.setTextColor(textColor(totalBalance))
-//
-//                    binding.tvTitle.text = "$customerName\nBalance History"
-//
-//                    adapter.submitList(list)
-//                }
-//            }
-//        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        adapter.submitList(history)
     }
 }

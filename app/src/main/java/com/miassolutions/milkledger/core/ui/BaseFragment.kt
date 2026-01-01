@@ -8,26 +8,16 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.feature.FeatureManager
-import dagger.hilt.android.AndroidEntryPoint
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.premiumfeatures.FeatureManager
 import jakarta.inject.Inject
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 
 abstract class BaseFragment<VB : ViewBinding>(
@@ -53,7 +43,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
 
     private fun observePremiumFlag() {
-        featureManager.isPremiumEnabled().collectState { enabled ->
+        collectFlow(featureManager.isPremiumEnabled()) { enabled ->
             isPremiumEnabled = enabled
         }
     }
@@ -102,9 +92,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected open fun setupObservers() {}
     protected open fun setupListeners() {}
 
-    private fun showSnackbar(message: String, duration: Int = Snackbar.LENGTH_SHORT) {
-        Snackbar.make(requireView(), message, duration).show()
-    }
+
 
     protected fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
@@ -127,30 +115,8 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
 
 
-    protected fun <T> Flow<T>.collectState(
-        state: Lifecycle.State = Lifecycle.State.STARTED,
-        collector: suspend (T) -> Unit
-    ) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(state) {
-                this@collectState.collect { collector(it) }
-            }
-        }
-    }
 
 
-    protected fun SharedFlow<UiEvent>.collectEvent() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            collect { event ->
-                when (event) {
-                    is UiEvent.Navigate -> findNavController().navigate(event.destId, event.args)
-                    is UiEvent.NavigateBack -> findNavController().navigateUp()
-                    is UiEvent.ShowSnackbar -> showSnackbar(event.message)
-                    is UiEvent.ShowToast -> showToast(event.message)
-                }
-            }
-        }
-    }
 
     protected fun setToolbarTitle(title: String) {
         (requireActivity() as? ToolbarOwner)?.setToolbarTitle(title)
@@ -170,8 +136,6 @@ abstract class BaseFragment<VB : ViewBinding>(
             .show()
     }
 
-//    protected fun showBottomNav(show: Boolean) {
-//        (requireActivity() as? BottomNavOwner)?.setBottomNavVisibility(show)
-//    }
+
 
 }

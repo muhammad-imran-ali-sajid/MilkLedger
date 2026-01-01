@@ -4,15 +4,12 @@ import androidx.fragment.app.viewModels
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentSettingsBinding
 import com.miassolutions.milkledger.presentation.expenses.ui.detail.ExpenseViewModel
 
 
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class SettingsFragment :

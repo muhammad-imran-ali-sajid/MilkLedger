@@ -1,21 +1,14 @@
 package com.miassolutions.milkledger.presentation.supplier.balancehistory
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.miassolutions.milkledger.core.helper.numberFormat
-import com.miassolutions.milkledger.core.helper.textColor
 import com.miassolutions.milkledger.databinding.BottomsheetBalanceHistoryBinding
 import com.miassolutions.milkledger.presentation.supplier.purchase.PurchaseViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SupplierBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
@@ -52,37 +45,37 @@ class SupplierBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
     }
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        val supplierId = arguments?.getString(ARG_SUPPLIER_ID)
-        val supplierName = arguments?.getString(ARG_SUPPLIER_NAME)
-
-        if (supplierId.isNullOrEmpty()) {
-            return
-        }
-
-        adapter = BalanceHistoryAdapter()
-        binding.rvBalanceHistory.adapter = adapter
-
-        viewModel.setBalanceSupplierId(supplierId)
-        Log.d("TransactionHistory", supplierId)
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.balanceHistory.collect {
-                    Log.d("TransactionHistory", "$it")
-
-                    val totalBalance = it.sumOf { balanceHistory -> balanceHistory.balance }
-
-                    binding.tvBalance.text = numberFormat(totalBalance)
-                    binding.tvBalance.setTextColor(textColor(totalBalance))
-
-                    binding.tvTitle.text = "$supplierName\nBalance History"
-                    adapter.submitList(it)
-                }
-            }
-        }
-
-
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//
+//        val supplierId = arguments?.getString(ARG_SUPPLIER_ID)
+//        val supplierName = arguments?.getString(ARG_SUPPLIER_NAME)
+//
+//        if (supplierId.isNullOrEmpty()) {
+//            return
+//        }
+//
+//        adapter = BalanceHistoryAdapter()
+//        binding.rvBalanceHistory.adapter = adapter
+//
+//        viewModel.setBalanceSupplierId(supplierId)
+//        Log.d("TransactionHistory", supplierId)
+//
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                viewModel.balanceHistory.collect {
+//                    Log.d("TransactionHistory", "$it")
+//
+//                    val totalBalance = it.sumOf { balanceHistory -> balanceHistory.balance }
+//
+//                    binding.tvBalance.text = numberFormat(totalBalance)
+//                    binding.tvBalance.setTextColor(textColor(totalBalance))
+//
+//                    binding.tvTitle.text = "$supplierName\nBalance History"
+//                    adapter.submitList(it)
+//                }
+//            }
+//        }
+//
+//
+//    }
 }

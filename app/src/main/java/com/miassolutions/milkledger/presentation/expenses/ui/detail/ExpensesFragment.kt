@@ -6,11 +6,12 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
-import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
-import com.miassolutions.milkledger.presentation.expenses.ui.form.ExpenseEditBottomSheet
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -72,7 +73,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
     // Observers
     // ─────────────────────────────────────────────────────────────────────────────
     override fun setupObservers() {
-        viewModel.uiState.collectState { state ->
+        collectFlow(viewModel.uiState) { state ->
 
             binding.progressBar.visibility =
                 if (state.isLoading) View.VISIBLE else View.GONE
@@ -124,7 +125,7 @@ class ExpensesFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesB
             val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
             val isUserAuthorized = isAdmin // Replace with actual auth check
 
-            showExpenseDatePicker(
+            showLedgerDatePicker(
                 isAuthorized = isUserAuthorized,
                 initialDate = currentDate,
                 onPicked = { selectedDate: LocalDate ->

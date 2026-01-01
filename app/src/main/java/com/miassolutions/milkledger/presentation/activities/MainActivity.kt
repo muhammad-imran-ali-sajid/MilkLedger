@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -21,8 +20,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.feature.FeatureManager
-import com.miassolutions.milkledger.core.feature.RemoteConfigManager
+import com.miassolutions.milkledger.utils.premiumfeatures.FeatureManager
+import com.miassolutions.milkledger.utils.premiumfeatures.RemoteConfigManager
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.ToolbarOwner

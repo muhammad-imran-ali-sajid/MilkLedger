@@ -1,22 +1,16 @@
 package com.miassolutions.milkledger.data.repository
 
-import android.util.Log
-import com.miassolutions.milkledger.core.extensions.toMillis
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
 import com.miassolutions.milkledger.data.local.daos.TransactionDao
 import com.miassolutions.milkledger.data.local.entities.TransactionEntity
 import com.miassolutions.milkledger.data.local.entities.TransactionType
 import com.miassolutions.milkledger.data.mapper.toDomain
 import com.miassolutions.milkledger.data.mapper.toEntity
-import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
-import com.miassolutions.milkledger.data.remote.mapper.FirestorePurchaseModel
 import com.miassolutions.milkledger.domain.model.Purchase
 import com.miassolutions.milkledger.domain.model.Supplier
 import com.miassolutions.milkledger.domain.model.Transaction
-import com.miassolutions.milkledger.presentation.expenses.data.toDomain
-import com.miassolutions.milkledger.presentation.expenses.data.toEntity
 import com.miassolutions.milkledger.presentation.stats.SupplierPaidSummary
-import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
@@ -27,7 +21,6 @@ import javax.inject.Singleton
 class PurchaseRepository @Inject constructor(
     private val purchaseDao: PurchaseDao,
     private val transactionDao: TransactionDao,
-    private val firestore: FirestoreSyncHelper
 ) {
 
     companion object {
@@ -57,8 +50,7 @@ class PurchaseRepository @Inject constructor(
     suspend fun isDuplicatePurchase(supplierId: String, date: LocalDate): Boolean =
         purchaseDao.countPurchaseForDate(supplierId, date.toMillis()) > 0
 
-    fun getBalanceHistory(supplierId: String): Flow<List<BalanceHistory>> =
-        purchaseDao.getSupplierBalanceHistory(supplierId)
+
 
     /* ---------------------------------------------------
        WRITE : PURCHASE
@@ -76,21 +68,15 @@ class PurchaseRepository @Inject constructor(
                 dateMillis = entity.dateMillis,
                 type = TransactionType.PURCHASE,   // 🆕
                 referenceId = entity.purchaseId,
+                accountId = entity.supplierId,
                 debit = entity.payment,
                 credit = 0.0,
                 profitImpact = -entity.payment,
-                note = "Purchase from supplier ${entity.supplierId}"
+                notes = "Purchase from supplier ${entity.supplierId}"
             )
         )
 
-        // 3️⃣ Firestore (best-effort)
-        syncSafely {
-            firestore.uploadSingle(
-                collectionName = COLLECTION,
-                documentId = entity.purchaseId,
-                data = FirestorePurchaseModel.fromEntity(entity) // mapper later
-            )
-        }
+
     }
 
     suspend fun updatePurchase(purchase: Purchase) {
@@ -104,10 +90,11 @@ class PurchaseRepository @Inject constructor(
                 dateMillis = entity.dateMillis,
                 type = TransactionType.PURCHASE,
                 referenceId = entity.purchaseId,
+                accountId = entity.supplierId,
                 debit = entity.payment,
                 credit = 0.0,
                 profitImpact = -entity.payment,
-                note = "Purchase updated"
+                notes = "Purchase updated"
             )
         )
     }
@@ -118,21 +105,18 @@ class PurchaseRepository @Inject constructor(
         purchaseDao.softDeletePurchase(purchaseId, deletedAt)
 
         // 🆕 Ledger reversal
-        transactionDao.insert(
-            TransactionEntity(
-                dateMillis = deletedAt,
-                type = TransactionType.PURCHASE_REVERSAL,
-                referenceId = purchaseId,
-                debit = 0.0,
-                credit = 0.0,
-                profitImpact = 0.0,
-                note = "Purchase deleted"
-            )
-        )
+//        transactionDao.insert(
+//            TransactionEntity(
+//                dateMillis = deletedAt,
+//                type = TransactionType.PURCHASE_REVERSAL,
+//                referenceId = purchaseId,
+//                debit = 0.0,
+//                credit = 0.0,
+//                profitImpact = 0.0,
+//                notes = "Purchase deleted"
+//            )
+//        )
 
-        syncSafely {
-            firestore.deleteDocument(COLLECTION, purchaseId)
-        }
     }
 
     /* ---------------------------------------------------
@@ -147,32 +131,23 @@ class PurchaseRepository @Inject constructor(
         if (amount == 0.0) return
         if (purchaseDao.countPurchaseById(purchaseId) == 0) return
 
-        transactionDao.insert(
-            TransactionEntity(
-                dateMillis = System.currentTimeMillis(),
-                type = TransactionType.PROFIT_ADJUSTMENT,
-                referenceId = purchaseId,
-                debit = if (amount > 0) amount else 0.0,
-                credit = if (amount < 0) -amount else 0.0,
-                profitImpact = -amount,
-                note = note
-            )
-        )
+//        transactionDao.insert(
+//            TransactionEntity(
+//                dateMillis = System.currentTimeMillis(),
+//                type = TransactionType.PROFIT_ADJUSTMENT,
+//                referenceId = purchaseId,
+//                accountId = customerId,
+//                debit = if (amount > 0) amount else 0.0,
+//                credit = if (amount < 0) -amount else 0.0,
+//                profitImpact = -amount,
+//                notes = note
+//            )
+//        )
     }
 
     fun observePurchaseAdjustments(purchaseId: String): Flow<List<Transaction>> =
         transactionDao.getAdjustmentsFor(purchaseId)
             .map { it.map { tx -> tx.toDomain() } }
 
-    /* ---------------------------------------------------
-       HELPERS
-    --------------------------------------------------- */
 
-    private suspend fun syncSafely(block: suspend () -> Unit) {
-        try {
-            block()
-        } catch (e: Exception) {
-            Log.e(TAG, "Firestore sync failed", e)
-        }
-    }
 }

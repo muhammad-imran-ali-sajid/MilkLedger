@@ -38,7 +38,7 @@
         tools:listitem="@layout/item_customer_detail"
         style="@style/RecyclerViewStyle" />
 
-    <com.miassolutions.milkledger.core.util.CollapsibleCardView
+    <com.miassolutions.milkledger.utils.customviews.CollapsibleCardView
         android:id="@+id/customer_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

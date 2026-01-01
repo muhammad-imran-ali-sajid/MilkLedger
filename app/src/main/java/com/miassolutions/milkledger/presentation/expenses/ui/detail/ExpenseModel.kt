@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.presentation.expenses.ui.detail
 
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 
 fun ExpensesEntity.toModel() : ExpenseModel{
     return ExpenseModel(

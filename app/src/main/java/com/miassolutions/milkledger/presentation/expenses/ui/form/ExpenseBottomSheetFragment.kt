@@ -3,14 +3,15 @@ package com.miassolutions.milkledger.presentation.expenses.ui.form
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.util.setTextIfDifferent
-import com.miassolutions.milkledger.core.util.showExpenseDatePicker
+import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.databinding.FragmentAddExpenseBinding
 import com.miassolutions.milkledger.databinding.ItemPersonalExpenseBinding
 import com.miassolutions.milkledger.presentation.expenses.ui.detail.ExpenseInput
 import com.miassolutions.milkledger.presentation.expenses.ui.detail.ExpenseUiEvent
+import com.miassolutions.milkledger.utils.extensions.collectEffect
+import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,7 +38,7 @@ class ExpenseAddBottomSheetFragment :
     override fun setupObservers() {
 
         // UI STATE
-        viewModel.uiState.collectState { state ->
+        collectFlow(viewModel.uiState) { state ->
             binding.etDate.setText(state.date.toDisplayFormat())
 
             renderBusinessInputs(state.businessInputs)
@@ -45,7 +46,7 @@ class ExpenseAddBottomSheetFragment :
         }
 
         // EVENTS
-        viewModel.uiEvent.collectState { event ->
+        collectEffect(viewModel.uiEvent) { event ->
             when (event) {
                 is ExpenseUiEvent.ShowMessage -> showToast(event.message)
                 ExpenseUiEvent.Dismiss -> findNavController().popBackStack()

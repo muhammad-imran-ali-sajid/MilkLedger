@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.presentation.stats
 
 
-import com.miassolutions.milkledger.core.extensions.toMillis
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.data.local.daos.StatsDao
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,7 +17,7 @@ class StatsRepository @Inject constructor(
         val suppliers = dao.getSupplierTotals(start.toMillis(), end.toMillis())
         val expenses = dao.getBusinessExpenseTotals(start.toMillis(), end.toMillis())
         val personalExpenses = dao.getPersonalExpenseTotals(start.toMillis(), end.toMillis())
-        val profits = dao.getProfitTotals(start.toMillis(), end.toMillis())
+        val profits = dao.getCustomerTotals(start.toMillis(), end.toMillis()) //temp todo()
 
         return buildList {
             addAll(customers)

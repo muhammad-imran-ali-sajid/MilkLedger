@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.miassolutions.milkledger.core.util.autoSelectOnFocus
-import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
+import com.miassolutions.milkledger.utils.extensions.autoSelectOnFocus
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import com.miassolutions.milkledger.databinding.BottomsheetEditExpenseBinding
 
 class ExpenseEditBottomSheet(
@@ -43,7 +43,7 @@ class ExpenseEditBottomSheet(
 
         // Populate editable fields
         binding.etExpenseAmount.setText(entry.expenseAmount.toString())
-        binding.etNotes.setText(entry.expenseNote ?: "")
+        binding.etNotes.setText(entry.note ?: "")
 
         binding.btnSave.setOnClickListener {
             val amount = binding.etExpenseAmount.text?.toString()?.toDoubleOrNull()
@@ -58,7 +58,7 @@ class ExpenseEditBottomSheet(
 
             val updated = entry.copy(
                 expenseAmount = amount,
-                expenseNote = notes
+                note = notes
             )
 
             onSave(updated)

@@ -7,10 +7,8 @@ import com.miassolutions.milkledger.data.local.AppDatabase
 import com.miassolutions.milkledger.data.local.daos.CustomerDao
 import com.miassolutions.milkledger.data.local.daos.ExpensesDao
 import com.miassolutions.milkledger.data.local.daos.NoteDao
-import com.miassolutions.milkledger.data.local.daos.ProfitDao
-import com.miassolutions.milkledger.data.local.daos.ProfitReceiptDao
+import com.miassolutions.milkledger.data.local.daos.ProfitWithdrawalDao
 import com.miassolutions.milkledger.data.local.daos.PurchaseDao
-import com.miassolutions.milkledger.data.local.daos.ReportsDao
 import com.miassolutions.milkledger.data.local.daos.SalesDao
 import com.miassolutions.milkledger.data.local.daos.StatsDao
 import com.miassolutions.milkledger.data.local.daos.SupplierDao
@@ -33,7 +31,7 @@ object DatabaseModule {
         @ApplicationContext appContext: Context,
     ): AppDatabase =
         Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
-            .fallbackToDestructiveMigration(true)
+            .fallbackToDestructiveMigration(true) // todo()
             .build()
 
     @Singleton
@@ -58,15 +56,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesReportsDao(db: AppDatabase): ReportsDao = db.reportsDao()
-
-    @Singleton
-    @Provides
     fun provideNoteDao(db: AppDatabase): NoteDao = db.noteDao()
-
-    @Singleton
-    @Provides
-    fun provideProfitDao(db: AppDatabase): ProfitDao = db.profitDao()
 
     @Singleton
     @Provides
@@ -78,6 +68,6 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideProfitReceiptDao(db: AppDatabase): ProfitReceiptDao = db.profitReceiptDao()
+    fun provideProfitReceiptDao(db: AppDatabase): ProfitWithdrawalDao = db.profitWithdrawalDao()
 
 }

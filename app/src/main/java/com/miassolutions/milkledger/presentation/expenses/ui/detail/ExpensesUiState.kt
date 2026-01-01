@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.presentation.expenses.ui.detail
 
-import com.miassolutions.milkledger.presentation.expenses.data.ExpensesEntity
+import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
 import java.time.LocalDate
 
 

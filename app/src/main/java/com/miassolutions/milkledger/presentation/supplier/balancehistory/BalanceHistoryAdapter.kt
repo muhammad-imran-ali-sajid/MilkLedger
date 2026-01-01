@@ -3,11 +3,10 @@ package com.miassolutions.milkledger.presentation.supplier.balancehistory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.core.extensions.toDisplayDate
-import com.miassolutions.milkledger.core.extensions.toLocalDate
-import com.miassolutions.milkledger.core.helper.numberFormat
-import com.miassolutions.milkledger.core.helper.textColor
-import com.miassolutions.milkledger.core.util.dateFormatter
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.helper.numberFormat
+import com.miassolutions.milkledger.utils.helper.textColor
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
 
 class BalanceHistoryAdapter(

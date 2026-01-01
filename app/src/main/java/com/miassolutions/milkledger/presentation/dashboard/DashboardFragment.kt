@@ -5,19 +5,20 @@ import android.view.Menu
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.helper.RemoteConfigHelper
-import com.miassolutions.milkledger.core.pdf.dashboardreport.DashboardReportGenerator
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.extensions.hide
-import com.miassolutions.milkledger.core.extensions.show
-import com.miassolutions.milkledger.core.extensions.toPriceStr
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
-import com.miassolutions.milkledger.core.datefilter.DateFilterCallback
-import com.miassolutions.milkledger.core.datefilter.DateFilterController
-import com.miassolutions.milkledger.core.datefilter.DatePeriod
 import com.miassolutions.milkledger.presentation.stats.toPdfSummary
+import com.miassolutions.milkledger.utils.datefilter.DateFilterCallback
+import com.miassolutions.milkledger.utils.datefilter.DateFilterController
+import com.miassolutions.milkledger.utils.datefilter.DatePeriod
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.hide
+import com.miassolutions.milkledger.utils.extensions.show
+import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.helper.RemoteConfigHelper
+import com.miassolutions.milkledger.utils.pdf.dashboardreport.DashboardReportGenerator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,7 +35,6 @@ class DashboardFragment :
     }
 
     override fun setupViews() {
-
 
 
         controller = DateFilterController(
@@ -74,8 +74,6 @@ class DashboardFragment :
         if (!isAdmin) {
             hideTextViews()
         }
-
-
 
 
     }
@@ -122,7 +120,7 @@ class DashboardFragment :
 
 
     override fun setupObservers() = with(binding) {
-        viewModel.uiState.collectState { state ->
+        collectFlow(viewModel.uiState) { state ->
             val milkFatLr = state.totalMilkWithFatAndLr
 
             val qtyDiff = state.milkSold - state.milkPurchase
@@ -146,12 +144,8 @@ class DashboardFragment :
             tvRemainingProfit.text = state.profitAfter.toPriceStr()
 
 
-
-
-
         }
     }
-
 
 
     override fun setupListeners() {

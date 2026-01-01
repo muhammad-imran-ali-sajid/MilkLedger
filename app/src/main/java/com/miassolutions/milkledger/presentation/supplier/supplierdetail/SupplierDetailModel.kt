@@ -1,11 +1,11 @@
 package com.miassolutions.milkledger.presentation.supplier.supplierdetail
 
-import com.miassolutions.milkledger.core.pdf.purchasereport.PdfPurchaseItemRecord
-import com.miassolutions.milkledger.core.pdf.supplierreport.PdfSupplierItemRecord
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toLocalDate
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
 import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
+import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.pdf.purchasereport.PdfPurchaseItemRecord
+import com.miassolutions.milkledger.utils.pdf.supplierreport.PdfSupplierItemRecord
 import java.time.LocalDate
 
 data class SupplierDetailModel(

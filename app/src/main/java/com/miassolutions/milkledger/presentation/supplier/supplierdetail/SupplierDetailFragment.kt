@@ -6,17 +6,13 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.filterdata.CustomDateRangeBottomSheet
-import com.miassolutions.milkledger.core.helper.numberFormat
-import com.miassolutions.milkledger.core.helper.textColor
-import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierReceiptPdf
-import com.miassolutions.milkledger.core.pdf.supplierreport.SupplierReportGenerator
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.core.extensions.formatPeriodLabel
-import com.miassolutions.milkledger.core.extensions.toDisplayFormat
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
+import com.miassolutions.milkledger.core.ui.CustomDateRangeBottomSheet
 import com.miassolutions.milkledger.databinding.FragmentSupplierDetailBinding
-import com.miassolutions.milkledger.databinding.LayoutSupplierDetailSummaryBinding
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.formatPeriodLabel
+import com.miassolutions.milkledger.utils.helper.numberFormat
+import com.miassolutions.milkledger.utils.helper.textColor
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -72,7 +68,7 @@ class SupplierDetailFragment :
             showDialog(
                 title = "Confirmation",
                 message = "Do you want to generate pdf report?",
-                onAction = { generateReport() }
+                onAction = {  }
             )
             true
         }
@@ -88,52 +84,7 @@ class SupplierDetailFragment :
         viewModel.setCustomDateRange(start, end)
     }
 
-    private fun generateReport() {
-        val state = viewModel.uiState.value
-        val filteredList = state.filteredList
 
-        // --- Determine the actual dates used for the current filter ---
-        val startDate = state.selectedStartDate ?: LocalDate.now()
-        val endDate = state.selectedEndDate ?: LocalDate.now()
-
-        // Format the dates (assuming formattedDate() is an extension on LocalDate)
-        val fromDate = startDate.toDisplayFormat()
-        val toDate = endDate.toDisplayFormat()
-
-        val dateRange = "$fromDate - $toDate"
-
-        val recordList = filteredList.toRecordList()
-        val totalQty = recordList.sumOf { it.quantity }
-        val avgTS = recordList.sumOf { it.ts }
-        val totalAmount = recordList.sumOf { it.amount }
-        val totalPaid = recordList.sumOf { it.paid }
-        val totalBalance = recordList.sumOf { it.balance }
-
-
-
-        val data = SupplierReceiptPdf(
-
-            dateRange = dateRange,
-            supplierName = args.supplierName,
-            totalQty = totalQty.toRoundedStr(),
-            avgTs = avgTS.toRoundedStr(),
-            recordList = filteredList.toRecordList(),
-            totalAmount = totalAmount.toRoundedStr(),
-            totalPaid = totalPaid.toRoundedStr(),
-            totalBalance = totalBalance.toRoundedStr(),
-            footerNote = "Receipt generated on : ${LocalDate.now().toDisplayFormat()}"
-        )
-
-        SupplierReportGenerator.generateAndSharePdf(
-            context = requireContext(),
-            data = data,
-            baseName = "Supplier",
-            showLogo = true,
-//                logoResId = R.drawable.ic_launcher_foreground
-        )
-
-        showToast("Generating pdf report...")
-    }
 
 
     private fun setupRecyclerView() {
@@ -157,7 +108,7 @@ class SupplierDetailFragment :
     }
 
     override fun setupObservers() {
-        viewModel.uiState.collectState { state ->
+        collectFlow(viewModel.uiState) { state ->
             // 1. Get the current formatted date range from the state
             val currentSelectedDateRange =
                 getFormattedDateRange(state.selectedStartDate, state.selectedEndDate)
@@ -197,26 +148,26 @@ class SupplierDetailFragment :
         balanceColor: Int,
         dateRange: String // Added dateRange parameter
     ) {
-        binding.apply {
-            supplierSummary.setTitle("Summary")
-            supplierSummary.collapse()
-
-            val summaryBinding =
-                LayoutSupplierDetailSummaryBinding.inflate(layoutInflater, root, false)
-            supplierSummary.setContent(summaryBinding.root)
-
-            summaryBinding.apply {
-                // Use the passed dateRange parameter
-                tvDateRangeValue.text = dateRange
-                tvTotalMilk.text = milkAmount
-                tvTotalTs.text = totalTS
-                tvTotalAmount.text = totalPrice
-                tvAvgFat.text = avgFat
-                tvAvgLr.text = avgLr
-                tvPaymentValue.text = payment
-                tvBalanceValue.text = balance
-                tvBalanceValue.setTextColor(balanceColor)
-            }
-        }
+//        binding.apply {
+//            supplierSummary.setTitle("Summary")
+//            supplierSummary.collapse()
+//
+//            val summaryBinding =
+//                LayoutSupplierDetailSummaryBinding.inflate(layoutInflater, root, false)
+//            supplierSummary.setContent(summaryBinding.root)
+//
+//            summaryBinding.apply {
+//                // Use the passed dateRange parameter
+//                tvDateRangeValue.text = dateRange
+//                tvTotalMilk.text = milkAmount
+//                tvTotalTs.text = totalTS
+//                tvTotalAmount.text = totalPrice
+//                tvAvgFat.text = avgFat
+//                tvAvgLr.text = avgLr
+//                tvPaymentValue.text = payment
+//                tvBalanceValue.text = balance
+//                tvBalanceValue.setTextColor(balanceColor)
+//            }
+//        }
     }
 }

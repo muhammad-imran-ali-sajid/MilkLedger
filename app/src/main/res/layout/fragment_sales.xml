@@ -59,7 +59,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-    <com.miassolutions.milkledger.core.util.CollapsibleCardView
+    <com.miassolutions.milkledger.utils.customviews.CollapsibleCardView
         android:id="@+id/cardSalesSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

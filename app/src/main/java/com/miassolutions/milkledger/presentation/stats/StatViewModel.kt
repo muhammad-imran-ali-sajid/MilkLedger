@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.presentation.stats
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.util.DateRangeUtil
+import com.miassolutions.milkledger.utils.util.DateRangeUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

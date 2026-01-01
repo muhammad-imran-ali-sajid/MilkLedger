@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.data.mapper
 
-import com.miassolutions.milkledger.core.extensions.toLocalDate
-import com.miassolutions.milkledger.core.extensions.toMillis
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
 import com.miassolutions.milkledger.domain.model.Purchase
 

@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.core.di
 
 import com.google.firebase.firestore.FirebaseFirestore
-import com.miassolutions.milkledger.data.remote.FirestoreSyncHelper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,9 +17,5 @@ object FirebaseModule {
         return FirebaseFirestore.getInstance()
     }
 
-    @Provides
-    @Singleton
-    fun provideFirestoreSyncHelper(firestore: FirebaseFirestore): FirestoreSyncHelper {
-        return FirestoreSyncHelper(firestore)
-    }
+
 }

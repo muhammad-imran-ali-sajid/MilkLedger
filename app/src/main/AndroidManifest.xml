@@ -18,7 +18,7 @@
         android:maxSdkVersion="28" />
 
     <application
-        android:name=".MilkLedgerApp"
+        android:name=".app.MilkLedgerApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -54,7 +54,7 @@
 
         </activity>
 
-        <receiver android:name=".core.alarm.AlarmReceiver" />
+        <receiver android:name=".utils.alarm.AlarmReceiver" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

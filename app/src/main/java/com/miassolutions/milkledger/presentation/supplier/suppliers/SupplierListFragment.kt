@@ -4,13 +4,11 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.extensions.collectEffect
-import com.miassolutions.milkledger.core.extensions.collectFlow
-import com.miassolutions.milkledger.core.extensions.showDeleteActionDialog
+import com.miassolutions.milkledger.utils.extensions.collectEffect
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSuppliersBinding
-import com.miassolutions.milkledger.domain.model.Supplier
-import com.miassolutions.milkledger.presentation.supplier.form.SupplierFormBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

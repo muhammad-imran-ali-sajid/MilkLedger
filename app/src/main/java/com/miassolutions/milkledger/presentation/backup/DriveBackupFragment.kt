@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentDriveBackupBinding
+import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.ByteArrayInputStream
@@ -89,8 +90,8 @@ class DriveBackupFragment :
             )
         }
 
-        viewModel.status.collectState { message ->
-            // Show progress or final message
+        collectFlow(viewModel.status) { message ->
+
             showSnackbar(message)
         }
     }

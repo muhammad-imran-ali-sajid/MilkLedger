@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.presentation.customerandsales.sales.custome
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toRoundedStr
 
 import com.miassolutions.milkledger.data.repository.SalesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

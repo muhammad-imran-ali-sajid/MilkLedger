@@ -44,25 +44,6 @@ class ExpenseViewModel @Inject constructor(
     }
 
     private fun observeDate(date: LocalDate) {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(currentDate = date, isLoading = true)
-            }
 
-            repository.getExpensesByDate(date).collect { list ->
-
-                val business = list.filter { it.isBusiness }
-                val personal = list.filter { !it.isBusiness }
-
-                _uiState.update { it ->
-                    it.copy(
-//                        expenses = list,
-//                        businessTotalExpenses = business.sumOf { it.amount },
-//                        personalTotalExpenses = personal.sumOf { it.amount },
-//                        isLoading = false
-                    )
-                }
-            }
-        }
     }
 }

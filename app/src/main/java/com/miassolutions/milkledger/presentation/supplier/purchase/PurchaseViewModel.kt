@@ -2,24 +2,14 @@ package com.miassolutions.milkledger.presentation.supplier.purchase
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.core.util.MilkCalculationUtils
 import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
-import com.miassolutions.milkledger.data.local.relations.PurchaseWithSupplier
 import com.miassolutions.milkledger.data.repository.PurchaseRepository
-import com.miassolutions.milkledger.presentation.supplier.balancehistory.BalanceHistory
+import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -35,17 +25,6 @@ class PurchaseViewModel @Inject constructor(
 
     private val _balanceSupplierId = MutableStateFlow<String?>(null)
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    val balanceHistory: StateFlow<List<BalanceHistory>> =
-        _balanceSupplierId
-            .filterNotNull()
-            .flatMapLatest { repository.getBalanceHistory(it) }
-            .onStart { emit(emptyList()) }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000),
-                emptyList()
-            )
 
     init {
         observeForDate(_uiState.value.currentDate)

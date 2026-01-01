@@ -8,8 +8,9 @@ data class Transaction(
     val date: LocalDate,
     val type: TransactionType,
     val referenceId: String?,
+    val accountId: String?,
     val debit: Double,
     val credit: Double,
     val profitImpact: Double,
-    val note: String?
+    val notes: String?
 )
