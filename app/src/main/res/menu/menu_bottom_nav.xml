@@ -27,7 +27,7 @@
     <item
         android:id="@+id/dashboardFragment"
         android:icon="@drawable/ic_stats"
-        android:orderInCategory="500"
+        android:orderInCategory="50"
         android:title="Dashboard" />
 
 
