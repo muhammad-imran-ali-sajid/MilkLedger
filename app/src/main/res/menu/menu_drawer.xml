@@ -6,7 +6,7 @@
     <group android:id="@+id/menu_group_navigation">
 
         <item
-            android:id="@+id/action_suppliersFragment"
+            android:id="@+id/suppliersFragment"
             android:orderInCategory="100"
             android:icon="@drawable/ic_supplier2"
             android:title="@string/suppliers"
@@ -14,7 +14,7 @@
 
 
         <item
-            android:id="@+id/action_customersFragment"
+            android:id="@+id/customersFragment"
             android:orderInCategory="101"
             android:title="@string/customers"
             android:icon="@drawable/ic_cutomer2"
@@ -31,7 +31,7 @@
 
 
         <item
-            android:id="@+id/action_notesFragment"
+            android:id="@+id/notesListFragment"
             android:icon="@android:drawable/ic_menu_edit"
             android:orderInCategory="102"
             android:title="@string/notes"
@@ -41,14 +41,14 @@
     <!-- Tools / Settings -->
     <group android:id="@+id/menu_group_tools">
         <item
-            android:id="@+id/action_driveBackupFragment"
+            android:id="@+id/driveBackupFragment"
             android:icon="@drawable/ic_backup"
             android:orderInCategory="200"
             android:title="@string/backup_restore"
             app:showAsAction="never" />
 
         <item
-            android:id="@+id/action_settingsFragment"
+            android:id="@+id/settingsFragment"
             android:icon="@drawable/ic_settings"
             android:orderInCategory="201"
             android:title="@string/settings"
