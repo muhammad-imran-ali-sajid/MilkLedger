@@ -112,6 +112,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_statsFragment"
             app:destination="@id/statsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_saleListFragment"
+            app:destination="@id/saleListFragment" />
     </fragment>
     <fragment
         android:id="@+id/customerDetailFragment"
@@ -148,9 +151,9 @@
     </fragment>
     <fragment
         android:id="@+id/addEditNoteFragment"
-        android:name="com.miassolutions.milkledger.features.note.ui.form.AddEditNoteBottomSheet"
+        android:name="com.miassolutions.milkledger.features.note.ui.form.NoteFormBottomSheet"
         android:label="Add New Note"
-        tools:layout="@layout/bottom_sheet_add_edit_note" />
+        tools:layout="@layout/bottom_sheet_note_form" />
     <fragment
         android:id="@+id/profitFragment"
         android:name="com.miassolutions.milkledger.features.profitwithdrawal.ProfitFragment"
@@ -178,7 +181,14 @@
         android:name="com.miassolutions.milkledger.features.expense.ui.form.ExpenseEditBottomSheet"
         android:label="ExpenseEditBottomSheet" />
     <fragment
-        android:id="@+id/saleListFragment2"
+        android:id="@+id/saleListFragment"
         android:name="com.miassolutions.milkledger.features.sale.ui.list.SaleListFragment"
-        android:label="SaleListFragment" />
+        android:label="SaleListFragment" >
+        <action
+            android:id="@+id/action_saleListFragment_to_customerDetailFragment"
+            app:destination="@id/customerDetailFragment" />
+        <action
+            android:id="@+id/action_saleListFragment_to_saleAddFragment"
+            app:destination="@id/saleAddFragment" />
+    </fragment>
 </navigation>

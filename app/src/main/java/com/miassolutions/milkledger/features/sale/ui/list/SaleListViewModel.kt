@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.features.sale.data.repository.SaleRepository
 import com.miassolutions.milkledger.features.sale.domain.model.Sale
 import com.miassolutions.milkledger.features.sale.domain.model.toSaleUi
 import com.miassolutions.milkledger.features.sale.domain.usecase.ObserveSalesForDateUseCase
+import com.miassolutions.milkledger.features.sale.ui.list.SalesUiEffect.*
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -141,14 +142,14 @@ class SaleListViewModel @Inject constructor(
 
             is SalesUiEvent.EditClicked -> {
                 emitEffect(
-                    SalesUiEffect.EditSaleRecord(event.sale)
+                    EditSaleRecord(event.sale)
                 )
             }
 
 
             is SalesUiEvent.OpenCustomerLedger ->
                 emitEffect(
-                    SalesUiEffect.NavigateToCustomerLedger(
+                    NavigateToCustomerLedger(
                         event.customerId,
                         event.customerName
                     )
@@ -159,6 +160,9 @@ class SaleListViewModel @Inject constructor(
             }
 
             SalesUiEvent.DismissBalanceHistory -> {}
+            SalesUiEvent.OpenSaleForm -> {
+                emitEffect(NavigateToSaleForm)
+            }
         }
     }
 

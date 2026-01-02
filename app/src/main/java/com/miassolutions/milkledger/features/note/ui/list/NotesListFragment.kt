@@ -15,7 +15,7 @@ import com.miassolutions.milkledger.core.notification.NotificationPermissionHelp
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentNotesListBinding
 import com.miassolutions.milkledger.features.note.data.local.NoteEntity
-import com.miassolutions.milkledger.features.note.ui.form.AddEditNoteBottomSheet
+import com.miassolutions.milkledger.features.note.ui.form.NoteFormBottomSheet
 import com.miassolutions.milkledger.features.note.ui.form.NoteUiEvent
 import com.miassolutions.milkledger.features.note.ui.form.NotesViewModel
 import com.miassolutions.milkledger.utils.extensions.collectFlow
@@ -61,7 +61,7 @@ class NotesListFragment :
     private fun setupRecyclerView() {
         adapter = NotesListAdapter(
             onItemClick = { note ->
-                AddEditNoteBottomSheet.Companion.newInstance(note)
+                NoteFormBottomSheet.Companion.newInstance(note)
                     .show(parentFragmentManager, "AddEditNote")
             },
             onDeleteClick = { note ->
@@ -91,7 +91,7 @@ class NotesListFragment :
 
     override fun setupListeners() {
         binding.fabAddNote.setOnClickListener {
-            AddEditNoteBottomSheet.Companion.newInstance(null).show(parentFragmentManager, "AddEditNote")
+            NoteFormBottomSheet.Companion.newInstance(null).show(parentFragmentManager, "AddEditNote")
         }
         binding.etSearch.addTextChangedListener { editable ->
             viewModel.onSearchQueryChanged(editable?.toString().orEmpty())

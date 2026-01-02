@@ -167,7 +167,7 @@ class DashboardFragment :
 
 
         binding.saleCard.setOnClickListener {
-            val dest = DashboardFragmentDirections.actionDashboardFragmentToSalesFragment()
+            val dest = DashboardFragmentDirections.actionDashboardFragmentToSaleListFragment()
             navigateTo(dest.actionId)
 
         }

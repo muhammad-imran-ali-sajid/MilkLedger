@@ -112,7 +112,7 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
         }
 
         binding.fabAddSale.setOnClickListener {
-
+            viewModel.onEvent(SalesUiEvent.OpenSaleForm)
         }
     }
 
@@ -232,9 +232,9 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
 
             binding.dateHeader.tvSelectedDate.text =
                 state.currentDate.toDisplayFormat()
-            
 
-                
+
+
 
             showSummary(
                 milkAmount = state.totalMilk,
@@ -256,14 +256,12 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
 
             is SalesUiEffect.NavigateToCustomerLedger -> {
 
-                val action = SaleListFragment
-//                findNavController().navigate(
-//                    SaleLi
-//                        .actionSalesFragmentToCustomerDetailFragment(
-//                            effect.customerId,
-//                            effect.name
-//                        )
-//                )
+                val action =
+                    SaleListFragmentDirections.actionSaleListFragmentToCustomerDetailFragment(
+                        effect.customerId,
+                        effect.name
+                    )
+                findNavController().navigate(action)
             }
 
             is SalesUiEffect.EditSaleRecord -> {
@@ -286,6 +284,11 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
 //            is SalesUiEffect.GeneratePdf -> {
 //                generatePdf(effect.data)
 //            }
+            SalesUiEffect.NavigateToSaleForm -> {
+                findNavController().navigate(
+                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment()
+                )
+            }
         }
     }
 

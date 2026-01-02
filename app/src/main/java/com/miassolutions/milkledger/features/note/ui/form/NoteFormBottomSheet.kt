@@ -10,17 +10,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
-import com.miassolutions.milkledger.utils.alarm.AlarmScheduler
-import com.miassolutions.milkledger.databinding.BottomSheetAddEditNoteBinding
+import com.miassolutions.milkledger.databinding.BottomSheetNoteFormBinding
 import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.utils.alarm.AlarmScheduler
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
+class NoteFormBottomSheet : BottomSheetDialogFragment() {
 
-    private var _binding: BottomSheetAddEditNoteBinding? = null
+    private var _binding: BottomSheetNoteFormBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<NotesViewModel>()
@@ -32,7 +32,7 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = BottomSheetAddEditNoteBinding.inflate(inflater, container, false)
+        _binding = BottomSheetNoteFormBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -158,8 +158,8 @@ class AddEditNoteBottomSheet : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(note: NoteEntity? = null): AddEditNoteBottomSheet {
-            return AddEditNoteBottomSheet().apply {
+        fun newInstance(note: NoteEntity? = null): NoteFormBottomSheet {
+            return NoteFormBottomSheet().apply {
                 note?.let {
                     arguments = Bundle().apply {
 //                        putParcelable("note", it)
