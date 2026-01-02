@@ -12,7 +12,7 @@
 
     <!-- Primary Brand Color (A strong, accessible blue) -->
 <!--    <color name="primary">#00796B</color>-->
-    <color name="primary">#1C2833</color>
+    <color name="primary">#45B39D</color>
     <!-- Text/Icons ON Primary (Should always be white for contrast) -->
     <color name="on_primary">#eee</color>
 

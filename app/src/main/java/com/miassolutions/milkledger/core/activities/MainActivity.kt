@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.core.activities
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -76,8 +77,11 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         }
 
         applySavedBackground()
+
         enableEdgeToEdge()
+
         setContentView(binding.root)
+
         applyWindowInsets()
 
         WindowInsetsControllerCompat(window, window.decorView)
@@ -101,8 +105,6 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                 R.id.suppliersFragment,
                 R.id.settingsFragment,
                 R.id.notesListFragment,
-
-                R.id.dashboardFragment,
                 R.id.saleListFragment,
                 R.id.purchaseFragment,
                 R.id.expenseFragment,
@@ -124,10 +126,12 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         // Drawer navigation
         setupDrawerNavigation()
 
-        // -------------------- BottomNav visibility control --------------------
+        // -------------------- Navigation Listener (Visibility + Icon Color) --------------------
         navController.addOnDestinationChangedListener { _, destination, _ ->
+
             binding.bottomNav.visibility =
                 if (destination.id in bottomNavDestinations) View.VISIBLE else View.GONE
+
         }
     }
 

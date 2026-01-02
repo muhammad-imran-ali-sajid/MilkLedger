@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.sale.data.repository
 
 import com.miassolutions.milkledger.features.sale.data.local.SaleDao
+import com.miassolutions.milkledger.features.sale.data.local.SaleEntity
 import com.miassolutions.milkledger.features.sale.mapper.toDomain
 import com.miassolutions.milkledger.features.sale.mapper.toEntity
 import com.miassolutions.milkledger.features.sale.domain.model.Sale
@@ -60,6 +61,11 @@ class SaleRepository @Inject constructor(
     /* ---------------------------------------------------
        READ
     --------------------------------------------------- */
+
+    suspend fun getSaleById(saleId: String): Sale? {
+        val entity = saleDao.getSaleById(saleId)
+        return entity?.toDomain()
+    }
 
     fun getSalesByDate(date: LocalDate): Flow<List<Sale>> =
         saleDao.getSalesByDate(date.toMillis())

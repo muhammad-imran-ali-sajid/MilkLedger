@@ -26,7 +26,7 @@ data class SalesUiState(
 
 
 sealed interface SalesUiEvent {
-    data class EditClicked(val sale: SaleUi) : SalesUiEvent
+    data class EditClicked(val saleId: String) : SalesUiEvent
     data class SelectDate(val date: LocalDate) : SalesUiEvent
     data object NextDate : SalesUiEvent
     data object PreviousDate : SalesUiEvent
@@ -70,7 +70,7 @@ sealed interface SalesUiEffect {
         val name: String
     ) : SalesUiEffect
 
-    data class EditSaleRecord(val saleUi: SaleUi) : SalesUiEffect
+    data class EditSaleRecord(val saleId: String) : SalesUiEffect
 
     data class ShowBalanceHistory(
         val customerName: String,

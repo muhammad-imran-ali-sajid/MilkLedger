@@ -12,7 +12,7 @@ import java.util.UUID
 data class SaleEntity(
     @PrimaryKey val saleId: String = UUID.randomUUID().toString(),
     val customerId: String,
-    val dateMillis: Long,          // Ledger Date
+    val dateMillis: Long,
     val paidAtMillis: Long?,
 
     // Milk Details
@@ -22,8 +22,8 @@ data class SaleEntity(
 
     // Price Details
     val rateUsed: Double,
-    val totalAmount: Double,       // Total Bill
-    val paid: Double,        // Sirf record ke liye (Ledger math Transaction se hoga)
+    val totalAmount: Double,
+    val paid: Double,
     val balance: Double,
 
     val notes: String?,

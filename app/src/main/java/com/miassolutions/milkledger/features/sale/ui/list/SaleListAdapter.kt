@@ -14,7 +14,7 @@ import com.miassolutions.milkledger.features.sale.domain.model.SaleUi
 
 
 class SaleListAdapter(
-    private val onEditClick: (SaleUi) -> Unit,
+    private val onEditClick: (String) -> Unit,
     private val onCustomerClick: (String, String) -> Unit,
     private val onDeleteClick: (String) -> Unit,
     private val onBalanceClick: (String, String) -> Unit
@@ -45,7 +45,7 @@ class SaleListAdapter(
             tvName.text = item.customerName
 
             btnEditForm.setOnClickListener {
-                onEditClick(item)
+                onEditClick(item.id)
             }
 
             btnCustomerDetail.setOnClickListener {

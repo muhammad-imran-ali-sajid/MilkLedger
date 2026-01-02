@@ -162,7 +162,12 @@
         android:id="@+id/saleAddFragment"
         android:name="com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormFragment"
         android:label="Add Sales"
-        tools:layout="@layout/fragment_add_sale" />
+        tools:layout="@layout/fragment_add_sale" >
+        <argument
+            android:name="saleId"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <dialog
         tools:layout="@layout/bottomsheet_edit_expense"
         android:id="@+id/expenseEditBottomSheet"

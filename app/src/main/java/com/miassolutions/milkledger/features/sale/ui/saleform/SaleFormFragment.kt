@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
@@ -22,10 +23,17 @@ class SaleFormFragment :
     BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBinding::inflate) {
 
     private val viewModel: SaleFormViewModel by viewModels()
+    private val args: SaleFormFragmentArgs by navArgs()
+
     private var customerAdapter: ArrayAdapter<String>? = null
 
 
     override fun setupViews() {
+
+        args.saleId?.let { saleId ->
+            viewModel.onEvent(SaleFormUiEvent.EditSaleLoaded(saleId))
+        }
+
         setupCollectors()
         setupListeners()
     }
@@ -104,6 +112,10 @@ class SaleFormFragment :
 
         btnReceivedDate.text = state.receivedDate.toDisplayFormat()
 
+        state.selectedCustomer?.let {
+            actvCustomerName.setText(it.name, false)
+        }
+
 
 
         if (customerAdapter == null && state.customers.isNotEmpty()) {
@@ -133,30 +145,26 @@ class SaleFormFragment :
 
         }
 
-        /* 🔥 THIS IS THE KEY LINE */
-        customerAdapter?.clear()
-        customerAdapter?.addAll(state.customers.map { it.name })
-        customerAdapter?.notifyDataSetChanged()
-
 
         // Rate
         tvRate.text = state.rateUsed.toRoundedStr()
 
-        // Net milk
-//        tvNetMilk.text =
-//            if (state.netMilk compareTo 0) "${state.netMilk.toRoundedStr()} L"
-//            else "--"
+        tvNetMilk.text = if (state.netMilk > 0.0) {
+            "${state.netMilk.toRoundedStr()} L"
+        } else {
+            "--"
+        }
 
-        // Price
+// --- Price ---
         tvPrice.text = state.price.toPriceStr()
 
-        // Balance + color
+// --- Balance + color ---
         tvBalance.text = state.balance.toPriceStr()
 
         val balanceColor = when {
-//            state.balance compareTo 0 -> Color.RED
-//            state.balance compareTo 0 -> "#4CAF50".toColorInt()
-            else -> Color.BLACK
+            state.balance > 0 -> Color.RED          // Positive balance (Amount due)
+            state.balance < 0 -> Color.parseColor("#4CAF50") // Negative balance (Overpaid/Advance)
+            else -> Color.BLACK                     // Zero balance
         }
         tvBalance.setTextColor(balanceColor)
 

@@ -4,6 +4,7 @@ import android.view.Menu
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -23,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::inflate) {
     private lateinit var adapter: SaleListAdapter
     private val viewModel by viewModels<SaleListViewModel>()
+
 
     override fun setupViews() {
 
@@ -177,9 +179,9 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
     private fun setupSalesRV() {
 
         adapter = SaleListAdapter(
-            onEditClick = { saleUi ->
+            onEditClick = { saleId ->
                 viewModel.onEvent(
-                    SalesUiEvent.EditClicked(saleUi)
+                    SalesUiEvent.EditClicked(saleId)
                 )
             },
             onCustomerClick = { id, name ->
@@ -265,9 +267,14 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
             }
 
             is SalesUiEffect.EditSaleRecord -> {
-                SaleEditBottomSheet
-                    .newInstance(effect.saleUi)
-                    .show(childFragmentManager, "EditSaleBottomSheet")
+                findNavController().navigate(
+                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(
+                        saleId = effect.saleId
+                    )
+                )
+//                SaleEditBottomSheet
+//                    .newInstance(effect.saleUi)
+//                    .show(childFragmentManager, "EditSaleBottomSheet")
             }
 
             is SalesUiEffect.ShowMessage -> {
@@ -286,7 +293,7 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
 //            }
             SalesUiEffect.NavigateToSaleForm -> {
                 findNavController().navigate(
-                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment()
+                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(null)
                 )
             }
         }

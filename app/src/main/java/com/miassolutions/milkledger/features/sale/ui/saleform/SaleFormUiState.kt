@@ -32,6 +32,7 @@ data class SaleFormUiState(
 
 sealed interface SaleFormUiEvent {
 
+    data class EditSaleLoaded(val saleId: String) : SaleFormUiEvent
     data class CustomerSelected(
         val customerId: String,
         val customerName: String,
@@ -58,11 +59,11 @@ sealed interface SaleFormUiEffect {
 
     data class ShowToast(val message: String) : SaleFormUiEffect
 
-    data object OpenSaleDatePicker: SaleFormUiEffect
-    data object OpenReceivedDatePicker: SaleFormUiEffect
+    data object OpenSaleDatePicker : SaleFormUiEffect
+    data object OpenReceivedDatePicker : SaleFormUiEffect
 
-    data object NavigateBack: SaleFormUiEffect
-    data object ResetForm: SaleFormUiEffect
+    data object NavigateBack : SaleFormUiEffect
+    data object ResetForm : SaleFormUiEffect
 }
 
 enum class SaleMode {

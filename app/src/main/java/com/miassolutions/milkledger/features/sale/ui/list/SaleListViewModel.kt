@@ -142,7 +142,7 @@ class SaleListViewModel @Inject constructor(
 
             is SalesUiEvent.EditClicked -> {
                 emitEffect(
-                    EditSaleRecord(event.sale)
+                    EditSaleRecord(event.saleId)
                 )
             }
 

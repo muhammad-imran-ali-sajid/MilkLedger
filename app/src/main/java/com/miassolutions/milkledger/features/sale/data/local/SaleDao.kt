@@ -15,9 +15,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SaleDao {
 
-    // ------------------------------------------------
-    // 1️⃣ WRITE (Likhna)
-    // ------------------------------------------------
+
     @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertSale(sale: SaleEntity)
 
@@ -200,15 +198,6 @@ interface SaleDao {
     @Query("SELECT COUNT(*) FROM sales_table WHERE saleId = :saleId")
     suspend fun countSaleById(saleId: String): Int
 
-//    @Query("""
-//        UPDATE sales_table
-//        SET deletedAtMillis = :deletedAtMillis
-//        WHERE saleId = :id
-//    """)
-//    suspend fun softDeleteSale(
-//        id: String,
-//        deletedAtMillis: Long
-//    )
 
     @Query("""
         UPDATE sales_table
@@ -245,17 +234,17 @@ interface SaleDao {
         dateMillis: Long
     ): Flow<List<SaleWithCustomer>>
 
-//    @Transaction
-//    @Query("""
-//        SELECT *
-//        FROM sales_table
-//        WHERE customerId = :customerId
-//          AND deletedAtMillis IS NULL
-//        ORDER BY dateMillis DESC
-//    """)
-//    fun getSalesForCustomer(
-//        customerId: String
-//    ): Flow<List<SaleWithCustomer>>
+    @Transaction
+    @Query("""
+        SELECT *
+        FROM sales_table
+        WHERE customerId = :customerId
+          AND deletedAtMillis IS NULL
+        ORDER BY dateMillis DESC
+    """)
+    fun getSalesWithCustomerList(
+        customerId: String
+    ): Flow<List<SaleWithCustomer>>
 
     @Transaction
     @Query("""

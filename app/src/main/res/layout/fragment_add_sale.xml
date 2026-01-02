@@ -12,11 +12,11 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_date"
         style="@style/MaterialButtonStyle"
-        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
         android:text="03 Dec 2025" />
 
     <ScrollView
@@ -41,10 +41,10 @@
 
                 <AutoCompleteTextView
                     android:id="@+id/actv_customer_name"
-
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
+                    android:completionThreshold="1"
                     android:drawablePadding="8dp"
 
                     android:inputType="none"
@@ -90,8 +90,8 @@
 
                 <TextView
                     android:id="@+id/tvNetMilk"
-                    android:layout_weight="4"
                     style="@style/Style.TextViewValue.ReadOnly"
+                    android:layout_weight="4"
                     android:inputType="numberDecimal" />
             </LinearLayout>
 
@@ -102,8 +102,8 @@
 
                 <TextView
                     android:id="@+id/textView"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="Price"
                     android:textColor="@color/black"
 
@@ -154,12 +154,10 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp">
-
 
 
                 <TextView
@@ -176,8 +174,8 @@
                     android:id="@+id/etPayment"
                     style="@style/Style.TextViewValue"
                     android:layout_width="0dp"
-                    android:paddingEnd="0dp"
                     android:inputType="numberDecimal"
+                    android:paddingEnd="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/btnReceivedDate"
                     app:layout_constraintHorizontal_bias="0.03"
@@ -190,20 +188,19 @@
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
-                    app:strokeColor="@color/primary"
-                    android:textColor="@color/primary"
                     android:layout_marginHorizontal="4dp"
                     android:text="Date"
+                    android:textColor="@color/primary"
                     android:textSize="20sp"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="8sp"
                     app:autoSizeMaxTextSize="16sp"
+                    app:autoSizeMinTextSize="8sp"
                     app:autoSizeStepGranularity="1sp"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/etPayment"
-                    app:layout_constraintTop_toTopOf="parent" />
-
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/primary" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -216,7 +213,6 @@
             </androidx.constraintlayout.widget.Constraints>
 
 
-
             <LinearLayout
                 style="@style/Style.InputRow"
                 android:layout_marginTop="8dp">
@@ -227,8 +223,8 @@
 
                 <TextView
                     android:id="@+id/tv_balance"
-                    android:layout_weight="4"
                     style="@style/Style.TextViewValue.ReadOnly"
+                    android:layout_weight="4"
                     android:inputType="numberDecimal" />
             </LinearLayout>
 
@@ -259,17 +255,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
-        android:weightSum="2"
+        android:orientation="horizontal"
 
-        android:orientation="horizontal">
+        android:weightSum="2">
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
-            android:layout_width="0dp"
             style="@style/MaterialButtonStyle"
-            android:layout_weight="1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
 
 
             android:text="OK" />
@@ -279,10 +275,10 @@
             android:id="@+id/btn_saveNew"
             style="@style/MaterialButtonStyle"
             android:layout_width="0dp"
-            android:layout_weight="1"
-
             android:layout_height="wrap_content"
+
             android:layout_marginStart="12dp"
+            android:layout_weight="1"
             android:text="OK &amp; New" />
 
     </LinearLayout>
