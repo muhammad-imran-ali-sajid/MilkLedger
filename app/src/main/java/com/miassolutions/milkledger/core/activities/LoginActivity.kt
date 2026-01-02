@@ -104,7 +104,7 @@ class LoginActivity : AppCompatActivity() {
      * Attempts to sign in the user with Firebase Authentication.
      */
     private fun attemptFirebaseLogin(email: String, password: String) {
-        // Show loading state and disable button
+
         binding.tvStatusMessage.text = "Attempting login..."
         binding.btnLogin.isEnabled = false
 

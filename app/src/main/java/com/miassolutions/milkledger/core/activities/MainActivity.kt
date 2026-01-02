@@ -39,11 +39,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
     lateinit var featureManager: FeatureManager
     @Inject
     lateinit var remote: RemoteConfigManager
-
     @Inject
     lateinit var appPreferences: AppPreferencesManager
-
-
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -72,9 +69,10 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             }
         }
 
-
         applySavedBackground()
+
         enableEdgeToEdge()
+
         setContentView(binding.root)
 
         windowsInsets()
@@ -85,28 +83,26 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
 
         setupDrawerHeader()
 
-        // -------------------------------------------------------------
         // 1. Toolbar setup
-        // -------------------------------------------------------------
         setSupportActionBar(binding.toolbar)
 
-        // -------------------------------------------------------------
         // 2. Init NavController
-        // -------------------------------------------------------------
-        val navHost =
-            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHost.navController
 
-        // -------------------------------------------------------------
         // 3. App bar configuration (top-level destinations)
-        // -------------------------------------------------------------
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.dashboardFragment,
                 R.id.action_customersFragment,
                 R.id.action_suppliersFragment,
                 R.id.action_settingsFragment,
-                R.id.action_notesFragment
+                R.id.action_notesFragment,
+                R.id.purchaseFragment,
+                R.id.saleListFragment,
+                R.id.expenseFragment,
+                R.id.statsFragment,
+                R.id.dashboardFragment
             ),
             binding.drawerLayout
         )
@@ -134,6 +130,8 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
 
             binding.toolbar.navigationIcon = arrow
         }
+
+        binding.bottomNav.setupWithNavController(navController)
 
 
         // Drawer navigation

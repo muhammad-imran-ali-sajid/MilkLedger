@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/dashboardFragment">
+    app:startDestination="@id/purchaseFragment">
 
     <fragment
         android:id="@+id/purchaseFragment"
@@ -101,20 +101,8 @@
         android:label="Dashboard"
         tools:layout="@layout/fragment_dashboard">
         <action
-            android:id="@+id/action_dashboardFragment_to_purchaseFragment"
-            app:destination="@id/purchaseFragment" />
-        <action
-            android:id="@+id/action_dashboardFragment_to_expensesFragment"
-            app:destination="@id/expenseFragment" />
-        <action
-            android:id="@+id/action_dashboardFragment_to_profitFragment"
-            app:destination="@id/profitFragment" />
-        <action
             android:id="@+id/action_dashboardFragment_to_statsFragment"
             app:destination="@id/statsFragment" />
-        <action
-            android:id="@+id/action_dashboardFragment_to_saleListFragment"
-            app:destination="@id/saleListFragment" />
     </fragment>
     <fragment
         android:id="@+id/customerDetailFragment"
@@ -183,7 +171,8 @@
     <fragment
         android:id="@+id/saleListFragment"
         android:name="com.miassolutions.milkledger.features.sale.ui.list.SaleListFragment"
-        android:label="SaleListFragment" >
+        android:label="Sales"
+        tools:layout="@layout/fragment_sales">
         <action
             android:id="@+id/action_saleListFragment_to_customerDetailFragment"
             app:destination="@id/customerDetailFragment" />

@@ -83,18 +83,18 @@
                     android:id="@+id/purchase_card"
                     style="@style/DashboardCard"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="@color/purchase_color">
+                    android:layout_weight="1">
 
-                    <ImageView
-                        android:layout_gravity="end"
-                        android:layout_margin="2dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:tint="@color/white"
-                        android:src="@drawable/ic_arrow_right"/>
+<!--                    <ImageView-->
+<!--                        android:layout_gravity="end"-->
+<!--                        android:layout_margin="2dp"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:tint="@color/white"-->
+<!--                        android:src="@drawable/ic_arrow_right"/>-->
 
-                    <LinearLayout style="@style/DashboardInnerRow">
+                    <LinearLayout style="@style/DashboardInnerRow"
+                        android:background="@drawable/bg_purchase">
 
                         <TextView
                             style="@style/DashboardLabel"
@@ -116,15 +116,16 @@
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/sale_color">
 
-                    <ImageView
-                        android:layout_gravity="end"
-                        android:layout_margin="2dp"
-                        android:tint="@color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_right"/>
+<!--                    <ImageView-->
+<!--                        android:layout_gravity="end"-->
+<!--                        android:layout_margin="2dp"-->
+<!--                        android:tint="@color/white"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:src="@drawable/ic_arrow_right"/>-->
 
-                    <LinearLayout style="@style/DashboardInnerRow">
+                    <LinearLayout style="@style/DashboardInnerRow"
+                        android:background="@drawable/bg_sale">
 
                         <TextView
                             style="@style/DashboardLabel"
@@ -157,15 +158,16 @@
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/red">
 
-                    <ImageView
-                        android:layout_gravity="end"
-                        android:layout_margin="2dp"
-                        android:tint="@color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_right"/>
+<!--                    <ImageView-->
+<!--                        android:layout_gravity="end"-->
+<!--                        android:layout_margin="2dp"-->
+<!--                        android:tint="@color/white"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:src="@drawable/ic_arrow_right"/>-->
 
-                    <LinearLayout style="@style/DashboardInnerRow">
+                    <LinearLayout style="@style/DashboardInnerRow"
+                        android:background="@drawable/bg_expense">
 
                         <TextView
                             style="@style/DashboardLabel"
@@ -190,15 +192,16 @@
                     android:layout_weight="1"
                     app:cardBackgroundColor="@color/deep_forest_green">
 
-                    <ImageView
-                        android:layout_gravity="end"
-                        android:tint="@color/white"
-                        android:layout_margin="2dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_arrow_right"/>
+<!--                    <ImageView-->
+<!--                        android:layout_gravity="end"-->
+<!--                        android:tint="@color/white"-->
+<!--                        android:layout_margin="2dp"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:src="@drawable/ic_arrow_right"/>-->
 
-                    <LinearLayout style="@style/DashboardInnerRow">
+                    <LinearLayout style="@style/DashboardInnerRow"
+                        android:background="@drawable/bg_profit">
 
                         <TextView
                             style="@style/DashboardLabel"
@@ -228,7 +231,8 @@
                     app:cardBackgroundColor="@color/orange_700"
                     >
 
-                    <LinearLayout style="@style/DashboardInnerRow">
+                    <LinearLayout style="@style/DashboardInnerRow"
+                        android:background="@drawable/bg_expense">
 
                         <TextView
                             style="@style/DashboardLabel"
