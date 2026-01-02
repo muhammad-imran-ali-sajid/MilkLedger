@@ -11,6 +11,7 @@ import com.miassolutions.milkledger.utils.extensions.toPriceStr
 import com.miassolutions.milkledger.utils.extensions.toRoundedStr
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import com.miassolutions.milkledger.features.sale.domain.model.SaleUi
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 
 
 class SaleListAdapter(
@@ -68,7 +69,7 @@ class SaleListAdapter(
             // Receive date (optional)
             if (item.paid > 0 && item.paidAt != null) {
                 tvReceiveDate.visibility = View.VISIBLE
-                tvReceiveDate.text = "(${item.paidAt.toDisplayFormat()})"
+                tvReceiveDate.text = "(${item.paidAt.toDisplayDate()})"
             } else {
                 tvReceiveDate.visibility = View.GONE
             }

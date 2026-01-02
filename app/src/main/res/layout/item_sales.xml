@@ -193,6 +193,7 @@
                         style="@style/TextValue"
                         android:id="@+id/tvReceiveDate"
                         android:paddingStart="4dp"
+                        android:textSize="16sp"
                         android:text="(20/11)"
                         android:visibility="gone" />
                 </LinearLayout>
