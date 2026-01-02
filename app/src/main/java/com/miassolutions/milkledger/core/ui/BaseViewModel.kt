@@ -21,7 +21,7 @@ abstract class BaseViewModel<S, E, F>(initialState: S) : ViewModel() {
     val uiEffect = _uiEffect.asSharedFlow()
 
 
-    protected val currentState: S
+    val currentState: S
         get() = _uiState.value
 
     abstract fun onEvent(event: E)

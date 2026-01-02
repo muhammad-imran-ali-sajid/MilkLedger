@@ -27,9 +27,8 @@ class SaleFormFragment :
 
     private var customerAdapter: ArrayAdapter<String>? = null
 
-
     override fun setupViews() {
-
+        // Load sale if editing
         args.saleId?.let { saleId ->
             viewModel.onEvent(SaleFormUiEvent.EditSaleLoaded(saleId))
         }
@@ -40,199 +39,119 @@ class SaleFormFragment :
 
     override fun setupListeners() = with(binding) {
 
-        // Volume
+        // --- Text Change Listeners ---
         etVolume.doOnTextChanged { text, _, _, _ ->
-            viewModel.onEvent(
-                SaleFormUiEvent.VolumeChanged(text.toString())
-            )
+            viewModel.onEvent(SaleFormUiEvent.VolumeChanged(text.toString()))
         }
-
-        // Deduction
         etDeduction.doOnTextChanged { text, _, _, _ ->
-            viewModel.onEvent(
-                SaleFormUiEvent.DeductionChanged(text.toString())
-            )
+            viewModel.onEvent(SaleFormUiEvent.DeductionChanged(text.toString()))
         }
-
-        // Payment
         etPayment.doOnTextChanged { text, _, _, _ ->
-            viewModel.onEvent(
-                SaleFormUiEvent.PaymentChanged(text.toString())
-            )
+            viewModel.onEvent(SaleFormUiEvent.PaymentChanged(text.toString()))
         }
-
-        // Notes
         etNotes.doOnTextChanged { text, _, _, _ ->
-            viewModel.onEvent(
-                SaleFormUiEvent.NotesChanged(text.toString())
-            )
+            viewModel.onEvent(SaleFormUiEvent.NotesChanged(text.toString()))
         }
 
-        // Sale date
-        btnDate.setOnClickListener {
-            viewModel.onEvent(SaleFormUiEvent.SaleDateClicked)
-        }
+        // --- Date Buttons ---
+        btnDate.setOnClickListener { viewModel.onEvent(SaleFormUiEvent.SaleDateClicked) }
+        btnReceivedDate.setOnClickListener { viewModel.onEvent(SaleFormUiEvent.ReceivedDateClicked) }
 
-        // Received date
-        btnReceivedDate.setOnClickListener {
-            viewModel.onEvent(SaleFormUiEvent.ReceivedDateClicked)
-        }
-
-        // Save
-        btnSave.setOnClickListener {
-            viewModel.onEvent(SaleFormUiEvent.SaveClicked)
-        }
-
-        // Save & New
-        btnSaveNew.setOnClickListener {
-            viewModel.onEvent(SaleFormUiEvent.SaveAndNewClicked)
-        }
+        // --- Save Buttons ---
+        btnSave.setOnClickListener { viewModel.onEvent(SaleFormUiEvent.SaveClicked) }
+        btnSaveNew.setOnClickListener { viewModel.onEvent(SaleFormUiEvent.SaveAndNewClicked) }
     }
-
 
     private fun setupCollectors() {
-
-        collectFlow(viewModel.uiState) { state ->
-            renderState(state)
-        }
-
-        collectEffect(viewModel.uiEffect) { effect ->
-            handleEffect(effect)
-        }
-
+        collectFlow(viewModel.uiState) { state -> renderState(state) }
+        collectEffect(viewModel.uiEffect) { effect -> handleEffect(effect) }
     }
 
-    // ----------------------------------------------------
-    // RENDER STATE
-    // ----------------------------------------------------
     private fun renderState(state: SaleFormUiState) = with(binding) {
-
-        // Date
+        // --- Dates ---
         btnDate.text = state.saleDate.toDisplayFormat()
-
         btnReceivedDate.text = state.receivedDate.toDisplayFormat()
 
-        state.selectedCustomer?.let {
-            actvCustomerName.setText(it.name, false)
-        }
-
-
-
-        if (customerAdapter == null && state.customers.isNotEmpty()) {
+        // --- Customer Dropdown ---
+        if (state.mode == SaleMode.EDIT && state.selectedCustomer != null) {
+            // Only show editing customer
+            actvCustomerName.setText(state.selectedCustomer.name, false)
+            actvCustomerName.isEnabled = false
+        } else if (customerAdapter == null && state.customers.isNotEmpty()) {
+            // Populate adapter for selection
             customerAdapter = ArrayAdapter(
                 requireContext(),
                 R.layout.layout_drop_down_list,
                 state.customers.map { it.name }
             )
-            binding.actvCustomerName.setAdapter(customerAdapter)
+            actvCustomerName.setAdapter(customerAdapter)
+            actvCustomerName.isEnabled = true
 
-
-
-            binding.actvCustomerName.setOnItemClickListener { parent, _, position, _ ->
-                val selectedName = parent.getItemAtPosition(position) as String
-
-                val customer = state.customers.firstOrNull { it.name == selectedName }
-                    ?: return@setOnItemClickListener
-
-                viewModel.onEvent(
-                    SaleFormUiEvent.CustomerSelected(
-                        customerId = customer.id,
-                        customerName = customer.name,
-                        rate = customer.rate
-                    )
-                )
+            actvCustomerName.setOnItemClickListener { parent, _, position, _ ->
+                val name = parent.getItemAtPosition(position) as String
+                val customer = state.customers.firstOrNull { it.name == name } ?: return@setOnItemClickListener
+                viewModel.onEvent(SaleFormUiEvent.CustomerSelected(customer.id, customer.name, customer.rate))
             }
-
         }
 
+        // --- EditTexts ---
+        if (!etVolume.hasFocus()) etVolume.setText(state.volume)
+        if (!etDeduction.hasFocus()) etDeduction.setText(state.deduction)
+        if (!etPayment.hasFocus()) etPayment.setText(state.receivedAmount)
+        if (!etNotes.hasFocus()) etNotes.setText(state.notes)
 
-        // Rate
+        // --- Calculated Fields ---
         tvRate.text = state.rateUsed.toRoundedStr()
-
-        tvNetMilk.text = if (state.netMilk > 0.0) {
-            "${state.netMilk.toRoundedStr()} L"
-        } else {
-            "--"
-        }
-
-// --- Price ---
+        tvNetMilk.text = if (state.netMilk > 0.0) "${state.netMilk.toRoundedStr()} L" else "--"
         tvPrice.text = state.price.toPriceStr()
 
-// --- Balance + color ---
+        // --- Balance with color ---
         tvBalance.text = state.balance.toPriceStr()
+        tvBalance.setTextColor(
+            when {
+                state.balance > 0 -> Color.RED
+                state.balance < 0 -> Color.parseColor("#4CAF50")
+                else -> Color.BLACK
+            }
+        )
 
-        val balanceColor = when {
-            state.balance > 0 -> Color.RED          // Positive balance (Amount due)
-            state.balance < 0 -> Color.parseColor("#4CAF50") // Negative balance (Overpaid/Advance)
-            else -> Color.BLACK                     // Zero balance
-        }
-        tvBalance.setTextColor(balanceColor)
-
-
-        // Loading (optional)
+        // --- Buttons enabled state ---
         btnSave.isEnabled = !state.isSaving
         btnSaveNew.isEnabled = !state.isSaving
     }
 
-    // ----------------------------------------------------
-    // EFFECTS
-    // ----------------------------------------------------
     private fun handleEffect(effect: SaleFormUiEffect) {
         when (effect) {
+            is SaleFormUiEffect.ShowToast -> showSnackbar(effect.message)
+            SaleFormUiEffect.OpenSaleDatePicker -> showLedgerDatePicker(
+                isAuthorized = true,
+                initialDate = viewModel.currentState.saleDate
+            ) { date -> viewModel.onEvent(SaleFormUiEvent.SaleDateSelected(date)) }
 
-            is SaleFormUiEffect.ShowToast -> {
-                showSnackbar(effect.message)
-            }
+            SaleFormUiEffect.OpenReceivedDatePicker -> showLedgerDatePicker(
+                isAuthorized = true,
+                initialDate = viewModel.currentState.receivedDate
+            ) { date -> viewModel.onEvent(SaleFormUiEvent.ReceivedDateSelected(date)) }
 
-            SaleFormUiEffect.OpenSaleDatePicker -> {
-                showLedgerDatePicker(
-                    isAuthorized = true,
-                    initialDate = LocalDate.now(),
-                    onPicked = { date ->
-                        viewModel.onEvent(SaleFormUiEvent.SaleDateSelected(date))
-                    }
-                )
-            }
-
-            SaleFormUiEffect.OpenReceivedDatePicker -> {
-                showLedgerDatePicker(
-                    isAuthorized = true,
-                    initialDate = LocalDate.now(),
-                    onPicked = { date ->
-                        viewModel.onEvent(SaleFormUiEvent.ReceivedDateSelected(date))
-                    }
-                )
-            }
-
-            SaleFormUiEffect.NavigateBack -> {
-                findNavController().popBackStack()
-            }
-
-            SaleFormUiEffect.ResetForm -> {
-                resetForm()
-            }
+            SaleFormUiEffect.NavigateBack -> findNavController().popBackStack()
+            SaleFormUiEffect.ResetForm -> resetForm()
         }
     }
 
-    // ----------------------------------------------------
-    // RESET FORM (UI ONLY)
-    // ----------------------------------------------------
     private fun resetForm() = with(binding) {
         etVolume.setText("")
         etDeduction.setText("")
         etPayment.setText("")
         etNotes.setText("")
         actvCustomerName.setText("")
-
+        tvRate.text = "0.00"
         tvNetMilk.text = "--"
         tvPrice.text = "0.00"
-        tvRate.text = "0.00"
         tvBalance.text = "0.00"
         tvBalance.setTextColor(Color.BLACK)
 
-        scrollView.post {
-            scrollView.scrollTo(0, 0)
-        }
+        scrollView.post { scrollView.scrollTo(0, 0) }
     }
 }
+
 

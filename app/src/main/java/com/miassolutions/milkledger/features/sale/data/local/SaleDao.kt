@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.Flow
 interface SaleDao {
 
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertSale(sale: SaleEntity)
 
     @Update

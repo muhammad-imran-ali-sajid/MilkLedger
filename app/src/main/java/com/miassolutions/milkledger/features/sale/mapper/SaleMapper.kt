@@ -42,7 +42,7 @@ fun Sale.toEntity(): SaleEntity =
 
 fun SaleFormUiState.toDomain(): Sale =
     Sale(
-        id = UUID.randomUUID().toString(),
+        id = this.saleId ?: UUID.randomUUID().toString(),
         customerId = selectedCustomer!!.id,
         date = saleDate,
         volume = volume.toDoubleOrNull() ?: 0.0,

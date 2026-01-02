@@ -5,9 +5,11 @@ import java.time.LocalDate
 
 data class SaleFormUiState(
     val mode: SaleMode = SaleMode.ADD,
-    val saleDate: LocalDate = LocalDate.now(),
+    val saleId: String? = null,
 
+    val saleDate: LocalDate = LocalDate.now(),
     val customers: List<DropDownCustomerListUi> = emptyList(),
+
     val selectedCustomer: DropDownCustomerListUi? = null,
 
     val volume: String = "",

@@ -11,8 +11,8 @@ import com.miassolutions.milkledger.features.sale.domain.usecase.CheckDuplicateS
 import com.miassolutions.milkledger.features.sale.domain.usecase.GetSaleByIdUseCase
 import com.miassolutions.milkledger.features.sale.domain.usecase.ObserveCustomerUseCase
 import com.miassolutions.milkledger.features.sale.domain.usecase.SaveSaleUseCase
+import com.miassolutions.milkledger.features.sale.domain.usecase.UpdateSaleUseCase
 import com.miassolutions.milkledger.features.sale.mapper.toDomain
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -23,35 +23,44 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaleFormViewModel @Inject constructor(
-     savedStateHandle: SavedStateHandle,
+    private val savedStateHandle: SavedStateHandle,
     observeCustomer: ObserveCustomerUseCase,
     private val getSaleById: GetSaleByIdUseCase,
+    private val insertSale: SaveSaleUseCase,
+    private val updateSale: UpdateSaleUseCase,
     private val checkDuplicateSale: CheckDuplicateSaleUseCase,
-    private val saveSale: SaveSaleUseCase,
     private val calculateSale: CalculateSaleUseCase
-
-) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(initialState = SaleFormUiState()) {
+) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(
+    initialState = SaleFormUiState()
+) {
 
     private var editingSale: Sale? = null
 
-
-
     init {
-
-        val saleId : String? = savedStateHandle["saleId"]
-
+        // Check if we're editing
+        val saleId: String? = savedStateHandle["saleId"]
         saleId?.let {
-            onEvent(SaleFormUiEvent.EditSaleLoaded(saleId))
+            onEvent(SaleFormUiEvent.EditSaleLoaded(it))
         }
 
+        // Observe customers
         observeCustomer()
             .map { list -> list.map { it.toDropDownUi() } }
             .onEach { customers ->
-                updateState { it.copy(customers = customers) }
+                updateState { current ->
+                    // If editing, show only selected customer
+                    if (current.mode == SaleMode.EDIT && editingSale != null) {
+                        val selected = customers.firstOrNull { it.id == editingSale!!.customerId }
+                        current.copy(customers = selected?.let { listOf(it) } ?: emptyList())
+                    } else {
+                        current.copy(customers = customers)
+                    }
+                }
                 applyEditIfReady()
             }
             .launchIn(viewModelScope)
 
+        // Auto-calculate price/balance
         uiState.map {
             calculateSale(
                 volume = it.volume,
@@ -61,8 +70,8 @@ class SaleFormViewModel @Inject constructor(
             )
         }
             .onEach { result ->
-                updateState {
-                    it.copy(
+                updateState { current ->
+                    current.copy(
                         netMilk = result.netMilk,
                         price = result.price,
                         balance = result.balance
@@ -74,6 +83,16 @@ class SaleFormViewModel @Inject constructor(
 
     override fun onEvent(event: SaleFormUiEvent) {
         when (event) {
+
+            is SaleFormUiEvent.EditSaleLoaded -> {
+                viewModelScope.launch {
+                    val sale = getSaleById(event.saleId) ?: return@launch
+                    editingSale = sale
+                    updateState { it.copy(mode = SaleMode.EDIT, saleId = sale.id) }
+                    applyEditIfReady()
+                }
+            }
+
             is SaleFormUiEvent.CustomerSelected -> {
                 updateState {
                     it.copy(
@@ -85,78 +104,55 @@ class SaleFormViewModel @Inject constructor(
                         rateUsed = event.rate
                     )
                 }
-
-
             }
 
-
-            is SaleFormUiEvent.VolumeChanged -> {
+            is SaleFormUiEvent.VolumeChanged ->
                 updateState { it.copy(volume = event.value) }
-            }
 
-            is SaleFormUiEvent.DeductionChanged -> {
+            is SaleFormUiEvent.DeductionChanged ->
                 updateState { it.copy(deduction = event.value) }
-            }
 
-            is SaleFormUiEvent.PaymentChanged -> {
+            is SaleFormUiEvent.PaymentChanged ->
                 updateState { it.copy(receivedAmount = event.value) }
-            }
 
-            is SaleFormUiEvent.NotesChanged -> {
+            is SaleFormUiEvent.NotesChanged ->
                 updateState { it.copy(notes = event.value) }
-            }
 
-            SaleFormUiEvent.SaleDateClicked -> {
+            SaleFormUiEvent.SaleDateClicked ->
                 emitEffect(SaleFormUiEffect.OpenSaleDatePicker)
-            }
 
-            SaleFormUiEvent.ReceivedDateClicked -> {
+            SaleFormUiEvent.ReceivedDateClicked ->
                 emitEffect(SaleFormUiEffect.OpenReceivedDatePicker)
-            }
 
-            SaleFormUiEvent.SaveAndNewClicked -> {
-                save(closeAfter = false)
-            }
-
-            SaleFormUiEvent.SaveClicked -> {
-                save(closeAfter = true)
-            }
-
-            is SaleFormUiEvent.SaleDateSelected -> {
+            is SaleFormUiEvent.SaleDateSelected ->
                 updateState { it.copy(saleDate = event.date) }
-            }
 
-            is SaleFormUiEvent.ReceivedDateSelected -> {
+            is SaleFormUiEvent.ReceivedDateSelected ->
                 updateState { it.copy(receivedDate = event.date) }
-            }
 
-            is SaleFormUiEvent.EditSaleLoaded -> {
-                viewModelScope.launch {
-                    editingSale = getSaleById(event.saleId)
-                    applyEditIfReady()
+            SaleFormUiEvent.SaveClicked ->
+                save(closeAfter = true)
 
-                }
-            }
+            SaleFormUiEvent.SaveAndNewClicked ->
+                save(closeAfter = false)
         }
     }
-
 
     private fun applyEditIfReady() {
         val sale = editingSale ?: return
         val customers = currentState.customers
         if (customers.isEmpty()) return
 
-        val customerUi = customers.firstOrNull() { it.id == sale.customerId } ?: return
+        val customerUi = customers.firstOrNull { it.id == sale.customerId } ?: return
 
         updateState {
             it.copy(
                 mode = SaleMode.EDIT,
+                saleId = sale.id,
                 saleDate = sale.date,
                 receivedDate = sale.paidAt ?: LocalDate.now(),
-
                 selectedCustomer = customerUi,
                 rateUsed = sale.rateUsed,
-
                 volume = sale.volume?.toString().orEmpty(),
                 deduction = sale.deduction?.toString().orEmpty(),
                 receivedAmount = sale.paid?.toString().orEmpty(),
@@ -167,7 +163,6 @@ class SaleFormViewModel @Inject constructor(
         editingSale = null
     }
 
-
     private fun save(closeAfter: Boolean) = viewModelScope.launch {
         val state = currentState
         val customer = state.selectedCustomer ?: run {
@@ -176,35 +171,27 @@ class SaleFormViewModel @Inject constructor(
         }
 
         if (state.mode == SaleMode.ADD && checkDuplicateSale(customer.id, state.saleDate)) {
-            emitEffect(
-                SaleFormUiEffect.ShowToast(
-                    "${customer.name} already exists for ${state.saleDate}"
-                )
-            )
+            emitEffect(SaleFormUiEffect.ShowToast("${customer.name} already exists for ${state.saleDate}"))
             return@launch
         }
 
-
-        val isTrue = state.volume.isBlank() && state.receivedAmount.isBlank()
-
-        if (isTrue) {
+        if (state.volume.isBlank() && state.receivedAmount.isBlank()) {
             emitEffect(SaleFormUiEffect.ShowToast("Enter volume or amount"))
             return@launch
         }
 
-        val sale = state.toDomain()
+        val sale = state.toDomain() // maps to Sale
 
-        saveSale(sale)
-
-        emitEffect(SaleFormUiEffect.ShowToast("Sale saved"))
-
-        if (closeAfter) {
-            emitEffect(SaleFormUiEffect.NavigateBack)
+        if (state.mode == SaleMode.ADD) {
+            insertSale(state.toDomain())
+            emitEffect(SaleFormUiEffect.ShowToast("Sale saved"))
         } else {
-            emitEffect(SaleFormUiEffect.ResetForm)
+            updateSale(state.toDomain())
+            emitEffect(SaleFormUiEffect.ShowToast("Sale updated"))
         }
 
+
+        if (closeAfter) emitEffect(SaleFormUiEffect.NavigateBack)
+        else emitEffect(SaleFormUiEffect.ResetForm)
     }
-
-
 }

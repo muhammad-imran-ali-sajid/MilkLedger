@@ -27,10 +27,6 @@ class SaleRepository @Inject constructor(
 
     ) {
 
-    companion object {
-        private const val COLLECTION = "sales"
-        private const val TAG = "SalesRepository"
-    }
 
     /* ---------------------------------------------------
        CUSTOMER BALANCE HISTORY
