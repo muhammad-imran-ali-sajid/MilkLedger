@@ -1,19 +1,20 @@
 package com.miassolutions.milkledger.core.localbackup
 
-import com.miassolutions.milkledger.data.local.entities.CustomerEntity
-import com.miassolutions.milkledger.data.local.entities.ExpensesEntity
-import com.miassolutions.milkledger.data.local.entities.NoteEntity
-import com.miassolutions.milkledger.data.local.entities.PurchaseEntity
-import com.miassolutions.milkledger.data.local.entities.SalesEntity
-import com.miassolutions.milkledger.data.local.entities.SupplierEntity
-import com.miassolutions.milkledger.data.local.entities.TransactionEntity
+import com.miassolutions.milkledger.features.customer.data.local.CustomerEntity
+import com.miassolutions.milkledger.features.expense.data.local.ExpenseEntity
+import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.features.purchase.data.PurchaseEntity
+import com.miassolutions.milkledger.features.sale.data.local.SaleEntity
+import com.miassolutions.milkledger.features.supplier.data.local.SupplierEntity
+import com.miassolutions.milkledger.features.transaction.data.TransactionEntity
+
 
 data class BackupData(
-    val customers: List<CustomerEntity> ,
-    val suppliers: List<SupplierEntity> ,
+    val customers: List<CustomerEntity>,
+    val suppliers: List<SupplierEntity>,
     val purchases: List<PurchaseEntity>,
-    val sales: List<SalesEntity>,
-    val expenses: List<ExpensesEntity>,
+    val sales: List<SaleEntity>,
+    val expenses: List<ExpenseEntity>,
     val notes: List<NoteEntity>,
     val transactions: List<TransactionEntity>
 )

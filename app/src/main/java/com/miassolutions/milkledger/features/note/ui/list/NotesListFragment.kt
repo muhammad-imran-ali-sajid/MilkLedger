@@ -1,0 +1,153 @@
+package com.miassolutions.milkledger.features.note.ui.list
+
+import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.miassolutions.milkledger.core.notification.AppNotifier
+import com.miassolutions.milkledger.core.notification.NotificationPermissionHelper
+import com.miassolutions.milkledger.core.ui.BaseFragment
+import com.miassolutions.milkledger.databinding.FragmentNotesListBinding
+import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.features.note.ui.form.AddEditNoteBottomSheet
+import com.miassolutions.milkledger.features.note.ui.form.NoteUiEvent
+import com.miassolutions.milkledger.features.note.ui.form.NotesViewModel
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+
+@AndroidEntryPoint
+class NotesListFragment :
+    BaseFragment<FragmentNotesListBinding>(FragmentNotesListBinding::inflate) {
+
+    private val viewModel by viewModels<NotesViewModel>()
+    private lateinit var adapter: NotesListAdapter
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                showToast("Thanks! Permission Granted")
+            } else {
+                // ❌ Permission denied — check if permanently denied
+                showToast("Permission not granted, notification now not will be shown")
+                NotificationPermissionHelper.handlePermissionDenied(this)
+            }
+        }
+
+    override fun setupViews() {
+        setupRecyclerView()
+        setupObservers()
+        setupListeners()
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                checkNotificationPermission()
+
+            }
+        }
+        AppNotifier.init(requireContext())
+    }
+
+    private fun checkNotificationPermission() {
+        NotificationPermissionHelper.requestPermissionIfNeeded(this, notificationPermissionLauncher)
+    }
+
+    private fun setupRecyclerView() {
+        adapter = NotesListAdapter(
+            onItemClick = { note ->
+                AddEditNoteBottomSheet.Companion.newInstance(note)
+                    .show(parentFragmentManager, "AddEditNote")
+            },
+            onDeleteClick = { note ->
+                showDeleteConfirmation(note)
+            },
+
+        )
+
+        binding.rvNotes.apply {
+            adapter = this@NotesListFragment.adapter
+
+
+            //Add scroll listener for FAB hide/show
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0 && binding.fabAddNote.isShown) {
+                        binding.fabAddNote.animate().translationY(binding.fabAddNote.height.toFloat() + 50).alpha(0f).start()
+                    } else if (dy < 0 && binding.fabAddNote.alpha == 0f) {
+                        binding.fabAddNote.animate().translationY(0f).alpha(1f).start()
+                    }
+                }
+            })
+        }
+    }
+
+
+    override fun setupListeners() {
+        binding.fabAddNote.setOnClickListener {
+            AddEditNoteBottomSheet.Companion.newInstance(null).show(parentFragmentManager, "AddEditNote")
+        }
+        binding.etSearch.addTextChangedListener { editable ->
+            viewModel.onSearchQueryChanged(editable?.toString().orEmpty())
+        }
+
+    }
+
+    override fun setupObservers() {
+        // Collect UI state
+
+        collectFlow(viewModel.uiState) { state ->
+            binding.progressBar.visibility =
+                if (state.isLoading) View.VISIBLE else View.GONE
+
+            adapter.submitList(state.notes)
+
+            state.error?.let { showSnackbar(it) }
+        }
+
+
+        // Collect UI events
+
+        collectFlow(viewModel.eventFlow) { event ->
+            when (event) {
+                is NoteUiEvent.NoteDeleted -> {
+                    showUndoSnackbar(event.noteEntity)
+                }
+
+                NoteUiEvent.NoteSaved -> {
+                    showSnackbar("Note saved")
+                }
+
+                is NoteUiEvent.ShowMessage -> {
+                    showSnackbar(event.message)
+                }
+
+                else -> Unit
+            }
+
+        }
+    }
+
+    private fun showDeleteConfirmation(note: NoteEntity) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete Note?")
+            .setMessage("Are you sure you want to delete this note?")
+            .setPositiveButton("Delete") { _, _ ->
+                viewModel.deleteNote(note)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showUndoSnackbar(note: NoteEntity) {
+        showSnackbar("Note Deleted", Snackbar.LENGTH_LONG) {
+            viewModel.addOrUpdateNote(note)
+        }
+    }
+}

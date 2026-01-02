@@ -6,12 +6,12 @@
         android:title="@string/purchases" />
 
     <item
-        android:id="@+id/salesFragment"
+        android:id="@+id/saleListFragment"
         android:icon="@drawable/ic_sales"
         android:title="@string/sales" />
 
     <item
-        android:id="@+id/expensesFragment"
+        android:id="@+id/expenseFragment"
         android:icon="@drawable/ic_expense"
         android:title="@string/expenses" />
 

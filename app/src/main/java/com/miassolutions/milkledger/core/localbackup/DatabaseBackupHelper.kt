@@ -11,7 +11,7 @@ import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import com.google.gson.reflect.TypeToken
-import com.miassolutions.milkledger.data.local.AppDatabase
+import com.miassolutions.milkledger.core.localdb.AppDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

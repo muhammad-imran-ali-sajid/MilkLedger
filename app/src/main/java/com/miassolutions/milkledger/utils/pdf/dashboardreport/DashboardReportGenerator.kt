@@ -5,7 +5,8 @@ import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.databinding.LayoutDashboardPdfBinding
-import com.miassolutions.milkledger.presentation.dashboard.DashboardSummaryPdf
+import com.miassolutions.milkledger.features.dashboard.DashboardSummaryPdf
+
 import com.miassolutions.milkledger.utils.pdf.PdfUtils
 import java.io.File
 import java.io.FileOutputStream

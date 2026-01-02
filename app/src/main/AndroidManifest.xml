@@ -28,16 +28,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MilkLedger">
         <activity
-            android:name=".presentation.activities.ForceUpdateActivity"
+            android:name=".core.activities.ForceUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.activities.LoginActivity"
+            android:name=".core.activities.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.Auth">
 
         </activity>
         <activity
-            android:name=".presentation.activities.LauncherActivity"
+            android:name=".core.activities.LauncherActivity"
             android:exported="true"
             android:theme="@style/Theme.Launcher">
             <intent-filter>
@@ -47,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".presentation.activities.MainActivity"
+            android:name=".core.activities.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
