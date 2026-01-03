@@ -4,10 +4,10 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.localdb.expense.ExpenseEntity
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
-import com.miassolutions.milkledger.features.expense.data.local.ExpenseEntity
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toRoundedStr

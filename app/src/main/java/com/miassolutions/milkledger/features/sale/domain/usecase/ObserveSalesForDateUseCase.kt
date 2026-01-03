@@ -27,7 +27,7 @@ class ObserveSalesForDateUseCase @Inject constructor(
             // ---- Totals ----
             val totalMilk = sales.sumOf { it.volume }
             val totalDeduction = sales.sumOf { it.deduction }
-            val totalNet = sales.sumOf { it.netMilk }
+            val totalNetMilk = sales.sumOf { it.netMilk }
 
             val totalAmount = sales.sumOf { it.price }
             val received = sales.sumOf { it.paid }
@@ -35,7 +35,7 @@ class ObserveSalesForDateUseCase @Inject constructor(
 
             val purchaseMilk = purchases.sumOf { it.milkAmount }
             val avgRate =
-                if (purchaseMilk > 0) totalAmount / purchaseMilk else 0.0
+                if (totalNetMilk > 0) totalAmount / totalNetMilk else 0.0 // here purchase milk will be used todo()
 
             // ---- Accumulated balance (ledger-safe) ----
             val balanceCache = mutableMapOf<String, Double>()
@@ -64,7 +64,7 @@ class ObserveSalesForDateUseCase @Inject constructor(
                 sales = projections,
                 totalMilk = totalMilk,
                 totalDeduction = totalDeduction,
-                totalNetMilk = totalNet,
+                totalNetMilk = totalNetMilk,
                 totalAmount = totalAmount,
                 receivedAmount = received,
                 totalBalance = totalBalance,

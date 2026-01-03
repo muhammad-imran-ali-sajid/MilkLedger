@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.features.expense.data.mapper
 
-import com.miassolutions.milkledger.features.expense.data.local.ExpenseEntity
+import com.miassolutions.milkledger.core.localdb.expense.ExpenseEntity
 import com.miassolutions.milkledger.features.expense.domain.Expense
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
@@ -10,10 +10,10 @@ fun ExpenseEntity.toDomain(): Expense =
     Expense(
         id = expenseId,
         date = dateMillis.toLocalDate(),
-        title = expenseTitle,
-        amount = expenseAmount,
+        title = title,
+        amount = amount,
         note = note,
-        isBusiness = isBusiness
+        isPersonal = isPersonal
     )
 
 
@@ -21,9 +21,9 @@ fun Expense.toEntity(): ExpenseEntity =
     ExpenseEntity(
         expenseId = id,
         dateMillis = date.toMillis(),
-        expenseTitle = title,
-        expenseAmount = amount,
+        title = title,
+        amount = amount,
         note = note,
-        isBusiness = isBusiness
+        isPersonal = isPersonal
     )
 

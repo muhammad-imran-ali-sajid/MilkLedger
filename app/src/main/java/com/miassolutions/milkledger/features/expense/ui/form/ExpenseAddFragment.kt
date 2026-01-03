@@ -3,10 +3,10 @@ package com.miassolutions.milkledger.features.expense.ui.form
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.miassolutions.milkledger.core.localdb.expense.ExpenseEntity
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAddExpenseBinding
 import com.miassolutions.milkledger.databinding.ItemPersonalExpenseBinding
-import com.miassolutions.milkledger.features.expense.data.local.ExpenseEntity
 import com.miassolutions.milkledger.features.expense.ui.list.ExpenseViewModel
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayFormat

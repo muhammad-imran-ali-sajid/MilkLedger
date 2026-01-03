@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.features.expense.data.repository
 
-import com.miassolutions.milkledger.features.expense.data.local.ExpenseDao
+import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
 import com.miassolutions.milkledger.features.expense.data.mapper.toEntity
 import com.miassolutions.milkledger.features.expense.domain.Expense
 import com.miassolutions.milkledger.features.transaction.data.Transaction
@@ -33,10 +33,10 @@ class ExpenseRepository @Inject constructor(
                 dateMillis = entity.dateMillis,
                 type = TransactionType.EXPENSE,
                 referenceId = entity.expenseId,
-                debit = entity.expenseAmount,
+                debit = entity.amount.toDouble(),
                 credit = 0.0,
-                profitImpact = -entity.expenseAmount,
-                note = entity.expenseTitle,
+                profitImpact = -entity.amount.toDouble(),
+                note = entity.title,
                 accountId = "accountId" //todo()
 
             )
@@ -55,9 +55,9 @@ class ExpenseRepository @Inject constructor(
                 dateMillis = entity.dateMillis,
                 type = TransactionType.EXPENSE,
                 referenceId = entity.expenseId,
-                debit = entity.expenseAmount,
+                debit = entity.amount.toDouble(),
                 credit = 0.0,
-                profitImpact = -entity.expenseAmount,
+                profitImpact = -entity.amount.toDouble(),
                 note = "Expense updated",
                 accountId = "accountId" //todo()
             )

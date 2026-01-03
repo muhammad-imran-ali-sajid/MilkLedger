@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.core.localbackup
 
+import com.miassolutions.milkledger.core.localdb.expense.ExpenseEntity
 import com.miassolutions.milkledger.features.customer.data.local.CustomerEntity
-import com.miassolutions.milkledger.features.expense.data.local.ExpenseEntity
 import com.miassolutions.milkledger.features.note.data.local.NoteEntity
 import com.miassolutions.milkledger.features.purchase.data.PurchaseEntity
 import com.miassolutions.milkledger.features.sale.data.local.SaleEntity

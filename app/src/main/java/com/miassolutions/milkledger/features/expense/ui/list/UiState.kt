@@ -28,18 +28,18 @@ data class ExpenseInput(
     fun isValid(): Boolean =
         title.isNotBlank() && amount > 0.0
 
-    fun toExpense(
-        date: LocalDate,
-        isBusiness: Boolean
-    ): Expense =
-        Expense(
-            id = UUID.randomUUID().toString(),
-            date = date,
-            title = title.trim(),
-            amount = amount,
-            note = note,
-            isBusiness = isBusiness
-        )
+//    fun toExpense(
+//        date: LocalDate,
+//        isBusiness: Boolean
+//    ): Expense =
+//        Expense(
+//            id = UUID.randomUUID().toString(),
+//            date = date,
+//            title = title.trim(),
+//            amount = amount.toLong(),
+//            note = note,
+//            isBusiness = isBusiness
+//        )
 }
 
 

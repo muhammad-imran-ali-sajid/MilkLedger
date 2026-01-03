@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.expense.data.local
+package com.miassolutions.milkledger.core.localdb.expense
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -13,7 +13,7 @@ interface ExpenseDao {
     // ------------------------------------------------
     // 1️⃣ WRITE
     // ------------------------------------------------
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExpense(expense: ExpenseEntity)
 
     @Update
@@ -38,7 +38,7 @@ interface ExpenseDao {
     // Sirf Dukan ke Kharche (Filter by Type)
     @Query("""
         SELECT * FROM expense_table 
-        WHERE isBusiness = 1 
+        WHERE isPersonal = 0 
         AND deletedAtMillis IS NULL 
         ORDER BY dateMillis DESC
     """)
@@ -47,7 +47,7 @@ interface ExpenseDao {
     // Sirf Ghar ke Kharche
     @Query("""
         SELECT * FROM expense_table 
-        WHERE isBusiness = 0 
+        WHERE isPersonal = 1 
         AND deletedAtMillis IS NULL 
         ORDER BY dateMillis DESC
     """)
@@ -62,7 +62,7 @@ interface ExpenseDao {
 
     // Total Kharcha aaj ka (Repository mein Business vs Personal separate kar lenge)
     @Query("""
-        SELECT SUM(expenseAmount) FROM expense_table 
+        SELECT SUM(amount) FROM expense_table 
         WHERE dateMillis BETWEEN :start AND :end 
         AND deletedAtMillis IS NULL
     """)

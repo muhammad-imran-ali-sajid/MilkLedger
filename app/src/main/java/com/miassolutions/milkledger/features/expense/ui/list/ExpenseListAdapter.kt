@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.core.localdb.expense.ExpenseEntity
 import com.miassolutions.milkledger.databinding.ItemExpensesBinding
-import com.miassolutions.milkledger.features.expense.data.local.ExpenseEntity
 import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toPriceStr
@@ -30,8 +30,8 @@ class ExpensesAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ExpenseEntity) = with(binding) {
-            tvExpenseTitle.text = item.expenseTitle
-            tvExpenseAmount.text = item.expenseAmount.toPriceStr()
+            tvExpenseTitle.text = item.title
+            tvExpenseAmount.text = item.amount.toDouble().toPriceStr()
 
             if (item.note.isNullOrEmpty()) {
                 tvExpenseNote.hide()

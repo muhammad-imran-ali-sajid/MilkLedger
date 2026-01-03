@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
+import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
 import com.miassolutions.milkledger.features.sale.ui.balancehistory.CustomerBalanceHistoryBottomSheet
 import com.miassolutions.milkledger.features.sale.ui.saleform.SaleEditBottomSheet
 import com.miassolutions.milkledger.utils.extensions.collectEffect
@@ -20,6 +21,7 @@ import com.miassolutions.milkledger.utils.extensions.toPriceStr
 import com.miassolutions.milkledger.utils.extensions.toRoundedStr
 import com.miassolutions.milkledger.utils.pdf.salereport.PdfSalesSummary
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.apply
 
 @AndroidEntryPoint
 class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding::inflate) {
@@ -69,27 +71,27 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
     ) {
 
 
-//        binding.apply {
-//            cardSalesSummary.setTitle("Summary")
-//
-//            val summaryBinding by lazy {
-//                LayoutSalesSummaryBinding.inflate(layoutInflater)
-//            }
-//
-//            cardSalesSummary.setContent(summaryBinding.root)
-//            cardSalesSummary.collapse()
-//
-//
-//            summaryBinding.apply {
-//                tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
-//                tvDeduction.text = "${deduction.toRoundedStr()} L"
-//                tvTotalNetMilk.text = "${totalNetMilk.toRoundedStr()} L"
-//                tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
-//                tvReceivedAmount.text = "Rs. ${receivedAmount.toPriceStr()}"
-//                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
-//            }
-//
-//        }
+        binding.apply {
+            cardSalesSummary.setTitle("Summary")
+
+            val summaryBinding by lazy {
+                LayoutSalesSummaryBinding.inflate(layoutInflater)
+            }
+
+            cardSalesSummary.setContent(summaryBinding.root)
+            cardSalesSummary.collapse()
+
+
+            summaryBinding.apply {
+                tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
+                tvDeduction.text = "${deduction.toRoundedStr()} L"
+                tvTotalNetMilk.text = "${totalNetMilk.toRoundedStr()} L"
+                tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
+                tvReceivedAmount.text = "Rs. ${receivedAmount.toPriceStr()}"
+                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
+            }
+
+        }
     }
 
     override fun setupListeners() {

@@ -6,7 +6,7 @@ data class Expense(
     val id: String,
     val date: LocalDate,
     val title: String,
-    val amount: Double,
+    val amount: Long,
     val note: String?,
-    val isBusiness: Boolean
+    val isPersonal: Boolean
 )
