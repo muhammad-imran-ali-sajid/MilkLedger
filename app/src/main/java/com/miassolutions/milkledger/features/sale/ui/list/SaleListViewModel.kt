@@ -48,9 +48,6 @@ class SaleListViewModel @Inject constructor(
     }
 
 
-
-
-
     private fun observeDate(date: LocalDate) {
         observeJob?.cancel()
 
@@ -121,47 +118,52 @@ class SaleListViewModel @Inject constructor(
     }
 
 
-
     override fun onEvent(event: SalesUiEvent) {
         when (event) {
 
-            is SalesUiEvent.SelectDate ->
+            is SalesUiEvent.SelectDate -> {
                 observeDate(event.date)
+            }
 
-            SalesUiEvent.NextDate ->
+            SalesUiEvent.NextDate -> {
                 observeDate(currentState.currentDate.plusDays(1))
+            }
 
-            SalesUiEvent.PreviousDate ->
+            SalesUiEvent.PreviousDate -> {
                 observeDate(currentState.currentDate.minusDays(1))
+            }
 
-            is SalesUiEvent.DeleteSale ->
+            is SalesUiEvent.DeleteSale -> {
                 deleteSale(event.saleId)
+            }
 
-            is SalesUiEvent.EditSale ->
+            is SalesUiEvent.EditSale -> {
                 updateSale(event)
+            }
 
             is SalesUiEvent.EditClicked -> {
                 emitEffect(
-                    EditSaleRecord(event.saleId)
+                    EditSaleRecord(event.saleId, event.saleDate)
                 )
             }
 
 
-            is SalesUiEvent.OpenCustomerLedger ->
+            is SalesUiEvent.OpenCustomerLedger -> {
                 emitEffect(
                     NavigateToCustomerLedger(
                         event.customerId,
                         event.customerName
                     )
                 )
+            }
 
             is SalesUiEvent.BalanceClicked -> {
                 loadBalanceHistory(event.customerId, event.customerName)
             }
 
             SalesUiEvent.DismissBalanceHistory -> {}
-            SalesUiEvent.OpenSaleForm -> {
-                emitEffect(NavigateToSaleForm)
+            is SalesUiEvent.OpenSaleForm -> {
+                emitEffect(NavigateToSaleForm(event.date))
             }
         }
     }

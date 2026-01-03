@@ -15,6 +15,7 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.extensions.toPriceStr
 import com.miassolutions.milkledger.utils.extensions.toRoundedStr
 import com.miassolutions.milkledger.utils.pdf.salereport.PdfSalesSummary
@@ -114,7 +115,7 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
         }
 
         binding.fabAddSale.setOnClickListener {
-            viewModel.onEvent(SalesUiEvent.OpenSaleForm)
+            viewModel.onEvent(SalesUiEvent.OpenSaleForm(viewModel.uiState.value.currentDate.toMillis()))
         }
     }
 
@@ -181,7 +182,7 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
         adapter = SaleListAdapter(
             onEditClick = { saleId ->
                 viewModel.onEvent(
-                    SalesUiEvent.EditClicked(saleId)
+                    SalesUiEvent.EditClicked(saleId, viewModel.uiState.value.currentDate.toMillis())
                 )
             },
             onCustomerClick = { id, name ->
@@ -269,7 +270,8 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
             is SalesUiEffect.EditSaleRecord -> {
                 findNavController().navigate(
                     SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(
-                        saleId = effect.saleId
+                        saleId = effect.saleId,
+                        saleDate = effect.saleDate
                     )
                 )
 //                SaleEditBottomSheet
@@ -291,9 +293,12 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
 //            is SalesUiEffect.GeneratePdf -> {
 //                generatePdf(effect.data)
 //            }
-            SalesUiEffect.NavigateToSaleForm -> {
+            is SalesUiEffect.NavigateToSaleForm -> {
                 findNavController().navigate(
-                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(null)
+                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(
+                        null,
+                        viewModel.uiState.value.currentDate.toMillis()
+                    )
                 )
             }
         }

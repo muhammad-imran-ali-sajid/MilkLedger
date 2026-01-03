@@ -13,6 +13,7 @@ import com.miassolutions.milkledger.features.sale.domain.usecase.ObserveCustomer
 import com.miassolutions.milkledger.features.sale.domain.usecase.SaveSaleUseCase
 import com.miassolutions.milkledger.features.sale.domain.usecase.UpdateSaleUseCase
 import com.miassolutions.milkledger.features.sale.mapper.toDomain
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -41,6 +42,12 @@ class SaleFormViewModel @Inject constructor(
         val saleId: String? = savedStateHandle["saleId"]
         saleId?.let {
             onEvent(SaleFormUiEvent.EditSaleLoaded(it))
+        }
+
+        val saleDate : Long? = savedStateHandle["saleDate"]
+
+        saleDate?.let { date->
+            updateState { it.copy(saleDate = date.toLocalDate(), receivedDate = date.toLocalDate()) }
         }
 
         // Observe customers

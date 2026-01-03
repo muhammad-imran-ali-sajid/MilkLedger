@@ -167,6 +167,9 @@
             android:name="saleId"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="saleDate"
+            app:argType="long" />
     </fragment>
     <dialog
         tools:layout="@layout/bottomsheet_edit_expense"

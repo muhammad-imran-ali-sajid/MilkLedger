@@ -27,6 +27,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:navigationIconTint="@color/white"
                 app:titleTextAppearance="@style/Text.H1"
                 tools:title="Milk App" />
@@ -35,7 +38,7 @@
                 android:id="@+id/nav_host_fragment"
                 android:name="androidx.navigation.fragment.NavHostFragment"
                 android:layout_width="match_parent"
-                android:background="@color/white"
+                android:background="@color/divider"
                 android:layout_height="0dp"
                 app:defaultNavHost="true"
 
