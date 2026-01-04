@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.account
+package com.miassolutions.milkledger.features.account.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

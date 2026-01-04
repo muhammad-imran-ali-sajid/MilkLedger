@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.account
+package com.miassolutions.milkledger.features.account.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,7 +23,7 @@ class AccountViewModel : ViewModel() {
         val accounts = allItems.map { it.toUi() }
         accounts.filter { it.typeLabel == type.name }
 
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), emptyList())
 
     fun onTabSelected(type: ItemType) {
         _selectedTab.value = type

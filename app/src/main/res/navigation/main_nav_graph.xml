@@ -190,7 +190,7 @@
     </fragment>
     <fragment
         android:id="@+id/accountListFragment"
-        android:name="com.miassolutions.milkledger.features.account.AccountListFragment"
+        android:name="com.miassolutions.milkledger.features.account.list.AccountListFragment"
         android:label="Accounts"
         tools:layout="@layout/fragment_account_list" />
 </navigation>

@@ -1,10 +1,10 @@
-package com.miassolutions.milkledger.features.account
+package com.miassolutions.milkledger.features.account.list
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.tabs.TabLayout
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountListBinding
+import com.miassolutions.milkledger.features.account.form.AccountFormFragment
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -19,7 +19,12 @@ class AccountListFragment :
     override fun setupViews() = with(binding) {
         super.setupViews()
 
-        adapter = AccountListAdapter{
+        btnAddAccount.setOnClickListener {
+            val btmSheet = AccountFormFragment()
+            btmSheet.show(parentFragmentManager, null)
+        }
+
+        adapter = AccountListAdapter {
             showToast(it)
         }
 

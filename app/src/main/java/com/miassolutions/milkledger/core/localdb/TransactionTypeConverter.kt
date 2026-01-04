@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.core.localdb
 
 import androidx.room.TypeConverter
-import com.miassolutions.milkledger.core.localdb.account.AccountType
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
 import com.miassolutions.milkledger.features.transaction.data.TransactionType
 

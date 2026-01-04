@@ -1,9 +1,10 @@
-package com.miassolutions.milkledger.features.account
+package com.miassolutions.milkledger.core.localdb.account.repository
 
-
-import com.miassolutions.milkledger.core.localdb.account.AccountDao
-import com.miassolutions.milkledger.core.localdb.account.AccountType
-
+import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
+import com.miassolutions.milkledger.core.localdb.account.local.toDomain
+import com.miassolutions.milkledger.core.localdb.account.local.toEntity
+import com.miassolutions.milkledger.features.account.domain.Account
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -19,6 +20,8 @@ class AccountRepository @Inject constructor(
             entities.map { it.toDomain() }
         }
     }
+
+    suspend fun isSortOrderExist(sortOrder: Int, accountType: AccountType): Boolean = dao.isSortOrderExist(sortOrder, accountType)
 
     // 2. Get Single Account
     suspend fun getAccountById(id: String): Account? {

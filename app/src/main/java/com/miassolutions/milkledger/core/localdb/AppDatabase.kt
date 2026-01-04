@@ -3,8 +3,8 @@ package com.miassolutions.milkledger.core.localdb
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.miassolutions.milkledger.core.localdb.account.AccountDao
-import com.miassolutions.milkledger.core.localdb.account.AccountEntity
+import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
+import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
 import com.miassolutions.milkledger.core.localdb.expense.ExpenseEntity
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao

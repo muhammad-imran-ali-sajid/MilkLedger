@@ -1,6 +1,6 @@
-package com.miassolutions.milkledger.features.account
+package com.miassolutions.milkledger.core.localdb.account.local
 
-import com.miassolutions.milkledger.core.localdb.account.AccountEntity
+import com.miassolutions.milkledger.features.account.domain.Account
 import java.util.UUID
 
 

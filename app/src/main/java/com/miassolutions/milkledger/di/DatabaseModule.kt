@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.core.localdb.AppDatabase
-import com.miassolutions.milkledger.core.localdb.account.AccountDao
+import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.features.customer.data.local.CustomerDao

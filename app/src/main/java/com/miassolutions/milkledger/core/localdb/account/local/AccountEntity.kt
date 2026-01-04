@@ -1,11 +1,15 @@
-package com.miassolutions.milkledger.core.localdb.account
+package com.miassolutions.milkledger.core.localdb.account.local
 
 
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import java.util.UUID
 
-@Entity(tableName = "accounts_table")
+@Entity(
+    tableName = "accounts_table",
+    indices = [Index(value = ["sortOrder", "accountType"], unique = true)]
+)
 data class AccountEntity(
     @PrimaryKey
     val accountId: String = UUID.randomUUID().toString(),
@@ -29,4 +33,4 @@ data class AccountEntity(
     val deletedAtMillis: Long? = null
 )
 
-enum class AccountType { CUSTOMER, SUPPLIER, EMPLOYEE, OWNER }
+enum class AccountType { CUSTOMER, SUPPLIER }

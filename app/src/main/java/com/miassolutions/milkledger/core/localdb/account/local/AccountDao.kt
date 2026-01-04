@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.localdb.account
+package com.miassolutions.milkledger.core.localdb.account.local
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -13,6 +13,9 @@ interface AccountDao {
     // 1. Naya Account Banane ke liye
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(account: AccountEntity): Long
+
+    @Query("SELECT EXISTS(SELECT 1 FROM accounts_table WHERE sortOrder =:sortOrder  AND accountType = :accountType)")
+    suspend fun isSortOrderExist(sortOrder: Int, accountType: AccountType) : Boolean
 
     // 2. Edit karne ke liye
     @Update

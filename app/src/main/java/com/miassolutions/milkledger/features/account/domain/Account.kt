@@ -1,12 +1,11 @@
-package com.miassolutions.milkledger.features.account
+package com.miassolutions.milkledger.features.account.domain
 
-
-import com.miassolutions.milkledger.core.localdb.account.AccountType
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 
 data class Account(
     val accountId: String = "",
     val name: String,
-    val phone: String?,
+    val phone: String? = null,
     val type: AccountType,
 
     val sortOrder: Int = 0,
