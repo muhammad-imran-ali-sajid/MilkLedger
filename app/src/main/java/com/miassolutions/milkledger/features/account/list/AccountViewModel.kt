@@ -2,30 +2,51 @@ package com.miassolutions.milkledger.features.account.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
+import com.miassolutions.milkledger.core.localdb.account.repository.AccountRepository
+import com.miassolutions.milkledger.features.account.mapper.toUiList
+import com.miassolutions.milkledger.features.account.mapper.toUiListFlow
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AccountViewModel : ViewModel() {
-
-    private val allItems = listOf(
-        Item(1, "Item A", ItemType.FIRST),
-        Item(2, "Item B", ItemType.SECOND),
-        Item(3, "Item C", ItemType.FIRST),
-        Item(4, "Item D", ItemType.SECOND)
-    )
+@HiltViewModel
+class AccountViewModel @Inject constructor(private val repository: AccountRepository) :
+    ViewModel() {
 
 
-    private val _selectedTab = MutableStateFlow(ItemType.FIRST)
+    private val _selectedTab = MutableStateFlow(AccountType.CUSTOMER)
 
-    val items = _selectedTab.map { type ->
-        val accounts = allItems.map { it.toUi() }
-        accounts.filter { it.typeLabel == type.name }
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val accounts = _selectedTab
+        .flatMapLatest { type ->
+            repository.getAccountsByType(type).toUiListFlow()
 
-    }.stateIn(viewModelScope, SharingStarted.Companion.WhileSubscribed(5000), emptyList())
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    fun onTabSelected(type: ItemType) {
+    fun onTabSelected(type: AccountType) {
         _selectedTab.value = type
     }
+
+    fun delete(id: String){
+        viewModelScope.launch {
+            repository.deleteAccount(id)
+        }
+    }
+
+    fun restore(id: String){
+        viewModelScope.launch {
+            repository.restoreAccount(id)
+        }
+    }
+
+
 }

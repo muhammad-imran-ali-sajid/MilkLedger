@@ -201,5 +201,10 @@
         android:id="@+id/accountFormFragment"
         tools:layout="@layout/fragment_account_form"
         android:name="com.miassolutions.milkledger.features.account.form.AccountFormFragment"
-        android:label="AccountFormFragment" />
+        android:label="AccountFormFragment" >
+        <argument
+            android:name="accountId"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

@@ -5,11 +5,13 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.account.form.AccountFormUiState
-import com.miassolutions.milkledger.features.account.model.AccountUI
+import com.miassolutions.milkledger.features.account.model.AccountUi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 
-fun Account.toUi(): AccountUI =
-    AccountUI(
+fun Account.toUi(): AccountUi =
+    AccountUi(
         id = accountId,
         personName = name,
         accountType = type,
@@ -18,11 +20,15 @@ fun Account.toUi(): AccountUI =
         defaultRate = defaultRate,
         advanceAmount = advanceAmount,
         bgDrawable = when (type) {
-            AccountType.CUSTOMER -> R.drawable.bg_sale
-            else -> R.drawable.bg_purchase
+            AccountType.CUSTOMER -> R.color.background
+            else -> R.color.blue_100
 
         }
     )
+
+fun List<Account>.toUiList(): List<AccountUi> = this.map { it.toUi() }
+
+fun Flow<List<Account>>.toUiListFlow(): Flow<List<AccountUi>> = this.map { it.toUiList() }
 
 
 fun Account.toFormUiState(): AccountFormUiState =
@@ -31,16 +37,16 @@ fun Account.toFormUiState(): AccountFormUiState =
         personName = name,
         selectAccountType = type,
         rate = defaultRate.toString(),
-        initialBalance = initialBalance.toString(),
+        initialBalance = initialBalance.toString().orEmpty(),
         advanceAmount = advanceAmount.toString().orEmpty(),
     )
 
 
 fun AccountFormUiState.toDomain(
-    existingId: String? = null
+    existingId: String
 ): Account =
     Account(
-        accountId = existingId ?: UUID.randomUUID().toString(),
+        accountId = existingId,
         name = personName,
 
         type = selectAccountType,

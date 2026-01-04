@@ -12,7 +12,7 @@ import java.util.UUID
 )
 data class AccountEntity(
     @PrimaryKey
-    val accountId: String = UUID.randomUUID().toString(),
+    val accountId: String,
     val name: String,
     val phone: String?,
     val accountType: AccountType, // Enum niche defined hai

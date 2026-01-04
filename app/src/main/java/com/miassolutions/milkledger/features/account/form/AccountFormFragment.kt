@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountFormBinding
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,6 +25,8 @@ class AccountFormFragment :
 
     override fun setupViews() {
         super.setupViews()
+
+
 
         setupInputs()
         setupObservers()
@@ -47,7 +50,6 @@ class AccountFormFragment :
             }
         }
 
-        rbCustomer.isChecked = true
     }
 
 
@@ -140,11 +142,28 @@ class AccountFormFragment :
 
     private fun renderState(state: AccountFormUiState) = with(binding) {
         btnSave.isEnabled = !state.isSaving
+        btnSave.text = if (state.isEditMode) "Update" else "Save"
 
+        // 🔹 TEXT FIELDS (EDIT MODE PREFILL)
+        etSortOrder.setTextIfDifferent(state.sortOrder)
+        etAccountName.setTextIfDifferent(state.personName)
+        etDefaultRate.setTextIfDifferent(state.rate)
+        etInitialBalance.setTextIfDifferent(state.initialBalance)
+        etAdvanceAmount.setTextIfDifferent(state.advanceAmount)
+
+        // 🔹 RADIO BUTTONS
+        when (state.selectAccountType) {
+            AccountType.CUSTOMER -> rbCustomer.isChecked = true
+            AccountType.SUPPLIER -> rbSupplier.isChecked = true
+            null -> Unit
+        }
+
+        // 🔹 ERRORS
         sortOrderLayout.error = state.validation.sortOrderError
         nameLayout.error = state.validation.nameError
         rateLayout.error = state.validation.rateError
     }
+
 
 
 }

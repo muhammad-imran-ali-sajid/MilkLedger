@@ -1,12 +1,16 @@
 package com.miassolutions.milkledger.features.account.list
 
+import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountListBinding
 import com.miassolutions.milkledger.features.account.form.AccountFormFragment
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,31 +25,30 @@ class AccountListFragment :
         super.setupViews()
 
         btnAddAccount.setOnClickListener {
-            val action = AccountListFragmentDirections.actionAccountListFragmentToAccountFormFragment().actionId
+            val action =
+                AccountListFragmentDirections.actionAccountListFragmentToAccountFormFragment(null).actionId
             findNavController().navigate(action)
 
 
-
         }
 
-        adapter = AccountListAdapter {
-            showToast(it)
-        }
+        adapter = AccountListAdapter(::onEditClick, ::onDeleteClick)
 
         recyclerView.adapter = adapter
-
-        tabLayout.addTab(
-            tabLayout.newTab().setText("Suppliers")
-        )
 
         tabLayout.addTab(
             tabLayout.newTab().setText("Customers")
         )
 
+        tabLayout.addTab(
+            tabLayout.newTab().setText("Suppliers")
+        )
+
+
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val type = if (tab?.position == 0)
-                    ItemType.FIRST else ItemType.SECOND
+                    AccountType.CUSTOMER else AccountType.SUPPLIER
 
                 viewModel.onTabSelected(type)
             }
@@ -57,9 +60,30 @@ class AccountListFragment :
 
     }
 
+    private fun onDeleteClick(id: String) {
+        showDeleteActionDialog {
+
+            viewModel.delete(id)
+            showSnackbar(
+                message = "Account deleted",
+                duration = Snackbar.LENGTH_LONG,
+                actionText = "Undo",
+                onAction = { viewModel.restore(id) }
+            )
+        }
+    }
+
+    private fun onEditClick(id: String) {
+        Log.d("AccountListFragment", id)
+        val action =
+            AccountListFragmentDirections.actionAccountListFragmentToAccountFormFragment(id)
+        findNavController().navigate(action)
+
+    }
+
     override fun setupObservers() {
 
-        collectFlow(viewModel.items) { items ->
+        collectFlow(viewModel.accounts) { items ->
             adapter.submitList(items)
         }
     }

@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.features.account.model
 import androidx.annotation.DrawableRes
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 
-data class AccountUI(
+data class AccountUi(
     val id: String,
     val personName: String,
     val accountType: AccountType,

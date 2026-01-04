@@ -5,6 +5,7 @@ import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.account.local.toDomain
 import com.miassolutions.milkledger.core.localdb.account.local.toEntity
 import com.miassolutions.milkledger.features.account.domain.Account
+import com.miassolutions.milkledger.features.account.model.AccountUi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -21,7 +22,11 @@ class AccountRepository @Inject constructor(
         }
     }
 
-    suspend fun isSortOrderExist(sortOrder: Int, accountType: AccountType): Boolean = dao.isSortOrderExist(sortOrder, accountType)
+    suspend fun isSortOrderExist(
+        sortOrder: Int,
+        accountType: AccountType,
+        excludeId: String? = null
+    ): Boolean = dao.isSortOrderExist(sortOrder, accountType, excludeId)
 
     // 2. Get Single Account
     suspend fun getAccountById(id: String): Account? {
@@ -37,6 +42,10 @@ class AccountRepository @Inject constructor(
     // 4. Soft Delete
     suspend fun deleteAccount(accountId: String) {
         dao.softDelete(accountId, System.currentTimeMillis())
+    }
+
+    suspend fun restoreAccount(accountUi: String) {
+        dao.restore(accountUi)
     }
 
 //    // 5. Update Sort Order (Drag & Drop)

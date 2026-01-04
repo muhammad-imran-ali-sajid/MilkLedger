@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.account.form
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 
 data class AccountFormUiState(
+    val isEditMode: Boolean = false,
     val sortOrder: String = "",
     val personName: String = "",
     val selectAccountType: AccountType = AccountType.CUSTOMER,

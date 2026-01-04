@@ -14,8 +14,19 @@ interface AccountDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(account: AccountEntity): Long
 
-    @Query("SELECT EXISTS(SELECT 1 FROM accounts_table WHERE sortOrder =:sortOrder  AND accountType = :accountType)")
-    suspend fun isSortOrderExist(sortOrder: Int, accountType: AccountType) : Boolean
+    @Query(
+        """SELECT EXISTS(
+        SELECT 1 FROM accounts_table 
+        WHERE sortOrder =:sortOrder
+        AND accountType = :accountType
+        AND (:excludeId IS NULL OR accountId != :excludeId)
+)"""
+    )
+    suspend fun isSortOrderExist(
+        sortOrder: Int,
+        accountType: AccountType,
+        excludeId: String?
+    ): Boolean
 
     // 2. Edit karne ke liye
     @Update
@@ -33,4 +44,7 @@ interface AccountDao {
     // 5. Soft Delete Logic
     @Query("UPDATE accounts_table SET deletedAtMillis = :time WHERE accountId = :id")
     suspend fun softDelete(id: String, time: Long)
+
+    @Query("UPDATE accounts_table SET deletedAtMillis = NULL WHERE accountId = :id")
+    suspend fun restore(id: String)
 }

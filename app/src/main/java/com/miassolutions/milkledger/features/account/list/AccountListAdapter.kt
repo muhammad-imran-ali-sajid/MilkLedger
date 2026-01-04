@@ -2,45 +2,17 @@ package com.miassolutions.milkledger.features.account.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.DrawableRes
-
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemAccountBinding
-
-data class Item(
-    val id: Int,
-    val title: String,
-    val type: ItemType
-)
-
-enum class ItemType {
-    FIRST, SECOND
-}
-
-data class AccountUi(
-    val id: Int,
-    val title: String,
-    val typeLabel: String,
-    @DrawableRes val backgroundRes: Int
-)
-
-fun Item.toUi(): AccountUi {
-    return AccountUi(
-        id = id,
-        title = title,
-        typeLabel = type.name,
-        backgroundRes = when (type) {
-            ItemType.FIRST -> R.drawable.bg_expense
-            ItemType.SECOND -> R.drawable.bg_sale
-        }
-    )
-}
+import com.miassolutions.milkledger.features.account.model.AccountUi
 
 
-class AccountListAdapter(private val onItemClick: (String) -> Unit) :
+class AccountListAdapter(
+    private val onEditClick: (String) -> Unit,
+    private val onDeleteClick: (String) -> Unit
+) :
     ListAdapter<AccountUi, AccountListAdapter.AccountVH>(Diff) {
 
 
@@ -67,12 +39,17 @@ class AccountListAdapter(private val onItemClick: (String) -> Unit) :
     inner class AccountVH(val binding: ItemAccountBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: AccountUi) = with(binding) {
-            tvAccountName.text = item.title
-            tvAccountType.text = item.typeLabel
+            tvAccountName.text = item.personName
+            tvAccountType.text = item.accountType.name
 
-            root.setBackgroundResource(item.backgroundRes)
+            root.setBackgroundResource(item.bgDrawable)
             root.setOnClickListener {
-                onItemClick(item.title)
+                onEditClick(item.id)
+            }
+
+            root.setOnLongClickListener {
+                onDeleteClick(item.id)
+                true
             }
 
 

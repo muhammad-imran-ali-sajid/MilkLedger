@@ -1,5 +1,7 @@
 package com.miassolutions.milkledger.features.account.form
 
+import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.account.repository.AccountRepository
@@ -7,12 +9,44 @@ import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.account.mapper.toDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountFormViewModel @Inject
-constructor(private val repository: AccountRepository) :
+class AccountFormViewModel @Inject constructor(
+    private val repository: AccountRepository,
+    savedStateHandle: SavedStateHandle
+) :
     BaseViewModel<AccountFormUiState, AccountFormEvent, AccountFormEffect>(AccountFormUiState()) {
+
+    private val accountId: String? = savedStateHandle["accountId"]
+
+
+    init {
+
+        updateState { it.copy(isEditMode = accountId != null) }
+
+        if (accountId != null) loadAccount()
+    }
+
+    private fun loadAccount() {
+        viewModelScope.launch {
+            val account = repository.getAccountById(accountId!!)
+            Log.d("AccountEdit", "Loaded account = $account")
+            if (account == null) return@launch
+            updateState {
+                it.copy(
+                    sortOrder = account.sortOrder.toString(),
+                    personName = account.name,
+                    selectAccountType = account.type,
+                    rate = account.defaultRate.toString(),
+                    initialBalance = account.initialBalance?.toString().orEmpty(),
+                    advanceAmount = account.advanceAmount?.toString().orEmpty()
+                )
+            }
+        }
+    }
+
 
     private suspend fun validate(): AccountFormValidation {
         val state = currentState
@@ -23,7 +57,7 @@ constructor(private val repository: AccountRepository) :
         val type = state.selectAccountType
 
 
-        if (repository.isSortOrderExist(sort, type as AccountType)) {
+        if (repository.isSortOrderExist(sort, type, accountId)) {
             emitEffect(AccountFormEffect.FocusField(Field.SORT_ORDER))
             return AccountFormValidation(
                 sortOrderError = "Sort order already exists for this account type"
@@ -45,7 +79,6 @@ constructor(private val repository: AccountRepository) :
 
         return AccountFormValidation(isValid = true)
     }
-
 
 
     override fun onEvent(event: AccountFormEvent) {
@@ -80,7 +113,8 @@ constructor(private val repository: AccountRepository) :
             }
 
             try {
-                val account = currentState.toDomain()
+                val id = accountId ?: UUID.randomUUID().toString()
+                val account = currentState.toDomain(id)
                 repository.saveAccount(account)
                 emitEffect(AccountFormEffect.ShowToast("Account saved in db"))
                 emitEffect(AccountFormEffect.CloseScreen)
