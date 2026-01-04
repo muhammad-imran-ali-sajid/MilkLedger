@@ -188,4 +188,9 @@
             android:id="@+id/action_saleListFragment_to_saleAddFragment"
             app:destination="@id/saleAddFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/accountListFragment"
+        android:name="com.miassolutions.milkledger.features.account.AccountListFragment"
+        android:label="Accounts"
+        tools:layout="@layout/fragment_account_list" />
 </navigation>

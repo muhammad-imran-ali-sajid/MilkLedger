@@ -6,6 +6,12 @@
     <group android:id="@+id/menu_group_navigation">
 
         <item
+            android:id="@+id/accountListFragment"
+            android:orderInCategory="50"
+            android:title="@string/accounts"
+            app:showAsAction="never" />
+
+        <item
             android:id="@+id/suppliersFragment"
             android:orderInCategory="100"
             android:icon="@drawable/ic_supplier2"

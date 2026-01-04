@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                 R.id.purchaseFragment,
                 R.id.expenseFragment,
                 R.id.profitFragment,
+                R.id.accountListFragment
             ),
             binding.drawerLayout
         )
