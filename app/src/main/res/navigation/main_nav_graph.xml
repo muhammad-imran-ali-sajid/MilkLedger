@@ -192,5 +192,14 @@
         android:id="@+id/accountListFragment"
         android:name="com.miassolutions.milkledger.features.account.list.AccountListFragment"
         android:label="Accounts"
-        tools:layout="@layout/fragment_account_list" />
+        tools:layout="@layout/fragment_account_list" >
+        <action
+            android:id="@+id/action_accountListFragment_to_accountFormFragment"
+            app:destination="@id/accountFormFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountFormFragment"
+        tools:layout="@layout/fragment_account_form"
+        android:name="com.miassolutions.milkledger.features.account.form.AccountFormFragment"
+        android:label="AccountFormFragment" />
 </navigation>

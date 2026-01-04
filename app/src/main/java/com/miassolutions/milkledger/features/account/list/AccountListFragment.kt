@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.account.list
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountListBinding
@@ -20,8 +21,11 @@ class AccountListFragment :
         super.setupViews()
 
         btnAddAccount.setOnClickListener {
-            val btmSheet = AccountFormFragment()
-            btmSheet.show(parentFragmentManager, null)
+            val action = AccountListFragmentDirections.actionAccountListFragmentToAccountFormFragment().actionId
+            findNavController().navigate(action)
+
+
+
         }
 
         adapter = AccountListAdapter {

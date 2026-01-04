@@ -21,34 +21,35 @@ constructor(private val repository: AccountRepository) :
             ?: return AccountFormValidation(sortOrderError = "Sort Order required")
 
         val type = state.selectAccountType
-            ?: AccountFormValidation(type = "Account type requrired")
+
 
         if (repository.isSortOrderExist(sort, type as AccountType)) {
+            emitEffect(AccountFormEffect.FocusField(Field.SORT_ORDER))
             return AccountFormValidation(
                 sortOrderError = "Sort order already exists for this account type"
             )
         }
 
         if (state.personName.isBlank()) {
+            emitEffect(AccountFormEffect.FocusField(Field.NAME))
             return AccountFormValidation(nameError = "Name required")
         }
 
-        if (state.selectAccountType == null) {
-            return AccountFormValidation(nameError = "Account type required")
-        }
+
 
         if (state.rate.isBlank()) {
+            emitEffect(AccountFormEffect.FocusField(Field.RATE))
             return AccountFormValidation(rateError = "Rate required")
         }
 
         if (state.initialBalance.isBlank()) {
-            return AccountFormValidation(
-                initialBalanceError = "Initial balance required"
-            )
+            emitEffect(AccountFormEffect.FocusField(Field.INITIAL_BALANCE))
+            return AccountFormValidation(initialBalanceError = "Initial balance required")
         }
 
         return AccountFormValidation(isValid = true)
     }
+
 
 
     override fun onEvent(event: AccountFormEvent) {
@@ -85,7 +86,7 @@ constructor(private val repository: AccountRepository) :
             try {
                 val account = currentState.toDomain()
                 repository.saveAccount(account)
-                AccountFormEffect.ShowToast("Account saved in db")
+                emitEffect(AccountFormEffect.ShowToast("Account saved in db"))
                 emitEffect(AccountFormEffect.CloseScreen)
             } catch (e: Exception) {
                 emitEffect(

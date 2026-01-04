@@ -31,4 +31,15 @@ sealed interface AccountFormEvent {
 sealed interface AccountFormEffect {
     object CloseScreen : AccountFormEffect
     data class ShowToast(val message: String) : AccountFormEffect
+    data class FocusField(val field: Field) : AccountFormEffect
 }
+
+enum class Field {
+    SORT_ORDER,
+    NAME,
+    ACCOUNT_TYPE,
+    RATE,
+    INITIAL_BALANCE
+}
+
+

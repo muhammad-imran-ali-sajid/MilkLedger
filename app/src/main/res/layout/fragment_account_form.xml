@@ -8,6 +8,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:id="@+id/scrollView"
         android:layout_weight="1">
 
         <LinearLayout
@@ -16,7 +17,7 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-
+            <!-- Sort Order -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/sortOrderLayout"
                 android:layout_width="match_parent"
@@ -28,11 +29,11 @@
                     android:id="@+id/etSortOrder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
-
+                    android:inputType="number"
+                    android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
+            <!-- Person Name -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameLayout"
                 android:layout_width="match_parent"
@@ -44,28 +45,40 @@
                     android:id="@+id/etAccountName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapWords" />
-
+                    android:inputType="textCapWords"
+                    android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Account Type (Radio Buttons) -->
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:hint="Select Account">
+                android:hint="Account Type">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/dropdownAccountType"
+                <RadioGroup
+                    android:id="@+id/rgAccountType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="false"
-                    android:importantForAutofill="no"
-                    android:inputType="none" />
+                    android:orientation="horizontal"
+                    android:paddingTop="8dp">
 
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/rbCustomer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Customer" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/rbSupplier"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="Supplier" />
+                </RadioGroup>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Rate -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/rateLayout"
                 android:layout_width="match_parent"
@@ -76,10 +89,12 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDefaultRate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Initial Balance -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/initialBalanceLayout"
                 android:layout_width="match_parent"
@@ -90,10 +105,12 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etInitialBalance"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Advance Amount (Last Field) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/advanceAmountLayout"
                 android:layout_width="match_parent"
@@ -105,16 +122,11 @@
                     android:id="@+id/etAdvanceAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number" />
-
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionDone" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-
-
-
         </LinearLayout>
-
     </ScrollView>
 
     <!-- SAVE BUTTON -->
@@ -126,6 +138,5 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/primary"
         android:text="Save" />
-
 
 </LinearLayout>
