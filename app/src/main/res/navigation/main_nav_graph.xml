@@ -211,5 +211,9 @@
         android:id="@+id/ownerSetupFragment"
         android:name="com.miassolutions.milkledger.features.owner.OwnerSetupFragment"
         android:label="fragment_owner_setup"
-        tools:layout="@layout/fragment_owner_setup" />
+        tools:layout="@layout/fragment_owner_setup" >
+        <action
+            android:id="@+id/action_ownerSetupFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
+    </fragment>
 </navigation>

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private lateinit var navController: NavController
+    private val viewModel: AppStartViewModel by viewModels()
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     /** ONLY bottom navigation destinations */
@@ -97,9 +99,19 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHost.navController
 
+        val navGraph = navController.navInflater.inflate(R.navigation.main_nav_graph)
+
+        lifecycleScope.launch {
+            viewModel.startDestination.collect { destination ->
+                navGraph.setStartDestination(destination)
+                navController.graph = navGraph
+            }
+        }
+
         // -------------------- AppBarConfiguration --------------------
         appBarConfiguration = AppBarConfiguration(
             setOf(
+                R.id.ownerSetupFragment,
                 R.id.dashboardFragment,
                 R.id.customersFragment,
                 R.id.suppliersFragment,

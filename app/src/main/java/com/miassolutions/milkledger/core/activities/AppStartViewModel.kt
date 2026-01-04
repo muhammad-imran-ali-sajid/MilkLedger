@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.owner
+package com.miassolutions.milkledger.core.activities
 
 import androidx.lifecycle.ViewModel
 import com.miassolutions.milkledger.R
