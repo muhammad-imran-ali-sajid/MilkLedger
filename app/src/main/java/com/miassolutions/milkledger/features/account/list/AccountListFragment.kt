@@ -42,11 +42,14 @@ class AccountListFragment :
 
         recyclerView.adapter = adapter
 
-        AccountType.entries.forEach { type ->
-            tabLayout.addTab(
-                tabLayout.newTab().setText(type.title(requireContext()))
-            )
-        }
+        AccountType.entries
+            .filter { it != AccountType.OWNER } // skip OWNER
+            .forEach { type ->
+                tabLayout.addTab(
+                    tabLayout.newTab().setText(type.title(requireContext()))
+                )
+            }
+
 
 
 

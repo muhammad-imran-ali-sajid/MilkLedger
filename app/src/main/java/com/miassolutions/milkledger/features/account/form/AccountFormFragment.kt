@@ -156,6 +156,7 @@ class AccountFormFragment :
         when (state.selectAccountType) {
             AccountType.CUSTOMER -> rbCustomer.isChecked = true
             AccountType.SUPPLIER -> rbSupplier.isChecked = true
+            else -> {}
         }
 
         // 🔹 ERRORS

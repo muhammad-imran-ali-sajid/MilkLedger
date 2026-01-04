@@ -22,8 +22,6 @@
     <string name="suppliers">Suppliers</string>
 
 
-
-
     <item name="text_watcher_tag" type="id" />
 
     <!-- 📅 For showing formatted date like 11/10/2025 -->

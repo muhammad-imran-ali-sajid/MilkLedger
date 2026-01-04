@@ -8,7 +8,7 @@ import java.util.UUID
 @Entity(tableName = "expense_table", indices = [Index("dateMillis")])
 data class ExpenseEntity(
     @PrimaryKey
-    val expenseId: String = UUID.randomUUID().toString(),
+    val expenseId: String,
 
     val dateMillis: Long,
     val title: String,

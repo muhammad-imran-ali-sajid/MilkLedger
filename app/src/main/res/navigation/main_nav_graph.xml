@@ -207,4 +207,9 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+    <fragment
+        android:id="@+id/ownerSetupFragment"
+        android:name="com.miassolutions.milkledger.features.owner.OwnerSetupFragment"
+        android:label="fragment_owner_setup"
+        tools:layout="@layout/fragment_owner_setup" />
 </navigation>

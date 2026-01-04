@@ -8,7 +8,7 @@ import java.util.UUID
 
 @Entity(
     tableName = "accounts_table",
-    indices = [Index(value = ["sortOrder", "accountType"], unique = true)]
+    indices = [Index(value = ["sortOrder", "accountType"])]
 )
 data class AccountEntity(
     @PrimaryKey
@@ -33,4 +33,4 @@ data class AccountEntity(
     val deletedAtMillis: Long? = null
 )
 
-enum class AccountType { CUSTOMER, SUPPLIER }
+enum class AccountType { CUSTOMER, SUPPLIER, OWNER }

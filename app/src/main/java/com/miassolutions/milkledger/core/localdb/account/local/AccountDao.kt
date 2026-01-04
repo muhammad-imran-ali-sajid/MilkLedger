@@ -5,10 +5,22 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
+
+    @Query("""
+        SELECT * FROM accounts_table
+        WHERE accountId = :ownerId
+        AND deletedAtMillis IS NULL
+        LIMIT 1
+    """)
+    suspend fun getOwner(ownerId: String = OWNER_ACCOUNT_ID): AccountEntity?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(account: AccountEntity)
 
     // 1. Naya Account Banane ke liye
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -50,4 +62,7 @@ interface AccountDao {
 
     @Query("DELETE FROM accounts_table WHERE deletedAtMillis IS NOT NULL")
     suspend fun permanentlyDeleteAllAccounts()
+
+
+
 }

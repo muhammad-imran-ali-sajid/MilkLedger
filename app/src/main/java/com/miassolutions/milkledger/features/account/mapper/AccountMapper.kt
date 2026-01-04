@@ -63,5 +63,6 @@ fun AccountType.title(context: Context): String =
         when (this) {
             AccountType.CUSTOMER -> R.string.customers
             AccountType.SUPPLIER -> R.string.suppliers
+            AccountType.OWNER -> throw IllegalArgumentException("OWNER has no title")
         }
     )

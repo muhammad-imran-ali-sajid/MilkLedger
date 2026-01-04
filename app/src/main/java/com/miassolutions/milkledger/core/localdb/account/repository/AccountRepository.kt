@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.core.localdb.account.repository
 
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
+import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.account.local.toDomain
 import com.miassolutions.milkledger.core.localdb.account.local.toEntity
@@ -14,6 +15,13 @@ import javax.inject.Inject
 class AccountRepository @Inject constructor(
     private val dao: AccountDao
 ) {
+
+    suspend fun getOwner(): AccountEntity? =
+        dao.getOwner()
+
+    suspend fun saveOwner(owner: AccountEntity) {
+        dao.upsert(owner)
+    }
 
     // 1. Get List (Reactive Flow)
     fun getAccountsByType(type: AccountType): Flow<List<Account>> {

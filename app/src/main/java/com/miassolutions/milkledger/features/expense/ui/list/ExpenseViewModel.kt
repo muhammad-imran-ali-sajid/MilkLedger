@@ -39,9 +39,7 @@ class ExpenseViewModel @Inject constructor(
         repository.deleteExpense(expenseId)
     }
 
-    fun updateExpense(expense: Expense) = viewModelScope.launch {
-        repository.updateExpense(expense)
-    }
+
 
     private fun observeDate(date: LocalDate) {
 
