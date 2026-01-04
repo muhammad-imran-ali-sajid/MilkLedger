@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.account.list
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
@@ -10,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -18,11 +20,22 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AccountViewModel @Inject constructor(private val repository: AccountRepository) :
+class AccountViewModel @Inject constructor(
+    private val repository: AccountRepository,
+   private val savedStateHandle: SavedStateHandle
+) :
     ViewModel() {
 
+        private companion object {
+            const val KEY_SELECTED_TAB = "selected_tab"
+        }
 
-    private val _selectedTab = MutableStateFlow(AccountType.CUSTOMER)
+
+
+
+    private val _selectedTab = MutableStateFlow(savedStateHandle[KEY_SELECTED_TAB]?: AccountType.CUSTOMER)
+
+    val selectedTab = _selectedTab.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val accounts = _selectedTab
@@ -34,6 +47,7 @@ class AccountViewModel @Inject constructor(private val repository: AccountReposi
 
     fun onTabSelected(type: AccountType) {
         _selectedTab.value = type
+        savedStateHandle[KEY_SELECTED_TAB] = type
     }
 
     fun delete(id: String){

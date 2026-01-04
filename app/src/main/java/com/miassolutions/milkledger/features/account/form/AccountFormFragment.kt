@@ -53,7 +53,6 @@ class AccountFormFragment :
     }
 
 
-
     private fun setupInputs() = with(binding) {
         etSortOrder.doAfterTextChanged {
             viewModel.onSortOrderChanged(it.toString())
@@ -96,7 +95,10 @@ class AccountFormFragment :
                 showToast(effect.message)
 
             AccountFormEffect.CloseScreen ->
-                findNavController().popBackStack()
+                findNavController().popBackStack(
+                    R.id.accountListFragment, false
+                )
+
 
             is AccountFormEffect.FocusField ->
                 focusField(effect.field)
@@ -139,7 +141,6 @@ class AccountFormFragment :
     }
 
 
-
     private fun renderState(state: AccountFormUiState) = with(binding) {
         btnSave.isEnabled = !state.isSaving
         btnSave.text = if (state.isEditMode) "Update" else "Save"
@@ -155,7 +156,6 @@ class AccountFormFragment :
         when (state.selectAccountType) {
             AccountType.CUSTOMER -> rbCustomer.isChecked = true
             AccountType.SUPPLIER -> rbSupplier.isChecked = true
-            null -> Unit
         }
 
         // 🔹 ERRORS
@@ -163,7 +163,6 @@ class AccountFormFragment :
         nameLayout.error = state.validation.nameError
         rateLayout.error = state.validation.rateError
     }
-
 
 
 }

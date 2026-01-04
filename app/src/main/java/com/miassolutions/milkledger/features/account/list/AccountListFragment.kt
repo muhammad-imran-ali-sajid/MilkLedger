@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountListBinding
 import com.miassolutions.milkledger.features.account.form.AccountFormFragment
+import com.miassolutions.milkledger.features.account.mapper.title
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +27,7 @@ class AccountListFragment :
 
         btnAddAccount.setOnClickListener {
             val action =
-                AccountListFragmentDirections.actionAccountListFragmentToAccountFormFragment(null).actionId
+                AccountListFragmentDirections.actionAccountListFragmentToAccountFormFragment(null)
             findNavController().navigate(action)
 
 
@@ -36,21 +37,19 @@ class AccountListFragment :
 
         recyclerView.adapter = adapter
 
-        tabLayout.addTab(
-            tabLayout.newTab().setText("Customers")
-        )
+        AccountType.entries.forEach { type ->
+            tabLayout.addTab(
+                tabLayout.newTab().setText(type.title(requireContext()))
+            )
+        }
 
-        tabLayout.addTab(
-            tabLayout.newTab().setText("Suppliers")
-        )
 
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                val type = if (tab?.position == 0)
-                    AccountType.CUSTOMER else AccountType.SUPPLIER
+                tab ?: return
+                viewModel.onTabSelected(AccountType.entries[tab.position])
 
-                viewModel.onTabSelected(type)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -86,6 +85,11 @@ class AccountListFragment :
         collectFlow(viewModel.accounts) { items ->
             adapter.submitList(items)
         }
+
+        collectFlow(viewModel.selectedTab) { type ->
+            binding.tabLayout.getTabAt(type.ordinal)?.select()
+        }
+
     }
 
 

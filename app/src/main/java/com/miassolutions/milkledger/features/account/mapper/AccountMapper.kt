@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.account.mapper
 
 
+import android.content.Context
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.features.account.domain.Account
@@ -20,7 +21,7 @@ fun Account.toUi(): AccountUi =
         defaultRate = defaultRate,
         advanceAmount = advanceAmount,
         bgDrawable = when (type) {
-            AccountType.CUSTOMER -> R.color.background
+            AccountType.CUSTOMER -> R.color.green_200
             else -> R.color.blue_100
 
         }
@@ -56,3 +57,11 @@ fun AccountFormUiState.toDomain(
         initialBalance = initialBalance.toLongOrNull(),
 
         )
+
+fun AccountType.title(context: Context): String =
+    context.getString(
+        when (this) {
+            AccountType.CUSTOMER -> R.string.customers
+            AccountType.SUPPLIER -> R.string.suppliers
+        }
+    )
