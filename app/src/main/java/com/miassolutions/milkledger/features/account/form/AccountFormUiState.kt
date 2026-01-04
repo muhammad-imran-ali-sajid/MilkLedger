@@ -17,8 +17,6 @@ data class AccountFormValidation(
     val sortOrderError: String? = null,
     val nameError: String? = null,
     val rateError: String? = null,
-    val type: String? = null,
-    val initialBalanceError: String? = null,
     val isValid: Boolean = false
 )
 

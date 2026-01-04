@@ -46,7 +46,7 @@ fun AccountFormUiState.toDomain(
         type = selectAccountType,
         sortOrder = sortOrder.toInt(),
         defaultRate = rate.toDouble(),
-        advanceAmount = advanceAmount.toLong(),
-        initialBalance = initialBalance.toLong(),
+        advanceAmount = advanceAmount.toLongOrNull(),
+        initialBalance = initialBalance.toLongOrNull(),
 
         )

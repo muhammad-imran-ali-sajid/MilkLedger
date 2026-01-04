@@ -144,7 +144,6 @@ class AccountFormFragment :
         sortOrderLayout.error = state.validation.sortOrderError
         nameLayout.error = state.validation.nameError
         rateLayout.error = state.validation.rateError
-        initialBalanceLayout.error = state.validation.initialBalanceError
     }
 
 

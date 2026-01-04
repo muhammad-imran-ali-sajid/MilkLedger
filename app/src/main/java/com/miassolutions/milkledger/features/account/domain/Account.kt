@@ -9,11 +9,11 @@ data class Account(
     val type: AccountType,
 
     val sortOrder: Int = 0,
-    val defaultRate: Double = 0.0,
+    val defaultRate: Double,
 
     // Sirf Profile me show hoga (No Ledger Effect)
-    val advanceAmount: Long = 0,
+    val advanceAmount: Long?,
 
     // Ye Ledger me "Opening Balance" k tor par jayega (Agar user dale)
-    val initialBalance: Long = 0,
+    val initialBalance: Long?,
 )

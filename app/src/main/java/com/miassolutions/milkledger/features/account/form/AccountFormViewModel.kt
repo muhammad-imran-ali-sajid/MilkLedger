@@ -42,10 +42,6 @@ constructor(private val repository: AccountRepository) :
             return AccountFormValidation(rateError = "Rate required")
         }
 
-        if (state.initialBalance.isBlank()) {
-            emitEffect(AccountFormEffect.FocusField(Field.INITIAL_BALANCE))
-            return AccountFormValidation(initialBalanceError = "Initial balance required")
-        }
 
         return AccountFormValidation(isValid = true)
     }

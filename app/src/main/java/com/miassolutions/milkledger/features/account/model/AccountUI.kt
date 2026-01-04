@@ -8,7 +8,7 @@ data class AccountUI(
     val personName: String,
     val accountType: AccountType,
     val sortOrder: Int,
-    val initialBalance: Long,
+    val initialBalance: Long?,
     val defaultRate: Double,
     val advanceAmount: Long?,
     @DrawableRes val bgDrawable: Int
