@@ -29,8 +29,13 @@ class AccountListFragment :
             val action =
                 AccountListFragmentDirections.actionAccountListFragmentToAccountFormFragment(null)
             findNavController().navigate(action)
+        }
 
+        binding.fabDelete.setOnClickListener {
+            showDeleteActionDialog(message = "Be careful. It can't be undone") {
 
+                viewModel.permanentlyDeleteSoftDeleted()
+            }
         }
 
         adapter = AccountListAdapter(::onEditClick, ::onDeleteClick)

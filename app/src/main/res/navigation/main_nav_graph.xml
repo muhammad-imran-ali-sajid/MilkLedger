@@ -199,9 +199,9 @@
     </fragment>
     <fragment
         android:id="@+id/accountFormFragment"
-        tools:layout="@layout/fragment_account_form"
         android:name="com.miassolutions.milkledger.features.account.form.AccountFormFragment"
-        android:label="AccountFormFragment" >
+        android:label="Account Form"
+        tools:layout="@layout/fragment_account_form">
         <argument
             android:name="accountId"
             app:argType="string"

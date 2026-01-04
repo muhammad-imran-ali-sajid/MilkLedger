@@ -48,6 +48,10 @@ class AccountRepository @Inject constructor(
         dao.restore(accountUi)
     }
 
+    suspend fun permanentlyDeleteAllSoftDeletedAccounts(){
+        dao.permanentlyDeleteAllAccounts()
+    }
+
 //    // 5. Update Sort Order (Drag & Drop)
 //    suspend fun updateSortOrder(accountId: String, newOrder: Int) {
 //        dao.updateSortOrder(accountId, newOrder)

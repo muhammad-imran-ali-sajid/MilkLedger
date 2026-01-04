@@ -22,18 +22,17 @@ import javax.inject.Inject
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val repository: AccountRepository,
-   private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
 
-        private companion object {
-            const val KEY_SELECTED_TAB = "selected_tab"
-        }
+    private companion object {
+        const val KEY_SELECTED_TAB = "selected_tab"
+    }
 
 
-
-
-    private val _selectedTab = MutableStateFlow(savedStateHandle[KEY_SELECTED_TAB]?: AccountType.CUSTOMER)
+    private val _selectedTab =
+        MutableStateFlow(savedStateHandle[KEY_SELECTED_TAB] ?: AccountType.CUSTOMER)
 
     val selectedTab = _selectedTab.asStateFlow()
 
@@ -50,15 +49,22 @@ class AccountViewModel @Inject constructor(
         savedStateHandle[KEY_SELECTED_TAB] = type
     }
 
-    fun delete(id: String){
+    fun delete(id: String) {
         viewModelScope.launch {
             repository.deleteAccount(id)
         }
     }
 
-    fun restore(id: String){
+    fun restore(id: String) {
         viewModelScope.launch {
             repository.restoreAccount(id)
+        }
+    }
+
+    fun permanentlyDeleteSoftDeleted() {
+        viewModelScope.launch {
+
+            repository.permanentlyDeleteAllSoftDeletedAccounts()
         }
     }
 

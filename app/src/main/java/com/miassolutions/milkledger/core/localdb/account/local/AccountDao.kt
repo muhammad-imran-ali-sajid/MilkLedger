@@ -47,4 +47,7 @@ interface AccountDao {
 
     @Query("UPDATE accounts_table SET deletedAtMillis = NULL WHERE accountId = :id")
     suspend fun restore(id: String)
+
+    @Query("DELETE FROM accounts_table WHERE deletedAtMillis IS NOT NULL")
+    suspend fun permanentlyDeleteAllAccounts()
 }
