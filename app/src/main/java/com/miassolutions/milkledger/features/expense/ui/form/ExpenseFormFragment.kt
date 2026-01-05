@@ -55,6 +55,8 @@ class ExpenseFormFragment :
         // 1️⃣ Collect UI STATE
         collectFlow(viewModel.uiState) { state ->
 
+            tvTotalExpense.text = "Total Expenses: Rs. ${state.totalExpense}"
+
             etDate.setTextIfDifferent(state.date.toCompleteDateFormat())
             dateLayout.error = state.dateError
 

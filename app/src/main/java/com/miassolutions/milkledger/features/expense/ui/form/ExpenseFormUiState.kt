@@ -25,7 +25,17 @@ data class ExpenseFormUiState(
     val refreshmentError: String? = null,
 
     val isSaving: Boolean = false
-)
+){
+    val totalExpense: Double
+        get() {
+            val fuel = fuelAmount.toDoubleOrNull() ?: 0.0
+            val vehicle = vehicleAmount.toDoubleOrNull() ?: 0.0
+            val refreshment = refreshmentAmount.toDoubleOrNull() ?: 0.0
+            val personal = personalExpenses.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
+            return fuel + vehicle + refreshment + personal
+        }
+
+}
 
 sealed interface ExpenseFormUiEvent {
     data object OnDateClick : ExpenseFormUiEvent
