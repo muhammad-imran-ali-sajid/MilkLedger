@@ -30,21 +30,27 @@ class ExpenseListViewModel @Inject constructor(
                 updateState { it.copy(date = newDate) }
                 loadExpenses(newDate)
             }
+
             ExpenseListUiEvent.OnPrevDate -> {
                 val newDate = currentState.date.minusDays(1)
                 updateState { it.copy(date = newDate) }
                 loadExpenses(newDate)
             }
+
             ExpenseListUiEvent.OnDateClick -> {
                 // Fragment will handle Date Picker dialog
             }
+
             is ExpenseListUiEvent.OnDateSelected -> {
                 updateState { it.copy(date = event.date) }
                 loadExpenses(event.date)
             }
+
             ExpenseListUiEvent.OnAddExpenseClicked -> {
-                emitEffect(ExpenseListUiEffect.NavigateToAddExpense)
+                val dateMillis = currentState.date.toMillis()
+                emitEffect(ExpenseListUiEffect.NavigateToAddExpense(dateMillis))
             }
+
             is ExpenseListUiEvent.OnExpenseClicked -> {
                 // Future: Open Edit Screen
             }

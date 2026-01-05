@@ -217,5 +217,10 @@
         android:id="@+id/expenseFormFragment"
         tools:layout="@layout/fragment_add_expense"
         android:name="com.miassolutions.milkledger.features.expense.ui.form.ExpenseFormFragment"
-        android:label="ExpenseFormFragment" />
+        android:label="ExpenseFormFragment" >
+        <argument
+            android:name="selectedDate"
+            app:argType="long"
+            android:defaultValue="-1L" />
+    </fragment>
 </navigation>

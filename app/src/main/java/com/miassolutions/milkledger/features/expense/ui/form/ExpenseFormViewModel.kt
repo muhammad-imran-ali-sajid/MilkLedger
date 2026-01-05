@@ -1,9 +1,11 @@
 package com.miassolutions.milkledger.features.expense.ui.form
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.expense.data.repository.ExpenseRepository
 import com.miassolutions.milkledger.features.expense.domain.Expense
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -11,12 +13,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExpenseFormViewModel @Inject constructor(
-    private val repository: ExpenseRepository
+    private val repository: ExpenseRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<ExpenseFormUiState, ExpenseFormUiEvent, ExpenseFormUiEffect>(ExpenseFormUiState()) {
 
 
     init {
-        updateState { it.copy(date = LocalDate.now()) }
+        val dateMillis: Long = savedStateHandle["selectedDate"] ?: -1L
+
+        val initialDate = if (dateMillis != -1L){
+            dateMillis.toLocalDate()
+        } else {
+            LocalDate.now()
+        }
+
+        updateState { it.copy(date = initialDate) }
     }
 
     override fun onEvent(event: ExpenseFormUiEvent) {

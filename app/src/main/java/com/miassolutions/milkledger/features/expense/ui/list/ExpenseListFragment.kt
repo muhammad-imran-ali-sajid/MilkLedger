@@ -79,8 +79,13 @@ class ExpenseListFragment :
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiEffect.collectLatest { effect ->
                 when (effect) {
-                    ExpenseListUiEffect.NavigateToAddExpense -> {
-                        findNavController().navigate(R.id.action_expenseFragment_to_expenseFormFragment)
+                    is ExpenseListUiEffect.NavigateToAddExpense -> {
+                        val action =
+                            ExpenseListFragmentDirections.actionExpenseFragmentToExpenseFormFragment(
+                                effect.dateMillis
+                            )
+
+                        findNavController().navigate(action)
                     }
 
                     is ExpenseListUiEffect.ShowSnackbar -> {

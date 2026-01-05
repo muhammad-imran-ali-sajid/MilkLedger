@@ -34,6 +34,6 @@ sealed interface ExpenseListUiEvent {
 }
 
 sealed interface ExpenseListUiEffect {
-    data object NavigateToAddExpense : ExpenseListUiEffect
+    data class NavigateToAddExpense(val dateMillis: Long) : ExpenseListUiEffect
     data class ShowSnackbar(val message: String) : ExpenseListUiEffect
 }
