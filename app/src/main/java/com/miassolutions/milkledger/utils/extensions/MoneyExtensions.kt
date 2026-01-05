@@ -15,6 +15,12 @@ fun Long.toPrice(showCurrency: Boolean = false): String {
     return if (showCurrency) "Rs. $formatted" else formatted
 }
 
+fun String.toLongPaisa(): Long {
+    return (this.toDouble() * 100).toLong()
+}
+
+
+
 // --- 2. MILK QUANTITY (Double -> String) ---
 
 fun Double.toMilkAmount(): String {

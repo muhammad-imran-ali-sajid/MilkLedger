@@ -85,12 +85,37 @@ class ExpenseRepository @Inject constructor(
         }
     }
 
-    suspend fun updateExpense(expenseId: String){
+    // ------------------------------------------------
+    // 4️⃣ UPDATE (Single Expense + Ledger)
+    // ------------------------------------------------
+    suspend fun updateExpense(updatedExpense: Expense) {
         db.withTransaction {
-            val entity = expenseDao.getExpenseById(expenseId)
+            // 1. Expense Table Update
+            expenseDao.updateExpense(updatedExpense.toEntity())
 
+            // 2. Ledger Update (Reference ID se dhoond kar)
+            val oldLedgerEntry = ledgerDao.getByReferenceId(updatedExpense.expenseId)
+
+            oldLedgerEntry?.let { entry ->
+                val newLedgerEntry = entry.copy(
+                    // Amount update karein
+                    credit = updatedExpense.amount,
+
+                    // Agar Personal hai to Profit 0, warna Expense amount minus hogi
+                    profitImpact = if (updatedExpense.isPersonal) 0 else -(updatedExpense.amount),
+
+                    // Agar Title ya Note change hua ho
+                    note = updatedExpense.title,
+
+
+                    // Sync status reset karein taake Cloud pe bhi update ho
+                    isSynced = false,
+                    updatedAtMillis = System.currentTimeMillis()
+                )
+
+                ledgerDao.update(newLedgerEntry)
+            }
         }
-
     }
 
     // ------------------------------------------------
@@ -102,16 +127,10 @@ class ExpenseRepository @Inject constructor(
 
             // 1. Expense ko soft delete karein
             expenseDao.softDeleteExpense(expenseId, currentTime)
+            // 2. Ledger Table se bhi Soft Delete (Direct Query)
+            ledgerDao.softDeleteByReference(expenseId, currentTime)
 
-            // 2. Ledger entry dhoond kar usay bhi delete karein
-            val ledgerEntry = ledgerDao.getByReferenceId(expenseId)
-            ledgerEntry?.let {
-                val deletedLedger = it.copy(
-                    deletedAtMillis = currentTime,
-                    isSynced = false
-                )
-                ledgerDao.update(deletedLedger)
-            }
+
         }
     }
 

@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.features.expense.ui.list
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.expense.data.repository.ExpenseRepository
-import com.miassolutions.milkledger.features.expense.ui.list.ExpenseListUiEffect.*
+import com.miassolutions.milkledger.features.expense.ui.list.ExpenseListUiEffect.NavigateToAddExpense
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -54,11 +54,14 @@ class ExpenseListViewModel @Inject constructor(
 
             is ExpenseListUiEvent.OnExpenseClicked -> {
                 // Future: Open Edit Screen
+                emitEffect(ExpenseListUiEffect.NavigateToEditExpense(event.expense))
             }
 
             is ExpenseListUiEvent.OnDeleteClicked -> {
                 deleteExpense(event.id)
             }
+
+
         }
     }
 

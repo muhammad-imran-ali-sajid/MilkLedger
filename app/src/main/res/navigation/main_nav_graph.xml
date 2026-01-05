@@ -30,11 +30,11 @@
         tools:layout="@layout/fragment_expenses" >
 
         <action
-            android:id="@+id/action_expensesFragment_to_expenseEditBottomSheet"
-            app:destination="@id/expenseEditBottomSheet" />
-        <action
             android:id="@+id/action_expenseFragment_to_expenseFormFragment"
             app:destination="@id/expenseFormFragment" />
+        <action
+            android:id="@+id/action_expenseFragment_to_editExpenseBottomSheet"
+            app:destination="@id/editExpenseBottomSheet" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -168,11 +168,6 @@
             android:name="saleDate"
             app:argType="long" />
     </fragment>
-    <dialog
-        tools:layout="@layout/bottomsheet_edit_expense"
-        android:id="@+id/expenseEditBottomSheet"
-        android:name="com.miassolutions.milkledger.features.expense.ui.form.ExpenseEditBottomSheet"
-        android:label="ExpenseEditBottomSheet" />
     <fragment
         android:id="@+id/saleListFragment"
         android:name="com.miassolutions.milkledger.features.sale.ui.list.SaleListFragment"
@@ -223,4 +218,12 @@
             app:argType="long"
             android:defaultValue="-1L" />
     </fragment>
+    <dialog
+        android:id="@+id/editExpenseBottomSheet"
+        android:name="com.miassolutions.milkledger.features.expense.ui.form.EditExpenseBottomSheet"
+        android:label="EditExpenseBottomSheet" >
+        <argument
+            android:name="expense"
+            app:argType="com.miassolutions.milkledger.features.expense.domain.Expense" />
+    </dialog>
 </navigation>

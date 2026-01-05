@@ -1,8 +1,10 @@
 package com.miassolutions.milkledger.features.expense.domain
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
-
+@Parcelize
 data class Expense(
     val expenseId: String = "",
     val date: LocalDate,
@@ -11,4 +13,4 @@ data class Expense(
     val category: String?,
     val isPersonal: Boolean,
     val note: String? = null,
-)
+) : Parcelable

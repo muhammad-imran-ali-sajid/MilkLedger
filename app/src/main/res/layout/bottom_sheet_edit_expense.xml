@@ -1,76 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/bottomSheetRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_milk_overview"
-    android:backgroundTint="#eee"
     android:orientation="vertical"
     android:padding="24dp">
 
     <TextView
-        android:id="@+id/tvExpenseTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:text="Expense Title"
-        android:visibility="gone" />
+        android:layout_marginBottom="16dp"
+        android:text="Edit Expense"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameLayout"
+        android:id="@+id/tilTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Expense Title">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etName"
-            android:inputType="text"
-            android:imeOptions="actionNext"
+            android:id="@+id/etTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/etExpenseAmountLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="Amount">
+        android:hint="Amount (Rs)">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etExpenseAmount"
+            android:id="@+id/etAmount"
             android:layout_width="match_parent"
-            android:imeOptions="actionNext"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- 🆕 Notes Field -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/notesLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="Notes">
+        android:hint="Note (Optional)">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etNotes"
-            android:inputType="text"
-            android:imeOptions="actionDone"
+            android:id="@+id/etNote"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences" />
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSave"
-        style="@style/Widget.Material3.Button.ElevatedButton"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Save" />
+        android:id="@+id/btnUpdate"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:text="Update Expense" />
 
 </LinearLayout>

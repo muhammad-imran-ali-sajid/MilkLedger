@@ -31,4 +31,11 @@ interface LedgerDao {
         AND deletedAtMillis IS NULL
     """)
     fun getAccountBalance(accountId: String): Flow<Long>
+
+    @Query("""
+        UPDATE financial_ledger_table 
+        SET deletedAtMillis = :time, isSynced = 0 
+        WHERE referenceId = :refId
+    """)
+    suspend fun softDeleteByReference(refId: String, time: Long)
 }

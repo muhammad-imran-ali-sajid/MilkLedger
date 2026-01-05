@@ -61,6 +61,7 @@ class ExpenseListFragment :
         binding.dateHeader.tvSelectedDate.setOnClickListener {
             // Yahan DatePicker dialog open kar k OnDateSelected call karein
             // Filhal simple rakhte hain
+
         }
     }
 
@@ -99,6 +100,15 @@ class ExpenseListFragment :
 
                     is ExpenseListUiEffect.ShowSnackbar -> {
                         // Show snackbar
+                        showSnackbar(effect.message)
+                    }
+
+                    is ExpenseListUiEffect.NavigateToEditExpense -> {
+                        val action =
+                            ExpenseListFragmentDirections.actionExpenseFragmentToEditExpenseBottomSheet(
+                                effect.expense
+                            )
+                        findNavController().navigate(action)
                     }
                 }
             }
