@@ -28,12 +28,13 @@
         android:name="com.miassolutions.milkledger.features.expense.ui.list.ExpenseFragment"
         android:label="Expenses"
         tools:layout="@layout/fragment_expenses" >
-        <action
-            android:id="@+id/action_expensesFragment_to_expenseAddEditFragment"
-            app:destination="@id/expenseAddEditFragment" />
+
         <action
             android:id="@+id/action_expensesFragment_to_expenseEditBottomSheet"
             app:destination="@id/expenseEditBottomSheet" />
+        <action
+            android:id="@+id/action_expenseFragment_to_expenseFormFragment"
+            app:destination="@id/expenseFormFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -147,12 +148,8 @@
         android:name="com.miassolutions.milkledger.features.profitwithdrawal.ProfitFragment"
         android:label="Profit History"
         tools:layout="@layout/fragment_profit" />
-    <fragment
-        android:id="@+id/expenseAddEditFragment"
 
-        tools:layout="@layout/fragment_add_expense"
-        android:name="com.miassolutions.milkledger.features.expense.ui.form.ExpenseAddBottomSheetFragment"
-        android:label="Add Expenses" />
+
     <fragment
         android:id="@+id/purchaseAddFragment"
         android:name="com.miassolutions.milkledger.features.purchase.ui.form.PurchaseAddFragment"
@@ -216,4 +213,9 @@
             android:id="@+id/action_ownerSetupFragment_to_dashboardFragment"
             app:destination="@id/dashboardFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/expenseFormFragment"
+        tools:layout="@layout/fragment_add_expense"
+        android:name="com.miassolutions.milkledger.features.expense.ui.form.ExpenseFormFragment"
+        android:label="ExpenseFormFragment" />
 </navigation>

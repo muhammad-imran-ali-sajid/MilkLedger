@@ -114,7 +114,7 @@ class ExpenseFragment : BaseFragment<FragmentExpensesBinding>(FragmentExpensesBi
 
         fabAddExpense.setOnClickListener {
             findNavController().navigate(
-                R.id.action_expensesFragment_to_expenseAddEditFragment
+                R.id.action_expenseFragment_to_expenseFormFragment
             )
         }
 

@@ -3,36 +3,37 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/personalTitleLayout"
         android:layout_width="0dp"
-        android:layout_weight="1"
-
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:hint="Title">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPersonalTitle"
-            android:inputType="textCapWords"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_marginStart="4dp"
+        android:id="@+id/personalAmountLayout"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_weight="1"
         android:hint="Amount">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPersonalAmount"
             android:layout_width="match_parent"
-            android:inputType="numberDecimal"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
