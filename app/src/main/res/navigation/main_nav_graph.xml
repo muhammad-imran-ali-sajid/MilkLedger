@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/expenseFragment"
-        android:name="com.miassolutions.milkledger.features.expense.ui.list.ExpenseFragment"
+        android:name="com.miassolutions.milkledger.features.expense.ui.list.ExpenseListFragment"
         android:label="Expenses"
         tools:layout="@layout/fragment_expenses" >
 
