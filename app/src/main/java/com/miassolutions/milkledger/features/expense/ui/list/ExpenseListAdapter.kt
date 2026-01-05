@@ -36,7 +36,7 @@ class ExpenseAdapter(
 
                 // Paisa -> Rupees Conversion logic
                 val rupees = item.amount / 100.0
-                tvExpenseAmount.text = "Rs. ${String.format("%.2f", rupees)}"
+                tvExpenseAmount.text = "Rs. ${String.format("%.0f", rupees)}"
 
                 // Note Handling
                 if (item.note.isNullOrBlank()) {

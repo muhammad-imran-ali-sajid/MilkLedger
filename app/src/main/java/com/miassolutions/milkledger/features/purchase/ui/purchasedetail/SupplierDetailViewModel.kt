@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.features.purchase.data.PurchaseRepository
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -121,12 +121,12 @@ class SupplierDetailViewModel @Inject constructor(private val repository: Purcha
 
             val supplierSummary = SupplierSummary(
                 summaryPeriod = "", // UI text handled separately below
-                totalMilk = "${totalMilk.toRoundedStr()} L",
-                avgFat = "${avgFat.toRoundedStr()}%",
-                avgLr = avgLr.toRoundedStr(),
-                totalTS = totalTS.toRoundedStr(),
-                totalPrice = "Rs. ${totalPrice.toPriceStr()}",
-                paidAmount = "Rs. ${totalPaid.toPriceStr()}",
+                totalMilk = "${totalMilk.toMilkAmount()} L",
+                avgFat = "${avgFat.toMilkAmount()}%",
+                avgLr = avgLr.toMilkAmount(),
+                totalTS = totalTS.toMilkAmount(),
+                totalPrice = "Rs. ${totalPrice.toPrice()}",
+                paidAmount = "Rs. ${totalPaid.toPrice()}",
                 balance = balance
             )
 

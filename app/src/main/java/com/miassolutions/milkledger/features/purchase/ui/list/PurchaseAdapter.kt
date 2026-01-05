@@ -10,8 +10,8 @@ import com.miassolutions.milkledger.utils.helper.numberFormat
 import com.miassolutions.milkledger.utils.helper.textColor
 import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.show
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 import com.miassolutions.milkledger.features.purchase.ui.model.PurchaseUi
 import com.miassolutions.milkledger.features.purchase.ui.model.PurchaseWithSupplier
@@ -47,7 +47,7 @@ class PurchaseAdapter(
 
 
 
-            tvVolume.text = item.data.purchase.milkAmount.toRoundedStr()
+            tvVolume.text = item.data.purchase.milkAmount.toMilkAmount()
 
             tvFat.text = handleZeroData(item.data.purchase.fat)
             tvLr.text = handleZeroData(item.data.purchase.lr)
@@ -62,8 +62,8 @@ class PurchaseAdapter(
                 divider.show()
                 tvNotes.text = "Note: ${item.data.purchase.notes}"
             }
-            tvPrice.text = item.data.purchase.milkPrice.toPriceStr()
-            tvPaid.text = item.data.purchase.payment.toPriceStr()
+            tvPrice.text = item.data.purchase.milkPrice.toPrice()
+            tvPaid.text = item.data.purchase.payment.toPrice()
 
             val balance = item.accumulatedBalance
 

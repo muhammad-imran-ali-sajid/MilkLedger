@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.show
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.databinding.*
 import java.time.LocalDate
 
@@ -144,7 +144,7 @@ class TotalSummaryViewHolder(private val binding: ItemTotalSummaryBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(item: StatListItem.TotalSummary) {
         binding.tvLabel.text = item.label
-        binding.tvVolume.text = item.amount.toPriceStr()
+        binding.tvVolume.text = item.amount.toPrice()
     }
 }
 
@@ -152,7 +152,7 @@ class MilkTotalSummaryViewHolder(private val binding: ItemTotalMilkSummaryBindin
     RecyclerView.ViewHolder(binding.root) {
     fun bind(item: StatListItem.MilkTotalSummary) {
         binding.tvLabel.text = item.label
-        binding.tvPaidAmount.text = item.amount.toPriceStr()
+        binding.tvPaidAmount.text = item.amount.toPrice()
         binding.tvVolume.text = item.volume.toString()
     }
 }
@@ -161,7 +161,7 @@ class CustomerViewHolder(private val binding: ItemCustomerPaidBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: CustomerPaidSummary) {
         binding.tvCustomerName.text = summary.customerName
-        binding.tvPaidAmount.text = summary.paidAmount.toPriceStr()
+        binding.tvPaidAmount.text = summary.paidAmount.toPrice()
         binding.tvVolume.text = summary.volume.toString()
     }
 }
@@ -170,7 +170,7 @@ class SupplierViewHolder(private val binding: ItemSupplierPaidBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: SupplierPaidSummary) {
         binding.tvSupplierName.text = summary.supplierName
-        binding.tvPaidAmount.text = summary.paidAmount.toPriceStr()
+        binding.tvPaidAmount.text = summary.paidAmount.toPrice()
         binding.tvVolume.text = summary.volume.toString()
     }
 }
@@ -179,7 +179,7 @@ class ExpenseViewHolder(private val binding: ItemExpenseBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: BusinessExpenseSummary) {
         binding.tvExpense.text = summary.expenseTitle
-        binding.tvExpenseAmount.text = summary.expenseAmount.toPriceStr()
+        binding.tvExpenseAmount.text = summary.expenseAmount.toPrice()
     }
 }
 
@@ -188,7 +188,7 @@ class PersonalExpenseViewHolder(private val binding: ItemOtherExpenseBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: PersonalExpenseSummary) {
         binding.tvExpense.text = summary.expenseTitle
-        binding.tvExpenseAmount.text = summary.expenseAmount.toPriceStr()
+        binding.tvExpenseAmount.text = summary.expenseAmount.toPrice()
     }
 }
 
@@ -196,8 +196,8 @@ class ProfitViewHolder(private val binding: ItemProfitOverviewBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bind(summary: ProfitSummary) {
         val date = LocalDate.parse(summary.date)
-        binding.tvDate.text = date.toDisplayFormat()
-        binding.tvProfitReceived.text = summary.profitAmount.toPriceStr()
+        binding.tvDate.text = date.toCompleteDateFormat()
+        binding.tvProfitReceived.text = summary.profitAmount.toPrice()
     }
 }
 

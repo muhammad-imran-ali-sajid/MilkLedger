@@ -14,9 +14,9 @@ import com.miassolutions.milkledger.features.sale.ui.list.SalesUiEvent
 import com.miassolutions.milkledger.features.sale.ui.list.SaleListViewModel
 import com.miassolutions.milkledger.features.sale.domain.model.SaleUi
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -76,15 +76,15 @@ class SaleEditBottomSheet : BottomSheetDialogFragment() {
         etDeduction.setText(sale.deduction.toString())
         etPayment.setText(sale.paid.toString())
 
-        tvNetMilk.text = sale.netMilk.toRoundedStr()
-        tvPrice.text = sale.price.toPriceStr()
-        tvRate.text = sale.rateUsed.toRoundedStr()
-        tvBalance.text = sale.balance.toPriceStr()
+        tvNetMilk.text = sale.netMilk.toMilkAmount()
+        tvPrice.text = sale.price.toPrice()
+        tvRate.text = sale.rateUsed.toMilkAmount()
+        tvBalance.text = sale.balance.toPrice()
 
         etNotes.setText(sale.notes.orEmpty())
 
         btnReceivedDate.text =
-            sale.paidAt?.toDisplayFormat() ?: "Date"
+            sale.paidAt?.toCompleteDateFormat() ?: "Date"
     }
 
     private fun Editable.toDoubleOrZero(): Double {
@@ -98,14 +98,14 @@ class SaleEditBottomSheet : BottomSheetDialogFragment() {
             val deduction = etDeduction.text.toDoubleOrZero()
 
             val net = volume - deduction
-            tvNetMilk.text = net.toRoundedStr()
+            tvNetMilk.text = net.toMilkAmount()
 
             val price = MilkCalculationUtils.calculateCustomerPrice(
                 volume = volume,
                 deduction = deduction,
                 rate = sale.rateUsed
             )
-            tvPrice.text = price.toPriceStr()
+            tvPrice.text = price.toPrice()
         }
 
         etVolume.doAfterTextChanged { recalc() }
@@ -121,7 +121,7 @@ class SaleEditBottomSheet : BottomSheetDialogFragment() {
                 initialDate = selectedPaidAt ?: LocalDate.now()
             ) { date ->
                 selectedPaidAt = date
-                btnReceivedDate.text = date.toDisplayFormat()
+                btnReceivedDate.text = date.toCompleteDateFormat()
             }
         }
 

@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.features.profitwithdrawal
 
 import android.os.Parcelable
 
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.pdf.profitreport.PdfProfitItemRecord
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
@@ -23,7 +23,7 @@ data class ProfitListModel(
 fun List<ProfitListModel>.toProfitRecordList(): List<PdfProfitItemRecord> {
     return this.map { item ->
         PdfProfitItemRecord(
-            date = item.date.toDisplayFormat(),
+            date = item.date.toCompleteDateFormat(),
             grossProfit = item.grossProfit,
             netProfit = item.netProfit ?: 0.0,
             profitReceived = item.profitReceived,

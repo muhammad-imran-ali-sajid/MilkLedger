@@ -2,7 +2,6 @@ package com.miassolutions.milkledger.features.expense.ui.form
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -13,7 +12,7 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -56,7 +55,7 @@ class ExpenseFormFragment :
         // 1️⃣ Collect UI STATE
         collectFlow(viewModel.uiState) { state ->
 
-            etDate.setTextIfDifferent(state.date.toDisplayFormat())
+            etDate.setTextIfDifferent(state.date.toCompleteDateFormat())
             dateLayout.error = state.dateError
 
             etFuelAmount.setTextIfDifferent(state.fuelAmount)

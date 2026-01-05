@@ -5,8 +5,8 @@ import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
 import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
 
@@ -62,11 +62,11 @@ object SupplierReportGenerator {
             val rowBinding = ItemRecordRowBinding.inflate(inflater, binding.recordContainer, false)
             rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
-            rowBinding.tvTS.text = item.ts.toRoundedStr()
-            rowBinding.tvRate.text = item.rate.toPriceStr()
-            rowBinding.tvAmount.text = item.amount.toPriceStr()
-            rowBinding.tvPaid.text = item.paid.toPriceStr()
-            rowBinding.tvBalance.text = item.balance.toPriceStr()
+            rowBinding.tvTS.text = item.ts.toMilkAmount()
+            rowBinding.tvRate.text = item.rate.toPrice()
+            rowBinding.tvAmount.text = item.amount.toPrice()
+            rowBinding.tvPaid.text = item.paid.toPrice()
+            rowBinding.tvBalance.text = item.balance.toPrice()
             binding.recordContainer.addView(rowBinding.root)
         }
 
@@ -136,11 +136,11 @@ object SupplierReportGenerator {
                 ItemSaleRecordRowBinding.inflate(inflater, binding.recordContainer, false)
             rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
-            rowBinding.tvDeduction.text = item.deduction.toRoundedStr()
+            rowBinding.tvDeduction.text = item.deduction.toMilkAmount()
             rowBinding.tvRate.text = item.rate.toString()
-            rowBinding.tvAmount.text = item.amount.toRoundedStr()
-            rowBinding.tvPaid.text = item.paid.toRoundedStr()
-            rowBinding.tvBalance.text = item.balance.toRoundedStr()
+            rowBinding.tvAmount.text = item.amount.toMilkAmount()
+            rowBinding.tvPaid.text = item.paid.toMilkAmount()
+            rowBinding.tvBalance.text = item.balance.toMilkAmount()
             binding.recordContainer.addView(rowBinding.root)
         }
 

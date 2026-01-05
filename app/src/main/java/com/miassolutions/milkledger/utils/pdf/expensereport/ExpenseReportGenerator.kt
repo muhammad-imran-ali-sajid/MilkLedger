@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.databinding.ItemExpenseRecordRowBinding
 import com.miassolutions.milkledger.databinding.LayoutExpenseReceiptBinding
 import com.miassolutions.milkledger.utils.pdf.PdfUtils
@@ -42,9 +42,9 @@ object ExpenseReportGenerator {
 
 
             tvDateRange.text = "Date Range: ${data.dateRange}"
-            tvTotalExpense.text = data.totalExpenses.toPriceStr()
-            tvTotalPersonalExpense.text = data.personalExpenses.toPriceStr()
-            tvTotalBusinessExpense.text = data.businessExpenses.toPriceStr()
+            tvTotalExpense.text = data.totalExpenses.toPrice()
+            tvTotalPersonalExpense.text = data.personalExpenses.toPrice()
+            tvTotalBusinessExpense.text = data.businessExpenses.toPrice()
 //            tvFooter.text = data.footerNote ?: ""
         }
 
@@ -56,7 +56,7 @@ object ExpenseReportGenerator {
             rowBinding.tvDate.text = item.date
             rowBinding.tvExpenseTitle.text = item.expenseTitle
             rowBinding.tvExpenseType.text = item.expenseType
-            rowBinding.tvExpenseAmount.text = item.expenseAmount.toPriceStr()
+            rowBinding.tvExpenseAmount.text = item.expenseAmount.toPrice()
             binding.recordContainer.addView(rowBinding.root)
         }
 

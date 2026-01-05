@@ -18,10 +18,9 @@ import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseAdapter
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseUiEvent
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseViewModel
 import com.miassolutions.milkledger.features.purchase.ui.model.PurchaseWithSupplier
-import com.miassolutions.milkledger.utils.extensions.isToday
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.pdf.purchasereport.PdfPurchaseSummary
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -168,7 +167,7 @@ class PurchaseFragment :
                 binding.rvPurchases.visibility = if (isEmpty) View.GONE else View.VISIBLE
 
 
-                binding.dateHeader.tvSelectedDate.text = state.currentDate.toDisplayFormat()
+                binding.dateHeader.tvSelectedDate.text = state.currentDate.toCompleteDateFormat()
 
 
 
@@ -182,20 +181,9 @@ class PurchaseFragment :
                     milkFatLr = state.volumeWithFatLr
                 )
 
-                val isToday = state.currentDate.isToday()
-                val isLockedToday = isEditModeLockedForToday()
 
-                if (isToday) {
-                    biometricRequiredForToday = isLockedToday
-                    if (isLockedToday) {
-                        disableEditMode()
-                    } else {
-                        enableEditMode()
-                    }
-                } else {
-                    biometricRequiredForToday = true
-                    disableEditMode()
-                }
+
+
             }
         }
     }
@@ -249,14 +237,14 @@ class PurchaseFragment :
         balanceDue: Double
     ): PdfPurchaseSummary {
         return PdfPurchaseSummary(
-            totalQty = totalQty.toRoundedStr(),
-            avgFat = avgFat.toRoundedStr(),
-            avgLr = avgLr.toRoundedStr(),
-            totalTs = totalTs.toRoundedStr(),
-            avgRate =avgRate.toRoundedStr(),
-            totalAmount = totalAmount.toRoundedStr(),
-            totalPaid = totalPaid.toRoundedStr(),
-            balanceDue = balanceDue.toRoundedStr()
+            totalQty = totalQty.toMilkAmount(),
+            avgFat = avgFat.toMilkAmount(),
+            avgLr = avgLr.toMilkAmount(),
+            totalTs = totalTs.toMilkAmount(),
+            avgRate =avgRate.toMilkAmount(),
+            totalAmount = totalAmount.toMilkAmount(),
+            totalPaid = totalPaid.toMilkAmount(),
+            balanceDue = balanceDue.toMilkAmount()
         )
     }
 

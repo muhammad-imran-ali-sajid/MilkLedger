@@ -9,8 +9,8 @@ import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.show
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.helper.numberFormat
 import com.miassolutions.milkledger.utils.helper.textColor
 
@@ -41,7 +41,7 @@ class CustomerDetailListAdapter :
 
         fun bind(item: CustomerDetailModel) = with(binding) {
 
-            tvDate.text = item.date.toDisplayFormat()
+            tvDate.text = item.date.toCompleteDateFormat()
             tvMilk.text = item.milkAmount.toString()
             tvDeduction.text = item.deduction.toString()
             tvNetMilk.text = item.netMilk.toString()
@@ -49,11 +49,11 @@ class CustomerDetailListAdapter :
             tvPayment.text = item.payment.toString()
 
             if (item.rateChanged) {
-                rateAlert.text = "RCA (${item.rateUsed.toPriceStr()})"
+                rateAlert.text = "RCA (${item.rateUsed.toPrice()})"
                 rateAlert.show()
                 root.setCardBackgroundColor("#ccff00".toColorInt())
             } else {
-                rateAlert.text = "Rate: (${item.rateUsed.toPriceStr()})"
+                rateAlert.text = "Rate: (${item.rateUsed.toPrice()})"
                 rateAlert.setTextColor("#000000".toColorInt())
                 root.setCardBackgroundColor("#ffffff".toColorInt())
             }

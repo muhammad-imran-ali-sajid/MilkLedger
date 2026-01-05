@@ -15,7 +15,13 @@ data class ExpenseListUiState(
     val avgExpense: Double = 0.0,
 
     val error: String? = null
-)
+) {
+    val displayTotal
+        get() = totalExpense / 100.0
+
+    val displayAvgExpense
+        get() = avgExpense / 100.0
+}
 
 sealed interface ExpenseListUiEvent {
     data object OnNextDate : ExpenseListUiEvent

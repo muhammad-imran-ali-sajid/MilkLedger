@@ -7,9 +7,9 @@ import java.util.Locale
 private fun appDateFormatter(): DateTimeFormatter =
     DateTimeFormatter.ofPattern("dd MMM yy", Locale.getDefault())
 private fun appOnlyDateFormatter(): DateTimeFormatter =
-    DateTimeFormatter.ofPattern("dd/MM", Locale.getDefault())
+    DateTimeFormatter.ofPattern("dd MMM", Locale.getDefault())
 
-fun LocalDate.toDisplayFormat(): String =
+fun LocalDate.toCompleteDateFormat(): String =
     this.format(appDateFormatter())
 
 fun LocalDate.toDisplayDate(): String =
@@ -17,6 +17,6 @@ fun LocalDate.toDisplayDate(): String =
 
 
 fun formatPeriodLabel(start: LocalDate, end: LocalDate): String {
-    return if (start == end) start.toDisplayFormat()
-    else "${start.toDisplayFormat()} to ${end.toDisplayFormat()}"
+    return if (start == end) start.toCompleteDateFormat()
+    else "${start.toCompleteDateFormat()} to ${end.toCompleteDateFormat()}"
 }

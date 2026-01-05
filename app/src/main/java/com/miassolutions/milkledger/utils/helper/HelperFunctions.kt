@@ -2,14 +2,14 @@ package com.miassolutions.milkledger.utils.helper
 
 import android.graphics.Color
 import androidx.core.graphics.toColorInt
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 
 fun handleZeroData(value: Double): String {
     return if (value == 0.0) {
         "--"
     } else {
-        value.toRoundedStr("%.2f")
+        value.toMilkAmount("%.2f")
     }
 }
 
@@ -37,12 +37,12 @@ fun numberFormat(amount: Double): String {
 
     return when {
         // If the whole number is 0 (e.g., balance is -0.99 to +0.99)
-        wholeAmount == 0L -> 0.0.toPriceStr() // Display as '0' without sign or decimal if toPriceStr uses %.0f
+        wholeAmount == 0L -> 0.0.toPrice() // Display as '0' without sign or decimal if toPriceStr uses %.0f
 
         // If the whole number is positive (e.g., 1, 2, etc.)
-        wholeAmount > 0 -> "+${amount.toPriceStr()}" // Show + sign
+        wholeAmount > 0 -> "+${amount.toPrice()}" // Show + sign
 
         // If the whole number is negative (e.g., -1, -2, etc.)
-        else -> amount.toPriceStr() // Show - sign (toPriceStr handles this)
+        else -> amount.toPrice() // Show - sign (toPriceStr handles this)
     }
 }

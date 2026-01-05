@@ -1,20 +1,41 @@
 package com.miassolutions.milkledger.utils.extensions
 
+import android.content.Context
 import android.view.View
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
+import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
 import java.time.LocalDate
 
 
-fun Double.toRoundedStr(format: String = "%.2f"): String {
+
+// --- 1. VISIBILITY ---
+
+
+fun View.invisible() {
+    this.visibility = View.INVISIBLE
+}
+
+// Smart Visibility: true = Show, false = Hide
+fun View.visible(isVisible: Boolean) {
+    this.visibility = if (isVisible) View.VISIBLE else View.GONE
+}
+
+// --- 2. KEYBOARD HANDLING ---
+
+fun View.hideKeyboard() {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun Fragment.hideKeyboard() {
+    view?.hideKeyboard()
+}
+
+fun Double.toMilkAmount(format: String = "%.2f"): String {
     return String.format(format, this)
 }
 
-fun Double.toPriceStr(format: String = "%.0f"): String {
+fun Double.toPrice(format: String = "%.0f"): String {
     return String.format(format, this)
 }
 
@@ -25,19 +46,5 @@ fun View.hide() {
 fun View.show() {
     this.visibility = View.VISIBLE
 }
-
-
-fun LocalDate.isToday(): Boolean = this == LocalDate.now()
-
-
-
-
-
-
-
-
-
-
-
 
 

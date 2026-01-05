@@ -9,8 +9,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.databinding.BottomsheetEditProfitBinding
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -62,14 +62,14 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupUI() = with(binding) {
         if (existingProfit != null) {
-            tvDate.text = existingProfit!!.date.toDisplayFormat()
-            tvGrossProfit.text = existingProfit!!.grossProfit.toPriceStr()
-            tvNetProfit.text = existingProfit!!.netProfit?.toPriceStr()
+            tvDate.text = existingProfit!!.date.toCompleteDateFormat()
+            tvGrossProfit.text = existingProfit!!.grossProfit.toPrice()
+            tvNetProfit.text = existingProfit!!.netProfit?.toPrice()
             etProfitReceived.setText(existingProfit!!.profitReceived.toString())
             etNotes.setText(existingProfit!!.notes)
             btnSave.text = "Update"
         } else {
-            tvDate.text = LocalDate.now().toDisplayFormat()
+            tvDate.text = LocalDate.now().toCompleteDateFormat()
             btnSave.text = "Save"
         }
 
@@ -103,7 +103,7 @@ class AddEditProfitBottomSheet : BottomSheetDialogFragment() {
                 isAuthorized = isAdmin,
                 initialDate = LocalDate.now(),
                 onPicked = { selectedDate: LocalDate ->
-                    tvDate.text = selectedDate.toDisplayFormat()
+                    tvDate.text = selectedDate.toCompleteDateFormat()
                     receivedSelectedDate = selectedDate
 //                    viewModel.setDate(selectedDate)
                 }

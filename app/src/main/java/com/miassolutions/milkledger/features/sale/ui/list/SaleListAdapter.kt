@@ -6,9 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import com.miassolutions.milkledger.features.sale.domain.model.SaleUi
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
@@ -56,15 +55,15 @@ class SaleListAdapter(
             // ---------------------------
             // Milk Info
             // ---------------------------
-            tvMilk.text = item.volume.toRoundedStr()
-            tvDeduction.text = item.deduction.toRoundedStr()
-            tvNetMilk.text = item.netMilk.toRoundedStr()
+            tvMilk.text = item.volume.toMilkAmount()
+            tvDeduction.text = item.deduction.toMilkAmount()
+            tvNetMilk.text = item.netMilk.toMilkAmount()
 
             // ---------------------------
             // Price / Payment
             // ---------------------------
-            tvPrice.text = item.price.toPriceStr()
-            tvPayment.text = item.paid.toPriceStr()
+            tvPrice.text = item.price.toPrice()
+            tvPayment.text = item.paid.toPrice()
 
             // Receive date (optional)
             if (item.paid > 0 && item.paidAt != null) {
@@ -77,7 +76,7 @@ class SaleListAdapter(
             // ---------------------------
             // Balance
             // ---------------------------
-            tvBalance.text = item.accumulatedBalance.toPriceStr()
+            tvBalance.text = item.accumulatedBalance.toPrice()
 
             btnBalance.setOnClickListener {
                 onBalanceClick(item.customerId, item.customerName)

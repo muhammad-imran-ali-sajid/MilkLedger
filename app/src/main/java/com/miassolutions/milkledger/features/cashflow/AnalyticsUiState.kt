@@ -1,8 +1,8 @@
 package com.miassolutions.milkledger.features.cashflow
 
 import com.miassolutions.milkledger.features.dashboard.DashboardSummaryPdf
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import java.time.LocalDate
 
 data class AnalyticsUiState(
@@ -30,20 +30,20 @@ data class AnalyticsUiState(
 fun AnalyticsUiState.toPdfSummary(): DashboardSummaryPdf = with(this) {
     return DashboardSummaryPdf(
         dateRange = period,
-        totalPurchasePrice = purchaseTotal.toPriceStr(),
-        totalSalePrice = salesTotal.toPriceStr(),
-        businessExpenses = fixedExpense.toPriceStr(),
-        profit = profit.toPriceStr(),
-        personalExpenses = personalExpense.toPriceStr(),
-        remainingProfit = profitAfter.toPriceStr(),
-        milkPurchased = milkPurchase.toRoundedStr(),
-        milkSold = milkSold.toRoundedStr(),
-        quantityDifference = (milkSold - milkPurchase).toRoundedStr(),
-        averageFat = avgFat.toRoundedStr(),
-        averageLr = avgLr.toRoundedStr(),
-        averageSalePrice = avgSP?.toRoundedStr() ?: "",
-        averageCostPrice = avgCP?.toRoundedStr() ?: "",
-        averagePriceDifference = difference?.toRoundedStr() ?: ""
+        totalPurchasePrice = purchaseTotal.toPrice(),
+        totalSalePrice = salesTotal.toPrice(),
+        businessExpenses = fixedExpense.toPrice(),
+        profit = profit.toPrice(),
+        personalExpenses = personalExpense.toPrice(),
+        remainingProfit = profitAfter.toPrice(),
+        milkPurchased = milkPurchase.toMilkAmount(),
+        milkSold = milkSold.toMilkAmount(),
+        quantityDifference = (milkSold - milkPurchase).toMilkAmount(),
+        averageFat = avgFat.toMilkAmount(),
+        averageLr = avgLr.toMilkAmount(),
+        averageSalePrice = avgSP?.toMilkAmount() ?: "",
+        averageCostPrice = avgCP?.toMilkAmount() ?: "",
+        averagePriceDifference = difference?.toMilkAmount() ?: ""
     )
 }
 

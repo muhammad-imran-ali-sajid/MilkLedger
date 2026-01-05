@@ -3,8 +3,8 @@ package com.miassolutions.milkledger.features.profitwithdrawal
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.databinding.ItemProfitBinding
 
 class ProfitAdapter(
@@ -17,11 +17,11 @@ class ProfitAdapter(
     inner class ProfitViewHolder(private val binding: ItemProfitBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ProfitListModel) = with(binding) {
-            tvDate.text = item.date.toDisplayFormat()
-            tvGrossProfit.text = item.grossProfit.toPriceStr()
-            tvNetProfit.text = item.netProfit?.toPriceStr()
-            tvReceivedProfit.text = item.profitReceived.toPriceStr()
-            tvBalance.text = (item.netProfit?.minus(item.profitReceived))?.toPriceStr()
+            tvDate.text = item.date.toCompleteDateFormat()
+            tvGrossProfit.text = item.grossProfit.toPrice()
+            tvNetProfit.text = item.netProfit?.toPrice()
+            tvReceivedProfit.text = item.profitReceived.toPrice()
+            tvBalance.text = (item.netProfit?.minus(item.profitReceived))?.toPrice()
 
             root.setOnClickListener { onItemClick(item) }
             root.setOnLongClickListener { onItemLongClick(item); true }

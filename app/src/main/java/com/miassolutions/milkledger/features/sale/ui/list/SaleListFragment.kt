@@ -4,21 +4,19 @@ import android.view.Menu
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSalesBinding
 import com.miassolutions.milkledger.databinding.LayoutSalesSummaryBinding
 import com.miassolutions.milkledger.features.sale.ui.balancehistory.CustomerBalanceHistoryBottomSheet
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleEditBottomSheet
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toMillis
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.pdf.salereport.PdfSalesSummary
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.apply
@@ -83,12 +81,12 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
 
 
             summaryBinding.apply {
-                tvTotalMilk.text = "${milkAmount.toRoundedStr()} L"
-                tvDeduction.text = "${deduction.toRoundedStr()} L"
-                tvTotalNetMilk.text = "${totalNetMilk.toRoundedStr()} L"
-                tvTotalAmount.text = "Rs. ${totalAmount.toPriceStr()}"
-                tvReceivedAmount.text = "Rs. ${receivedAmount.toPriceStr()}"
-                tvAvgPrice.text = "Rs. ${avgRate.toRoundedStr()}"
+                tvTotalMilk.text = "${milkAmount.toMilkAmount()} L"
+                tvDeduction.text = "${deduction.toMilkAmount()} L"
+                tvTotalNetMilk.text = "${totalNetMilk.toMilkAmount()} L"
+                tvTotalAmount.text = "Rs. ${totalAmount.toPrice()}"
+                tvReceivedAmount.text = "Rs. ${receivedAmount.toPrice()}"
+                tvAvgPrice.text = "Rs. ${avgRate.toMilkAmount()}"
             }
 
         }
@@ -171,11 +169,11 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
         balanceDue: Double
     ): PdfSalesSummary {
         return PdfSalesSummary(
-            totalQty = totalQty.toRoundedStr(),
-            totalDeduction = totalDeduction.toRoundedStr(),
-            totalAmount = totalAmount.toPriceStr(),
-            totalPaid = totalPaid.toPriceStr(),
-            balanceDue = balanceDue.toPriceStr()
+            totalQty = totalQty.toMilkAmount(),
+            totalDeduction = totalDeduction.toMilkAmount(),
+            totalAmount = totalAmount.toPrice(),
+            totalPaid = totalPaid.toPrice(),
+            balanceDue = balanceDue.toPrice()
         )
     }
 
@@ -236,7 +234,7 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
                 if (isEmpty) View.GONE else View.VISIBLE
 
             binding.dateHeader.tvSelectedDate.text =
-                state.currentDate.toDisplayFormat()
+                state.currentDate.toCompleteDateFormat()
 
 
 

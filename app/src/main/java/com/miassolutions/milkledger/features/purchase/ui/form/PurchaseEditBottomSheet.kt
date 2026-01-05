@@ -15,8 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.show
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.databinding.BottomsheetEditPurchaseBinding
 import com.miassolutions.milkledger.features.purchase.data.PurchaseEntity
 import com.miassolutions.milkledger.features.purchase.ui.model.PurchaseWithSupplier
@@ -47,13 +47,13 @@ class PurchaseEditBottomSheet(
             tvSupplierName.text = supplier.supplierName
 
             // Autofill with empty if 0
-            tvAdvanceAmount.text = supplier.advanceAmount.toPriceStr()
+            tvAdvanceAmount.text = supplier.advanceAmount.toPrice()
             etVolume.setText(purchase.milkAmount.takeIf { it != 0.0 }?.toString() ?: "")
-            etFat.setText(purchase.fat.takeIf { it != 0.0 }?.toRoundedStr() ?: "")
-            etLr.setText(purchase.lr.takeIf { it != 0.0 }?.toRoundedStr() ?: "")
-            etPaid.setText(purchase.payment.toPriceStr())
+            etFat.setText(purchase.fat.takeIf { it != 0.0 }?.toMilkAmount() ?: "")
+            etLr.setText(purchase.lr.takeIf { it != 0.0 }?.toMilkAmount() ?: "")
+            etPaid.setText(purchase.payment.toPrice())
             etNotes.setText(purchase.notes ?: "")
-            tvRate.text = "${purchase.rateUsed.toRoundedStr(" % .1f")}"
+            tvRate.text = "${purchase.rateUsed.toMilkAmount(" % .1f")}"
 
             if(supplier.advanceAmount <= 0.0) binding.tilAdvance.hide() else binding.tilAdvance.show()
 
@@ -145,7 +145,7 @@ class PurchaseEditBottomSheet(
             volume * rate
         }
 
-        binding.tvPrice.text = price.toPriceStr()
+        binding.tvPrice.text = price.toPrice()
     }
 
     private fun recalculateTS() {
@@ -159,7 +159,7 @@ class PurchaseEditBottomSheet(
         }
 
         val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
-        binding.tvTs.text = ts.toRoundedStr()
+        binding.tvTs.text = ts.toMilkAmount()
     }
 
     private fun recalculateBalance() {
@@ -175,7 +175,7 @@ class PurchaseEditBottomSheet(
 
         val text = when {
             balance > 0 -> "+${balance.roundToInt()}"
-            else -> balance.toPriceStr()
+            else -> balance.toPrice()
         }
 
         binding.tvBalance.text = text

@@ -15,8 +15,8 @@ import com.miassolutions.milkledger.utils.datefilter.DatePeriod
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.show
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.helper.RemoteConfigHelper
 import com.miassolutions.milkledger.utils.pdf.dashboardreport.DashboardReportGenerator
 import dagger.hilt.android.AndroidEntryPoint
@@ -127,21 +127,21 @@ class DashboardFragment :
 
             dateFilterLayout.tvSelectedDate.text = state.period
 
-            tvTotalPurchases.text = state.purchaseTotal.toPriceStr()
-            tvTotalSales.text = state.salesTotal.toPriceStr()
-            tvTotalExpense.text = state.fixedExpense.toPriceStr()
-            tvNetProfit.text = state.profit.toPriceStr()
-            tvMilkPurchase.text = "${state.milkPurchase.toRoundedStr("%.0f")} L"
-            tvMilkSold.text = "${state.milkSold.toRoundedStr("%.0f")} L"
-            tvQtyDiff.text = "${qtyDiff.toRoundedStr(" % .0f")} L"
-            tvAvgFat.text = "${state.avgFat.toRoundedStr()}% ($milkFatLr)"
-            tvAvgLr.text = "${state.avgLr.toRoundedStr()} ($milkFatLr)"
-            tvTotalTs.text = "${state.totalTs.toRoundedStr()} ($milkFatLr)"
-            tvAvgSP.text = state.avgSP?.toRoundedStr() ?: "0.0"
-            tvAvgCP.text = state.avgCP?.toRoundedStr() ?: "0.0"
-            tvAvgPriceDiff.text = state.difference?.toRoundedStr() ?: "0.0"
+            tvTotalPurchases.text = state.purchaseTotal.toPrice()
+            tvTotalSales.text = state.salesTotal.toPrice()
+            tvTotalExpense.text = state.fixedExpense.toPrice()
+            tvNetProfit.text = state.profit.toPrice()
+            tvMilkPurchase.text = "${state.milkPurchase.toMilkAmount("%.0f")} L"
+            tvMilkSold.text = "${state.milkSold.toMilkAmount("%.0f")} L"
+            tvQtyDiff.text = "${qtyDiff.toMilkAmount(" % .0f")} L"
+            tvAvgFat.text = "${state.avgFat.toMilkAmount()}% ($milkFatLr)"
+            tvAvgLr.text = "${state.avgLr.toMilkAmount()} ($milkFatLr)"
+            tvTotalTs.text = "${state.totalTs.toMilkAmount()} ($milkFatLr)"
+            tvAvgSP.text = state.avgSP?.toMilkAmount() ?: "0.0"
+            tvAvgCP.text = state.avgCP?.toMilkAmount() ?: "0.0"
+            tvAvgPriceDiff.text = state.difference?.toMilkAmount() ?: "0.0"
 //            tvPersonalExpense.text = state.personalExpense.toPriceStr()
-            tvRemainingProfit.text = state.profitAfter.toPriceStr()
+            tvRemainingProfit.text = state.profitAfter.toPrice()
 
 
         }

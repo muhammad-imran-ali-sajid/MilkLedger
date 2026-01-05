@@ -1,9 +1,9 @@
 package com.miassolutions.milkledger.features.purchase.ui.purchasedetail
 
 import com.miassolutions.milkledger.features.purchase.ui.model.PurchaseWithSupplier
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.pdf.purchasereport.PdfPurchaseItemRecord
 import com.miassolutions.milkledger.utils.pdf.supplierreport.PdfSupplierItemRecord
 import java.time.LocalDate
@@ -45,7 +45,7 @@ fun List<SupplierDetailModel>.toRecordList(): List<PdfSupplierItemRecord> {
 
     return this.map { item ->
         PdfSupplierItemRecord(
-            date = item.date.toDisplayFormat(),
+            date = item.date.toCompleteDateFormat(),
             quantity = item.milkAmount,
             ts = item.ts,
             rate = item.rateUsed,
@@ -60,14 +60,14 @@ fun List<PurchaseWithSupplier>.toPurchaseRecordList(): List<PdfPurchaseItemRecor
     return this.map { item ->
         PdfPurchaseItemRecord(
             supplierName = item.supplier.supplierName,
-            milkVolume = item.purchase.milkAmount.toRoundedStr(),
-            fat = item.purchase.fat.toRoundedStr(),
-            lr = item.purchase.lr.toRoundedStr(),
-            ts = item.purchase.ts.toRoundedStr(),
-            rate = item.supplier.supplierRate.toRoundedStr(),
-            amount = item.purchase.milkPrice.toRoundedStr(),
-            paid = item.purchase.payment.toRoundedStr(),
-            balance = item.purchase.balance.toRoundedStr()
+            milkVolume = item.purchase.milkAmount.toMilkAmount(),
+            fat = item.purchase.fat.toMilkAmount(),
+            lr = item.purchase.lr.toMilkAmount(),
+            ts = item.purchase.ts.toMilkAmount(),
+            rate = item.supplier.supplierRate.toMilkAmount(),
+            amount = item.purchase.milkPrice.toMilkAmount(),
+            paid = item.purchase.payment.toMilkAmount(),
+            balance = item.purchase.balance.toMilkAmount()
         )
 
     }

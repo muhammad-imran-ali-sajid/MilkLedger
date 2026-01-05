@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.databinding.ItemProfitRecordRowBinding
 import com.miassolutions.milkledger.databinding.LayoutProfitReceiptBinding
 import com.miassolutions.milkledger.utils.pdf.PdfUtils
@@ -50,10 +50,10 @@ object ProfitReportGenerator {
             val rowBinding =
                 ItemProfitRecordRowBinding.inflate(inflater, binding.recordContainer, false)
             rowBinding.tvDate.text = item.date
-            rowBinding.tvGrossProfit.text = item.grossProfit.toPriceStr()
-            rowBinding.tvNetProfit.text = item.netProfit.toPriceStr()
-            rowBinding.tvProfitReceived.text = item.profitReceived.toPriceStr()
-            rowBinding.tvBalance.text = item.balance.toPriceStr()
+            rowBinding.tvGrossProfit.text = item.grossProfit.toPrice()
+            rowBinding.tvNetProfit.text = item.netProfit.toPrice()
+            rowBinding.tvProfitReceived.text = item.profitReceived.toPrice()
+            rowBinding.tvBalance.text = item.balance.toPrice()
             binding.recordContainer.addView(rowBinding.root)
         }
 

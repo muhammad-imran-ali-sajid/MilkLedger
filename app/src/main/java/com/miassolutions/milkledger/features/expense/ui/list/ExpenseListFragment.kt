@@ -7,10 +7,12 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class ExpenseListFragment :
@@ -41,10 +43,10 @@ class ExpenseListFragment :
         }
 
         // Date Header Clicks (Assuming IDs inside included layout)
-        binding.dateHeader.btnNextDate.setOnClickListener {
+        binding.dateHeader.btnPrevDate.setOnClickListener {
             viewModel.onEvent(ExpenseListUiEvent.OnPrevDate)
         }
-        binding.dateHeader.btnPrevDate.setOnClickListener {
+        binding.dateHeader.btnNextDate.setOnClickListener {
             viewModel.onEvent(ExpenseListUiEvent.OnNextDate)
         }
         binding.dateHeader.tvSelectedDate.setOnClickListener {
@@ -64,21 +66,11 @@ class ExpenseListFragment :
                 binding.emptyStateLayout.isVisible = !state.isLoading && state.expenses.isEmpty()
                 binding.rvExpenses.isVisible = !state.isLoading && state.expenses.isNotEmpty()
 
-                // 3. Update Header Date
-                // Note: Aapka Date Format Utils use karein
-                val dateText = state.date.format(DateTimeFormatter.ofPattern("dd MMM yyyy"))
-                // binding.dateHeader.tvDate.text = dateText (Binding k zariye access karein)
-                // Lekin include binding access karne k liye:
-                // binding.dateHeader is NOT a layout, it's a View in generated binding unless typed.
-                // Simple View access:
-                binding.dateHeader.tvSelectedDate.text = dateText
+                binding.dateHeader.tvSelectedDate.text = state.date.toCompleteDateFormat()
 
-                // 4. Update Summary (Bottom Bar)
-                val totalRupees = state.totalExpense / 100.0
-                val avgRupees = state.avgExpense / 100.0
 
-                binding.tvTotalExpense.text = "Rs. ${String.format("%.0f", totalRupees)}"
-                binding.tvAvgExpenses.text = "Rs. ${String.format("%.1f", avgRupees)}"
+                binding.tvTotalExpense.text = "Rs. ${state.displayTotal.toPrice()}"
+                binding.tvAvgExpenses.text = "Rs. ${state.displayAvgExpense.toPrice("%.2f")}"
             }
         }
     }

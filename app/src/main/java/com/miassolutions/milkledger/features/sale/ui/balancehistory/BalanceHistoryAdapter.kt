@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
 import com.miassolutions.milkledger.features.sale.domain.model.BalanceHistoryItem
 
@@ -33,13 +33,13 @@ class BalanceHistoryAdapter :
 
         fun bind(item: BalanceHistoryItem) = with(binding) {
 
-            tvDate.text = item.date.toDisplayFormat()
+            tvDate.text = item.date.toCompleteDateFormat()
 
             tvChange.text =
                 if (item.change >= 0)
-                    "+${item.change.toPriceStr()}"
+                    "+${item.change.toPrice()}"
                 else
-                    item.change.toPriceStr()
+                    item.change.toPrice()
 
             tvChange.setTextColor(
                 if (item.change >= 0)
@@ -48,7 +48,7 @@ class BalanceHistoryAdapter :
                     Color.parseColor("#C62828") // red
             )
 
-            tvBalance.text = item.balanceAfter.toPriceStr()
+            tvBalance.text = item.balanceAfter.toPrice()
         }
     }
 

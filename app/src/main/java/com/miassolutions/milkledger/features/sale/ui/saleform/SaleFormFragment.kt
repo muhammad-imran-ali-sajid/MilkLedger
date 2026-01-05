@@ -12,11 +12,10 @@ import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class SaleFormFragment :
@@ -69,8 +68,8 @@ class SaleFormFragment :
 
     private fun renderState(state: SaleFormUiState) = with(binding) {
         // --- Dates ---
-        btnDate.text = state.saleDate.toDisplayFormat()
-        btnReceivedDate.text = state.receivedDate.toDisplayFormat()
+        btnDate.text = state.saleDate.toCompleteDateFormat()
+        btnReceivedDate.text = state.receivedDate.toCompleteDateFormat()
 
         // --- Customer Dropdown ---
         if (state.mode == SaleMode.EDIT && state.selectedCustomer != null) {
@@ -101,12 +100,12 @@ class SaleFormFragment :
         if (!etNotes.hasFocus()) etNotes.setText(state.notes)
 
         // --- Calculated Fields ---
-        tvRate.text = state.rateUsed.toRoundedStr()
-        tvNetMilk.text = if (state.netMilk > 0.0) "${state.netMilk.toRoundedStr()} L" else "--"
-        tvPrice.text = state.price.toPriceStr()
+        tvRate.text = state.rateUsed.toMilkAmount()
+        tvNetMilk.text = if (state.netMilk > 0.0) "${state.netMilk.toMilkAmount()} L" else "--"
+        tvPrice.text = state.price.toPrice()
 
         // --- Balance with color ---
-        tvBalance.text = state.balance.toPriceStr()
+        tvBalance.text = state.balance.toPrice()
         tvBalance.setTextColor(
             when {
                 state.balance > 0 -> Color.RED

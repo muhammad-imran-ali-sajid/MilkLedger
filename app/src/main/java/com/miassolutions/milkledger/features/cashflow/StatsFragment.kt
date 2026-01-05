@@ -8,8 +8,8 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentStatsBinding
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.helper.textColor
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -104,7 +104,7 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
         collectFlow(viewModel.balanceFlow) { balance ->
 
 
-            binding.tvBalance.text = "Balance: ${balance.toPriceStr()}"
+            binding.tvBalance.text = "Balance: ${balance.toPrice()}"
             binding.tvBalance.setTextColor(textColor(balance))
         }
     }
@@ -124,10 +124,10 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
         val label = when (period) {
 
             StatViewModel.Period.DAILY ->
-                start.toDisplayFormat()
+                start.toCompleteDateFormat()
 
             StatViewModel.Period.WEEKLY ->
-                "${start.toDisplayFormat()} - ${end.toDisplayFormat()}"
+                "${start.toCompleteDateFormat()} - ${end.toCompleteDateFormat()}"
 
             StatViewModel.Period.MONTHLY -> {
                 val monthName = start.month.name.lowercase().replaceFirstChar { it.uppercase() }
@@ -139,9 +139,9 @@ class StatsFragment : BaseFragment<FragmentStatsBinding>(FragmentStatsBinding::i
 
             StatViewModel.Period.CUSTOM ->
                 if (start == end)
-                    start.toDisplayFormat()
+                    start.toCompleteDateFormat()
                 else
-                    "${start.toDisplayFormat()} - ${end.toDisplayFormat()}"
+                    "${start.toCompleteDateFormat()} - ${end.toCompleteDateFormat()}"
         }
 
         binding.tvSelectedDate.text = label

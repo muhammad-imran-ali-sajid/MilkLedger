@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.features.sale.ui.saledetail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.features.sale.data.repository.SaleRepository
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -97,10 +97,10 @@ class CustomerDetailViewModel @Inject constructor(
 
             val customerSummary = CustomerSummary(
                 summaryPeriod = "",
-                totalMilk = totalMilkAmount.toRoundedStr(),
-                totalDeduction = totalDeduction.toRoundedStr(),
-                totalPrice = totalPrice.toRoundedStr(),
-                paidAmount = totalPaid.toRoundedStr(),
+                totalMilk = totalMilkAmount.toMilkAmount(),
+                totalDeduction = totalDeduction.toMilkAmount(),
+                totalPrice = totalPrice.toMilkAmount(),
+                paidAmount = totalPaid.toMilkAmount(),
                 balance = balance
             )
 

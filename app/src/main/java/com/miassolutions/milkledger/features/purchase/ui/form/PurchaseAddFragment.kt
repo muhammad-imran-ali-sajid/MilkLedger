@@ -13,9 +13,9 @@ import com.miassolutions.milkledger.features.supplier.data.local.SupplierEntity
 import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -47,7 +47,7 @@ class PurchaseAddFragment :
             if (isDuplicate) {
                 Toast.makeText(
                     requireContext(),
-                    "${selectedSupplier?.supplierName} is already exist for ${dateSelected?.toDisplayFormat()}",
+                    "${selectedSupplier?.supplierName} is already exist for ${dateSelected?.toCompleteDateFormat()}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -84,9 +84,9 @@ class PurchaseAddFragment :
 
     private fun updateSupplierUI() {
         val s = selectedSupplier ?: return
-        binding.tvAdvanceAmount.text = s.advanceAmount.toPriceStr()
+        binding.tvAdvanceAmount.text = s.advanceAmount.toPrice()
         if (s.advanceAmount <= 0.0) binding.tilAdvance.hide() else binding.tilAdvance.show()
-        binding.tvRate.text = s.supplierRate.toRoundedStr()
+        binding.tvRate.text = s.supplierRate.toMilkAmount()
     }
 
     // ---------------------------------------------------------------------
@@ -116,7 +116,7 @@ class PurchaseAddFragment :
                     if (isDuplicate) {
                         Toast.makeText(
                             requireContext(),
-                            "${supplier.supplierName} already exists for ${date.toDisplayFormat()}",
+                            "${supplier.supplierName} already exists for ${date.toCompleteDateFormat()}",
                             Toast.LENGTH_SHORT
                         ).show()
                         return@checkDuplicate
@@ -139,7 +139,7 @@ class PurchaseAddFragment :
                     if (isDuplicate) {
                         Toast.makeText(
                             requireContext(),
-                            "${supplier.supplierName} already exists for ${date.toDisplayFormat()}",
+                            "${supplier.supplierName} already exists for ${date.toCompleteDateFormat()}",
                             Toast.LENGTH_SHORT
                         ).show()
                         return@checkDuplicate
@@ -153,7 +153,7 @@ class PurchaseAddFragment :
 
 
 
-            binding.btnDate.text = LocalDate.now().toDisplayFormat()
+            binding.btnDate.text = LocalDate.now().toCompleteDateFormat()
 
             binding.btnDate.setOnClickListener {
                 val role = SharedPrefsHelper.getUserRole(requireContext())
@@ -168,7 +168,7 @@ class PurchaseAddFragment :
                     // The selectedDate (LocalDate) is available here!
                     onPicked = { selectedDate: LocalDate ->
                         dateSelected = selectedDate
-                        binding.btnDate.text = selectedDate.toDisplayFormat()
+                        binding.btnDate.text = selectedDate.toCompleteDateFormat()
 
                     }
                 )
@@ -201,7 +201,7 @@ class PurchaseAddFragment :
         // DO NOT reset dateSelected — keep it as user chose
         // Just re-show the last selected date
         dateSelected?.let {
-            btnDate.text = it.toDisplayFormat()
+            btnDate.text = it.toCompleteDateFormat()
         }
 
         // Scroll to top if needed
@@ -235,7 +235,7 @@ class PurchaseAddFragment :
         else
             volume * supplierRate
 
-        binding.tvPrice.text = price.toPriceStr()
+        binding.tvPrice.text = price.toPrice()
     }
 
     private fun recalcTS() {
@@ -249,7 +249,7 @@ class PurchaseAddFragment :
         }
 
         val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
-        binding.tvTs.text = ts.toRoundedStr()
+        binding.tvTs.text = ts.toMilkAmount()
     }
 
     private fun recalcBalance() {
@@ -268,7 +268,7 @@ class PurchaseAddFragment :
 
         val text =
             if (balance > 0) "+${balance.roundToInt()}"
-            else balance.toPriceStr()
+            else balance.toPrice()
 
         binding.tvBalance.text = text
         binding.tvBalance.setTextColor(color)

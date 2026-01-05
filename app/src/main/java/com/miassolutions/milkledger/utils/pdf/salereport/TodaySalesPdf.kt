@@ -9,8 +9,8 @@ import android.content.Context
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.databinding.ItemCustomerRecordRowBinding
 import com.miassolutions.milkledger.databinding.LayoutTodaySaleReceiptBinding
 import com.miassolutions.milkledger.utils.pdf.PdfUtils
@@ -62,12 +62,12 @@ object TodaySalesPdf {
                 ItemCustomerRecordRowBinding.inflate(inflater, binding.recordContainer, false)
 
             rowBinding.tvCustomer.text = item.customerName
-            rowBinding.tvQty.text = item.milkVolume.toRoundedStr()
-            rowBinding.tvDeduction.text = item.deduction.toRoundedStr()
-            rowBinding.tvRate.text = item.rate.toRoundedStr()
-            rowBinding.tvAmount.text = item.amount.toPriceStr()
-            rowBinding.tvPaid.text = item.paid.toPriceStr()
-            rowBinding.tvBalance.text = item.balance.toPriceStr()
+            rowBinding.tvQty.text = item.milkVolume.toMilkAmount()
+            rowBinding.tvDeduction.text = item.deduction.toMilkAmount()
+            rowBinding.tvRate.text = item.rate.toMilkAmount()
+            rowBinding.tvAmount.text = item.amount.toPrice()
+            rowBinding.tvPaid.text = item.paid.toPrice()
+            rowBinding.tvBalance.text = item.balance.toPrice()
 
 
             binding.recordContainer.addView(rowBinding.root)

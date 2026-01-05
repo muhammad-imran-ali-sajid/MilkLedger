@@ -8,9 +8,9 @@ import com.miassolutions.milkledger.databinding.ItemSupplierDetailBinding
 import com.miassolutions.milkledger.core.ui.GenericDiffCallback
 import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.show
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
-import com.miassolutions.milkledger.utils.extensions.toPriceStr
-import com.miassolutions.milkledger.utils.extensions.toRoundedStr
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.helper.handleZeroData
 import com.miassolutions.milkledger.utils.helper.numberFormat
 import com.miassolutions.milkledger.utils.helper.textColor
@@ -45,10 +45,10 @@ class SupplierDetailListAdapter :
             tvFat.text = handleZeroData(item.fat)
             tvLr.text = handleZeroData(item.lr)
             tvTs.text = handleZeroData(item.ts)
-            tvDate.text = item.date.toDisplayFormat()
-            tvMilk.text = item.milkAmount.toRoundedStr()
-            tvPrice.text = item.milkPrice.toPriceStr()
-            tvPayment.text = item.payment.toPriceStr()
+            tvDate.text = item.date.toCompleteDateFormat()
+            tvMilk.text = item.milkAmount.toMilkAmount()
+            tvPrice.text = item.milkPrice.toPrice()
+            tvPayment.text = item.payment.toPrice()
 
             tvBalance.text = numberFormat(item.balance)
             tvBalance.setTextColor(textColor(item.balance))
@@ -69,11 +69,11 @@ class SupplierDetailListAdapter :
         item: SupplierDetailModel
     ) {
         if (item.isRateChanged) {
-            rateAlert.text = "RCA (${item.rateUsed.toPriceStr()})"
+            rateAlert.text = "RCA (${item.rateUsed.toPrice()})"
             rateAlert.show()
             root.setCardBackgroundColor("#ccff00".toColorInt())
         } else {
-            rateAlert.text = "Rate: (${item.rateUsed.toPriceStr()})"
+            rateAlert.text = "Rate: (${item.rateUsed.toPrice()})"
             rateAlert.setTextColor("#000000".toColorInt())
             root.setCardBackgroundColor("#ffffff".toColorInt())
         }

@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.features.sale.ui.saledetail
 
 
 import com.miassolutions.milkledger.features.sale.ui.list.SaleWithCustomer
-import com.miassolutions.milkledger.utils.extensions.toDisplayFormat
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.pdf.customerreport.SalesItemRecord
 
@@ -48,7 +48,7 @@ fun List<CustomerDetailModel>.toRecordList(): List<SalesItemRecord> {
 
     return this.map { item ->
         SalesItemRecord(
-            date = item.date.toDisplayFormat(),
+            date = item.date.toCompleteDateFormat(),
             quantity = item.milkAmount, // Use netMilk for quantity
             deduction = 0.0, // N/A for customer, or use a placeholder
             rate = item.rateUsed,
