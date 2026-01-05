@@ -13,6 +13,7 @@ import java.text.NumberFormat
 import java.util.Locale
 
 class ExpenseAdapter(
+    private val onDeleteClick: (String) -> Unit,
     private val onItemClick: (Expense) -> Unit
 ) : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(ExpenseDiffCallback()) {
 
@@ -46,6 +47,11 @@ class ExpenseAdapter(
                     tvExpenseNote.visibility = View.VISIBLE
                     divider.visibility = View.VISIBLE
                     tvExpenseNote.text = "Note: ${item.note}"
+                }
+
+                root.setOnLongClickListener {
+                    onDeleteClick(item.expenseId)
+                    true
                 }
 
                 // Click Listener

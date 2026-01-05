@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
@@ -20,9 +21,17 @@ class ExpenseListFragment :
 
 
     private val viewModel: ExpenseListViewModel by viewModels()
-    private val adapter = ExpenseAdapter { expense ->
-        viewModel.onEvent(ExpenseListUiEvent.OnExpenseClicked(expense))
-    }
+    private val adapter = ExpenseAdapter(
+        onItemClick = { expense ->
+            viewModel.onEvent(ExpenseListUiEvent.OnExpenseClicked(expense))
+        },
+        onDeleteClick = {
+            showDeleteActionDialog {
+
+                viewModel.onEvent(ExpenseListUiEvent.OnDeleteClicked(it))
+            }
+        }
+    )
 
     override fun setupViews() {
         super.setupViews()

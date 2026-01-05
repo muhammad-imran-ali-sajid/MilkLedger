@@ -46,6 +46,7 @@ class ExpenseRepository @Inject constructor(
                     note = expenseEntity.note
                 )
             }
+            ledgerDao.insertAll(ledgerEntries)
         }
     }
 

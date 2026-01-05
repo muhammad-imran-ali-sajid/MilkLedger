@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.features.expense.ui.form
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -46,23 +47,14 @@ class PersonalExpenseAdapter(
             etPersonalAmount.setTextIfDifferent(item.amount)
 
             // Update ViewModel ONLY when focus is lost
-            etPersonalTitle.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    onTitleChanged(
-                        item.id,
-                        etPersonalTitle.text.toString()
-                    )
-                }
+            etPersonalTitle.doAfterTextChanged {
+                onTitleChanged(item.id, it.toString())
             }
 
-            etPersonalAmount.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
-                    onAmountChanged(
-                        item.id,
-                        etPersonalAmount.text.toString()
-                    )
-                }
+            etPersonalAmount.doAfterTextChanged {
+                onAmountChanged(item.id, it.toString())
             }
+
 
             btnRemove.setOnClickListener {
                 onRemove(item.id)

@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.expense.ui.list
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.expense.data.repository.ExpenseRepository
+import com.miassolutions.milkledger.features.expense.ui.list.ExpenseListUiEffect.*
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -48,12 +49,23 @@ class ExpenseListViewModel @Inject constructor(
 
             ExpenseListUiEvent.OnAddExpenseClicked -> {
                 val dateMillis = currentState.date.toMillis()
-                emitEffect(ExpenseListUiEffect.NavigateToAddExpense(dateMillis))
+                emitEffect(NavigateToAddExpense(dateMillis))
             }
 
             is ExpenseListUiEvent.OnExpenseClicked -> {
                 // Future: Open Edit Screen
             }
+
+            is ExpenseListUiEvent.OnDeleteClicked -> {
+                deleteExpense(event.id)
+            }
+        }
+    }
+
+    private fun deleteExpense(id: String) {
+        viewModelScope.launch {
+            repository.deleteExpense(id)
+            emitEffect(ExpenseListUiEffect.ShowSnackbar("Expense deleted"))
         }
     }
 
