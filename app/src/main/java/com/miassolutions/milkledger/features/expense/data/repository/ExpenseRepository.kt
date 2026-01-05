@@ -1,6 +1,9 @@
 package com.miassolutions.milkledger.features.expense.data.repository
 
 import androidx.room.withTransaction
+import com.miassolutions.milkledger.core.contstants.Constants
+import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
+import com.miassolutions.milkledger.core.contstants.Constants.SHOP_EXPENSE
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
@@ -23,6 +26,30 @@ class ExpenseRepository @Inject constructor(
     // ------------------------------------------------
     // 1️⃣ SAVE (Expense + Ledger Update)
     // ------------------------------------------------
+
+    suspend fun saveAllExpenses(expenses: List<Expense>) {
+        db.withTransaction {
+            val entities = expenses.map { it.toEntity() }
+            expenseDao.insertAll(entities)
+
+            val ledgerEntries = entities.map { expenseEntity ->
+                FinancialLedgerEntity(
+                    dateMillis = expenseEntity.dateMillis,
+                    accountId = if (expenseEntity.isPersonal) Constants.OWNER_ACCOUNT_ID else Constants.SHOP_EXPENSE,
+                    referenceId = expenseEntity.expenseId,
+                    type = if (expenseEntity.isPersonal) LedgerEntryType.OWNER_WITHDRAWAL else LedgerEntryType.EXPENSE,
+
+                    debit = 0,
+                    credit = expenseEntity.amount,
+
+                    profitImpact = if (expenseEntity.isPersonal) 0 else -(expenseEntity.amount),
+                    note = expenseEntity.note
+                )
+            }
+        }
+    }
+
+
     suspend fun saveExpense(expense: Expense) {
         db.withTransaction {
             // Step 1: Expense Table me save karein
@@ -36,16 +63,16 @@ class ExpenseRepository @Inject constructor(
                 // Expense kisi specific Account ka nahi hota (usually),
                 // ya agar "Owner" ka withdrawal hai to accountId Owner ka hoga.
                 // Filhal hum generic rakh rahe hain, ya aap Owner ID pass kar sakte hain.
-                accountId = if(expense.isPersonal) "OWNER_ID_PLACEHOLDER" else "SHOP_EXPENSE",
+                accountId = if (expense.isPersonal) OWNER_ACCOUNT_ID else SHOP_EXPENSE,
 
                 referenceId = expenseEntity.expenseId, // Link to Expense
-                type = if(expense.isPersonal) LedgerEntryType.OWNER_WITHDRAWAL else LedgerEntryType.EXPENSE,
+                type = if (expense.isPersonal) LedgerEntryType.OWNER_WITHDRAWAL else LedgerEntryType.EXPENSE,
 
                 debit = 0,
                 credit = expenseEntity.amount, // Paisa ja raha hai (Credit)
 
                 // Profit logic: Personal withdrawal profit kam nahi karta, Business expense karta hai
-                profitImpact = if(expense.isPersonal) 0 else -(expenseEntity.amount),
+                profitImpact = if (expense.isPersonal) 0 else -(expenseEntity.amount),
 
                 note = expense.title
             )
@@ -55,6 +82,14 @@ class ExpenseRepository @Inject constructor(
             // lekin filhal simple insert/replace:
             ledgerDao.insert(ledgerEntry)
         }
+    }
+
+    suspend fun updateExpense(expenseId: String){
+        db.withTransaction {
+            val entity = expenseDao.getExpenseById(expenseId)
+
+        }
+
     }
 
     // ------------------------------------------------

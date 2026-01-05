@@ -140,7 +140,7 @@ class DashboardFragment :
             tvAvgSP.text = state.avgSP?.toRoundedStr() ?: "0.0"
             tvAvgCP.text = state.avgCP?.toRoundedStr() ?: "0.0"
             tvAvgPriceDiff.text = state.difference?.toRoundedStr() ?: "0.0"
-            tvPersonalExpense.text = state.personalExpense.toPriceStr()
+//            tvPersonalExpense.text = state.personalExpense.toPriceStr()
             tvRemainingProfit.text = state.profitAfter.toPriceStr()
 
 
@@ -151,7 +151,7 @@ class DashboardFragment :
     override fun setupListeners() {
 
 
-        binding.cashFlowCard.setOnClickListener {
+        binding.btnCashFlow.setOnClickListener {
 
             if (!isPremiumEnabled) {
                 showSnackbar("This feature requires Premium")
@@ -161,9 +161,6 @@ class DashboardFragment :
             val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
             navigateTo(dest.actionId)
         }
-
-
-
 
 
 //        binding.saleCard.setOnClickListener {

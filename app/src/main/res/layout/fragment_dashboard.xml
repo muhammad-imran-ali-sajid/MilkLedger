@@ -32,68 +32,106 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateFilterLayout">
+        app:layout_constraintEnd_toEndOf="parent"
 
-
-
-
-
-        <!-- ====== DASHBOARD CARDS (VERTICAL, LABEL + VALUE HORIZONTAL) ====== -->
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dateFilterLayout">
 
         <LinearLayout
-            android:id="@+id/cardGroup"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="8dp"
+            android:layout_height="0dp"
             android:orientation="vertical"
-            android:weightSum="3">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dateFilterLayout">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cash_flow_card"
-                style="@style/DashboardCard"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
 
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/midnight_blue">
-
-                <TextView
-                    style="@style/DashboardValue"
-                    android:layout_gravity="center"
-                    android:text="Cash Flow"
-                    android:textColor="@color/white" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ===== ROW 1 ===== -->
             <LinearLayout
+                android:id="@+id/cardGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginHorizontal="8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/teal_dark"
+                        android:layout_height="wrap_content"
+                        android:text="My Profile"
+                        android:id="@+id/btnProfile"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/teal_dark"
+                        android:layout_height="wrap_content"
+                        android:text="Cash Flow"
+                        android:id="@+id/btnCashFlow"/>
+
+                </LinearLayout>
+
+<!--                <com.google.android.material.card.MaterialCardView-->
+<!--                    android:id="@+id/card_personal_expense"-->
+<!--                    style="@style/DashboardCard"-->
+<!--                    app:cardBackgroundColor="@color/orange_700">-->
+
+<!--                    <LinearLayout-->
+<!--                        style="@style/DashboardInnerRow"-->
+<!--                        android:background="@drawable/bg_expense">-->
+
+<!--                        <TextView-->
+<!--                            android:gravity="center"-->
+<!--                            style="@style/DashboardLabel"-->
+<!--                            android:text="My Profile" />-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/tvPersonalExpense"-->
+<!--                            style="@style/DashboardValue"-->
+<!--                            android:text="4,500"-->
+<!--                            android:visibility="gone" />-->
+<!--                    </LinearLayout>-->
+<!--                </com.google.android.material.card.MaterialCardView>-->
+
+<!--                <com.google.android.material.card.MaterialCardView-->
+<!--                    android:id="@+id/cash_flow_card"-->
+<!--                    style="@style/DashboardCard"-->
+<!--                    app:cardBackgroundColor="@color/midnight_blue">-->
+
+<!--                    <LinearLayout-->
+<!--                        style="@style/DashboardInnerRow"-->
+<!--                        android:background="@drawable/bg_expense">-->
+
+<!--                        <TextView-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            style="@style/DashboardValue"-->
+<!--                            android:gravity="center"-->
+<!--                            android:text="Cash Flow"-->
+<!--                            android:textColor="@color/white" />-->
+<!--                    </LinearLayout>-->
+
+
+
+<!--                </com.google.android.material.card.MaterialCardView>-->
 
 
                 <!-- Purchases -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/purchase_card"
                     style="@style/DashboardCard"
-                    android:layout_width="0dp"
-                    android:layout_weight="1">
+                    android:layout_width="match_parent">
 
-<!--                    <ImageView-->
-<!--                        android:layout_gravity="end"-->
-<!--                        android:layout_margin="2dp"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:tint="@color/white"-->
-<!--                        android:src="@drawable/ic_arrow_right"/>-->
 
-                    <LinearLayout style="@style/DashboardInnerRow"
+                    <LinearLayout
+                        style="@style/DashboardInnerRow"
                         android:background="@drawable/bg_purchase">
 
                         <TextView
@@ -111,20 +149,11 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/sale_card"
                     style="@style/DashboardCard"
-                    android:layout_width="0dp"
-
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     app:cardBackgroundColor="@color/sale_color">
 
-<!--                    <ImageView-->
-<!--                        android:layout_gravity="end"-->
-<!--                        android:layout_margin="2dp"-->
-<!--                        android:tint="@color/white"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:src="@drawable/ic_arrow_right"/>-->
-
-                    <LinearLayout style="@style/DashboardInnerRow"
+                    <LinearLayout
+                        style="@style/DashboardInnerRow"
                         android:background="@drawable/bg_sale">
 
                         <TextView
@@ -139,34 +168,13 @@
                 </com.google.android.material.card.MaterialCardView>
 
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-
-
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/expense_card"
                     style="@style/DashboardCard"
-                    android:layout_width="0dp"
-
-
-                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/red">
 
-<!--                    <ImageView-->
-<!--                        android:layout_gravity="end"-->
-<!--                        android:layout_margin="2dp"-->
-<!--                        android:tint="@color/white"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:src="@drawable/ic_arrow_right"/>-->
-
-                    <LinearLayout style="@style/DashboardInnerRow"
+                    <LinearLayout
+                        style="@style/DashboardInnerRow"
                         android:background="@drawable/bg_expense">
 
                         <TextView
@@ -181,26 +189,14 @@
                 </com.google.android.material.card.MaterialCardView>
 
 
-
                 <!-- Profit -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardProfit"
                     style="@style/DashboardCard"
-                    android:layout_width="0dp"
-
-
-                    android:layout_weight="1"
                     app:cardBackgroundColor="@color/deep_forest_green">
 
-<!--                    <ImageView-->
-<!--                        android:layout_gravity="end"-->
-<!--                        android:tint="@color/white"-->
-<!--                        android:layout_margin="2dp"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:src="@drawable/ic_arrow_right"/>-->
-
-                    <LinearLayout style="@style/DashboardInnerRow"
+                    <LinearLayout
+                        style="@style/DashboardInnerRow"
                         android:background="@drawable/bg_profit">
 
                         <TextView
@@ -213,45 +209,13 @@
                             android:text="4,500" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
 
 
-                <!-- Personal Expense -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_personal_expense"
-                    style="@style/DashboardCard"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="@color/orange_700"
-                    >
-
-                    <LinearLayout style="@style/DashboardInnerRow"
-                        android:background="@drawable/bg_expense">
-
-                        <TextView
-                            style="@style/DashboardLabel"
-                            android:text="Prsnl Exp" />
-
-                        <TextView
-                            android:id="@+id/tvPersonalExpense"
-                            style="@style/DashboardValue"
-                            android:text="4,500" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
 
                 <!-- Remaining Profit -->
                 <com.google.android.material.card.MaterialCardView
                     style="@style/DashboardCard"
-                    id="@+id/card_remaining_profit"
-                    android:layout_width="0dp"
-
-                    android:layout_weight="1"
+                    android:visibility="gone"
                     app:cardBackgroundColor="@color/blue_700">
 
                     <LinearLayout style="@style/DashboardInnerRow">
@@ -266,36 +230,32 @@
                             android:text="4,500" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
             </LinearLayout>
 
-        </LinearLayout>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_milk_overview"
-            android:orientation="vertical"
-            android:paddingHorizontal="8dp">
-
-            <!-- Milk Overview Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-
-                android:padding="12dp"
-                android:text="Milk Overview"
-                android:textColor="@color/black"
-                android:textSize="22sp" />
-
-            <androidx.core.widget.NestedScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_milk_overview"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp">
+
+                <!-- Milk Overview Section -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="8dp"
+
+                    android:padding="12dp"
+                    android:text="Milk Overview"
+                    android:textColor="@color/black"
+                    android:textSize="22sp" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -587,11 +547,13 @@
 
                 </LinearLayout>
 
-            </androidx.core.widget.NestedScrollView>
+
+            </LinearLayout>
+
+
         </LinearLayout>
 
-
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

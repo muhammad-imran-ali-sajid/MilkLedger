@@ -11,6 +11,9 @@ import kotlinx.coroutines.flow.Flow
 interface LedgerDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(ledgerEntries: List<FinancialLedgerEntity>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(ledger: FinancialLedgerEntity)
 
     @Update

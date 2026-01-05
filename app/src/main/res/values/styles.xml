@@ -322,6 +322,7 @@
 
     <style name="DashboardCard">
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">6dp</item>
         <item name="android:elevation">4dp</item>
         <item name="cardBackgroundColor">@color/white</item>
@@ -334,10 +335,11 @@
     <style name="DashboardInnerRow">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">vertical</item>
+        <item name="android:orientation">horizontal</item>
 
         <item name="android:gravity">center_vertical</item>
-        <item name="android:padding">8dp</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">8dp</item>
     </style>
 
     <style name="DashboardLabel">
