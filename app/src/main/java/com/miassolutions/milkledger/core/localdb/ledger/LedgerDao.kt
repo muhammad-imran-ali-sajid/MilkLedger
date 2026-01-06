@@ -42,4 +42,14 @@ interface LedgerDao {
         WHERE referenceId = :refId
     """)
     suspend fun softDeleteByReference(refId: String, time: Long)
+
+    // Customer ki last 50 transactions
+    @Query("""
+        SELECT * FROM financial_ledger_table 
+        WHERE accountId = :accountId 
+        AND deletedAtMillis IS NULL
+        ORDER BY dateMillis DESC 
+        LIMIT 50
+    """)
+    fun getLedgerHistory(accountId: String): Flow<List<FinancialLedgerEntity>>
 }

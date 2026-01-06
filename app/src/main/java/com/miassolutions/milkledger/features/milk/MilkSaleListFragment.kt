@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.milk
 
 
+import android.util.Log
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -27,7 +28,18 @@ class MilkSaleListFragment :
         },
         onDetailClick = { item ->
             viewModel.onEvent(MilkSaleListUiEvent.OnCustomerDetailClicked(item.customerId))
+        },
+        onBalanceClick = { id, name ->
+            // Navigate to Bottom Sheet
+
+            val action = MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerBalanceHistoryBottomSheet(
+                customerId = id,
+                customerName = name
+            )
+            findNavController().navigate(action)
+
         }
+
     )
 
     override fun setupViews() {

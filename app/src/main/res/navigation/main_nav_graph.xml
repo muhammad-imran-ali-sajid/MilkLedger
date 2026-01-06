@@ -224,5 +224,24 @@
         <action
             android:id="@+id/action_milkSaleListFragment_to_customerDetailFragment"
             app:destination="@id/customerDetailFragment" />
+        <action
+            android:id="@+id/action_milkSaleListFragment_to_customerBalanceHistoryBottomSheet"
+            app:destination="@id/customerBalanceHistoryBottomSheet" />
     </fragment>
+    <dialog
+        android:id="@+id/customerBalanceHistoryBottomSheet"
+        android:name="com.miassolutions.milkledger.features.milk.balancehistory.CustomerHistoryBottomSheet"
+        android:label="CustomerBalanceHistoryBottomSheet">
+
+        <argument
+            android:name="customerName"
+            app:argType="string"
+            app:nullable="false" />
+
+        <argument
+            android:name="customerId"
+            app:argType="string"
+            app:nullable="false" />
+    </dialog>
+
 </navigation>

@@ -172,7 +172,10 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel" android:text="Bal." />
+                <TextView
+                    style="@style/TextLabel"
+                    android:text="Bal." />
+
                 <TextView
                     android:id="@+id/tvBalance"
                     style="@style/TextValue"

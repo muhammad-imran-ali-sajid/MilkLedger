@@ -21,7 +21,8 @@ interface MilkDao {
 
 
     @Transaction // Safe side k liye
-    @Query("""
+    @Query(
+        """
         SELECT 
             m.*, 
             
@@ -55,29 +56,32 @@ interface MilkDao {
             AND l.deletedAtMillis IS NULL
 
         WHERE m.milkTransId = :saleId
-    """)
+    """
+    )
     suspend fun getSaleDetailById(saleId: String): SaleDetailTuple?
 
 
-
     // Kisi aik Customer ki History dekhne ke liye
-    @Query("""
+    @Query(
+        """
         SELECT * FROM milk_transactions_table 
         WHERE accountId = :accountId 
         AND deletedAtMillis IS NULL 
         ORDER BY dateMillis DESC
-    """)
+    """
+    )
     fun getMilkHistoryByAccount(accountId: String): Flow<List<MilkTransactionEntity>>
 
     // Soft Delete
     @Query("UPDATE milk_transactions_table SET deletedAtMillis = :time WHERE milkTransId = :id")
     suspend fun softDelete(id: String, time: Long)
 
-    @Query("""
+    @Query(
+        """
     SELECT 
         m.milkTransId as id,
         m.dateMillis,
-        m.accountId as customerId,  -- ✅ Fix 1: Alias match karwaya (accountId -> customerId)
+        m.accountId as customerId,
         a.name as customerName,
         m.volume as quantity, 
         m.deduction as deduction,
@@ -85,15 +89,33 @@ interface MilkDao {
         m.totalAmount,
         m.notes as note,
         
-        -- ✅ Fix 2: Dummy values pass karein taake Crash na ho
-        0 as paymentReceived, 
-        0 as currentBalance
+        -- ✅ FIX 1: Payment Received (Specific to this Sale)
+        -- COALESCE ka matlab hai agar NULL ho (Payment nahi hui) to 0 return karo
+        COALESCE(l.credit, 0) as paymentReceived, 
+        
+        -- ✅ FIX 2: Live Current Balance (Sub-Query)
+        (
+            SELECT (TOTAL(debit) - TOTAL(credit))
+            FROM financial_ledger_table 
+            WHERE accountId = m.accountId 
+            AND deletedAtMillis IS NULL
+        ) as currentBalance
         
     FROM milk_transactions_table m
+    
+    -- Join Customer Name
     INNER JOIN accounts_table a ON m.accountId = a.accountId
+    
+    -- Join Payment (Agar Reference ID match ho aur Type 'CASH_RECEIVED' ho)
+    LEFT JOIN financial_ledger_table l 
+        ON l.referenceId = m.milkTransId 
+        AND l.type = 'CASH_RECEIVED' 
+        AND l.deletedAtMillis IS NULL
+
     WHERE m.dateMillis BETWEEN :start AND :end 
     AND m.deletedAtMillis IS NULL
     ORDER BY m.createdAtMillis DESC
-""")
+"""
+    )
     fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
 }

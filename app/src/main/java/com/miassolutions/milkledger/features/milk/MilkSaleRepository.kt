@@ -46,8 +46,8 @@ class MilkSaleRepository @Inject constructor(
         saleDate: LocalDate,
         paymentDate: LocalDate,
         accountId: String,
-        volume: Double,    // ✅ New Param
-        deduction: Double, // ✅ New Param
+        volume: Double,
+        deduction: Double,
         rate: Double,
         amountPaid: Long,
         note: String?
