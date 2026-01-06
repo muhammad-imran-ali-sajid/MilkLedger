@@ -27,10 +27,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaleFormViewModel @Inject constructor(
-    private val repository: MilkSaleRepository
+    private val repository: MilkSaleRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(SaleFormUiState()) {
 
     // Customers List alag flow me rakhna behtar hai state se
+
+    init {
+
+        val dateMillis = savedStateHandle["saleDate"] ?: -1L
+
+        val initialDate = if (dateMillis != -1L) {
+            dateMillis.toLocalDate()
+        } else {
+            LocalDate.now()
+        }
+
+        updateState { it.copy(date = initialDate, paymentDate = initialDate) }
+
+    }
+
     val customersList = repository.getCustomers()
 
     override fun onEvent(event: SaleFormUiEvent) {
@@ -39,10 +55,12 @@ class SaleFormViewModel @Inject constructor(
 
             is SaleFormUiEvent.OnCustomerSelected -> {
                 // Customer select hotay hi Rate aur Balance fetch karein
-                updateState { it.copy(
-                    selectedCustomer = event.customer,
-                    rate = event.customer.defaultRate.toString() // Auto-fill Rate
-                ) }
+                updateState {
+                    it.copy(
+                        selectedCustomer = event.customer,
+                        rate = event.customer.defaultRate.toString() // Auto-fill Rate
+                    )
+                }
                 fetchBalance(event.customer.accountId)
                 calculateTotal()
             }
@@ -51,22 +69,30 @@ class SaleFormViewModel @Inject constructor(
                 updateState { it.copy(volume = event.value) }
                 calculateTotal()
             }
+
             is SaleFormUiEvent.OnDeductionChanged -> {
                 updateState { it.copy(deduction = event.value) }
                 calculateTotal()
             }
+
             is SaleFormUiEvent.OnRateChanged -> {
                 updateState { it.copy(rate = event.value) }
                 calculateTotal()
             }
+
             is SaleFormUiEvent.OnAmountPaidChanged -> {
                 updateState { it.copy(amountPaid = event.value) }
             }
+
             is SaleFormUiEvent.OnNoteChanged -> updateState { it.copy(note = event.value) }
 
             is SaleFormUiEvent.OnSaveClicked -> saveSale()
 
             SaleFormUiEvent.OnDateClick -> emitEffect(SaleFormUiEffect.OpenDatePicker)
+            SaleFormUiEvent.OnPaymentDateClick -> emitEffect(SaleFormUiEffect.OpenPaymentDatePicker)
+            is SaleFormUiEvent.OnPaymentDateSelected -> {
+                updateState { it.copy(paymentDate = event.paymentDate) }
+            }
         }
     }
 
@@ -111,7 +137,8 @@ class SaleFormViewModel @Inject constructor(
                     volume = vol,
                     deduction = state.deduction.toDoubleOrNull() ?: 0.0,
                     rate = state.rate.toDoubleOrNull() ?: 0.0,
-                    amountPaid = (state.amountPaid.toDoubleOrNull() ?: 0.0).toLong() * 100, // Rs to Paisa
+                    amountPaid = (state.amountPaid.toDoubleOrNull()
+                        ?: 0.0).toLong() * 100, // Rs to Paisa
                     note = state.note
                 )
                 emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Saved Successfully"))

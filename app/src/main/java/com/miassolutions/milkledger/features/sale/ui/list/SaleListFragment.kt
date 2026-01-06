@@ -259,21 +259,21 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
 
             is SalesUiEffect.NavigateToCustomerLedger -> {
 
-                val action =
-                    SaleListFragmentDirections.actionSaleListFragmentToCustomerDetailFragment(
-                        effect.customerId,
-                        effect.name
-                    )
-                findNavController().navigate(action)
+//                val action =
+//                    SaleListFragmentDirections.actionSaleListFragmentToCustomerDetailFragment(
+//                        effect.customerId,
+//                        effect.name
+//                    )
+//                findNavController().navigate(action)
             }
 
             is SalesUiEffect.EditSaleRecord -> {
-                findNavController().navigate(
-                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(
-                        saleId = effect.saleId,
-                        saleDate = effect.saleDate
-                    )
-                )
+//                findNavController().navigate(
+//                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(
+//                        saleId = effect.saleId,
+//                        saleDate = effect.saleDate
+//                    )
+//                )
 //                SaleEditBottomSheet
 //                    .newInstance(effect.saleUi)
 //                    .show(childFragmentManager, "EditSaleBottomSheet")
@@ -294,12 +294,12 @@ class SaleListFragment : BaseFragment<FragmentSalesBinding>(FragmentSalesBinding
 //                generatePdf(effect.data)
 //            }
             is SalesUiEffect.NavigateToSaleForm -> {
-                findNavController().navigate(
-                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(
-                        null,
-                        viewModel.uiState.value.currentDate.toMillis()
-                    )
-                )
+//                findNavController().navigate(
+//                    SaleListFragmentDirections.actionSaleListFragmentToSaleAddFragment(
+//                        null,
+//                        viewModel.uiState.value.currentDate.toMillis()
+//                    )
+//                )
             }
         }
     }

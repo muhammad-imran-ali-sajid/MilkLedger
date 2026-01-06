@@ -64,6 +64,7 @@ sealed interface SalesUiEvent {
 
 sealed interface SalesUiEffect {
 
+
     data class NavigateToSaleForm(val saleDate: Long) : SalesUiEffect
     data class NavigateToCustomerLedger(
         val customerId: String,

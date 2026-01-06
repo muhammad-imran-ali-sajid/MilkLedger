@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
     /** ONLY bottom navigation destinations */
     private val bottomNavDestinations = setOf(
         R.id.dashboardFragment,
-        R.id.saleListFragment,
+        R.id.milkSaleListFragment,
         R.id.purchaseFragment,
         R.id.expenseFragment,
         R.id.profitFragment
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                 R.id.suppliersFragment,
                 R.id.settingsFragment,
                 R.id.notesListFragment,
-                R.id.saleListFragment,
+                R.id.milkSaleListFragment,
                 R.id.purchaseFragment,
                 R.id.expenseFragment,
                 R.id.profitFragment,

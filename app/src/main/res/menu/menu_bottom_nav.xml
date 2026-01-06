@@ -7,7 +7,7 @@
         android:title="@string/purchases" />
 
     <item
-        android:id="@+id/saleListFragment"
+        android:id="@+id/milkSaleListFragment"
         android:icon="@drawable/ic_sales"
         android:orderInCategory="200"
         android:title="@string/sales" />

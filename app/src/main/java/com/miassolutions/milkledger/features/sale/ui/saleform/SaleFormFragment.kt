@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.*
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
@@ -36,28 +37,32 @@ class SaleFormFragment :
         super.setupListeners()
 
         etMilkVolume.doAfterTextChanged {
-            viewModel.onEvent(SaleFormUiEvent.OnVolumeChanged(it.toString()))
+            viewModel.onEvent(OnVolumeChanged(it.toString()))
         }
 
         etDeduction.doAfterTextChanged {
-            viewModel.onEvent(SaleFormUiEvent.OnDeductionChanged(it.toString()))
+            viewModel.onEvent(OnDeductionChanged(it.toString()))
         }
 
-        etReceivedAmount.doAfterTextChanged {
-            viewModel.onEvent(SaleFormUiEvent.OnAmountPaidChanged(it.toString()))
+        etPayment.doAfterTextChanged {
+            viewModel.onEvent(OnAmountPaidChanged(it.toString()))
         }
 
         etNote.doAfterTextChanged {
-            viewModel.onEvent(SaleFormUiEvent.OnNoteChanged(it.toString()))
+            viewModel.onEvent(OnNoteChanged(it.toString()))
         }
 
 
         btnDate.setOnClickListener {
-            viewModel.onEvent(SaleFormUiEvent.OnDateClick)
+            viewModel.onEvent(OnDateClick)
         }
 
         btnSave.setOnClickListener {
-            viewModel.onEvent(SaleFormUiEvent.OnSaveClicked)
+            viewModel.onEvent(OnSaveClicked)
+        }
+
+        btnPaymentDate.setOnClickListener {
+            viewModel.onEvent(OnPaymentDateClick)
         }
 
 
@@ -75,7 +80,7 @@ class SaleFormFragment :
 
             binding.actvCustomerName.setOnItemClickListener { _, _, position, _ ->
                 val selectedCustomer = customers[position]
-                viewModel.onEvent(SaleFormUiEvent.OnCustomerSelected(selectedCustomer))
+                viewModel.onEvent(OnCustomerSelected(selectedCustomer))
             }
         }
 
@@ -83,10 +88,11 @@ class SaleFormFragment :
         collectFlow(viewModel.uiState) { state ->
 
             btnDate.text = state.date.toCompleteDateFormat()
+            btnPaymentDate.text = state.paymentDate.toCompleteDateFormat()
 
             etMilkVolume.setTextIfDifferent(state.volume)
             etDeduction.setTextIfDifferent(state.deduction)
-            etReceivedAmount.setTextIfDifferent(state.amountPaid)
+            etPayment.setTextIfDifferent(state.amountPaid)
             etNote.setTextIfDifferent(state.note)
 
             tvNetMilk.text = state.displayNetMilk
@@ -105,12 +111,18 @@ class SaleFormFragment :
 
                 SaleFormUiEffect.OpenDatePicker -> {
                     showLedgerDatePicker { date ->
-                        viewModel.onEvent(SaleFormUiEvent.OnDateSelected(date))
+                        viewModel.onEvent(OnDateSelected(date))
                     }
                 }
 
                 is SaleFormUiEffect.ShowSnackbar -> {
                     showSnackbar(effect.message)
+                }
+
+                SaleFormUiEffect.OpenPaymentDatePicker -> {
+                    showLedgerDatePicker { date ->
+                        viewModel.onEvent(OnPaymentDateSelected(date))
+                    }
                 }
             }
         }

@@ -2,75 +2,70 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/SaleCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="6dp"
-
-    >
+    app:cardUseCompatPadding="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:padding="10dp">
 
+        <!-- HEADER -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="2"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_sale"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="start"
-            android:layoutDirection="ltr"
+            android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="6dp"
             android:weightSum="8">
 
             <ImageButton
                 android:id="@+id/btn_edit_form"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="2"
-                android:backgroundTint="@color/transparent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
                 android:src="@drawable/ic_edit_form"
-                app:tint="@color/white"
-                tools:ignore="NestedWeights" />
-
+                app:tint="@color/white" />
 
             <TextView
                 android:id="@+id/tvName"
                 style="@style/TextLabel"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="4"
+                android:gravity="center"
                 android:text="Ali"
-                android:textColor="@color/white" />
-
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/btn_customer_detail"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="2"
-                android:backgroundTint="@color/transparent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="12dp"
                 android:rotation="180"
                 android:src="@drawable/ic_arrow"
                 app:tint="@color/white" />
         </LinearLayout>
 
-        <!-- Row 1: Labels and Values -->
+        <!-- ROW 1 : VOLUME INFO -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:backgroundTint="@color/textview_bg_tint"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:background="@drawable/bg_edittext_readable"
             android:orientation="horizontal"
+            android:paddingVertical="8dp"
             android:weightSum="3">
 
-            <!-- Volume -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -78,17 +73,14 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/TextLabel"
+                <TextView style="@style/TextLabel"
                     android:text="Vol." />
-
                 <TextView
                     android:id="@+id/tvMilk"
                     style="@style/TextValue"
                     tools:text="40.0" />
             </LinearLayout>
 
-            <!-- Deduction -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -96,18 +88,13 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/TextLabel"
-                    android:text="Deduction"
-                    android:textSize="20sp"/>
-
+                <TextView style="@style/TextLabel" android:text="Deduction" />
                 <TextView
                     android:id="@+id/tv_deduction"
                     style="@style/TextValue"
                     tools:text="2.0" />
             </LinearLayout>
 
-            <!-- Total -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -115,10 +102,7 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/TextLabel"
-                    android:text="Net Milk" />
-
+                <TextView style="@style/TextLabel" android:text="Net Milk" />
                 <TextView
                     android:id="@+id/tvNetMilk"
                     style="@style/TextValue"
@@ -126,22 +110,16 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!--        <com.google.android.material.divider.MaterialDivider-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_marginVertical="4dp"-->
-        <!--            android:layout_height="1dp" />-->
-        <!-- Row 2: Urdu Labels -->
+        <!-- ROW 2 : PAYMENT INFO -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="6dp"
             android:background="@drawable/bg_edittext_readable"
-
             android:orientation="horizontal"
-            android:paddingBottom="8dp"
+            android:paddingVertical="8dp"
             android:weightSum="4">
 
-            <!-- Price -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -149,17 +127,13 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/TextLabel"
-                    android:text="Price" />
-
+                <TextView style="@style/TextLabel" android:text="Price" />
                 <TextView
                     android:id="@+id/tvPrice"
                     style="@style/TextValue"
-                    android:text="10000" />
+                    tools:text="10000" />
             </LinearLayout>
 
-            <!-- Payment -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -167,41 +141,29 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/TextLabel"
-                    android:gravity="center"
-
-                    android:text="Received" />
+                <TextView style="@style/TextLabel" android:text="Received" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <TextView
-
                         android:id="@+id/tvPayment"
-
                         style="@style/TextValue"
-                        android:text="10,000"
-
-                        />
+                        tools:text="10,000" />
 
                     <TextView
-                        style="@style/TextValue"
                         android:id="@+id/tvReceiveDate"
+                        style="@style/TextValue"
                         android:paddingStart="4dp"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:text="(20/11)"
                         android:visibility="gone" />
                 </LinearLayout>
-
             </LinearLayout>
 
-
-            <!-- Balance -->
             <LinearLayout
                 android:id="@+id/btnBalance"
                 android:layout_width="0dp"
@@ -210,23 +172,22 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/TextLabel"
-                    android:text="Bal." />
-
+                <TextView style="@style/TextLabel" android:text="Bal." />
                 <TextView
                     android:id="@+id/tvBalance"
                     style="@style/TextValue"
-                    android:text="10000"
-                     />
+                    tools:text="10000" />
             </LinearLayout>
         </LinearLayout>
 
-        <!-- Notes -->
+        <!-- NOTES -->
         <TextView
             android:id="@+id/tvNotes"
             style="@style/TextValue"
+            android:layout_marginTop="6dp"
             android:layout_marginStart="12dp"
+            android:alpha="0.85"
             tools:text="Note: no note" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

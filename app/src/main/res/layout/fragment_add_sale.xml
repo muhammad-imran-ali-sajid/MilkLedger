@@ -140,20 +140,20 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Received">
+                    android:hint="Payment">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etReceivedAmount"
+                        android:id="@+id/etPayment"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:minHeight="48dp"
-                        android:paddingVertical="8dp"
+                        android:layout_height="53dp"
+                        android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
-                        android:imeOptions="actionNext" />
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnReceivedDate"
+                    android:id="@+id/btnPaymentDate"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
                     android:layout_height="48dp"

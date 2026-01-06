@@ -83,7 +83,7 @@ class SaleEditBottomSheet : BottomSheetDialogFragment() {
 
         etNotes.setText(sale.notes.orEmpty())
 
-        btnReceivedDate.text =
+        btnPaymentDate.text =
             sale.paidAt?.toCompleteDateFormat() ?: "Date"
     }
 
@@ -115,13 +115,13 @@ class SaleEditBottomSheet : BottomSheetDialogFragment() {
 
     private fun setupListeners() = with(binding) {
 
-        btnReceivedDate.setOnClickListener {
+        btnPaymentDate.setOnClickListener {
             showLedgerDatePicker(
                 isAuthorized = true,
                 initialDate = selectedPaidAt ?: LocalDate.now()
             ) { date ->
                 selectedPaidAt = date
-                btnReceivedDate.text = date.toCompleteDateFormat()
+                btnPaymentDate.text = date.toCompleteDateFormat()
             }
         }
 

@@ -87,6 +87,7 @@ data class SaleFormUiState(
     val deduction: String = "",
     val rate: String = "",
 
+    val paymentDate: LocalDate = LocalDate.now(),
     val amountPaid: String = "", // Payment (Optional)
     val note: String = "",
 
@@ -117,6 +118,11 @@ data class SaleFormUiState(
 
 sealed interface SaleFormUiEvent {
     data object OnDateClick : SaleFormUiEvent
+
+    data object OnPaymentDateClick : SaleFormUiEvent
+
+    data class OnPaymentDateSelected(val paymentDate: LocalDate) : SaleFormUiEvent
+
     data class OnDateSelected(val date: LocalDate) : SaleFormUiEvent
     data class OnCustomerSelected(val customer: Account) : SaleFormUiEvent
 
@@ -130,6 +136,8 @@ sealed interface SaleFormUiEvent {
 }
 
 sealed interface SaleFormUiEffect {
+
+    data object OpenPaymentDatePicker : SaleFormUiEffect
     data object OpenDatePicker : SaleFormUiEffect
     data object NavigateBack : SaleFormUiEffect
     data class ShowSnackbar(val message: String) : SaleFormUiEffect

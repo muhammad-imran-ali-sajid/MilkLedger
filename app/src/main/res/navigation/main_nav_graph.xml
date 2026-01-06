@@ -169,18 +169,6 @@
             app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/saleListFragment"
-        android:name="com.miassolutions.milkledger.features.sale.ui.list.SaleListFragment"
-        android:label="Sales"
-        tools:layout="@layout/fragment_sales">
-        <action
-            android:id="@+id/action_saleListFragment_to_customerDetailFragment"
-            app:destination="@id/customerDetailFragment" />
-        <action
-            android:id="@+id/action_saleListFragment_to_saleAddFragment"
-            app:destination="@id/saleAddFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/accountListFragment"
         android:name="com.miassolutions.milkledger.features.account.list.AccountListFragment"
         android:label="Accounts"
@@ -226,4 +214,15 @@
             android:name="expense"
             app:argType="com.miassolutions.milkledger.features.expense.domain.Expense" />
     </dialog>
+    <fragment
+        android:id="@+id/milkSaleListFragment"
+        android:name="com.miassolutions.milkledger.features.milk.MilkSaleListFragment"
+        android:label="MilkSaleListFragment" >
+        <action
+            android:id="@+id/action_milkSaleListFragment_to_saleAddFragment"
+            app:destination="@id/saleAddFragment" />
+        <action
+            android:id="@+id/action_milkSaleListFragment_to_customerDetailFragment"
+            app:destination="@id/customerDetailFragment" />
+    </fragment>
 </navigation>

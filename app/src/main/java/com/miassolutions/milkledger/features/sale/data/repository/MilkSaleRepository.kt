@@ -13,6 +13,7 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.customer.domain.Customer
+import com.miassolutions.milkledger.features.sale.domain.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
@@ -27,6 +28,10 @@ class MilkSaleRepository @Inject constructor(
     private val db: AppDatabase
 ) {
 
+    fun getSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>> {
+        return milkDao.getMilkSalesByDate(start, end)
+    }
+
     fun getCustomers(): Flow<List<Account>> {
         return accountDao.getAccountsByType(AccountType.CUSTOMER).map { list ->
             list.map { it.toDomain() }
@@ -38,21 +43,22 @@ class MilkSaleRepository @Inject constructor(
     }
 
     suspend fun saveMilkSale(
-        dateMillis : Long,
+        dateMillis: Long,
         accountId: String,
-        volume:Double,
-        deduction:Double,
-        rate:Double,
-        amountPaid:Long, //paisa
-        note:String?
-    ){
+        volume: Double,
+        deduction: Double,
+        rate: Double,
+        amountPaid: Long, //paisa
+        note: String?
+    ) {
         db.withTransaction {
             val netQuantity = volume - deduction
 
-            val totalPriceDouble = MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate)
+            val totalPriceDouble =
+                MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate)
             val totalPricePaisa = totalPriceDouble.toLongPaisa()
 
-            val milkEntity  = MilkTransactionEntity(
+            val milkEntity = MilkTransactionEntity(
                 accountId = accountId,
                 dateMillis = dateMillis,
                 type = TransactionType.SALE,
@@ -62,7 +68,7 @@ class MilkSaleRepository @Inject constructor(
                 notes = note
             )
 
-             milkDao.insert(milkEntity)
+            milkDao.insert(milkEntity)
 
             val saleLedger = FinancialLedgerEntity(
                 dateMillis = dateMillis,
@@ -77,7 +83,7 @@ class MilkSaleRepository @Inject constructor(
 
             ledgerDao.insert(saleLedger)
 
-            if (amountPaid >0){
+            if (amountPaid > 0) {
                 val paymentLedger = FinancialLedgerEntity(
                     dateMillis = dateMillis,
                     accountId = accountId,
