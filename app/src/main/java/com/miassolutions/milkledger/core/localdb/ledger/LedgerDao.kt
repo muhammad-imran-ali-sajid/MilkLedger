@@ -10,6 +10,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LedgerDao {
 
+    // Balance calculation hamesha shuru se hoti hai (ORDER BY dateMillis ASC)
+    @Query("""
+        SELECT * FROM financial_ledger_table 
+        WHERE accountId = :accountId 
+        AND deletedAtMillis IS NULL
+        ORDER BY dateMillis ASC, createdAtMillis ASC
+    """)
+    fun getLedgerForRunningBalance(accountId: String): Flow<List<FinancialLedgerEntity>>
+
     //  Account save/update karte waqt purana balance hatana zaroori hai
     @Query("DELETE FROM financial_ledger_table WHERE accountId = :accountId AND type = 'OPENING_BALANCE'")
     suspend fun deleteOpeningBalance(accountId: String)

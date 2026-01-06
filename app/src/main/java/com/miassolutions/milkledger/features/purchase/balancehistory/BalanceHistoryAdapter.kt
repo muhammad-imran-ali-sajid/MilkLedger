@@ -38,8 +38,8 @@ class BalanceHistoryAdapter(
             binding.tvDate.text = item.dateMillis.toLocalDate().toDisplayDate()
 
             val balance = item.balance
-            binding.tvBalance.text = numberFormat(balance)
-            binding.tvBalance.setTextColor(textColor(balance))
+//            binding.tvBalance.text = numberFormat(balance)
+//            binding.tvBalance.setTextColor(textColor(balance))
 
             binding.root.setOnClickListener {
                 onItemClick?.invoke(item)

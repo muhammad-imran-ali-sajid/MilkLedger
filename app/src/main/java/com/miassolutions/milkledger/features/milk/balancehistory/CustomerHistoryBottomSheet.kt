@@ -39,13 +39,15 @@ class CustomerHistoryBottomSheet : BottomSheetDialogFragment() {
             "${args.customerName}'s History"
 
 
-        val adapter = HistoryAdapter()
+        val adapter = BalanceHistoryAdapter()
         binding.rvHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.rvHistory.adapter = adapter
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.getHistory(args.customerId).collect { historyList ->
-                adapter.submitList(historyList)
+        lifecycleScope.launch {
+            viewModel.getRunningBalanceHistory(args.customerId).collect { list ->
+                adapter.submitList(list)
+
+                // Optional: Agar list empty hai to empty view dikhayen
             }
         }
     }

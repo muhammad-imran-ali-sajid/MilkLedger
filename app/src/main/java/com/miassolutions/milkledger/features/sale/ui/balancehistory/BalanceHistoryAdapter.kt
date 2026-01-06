@@ -34,21 +34,21 @@ class BalanceHistoryAdapter :
         fun bind(item: BalanceHistoryItem) = with(binding) {
 
             tvDate.text = item.date.toCompleteDateFormat()
+//
+//            tvChange.text =
+//                if (item.change >= 0)
+//                    "+${item.change.toPrice()}"
+//                else
+//                    item.change.toPrice()
+//
+//            tvChange.setTextColor(
+//                if (item.change >= 0)
+//                    Color.parseColor("#2E7D32") // green
+//                else
+//                    Color.parseColor("#C62828") // red
+//            )
 
-            tvChange.text =
-                if (item.change >= 0)
-                    "+${item.change.toPrice()}"
-                else
-                    item.change.toPrice()
-
-            tvChange.setTextColor(
-                if (item.change >= 0)
-                    Color.parseColor("#2E7D32") // green
-                else
-                    Color.parseColor("#C62828") // red
-            )
-
-            tvBalance.text = item.balanceAfter.toPrice()
+//            tvBalance.text = item.balanceAfter.toPrice()
         }
     }
 
