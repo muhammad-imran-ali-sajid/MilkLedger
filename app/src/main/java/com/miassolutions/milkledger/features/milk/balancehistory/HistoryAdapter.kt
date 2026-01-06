@@ -48,6 +48,7 @@ class HistoryAdapter : ListAdapter<CustomerHistoryUi, HistoryAdapter.HistoryView
                     HistoryType.DEBIT -> R.color.red    // Sale/Udhaar (Red)
                 }
 
+
                 // Colors.xml wala rang uthayen
                 tvAmount.setTextColor(ContextCompat.getColor(context, colorRes))
             }
