@@ -4,7 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
+import com.miassolutions.milkledger.features.milk.SaleDetailTuple
 import com.miassolutions.milkledger.features.sale.domain.model.MilkSaleUiModel
 import kotlinx.coroutines.flow.Flow
 
@@ -16,6 +18,47 @@ interface MilkDao {
 
     @Update
     suspend fun update(milkTransaction: MilkTransactionEntity)
+
+
+    @Transaction // Safe side k liye
+    @Query("""
+        SELECT 
+            m.*, 
+            
+            -- Account Columns (Prefix k sath map kar rahe hain)
+            a.accountId as acc_accountId,
+            a.name as acc_name,
+            a.phone as acc_phone,
+            a.accountType as acc_accountType,
+            a.sortOrder as acc_sortOrder,
+            a.advanceAmount as acc_advanceAmount,
+            a.defaultRate as acc_defaultRate,
+            a.initialBalance as acc_initialBalance,
+            a.createdAtMillis as acc_createdAtMillis,
+            a.updatedAtMillis as acc_updatedAtMillis,
+            a.isSynced as acc_isSynced,
+            a.deletedAtMillis as acc_deletedAtMillis,
+
+            -- Payment Info (Ledger se)
+            l.credit as paymentAmount,
+            l.dateMillis as paymentDate
+
+        FROM milk_transactions_table m
+        
+        -- 1. Join Customer
+        INNER JOIN accounts_table a ON m.accountId = a.accountId
+        
+        -- 2. Join Payment (Sirf wo entry jo CASH_RECEIVED ho aur isi sale se linked ho)
+        LEFT JOIN financial_ledger_table l 
+            ON l.referenceId = m.milkTransId 
+            AND l.type = 'CASH_RECEIVED' 
+            AND l.deletedAtMillis IS NULL
+
+        WHERE m.milkTransId = :saleId
+    """)
+    suspend fun getSaleDetailById(saleId: String): SaleDetailTuple?
+
+
 
     // Kisi aik Customer ki History dekhne ke liye
     @Query("""
@@ -36,8 +79,8 @@ interface MilkDao {
         m.dateMillis,
         m.accountId as customerId,  -- ✅ Fix 1: Alias match karwaya (accountId -> customerId)
         a.name as customerName,
-        m.quantity, 
-        0.0 as deduction,
+        m.volume as quantity, 
+        m.deduction as deduction,
         m.quantity as netQuantity,
         m.totalAmount,
         m.notes as note,

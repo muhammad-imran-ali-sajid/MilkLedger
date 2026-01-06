@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.sale.data.repository
+package com.miassolutions.milkledger.features.milk
 
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.core.localdb.AppDatabase
@@ -12,13 +12,13 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
-import com.miassolutions.milkledger.features.customer.domain.Customer
 import com.miassolutions.milkledger.features.sale.domain.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
-import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import javax.inject.Inject
 
 class MilkSaleRepository @Inject constructor(
@@ -43,12 +43,13 @@ class MilkSaleRepository @Inject constructor(
     }
 
     suspend fun saveMilkSale(
-        dateMillis: Long,
+        saleDate: LocalDate,
+        paymentDate: LocalDate,
         accountId: String,
-        volume: Double,
-        deduction: Double,
+        volume: Double,    // ✅ New Param
+        deduction: Double, // ✅ New Param
         rate: Double,
-        amountPaid: Long, //paisa
+        amountPaid: Long,
         note: String?
     ) {
         db.withTransaction {
@@ -60,8 +61,11 @@ class MilkSaleRepository @Inject constructor(
 
             val milkEntity = MilkTransactionEntity(
                 accountId = accountId,
-                dateMillis = dateMillis,
+                dateMillis = saleDate.toMillis(),
                 type = TransactionType.SALE,
+
+                volume =  volume,
+                deduction = deduction,
                 quantity = netQuantity,
                 rateUsed = rate,
                 totalAmount = totalPricePaisa,
@@ -71,24 +75,24 @@ class MilkSaleRepository @Inject constructor(
             milkDao.insert(milkEntity)
 
             val saleLedger = FinancialLedgerEntity(
-                dateMillis = dateMillis,
+                dateMillis = saleDate.toMillis(),
                 accountId = accountId,
                 referenceId = milkEntity.milkTransId,
                 type = LedgerEntryType.MILK_SALE,
                 debit = totalPricePaisa,
                 credit = 0,
                 profitImpact = totalPricePaisa,
-                note = "Milk sale: $netQuantity liters"
+                note = "Milk: $volume - $deduction = $netQuantity Ltr"
             )
 
             ledgerDao.insert(saleLedger)
 
             if (amountPaid > 0) {
                 val paymentLedger = FinancialLedgerEntity(
-                    dateMillis = dateMillis,
+                    dateMillis = paymentDate.toMillis(),
                     accountId = accountId,
-                    referenceId = null,
                     type = LedgerEntryType.CASH_RECEIVED,
+                    referenceId = milkEntity.milkTransId,
                     debit = 0,
                     credit = amountPaid,
                     profitImpact = 0,

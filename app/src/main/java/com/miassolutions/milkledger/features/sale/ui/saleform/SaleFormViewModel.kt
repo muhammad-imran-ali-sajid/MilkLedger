@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.customer.ui.mapper.toDropDownUi
 import com.miassolutions.milkledger.features.customer.ui.model.DropDownCustomerListUi
-import com.miassolutions.milkledger.features.sale.data.repository.MilkSaleRepository
+import com.miassolutions.milkledger.features.milk.MilkSaleRepository
 import com.miassolutions.milkledger.features.sale.domain.model.Sale
 import com.miassolutions.milkledger.features.sale.domain.usecase.CalculateSaleUseCase
 import com.miassolutions.milkledger.features.sale.domain.usecase.CheckDuplicateSaleUseCase
@@ -31,23 +31,33 @@ class SaleFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(SaleFormUiState()) {
 
-    // Customers List alag flow me rakhna behtar hai state se
+
+    private val saleId: String? = savedStateHandle["saleId"]
+    val passedDate = savedStateHandle["saleDate"] ?: -1L
+
+    val customersList = repository.getCustomers()
 
     init {
 
-        val dateMillis = savedStateHandle["saleDate"] ?: -1L
-
-        val initialDate = if (dateMillis != -1L) {
-            dateMillis.toLocalDate()
+        if (saleId != null){
+            loadSaleForEdit(saleId)
         } else {
-            LocalDate.now()
+
+            val initialDate = if (passedDate != -1L) passedDate.toLocalDate() else LocalDate.now()
+
+            updateState { it.copy(date = initialDate, paymentDate = initialDate) }
         }
 
-        updateState { it.copy(date = initialDate, paymentDate = initialDate) }
+
 
     }
 
-    val customersList = repository.getCustomers()
+    private fun loadSaleForEdit(id: String){
+        viewModelScope.launch {
+//            val saleDetails = repository.getSalesByDate()
+        }
+    }
+
 
     override fun onEvent(event: SaleFormUiEvent) {
         when (event) {
@@ -122,9 +132,13 @@ class SaleFormViewModel @Inject constructor(
             emitEffect(SaleFormUiEffect.ShowSnackbar("Please select a customer"))
             return
         }
-        val vol = state.volume.toDoubleOrNull()
-        if (vol == null || vol <= 0) {
-            emitEffect(SaleFormUiEffect.ShowSnackbar("Please enter valid volume"))
+        val vol = state.volume.toDoubleOrNull() ?: 0.0
+        val payment = state.amountPaid.toDoubleOrNull() ?: 0.0
+
+        // agr dono false hon tu error dikhao wrna aik bhi true ho tu aagy jao i.e. save kro
+
+        if (vol <= 0 && payment <= 0) {
+            emitEffect(SaleFormUiEffect.ShowSnackbar("Please enter volume or payment"))
             return
         }
 
@@ -132,14 +146,15 @@ class SaleFormViewModel @Inject constructor(
             updateState { it.copy(isSaving = true) }
             try {
                 repository.saveMilkSale(
-                    dateMillis = state.date.toMillis(),
                     accountId = state.selectedCustomer!!.accountId,
                     volume = vol,
                     deduction = state.deduction.toDoubleOrNull() ?: 0.0,
                     rate = state.rate.toDoubleOrNull() ?: 0.0,
                     amountPaid = (state.amountPaid.toDoubleOrNull()
                         ?: 0.0).toLong() * 100, // Rs to Paisa
-                    note = state.note
+                    note = state.note,
+                    saleDate = state.date,
+                    paymentDate = state.paymentDate
                 )
                 emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Saved Successfully"))
                 emitEffect(SaleFormUiEffect.NavigateBack)

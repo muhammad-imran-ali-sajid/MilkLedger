@@ -18,7 +18,11 @@ data class MilkTransactionEntity(
     val type: TransactionType,      // SALE, PURCHASE, RETURN
 
     // --- Measurements ---
-    val quantity: Double,           // Liters
+    val volume: Double,           // Liters
+    val deduction: Double,
+    val quantity: Double,
+
+
     val fat: Double? = null,        // Nullable for Sale
     val lr: Double? = null,
     val ts: Double? = null,

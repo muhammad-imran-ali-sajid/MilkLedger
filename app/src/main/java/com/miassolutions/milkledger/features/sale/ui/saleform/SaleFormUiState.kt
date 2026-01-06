@@ -79,6 +79,8 @@ import java.time.LocalDate
 /* New Ledger type Sale*/
 
 data class SaleFormUiState(
+    val isEditMode : Boolean = false,
+
     val date: LocalDate = LocalDate.now(),
     val selectedCustomer: Account? = null,
     val currentBalance: Long = 0, // Paisa

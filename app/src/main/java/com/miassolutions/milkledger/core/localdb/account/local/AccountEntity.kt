@@ -1,11 +1,14 @@
 package com.miassolutions.milkledger.core.localdb.account.local
 
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
+@Parcelize
 @Entity(
     tableName = "accounts_table",
     indices = [Index(value = ["sortOrder", "accountType"])]
@@ -31,6 +34,6 @@ data class AccountEntity(
     val updatedAtMillis: Long = System.currentTimeMillis(),
     val isSynced: Boolean = false,
     val deletedAtMillis: Long? = null
-)
+): Parcelable
 
 enum class AccountType { CUSTOMER, SUPPLIER, OWNER }

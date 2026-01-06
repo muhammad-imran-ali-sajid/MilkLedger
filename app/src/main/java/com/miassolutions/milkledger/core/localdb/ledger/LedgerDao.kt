@@ -10,6 +10,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LedgerDao {
 
+    //  Account save/update karte waqt purana balance hatana zaroori hai
+    @Query("DELETE FROM financial_ledger_table WHERE accountId = :accountId AND type = 'OPENING_BALANCE'")
+    suspend fun deleteOpeningBalance(accountId: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(ledgerEntries: List<FinancialLedgerEntity>)
 
