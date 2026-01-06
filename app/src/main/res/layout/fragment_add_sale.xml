@@ -5,22 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
+    android:orientation="vertical">
 
-    >
-
+    <!-- Date Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_date"
         style="@style/MaterialButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="0dp"
         android:layout_marginTop="8dp"
         android:text="03 Dec 2025" />
 
     <ScrollView
-        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -31,29 +28,31 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Customer Name -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_customer_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="Customer Name">
+                android:hint="Customer Name"
+                android:minHeight="0dp">
 
                 <AutoCompleteTextView
                     android:id="@+id/actv_customer_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:completionThreshold="1"
-                    android:drawablePadding="8dp"
-
+                    android:minHeight="48dp"
+                    android:paddingVertical="8dp"
                     android:inputType="none"
                     tools:ignore="LabelFor" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Volume & Deduction -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
@@ -64,14 +63,16 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etMilkVolume"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:inputType="numberDecimal"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View
-                    android:layout_width="4dp"
-                    android:layout_height="match_parent" />
+                    android:layout_width="8dp"
+                    android:layout_height="1dp" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="0dp"
@@ -82,98 +83,87 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDeduction"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:inputType="numberDecimal"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
-
             </LinearLayout>
 
+            <!-- Net Milk -->
             <TextView
-
                 android:id="@+id/tvNetMilk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_edittext_readable"
-                android:padding="8dp"
+                android:padding="12dp"
                 android:text="Net Milk: 100" />
 
+            <!-- Price & Rate -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext_readable"
-                android:padding="8dp">
+                android:layout_marginTop="8dp">
 
                 <TextView
                     android:id="@+id/tvMilkPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:layout_weight="2"
-                    android:text="Price: 1000"
-                    android:textColor="@color/black" />
+                    android:background="@drawable/bg_edittext_readable"
+                    android:padding="12dp"
+                    android:text="Price: 1000" />
 
                 <TextView
                     android:id="@+id/tv_rate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Rate: 160"
-                    android:textColor="@color/black" />
-
-
+                    android:background="@drawable/bg_edittext_readable"
+                    android:backgroundTint="@color/textview_bg_tint"
+                    android:gravity="center"
+                    android:padding="12dp"
+                    android:text="Rate: 160" />
             </LinearLayout>
 
+            <!-- Received & Date -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:weightSum="2">
+                android:layout_marginTop="8dp">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/paymentLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Received"
->
+                    android:hint="Received">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etReceivedAmount"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp"
+                        android:paddingVertical="8dp"
+                        android:inputType="numberDecimal"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnReceivedDate"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginHorizontal="4dp"
+                    android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    android:text="Received Date"
-                    android:textSize="20sp"
-                    app:autoSizeMaxTextSize="16sp"
-                    app:autoSizeMinTextSize="8sp"
-                    app:autoSizeStepGranularity="1sp"
-                    app:autoSizeTextType="uniform"
-                    app:strokeColor="@color/primary" />
-
-
+                    android:text="Date"
+                     />
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.Constraints
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-            </androidx.constraintlayout.widget.Constraints>
-
+            <!-- Balance -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -182,41 +172,32 @@
                 android:padding="12dp"
                 android:text="Balance: 0" />
 
-
+            <!-- Note -->
             <com.google.android.material.textfield.TextInputLayout
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Note"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnReceivedDate"
-                app:layout_constraintStart_toEndOf="@+id/label"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.3">
+                android:hint="Note">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNote"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:paddingVertical="8dp"
+                    android:inputType="textCapSentences"
+                    android:imeOptions="actionDone" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
         </LinearLayout>
-
     </ScrollView>
 
+    <!-- Bottom Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-
-        android:weightSum="2">
-
+        android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"
@@ -224,21 +205,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-
-
             android:text="OK" />
-
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_saveNew"
             style="@style/MaterialButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:text="OK &amp; New" />
-
     </LinearLayout>
 
 </LinearLayout>

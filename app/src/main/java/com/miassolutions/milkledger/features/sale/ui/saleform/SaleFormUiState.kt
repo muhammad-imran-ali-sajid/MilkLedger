@@ -92,27 +92,26 @@ data class SaleFormUiState(
 
     val calculatedTotal: Double = 0.0, // Live Calculation
     val isSaving: Boolean = false
-){
+) {
 
 
-    private val volumeDouble : Double
-        get() = 50.5
+    private val volumeDouble: Double
+        get() = volume.toDoubleOrNull() ?: 0.0
 
-    private val deductionDouble : Double
+    private val deductionDouble: Double
         get() = deduction.toDoubleOrNull() ?: 0.0
 
-    private val rateDouble : Double
+    private val rateDouble: Double
         get() = rate.toDoubleOrNull() ?: 0.0
 
-    private val netMilk : Double
+    private val netMilk: Double
         get() = volumeDouble - deductionDouble
 
     val displayRate: String
         get() = "Rate: $rateDouble"
-    val displayNetMilk : String
+    val displayNetMilk: String
         get() = "Net Milk: ${netMilk.toMilkAmount()}"
 
-    val displayPrice = "Price: ${(netMilk * rateDouble).toPrice()}"
 
 }
 
