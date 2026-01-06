@@ -30,7 +30,6 @@ class SaleFormFragment :
     private val viewModel: SaleFormViewModel by viewModels()
     private val args: SaleFormFragmentArgs by navArgs()
 
-    private var customerAdapter: ArrayAdapter<String>? = null
 
     override fun setupListeners() = with(binding) {
 
@@ -83,16 +82,17 @@ class SaleFormFragment :
 
         collectFlow(viewModel.uiState) { state ->
 
+            btnDate.text = state.date.toCompleteDateFormat()
 
             etMilkVolume.setTextIfDifferent(state.volume)
             etDeduction.setTextIfDifferent(state.deduction)
             etReceivedAmount.setTextIfDifferent(state.amountPaid)
             etNote.setTextIfDifferent(state.note)
 
-            tvRate.text = state.displayRate
             tvNetMilk.text = state.displayNetMilk
             tvMilkPrice.text = "Price: ${state.calculatedTotal.toPrice()}"
-            btnDate.text = state.date.toCompleteDateFormat()
+            tvRate.text = state.displayRate
+            tvBalance.text = "Balance: ${state.currentBalance.toPrice()}"
 
         }
 

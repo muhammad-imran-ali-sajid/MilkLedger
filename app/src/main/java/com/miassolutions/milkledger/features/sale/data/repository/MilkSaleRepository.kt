@@ -62,7 +62,7 @@ class MilkSaleRepository @Inject constructor(
                 notes = note
             )
 
-            val milkTxId = milkDao.insert(milkEntity)
+             milkDao.insert(milkEntity)
 
             val saleLedger = FinancialLedgerEntity(
                 dateMillis = dateMillis,
