@@ -40,18 +40,18 @@ fun Sale.toEntity(): SaleEntity =
         notes = notes
     )
 
-fun SaleFormUiState.toDomain(): Sale =
-    Sale(
-        id = this.saleId ?: UUID.randomUUID().toString(),
-        customerId = selectedCustomer!!.id,
-        date = saleDate,
-        volume = volume.toDoubleOrNull() ?: 0.0,
-        deduction = deduction.toDoubleOrNull() ?: 0.0,
-        netMilk = netMilk,
-        rateUsed = rateUsed,
-        price = price,
-        paid = receivedAmount.toDoubleOrNull() ?: 0.0,
-        notes = notes.orEmpty(),
-        paidAt = receivedDate,
-        balance = balance,
-    )
+//fun SaleFormUiState.toDomain(): Sale =
+//    Sale(
+//        id = this.saleId ?: UUID.randomUUID().toString(),
+//        customerId = selectedCustomer!!.id,
+//        date = saleDate,
+//        volume = volume.toDoubleOrNull() ?: 0.0,
+//        deduction = deduction.toDoubleOrNull() ?: 0.0,
+//        netMilk = netMilk,
+//        rateUsed = rateUsed,
+//        price = price,
+//        paid = receivedAmount.toDoubleOrNull() ?: 0.0,
+//        notes = notes.orEmpty(),
+//        paidAt = receivedDate,
+//        balance = balance,
+//    )

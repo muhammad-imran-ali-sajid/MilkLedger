@@ -39,6 +39,8 @@ fun Double.toPrice(format: String = "%.0f"): String {
     return String.format(format, this)
 }
 
+fun Double.toLongPaisa() = (this * 100).toLong()
+
 fun View.hide() {
     this.visibility = View.GONE
 }

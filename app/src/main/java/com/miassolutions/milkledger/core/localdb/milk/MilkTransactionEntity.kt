@@ -21,7 +21,7 @@ data class MilkTransactionEntity(
     val quantity: Double,           // Liters
     val fat: Double? = null,        // Nullable for Sale
     val lr: Double? = null,
-    val snf: Double? = null,
+    val ts: Double? = null,
 
     // --- Financials ---
     val rateUsed: Double,

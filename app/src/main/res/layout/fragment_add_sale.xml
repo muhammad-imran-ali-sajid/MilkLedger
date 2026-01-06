@@ -52,158 +52,124 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
-                style="@style/Style.InputRow"
-                android:layout_marginTop="8dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <TextView
-                    style="@style/Style.InputLabel"
-                    android:text="Volume" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Volume">
 
-                <EditText
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etMilkVolume"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                    android:id="@+id/etVolume"
-                    style="@style/Style.EditTextInput"
-                    android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Deduction">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDeduction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-                style="@style/Style.InputRow"
-                android:layout_marginTop="8dp">
+            <TextView
 
-                <TextView
-                    style="@style/Style.InputLabel"
-                    android:text="Deduction" />
-
-                <EditText
-                    android:id="@+id/etDeduction"
-                    style="@style/Style.EditTextInput"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/Style.InputRow"
-                android:layout_marginTop="8dp">
-
-                <TextView
-                    style="@style/Style.InputLabel"
-                    android:text="Net Milk" />
-
-                <TextView
-                    android:id="@+id/tvNetMilk"
-                    style="@style/Style.TextViewValue.ReadOnly"
-                    android:layout_weight="4"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tvNetMilk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext_readable"
+                android:padding="8dp"
+                android:text="Net Milk: 100" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext_readable"
+                android:padding="8dp">
 
                 <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Price"
-                    android:textColor="@color/black"
-
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.1" />
-
-                <TextView
-                    android:id="@+id/tv_price"
-                    style="@style/Style.TextViewValue"
-                    android:layout_width="0dp"
-                    android:paddingEnd="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_rate_header"
-                    app:layout_constraintHorizontal_bias="0.75"
-                    app:layout_constraintStart_toEndOf="@id/textView"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.3" />
-
-                <TextView
-                    android:id="@+id/tv_rate_header"
+                    android:id="@+id/tvMilkPrice"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Rate"
-                    android:textColor="@color/black"
-                    android:textSize="10sp"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_rate"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_rate"
-                    app:layout_constraintStart_toStartOf="@+id/tv_rate"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="2"
+                    android:text="Price: 1000"
+                    android:textColor="@color/black" />
 
                 <TextView
                     android:id="@+id/tv_rate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingStart="4dp"
-                    android:text="000"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_rate_header"
-                    app:layout_constraintWidth_percent="0.3" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:layout_weight="1"
+                    android:text="Rate: 160"
+                    android:textColor="@color/black" />
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:layout_marginTop="8dp"
+                android:weightSum="2">
 
-
-                <TextView
-                    android:id="@+id/label"
-                    style="@style/Style.InputLabel"
-                    android:layout_width="0dp"
-                    android:text="Received"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.33" />
-
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/etPayment"
-                    style="@style/Style.TextViewValue"
                     android:layout_width="0dp"
-                    android:inputType="numberDecimal"
-                    android:paddingEnd="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Received"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/btnReceivedDate"
-                    app:layout_constraintHorizontal_bias="0.03"
                     app:layout_constraintStart_toEndOf="@+id/label"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.3" />
+                    app:layout_constraintWidth_percent="0.3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etReceivedAmount"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnReceivedDate"
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginHorizontal="4dp"
-                    android:text="Date"
-                    android:textColor="@color/primary"
+                    android:layout_weight="1"
+                    android:text="Received Date"
                     android:textSize="20sp"
                     app:autoSizeMaxTextSize="16sp"
                     app:autoSizeMinTextSize="8sp"
                     app:autoSizeStepGranularity="1sp"
                     app:autoSizeTextType="uniform"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/etPayment"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:strokeColor="@color/primary" />
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
             <androidx.constraintlayout.widget.Constraints
                 android:layout_width="match_parent"
@@ -212,38 +178,33 @@
 
             </androidx.constraintlayout.widget.Constraints>
 
-
-            <LinearLayout
-                style="@style/Style.InputRow"
-                android:layout_marginTop="8dp">
-
-                <TextView
-                    style="@style/Style.InputLabel"
-                    android:text="Balance" />
-
-                <TextView
-                    android:id="@+id/tv_balance"
-                    style="@style/Style.TextViewValue.ReadOnly"
-                    android:layout_weight="4"
-                    android:inputType="numberDecimal" />
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/Style.InputRow"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:gravity="top">
+                android:background="@drawable/bg_edittext_readable"
+                android:padding="12dp"
+                android:text="Balance: 0" />
 
-                <TextView
-                    style="@style/Style.InputLabel"
-                    android:paddingTop="8dp"
-                    android:text="Notes" />
 
-                <EditText
-                    android:id="@+id/et_notes"
-                    style="@style/Style.EditTextInput"
-                    android:imeOptions="actionDone"
-                    android:inputType="textCapSentences" />
-            </LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Note"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btnReceivedDate"
+                app:layout_constraintStart_toEndOf="@+id/label"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.3">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
         </LinearLayout>

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.customer.ui.mapper.toDropDownUi
 import com.miassolutions.milkledger.features.customer.ui.model.DropDownCustomerListUi
+import com.miassolutions.milkledger.features.sale.data.repository.MilkSaleRepository
 import com.miassolutions.milkledger.features.sale.domain.model.Sale
 import com.miassolutions.milkledger.features.sale.domain.usecase.CalculateSaleUseCase
 import com.miassolutions.milkledger.features.sale.domain.usecase.CheckDuplicateSaleUseCase
@@ -14,6 +15,8 @@ import com.miassolutions.milkledger.features.sale.domain.usecase.SaveSaleUseCase
 import com.miassolutions.milkledger.features.sale.domain.usecase.UpdateSaleUseCase
 import com.miassolutions.milkledger.features.sale.mapper.toDomain
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
+import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
@@ -24,181 +27,99 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SaleFormViewModel @Inject constructor(
-    private val savedStateHandle: SavedStateHandle,
-    observeCustomer: ObserveCustomerUseCase,
-    private val getSaleById: GetSaleByIdUseCase,
-    private val insertSale: SaveSaleUseCase,
-    private val updateSale: UpdateSaleUseCase,
-    private val checkDuplicateSale: CheckDuplicateSaleUseCase,
-    private val calculateSale: CalculateSaleUseCase
-) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(
-    initialState = SaleFormUiState()
-) {
+    private val repository: MilkSaleRepository
+) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(SaleFormUiState()) {
 
-    private var editingSale: Sale? = null
-
-    init {
-        // Check if we're editing
-        val saleId: String? = savedStateHandle["saleId"]
-        saleId?.let {
-            onEvent(SaleFormUiEvent.EditSaleLoaded(it))
-        }
-
-        val saleDate : Long? = savedStateHandle["saleDate"]
-
-        saleDate?.let { date->
-            updateState { it.copy(saleDate = date.toLocalDate(), receivedDate = date.toLocalDate()) }
-        }
-
-        // Observe customers
-        observeCustomer()
-            .map { list -> list.map { it.toDropDownUi() } }
-            .onEach { customers ->
-                updateState { current ->
-                    // If editing, show only selected customer
-                    if (current.mode == SaleMode.EDIT && editingSale != null) {
-                        val selected = customers.firstOrNull { it.id == editingSale!!.customerId }
-                        current.copy(customers = selected?.let { listOf(it) } ?: emptyList())
-                    } else {
-                        current.copy(customers = customers)
-                    }
-                }
-                applyEditIfReady()
-            }
-            .launchIn(viewModelScope)
-
-        // Auto-calculate price/balance
-        uiState.map {
-            calculateSale(
-                volume = it.volume,
-                deduction = it.deduction,
-                rate = it.rateUsed,
-                received = it.receivedAmount
-            )
-        }
-            .onEach { result ->
-                updateState { current ->
-                    current.copy(
-                        netMilk = result.netMilk,
-                        price = result.price,
-                        balance = result.balance
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-    }
+    // Customers List alag flow me rakhna behtar hai state se
+    val customersList = repository.getCustomers()
 
     override fun onEvent(event: SaleFormUiEvent) {
         when (event) {
+            is SaleFormUiEvent.OnDateSelected -> updateState { it.copy(date = event.date) }
 
-            is SaleFormUiEvent.EditSaleLoaded -> {
-                viewModelScope.launch {
-                    val sale = getSaleById(event.saleId) ?: return@launch
-                    editingSale = sale
-                    updateState { it.copy(mode = SaleMode.EDIT, saleId = sale.id) }
-                    applyEditIfReady()
-                }
+            is SaleFormUiEvent.OnCustomerSelected -> {
+                // Customer select hotay hi Rate aur Balance fetch karein
+                updateState { it.copy(
+                    selectedCustomer = event.customer,
+                    rate = event.customer.defaultRate.toString() // Auto-fill Rate
+                ) }
+                fetchBalance(event.customer.accountId)
+                calculateTotal()
             }
 
-            is SaleFormUiEvent.CustomerSelected -> {
-                updateState {
-                    it.copy(
-                        selectedCustomer = DropDownCustomerListUi(
-                            id = event.customerId,
-                            name = event.customerName,
-                            rate = event.rate
-                        ),
-                        rateUsed = event.rate
-                    )
-                }
-            }
-
-            is SaleFormUiEvent.VolumeChanged ->
+            is SaleFormUiEvent.OnVolumeChanged -> {
                 updateState { it.copy(volume = event.value) }
-
-            is SaleFormUiEvent.DeductionChanged ->
+                calculateTotal()
+            }
+            is SaleFormUiEvent.OnDeductionChanged -> {
                 updateState { it.copy(deduction = event.value) }
+                calculateTotal()
+            }
+            is SaleFormUiEvent.OnRateChanged -> {
+                updateState { it.copy(rate = event.value) }
+                calculateTotal()
+            }
+            is SaleFormUiEvent.OnAmountPaidChanged -> {
+                updateState { it.copy(amountPaid = event.value) }
+            }
+            is SaleFormUiEvent.OnNoteChanged -> updateState { it.copy(note = event.value) }
 
-            is SaleFormUiEvent.PaymentChanged ->
-                updateState { it.copy(receivedAmount = event.value) }
+            is SaleFormUiEvent.OnSaveClicked -> saveSale()
 
-            is SaleFormUiEvent.NotesChanged ->
-                updateState { it.copy(notes = event.value) }
-
-            SaleFormUiEvent.SaleDateClicked ->
-                emitEffect(SaleFormUiEffect.OpenSaleDatePicker)
-
-            SaleFormUiEvent.ReceivedDateClicked ->
-                emitEffect(SaleFormUiEffect.OpenReceivedDatePicker)
-
-            is SaleFormUiEvent.SaleDateSelected ->
-                updateState { it.copy(saleDate = event.date) }
-
-            is SaleFormUiEvent.ReceivedDateSelected ->
-                updateState { it.copy(receivedDate = event.date) }
-
-            SaleFormUiEvent.SaveClicked ->
-                save(closeAfter = true)
-
-            SaleFormUiEvent.SaveAndNewClicked ->
-                save(closeAfter = false)
+            SaleFormUiEvent.OnDateClick -> emitEffect(SaleFormUiEffect.OpenDatePicker)
         }
     }
 
-    private fun applyEditIfReady() {
-        val sale = editingSale ?: return
-        val customers = currentState.customers
-        if (customers.isEmpty()) return
-
-        val customerUi = customers.firstOrNull { it.id == sale.customerId } ?: return
-
-        updateState {
-            it.copy(
-                mode = SaleMode.EDIT,
-                saleId = sale.id,
-                saleDate = sale.date,
-                receivedDate = sale.paidAt ?: LocalDate.now(),
-                selectedCustomer = customerUi,
-                rateUsed = sale.rateUsed,
-                volume = sale.volume?.toString().orEmpty(),
-                deduction = sale.deduction?.toString().orEmpty(),
-                receivedAmount = sale.paid?.toString().orEmpty(),
-                notes = sale.notes.orEmpty()
-            )
+    private fun fetchBalance(accountId: String) {
+        viewModelScope.launch {
+            repository.getCustomerBalance(accountId).collect { balance ->
+                updateState { it.copy(currentBalance = balance) }
+            }
         }
-
-        editingSale = null
     }
 
-    private fun save(closeAfter: Boolean) = viewModelScope.launch {
+    private fun calculateTotal() {
         val state = currentState
-        val customer = state.selectedCustomer ?: run {
-            emitEffect(SaleFormUiEffect.ShowToast("Select Customer"))
-            return@launch
+        val vol = state.volume.toDoubleOrNull() ?: 0.0
+        val ded = state.deduction.toDoubleOrNull() ?: 0.0
+        val rate = state.rate.toDoubleOrNull() ?: 0.0
+
+        // ✅ Using Your Utils
+        val total = MilkCalculationUtils.calculateCustomerPrice(vol, ded, rate)
+
+        updateState { it.copy(calculatedTotal = total) }
+    }
+
+    private fun saveSale() {
+        val state = currentState
+        if (state.selectedCustomer == null) {
+            emitEffect(SaleFormUiEffect.ShowSnackbar("Please select a customer"))
+            return
+        }
+        val vol = state.volume.toDoubleOrNull()
+        if (vol == null || vol <= 0) {
+            emitEffect(SaleFormUiEffect.ShowSnackbar("Please enter valid volume"))
+            return
         }
 
-        if (state.mode == SaleMode.ADD && checkDuplicateSale(customer.id, state.saleDate)) {
-            emitEffect(SaleFormUiEffect.ShowToast("${customer.name} already exists for ${state.saleDate}"))
-            return@launch
+        viewModelScope.launch {
+            updateState { it.copy(isSaving = true) }
+            try {
+                repository.saveMilkSale(
+                    dateMillis = state.date.toMillis(),
+                    accountId = state.selectedCustomer!!.accountId,
+                    volume = vol,
+                    deduction = state.deduction.toDoubleOrNull() ?: 0.0,
+                    rate = state.rate.toDoubleOrNull() ?: 0.0,
+                    amountPaid = (state.amountPaid.toDoubleOrNull() ?: 0.0).toLong() * 100, // Rs to Paisa
+                    note = state.note
+                )
+                emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Saved Successfully"))
+                emitEffect(SaleFormUiEffect.NavigateBack)
+            } catch (e: Exception) {
+                emitEffect(SaleFormUiEffect.ShowSnackbar("Error: ${e.message}"))
+                updateState { it.copy(isSaving = false) }
+            }
         }
-
-        if (state.volume.isBlank() && state.receivedAmount.isBlank()) {
-            emitEffect(SaleFormUiEffect.ShowToast("Enter volume or amount"))
-            return@launch
-        }
-
-        val sale = state.toDomain() // maps to Sale
-
-        if (state.mode == SaleMode.ADD) {
-            insertSale(state.toDomain())
-            emitEffect(SaleFormUiEffect.ShowToast("Sale saved"))
-        } else {
-            updateSale(state.toDomain())
-            emitEffect(SaleFormUiEffect.ShowToast("Sale updated"))
-        }
-
-
-        if (closeAfter) emitEffect(SaleFormUiEffect.NavigateBack)
-        else emitEffect(SaleFormUiEffect.ResetForm)
     }
 }
