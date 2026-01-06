@@ -39,7 +39,47 @@ fun Double.toPrice(format: String = "%.0f"): String {
     return String.format(format, this)
 }
 
+
 fun Double.toLongPaisa() = (this * 100).toLong()
+
+
+
+
+// --- 1. UI (String) to Database (Paisa/Long) ---
+
+// User ne "5000" likha -> Database me 500000 jayega
+fun String?.toPaisa(): Long {
+    if (this.isNullOrBlank()) return 0L
+    val doubleValue = this.toDoubleOrNull() ?: 0.0
+    return (doubleValue * 100).toLong()
+}
+
+// Calculation result (Double) -> Database (Paisa/Long)
+fun Double.toPaisa(): Long {
+    return (this * 100).toLong()
+}
+
+
+// --- 2. Database (Paisa/Long) to UI (Double/String) ---
+
+// Database se 500000 aaya -> UI me 5000.0 banega
+fun Long.toRupees(): Double {
+    return this / 100.0
+}
+
+// Database se 500000 aaya -> UI string "5000" banega (Point k baad zero hata kar)
+fun Long.toRupeesStr(): String {
+    val rupees = this / 100.0
+    // Agar .0 hai to hata do, warna dikhao (e.g. 50.5)
+    return if (rupees % 1.0 == 0.0) {
+        String.format("%.0f", rupees)
+    } else {
+        String.format("%.2f", rupees)
+    }
+}
+
+
+
 
 fun View.hide() {
     this.visibility = View.GONE

@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.account.form.AccountFormUiState
 import com.miassolutions.milkledger.features.account.model.AccountUi
+import com.miassolutions.milkledger.utils.extensions.toPaisa
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.util.UUID
@@ -53,8 +54,8 @@ fun AccountFormUiState.toDomain(
         type = selectAccountType,
         sortOrder = sortOrder.toInt(),
         defaultRate = rate.toDouble(),
-        advanceAmount = advanceAmount.toLongOrNull(),
-        initialBalance = initialBalance.toLongOrNull(),
+        advanceAmount = advanceAmount.toPaisa(),
+        initialBalance = initialBalance.toPaisa(),
 
         )
 

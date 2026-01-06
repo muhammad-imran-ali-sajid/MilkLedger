@@ -7,6 +7,7 @@ import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.account.repository.AccountRepository
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.account.mapper.toDomain
+import com.miassolutions.milkledger.utils.extensions.toRupeesStr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -40,8 +41,8 @@ class AccountFormViewModel @Inject constructor(
                     personName = account.name,
                     selectAccountType = account.type,
                     rate = account.defaultRate.toString(),
-                    initialBalance = account.initialBalance?.toString().orEmpty(),
-                    advanceAmount = account.advanceAmount?.toString().orEmpty()
+                    initialBalance = account.initialBalance?.toRupeesStr().orEmpty(),
+                    advanceAmount = account.advanceAmount?.toRupeesStr().orEmpty()
                 )
             }
         }

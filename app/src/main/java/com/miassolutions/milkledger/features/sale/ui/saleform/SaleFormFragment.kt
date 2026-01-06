@@ -17,11 +17,14 @@ import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
 import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.*
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toRupeesStr
+import com.miassolutions.milkledger.utils.extensions.toSignedBalance
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -98,7 +101,7 @@ class SaleFormFragment :
             tvNetMilk.text = state.displayNetMilk
             tvMilkPrice.text = "Price: ${state.calculatedTotal.toPrice()}"
             tvRate.text = state.displayRate
-            tvBalance.text = "Balance: ${state.currentBalance.toPrice()}"
+            tvBalance.setBalanceWithColor(state.currentBalance, prefix = "Balance: ")
 
         }
 

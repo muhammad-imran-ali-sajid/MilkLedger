@@ -14,7 +14,9 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountFormBinding
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
+import com.miassolutions.milkledger.utils.extensions.toPaisa
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -68,6 +70,7 @@ class AccountFormFragment :
 
         etInitialBalance.doAfterTextChanged {
             viewModel.onInitialBalanceChanged(it.toString())
+            updateBalancePreview()
         }
 
         etAdvanceAmount.doAfterTextChanged {
@@ -76,6 +79,27 @@ class AccountFormFragment :
 
         etSortOrder.focusWithScroll(binding.scrollView)
 
+    }
+
+    private fun updateBalancePreview(
+        forcedType: AccountType? = null,
+        forcedAmount: String? = null
+    ) = with(binding) {
+
+        // Current Type aur Amount uthayen (State se ya UI se)
+        val type = forcedType ?: if (rbCustomer.isChecked) AccountType.CUSTOMER else AccountType.SUPPLIER
+        val amountString = forcedAmount ?: etInitialBalance.text.toString()
+
+        // Amount ko Paisa me convert karein
+        val rawAmount = amountString.toPaisa()
+
+        // LOGIC:
+        // Agar Customer hai to Positive (Lene hen)
+        // Agar Supplier hai to Negative (Dene hen)
+        val finalAmount = if (type == AccountType.SUPPLIER) -rawAmount else rawAmount
+
+        // Extension function use karein jo humne pehle banaya tha
+        tvBalancePreview.setBalanceWithColor(finalAmount, prefix = "Net Impact: ")
     }
 
     override fun setupObservers() {
@@ -158,6 +182,9 @@ class AccountFormFragment :
             AccountType.SUPPLIER -> rbSupplier.isChecked = true
             else -> {}
         }
+
+        // 🔥 State render hotay waqt bhi preview update karein
+        updateBalancePreview(state.selectAccountType, state.initialBalance)
 
         // 🔹 ERRORS
         sortOrderLayout.error = state.validation.sortOrderError

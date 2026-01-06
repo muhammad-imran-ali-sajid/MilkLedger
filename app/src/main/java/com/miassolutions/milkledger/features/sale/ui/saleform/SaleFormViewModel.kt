@@ -16,6 +16,7 @@ import com.miassolutions.milkledger.features.sale.domain.usecase.UpdateSaleUseCa
 import com.miassolutions.milkledger.features.sale.mapper.toDomain
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -109,6 +110,7 @@ class SaleFormViewModel @Inject constructor(
     private fun fetchBalance(accountId: String) {
         viewModelScope.launch {
             repository.getCustomerBalance(accountId).collect { balance ->
+
                 updateState { it.copy(currentBalance = balance) }
             }
         }
