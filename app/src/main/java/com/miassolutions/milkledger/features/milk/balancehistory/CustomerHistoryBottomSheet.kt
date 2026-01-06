@@ -44,7 +44,7 @@ class CustomerHistoryBottomSheet : BottomSheetDialogFragment() {
         binding.rvHistory.adapter = adapter
 
         lifecycleScope.launch {
-            viewModel.getRunningBalanceHistory(args.customerId).collect { list ->
+            viewModel.getDailyClosingBalance(args.customerId).collect { list ->
                 adapter.submitList(list)
 
                 // Optional: Agar list empty hai to empty view dikhayen

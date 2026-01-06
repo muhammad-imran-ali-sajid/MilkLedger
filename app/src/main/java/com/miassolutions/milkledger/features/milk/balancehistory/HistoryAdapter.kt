@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemCustomerHistoryBinding
-import com.miassolutions.milkledger.features.customer.domain.model.CustomerHistoryUi
-import com.miassolutions.milkledger.features.customer.domain.model.HistoryType
+import com.miassolutions.milkledger.features.milk.model.CustomerHistoryUi
+import com.miassolutions.milkledger.features.milk.model.HistoryType
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 

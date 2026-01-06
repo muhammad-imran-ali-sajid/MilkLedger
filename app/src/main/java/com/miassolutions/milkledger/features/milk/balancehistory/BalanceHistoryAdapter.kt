@@ -7,8 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
-import com.miassolutions.milkledger.features.customer.domain.model.BalanceHistoryUi
+import com.miassolutions.milkledger.features.milk.model.BalanceHistoryUi
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toRupeesStr
 import com.miassolutions.milkledger.utils.extensions.toSignedBalance
 
 class BalanceHistoryAdapter :
@@ -27,21 +30,15 @@ class BalanceHistoryAdapter :
     inner class VH(val binding: ItemBalanceHitoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BalanceHistoryUi) {
             binding.apply {
-                // Date format: "05 Jan"
-                tvDate.text =
-                    item.date.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM"))
-                tvDesc.text = item.description
+                // Date
+                tvDate.text = item.date.toDisplayDate()
 
-                // Transaction Amount (+/-)
-                val sign = if (item.isDebit) "+" else "-"
-                tvAmount.text = "$sign ${item.amount.toPrice()}" // toPrice() extension Rs wala
+                // Net Change (Optional info)
+                val sign = if (item.netChange > 0) "+" else "" // Minus khud aa jata hai
+                tvNetChange.text = "Day Total: $sign${item.netChange.toRupeesStr()}"
 
-                // Color Logic for Transaction
-                val color = if (item.isDebit) R.color.red else R.color.green
-                tvAmount.setTextColor(root.context.getColor(color))
-
-                // Running Balance
-                tvRunningBal.text = item.runningBalance.toSignedBalance() // With Sign (+/-)
+                // ✅ MAIN: Closing Balance
+                tvClosingBalance.setBalanceWithColor(item.closingBalance)
             }
         }
     }
@@ -56,7 +53,7 @@ class DiffCallback : DiffUtil.ItemCallback<BalanceHistoryUi>() {
     ): Boolean {
         // Chunke unique ID nahi hai UI model me, hum date aur desc check kr lety hen
         // ya agar ledgerId entity se pass ho rahi ho to best hai.
-        return oldItem.date == newItem.date && oldItem.amount == newItem.amount
+        return oldItem.date == newItem.date && oldItem.date == newItem.date
     }
 
     override fun areContentsTheSame(

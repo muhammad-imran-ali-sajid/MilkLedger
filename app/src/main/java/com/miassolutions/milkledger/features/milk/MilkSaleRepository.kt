@@ -28,6 +28,16 @@ class MilkSaleRepository @Inject constructor(
     private val db: AppDatabase
 ) {
 
+    suspend fun getCustomerBalanceOnDate(customerId: String, date: LocalDate): Long {
+        // Date ko "End of Day" millisecond me convert karna zaroori hai
+        // Taake us din ki shaam tak ki saari transaction shamil ho jayen.
+
+        val endOfDayMillis = date.atTime(23, 59, 59).toMillis()
+        // Note: Aap apni extension 'toMillis()' bhi use kar skty hen agar wo end of day deti hai.
+
+        return ledgerDao.getBalanceAsOfDate(customerId, endOfDayMillis)
+    }
+
     fun getSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>> {
         return milkDao.getMilkSalesByDate(start, end)
     }
