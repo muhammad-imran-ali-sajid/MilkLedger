@@ -133,16 +133,12 @@
                 android:weightSum="2">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/etPayment"
+                    android:id="@+id/paymentLayout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Received"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/btnReceivedDate"
-                    app:layout_constraintStart_toEndOf="@+id/label"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintWidth_percent="0.3">
+>
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etReceivedAmount"
@@ -188,7 +184,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etNote"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -200,6 +196,7 @@
                 app:layout_constraintWidth_percent="0.3">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etNote"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 

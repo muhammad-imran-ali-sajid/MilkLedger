@@ -2,6 +2,8 @@ package com.miassolutions.milkledger.features.sale.ui.saleform
 
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.customer.ui.model.DropDownCustomerListUi
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import java.time.LocalDate
 
 //data class SaleFormUiState(
@@ -90,7 +92,29 @@ data class SaleFormUiState(
 
     val calculatedTotal: Double = 0.0, // Live Calculation
     val isSaving: Boolean = false
-)
+){
+
+
+    private val volumeDouble : Double
+        get() = 50.5
+
+    private val deductionDouble : Double
+        get() = deduction.toDoubleOrNull() ?: 0.0
+
+    private val rateDouble : Double
+        get() = rate.toDoubleOrNull() ?: 0.0
+
+    private val netMilk : Double
+        get() = volumeDouble - deductionDouble
+
+    val displayRate: String
+        get() = "Rate: $rateDouble"
+    val displayNetMilk : String
+        get() = "Net Milk: ${netMilk.toMilkAmount()}"
+
+    val displayPrice = "Price: ${(netMilk * rateDouble).toPrice()}"
+
+}
 
 sealed interface SaleFormUiEvent {
     data object OnDateClick : SaleFormUiEvent
