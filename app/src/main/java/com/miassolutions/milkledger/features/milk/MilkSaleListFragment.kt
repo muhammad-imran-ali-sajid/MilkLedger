@@ -24,6 +24,7 @@ class MilkSaleListFragment :
     // Adapter Initialization
     private val adapter = MilkSaleAdapter(
         onEditClick = { item ->
+            Log.d("MilkSaleListFragment", item)
             viewModel.onEvent(MilkSaleListUiEvent.OnEditSaleClicked(item))
         },
         onDetailClick = { item ->
@@ -97,13 +98,22 @@ class MilkSaleListFragment :
 
         collectEffect(viewModel.uiEffect) { effect ->
             when (effect) {
+                is MilkSaleListUiEffect.NavigateToEditSale -> {
+                    val action = MilkSaleListFragmentDirections
+                        .actionMilkSaleListFragmentToSaleAddFragment(
+                            saleId = effect.saleId, // ID pass karein
+                            saleDate = -1L // Edit me date DB se load hogi, is liye dummy value pass kr den
+                        )
+                    findNavController().navigate(action)
+                }
+
+                // ... baqi existing cases ...
                 is MilkSaleListUiEffect.NavigateToAddSale -> {
-                    val action =
-                        MilkSaleListFragmentDirections.actionMilkSaleListFragmentToSaleAddFragment(
-                            null,
+                    val action = MilkSaleListFragmentDirections
+                        .actionMilkSaleListFragmentToSaleAddFragment(
+                            null, // ID null matlab New Sale
                             effect.dateMillis
                         )
-
                     findNavController().navigate(action)
                 }
 

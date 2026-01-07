@@ -14,7 +14,7 @@ import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class MilkSaleAdapter(
-    private val onEditClick: (MilkSaleUiModel) -> Unit,
+    private val onEditClick: (saleId:String) -> Unit,
     private val onDetailClick: (MilkSaleUiModel) -> Unit,
     private val onBalanceClick: (customerId: String, customerName: String) -> Unit
 ) : ListAdapter<MilkSaleUiModel, MilkSaleAdapter.SaleViewHolder>(DiffCallback()) {
@@ -65,7 +65,7 @@ class MilkSaleAdapter(
                 }
 
                 // Clicks
-                btnEditForm.setOnClickListener { onEditClick(item) }
+                btnEditForm.setOnClickListener { onEditClick(item.id) }
                 btnCustomerDetail.setOnClickListener { onDetailClick(item) }
                 binding.btnBalance.setOnClickListener {
                     onBalanceClick(item.customerId, item.customerName)

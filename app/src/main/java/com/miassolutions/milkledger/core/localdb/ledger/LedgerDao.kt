@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.core.localdb.ledger
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -10,17 +11,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LedgerDao {
 
-    // ✅ Cleanest Way: Specific Date tak ka Balance
-    // COALESCE(SUM(...), 0) ka matlab hai agar koi entry na ho to 0 return kro (Crash se bachne k liye)
+    // ID aur Type ki bunyad par Ledger dhoondna (Update k liye zaroori hai)
+    @Query("SELECT * FROM financial_ledger_table WHERE referenceId = :refId AND type = :type LIMIT 1")
+    suspend fun getLedgerByReferenceId(refId: String, type: LedgerEntryType): FinancialLedgerEntity?
 
-    @Query("""
-        SELECT (COALESCE(SUM(debit), 0) - COALESCE(SUM(credit), 0))
-        FROM financial_ledger_table
-        WHERE accountId = :accountId
-        AND dateMillis <= :targetDate 
-        AND deletedAtMillis IS NULL
-    """)
-    suspend fun getBalanceAsOfDate(accountId: String, targetDate: Long): Long
+
+
+    @Delete
+    suspend fun delete(entity: FinancialLedgerEntity)
+
 
     // Balance calculation hamesha shuru se hoti hai (ORDER BY dateMillis ASC)
     @Query("""

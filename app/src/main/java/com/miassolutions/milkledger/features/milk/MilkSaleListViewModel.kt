@@ -49,8 +49,9 @@ class MilkSaleListViewModel @Inject constructor(
                 emitEffect(MilkSaleListUiEffect.NavigateToAddSale(dateMillis))
             }
             is MilkSaleListUiEvent.OnEditSaleClicked -> {
-                // Future implementation
-                // emitEffect(MilkSaleListUiEffect.NavigateToEditSale(event.saleItem.id))
+                emitEffect(
+                    MilkSaleListUiEffect.NavigateToEditSale(event.saleId)
+                )
             }
             is MilkSaleListUiEvent.OnCustomerDetailClicked -> {
                 emitEffect(MilkSaleListUiEffect.NavigateToCustomerLedger(event.customerId))
@@ -89,7 +90,3 @@ class MilkSaleListViewModel @Inject constructor(
     }
 }
 
-// Helper Extension (Agar file me nahi hai to yahan use kar lein)
-private fun java.time.LocalDateTime.toMillis(): Long {
-    return this.atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli()
-}

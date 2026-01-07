@@ -6,80 +6,13 @@ import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import java.time.LocalDate
 
-//data class SaleFormUiState(
-//    val mode: SaleMode = SaleMode.ADD,
-//    val saleId: String? = null,
-//
-//    val saleDate: LocalDate = LocalDate.now(),
-//    val customers: List<DropDownCustomerListUi> = emptyList(),
-//
-//    val selectedCustomer: DropDownCustomerListUi? = null,
-//
-//    val volume: String = "",
-//    val deduction: String = "",
-//
-//    val netMilk: Double = 0.0,
-//
-//    val rateUsed: Double = 0.0,
-//    val price: Double = 0.0,
-//
-//    val receivedAmount: String = "",
-//    val receivedDate: LocalDate = LocalDate.now(),
-//
-//    val balance: Double = 0.0,
-//
-//    val notes: String = "",
-//
-//    val isSaving: Boolean = false,
-//    val error: String? = null
-//
-//)
-//
-//sealed interface SaleFormUiEvent {
-//
-//    data class EditSaleLoaded(val saleId: String) : SaleFormUiEvent
-//    data class CustomerSelected(
-//        val customerId: String,
-//        val customerName: String,
-//        val rate: Double,
-//    ) : SaleFormUiEvent
-//
-//    data class VolumeChanged(val value: String) : SaleFormUiEvent
-//    data class DeductionChanged(val value: String) : SaleFormUiEvent
-//    data class PaymentChanged(val value: String) : SaleFormUiEvent
-//    data class NotesChanged(val value: String) : SaleFormUiEvent
-//
-//    data object SaleDateClicked : SaleFormUiEvent
-//
-//    data class SaleDateSelected(val date: LocalDate) : SaleFormUiEvent
-//    data class ReceivedDateSelected(val date: LocalDate) : SaleFormUiEvent
-//    data object ReceivedDateClicked : SaleFormUiEvent
-//
-//    data object SaveClicked : SaleFormUiEvent
-//    data object SaveAndNewClicked : SaleFormUiEvent
-//}
-//
-//
-//sealed interface SaleFormUiEffect {
-//
-//    data class ShowToast(val message: String) : SaleFormUiEffect
-//
-//    data object OpenSaleDatePicker : SaleFormUiEffect
-//    data object OpenReceivedDatePicker : SaleFormUiEffect
-//
-//    data object NavigateBack : SaleFormUiEffect
-//    data object ResetForm : SaleFormUiEffect
-//}
-//
-//enum class SaleMode {
-//    ADD,
-//    EDIT
-//}
 
 /* New Ledger type Sale*/
 
 data class SaleFormUiState(
-    val isEditMode : Boolean = false,
+    val isEditMode: Boolean = false,
+
+    val isLoading: Boolean = false,
 
     val date: LocalDate = LocalDate.now(),
     val selectedCustomer: Account? = null,
@@ -122,6 +55,8 @@ sealed interface SaleFormUiEvent {
     data object OnDateClick : SaleFormUiEvent
 
     data object OnPaymentDateClick : SaleFormUiEvent
+
+    data class LoadSaleForEdit(val saleId: String) : SaleFormUiEvent
 
     data class OnPaymentDateSelected(val paymentDate: LocalDate) : SaleFormUiEvent
 
