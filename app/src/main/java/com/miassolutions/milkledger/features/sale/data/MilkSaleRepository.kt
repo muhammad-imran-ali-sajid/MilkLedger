@@ -30,6 +30,12 @@ class MilkSaleRepository @Inject constructor(
     private val db: AppDatabase
 ) {
 
+
+    // Customer ki mukammal history
+    fun getCustomerHistory(accountId: String): Flow<List<MilkSaleUiModel>> {
+        return milkDao.getCustomerSalesHistory(accountId)
+    }
+
     fun getSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>> {
         return milkDao.getMilkSalesByDate(start, end)
     }

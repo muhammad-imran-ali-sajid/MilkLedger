@@ -125,7 +125,12 @@ class MilkSaleListFragment :
                 }
 
                 is MilkSaleListUiEffect.NavigateToCustomerLedger -> {
-                    // Navigate to Ledger logic
+                    val action = MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerHistoryFragment(
+                        customerId = effect.customerId,
+                        customerName = "Customer"
+                    )
+
+                    findNavController().navigate(action)
                 }
 
                 is MilkSaleListUiEffect.ShowSnackbar -> {

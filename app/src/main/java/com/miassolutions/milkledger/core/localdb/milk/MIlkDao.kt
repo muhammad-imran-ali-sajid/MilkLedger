@@ -135,4 +135,52 @@ interface MilkDao {
     ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
 """)
     fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
+
+
+
+    @Query("""
+        SELECT 
+            m.milkTransId as id,
+            m.dateMillis,
+            m.accountId as customerId,
+            a.name as customerName,
+            m.volume as quantity, 
+            m.deduction as deduction,
+            m.quantity as netQuantity,
+            m.totalAmount,
+            m.notes as note,
+            m.rateUsed as rate,
+            
+            -- Payment Data
+            COALESCE(l_pay.credit, 0) as paymentReceived, 
+            l_pay.dateMillis as paymentDateMillis,
+            
+            -- 🔥 RUNNING BALANCE CALCULATION FOR SPECIFIC CUSTOMER 🔥
+            (
+                SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
+                FROM financial_ledger_table sub_l
+                WHERE sub_l.accountId = :accountId  -- ✅ Sirf is customer ka hisaab
+                AND sub_l.deletedAtMillis IS NULL
+                AND (
+                    sub_l.dateMillis < m.dateMillis
+                    OR
+                    (sub_l.dateMillis = m.dateMillis)
+                )
+            ) as currentBalance
+            
+        FROM milk_transactions_table m
+        
+        INNER JOIN accounts_table a ON m.accountId = a.accountId
+        
+        LEFT JOIN financial_ledger_table l_pay 
+            ON l_pay.referenceId = m.milkTransId 
+            AND l_pay.type = 'CASH_RECEIVED' 
+            AND l_pay.deletedAtMillis IS NULL
+
+        WHERE m.accountId = :accountId 
+        AND m.deletedAtMillis IS NULL
+        
+        ORDER BY m.dateMillis ASC, m.createdAtMillis ASC
+    """)
+    fun getCustomerSalesHistory(accountId: String): Flow<List<MilkSaleUiModel>>
 }
