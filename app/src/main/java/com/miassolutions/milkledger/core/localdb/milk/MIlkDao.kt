@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.miassolutions.milkledger.features.milk.SaleDetailTuple
-import com.miassolutions.milkledger.features.sale.domain.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.milk.model.MilkSaleUiModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao

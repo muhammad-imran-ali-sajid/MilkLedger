@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.features.milk
 
-import com.miassolutions.milkledger.features.sale.domain.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.milk.model.MilkSaleUiModel
 
 
 import java.time.LocalDate

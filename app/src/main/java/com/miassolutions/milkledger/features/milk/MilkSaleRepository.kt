@@ -14,7 +14,7 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.milk.model.UpdateSaleRequest
-import com.miassolutions.milkledger.features.sale.domain.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.milk.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
