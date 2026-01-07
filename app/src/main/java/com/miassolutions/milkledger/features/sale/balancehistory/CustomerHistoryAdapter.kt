@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.milk.balancehistory
+package com.miassolutions.milkledger.features.sale.balancehistory
 
 
 import android.view.LayoutInflater
@@ -9,12 +9,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemCustomerHistoryBinding
-import com.miassolutions.milkledger.features.milk.model.CustomerHistoryUi
-import com.miassolutions.milkledger.features.milk.model.HistoryType
+import com.miassolutions.milkledger.features.sale.model.CustomerHistoryUi
+import com.miassolutions.milkledger.features.sale.model.HistoryType
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
-class HistoryAdapter : ListAdapter<CustomerHistoryUi, HistoryAdapter.HistoryViewHolder>(DiffCallback()) {
+class CustomerHistoryAdapter : ListAdapter<CustomerHistoryUi, CustomerHistoryAdapter.HistoryViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
         val binding = ItemCustomerHistoryBinding.inflate(

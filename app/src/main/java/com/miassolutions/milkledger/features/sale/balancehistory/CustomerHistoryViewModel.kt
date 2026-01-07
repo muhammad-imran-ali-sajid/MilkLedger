@@ -1,8 +1,8 @@
-package com.miassolutions.milkledger.features.milk.balancehistory
+package com.miassolutions.milkledger.features.sale.balancehistory
 
 import androidx.lifecycle.ViewModel
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
-import com.miassolutions.milkledger.features.milk.model.BalanceHistoryUi
+import com.miassolutions.milkledger.features.sale.model.BalanceHistoryUi
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

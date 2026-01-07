@@ -1,11 +1,11 @@
-package com.miassolutions.milkledger.features.sale.ui.saleform
+package com.miassolutions.milkledger.features.sale.saleform
 
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
-import com.miassolutions.milkledger.features.milk.MilkSaleRepository
-import com.miassolutions.milkledger.features.milk.model.UpdateSaleRequest
+import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
+import com.miassolutions.milkledger.features.sale.model.UpdateSaleRequest
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel

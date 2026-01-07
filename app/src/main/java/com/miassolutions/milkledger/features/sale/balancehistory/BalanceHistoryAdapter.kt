@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.milk.balancehistory
+package com.miassolutions.milkledger.features.sale.balancehistory
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
-import com.miassolutions.milkledger.features.milk.model.BalanceHistoryUi
+import com.miassolutions.milkledger.features.sale.model.BalanceHistoryUi
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toRupeesStr

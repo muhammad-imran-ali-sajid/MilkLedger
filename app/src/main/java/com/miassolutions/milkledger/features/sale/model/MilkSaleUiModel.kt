@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.milk.model
+package com.miassolutions.milkledger.features.sale.model
 
 data class MilkSaleUiModel(
     val id: String,

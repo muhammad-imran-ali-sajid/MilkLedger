@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.milk
+package com.miassolutions.milkledger.features.sale.salelist
 
 
 import android.view.LayoutInflater
@@ -8,9 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
-import com.miassolutions.milkledger.features.milk.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.extensions.toPrice
 

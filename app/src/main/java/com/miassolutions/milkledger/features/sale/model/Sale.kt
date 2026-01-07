@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.milk
+package com.miassolutions.milkledger.features.sale.model
 
 
 // Note: Agar aapke paas alag 'Account' domain model hai to wo import karein,

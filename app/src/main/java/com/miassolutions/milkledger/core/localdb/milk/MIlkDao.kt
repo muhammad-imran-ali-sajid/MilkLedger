@@ -4,10 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import androidx.room.Update
-import com.miassolutions.milkledger.features.milk.SaleDetailTuple
-import com.miassolutions.milkledger.features.milk.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -15,7 +13,8 @@ interface MilkDao {
 
     // 2️⃣ FOR EDIT SCREEN UI (Pura UI Model fetch karne k liye)
     // Yeh wohi query hai jo List k liye thi, bas WHERE condition change ki hai (ID match)
-    @Query("""
+    @Query(
+        """
         SELECT 
             m.milkTransId as id,
             m.dateMillis,
@@ -55,7 +54,8 @@ interface MilkDao {
 
         WHERE m.milkTransId = :id
         LIMIT 1
-    """)
+    """
+    )
     suspend fun getSaleDetailById(id: String): MilkSaleUiModel?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -63,47 +63,6 @@ interface MilkDao {
 
     @Update
     suspend fun update(milkTransaction: MilkTransactionEntity)
-
-
-//    @Transaction // Safe side k liye
-//    @Query(
-//        """
-//        SELECT
-//            m.*,
-//
-//            -- Account Columns (Prefix k sath map kar rahe hain)
-//            a.accountId as acc_accountId,
-//            a.name as acc_name,
-//            a.phone as acc_phone,
-//            a.accountType as acc_accountType,
-//            a.sortOrder as acc_sortOrder,
-//            a.advanceAmount as acc_advanceAmount,
-//            a.defaultRate as acc_defaultRate,
-//            a.initialBalance as acc_initialBalance,
-//            a.createdAtMillis as acc_createdAtMillis,
-//            a.updatedAtMillis as acc_updatedAtMillis,
-//            a.isSynced as acc_isSynced,
-//            a.deletedAtMillis as acc_deletedAtMillis,
-//
-//            -- Payment Info (Ledger se)
-//            l.credit as paymentAmount,
-//            l.dateMillis as paymentDate
-//
-//        FROM milk_transactions_table m
-//
-//        -- 1. Join Customer
-//        INNER JOIN accounts_table a ON m.accountId = a.accountId
-//
-//        -- 2. Join Payment (Sirf wo entry jo CASH_RECEIVED ho aur isi sale se linked ho)
-//        LEFT JOIN financial_ledger_table l
-//            ON l.referenceId = m.milkTransId
-//            AND l.type = 'CASH_RECEIVED'
-//            AND l.deletedAtMillis IS NULL
-//
-//        WHERE m.milkTransId = :saleId
-//    """
-//    )
-//    suspend fun getSaleDetailById(saleId: String): SaleDetailTuple?
 
 
     @Query("SELECT * FROM milk_transactions_table WHERE milkTransId = :id")
@@ -129,8 +88,8 @@ interface MilkDao {
     suspend fun softDeleteMilkTransaction(id: String, deleteTime: Long)
 
 
-
-    @Query("""
+    @Query(
+        """
     SELECT 
         m.milkTransId as id,
         m.dateMillis,
@@ -178,6 +137,7 @@ interface MilkDao {
     
     -- Sorting: Naya data upar
     ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
-""")
+"""
+    )
     fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
 }

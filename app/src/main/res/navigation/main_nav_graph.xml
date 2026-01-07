@@ -120,7 +120,7 @@
         tools:layout="@layout/fragment_add_purchase" />
     <fragment
         android:id="@+id/saleAddFragment"
-        android:name="com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormFragment"
+        android:name="com.miassolutions.milkledger.features.sale.saleform.SaleFormFragment"
         android:label="Add Sales"
         tools:layout="@layout/fragment_add_sale" >
         <argument
@@ -179,7 +179,7 @@
     </dialog>
     <fragment
         android:id="@+id/milkSaleListFragment"
-        android:name="com.miassolutions.milkledger.features.milk.MilkSaleListFragment"
+        android:name="com.miassolutions.milkledger.features.sale.salelist.MilkSaleListFragment"
         android:label="MilkSaleListFragment" >
         <action
             android:id="@+id/action_milkSaleListFragment_to_saleAddFragment"
@@ -193,7 +193,7 @@
     </fragment>
     <dialog
         android:id="@+id/customerBalanceHistoryBottomSheet"
-        android:name="com.miassolutions.milkledger.features.milk.balancehistory.CustomerHistoryBottomSheet"
+        android:name="com.miassolutions.milkledger.features.sale.balancehistory.CustomerHistoryBottomSheet"
         android:label="CustomerBalanceHistoryBottomSheet">
 
         <argument

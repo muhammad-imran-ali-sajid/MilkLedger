@@ -1,12 +1,12 @@
-package com.miassolutions.milkledger.features.milk.ui.list
+package com.miassolutions.milkledger.features.sale.ui.list
 
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
-import com.miassolutions.milkledger.features.milk.MilkSaleListUiEffect
-import com.miassolutions.milkledger.features.milk.MilkSaleListUiEffect.*
-import com.miassolutions.milkledger.features.milk.MilkSaleListUiEvent
-import com.miassolutions.milkledger.features.milk.MilkSaleListUiState
-import com.miassolutions.milkledger.features.milk.MilkSaleRepository
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.*
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiState
+import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job

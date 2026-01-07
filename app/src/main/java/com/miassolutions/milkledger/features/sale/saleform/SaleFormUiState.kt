@@ -1,8 +1,7 @@
-package com.miassolutions.milkledger.features.sale.ui.saleform
+package com.miassolutions.milkledger.features.sale.saleform
 
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.utils.extensions.toMilkAmount
-import com.miassolutions.milkledger.utils.extensions.toPrice
 import java.time.LocalDate
 
 

@@ -1,21 +1,22 @@
-package com.miassolutions.milkledger.features.sale.ui.saleform
+package com.miassolutions.milkledger.features.sale.saleform
 
+import android.R
 import android.widget.ArrayAdapter
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnAmountPaidChanged
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnCustomerSelected
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnDateClick
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnDateSelected
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnDeductionChanged
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnNoteChanged
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnPaymentDateClick
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnPaymentDateSelected
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnSaveClicked
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnVolumeChanged
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnAmountPaidChanged
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnCustomerSelected
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnDateClick
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnDateSelected
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnDeductionChanged
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnNoteChanged
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnPaymentDateClick
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnPaymentDateSelected
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnSaveClicked
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnVolumeChanged
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
@@ -61,7 +62,7 @@ class SaleFormFragment :
         // 1. Handle Customer List & Dropdown
         collectFlow(viewModel.customersList) { customers ->
             val names = customers.map { it.name }
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, names)
+            val adapter = ArrayAdapter(requireContext(), R.layout.simple_list_item_1, names)
 
             binding.actvCustomerName.setAdapter(adapter)
 

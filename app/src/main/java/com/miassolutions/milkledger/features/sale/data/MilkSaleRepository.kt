@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.milk
+package com.miassolutions.milkledger.features.sale.data
 
 import androidx.room.Transaction
 import androidx.room.withTransaction
@@ -13,8 +13,8 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
-import com.miassolutions.milkledger.features.milk.model.UpdateSaleRequest
-import com.miassolutions.milkledger.features.milk.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.sale.model.UpdateSaleRequest
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
@@ -29,9 +29,6 @@ class MilkSaleRepository @Inject constructor(
     private val accountDao: AccountDao,
     private val db: AppDatabase
 ) {
-
-
-
 
     fun getSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>> {
         return milkDao.getMilkSalesByDate(start, end)
@@ -83,7 +80,7 @@ class MilkSaleRepository @Inject constructor(
                 dateMillis = saleDate.toMillis(),
                 type = TransactionType.SALE,
 
-                volume =  volume,
+                volume = volume,
                 deduction = deduction,
                 quantity = netQuantity,
                 rateUsed = rate,
