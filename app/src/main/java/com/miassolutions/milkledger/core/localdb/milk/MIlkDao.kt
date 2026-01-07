@@ -27,10 +27,11 @@ interface MilkDao {
             m.totalAmount,
             m.notes as note,
             
-            -- Payment fetch (Taake Edit Form me purani payment show ho)
+            -- 🔥 YE LINE MISSING THI 👇
+            m.rateUsed as rate,
+            
             COALESCE(l_pay.credit, 0) as paymentReceived, 
             
-            -- Current Balance (Accumulated Logic - Same as List)
             (
                 SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
                 FROM financial_ledger_table sub_l
@@ -47,13 +48,11 @@ interface MilkDao {
         
         INNER JOIN accounts_table a ON m.accountId = a.accountId
         
-        -- Payment Join
         LEFT JOIN financial_ledger_table l_pay 
             ON l_pay.referenceId = m.milkTransId 
             AND l_pay.type = 'CASH_RECEIVED' 
             AND l_pay.deletedAtMillis IS NULL
 
-        -- 🔥 SIRF YE WALI SALE LAANI HAI
         WHERE m.milkTransId = :id
         LIMIT 1
     """)
@@ -137,6 +136,7 @@ interface MilkDao {
         m.quantity as netQuantity,
         m.totalAmount,
         m.notes as note,
+          m.rateUsed as rate,
         
         COALESCE(l_pay.credit, 0) as paymentReceived, 
         

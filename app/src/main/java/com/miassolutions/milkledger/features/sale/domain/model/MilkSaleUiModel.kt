@@ -13,6 +13,7 @@ data class MilkSaleUiModel(
     val netQuantity: Double,
     val totalAmount: Long, // Price (Paisa)
 
+    val rate: Double,
 
     val paymentReceived: Long = 0,
     val currentBalance: Long = 0,
