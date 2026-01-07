@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
@@ -12,24 +13,31 @@ import javax.inject.Inject
 @HiltViewModel
 class CustomerHistoryViewModel @Inject constructor(
     private val repository: MilkSaleRepository,
-    savedStateHandle: SavedStateHandle // Agar arguments se ID aani hai
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<CustomerHistoryUiState, CustomerHistoryUiEvent, CustomerHistoryUiEffect>(CustomerHistoryUiState()) {
 
-    // Fragment k arguments se ID uthayen
     private val customerId: String = savedStateHandle["customerId"] ?: ""
+    private val customerName: String = savedStateHandle["customerName"] ?: ""
+
+    private var historyJob: Job? = null
 
     init {
+        // Init state with Customer Name
+        updateState { it.copy(customerName = customerName) }
+
         if (customerId.isNotEmpty()) {
-            loadHistory()
+            // Default: Load All History
+            loadHistory(0L, Long.MAX_VALUE)
             loadCurrentBalance()
         }
     }
 
-    // Example inside ViewModel
-    private fun loadHistory() {
-        repository.getCustomerHistory(customerId)
+    private fun loadHistory(start: Long, end: Long) {
+        // Pichli job cancel karein (Agar user jaldi jaldi filter change kare)
+        historyJob?.cancel()
+
+        historyJob = repository.getCustomerHistory(customerId, start, end)
             .onEach { list ->
-                // Summary Calculate karein
                 val totalMilk = list.sumOf { it.netQuantity }
                 val totalReceived = list.sumOf { it.paymentReceived }
 
@@ -39,7 +47,6 @@ class CustomerHistoryViewModel @Inject constructor(
                         transactions = list,
                         summaryMilk = totalMilk,
                         summaryReceived = totalReceived
-                        // Balance alag flow se aayega
                     )
                 }
             }
@@ -47,7 +54,7 @@ class CustomerHistoryViewModel @Inject constructor(
     }
 
     private fun loadCurrentBalance() {
-        // 2. Abhi ka Total Balance (Jo sab se neechay show hoga)
+        // Balance hamesha 'Overall' hota hai, Date filter ka is par asar nahi hona chahiye
         repository.getCustomerBalance(customerId)
             .onEach { balance ->
                 updateState { it.copy(currentTotalBalance = balance) }
@@ -56,8 +63,24 @@ class CustomerHistoryViewModel @Inject constructor(
     }
 
     override fun onEvent(event: CustomerHistoryUiEvent) {
-        TODO("Not yet implemented")
-    }
+        when(event) {
+            // 1. Date Filter Changed
+            is CustomerHistoryUiEvent.OnDateFilterChanged -> { // Make sure ye Event class me defined ho
+                updateState { it.copy(dateRangeText = event.label) }
+                loadHistory(event.start, event.end)
+            }
 
-    // ... onEvent handlers
+            // 2. Click on Item (Edit)
+            is CustomerHistoryUiEvent.OnTransactionClick -> {
+                emitEffect(CustomerHistoryUiEffect.NavigateToEditSale(event.saleId))
+            }
+
+            // 3. Back Press
+            CustomerHistoryUiEvent.OnBackClick -> {
+                emitEffect(CustomerHistoryUiEffect.NavigateBack)
+            }
+
+            else -> {}
+        }
+    }
 }

@@ -1,14 +1,19 @@
 package com.miassolutions.milkledger.features.sale.customerhistory
 
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomerHistoryBinding
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,9 +22,6 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
 ) {
 
     private val viewModel: CustomerHistoryViewModel by viewModels()
-
-    // Navigation Arguments (Safe Args)
-    // Make sure nav_graph me arguments define hon: customerId (String), customerName (String)
     private val args: CustomerHistoryFragmentArgs by navArgs()
 
     private val adapter by lazy {
@@ -34,77 +36,62 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
     override fun setupViews() {
         super.setupViews()
 
-        // 1. Initial Setup (Arguments se Name set karein)
-        binding.tvSelectedDate.text = "${args.customerName} - History"
+        // 1. Initial Name Setup
+        binding.tvSelectedDate.text = "${args.customerName} - (All History)"
 
-        // 2. RecyclerView Setup
+        // 2. Setup RecyclerView
         binding.rvCustomerDetail.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@CustomerHistoryFragment.adapter
         }
-    }
 
-    override fun setupListeners() {
-        super.setupListeners()
-
-        // Agar Header par click kr k Date Filter kholna ho (Future Implementation)
-        binding.dateHeader.setOnClickListener {
-            viewModel.onEvent(CustomerHistoryUiEvent.OnDateFilterClick)
+        // 3. Setup Date Filter View ✅
+        binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
+            // Jab user chip select kare, ViewModel ko batayen
+            viewModel.onEvent(CustomerHistoryUiEvent.OnDateFilterChanged(start, end, label))
         }
     }
 
     override fun setupObservers() {
         super.setupObservers()
 
-        // --- A. Observe UI State ---
+        // A. UI State
         collectFlow(viewModel.uiState) { state ->
             renderState(state)
         }
 
-        // --- B. Observe Side Effects ---
+        // B. Effects
         collectEffect(viewModel.uiEffect) { effect ->
             handleEffect(effect)
         }
     }
 
     private fun renderState(state: CustomerHistoryUiState) = with(binding) {
-        // 1. Loading
-        // (Agar ProgressBar XML me hota to yahan visible/gone krte)
-
-        // 2. List Update
+        // 1. List Update
         adapter.submitList(state.transactions)
 
-        // 3. Empty State Logic
+        // 2. Empty State
         val isEmpty = !state.isLoading && state.transactions.isEmpty()
         tvEmptyState.isVisible = isEmpty
         rvCustomerDetail.isVisible = !isEmpty
 
-        // 4. Header Text Update
-        // Agar aap chahein k Date Range bhi dikhayen (e.g. "Ali - All Time")
+        // 3. Header Text Update (Customer Name + Date Filter Label)
         tvSelectedDate.text = "${state.customerName} (${state.dateRangeText})"
 
-        // 5. Update Bottom Sheet Summary
-        // Note: Assuming CollapsibleCardView k andar ye methods/views accessible hain.
-        // Agar custom methods nahi banaye, to aapko IDs access krni hongi.
-
-        // Example logic (Apne Custom View k mutabiq adjust karein):
+        // 4. Update Summary Card
         customerSummary.apply {
-            // Agar aap ne Custom View me methods banaye hue hen:
-            // setMilk(state.summaryMilk.toMilkAmount())
-            // setReceived(state.summaryReceived.toPrice())
-            // setBalance(state.currentTotalBalance)
-
-            // Ya agar direct child access krna hai:
-            // findViewById<TextView>(R.id.tvTotalMilk).text = state.summaryMilk.toMilkAmount()
-            // findViewById<TextView>(R.id.tvTotalReceived).text = state.summaryReceived.toPrice()
-            // findViewById<TextView>(R.id.tvCurrentBalance).setBalanceWithColor(state.currentTotalBalance)
+            // NOTE: Replace these IDs with actual IDs from your CollapsibleCardView layout
+            // Agar aap methods nahi banaye, to findViewById use karein:
+            findViewById<TextView>(R.id.tvMilk)?.text = state.summaryMilk.toMilkAmount()
+            findViewById<TextView>(R.id.tvPayment)?.text = state.summaryReceived.toPrice()
+            findViewById<TextView>(R.id.tvBalance)?.setBalanceWithColor(state.currentTotalBalance)
         }
     }
 
     private fun handleEffect(effect: CustomerHistoryUiEffect) {
         when (effect) {
             is CustomerHistoryUiEffect.NavigateToEditSale -> {
-                // Sale Form par navigate karein (ID k sath)
+                // ✅ Navigation to Sale Form
 //                val action = CustomerHistoryFragmentDirections
 //                    .actionCustomerHistoryFragmentToSaleFormFragment(
 //                        saleId = effect.saleId,
@@ -121,9 +108,7 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
                 showSnackbar(effect.message)
             }
 
-            CustomerHistoryUiEffect.ShowDateRangePicker -> {
-                // Future Implementation
-            }
+            else -> {}
         }
     }
 }

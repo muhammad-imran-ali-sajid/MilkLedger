@@ -34,6 +34,9 @@ sealed class CustomerHistoryUiEvent {
     // Jab user kisi specific transaction (card) par click kare edit k liye
     data class OnTransactionClick(val saleId: String) : CustomerHistoryUiEvent()
 
+    data class OnDateFilterChanged(val start: Long, val end: Long, val label: String):
+        CustomerHistoryUiEvent()
+
     // Agar future mein Date Filter lagana ho (Header click)
     object OnDateFilterClick : CustomerHistoryUiEvent()
 

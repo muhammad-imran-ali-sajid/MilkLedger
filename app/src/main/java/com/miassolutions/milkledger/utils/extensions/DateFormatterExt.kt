@@ -7,7 +7,7 @@ import java.util.Locale
 private fun appDateFormatter(): DateTimeFormatter =
     DateTimeFormatter.ofPattern("dd/MM/yy", Locale.getDefault())
 private fun appOnlyDateFormatter(): DateTimeFormatter =
-    DateTimeFormatter.ofPattern("dd/MM", Locale.getDefault())
+    DateTimeFormatter.ofPattern("dd MMM", Locale.getDefault())
 
 fun LocalDate.toCompleteDateFormat(): String =
     this.format(appDateFormatter())

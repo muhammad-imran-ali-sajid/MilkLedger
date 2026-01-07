@@ -177,10 +177,12 @@ interface MilkDao {
             AND l_pay.type = 'CASH_RECEIVED' 
             AND l_pay.deletedAtMillis IS NULL
 
+        -- 🔥 FILTER LOGIC HERE
         WHERE m.accountId = :accountId 
         AND m.deletedAtMillis IS NULL
+        AND m.dateMillis BETWEEN :startDate AND :endDate
         
         ORDER BY m.dateMillis ASC, m.createdAtMillis ASC
     """)
-    fun getCustomerSalesHistory(accountId: String): Flow<List<MilkSaleUiModel>>
+    fun getCustomerSalesHistory(accountId: String, startDate: Long, endDate: Long): Flow<List<MilkSaleUiModel>>
 }

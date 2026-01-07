@@ -32,8 +32,8 @@ class MilkSaleRepository @Inject constructor(
 
 
     // Customer ki mukammal history
-    fun getCustomerHistory(accountId: String): Flow<List<MilkSaleUiModel>> {
-        return milkDao.getCustomerSalesHistory(accountId)
+    fun getCustomerHistory(accountId: String, start: Long, end: Long): Flow<List<MilkSaleUiModel>> {
+        return milkDao.getCustomerSalesHistory(accountId, start, end)
     }
 
     fun getSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>> {
