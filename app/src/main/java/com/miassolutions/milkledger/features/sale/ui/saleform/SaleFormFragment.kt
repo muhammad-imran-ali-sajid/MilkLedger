@@ -1,16 +1,24 @@
 package com.miassolutions.milkledger.features.sale.ui.saleform
 
 import android.widget.ArrayAdapter
-import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
-import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.*
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnAmountPaidChanged
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnCustomerSelected
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnDateClick
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnDateSelected
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnDeductionChanged
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnNoteChanged
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnPaymentDateClick
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnPaymentDateSelected
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnSaveClicked
+import com.miassolutions.milkledger.features.sale.ui.saleform.SaleFormUiEvent.OnVolumeChanged
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
@@ -124,7 +132,7 @@ class SaleFormFragment :
         tvNetMilk.text = state.displayNetMilk
         tvMilkPrice.text = "Price: ${state.calculatedTotal.toPrice()}"
         tvRate.text = state.displayRate
-        tvBalance.setBalanceWithColor(state.currentBalance, prefix = "Balance: ")
+        tvBalance.setBalanceWithColorRupee(state.currentBalance, prefix = "Balance: ")
 
         // --- Save Button Text ---
         btnSave.text = if (state.isEditMode) "Update Sale" else "Save Sale"

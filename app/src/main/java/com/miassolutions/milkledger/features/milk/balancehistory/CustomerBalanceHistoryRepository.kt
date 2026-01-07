@@ -2,7 +2,6 @@ package com.miassolutions.milkledger.features.milk.balancehistory
 
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.features.milk.model.BalanceHistoryUi
-import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

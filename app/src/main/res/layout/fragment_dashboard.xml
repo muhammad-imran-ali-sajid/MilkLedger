@@ -66,8 +66,8 @@
                         android:layout_weight="1"
                         android:backgroundTint="@color/teal_dark"
                         android:layout_height="wrap_content"
-                        android:text="My Profile"
-                        android:id="@+id/btnProfile"/>
+                        android:text="My Notes"
+                        android:id="@+id/btnNote"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:layout_width="0dp"

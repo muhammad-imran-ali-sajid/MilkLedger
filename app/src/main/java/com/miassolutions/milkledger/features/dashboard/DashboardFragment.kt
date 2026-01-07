@@ -150,6 +150,11 @@ class DashboardFragment :
 
     override fun setupListeners() {
 
+        binding.btnNote.setOnClickListener {
+            val dest = DashboardFragmentDirections.actionDashboardFragmentToNotesListFragment()
+            navigateTo(dest.actionId)
+        }
+
 
         binding.btnCashFlow.setOnClickListener {
 
@@ -161,37 +166,6 @@ class DashboardFragment :
             val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
             navigateTo(dest.actionId)
         }
-
-
-//        binding.saleCard.setOnClickListener {
-//            val dest = DashboardFragmentDirections.actionDashboardFragmentToSaleListFragment()
-//            navigateTo(dest.actionId)
-//
-//        }
-
-//        binding.purchaseCard.setOnClickListener {
-//            val dest = DashboardFragmentDirections.actionDashboardFragmentToPurchaseFragment()
-//            navigateTo(dest.actionId)
-//        }
-
-//        binding.expenseCard.setOnClickListener {
-//            val dest = DashboardFragmentDirections.actionDashboardFragmentToExpensesFragment()
-//            navigateTo(dest.actionId)
-//        }
-
-//        binding.cardProfit.setOnClickListener {
-//            val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-//
-//            if (isAdmin) {
-//                val dest = DashboardFragmentDirections.actionDashboardFragmentToProfitFragment()
-//                navigateTo(dest.actionId)
-//
-//            } else {
-//                showSnackbar("Only ADMIN is allowed here")
-//            }
-//
-//
-//        }
 
 
     }

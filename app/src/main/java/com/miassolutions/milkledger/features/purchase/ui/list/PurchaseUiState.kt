@@ -1,16 +1,10 @@
 package com.miassolutions.milkledger.features.purchase.ui.list
-import com.miassolutions.milkledger.features.purchase.ui.model.PurchaseUi
-import com.miassolutions.milkledger.features.purchase.ui.model.PurchaseWithSupplier
+
 import java.time.LocalDate
 
 data class PurchaseUiState(
     val currentDate: LocalDate = LocalDate.now(),
 
-    // keep original list type for DB results
-    val purchasesForDate: List<PurchaseWithSupplier> = emptyList(),
-
-    // list for adapter that includes accumulated balances
-    val purchasesUi: List<PurchaseUi> = emptyList(),
 
     val grandTotalForDate: Double = 0.0,
     val totalPaid: Double = 0.0,
@@ -27,8 +21,6 @@ data class PurchaseUiState(
 
     val isLoading: Boolean = false
 )
-
-
 
 
 sealed class PurchaseUiEvent {

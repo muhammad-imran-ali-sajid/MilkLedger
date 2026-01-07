@@ -1,20 +1,17 @@
 package com.miassolutions.milkledger.features.account.form
 
-import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.ScrollView
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
-import com.miassolutions.milkledger.core.ui.BaseBottomSheet
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountFormBinding
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.utils.extensions.toPaisa
 import dagger.hilt.android.AndroidEntryPoint
@@ -99,7 +96,7 @@ class AccountFormFragment :
         val finalAmount = if (type == AccountType.SUPPLIER) -rawAmount else rawAmount
 
         // Extension function use karein jo humne pehle banaya tha
-        tvBalancePreview.setBalanceWithColor(finalAmount, prefix = "Net Impact: ")
+        tvBalancePreview.setBalanceWithColorRupee(finalAmount, prefix = "Net Impact: ")
     }
 
     override fun setupObservers() {

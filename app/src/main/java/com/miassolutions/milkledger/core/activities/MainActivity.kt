@@ -113,8 +113,6 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             setOf(
                 R.id.ownerSetupFragment,
                 R.id.dashboardFragment,
-                R.id.customersFragment,
-                R.id.suppliersFragment,
                 R.id.settingsFragment,
                 R.id.notesListFragment,
                 R.id.milkSaleListFragment,

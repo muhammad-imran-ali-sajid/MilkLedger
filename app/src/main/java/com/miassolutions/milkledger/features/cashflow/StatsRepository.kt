@@ -1,13 +1,11 @@
 package com.miassolutions.milkledger.features.cashflow
 
 
-import com.miassolutions.milkledger.features.transaction.data.TransactionDao
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class StatsRepository @Inject constructor(
-    private val dao: TransactionDao
 ) {
 
 //    suspend fun getTotalsForRange(start: LocalDate, end: LocalDate): List<StateRecord> {

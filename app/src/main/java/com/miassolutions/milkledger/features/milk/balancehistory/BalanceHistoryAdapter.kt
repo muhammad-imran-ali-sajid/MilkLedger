@@ -5,14 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
 import com.miassolutions.milkledger.features.milk.model.BalanceHistoryUi
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
-import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.extensions.toRupeesStr
-import com.miassolutions.milkledger.utils.extensions.toSignedBalance
 
 class BalanceHistoryAdapter :
     ListAdapter<BalanceHistoryUi, BalanceHistoryAdapter.VH>(DiffCallback()) {
@@ -38,7 +35,7 @@ class BalanceHistoryAdapter :
                 tvNetChange.text = "Day Total: $sign${item.netChange.toRupeesStr()}"
 
                 // ✅ MAIN: Closing Balance
-                tvClosingBalance.setBalanceWithColor(item.closingBalance)
+                tvClosingBalance.setBalanceWithColorRupee(item.closingBalance)
             }
         }
     }

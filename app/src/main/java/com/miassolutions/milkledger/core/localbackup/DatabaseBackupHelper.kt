@@ -10,12 +10,10 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
-import com.google.gson.reflect.TypeToken
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import java.io.InputStream
 import java.lang.reflect.Type
 import java.time.LocalDate
@@ -88,30 +86,30 @@ class DatabaseBackupHelper @Inject constructor(
 //            transactions = TODO(),
 //        )
 
-        val data = BackupData(
-            customers = emptyList(),
-            suppliers = emptyList(),
-            purchases = emptyList(),
-            sales = emptyList(),
-            expenses = emptyList(),
-            notes = emptyList(),
-            transactions = emptyList()
-        )
+//        val data = BackupData(
+//            customers = emptyList(),
+//            suppliers = emptyList(),
+//            purchases = emptyList(),
+//            sales = emptyList(),
+//            expenses = emptyList(),
+//            notes = emptyList(),
+//            transactions = emptyList()
+//        )
 
-        val json = gson.toJson(data)
-        val bytes = json.toByteArray()
+//        val json = gson.toJson(data)
+//        val bytes = json.toByteArray()
 
-        context.contentResolver.openOutputStream(uri)?.use { outStream ->
-            val bufferSize = 4096
-            var written = 0
-            while (written < bytes.size) {
-                val toWrite = minOf(bufferSize, bytes.size - written)
-                outStream.write(bytes, written, toWrite)
-                written += toWrite
-                progressCallback((written * 100) / bytes.size)
-            }
-            outStream.flush()
-        } ?: throw IOException("Failed to open URI for writing")
+//        context.contentResolver.openOutputStream(uri)?.use { outStream ->
+//            val bufferSize = 4096
+//            var written = 0
+//            while (written < bytes.size) {
+//                val toWrite = minOf(bufferSize, bytes.size - written)
+//                outStream.write(bytes, written, toWrite)
+//                written += toWrite
+//                progressCallback((written * 100) / bytes.size)
+//            }
+//            outStream.flush()
+//        } ?: throw IOException("Failed to open URI for writing")
     }
 
     // Restore database from InputStream
@@ -134,8 +132,8 @@ class DatabaseBackupHelper @Inject constructor(
             }
         }
 
-        val type = object : TypeToken<BackupData>() {}.type
-        val backupData: BackupData = gson.fromJson(json, type)
+//        val type = object : TypeToken<BackupData>() {}.type
+//        val backupData: BackupData = gson.fromJson(json, type)
 
         // Suspend-friendly transaction
         db.withTransaction {

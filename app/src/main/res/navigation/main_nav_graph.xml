@@ -47,46 +47,6 @@
         android:label="Cash Flow"
         tools:layout="@layout/fragment_stats" />
     <fragment
-        android:id="@+id/customersFragment"
-        android:name="com.miassolutions.milkledger.features.customer.ui.list.CustomerListFragment"
-        android:label="CustomersFragment"
-        tools:layout="@layout/fragment_customers" >
-        <action
-            android:id="@+id/action_customersFragment_to_customerFormBottomSheetFragment"
-            app:destination="@id/customerFormBottomSheetFragment" />
-    </fragment>
-    <dialog
-        android:id="@+id/supplierFormBottomSheetFragment"
-        android:name="com.miassolutions.milkledger.features.supplier.ui.form.SupplierFormBottomSheetFragment"
-        android:label="SupplierFormBottomSheetFragment"
-        tools:layout="@layout/supplier_form_layout" >
-        <argument
-            android:name="supplierId"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="@null" />
-    </dialog>
-    <dialog
-        android:id="@+id/customerFormBottomSheetFragment"
-        android:name="com.miassolutions.milkledger.features.customer.ui.form.CustomerFormBottomSheetFragment"
-        android:label="CustomerFormBottomSheetFragment"
-        tools:layout="@layout/customer_form_layout" >
-        <argument
-            android:name="customerId"
-            app:argType="string"
-            android:defaultValue="@null"
-            app:nullable="true" />
-    </dialog>
-    <fragment
-        android:id="@+id/suppliersFragment"
-        android:name="com.miassolutions.milkledger.features.supplier.ui.suppliers.SupplierListFragment"
-        android:label="SuppliersFragment"
-        tools:layout="@layout/fragment_suppliers" >
-        <action
-            android:id="@+id/action_suppliersFragment_to_supplierFormBottomSheetFragment"
-            app:destination="@id/supplierFormBottomSheetFragment" />
-    </fragment>
-    <fragment
         tools:layout="@layout/fragment_dev_settings"
         android:id="@+id/devSettingsFragment"
         android:name="com.miassolutions.milkledger.zplayground.DevSettingsFragment"
@@ -104,6 +64,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_statsFragment"
             app:destination="@id/statsFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_notesListFragment"
+            app:destination="@id/notesListFragment" />
     </fragment>
     <fragment
         android:id="@+id/customerDetailFragment"

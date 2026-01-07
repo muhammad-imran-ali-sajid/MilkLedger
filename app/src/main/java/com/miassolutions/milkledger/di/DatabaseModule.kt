@@ -5,16 +5,11 @@ import androidx.room.Room
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
+import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkDao
-import com.miassolutions.milkledger.features.customer.data.local.CustomerDao
-import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
 import com.miassolutions.milkledger.features.note.data.local.NoteDao
 import com.miassolutions.milkledger.features.profitwithdrawal.ProfitWithdrawalDao
-import com.miassolutions.milkledger.features.purchase.data.PurchaseDao
-import com.miassolutions.milkledger.features.sale.data.local.SaleDao
-import com.miassolutions.milkledger.features.supplier.data.local.SupplierDao
-import com.miassolutions.milkledger.features.transaction.data.TransactionDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,30 +57,8 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideCustomerDao(db: AppDatabase): CustomerDao = db.customerDao()
-
-    @Singleton
-    @Provides
-    fun provideSupplierDao(db: AppDatabase): SupplierDao = db.supplierDao()
-
-    @Singleton
-    @Provides
-    fun providePurchaseDao(db: AppDatabase): PurchaseDao = db.purchaseDao()
-
-    @Singleton
-    @Provides
-    fun provideSalesDao(db: AppDatabase): SaleDao = db.salesDao()
-
-
-    @Singleton
-    @Provides
     fun provideNoteDao(db: AppDatabase): NoteDao = db.noteDao()
 
-
-
-    @Singleton
-    @Provides
-    fun provideTransactionDao(db: AppDatabase): TransactionDao = db.transactionDao()
 
     @Singleton
     @Provides
