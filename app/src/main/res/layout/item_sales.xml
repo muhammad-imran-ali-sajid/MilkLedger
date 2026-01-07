@@ -88,7 +88,8 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel" android:text="Deduction" />
+                <TextView style="@style/TextLabel"
+                    android:text="Deduc." />
                 <TextView
                     android:id="@+id/tv_deduction"
                     style="@style/TextValue"
@@ -141,7 +142,8 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel" android:text="Received" />
+                <TextView style="@style/TextLabel"
+                    android:text="Payment" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

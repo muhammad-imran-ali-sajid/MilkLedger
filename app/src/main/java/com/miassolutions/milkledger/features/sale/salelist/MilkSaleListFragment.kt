@@ -22,7 +22,7 @@ class MilkSaleListFragment :
     private val viewModel: MilkSaleListViewModel by viewModels()
 
     // Adapter Initialization
-    private val adapter = MilkSaleAdapter(
+    private val adapter = MilkSaleListAdapter(
         onEditClick = { item ->
             Log.d("MilkSaleListFragment", item)
             viewModel.onEvent(MilkSaleListUiEvent.OnEditSaleClicked(item))

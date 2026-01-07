@@ -1,5 +1,8 @@
 package com.miassolutions.milkledger.features.sale.model
 
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import java.time.LocalDate
+
 data class MilkSaleUiModel(
     val id: String,
     val dateMillis: Long,
@@ -14,8 +17,12 @@ data class MilkSaleUiModel(
 
     val rate: Double,
 
+    val paymentDateMillis: Long?,
     val paymentReceived: Long = 0,
     val currentBalance: Long = 0,
 
     val note: String?
-)
+){
+    val paymentDate : LocalDate?
+        get() = paymentDateMillis?.toLocalDate()
+}

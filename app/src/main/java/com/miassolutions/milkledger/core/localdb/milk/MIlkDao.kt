@@ -88,8 +88,7 @@ interface MilkDao {
     suspend fun softDeleteMilkTransaction(id: String, deleteTime: Long)
 
 
-    @Query(
-        """
+    @Query("""
     SELECT 
         m.milkTransId as id,
         m.dateMillis,
@@ -100,25 +99,22 @@ interface MilkDao {
         m.quantity as netQuantity,
         m.totalAmount,
         m.notes as note,
-          m.rateUsed as rate,
-        
+        m.rateUsed as rate,
+          
         COALESCE(l_pay.credit, 0) as paymentReceived, 
         
-        -- 🔥 ACCUMULATED BALANCE (Up to Present Date) 🔥
+        -- 🔥 NEW ADDITION: Payment ki Date uthao
+        l_pay.dateMillis as paymentDateMillis,
+        
+        -- 🔥 ACCUMULATED BALANCE (Same logic)
         (
             SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
             FROM financial_ledger_table sub_l
             WHERE sub_l.accountId = m.accountId 
             AND sub_l.deletedAtMillis IS NULL
-            
             AND (
-                -- 1. Pichli saari dates ka hisaab
                 sub_l.dateMillis < m.dateMillis
-                
                 OR
-                
-                -- 2. Is Sale wali Date ka Pura Hisaab (End of Day Balance)
-                -- Is se Time ka jhagra khatam ho jayega aur Payment lazmi minus hogi.
                 (sub_l.dateMillis = m.dateMillis)
             )
         ) as currentBalance
@@ -127,6 +123,7 @@ interface MilkDao {
     
     INNER JOIN accounts_table a ON m.accountId = a.accountId
     
+    -- Payment Join (Jo pehle se tha)
     LEFT JOIN financial_ledger_table l_pay 
         ON l_pay.referenceId = m.milkTransId 
         AND l_pay.type = 'CASH_RECEIVED' 
@@ -135,9 +132,7 @@ interface MilkDao {
     WHERE m.dateMillis BETWEEN :start AND :end 
     AND m.deletedAtMillis IS NULL
     
-    -- Sorting: Naya data upar
     ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
-"""
-    )
+""")
     fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
 }

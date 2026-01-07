@@ -10,15 +10,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
-class MilkSaleAdapter(
+class MilkSaleListAdapter(
     private val onEditClick: (saleId: String) -> Unit,
     private val onDeleteClick: (saleId: String) -> Unit,
     private val onDetailClick: (MilkSaleUiModel) -> Unit,
     private val onBalanceClick: (customerId: String, customerName: String) -> Unit
-) : ListAdapter<MilkSaleUiModel, MilkSaleAdapter.SaleViewHolder>(DiffCallback()) {
+) : ListAdapter<MilkSaleUiModel, MilkSaleListAdapter.SaleViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SaleViewHolder {
         val binding = ItemSalesBinding.inflate(
@@ -46,10 +47,12 @@ class MilkSaleAdapter(
                 // Financial Info
                 tvPrice.text = item.totalAmount.toPrice() // Price (Bill)
 
+                tvReceiveDate.text = item.paymentDate?.toDisplayDate()
+
                 // Payment Info (Agar payment feature linked ho to yahan show karein)
                 if (item.paymentReceived > 0) {
                     tvPayment.text = item.paymentReceived.toPrice()
-                    tvReceiveDate.isVisible = false // Date toggle logic if needed
+                    tvReceiveDate.isVisible = true // Date toggle logic if needed
                 } else {
                     tvPayment.text = "-"
                     tvReceiveDate.isVisible = false
