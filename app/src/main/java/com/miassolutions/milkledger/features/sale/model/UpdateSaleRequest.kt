@@ -7,6 +7,7 @@ data class UpdateSaleRequest(
     val saleId: String,          // Kisko update krna hai
     val accountId: String,       // ID confirm krny k liye
     val date: LocalDate,         // Nayi Date
+    val paymentDate: LocalDate,
     val volume: Double,          // Naya Doodh
     val deduction: Double,       // Nayi Katoti
     val rate: Double,            // Naya Rate

@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.sale.data
+package com.miassolutions.milkledger.features.sale.data // Package verify kr len
 
 import androidx.room.Transaction
 import androidx.room.withTransaction
@@ -44,17 +44,10 @@ class MilkSaleRepository @Inject constructor(
         return ledgerDao.getAccountBalance(accountId)
     }
 
-
     @Transaction
     suspend fun deleteSale(saleId: String) {
         val currentTime = System.currentTimeMillis()
-
-        // 1. Milk Table se delete mark karein
         milkDao.softDeleteMilkTransaction(saleId, currentTime)
-
-        // 2. Ledger Table se delete mark karein
-        // Note: Chunke Sale aur Payment (agar form me hui thi) dono ki referenceId = saleId hoti hai,
-        // to ye aik line dono entries ko delete mark kar degi.
         ledgerDao.softDeleteLedgerByReference(saleId, currentTime)
     }
 
@@ -75,11 +68,11 @@ class MilkSaleRepository @Inject constructor(
                 MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate)
             val totalPricePaisa = totalPriceDouble.toLongPaisa()
 
+            // 1. Save Milk (Use SALE DATE)
             val milkEntity = MilkTransactionEntity(
                 accountId = accountId,
                 dateMillis = saleDate.toMillis(),
                 type = TransactionType.SALE,
-
                 volume = volume,
                 deduction = deduction,
                 quantity = netQuantity,
@@ -87,9 +80,9 @@ class MilkSaleRepository @Inject constructor(
                 totalAmount = totalPricePaisa,
                 notes = note
             )
-
             milkDao.insert(milkEntity)
 
+            // 2. Save Ledger Debit (Use SALE DATE)
             val saleLedger = FinancialLedgerEntity(
                 dateMillis = saleDate.toMillis(),
                 accountId = accountId,
@@ -100,12 +93,12 @@ class MilkSaleRepository @Inject constructor(
                 profitImpact = totalPricePaisa,
                 note = "Milk: $volume - $deduction = $netQuantity Ltr"
             )
-
             ledgerDao.insert(saleLedger)
 
+            // 3. Save Payment (Use PAYMENT DATE)
             if (amountPaid > 0) {
                 val paymentLedger = FinancialLedgerEntity(
-                    dateMillis = paymentDate.toMillis(),
+                    dateMillis = paymentDate.toMillis(), // ✅ Correct: Uses Payment Date
                     accountId = accountId,
                     type = LedgerEntryType.CASH_RECEIVED,
                     referenceId = milkEntity.milkTransId,
@@ -114,26 +107,19 @@ class MilkSaleRepository @Inject constructor(
                     profitImpact = 0,
                     note = "Payment with sale"
                 )
-
                 ledgerDao.insert(paymentLedger)
             }
-
         }
-
     }
 
-
-    // Edit Form k liye Data lana
     suspend fun getSaleById(id: String): MilkSaleUiModel? {
-        // Direct DAO se bana banaya UI Model milega
         return milkDao.getSaleDetailById(id)
     }
+
     suspend fun updateMilkSale(request: UpdateSaleRequest) {
         db.withTransaction {
-            // 1. Calculations Dobara Karein (Taake data consistent rahy)
+            // Calculations
             val netQuantity = request.volume - request.deduction
-
-            // Price Calculation (Helper Utils use kr k)
             val totalPriceDouble = MilkCalculationUtils.calculateCustomerPrice(
                 request.volume,
                 request.deduction,
@@ -141,17 +127,12 @@ class MilkSaleRepository @Inject constructor(
             )
             val totalPricePaisa = totalPriceDouble.toLongPaisa()
 
-            // 2. Milk Transaction Entity Update Karein
-            // Note: Hum Purani entity fetch kr k copy bhi kr skty hen,
-            // lekin direct query se update krna zyada fast hai.
-
-            // Lekin Room Update k liye humen Entity object chahiye hota hai.
-            // Behtar hai pehle purana fetch kr len taake consistency rahy.
             val oldSale = milkDao.getMilkTransactionById(request.saleId)
-                ?: throw Exception("Sale not found") // Safety Check
+                ?: throw Exception("Sale not found")
 
+            // 1. Update Milk Entity (Use SALE DATE)
             val updatedMilkEntity = oldSale.copy(
-                dateMillis = request.date.toMillis(),
+                dateMillis = request.date.toMillis(), // ✅ Sale Date
                 volume = request.volume,
                 deduction = request.deduction,
                 quantity = netQuantity,
@@ -160,48 +141,47 @@ class MilkSaleRepository @Inject constructor(
                 notes = request.note,
                 updatedAtMillis = System.currentTimeMillis()
             )
+            milkDao.update(updatedMilkEntity)
 
-            milkDao.update(updatedMilkEntity) // ✅ Update Milk Table
-
-            // 3. Ledger Update (Sale Entry - Debit)
-            // Humen wo Ledger entry dhundni hai jo IS Sale ki hai (MILK_SALE)
+            // 2. Update Ledger Debit (Use SALE DATE)
             val saleLedgerEntry = ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.MILK_SALE)
-
             saleLedgerEntry?.let { entry ->
                 val updatedLedger = entry.copy(
-                    dateMillis = request.date.toMillis(), // Date bhi update
-                    debit = totalPricePaisa,              // Naya Bill Update
+                    dateMillis = request.date.toMillis(), // ✅ Sale Date
+                    debit = totalPricePaisa,
                     profitImpact = totalPricePaisa,
                     note = "Milk: ${request.volume} - ${request.deduction} = $netQuantity Ltr",
                     updatedAtMillis = System.currentTimeMillis()
                 )
-                ledgerDao.update(updatedLedger) // ✅ Update Ledger Debit
+                ledgerDao.update(updatedLedger)
             }
 
-            // 4. Payment Update (Thora Complex Part)
-            // Check karein k is Sale k sath koi Payment linked thi ya nahi?
+            // 3. Update Payment (Use PAYMENT DATE) 🔥 Changes Here
             val paymentLedgerEntry = ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.CASH_RECEIVED)
 
             if (paymentLedgerEntry != null) {
                 if (request.amountPaid > 0) {
-                    // Case A: Pehle Payment thi, ab amount change kr dia -> Update
+                    // Update existing payment
                     val updatedPayment = paymentLedgerEntry.copy(
-                        dateMillis = request.date.toMillis(), // Usually Payment date same as Sale date in this flow
+                        // 🛑 OLD: dateMillis = request.date.toMillis(),
+                        // ✅ NEW: Payment Date use karein
+                        dateMillis = request.paymentDate.toMillis(),
                         credit = request.amountPaid,
                         updatedAtMillis = System.currentTimeMillis()
                     )
                     ledgerDao.update(updatedPayment)
                 } else {
-                    // Case B: Pehle Payment thi, ab user ne 0 kr di -> Delete
                     ledgerDao.delete(paymentLedgerEntry)
                 }
             } else if (request.amountPaid > 0) {
-                // Case C: Pehle Payment nahi thi, ab user ne daal di -> Insert New
+                // Insert new payment (if user added payment during edit)
                 val newPaymentLedger = FinancialLedgerEntity(
-                    dateMillis = request.date.toMillis(),
+                    // 🛑 OLD: dateMillis = request.date.toMillis(),
+                    // ✅ NEW: Payment Date use karein
+                    dateMillis = request.paymentDate.toMillis(),
                     accountId = request.accountId,
                     type = LedgerEntryType.CASH_RECEIVED,
-                    referenceId = request.saleId, // Link with Sale ID
+                    referenceId = request.saleId,
                     debit = 0,
                     credit = request.amountPaid,
                     profitImpact = 0,
@@ -211,5 +191,4 @@ class MilkSaleRepository @Inject constructor(
             }
         }
     }
-
 }
