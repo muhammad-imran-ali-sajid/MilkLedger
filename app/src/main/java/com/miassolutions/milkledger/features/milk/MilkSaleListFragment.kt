@@ -10,6 +10,7 @@ import com.miassolutions.milkledger.databinding.FragmentMilkSaleListBinding
 import com.miassolutions.milkledger.features.milk.ui.list.MilkSaleListViewModel
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
@@ -27,16 +28,22 @@ class MilkSaleListFragment :
             Log.d("MilkSaleListFragment", item)
             viewModel.onEvent(MilkSaleListUiEvent.OnEditSaleClicked(item))
         },
+        onDeleteClick = {
+            showDeleteActionDialog {
+                viewModel.onEvent(MilkSaleListUiEvent.OnDeleteClicked(it))
+            }
+        },
         onDetailClick = { item ->
             viewModel.onEvent(MilkSaleListUiEvent.OnCustomerDetailClicked(item.customerId))
         },
         onBalanceClick = { id, name ->
             // Navigate to Bottom Sheet
 
-            val action = MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerBalanceHistoryBottomSheet(
-                customerId = id,
-                customerName = name
-            )
+            val action =
+                MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerBalanceHistoryBottomSheet(
+                    customerId = id,
+                    customerName = name
+                )
             findNavController().navigate(action)
 
         }

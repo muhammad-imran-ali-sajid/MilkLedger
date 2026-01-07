@@ -125,6 +125,11 @@ interface MilkDao {
     @Query("UPDATE milk_transactions_table SET deletedAtMillis = :time WHERE milkTransId = :id")
     suspend fun softDelete(id: String, time: Long)
 
+    @Query("UPDATE milk_transactions_table SET deletedAtMillis = :deleteTime WHERE milkTransId = :id")
+    suspend fun softDeleteMilkTransaction(id: String, deleteTime: Long)
+
+
+
     @Query("""
     SELECT 
         m.milkTransId as id,

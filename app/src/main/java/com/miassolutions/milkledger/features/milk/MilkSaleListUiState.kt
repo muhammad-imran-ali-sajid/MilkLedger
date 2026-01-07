@@ -31,6 +31,7 @@ sealed interface MilkSaleListUiEvent {
     // --- Actions ---
     data object OnAddSaleClicked : MilkSaleListUiEvent
 
+    data class OnDeleteClicked(val saleId: String) : MilkSaleListUiEvent
     // List Item Clicks
     data class OnEditSaleClicked(val saleId: String) : MilkSaleListUiEvent
     data class OnCustomerDetailClicked(val customerId: String) : MilkSaleListUiEvent
@@ -46,6 +47,7 @@ sealed interface MilkSaleListUiEffect {
 
     // Existing Sale edit karne k liye (Transaction ID pass hogi)
     data class NavigateToEditSale(val saleId: String) : MilkSaleListUiEffect
+
 
     // Customer ka khata kholne k liye
     data class NavigateToCustomerLedger(val customerId: String) : MilkSaleListUiEffect

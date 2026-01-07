@@ -16,6 +16,9 @@ interface LedgerDao {
     suspend fun getLedgerByReferenceId(refId: String, type: LedgerEntryType): FinancialLedgerEntity?
 
 
+    // Reference ID ki bunyad par delete (Is se Sale aur Payment dono delete ho jayengi)
+    @Query("UPDATE financial_ledger_table SET deletedAtMillis = :deleteTime WHERE referenceId = :refId")
+    suspend fun     softDeleteLedgerByReference(refId: String, deleteTime: Long)
 
     @Delete
     suspend fun delete(entity: FinancialLedgerEntity)

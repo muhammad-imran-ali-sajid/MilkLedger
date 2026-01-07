@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.milk
 
+import androidx.room.Transaction
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
@@ -44,6 +45,20 @@ class MilkSaleRepository @Inject constructor(
 
     fun getCustomerBalance(accountId: String): Flow<Long> {
         return ledgerDao.getAccountBalance(accountId)
+    }
+
+
+    @Transaction
+    suspend fun deleteSale(saleId: String) {
+        val currentTime = System.currentTimeMillis()
+
+        // 1. Milk Table se delete mark karein
+        milkDao.softDeleteMilkTransaction(saleId, currentTime)
+
+        // 2. Ledger Table se delete mark karein
+        // Note: Chunke Sale aur Payment (agar form me hui thi) dono ki referenceId = saleId hoti hai,
+        // to ye aik line dono entries ko delete mark kar degi.
+        ledgerDao.softDeleteLedgerByReference(saleId, currentTime)
     }
 
     suspend fun saveMilkSale(

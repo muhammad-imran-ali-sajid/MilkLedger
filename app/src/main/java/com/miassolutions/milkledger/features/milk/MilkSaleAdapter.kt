@@ -14,7 +14,8 @@ import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class MilkSaleAdapter(
-    private val onEditClick: (saleId:String) -> Unit,
+    private val onEditClick: (saleId: String) -> Unit,
+    private val onDeleteClick: (saleId: String) -> Unit,
     private val onDetailClick: (MilkSaleUiModel) -> Unit,
     private val onBalanceClick: (customerId: String, customerName: String) -> Unit
 ) : ListAdapter<MilkSaleUiModel, MilkSaleAdapter.SaleViewHolder>(DiffCallback()) {
@@ -67,8 +68,14 @@ class MilkSaleAdapter(
                 // Clicks
                 btnEditForm.setOnClickListener { onEditClick(item.id) }
                 btnCustomerDetail.setOnClickListener { onDetailClick(item) }
-                binding.btnBalance.setOnClickListener {
+                btnBalance.setOnClickListener {
                     onBalanceClick(item.customerId, item.customerName)
+                }
+
+
+                tvName.setOnLongClickListener {
+                    onDeleteClick(item.id)
+                    true
                 }
             }
         }
@@ -77,6 +84,7 @@ class MilkSaleAdapter(
     class DiffCallback : DiffUtil.ItemCallback<MilkSaleUiModel>() {
         override fun areItemsTheSame(oldItem: MilkSaleUiModel, newItem: MilkSaleUiModel) =
             oldItem.id == newItem.id
+
         override fun areContentsTheSame(oldItem: MilkSaleUiModel, newItem: MilkSaleUiModel) =
             oldItem == newItem
     }

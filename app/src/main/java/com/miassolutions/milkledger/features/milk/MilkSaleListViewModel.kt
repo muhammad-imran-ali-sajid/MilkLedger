@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.milk.ui.list
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.milk.MilkSaleListUiEffect
+import com.miassolutions.milkledger.features.milk.MilkSaleListUiEffect.*
 import com.miassolutions.milkledger.features.milk.MilkSaleListUiEvent
 import com.miassolutions.milkledger.features.milk.MilkSaleListUiState
 import com.miassolutions.milkledger.features.milk.MilkSaleRepository
@@ -11,13 +12,16 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class MilkSaleListViewModel @Inject constructor(
     private val repository: MilkSaleRepository
-) : BaseViewModel<MilkSaleListUiState, MilkSaleListUiEvent, MilkSaleListUiEffect>(MilkSaleListUiState()) {
+) : BaseViewModel<MilkSaleListUiState, MilkSaleListUiEvent, MilkSaleListUiEffect>(
+    MilkSaleListUiState()
+) {
 
     private var dataJob: Job? = null
 
@@ -33,28 +37,56 @@ class MilkSaleListViewModel @Inject constructor(
                 val nextDate = currentState.date.plusDays(1)
                 loadSalesForDate(nextDate)
             }
+
             MilkSaleListUiEvent.OnPrevDate -> {
                 val prevDate = currentState.date.minusDays(1)
                 loadSalesForDate(prevDate)
             }
+
             is MilkSaleListUiEvent.OnDateSelected -> {
                 loadSalesForDate(event.date)
             }
-            MilkSaleListUiEvent.OnDateClick -> emitEffect(MilkSaleListUiEffect.OnDateClick) // Show Picker
+
+            MilkSaleListUiEvent.OnDateClick -> emitEffect(OnDateClick) // Show Picker
 
             // --- Actions ---
             MilkSaleListUiEvent.OnAddSaleClicked -> {
                 // Current Date pass kar rahe hain taake Form me auto-select ho
                 val dateMillis = currentState.date.toMillis()
-                emitEffect(MilkSaleListUiEffect.NavigateToAddSale(dateMillis))
+                emitEffect(NavigateToAddSale(dateMillis))
             }
+
             is MilkSaleListUiEvent.OnEditSaleClicked -> {
                 emitEffect(
-                    MilkSaleListUiEffect.NavigateToEditSale(event.saleId)
+                    NavigateToEditSale(event.saleId)
                 )
             }
+
             is MilkSaleListUiEvent.OnCustomerDetailClicked -> {
-                emitEffect(MilkSaleListUiEffect.NavigateToCustomerLedger(event.customerId))
+                emitEffect(NavigateToCustomerLedger(event.customerId))
+            }
+
+            is MilkSaleListUiEvent.OnDeleteClicked -> {
+                onDeleteSaleClicked(event.saleId)
+            }
+        }
+    }
+
+    fun onDeleteSaleClicked(saleId: String) {
+        viewModelScope.launch {
+            updateState { it.copy(isLoading = true) }
+            try {
+                repository.deleteSale(saleId)
+
+                // Success Message
+                emitEffect(ShowSnackbar("Sale Deleted Successfully"))
+
+                // List auto-refresh ho jayegi kyunke Flow use ho raha hai
+
+            } catch (e: Exception) {
+                emitEffect(ShowSnackbar("Error: ${e.message}"))
+            } finally {
+                updateState { it.copy(isLoading = false) }
             }
         }
     }
