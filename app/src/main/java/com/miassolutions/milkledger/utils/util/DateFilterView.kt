@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import androidx.core.util.Pair
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
-import com.google.android.material.theme.overlay.MaterialThemeOverlay
-import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ViewDateFilterBinding
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
