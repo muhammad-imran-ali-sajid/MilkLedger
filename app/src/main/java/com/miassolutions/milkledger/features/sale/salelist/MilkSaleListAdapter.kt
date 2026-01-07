@@ -47,15 +47,15 @@ class MilkSaleListAdapter(
                 // Financial Info
                 tvPrice.text = item.totalAmount.toPrice() // Price (Bill)
 
-                tvReceiveDate.text = item.paymentDate?.toDisplayDate()
+                tvPaymentDate.text = "(${item.paymentDate?.toDisplayDate()})"
 
                 // Payment Info (Agar payment feature linked ho to yahan show karein)
                 if (item.paymentReceived > 0) {
                     tvPayment.text = item.paymentReceived.toPrice()
-                    tvReceiveDate.isVisible = true // Date toggle logic if needed
+                    tvPaymentDate.isVisible = true // Date toggle logic if needed
                 } else {
                     tvPayment.text = "-"
-                    tvReceiveDate.isVisible = false
+                    tvPaymentDate.isVisible = false
                 }
 
                 tvBalance.setBalanceWithColor(item.currentBalance)

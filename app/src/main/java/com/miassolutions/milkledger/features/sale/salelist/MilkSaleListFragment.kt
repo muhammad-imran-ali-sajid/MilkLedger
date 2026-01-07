@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -95,7 +96,7 @@ class MilkSaleListFragment :
             // C. Update Date Text
             // Note: Ensure IDs match your included layout
             val tvDate = binding.dateHeader.tvSelectedDate
-            tvDate?.text = state.date.toDisplayDate()
+            tvDate.text = state.date.toCompleteDateFormat()
 
             // D. Update Summary Card (Custom View Handling)
             updateSummary(state.totalMilk, state.totalAmount)

@@ -69,18 +69,6 @@
             app:destination="@id/notesListFragment" />
     </fragment>
     <fragment
-        android:id="@+id/customerDetailFragment"
-        android:name="com.miassolutions.milkledger.features.sale.ui.saledetail.CustomerDetailFragment"
-        android:label="{customerName}"
-        tools:layout="@layout/fragment_customer_detail" >
-        <argument
-            android:name="customerId"
-            app:argType="string" />
-        <argument
-            android:name="customerName"
-            app:argType="string" />
-    </fragment>
-    <fragment
         android:id="@+id/supplierDetailFragment"
         tools:layout="@layout/fragment_supplier_detail"
         android:name="com.miassolutions.milkledger.features.purchase.ui.purchasedetail.SupplierDetailFragment"
@@ -153,8 +141,8 @@
     <fragment
         android:id="@+id/ownerSetupFragment"
         android:name="com.miassolutions.milkledger.features.owner.OwnerSetupFragment"
-        android:label="fragment_owner_setup"
-        tools:layout="@layout/fragment_owner_setup" >
+        android:label="Owner Setup"
+        tools:layout="@layout/fragment_owner_setup">
         <action
             android:id="@+id/action_ownerSetupFragment_to_dashboardFragment"
             app:destination="@id/dashboardFragment" />
@@ -170,6 +158,7 @@
             android:defaultValue="-1L" />
     </fragment>
     <dialog
+        tools:layout="@layout/bottom_sheet_edit_expense"
         android:id="@+id/editExpenseBottomSheet"
         android:name="com.miassolutions.milkledger.features.expense.ui.form.EditExpenseBottomSheet"
         android:label="EditExpenseBottomSheet" >
@@ -179,19 +168,21 @@
     </dialog>
     <fragment
         android:id="@+id/milkSaleListFragment"
+        tools:layout="@layout/fragment_milk_sale_list"
         android:name="com.miassolutions.milkledger.features.sale.salelist.MilkSaleListFragment"
         android:label="MilkSaleListFragment" >
         <action
             android:id="@+id/action_milkSaleListFragment_to_saleAddFragment"
             app:destination="@id/saleAddFragment" />
         <action
-            android:id="@+id/action_milkSaleListFragment_to_customerDetailFragment"
-            app:destination="@id/customerDetailFragment" />
-        <action
             android:id="@+id/action_milkSaleListFragment_to_customerBalanceHistoryBottomSheet"
             app:destination="@id/customerBalanceHistoryBottomSheet" />
+        <action
+            android:id="@+id/action_milkSaleListFragment_to_customerHistoryFragment"
+            app:destination="@id/customerHistoryFragment" />
     </fragment>
     <dialog
+        tools:layout="@layout/bottomsheet_balance_history"
         android:id="@+id/customerBalanceHistoryBottomSheet"
         android:name="com.miassolutions.milkledger.features.sale.balancehistory.CustomerBalanceHistoryBottomSheet"
         android:label="CustomerBalanceHistoryBottomSheet">
@@ -206,5 +197,17 @@
             app:argType="string"
             app:nullable="false" />
     </dialog>
+    <fragment
+        tools:layout="@layout/fragment_customer_history"
+        android:id="@+id/customerHistoryFragment"
+        android:name="com.miassolutions.milkledger.features.sale.customerhistory.CustomerHistoryFragment"
+        android:label="CustomerHistoryFragment" >
+        <argument
+            android:name="customerId"
+            app:argType="string" />
+        <argument
+            android:name="customerName"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

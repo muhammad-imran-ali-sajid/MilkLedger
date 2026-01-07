@@ -157,10 +157,10 @@
                         tools:text="10,000" />
 
                     <TextView
-                        android:id="@+id/tvReceiveDate"
+                        android:id="@+id/tvPaymentDate"
                         style="@style/TextValue"
                         android:paddingStart="4dp"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         android:text="(20/11)"
                         android:visibility="gone" />
                 </LinearLayout>

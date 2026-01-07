@@ -1,42 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_date_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="4dp"
     android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
-    android:weightSum="8">
+>
 
-
-    <ImageButton
-        android:id="@+id/btn_prev_date"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
-        android:src="@drawable/ic_arrow" />
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:weightSum="10">
 
-    <TextView
-        android:id="@+id/tv_selected_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="6"
-        android:gravity="center"
-        android:padding="8dp"
-        android:textSize="20sp"
-        android:text="📅 12-10-2025"
-        android:textStyle="bold" />
 
-    <ImageButton
-        android:id="@+id/btn_next_date"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="8dp"
-        android:rotation="180"
-        android:src="@drawable/ic_arrow" />
-</LinearLayout>
+
+        <ImageButton
+            android:id="@+id/btn_prev_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow" />
+
+        <TextView
+            android:id="@+id/tv_selected_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textSize="20sp"
+            android:text="📅 12-10-2025"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btn_next_date"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="12dp"
+            android:rotation="180"
+            android:src="@drawable/ic_arrow" />
+
+
+    </LinearLayout>
+
+
+</com.google.android.material.card.MaterialCardView>
 

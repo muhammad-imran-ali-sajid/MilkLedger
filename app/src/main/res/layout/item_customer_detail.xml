@@ -147,7 +147,7 @@
 
                 <TextView
                     style="@style/TextLabel"
-                    android:text="Received" />
+                    android:text="Payment" />
 
                 <TextView
                     android:id="@+id/tvPayment"
