@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import com.miassolutions.milkledger.features.sale.domain.model.MilkSaleUiModel
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
@@ -53,8 +54,7 @@ class MilkSaleAdapter(
                     tvReceiveDate.isVisible = false
                 }
 
-                // Balance (Optional: List me balance show krna heavy query hoti hai)
-                tvBalance.text = "-"
+                tvBalance.setBalanceWithColor(item.currentBalance)
 
                 // Note
                 if (item.note.isNullOrBlank()) {

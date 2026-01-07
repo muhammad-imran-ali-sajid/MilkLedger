@@ -22,16 +22,13 @@
                 android:id="@+id/tvDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
                 tools:text="07 Jan 2024" />
 
             <TextView
                 android:id="@+id/tvNetChange"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
                 android:textColor="#757575"
                 tools:text="Net Change: +500" />
         </LinearLayout>
@@ -40,7 +37,6 @@
             android:id="@+id/tvClosingBalance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:textStyle="bold"
             tools:text="Rs. 5,500"
             tools:textColor="@color/black" />

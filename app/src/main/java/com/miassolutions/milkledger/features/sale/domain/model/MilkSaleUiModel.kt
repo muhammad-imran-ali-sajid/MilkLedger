@@ -13,8 +13,7 @@ data class MilkSaleUiModel(
     val netQuantity: Double,
     val totalAmount: Long, // Price (Paisa)
 
-    // Note: Payment aur Balance fetch krna complex query hoti hai list k liye,
-    // filhal hum 0 show karenge ya alag logic se layenge.
+
     val paymentReceived: Long = 0,
     val currentBalance: Long = 0,
 

@@ -16,11 +16,6 @@ enum class HistoryType { DEBIT, CREDIT }
 data class BalanceHistoryUi(
     val date: LocalDate,
     val closingBalance: Long, // Us din k ikhtitaam pr Running Balance
-    val netChange: Long
-)
-
-data class DailyBalanceUi(
-    val date: LocalDate,
-    val closingBalance: Long, // Us din k ikhtitaam pr Running Balance
     val netChange: Long       // Us din total kitna plus/minus hua (Optional display k liye)
 )
+

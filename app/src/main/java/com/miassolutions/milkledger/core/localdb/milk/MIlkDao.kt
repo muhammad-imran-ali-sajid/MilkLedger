@@ -76,8 +76,7 @@ interface MilkDao {
     @Query("UPDATE milk_transactions_table SET deletedAtMillis = :time WHERE milkTransId = :id")
     suspend fun softDelete(id: String, time: Long)
 
-    @Query(
-        """
+    @Query("""
     SELECT 
         m.milkTransId as id,
         m.dateMillis,
@@ -89,33 +88,53 @@ interface MilkDao {
         m.totalAmount,
         m.notes as note,
         
-        -- ✅ FIX 1: Payment Received (Specific to this Sale)
-        -- COALESCE ka matlab hai agar NULL ho (Payment nahi hui) to 0 return karo
-        COALESCE(l.credit, 0) as paymentReceived, 
+        COALESCE(l_pay.credit, 0) as paymentReceived, 
         
-        -- ✅ FIX 2: Live Current Balance (Sub-Query)
+        -- 🔥 FIXED: Accurate Running Balance
         (
-            SELECT (TOTAL(debit) - TOTAL(credit))
-            FROM financial_ledger_table 
-            WHERE accountId = m.accountId 
-            AND deletedAtMillis IS NULL
+            SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
+            FROM financial_ledger_table sub_l
+            WHERE sub_l.accountId = m.accountId 
+            AND sub_l.deletedAtMillis IS NULL
+            
+            AND (
+                -- 1. Pichli Dates ka sara hisaab (Purani history)
+                sub_l.dateMillis < m.dateMillis
+                
+                OR 
+                
+                -- 2. Aaj ke din ki wo entries jo is Sale se PEHLE create huin
+                -- (Note: Hum < use kar rahy hen, <= nahi, taake duplication na ho)
+                (sub_l.dateMillis = m.dateMillis AND sub_l.createdAtMillis < l_main.createdAtMillis)
+                
+                OR
+                
+                -- 3. 🔥 MAGIC FIX: Is Current Transaction ki saari entries (Sale + Payment)
+                -- Chahe Payment 1ms baad hi kyu na bani ho, agar ID same hai to shamil karo!
+                sub_l.referenceId = m.milkTransId
+            )
         ) as currentBalance
         
     FROM milk_transactions_table m
     
-    -- Join Customer Name
     INNER JOIN accounts_table a ON m.accountId = a.accountId
     
-    -- Join Payment (Agar Reference ID match ho aur Type 'CASH_RECEIVED' ho)
-    LEFT JOIN financial_ledger_table l 
-        ON l.referenceId = m.milkTransId 
-        AND l.type = 'CASH_RECEIVED' 
-        AND l.deletedAtMillis IS NULL
+    -- Main Ledger (Time reference k liye)
+    LEFT JOIN financial_ledger_table l_main 
+        ON l_main.referenceId = m.milkTransId 
+        AND l_main.type = 'MILK_SALE' 
+        AND l_main.deletedAtMillis IS NULL
+
+    -- Payment Ledger (Amount k liye)
+    LEFT JOIN financial_ledger_table l_pay 
+        ON l_pay.referenceId = m.milkTransId 
+        AND l_pay.type = 'CASH_RECEIVED' 
+        AND l_pay.deletedAtMillis IS NULL
 
     WHERE m.dateMillis BETWEEN :start AND :end 
     AND m.deletedAtMillis IS NULL
-    ORDER BY m.createdAtMillis DESC
-"""
-    )
+    
+    ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
+""")
     fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
 }
