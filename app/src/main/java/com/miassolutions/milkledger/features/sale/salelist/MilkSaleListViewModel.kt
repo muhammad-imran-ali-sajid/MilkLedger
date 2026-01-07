@@ -63,7 +63,7 @@ class MilkSaleListViewModel @Inject constructor(
             }
 
             is MilkSaleListUiEvent.OnCustomerDetailClicked -> {
-                emitEffect(NavigateToCustomerLedger(event.customerId))
+                emitEffect(NavigateToCustomerLedger(event.customerId, event.customerName))
             }
 
             is MilkSaleListUiEvent.OnDeleteClicked -> {

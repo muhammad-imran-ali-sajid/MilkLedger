@@ -34,7 +34,12 @@ class MilkSaleListFragment :
             }
         },
         onDetailClick = { item ->
-            viewModel.onEvent(MilkSaleListUiEvent.OnCustomerDetailClicked(item.customerId))
+            viewModel.onEvent(
+                MilkSaleListUiEvent.OnCustomerDetailClicked(
+                    item.customerId,
+                    item.customerName
+                )
+            )
         },
         onBalanceClick = { id, name ->
             // Navigate to Bottom Sheet
@@ -125,10 +130,11 @@ class MilkSaleListFragment :
                 }
 
                 is MilkSaleListUiEffect.NavigateToCustomerLedger -> {
-                    val action = MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerHistoryFragment(
-                        customerId = effect.customerId,
-                        customerName = "Customer"
-                    )
+                    val action =
+                        MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerHistoryFragment(
+                            customerId = effect.customerId,
+                            customerName = effect.customerName
+                        )
 
                     findNavController().navigate(action)
                 }

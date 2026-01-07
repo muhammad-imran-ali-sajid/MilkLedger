@@ -201,7 +201,7 @@
         tools:layout="@layout/fragment_customer_history"
         android:id="@+id/customerHistoryFragment"
         android:name="com.miassolutions.milkledger.features.sale.customerhistory.CustomerHistoryFragment"
-        android:label="CustomerHistoryFragment" >
+        android:label="{customerName}'s History" >
         <argument
             android:name="customerId"
             app:argType="string" />

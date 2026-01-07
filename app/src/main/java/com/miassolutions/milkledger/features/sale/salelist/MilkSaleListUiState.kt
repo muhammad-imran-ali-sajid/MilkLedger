@@ -34,7 +34,7 @@ sealed interface MilkSaleListUiEvent {
     data class OnDeleteClicked(val saleId: String) : MilkSaleListUiEvent
     // List Item Clicks
     data class OnEditSaleClicked(val saleId: String) : MilkSaleListUiEvent
-    data class OnCustomerDetailClicked(val customerId: String) : MilkSaleListUiEvent
+    data class OnCustomerDetailClicked(val customerId: String, val customerName: String) : MilkSaleListUiEvent
 }
 
 // 3️⃣ EFFECT: One-time actions (Navigation/Toast)
@@ -50,7 +50,7 @@ sealed interface MilkSaleListUiEffect {
 
 
     // Customer ka khata kholne k liye
-    data class NavigateToCustomerLedger(val customerId: String) : MilkSaleListUiEffect
+    data class NavigateToCustomerLedger(val customerId: String, val customerName: String) : MilkSaleListUiEffect
 
     data class ShowSnackbar(val message: String) : MilkSaleListUiEffect
 }

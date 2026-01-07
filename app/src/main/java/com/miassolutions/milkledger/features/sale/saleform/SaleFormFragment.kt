@@ -105,7 +105,7 @@ class SaleFormFragment :
 
         // ✅ BEST WAY:
         binding.actvCustomerName.isEnabled = !state.isEditMode // Disable in Edit Mode
-        binding.actvCustomerName.alpha = if (state.isEditMode) 0.5f else 1.0f // Visual feedback
+        binding.actvCustomerName.alpha = if (state.isEditMode) 0.7f else 1.0f // Visual feedback
 
 
         // --- Customer Name Setting ---
@@ -136,7 +136,7 @@ class SaleFormFragment :
         tvBalance.setBalanceWithColorRupee(state.currentBalance, prefix = "Balance: ")
 
         // --- Save Button Text ---
-        btnSave.text = if (state.isEditMode) "Update Sale" else "Save Sale"
+        btnSave.text = if (state.isEditMode) "Update" else "Save"
         btnSave.isEnabled = !state.isSaving
 
         // Loading State
@@ -157,7 +157,6 @@ class SaleFormFragment :
 
             is SaleFormUiEffect.ShowSnackbar -> showSnackbar(effect.message)
 
-            else -> {}
         }
     }
 }
