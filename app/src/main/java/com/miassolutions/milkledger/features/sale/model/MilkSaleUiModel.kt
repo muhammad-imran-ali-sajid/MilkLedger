@@ -8,9 +8,9 @@ data class MilkSaleUiModel(
 
     // Milk Details
     val quantity: Double,
-    val deduction: Double = 0.0, // Deduction entity me add krna prega ya logic lagani pregi
+    val deduction: Double = 0.0,
     val netQuantity: Double,
-    val totalAmount: Long, // Price (Paisa)
+    val totalAmount: Long,
 
     val rate: Double,
 

@@ -11,7 +11,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
-class CustomerHistoryViewModel @Inject constructor(
+class CustomerBalanceHistoryViewModel @Inject constructor(
     private val ledgerDao: LedgerDao // Repository use karna behtar hai, but direct DAO for brevity
 ) : ViewModel() {
 

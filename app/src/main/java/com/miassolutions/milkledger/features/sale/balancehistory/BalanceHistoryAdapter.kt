@@ -14,6 +14,26 @@ import com.miassolutions.milkledger.utils.extensions.toRupeesStr
 class BalanceHistoryAdapter :
     ListAdapter<BalanceHistoryUi, BalanceHistoryAdapter.VH>(DiffCallback()) {
 
+
+    class DiffCallback : DiffUtil.ItemCallback<BalanceHistoryUi>() {
+        override fun areItemsTheSame(
+            oldItem: BalanceHistoryUi,
+            newItem: BalanceHistoryUi
+        ): Boolean {
+            // Chunke unique ID nahi hai UI model me, hum date aur desc check kr lety hen
+            // ya agar ledgerId entity se pass ho rahi ho to best hai.
+            return oldItem.date == newItem.date && oldItem.closingBalance == newItem.closingBalance
+        }
+
+        override fun areContentsTheSame(
+            oldItem: BalanceHistoryUi,
+            newItem: BalanceHistoryUi
+        ): Boolean {
+            return oldItem == newItem
+        }
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val binding =
             ItemBalanceHitoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -24,7 +44,7 @@ class BalanceHistoryAdapter :
         holder.bind(getItem(position))
     }
 
-    inner class VH(val binding: ItemBalanceHitoryBinding) : RecyclerView.ViewHolder(binding.root) {
+    class VH(val binding: ItemBalanceHitoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: BalanceHistoryUi) {
             binding.apply {
                 // Date
@@ -43,20 +63,3 @@ class BalanceHistoryAdapter :
 
 }
 
-class DiffCallback : DiffUtil.ItemCallback<BalanceHistoryUi>() {
-    override fun areItemsTheSame(
-        oldItem: BalanceHistoryUi,
-        newItem: BalanceHistoryUi
-    ): Boolean {
-        // Chunke unique ID nahi hai UI model me, hum date aur desc check kr lety hen
-        // ya agar ledgerId entity se pass ho rahi ho to best hai.
-        return oldItem.date == newItem.date && oldItem.date == newItem.date
-    }
-
-    override fun areContentsTheSame(
-        oldItem: BalanceHistoryUi,
-        newItem: BalanceHistoryUi
-    ): Boolean {
-        return oldItem == newItem
-    }
-}

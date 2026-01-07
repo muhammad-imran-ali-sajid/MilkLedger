@@ -193,7 +193,7 @@
     </fragment>
     <dialog
         android:id="@+id/customerBalanceHistoryBottomSheet"
-        android:name="com.miassolutions.milkledger.features.sale.balancehistory.CustomerHistoryBottomSheet"
+        android:name="com.miassolutions.milkledger.features.sale.balancehistory.CustomerBalanceHistoryBottomSheet"
         android:label="CustomerBalanceHistoryBottomSheet">
 
         <argument

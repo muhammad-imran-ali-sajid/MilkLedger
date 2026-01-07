@@ -14,13 +14,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CustomerHistoryBottomSheet : BottomSheetDialogFragment() {
+class CustomerBalanceHistoryBottomSheet : BottomSheetDialogFragment() {
 
     // Arguments se Customer ID aur Name len
-    private val args: CustomerHistoryBottomSheetArgs by navArgs()
+    private val args: CustomerBalanceHistoryBottomSheetArgs by navArgs()
 
     // ViewModel (Simple Repository Call k liye)
-    private val viewModel: CustomerHistoryViewModel by viewModels()
+    private val viewModel: CustomerBalanceHistoryViewModel by viewModels()
 
     private var _binding: BottomSheetCustomerHistoryBinding? = null
     private val binding get() = _binding!!
