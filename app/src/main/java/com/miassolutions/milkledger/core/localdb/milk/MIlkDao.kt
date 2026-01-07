@@ -90,7 +90,7 @@ interface MilkDao {
         
         COALESCE(l_pay.credit, 0) as paymentReceived, 
         
-        -- 🔥 FIXED: Accurate Running Balance
+        -- 🔥 ACCUMULATED BALANCE (Up to Present Date) 🔥
         (
             SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
             FROM financial_ledger_table sub_l
@@ -98,20 +98,14 @@ interface MilkDao {
             AND sub_l.deletedAtMillis IS NULL
             
             AND (
-                -- 1. Pichli Dates ka sara hisaab (Purani history)
+                -- 1. Pichli saari dates ka hisaab
                 sub_l.dateMillis < m.dateMillis
-                
-                OR 
-                
-                -- 2. Aaj ke din ki wo entries jo is Sale se PEHLE create huin
-                -- (Note: Hum < use kar rahy hen, <= nahi, taake duplication na ho)
-                (sub_l.dateMillis = m.dateMillis AND sub_l.createdAtMillis < l_main.createdAtMillis)
                 
                 OR
                 
-                -- 3. 🔥 MAGIC FIX: Is Current Transaction ki saari entries (Sale + Payment)
-                -- Chahe Payment 1ms baad hi kyu na bani ho, agar ID same hai to shamil karo!
-                sub_l.referenceId = m.milkTransId
+                -- 2. Is Sale wali Date ka Pura Hisaab (End of Day Balance)
+                -- Is se Time ka jhagra khatam ho jayega aur Payment lazmi minus hogi.
+                (sub_l.dateMillis = m.dateMillis)
             )
         ) as currentBalance
         
@@ -119,13 +113,6 @@ interface MilkDao {
     
     INNER JOIN accounts_table a ON m.accountId = a.accountId
     
-    -- Main Ledger (Time reference k liye)
-    LEFT JOIN financial_ledger_table l_main 
-        ON l_main.referenceId = m.milkTransId 
-        AND l_main.type = 'MILK_SALE' 
-        AND l_main.deletedAtMillis IS NULL
-
-    -- Payment Ledger (Amount k liye)
     LEFT JOIN financial_ledger_table l_pay 
         ON l_pay.referenceId = m.milkTransId 
         AND l_pay.type = 'CASH_RECEIVED' 
@@ -134,6 +121,7 @@ interface MilkDao {
     WHERE m.dateMillis BETWEEN :start AND :end 
     AND m.deletedAtMillis IS NULL
     
+    -- Sorting: Naya data upar
     ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
 """)
     fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
