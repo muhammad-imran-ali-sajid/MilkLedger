@@ -1,57 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<HorizontalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:scrollbars="none"
-    android:paddingVertical="4dp"
-    android:paddingHorizontal="4dp"
-    android:clipToPadding="false">
+    android:orientation="vertical"
+    android:background="?attr/colorSurface">
 
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/chipGroupFilter"
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:singleSelection="true"
-        app:selectionRequired="true">
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:paddingHorizontal="12dp"
+        android:paddingTop="8dp">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipAll"
-            style="@style/Widget.Material3.Chip.Filter.Elevated"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All"
-            android:checked="true" />
+            app:singleSelection="true"
+            app:selectionRequired="true">
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipToday"
-            style="@style/Widget.Material3.Chip.Filter.Elevated"
-            android:layout_width="wrap_content"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAll"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All"
+                android:checked="true" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipDay"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Day" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipMonth"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Month" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipYear"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Year" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipCustom"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Custom" />
+
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/layoutNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="4dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/btnPrev"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_left"
+            app:tint="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/tvCurrentRange"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Today" />
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="October 2025"
+            android:textSize="16sp"
+            android:drawableEnd="@drawable/ic_arrow_down"
+            android:textStyle="bold"
+            android:textColor="?attr/colorOnSurface" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipMonth"
-            style="@style/Widget.Material3.Chip.Filter.Elevated"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="This Month" />
+        <ImageButton
+            android:id="@+id/btnNext"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_right"
+            app:tint="?attr/colorOnSurface" />
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipPrevMonth"
-            style="@style/Widget.Material3.Chip.Filter.Elevated"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Last Month" />
+    </LinearLayout>
 
-        <com.google.android.material.chip.Chip
-            android:id="@+id/chipCustom"
-            style="@style/Widget.Material3.Chip.Filter.Elevated"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:chipIcon="@drawable/ic_calendar"
-            android:text="Custom" />
-
-    </com.google.android.material.chip.ChipGroup>
-
-</HorizontalScrollView>
+</LinearLayout>

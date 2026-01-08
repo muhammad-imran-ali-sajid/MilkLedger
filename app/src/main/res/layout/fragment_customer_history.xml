@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".features.sale.customerhistory.CustomerHistoryFragment">
 
-    <com.miassolutions.milkledger.utils.util.DateFilterView
+    <com.miassolutions.milkledger.utils.customviews.DateFilterView
         android:id="@+id/dateFilterView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,19 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_selected_date"
-        style="@style/TitleText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Ali Hassan (All History)"
-        android:textColor="?attr/colorOnSurface"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dateFilterView" />
+
 
     <TextView
         android:id="@+id/tvEmptyState"
@@ -41,7 +29,7 @@
         app:layout_constraintBottom_toTopOf="@id/customer_summary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_selected_date"
+        app:layout_constraintTop_toBottomOf="@id/dateFilterView"
         tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -53,12 +41,13 @@
         android:layout_marginTop="8dp"
         android:clipToPadding="false"
         android:paddingBottom="90dp"
+        tools:layout_height="match_parent"
         android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@id/dateFilterView"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/customer_summary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_selected_date"
         tools:itemCount="6"
         tools:listitem="@layout/item_customer_detail" />
 

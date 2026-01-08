@@ -36,8 +36,6 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
     override fun setupViews() {
         super.setupViews()
 
-        // 1. Initial Name Setup
-        binding.tvSelectedDate.text = "${args.customerName} - (All History)"
 
         // 2. Setup RecyclerView
         binding.rvCustomerDetail.apply {
@@ -45,9 +43,12 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
             adapter = this@CustomerHistoryFragment.adapter
         }
 
-        // 3. Setup Date Filter View ✅
+        // ✅ 3. Setup Date Filter View
+        // Ye code bilkul same rahega. View khud logic chalaye ga (Arrows/Calendar)
+        // aur jab user final karega, ye callback chalega.
         binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
-            // Jab user chip select kare, ViewModel ko batayen
+
+            // ViewModel ko naya range bhejen
             viewModel.onEvent(CustomerHistoryUiEvent.OnDateFilterChanged(start, end, label))
         }
     }
@@ -75,8 +76,7 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
         tvEmptyState.isVisible = isEmpty
         rvCustomerDetail.isVisible = !isEmpty
 
-        // 3. Header Text Update (Customer Name + Date Filter Label)
-        tvSelectedDate.text = "${state.customerName} (${state.dateRangeText})"
+
 
         // 4. Update Summary Card
         customerSummary.apply {
