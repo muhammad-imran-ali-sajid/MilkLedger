@@ -46,7 +46,7 @@ class MilkSaleRepository @Inject constructor(
         }
     }
 
-    fun getCustomerBalance(accountId: String): Flow<Long> {
+    fun getAccountBalance(accountId: String): Flow<Long> {
         return ledgerDao.getAccountBalance(accountId)
     }
 

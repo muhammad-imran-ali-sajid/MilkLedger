@@ -55,7 +55,7 @@ class CustomerHistoryViewModel @Inject constructor(
 
     private fun loadCurrentBalance() {
         // Balance hamesha 'Overall' hota hai, Date filter ka is par asar nahi hona chahiye
-        repository.getCustomerBalance(customerId)
+        repository.getAccountBalance(customerId)
             .onEach { balance ->
                 updateState { it.copy(currentTotalBalance = balance) }
             }

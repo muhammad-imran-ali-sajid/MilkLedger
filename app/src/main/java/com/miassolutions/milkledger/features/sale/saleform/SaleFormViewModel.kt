@@ -126,7 +126,7 @@ class SaleFormViewModel @Inject constructor(
     // ... fetchBalance aur calculateTotal same rahenge ...
     private fun fetchBalance(accountId: String) {
         viewModelScope.launch {
-            repository.getCustomerBalance(accountId).collect { balance ->
+            repository.getAccountBalance(accountId).collect { balance ->
                 updateState { it.copy(currentBalance = balance) }
             }
         }

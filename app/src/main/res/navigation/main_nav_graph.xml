@@ -6,10 +6,10 @@
     app:startDestination="@id/dashboardFragment">
 
     <fragment
-        android:id="@+id/purchaseFragment"
-        android:name="com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFragment"
+        android:id="@+id/purchaseListFragment"
+        android:name="com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListFragment"
         android:label="Purchases"
-        tools:layout="@layout/fragment_purchases" >
+        tools:layout="@layout/fragment_list_purchase" >
         <action
             android:id="@+id/action_purchaseFragment_to_supplierDetailFragment"
             app:destination="@id/supplierDetailFragment"
@@ -20,8 +20,8 @@
 
             />
         <action
-            android:id="@+id/action_purchaseFragment_to_purchaseAddFragment"
-            app:destination="@id/purchaseAddFragment" />
+            android:id="@+id/action_purchaseFragment_to_purchaseFormFragment"
+            app:destination="@id/purchaseFormFragment" />
     </fragment>
     <fragment
         android:id="@+id/expenseFragment"
@@ -101,11 +101,6 @@
         tools:layout="@layout/fragment_profit" />
 
 
-    <fragment
-        android:id="@+id/purchaseAddFragment"
-        android:name="com.miassolutions.milkledger.features.purchase.ui.form.PurchaseAddFragment"
-        android:label="Add Purchases"
-        tools:layout="@layout/fragment_purchase_form" />
     <fragment
         android:id="@+id/saleAddFragment"
         android:name="com.miassolutions.milkledger.features.sale.saleform.SaleFormFragment"
@@ -208,6 +203,16 @@
         <argument
             android:name="customerName"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/purchaseFormFragment"
+        tools:layout="@layout/fragment_purchase_form"
+        android:name="com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormFragment"
+        android:label="PurchaseFormFragment" >
+        <argument
+            android:name="supplierId"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 
 </navigation>
