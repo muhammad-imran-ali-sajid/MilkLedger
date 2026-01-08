@@ -105,7 +105,7 @@
         android:id="@+id/purchaseAddFragment"
         android:name="com.miassolutions.milkledger.features.purchase.ui.form.PurchaseAddFragment"
         android:label="Add Purchases"
-        tools:layout="@layout/fragment_add_purchase" />
+        tools:layout="@layout/fragment_purchase_form" />
     <fragment
         android:id="@+id/saleAddFragment"
         android:name="com.miassolutions.milkledger.features.sale.saleform.SaleFormFragment"
