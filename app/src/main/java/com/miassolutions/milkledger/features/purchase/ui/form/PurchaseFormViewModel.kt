@@ -5,13 +5,23 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.purchase.data.MilkPurchaseRepository
 import com.miassolutions.milkledger.features.purchase.domain.SavePurchaseUseCase
+import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
 import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiEffect
 import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiEvent
 import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiState
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -21,14 +31,54 @@ class PurchaseFormViewModel @Inject constructor(
     private val repository: MilkPurchaseRepository,
     private val savePurchaseUseCase: SavePurchaseUseCase,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<PurchaseFormUiState, PurchaseFormUiEvent, PurchaseFormUiEffect>(PurchaseFormUiState()) {
+) : BaseViewModel<PurchaseFormUiState, PurchaseFormUiEvent, PurchaseFormUiEffect>(
+    PurchaseFormUiState()
+) {
 
     private val purchaseId: String? = savedStateHandle["purchaseId"]
 
+
+    private val _suppliersDropDown = MutableStateFlow<List<SupplierDropDownUiModel>>(emptyList())
+    val suppliersDropDown = _suppliersDropDown.asStateFlow()
+
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun monitorSuppliersStatus() {
+        viewModelScope.launch {
+            combine(
+                repository.getSuppliers(), // 1. All Suppliers Flow
+
+                // 🔥 FIX: snapshotFlow hata kar simple Flow operator lagayen
+                uiState
+                    .map { it.date }            // Sirf Date change ko observe karein
+                    .distinctUntilChanged()     // Jab tak Date change na ho, dubara na chalayen
+                    .flatMapLatest { date ->    // Date change par DB query karein
+                        repository.getSuppliersWithPurchaseOnDate(date.toMillis())
+                    }
+            ) { suppliers, completedIds ->
+
+                // Combine Logic: Suppliers ko check karein k wo list me hain ya nahi
+                suppliers.map { account ->
+                    SupplierDropDownUiModel(
+                        account = account,
+                        isEntryDoneToday = completedIds.contains(account.accountId)
+                    )
+                }
+
+            }.collect { mappedList ->
+                _suppliersDropDown.value = mappedList
+            }
+        }
+    }
+
     // Suppliers List (For Dropdown)
-    val suppliersList = repository.getSuppliers() // Note: Repository me getSuppliers (AccountType.SUPPLIER) bana len
+    val suppliersList =
+        repository.getSuppliers() // Note: Repository me getSuppliers (AccountType.SUPPLIER) bana len
 
     init {
+        monitorSuppliersStatus()
+
+
         if (purchaseId != null) {
             loadPurchaseForEdit(purchaseId)
         } else {
@@ -53,7 +103,8 @@ class PurchaseFormViewModel @Inject constructor(
                         isEditMode = true,
                         selectedSupplier = supplier,
                         date = purchase.dateMillis.toLocalDate(),
-                        paymentDate = purchase.paymentDateMillis?.toLocalDate() ?: purchase.dateMillis.toLocalDate(),
+                        paymentDate = purchase.paymentDateMillis?.toLocalDate()
+                            ?: purchase.dateMillis.toLocalDate(),
 
                         volume = purchase.volume.toString(),
                         fat = if (purchase.fat > 0) purchase.fat.toString() else "", // 0 ko empty dikhayen
@@ -87,25 +138,31 @@ class PurchaseFormViewModel @Inject constructor(
                 fetchBalance(event.supplier.accountId)
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnVolumeChanged -> {
                 updateState { it.copy(volume = event.value) }
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnFatChanged -> {
                 updateState { it.copy(fat = event.value) }
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnLrChanged -> {
                 updateState { it.copy(lr = event.value) }
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnRateChanged -> {
                 updateState { it.copy(rate = event.value) }
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnAmountPaidChanged -> {
                 updateState { it.copy(amountPaid = event.value) }
             }
+
             is PurchaseFormUiEvent.OnNoteChanged -> updateState { it.copy(note = event.value) }
 
             // --- Dates ---

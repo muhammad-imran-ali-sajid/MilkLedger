@@ -10,9 +10,11 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchaseFormBinding // Make sure Layout name matches
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.purchase.purchaseform.PurchaseFormViewModel
+import com.miassolutions.milkledger.features.purchase.purchaseform.SupplierAdapter
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,20 +29,22 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
     private val viewModel: PurchaseFormViewModel by viewModels()
 //    private val args: PurchaseFormFragmentArgs by navArgs() // Ensure NavGraph has args
 
-    private lateinit var supplierAdapter: ArrayAdapter<String>
+    private lateinit var supplierAdapter: SupplierAdapter
     private var suppliersList: List<Account> = emptyList()
 
     override fun setupViews() {
         super.setupViews()
 
-        // 1. Setup Dropdown Adapter
-        supplierAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line)
-        binding.actvSupplierName.setAdapter(supplierAdapter)
 
-        // 2. Set Toolbar Title (Optional)
-        // (Agar aapke activity me toolbar logic hai to yahan set kar skty hen)
-        // val title = if (args.purchaseId != null) "Edit Purchase" else "New Purchase"
+
+//        // 1. Setup Dropdown Adapter
+//        supplierAdapter =
+//            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line)
+//        binding.actvSupplierName.setAdapter(supplierAdapter)
+//
+//        // 2. Set Toolbar Title (Optional)
+//        // (Agar aapke activity me toolbar logic hai to yahan set kar skty hen)
+//        // val title = if (args.purchaseId != null) "Edit Purchase" else "New Purchase"
     }
 
     override fun setupListeners() = with(binding) {
@@ -58,7 +62,6 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         etLr.doAfterTextChanged {
             viewModel.onEvent(PurchaseFormUiEvent.OnLrChanged(it.toString()))
         }
-
 
 
         // Rate Field
@@ -115,12 +118,20 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
     override fun setupObservers() {
         super.setupObservers()
 
+        collectFlow(viewModel.suppliersDropDown) { suppliersList ->
+            supplierAdapter = SupplierAdapter(requireContext(), suppliersList)
+            binding.actvSupplierName.setAdapter(supplierAdapter)
+
+            supplierAdapter.notifyDataSetChanged()
+        }
+
+
         // 1. Observe Suppliers List (Dropdown k liye)
         collectFlow(viewModel.suppliersList) { suppliers ->
             suppliersList = suppliers
             val names = suppliers.map { it.name }
             supplierAdapter.clear()
-            supplierAdapter.addAll(names)
+//            supplierAdapter.addAll(names)
             supplierAdapter.notifyDataSetChanged()
         }
 
@@ -154,7 +165,10 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         tvRate.text = "Rate: ${state.rate}"
 
         // Balance
-        tvBalance.setBalanceWithColor(state.currentBalance)
+        tvBalance.setBalanceWithColorRupee(state.currentBalance, prefix = "Balance: ")
+
+
+        btnPaymentDate.text = state.paymentDate.toDisplayDate()
 
 
         // --- 3. Inputs (Only update if text is different to avoid cursor jumping) ---

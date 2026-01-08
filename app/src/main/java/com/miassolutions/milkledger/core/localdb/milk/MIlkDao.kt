@@ -238,6 +238,11 @@ interface MilkDao {
         LIMIT 1
     """)
     suspend fun getPurchaseDetailById(id: String): MilkPurchaseUiModel?
+
+
+    // Aaj ki date me kin suppliers se purchase hui?
+    @Query("SELECT DISTINCT accountId FROM milk_transactions_table WHERE dateMillis = :dateMillis AND type = 'PURCHASE' AND deletedAtMillis IS NULL")
+    fun getSuppliersWithPurchaseOnDate(dateMillis: Long): Flow<List<String>>
 }
 
 

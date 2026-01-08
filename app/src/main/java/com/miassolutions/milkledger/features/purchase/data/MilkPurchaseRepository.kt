@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
+import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
 import com.miassolutions.milkledger.features.purchase.model.UpdatePurchaseRequest
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
@@ -31,15 +32,18 @@ class MilkPurchaseRepository @Inject constructor(
 ) {
 
 
-    fun getSuppliers() : Flow<List<Account>> = accountDao.getAccountsByType(AccountType.SUPPLIER).map { list ->
-        list.map { it.toDomain() }
-    }
+    fun getSuppliers(): Flow<List<Account>> =
+        accountDao.getAccountsByType(AccountType.SUPPLIER).map { list ->
+            list.map { it.toDomain() }
+        }
+
+    fun getSuppliersWithPurchaseOnDate(date: Long): Flow<List<String>> =
+        milkDao.getSuppliersWithPurchaseOnDate(date)
 
 
     fun getAccountBalance(accountId: String): Flow<Long> {
         return ledgerDao.getAccountBalance(accountId)
     }
-
 
 
     suspend fun getPurchaseById(id: String): MilkPurchaseUiModel? {
@@ -121,7 +125,12 @@ class MilkPurchaseRepository @Inject constructor(
         db.withTransaction {
             // 1. Re-Calculate
             val ts = MilkCalculationUtils.calculateTS(request.fat, request.lr, request.volume)
-            val totalPriceDouble = MilkCalculationUtils.calculatePrice(request.volume, request.fat, request.lr, request.rate)
+            val totalPriceDouble = MilkCalculationUtils.calculatePrice(
+                request.volume,
+                request.fat,
+                request.lr,
+                request.rate
+            )
             val totalPricePaisa = totalPriceDouble.toLongPaisa()
 
             val oldPurchase = milkDao.getMilkTransactionById(request.purchaseId)
@@ -143,7 +152,8 @@ class MilkPurchaseRepository @Inject constructor(
             milkDao.update(updatedMilk)
 
             // 3. Update Ledger (Purchase Entry - Credit)
-            val purchaseLedger = ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.MILK_PURCHASE)
+            val purchaseLedger =
+                ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.MILK_PURCHASE)
             purchaseLedger?.let {
                 val updated = it.copy(
                     dateMillis = request.date.toMillis(),
@@ -156,32 +166,37 @@ class MilkPurchaseRepository @Inject constructor(
             }
 
             // 4. Update Payment (Debit)
-            val paymentLedger = ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.CASH_PAID)
+            val paymentLedger =
+                ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.CASH_PAID)
 
             if (paymentLedger != null) {
                 if (request.amountPaid > 0) {
                     // Update
-                    ledgerDao.update(paymentLedger.copy(
-                        dateMillis = request.paymentDate.toMillis(),
-                        debit = request.amountPaid, // Update Paid Amount
-                        updatedAtMillis = System.currentTimeMillis()
-                    ))
+                    ledgerDao.update(
+                        paymentLedger.copy(
+                            dateMillis = request.paymentDate.toMillis(),
+                            debit = request.amountPaid, // Update Paid Amount
+                            updatedAtMillis = System.currentTimeMillis()
+                        )
+                    )
                 } else {
                     // Delete
                     ledgerDao.delete(paymentLedger)
                 }
             } else if (request.amountPaid > 0) {
                 // Insert New
-                ledgerDao.insert(FinancialLedgerEntity(
-                    dateMillis = request.paymentDate.toMillis(),
-                    accountId = request.supplierId,
-                    type = LedgerEntryType.CASH_PAID,
-                    referenceId = request.purchaseId,
-                    debit = request.amountPaid,
-                    credit = 0,
-                    profitImpact = 0,
-                    note = "Payment with purchase (Updated)"
-                ))
+                ledgerDao.insert(
+                    FinancialLedgerEntity(
+                        dateMillis = request.paymentDate.toMillis(),
+                        accountId = request.supplierId,
+                        type = LedgerEntryType.CASH_PAID,
+                        referenceId = request.purchaseId,
+                        debit = request.amountPaid,
+                        credit = 0,
+                        profitImpact = 0,
+                        note = "Payment with purchase (Updated)"
+                    )
+                )
             }
         }
     }
