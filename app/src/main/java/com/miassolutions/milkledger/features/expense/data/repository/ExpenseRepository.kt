@@ -35,7 +35,7 @@ class ExpenseRepository @Inject constructor(
             val ledgerEntries = entities.map { expenseEntity ->
                 FinancialLedgerEntity(
                     dateMillis = expenseEntity.dateMillis,
-                    accountId = if (expenseEntity.isPersonal) Constants.OWNER_ACCOUNT_ID else Constants.SHOP_EXPENSE,
+                    accountId = if (expenseEntity.isPersonal) OWNER_ACCOUNT_ID else SHOP_EXPENSE,
                     referenceId = expenseEntity.expenseId,
                     type = if (expenseEntity.isPersonal) LedgerEntryType.OWNER_WITHDRAWAL else LedgerEntryType.EXPENSE,
 

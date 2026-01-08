@@ -40,6 +40,9 @@ class MilkPurchaseRepository @Inject constructor(
     fun getSuppliersWithPurchaseOnDate(date: Long): Flow<List<String>> =
         milkDao.getSuppliersWithPurchaseOnDate(date)
 
+    fun getPurchasesByDate(date: Long): Flow<List<MilkPurchaseUiModel>> =
+        milkDao.getPurchasesByDate(date)
+
 
     fun getAccountBalance(accountId: String): Flow<Long> {
         return ledgerDao.getAccountBalance(accountId)

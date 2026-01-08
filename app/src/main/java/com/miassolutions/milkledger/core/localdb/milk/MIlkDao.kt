@@ -239,6 +239,55 @@ interface MilkDao {
     """)
     suspend fun getPurchaseDetailById(id: String): MilkPurchaseUiModel?
 
+    // 🔥 PURCHASE LIST BY DATE
+    @Query("""
+        SELECT 
+            m.milkTransId as id,
+            m.dateMillis,
+            m.accountId as supplierId,
+            a.name as supplierName,
+            
+            m.volume,
+            COALESCE(m.fat, 0.0) as fat,
+            COALESCE(m.lr, 0.0) as lr,
+            COALESCE(m.ts, 0.0) as ts,
+            
+            m.rateUsed as rate,
+            m.totalAmount,
+            m.notes as note,
+            
+            -- Payment (Purchase me Payment = Debit)
+            COALESCE(l_pay.debit, 0) as paymentMade,
+            l_pay.dateMillis as paymentDateMillis,
+            
+            -- Running Balance
+            (
+                SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
+                FROM financial_ledger_table sub_l
+                WHERE sub_l.accountId = m.accountId 
+                AND sub_l.deletedAtMillis IS NULL
+                AND (
+                    sub_l.dateMillis < m.dateMillis
+                    OR (sub_l.dateMillis = m.dateMillis)
+                )
+            ) as currentBalance
+            
+        FROM milk_transactions_table m
+        INNER JOIN accounts_table a ON m.accountId = a.accountId
+        
+        LEFT JOIN financial_ledger_table l_pay 
+            ON l_pay.referenceId = m.milkTransId 
+            AND l_pay.type = 'CASH_PAID' 
+            AND l_pay.deletedAtMillis IS NULL
+
+        WHERE m.type = 'PURCHASE' 
+        AND m.dateMillis = :dateMillis
+        AND m.deletedAtMillis IS NULL
+        
+        ORDER BY m.createdAtMillis DESC
+    """)
+    fun getPurchasesByDate(dateMillis: Long): Flow<List<MilkPurchaseUiModel>>
+
 
     // Aaj ki date me kin suppliers se purchase hui?
     @Query("SELECT DISTINCT accountId FROM milk_transactions_table WHERE dateMillis = :dateMillis AND type = 'PURCHASE' AND deletedAtMillis IS NULL")
