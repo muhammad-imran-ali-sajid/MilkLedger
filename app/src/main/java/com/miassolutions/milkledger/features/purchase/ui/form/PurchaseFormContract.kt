@@ -28,7 +28,7 @@ data class PurchaseFormUiState(
 
     // Calculated / Display Fields
     val calculatedTs: Double = 0.0,    // UI par dikhane k liye
-    val calculatedTotal: Double = 0.0, // Total Bill
+    val calculatedTotal: Long = 0, // Total Bill
     val currentBalance: Long = 0
 )
 

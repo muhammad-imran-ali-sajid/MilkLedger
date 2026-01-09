@@ -10,6 +10,7 @@ import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiEffe
 import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiEvent
 import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiState
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -193,7 +194,7 @@ class PurchaseFormViewModel @Inject constructor(
         updateState {
             it.copy(
                 calculatedTs = ts,
-                calculatedTotal = total
+                calculatedTotal = total.toLongPaisa()
             )
         }
     }

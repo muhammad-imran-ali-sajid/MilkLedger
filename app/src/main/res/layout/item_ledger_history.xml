@@ -26,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/grey"
             tools:text="Milk Purchase" />
     </LinearLayout>
 
@@ -36,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.9"
-        android:gravity="end"
+        android:gravity="center_horizontal"
         android:textColor="#388E3C"
         tools:text="5000" />
 
@@ -46,7 +45,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.9"
-        android:gravity="end"
+        android:gravity="center_horizontal"
         android:textColor="#D32F2F"
         tools:text="0" />
 
@@ -58,6 +57,6 @@
         android:src="@drawable/ic_calendar"
         android:visibility="gone"
         tools:visibility="visible"
-        app:tint="@color/grey" />
+         />
 
 </LinearLayout>

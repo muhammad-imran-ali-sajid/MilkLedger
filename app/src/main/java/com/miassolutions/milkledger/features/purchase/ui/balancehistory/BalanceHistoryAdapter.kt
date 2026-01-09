@@ -3,10 +3,12 @@ package com.miassolutions.milkledger.features.purchase.ui.balancehistory
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
 import com.miassolutions.milkledger.databinding.ItemLedgerHistoryBinding
@@ -43,22 +45,27 @@ class BalanceHistoryAdapter : ListAdapter<FinancialLedgerEntity, BalanceHistoryA
                 tvDebit.text = item.debit.toPrice()
                 tvDebit.isVisible = true
             } else {
-                tvDebit.text = "-"
-                // tvDebit.isVisible = false // Optional: keep alignment
+                tvDebit.text = "--"
+//                 tvDebit.isVisible = false // Optional: keep alignment
             }
 
             if (item.credit > 0) {
                 tvCredit.text = item.credit.toPrice()
                 tvCredit.isVisible = true
             } else {
-                tvCredit.text = "-"
+                tvCredit.text = "--"
+//                tvCredit.isVisible = false
             }
 
             // Note Icon
             ivNote.isVisible = !item.note.isNullOrBlank()
             if (!item.note.isNullOrBlank()) {
                 root.setOnClickListener {
-                    // Optional: Show full note on click via Toast/Dialog
+                    Snackbar.make(
+                        binding.root,      // any attached view
+                        item.note ?: "",
+                        Snackbar.LENGTH_LONG
+                    ).show()
                 }
             }
         }
