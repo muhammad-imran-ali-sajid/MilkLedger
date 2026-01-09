@@ -130,7 +130,9 @@ interface MilkDao {
         AND l_pay.type = 'CASH_RECEIVED' 
         AND l_pay.deletedAtMillis IS NULL
 
-    WHERE m.dateMillis BETWEEN :start AND :end 
+    WHERE m.dateMillis BETWEEN :start AND :end
+    AND m.deletedAtMillis IS NULL
+    AND m.type = 'SALE'
     AND m.deletedAtMillis IS NULL
     
     ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
