@@ -25,6 +25,9 @@ interface LedgerDao {
     @Delete
     suspend fun delete(entity: FinancialLedgerEntity)
 
+    @Query("SELECT * FROM financial_ledger_table WHERE ledgerId = :ledgerId LIMIT 1")
+    suspend fun getLedgerById(ledgerId: String) : FinancialLedgerEntity?
+
 
     // Balance calculation hamesha shuru se hoti hai (ORDER BY dateMillis ASC)
     @Query("""
@@ -77,6 +80,47 @@ interface LedgerDao {
         LIMIT 50
     """)
     fun getLedgerHistory(accountId: String): Flow<List<FinancialLedgerEntity>>
+
+
+    // ----------------------------------------------------------------
+    // 🔥 OWNER DASHBOARD QUERIES
+    // ----------------------------------------------------------------
+
+    // 1. Calculate NET PROFIT for Date Range
+    // Formula: (Profit from Sales/Purchases) - (Business Expenses)
+    // Note: 'profitImpact' column humne isi liye banaya tha.
+    // Bus us column ka SUM le lein, jahan type Owner Drawing na ho.
+    @Query("""
+        SELECT COALESCE(SUM(profitImpact), 0) 
+        FROM financial_ledger_table 
+        WHERE dateMillis BETWEEN :start AND :end 
+        AND deletedAtMillis IS NULL
+        AND type != 'OWNER_DRAWING' 
+        AND type != 'OWNER_WITHDRAWAL' -- Safety check agar naming change ho
+    """)
+    fun getNetProfitInRange(start: Long, end: Long): Flow<Long>
+
+    // 2. Calculate TOTAL DRAWINGS for Date Range
+    // Formula: Sum of all OWNER_DRAWING (Debit side represents money taken)
+    @Query("""
+        SELECT COALESCE(SUM(debit), 0) 
+        FROM financial_ledger_table 
+        WHERE dateMillis BETWEEN :start AND :end 
+        AND deletedAtMillis IS NULL
+        AND type = 'OWNER_DRAWING' 
+    """)
+    fun getTotalDrawingsInRange(start: Long, end: Long): Flow<Long>
+
+    // 3. Get LIST of Owner Transactions
+    // Sirf wo entries jahan type = OWNER_DRAWING (Cash Withdrawals + Personal Expenses)
+    @Query("""
+        SELECT * FROM financial_ledger_table 
+        WHERE dateMillis BETWEEN :start AND :end 
+        AND deletedAtMillis IS NULL
+        AND type = 'OWNER_DRAWING'
+        ORDER BY dateMillis DESC, createdAtMillis DESC
+    """)
+    fun getOwnerTransactionsInRange(start: Long, end: Long): Flow<List<FinancialLedgerEntity>>
 
 
 }
