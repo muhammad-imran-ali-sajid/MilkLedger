@@ -44,7 +44,6 @@
         android:layout_height="wrap_content"
         android:text="12 Oct, 10:30 AM"
         android:textSize="12sp"
-        android:textColor="@color/grey"
         app:layout_constraintStart_toStartOf="@id/tvTitle"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"/>
 
@@ -54,7 +53,6 @@
         android:layout_height="wrap_content"
         android:text="Grocery items"
         android:textSize="12sp"
-        android:textColor="@color/grey"
         android:maxLines="1"
         android:ellipsize="end"
         android:visibility="gone"

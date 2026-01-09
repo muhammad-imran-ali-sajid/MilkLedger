@@ -19,8 +19,8 @@
         android:id="@+id/cardSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="4dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="6dp"
         app:cardBackgroundColor="?attr/colorSurface"
@@ -29,25 +29,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:padding="8dp">
 
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Financial Summary"
-                android:textStyle="bold"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <View
-                android:id="@+id/divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="12dp"
-                android:background="#E0E0E0"
-                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
             <LinearLayout
                 android:id="@+id/layoutProfit"
@@ -126,7 +110,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="4dp"
                 app:cardBackgroundColor="#E3F2FD"
                 app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
@@ -135,7 +119,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp"
+                    android:padding="6dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -166,7 +150,7 @@
         android:id="@+id/layoutActions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
         android:paddingHorizontal="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -198,11 +182,11 @@
         android:id="@+id/tvHistoryHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recent Transactions"
-        android:textStyle="bold"
-        android:textSize="16sp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
+        android:text="Recent Transactions"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layoutActions" />
 
