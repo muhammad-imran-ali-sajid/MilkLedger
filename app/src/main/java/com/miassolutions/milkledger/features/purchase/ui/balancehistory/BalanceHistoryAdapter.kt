@@ -58,16 +58,16 @@ class BalanceHistoryAdapter : ListAdapter<FinancialLedgerEntity, BalanceHistoryA
             }
 
             // Note Icon
-            ivNote.isVisible = !item.note.isNullOrBlank()
-            if (!item.note.isNullOrBlank()) {
-                root.setOnClickListener {
-                    Snackbar.make(
-                        binding.root,      // any attached view
-                        item.note ?: "",
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                }
-            }
+//            ivNote.isVisible = !item.note.isNullOrBlank()
+//            if (!item.note.isNullOrBlank()) {
+//                root.setOnClickListener {
+//                    Snackbar.make(
+//                        binding.root,      // any attached view
+//                        item.note ?: "",
+//                        Snackbar.LENGTH_LONG
+//                    ).show()
+//                }
+//            }
         }
     }
 

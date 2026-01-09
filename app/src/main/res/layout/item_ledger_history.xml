@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="12dp"
     android:background="?attr/selectableItemBackground"
-    android:weightSum="4">
+    android:weightSum="3">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -35,7 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.9"
-        android:gravity="center_horizontal"
+        android:gravity="end"
         android:textColor="#388E3C"
         tools:text="5000" />
 
@@ -45,18 +45,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.9"
-        android:gravity="center_horizontal"
+        android:gravity="end"
         android:textColor="#D32F2F"
         tools:text="0" />
-
-    <ImageView
-        android:id="@+id/ivNote"
-        android:layout_width="0dp"
-        android:layout_height="20dp"
-        android:layout_weight="1"
-        android:src="@drawable/ic_calendar"
-        android:visibility="gone"
-        tools:visibility="visible"
-         />
 
 </LinearLayout>
