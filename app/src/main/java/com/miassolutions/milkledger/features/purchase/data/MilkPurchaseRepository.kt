@@ -32,6 +32,7 @@ class MilkPurchaseRepository @Inject constructor(
 ) {
 
 
+    fun getAccountLedgerHistory(accountId: String) = ledgerDao.getLedgerHistory(accountId)
     fun getSuppliers(): Flow<List<Account>> =
         accountDao.getAccountsByType(AccountType.SUPPLIER).map { list ->
             list.map { it.toDomain() }

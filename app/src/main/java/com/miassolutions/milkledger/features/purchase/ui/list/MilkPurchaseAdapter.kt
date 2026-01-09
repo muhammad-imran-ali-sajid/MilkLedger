@@ -68,7 +68,7 @@ class MilkPurchaseAdapter(
 
             // Click Listeners
             btnEditForm.setOnClickListener { onEditClick(item.id) }
-            btnSupplierDetail.setOnClickListener { onHistoryClick(item.supplierId, item.supplierName) }
+            btnBalance.setOnClickListener { onHistoryClick(item.supplierId, item.supplierName) }
         }
     }
 

@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LedgerDao {
 
+
+
     // ID aur Type ki bunyad par Ledger dhoondna (Update k liye zaroori hai)
     @Query("SELECT * FROM financial_ledger_table WHERE referenceId = :refId AND type = :type LIMIT 1")
     suspend fun getLedgerByReferenceId(refId: String, type: LedgerEntryType): FinancialLedgerEntity?
@@ -75,4 +77,6 @@ interface LedgerDao {
         LIMIT 50
     """)
     fun getLedgerHistory(accountId: String): Flow<List<FinancialLedgerEntity>>
+
+
 }

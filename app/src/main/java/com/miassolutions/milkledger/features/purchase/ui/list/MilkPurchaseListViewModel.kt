@@ -67,8 +67,9 @@ class MilkPurchaseListViewModel @Inject constructor(
             is PurchaseListUiEvent.OnEditClick ->
                 emitEffect(PurchaseListUiEffect.NavigateToEditPurchase(event.purchaseId))
 
-            is PurchaseListUiEvent.OnSupplierHistoryClick ->
-                emitEffect(PurchaseListUiEffect.NavigateToSupplierHistory(event.supplierId, event.supplierName))
+            is PurchaseListUiEvent.OnBalanceClick -> {
+                emitEffect(PurchaseListUiEffect.OpenBalanceHistorySheet(event.supplierId, event.supplierName))
+            }
 
             is PurchaseListUiEvent.OnDeleteClick -> deletePurchase(event.purchaseId)
         }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkPurchaseListBinding
+import com.miassolutions.milkledger.features.purchase.ui.balancehistory.BalanceHistoryBottomSheet
 import com.miassolutions.milkledger.features.purchase.ui.list.MilkPurchaseAdapter
 import com.miassolutions.milkledger.features.purchase.ui.list.MilkPurchaseListViewModel
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect
@@ -28,11 +29,10 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
     private val adapter by lazy {
         MilkPurchaseAdapter(
             onEditClick = { id ->
-                showSnackbar(id)
                 viewModel.onEvent(PurchaseListUiEvent.OnEditClick(id)) },
             onHistoryClick = { id, name ->
                 viewModel.onEvent(
-                    PurchaseListUiEvent.OnSupplierHistoryClick(
+                    PurchaseListUiEvent.OnBalanceClick(
                         id,
                         name
                     )
@@ -118,12 +118,17 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                     )
                 }
 
-                is PurchaseListUiEffect.NavigateToSupplierHistory -> {
-                    // Navigate to history (Reuse CustomerHistory logic but for Supplier)
-                    // You might need a separate Fragment or reuse existing with a Type flag
-                }
+
 
                 PurchaseListUiEffect.OpenDatePicker -> openDatePicker()
+                is PurchaseListUiEffect.OpenBalanceHistorySheet -> {
+                    val sheet = BalanceHistoryBottomSheet.newInstance(
+                        accountId = effect.id,
+                        accountName = effect.name
+                    )
+                    sheet.show(childFragmentManager, "BalanceHistorySheet")
+
+                }
             }
         }
     }
