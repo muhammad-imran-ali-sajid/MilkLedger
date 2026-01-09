@@ -88,11 +88,6 @@
         android:name="com.miassolutions.milkledger.features.note.ui.form.NoteFormBottomSheet"
         android:label="Add New Note"
         tools:layout="@layout/bottom_sheet_note_form" />
-    <fragment
-        android:id="@+id/profitFragment"
-        android:name="com.miassolutions.milkledger.features.profitwithdrawal.ProfitFragment"
-        android:label="Profit History"
-        tools:layout="@layout/fragment_profit" />
 
 
     <fragment
@@ -129,7 +124,7 @@
     </fragment>
     <fragment
         android:id="@+id/ownerSetupFragment"
-        android:name="com.miassolutions.milkledger.features.owner.OwnerSetupFragment"
+        android:name="com.miassolutions.milkledger.features.owner.setup.OwnerSetupFragment"
         android:label="Owner Setup"
         tools:layout="@layout/fragment_owner_setup">
         <action
@@ -208,5 +203,10 @@
             app:argType="string"
             app:nullable="true" />
     </fragment>
+    <fragment
+        tools:layout="@layout/fragment_owner_dashboard"
+        android:id="@+id/ownerDashboardFragment"
+        android:name="com.miassolutions.milkledger.features.owner.dasboard.OwnerDashboardFragment"
+        android:label="My Wallet" />
 
 </navigation>

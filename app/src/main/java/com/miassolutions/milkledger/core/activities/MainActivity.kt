@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         R.id.milkSaleListFragment,
         R.id.purchaseListFragment,
         R.id.expenseFragment,
-        R.id.profitFragment
+        R.id.ownerDashboardFragment
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                 R.id.milkSaleListFragment,
                 R.id.purchaseListFragment,
                 R.id.expenseFragment,
-                R.id.profitFragment,
+                R.id.ownerDashboardFragment,
                 R.id.accountListFragment
             ),
             binding.drawerLayout

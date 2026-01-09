@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.owner
+package com.miassolutions.milkledger.features.owner.setup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

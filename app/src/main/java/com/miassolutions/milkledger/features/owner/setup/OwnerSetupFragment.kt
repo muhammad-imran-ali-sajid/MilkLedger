@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.owner
+package com.miassolutions.milkledger.features.owner.setup
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
