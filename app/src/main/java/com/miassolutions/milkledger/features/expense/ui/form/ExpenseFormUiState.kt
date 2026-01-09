@@ -40,6 +40,16 @@ data class ExpenseFormUiState(
 sealed interface ExpenseFormUiEvent {
     data object OnDateClick : ExpenseFormUiEvent
 
+    data class OnPersonalDraftChanged(
+        val id: String,
+        val field: DraftField,
+        val value: String
+    ) : ExpenseFormUiEvent
+
+    data class OnPersonalCommit(
+        val id: String
+    ) : ExpenseFormUiEvent
+
     data class OnDateSelected(val date: LocalDate) : ExpenseFormUiEvent
 
     data class OnFuelChanged(val value: String) : ExpenseFormUiEvent
@@ -48,8 +58,7 @@ sealed interface ExpenseFormUiEvent {
 
     data object OnAddPersonalExpense : ExpenseFormUiEvent
     data class OnRemovedPersonalExpense(val id: String) : ExpenseFormUiEvent
-    data class OnPersonalTitleChanged(val id: String, val value: String) : ExpenseFormUiEvent
-    data class OnPersonalAmountChanged(val id: String, val value: String) : ExpenseFormUiEvent
+
 
     data class OnNotesChanged(val value: String) : ExpenseFormUiEvent
 

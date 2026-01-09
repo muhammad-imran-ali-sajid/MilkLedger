@@ -11,8 +11,8 @@ import com.miassolutions.milkledger.databinding.ItemPersonalExpenseBinding
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 
 class PersonalExpenseAdapter(
-    private val onTitleChanged: (String, String) -> Unit,
-    private val onAmountChanged: (String, String) -> Unit,
+    private val onDraftChanged: (String, DraftField, String) -> Unit,
+    private val onCommit: (String) -> Unit,
     private val onRemove: (String) -> Unit
 ) : ListAdapter<PersonalExpenseUi, PersonalExpenseAdapter.VH>(Diff) {
 
@@ -41,20 +41,17 @@ class PersonalExpenseAdapter(
         private val b: ItemPersonalExpenseBinding
     ) : RecyclerView.ViewHolder(b.root) {
 
-        // Watchers ko store krny k liye variables
         private var titleWatcher: TextWatcher? = null
         private var amountWatcher: TextWatcher? = null
 
         fun bind(item: PersonalExpenseUi) = with(b) {
 
-            // 1. Purane Listeners Remove (Must)
+            // 🔹 IMPORTANT:
+            // Purane listeners remove — warna multiple callbacks lag jate hain
             etPersonalTitle.removeTextChangedListener(titleWatcher)
             etPersonalAmount.removeTextChangedListener(amountWatcher)
 
-            // 2. UI Update Logic (The Fix is Here)
-            // Agar user is field me type kr rha hy (Focus hy), tu UI update mat kro.
-            // Wo jo likh rha hy wo hi latest hy. ViewModel k pas data ja rha hy background me.
-
+            // 🔹 Only update UI when user is NOT typing
             if (!etPersonalTitle.hasFocus()) {
                 etPersonalTitle.setTextIfDifferent(item.title)
             }
@@ -63,18 +60,26 @@ class PersonalExpenseAdapter(
                 etPersonalAmount.setTextIfDifferent(item.amount)
             }
 
-            // 3. Re-attach Watchers
-
+            // 🔹 Draft typing — NO RecyclerView update
             titleWatcher = etPersonalTitle.doAfterTextChanged {
                 if (etPersonalTitle.hasFocus()) {
-                    onTitleChanged(item.id, it.toString())
+                    onDraftChanged(item.id, DraftField.TITLE, it.toString())
                 }
             }
 
             amountWatcher = etPersonalAmount.doAfterTextChanged {
                 if (etPersonalAmount.hasFocus()) {
-                    onAmountChanged(item.id, it.toString())
+                    onDraftChanged(item.id, DraftField.AMOUNT, it.toString())
                 }
+            }
+
+            // 🔹 Commit only when focus lost (professional pattern)
+            etPersonalTitle.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) onCommit(item.id)
+            }
+
+            etPersonalAmount.setOnFocusChangeListener { _, hasFocus ->
+                if (!hasFocus) onCommit(item.id)
             }
 
             btnRemove.setOnClickListener {
@@ -84,15 +89,19 @@ class PersonalExpenseAdapter(
     }
 
     object Diff : DiffUtil.ItemCallback<PersonalExpenseUi>() {
-        override fun areItemsTheSame(
-            oldItem: PersonalExpenseUi,
-            newItem: PersonalExpenseUi
-        ) = oldItem.id == newItem.id
+        override fun areItemsTheSame(old: PersonalExpenseUi, new: PersonalExpenseUi) =
+            old.id == new.id
 
-        override fun areContentsTheSame(
-            oldItem: PersonalExpenseUi,
-            newItem: PersonalExpenseUi
-        ) = oldItem.title == newItem.title &&
-                oldItem.amount == newItem.amount
+        override fun areContentsTheSame(old: PersonalExpenseUi, new: PersonalExpenseUi) =
+            old.title == new.title && old.amount == new.amount
     }
+}
+
+/**
+ * 🔹 Ye enum is liye banaya:
+ * taake ViewModel ko pata ho kis field ka draft update hua
+ */
+enum class DraftField {
+    TITLE,
+    AMOUNT
 }
