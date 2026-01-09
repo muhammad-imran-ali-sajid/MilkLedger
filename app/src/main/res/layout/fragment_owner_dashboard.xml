@@ -3,17 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <com.miassolutions.milkledger.utils.customviews.DateFilterView
         android:id="@+id/dateFilterView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardSummary"
@@ -21,9 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
         android:layout_marginTop="4dp"
+        app:cardBackgroundColor="?attr/colorSurface"
         app:cardCornerRadius="16dp"
         app:cardElevation="6dp"
-        app:cardBackgroundColor="?attr/colorSurface"
         app:layout_constraintTop_toBottomOf="@id/dateFilterView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -32,78 +31,76 @@
             android:padding="8dp">
 
 
-
             <LinearLayout
                 android:id="@+id/layoutProfit"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="vertical"
-                android:gravity="center"
                 android:background="?attr/selectableItemBackground"
-                android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintStart_toStartOf="parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp"
                 app:layout_constraintEnd_toStartOf="@id/layoutDrawing"
-                app:layout_constraintTop_toBottomOf="@id/divider">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:text="Net Profit"
-                    android:textSize="18sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="Net Profit"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tvTotalProfit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100,000"
-                    android:textStyle="bold"
                     android:textColor="#388E3C"
+                    android:textStyle="bold"
                     tools:text="100,000" />
 
                 <TextView
-                    android:text="(Tap for details)"
-                    android:textSize="10sp"
-                    android:alpha="0.7"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:alpha="0.7"
+                    android:text="(Tap for details)"
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="40dp"
                 android:background="#E0E0E0"
-                app:layout_constraintStart_toEndOf="@id/layoutProfit"
+                app:layout_constraintBottom_toBottomOf="@id/layoutProfit"
                 app:layout_constraintEnd_toStartOf="@id/layoutDrawing"
-                app:layout_constraintTop_toTopOf="@id/layoutProfit"
-                app:layout_constraintBottom_toBottomOf="@id/layoutProfit"/>
+                app:layout_constraintStart_toEndOf="@id/layoutProfit"
+                app:layout_constraintTop_toTopOf="@id/layoutProfit" />
 
             <LinearLayout
                 android:id="@+id/layoutDrawing"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:gravity="center"
+                android:orientation="vertical"
                 android:padding="8dp"
-                app:layout_constraintStart_toEndOf="@id/layoutProfit"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/layoutProfit"
                 app:layout_constraintTop_toTopOf="@id/layoutProfit">
 
                 <TextView
-                    android:text="Total Withdrawn"
-                    android:textSize="18sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="Total Withdrawn"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tvTotalDrawings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="40,000"
-                    android:textStyle="bold"
                     android:textColor="#D32F2F"
+                    android:textStyle="bold"
                     tools:text="40,000" />
             </LinearLayout>
 
@@ -119,26 +116,26 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="6dp"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="6dp">
 
                     <TextView
-                        android:text="Retained:"
-                        android:textStyle="bold"
-                        android:textColor="#1565C0"
-                        android:layout_marginEnd="8dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Retained:"
+                        android:textColor="#1565C0"
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tvRetained"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="60,000"
+                        android:textColor="#1565C0"
                         android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="#1565C0" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -157,24 +154,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardSummary">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnWithdraw"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-
-            android:layout_weight="1"
-            android:text="Withdraw" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAddExpense"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:text="Prsnl Exp" />
 
     </LinearLayout>
 
@@ -198,9 +177,26 @@
         android:clipToPadding="false"
         android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnWithdraw"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHistoryHeader"
+        tools:itemCount="3"
         tools:listitem="@layout/item_owner_transaction" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnWithdraw"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Withdraw"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tvEmpty"
