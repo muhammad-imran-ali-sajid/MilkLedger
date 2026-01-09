@@ -31,6 +31,9 @@ class MilkPurchaseRepository @Inject constructor(
     private val db: AppDatabase
 ) {
 
+    fun getSupplierHistory(supplierId: String, start: Long, end: Long): Flow<List<MilkPurchaseUiModel>> {
+        return milkDao.getSupplierHistory(supplierId, start, end)
+    }
 
     fun getAccountLedgerHistory(accountId: String) = ledgerDao.getLedgerHistory(accountId)
     fun getSuppliers(): Flow<List<Account>> =

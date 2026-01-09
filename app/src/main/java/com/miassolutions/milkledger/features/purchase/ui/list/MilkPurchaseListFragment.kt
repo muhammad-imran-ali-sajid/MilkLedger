@@ -29,12 +29,22 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
     private val adapter by lazy {
         MilkPurchaseAdapter(
             onEditClick = { id ->
-                viewModel.onEvent(PurchaseListUiEvent.OnEditClick(id)) },
-            onHistoryClick = { id, name ->
+                viewModel.onEvent(PurchaseListUiEvent.OnEditClick(id))
+            },
+            onBalanceHistoryClick = { id, name ->
                 viewModel.onEvent(
                     PurchaseListUiEvent.OnBalanceClick(
                         id,
                         name
+                    )
+                )
+            },
+
+            onSupplierHistoryClick = { supplierId, supplierName ->
+                viewModel.onEvent(
+                    PurchaseListUiEvent.OnSupplierHistoryClick(
+                        supplierId,
+                        supplierName
                     )
                 )
             }
@@ -119,7 +129,6 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                 }
 
 
-
                 PurchaseListUiEffect.OpenDatePicker -> openDatePicker()
                 is PurchaseListUiEffect.OpenBalanceHistorySheet -> {
                     val sheet = BalanceHistoryBottomSheet.newInstance(
@@ -128,6 +137,15 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                     )
                     sheet.show(childFragmentManager, "BalanceHistorySheet")
 
+                }
+
+                is PurchaseListUiEffect.OpenSupplierHistory -> {
+                    val action =
+                        MilkPurchaseListFragmentDirections.actionPurchaseListFragmentToSupplierDetailFragment(
+                            effect.supplierName,
+                            effect.supplierId
+                        )
+                    findNavController().navigate(action)
                 }
             }
         }

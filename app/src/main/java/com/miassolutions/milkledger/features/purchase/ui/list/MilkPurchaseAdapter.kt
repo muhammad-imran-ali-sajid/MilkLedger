@@ -15,11 +15,13 @@ import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class MilkPurchaseAdapter(
     private val onEditClick: (String) -> Unit,
-    private val onHistoryClick: (String, String) -> Unit
+    private val onBalanceHistoryClick: (String, String) -> Unit,
+    private val onSupplierHistoryClick: (supplierId: String, supplierName: String) -> Unit
 ) : ListAdapter<MilkPurchaseUiModel, MilkPurchaseAdapter.PurchaseViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PurchaseViewHolder {
-        val binding = ItemPurchaseBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemPurchaseBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PurchaseViewHolder(binding)
     }
 
@@ -66,16 +68,31 @@ class MilkPurchaseAdapter(
                 tvNotes.isVisible = false
             }
 
+            btnSupplierHistory.setOnClickListener {
+                onSupplierHistoryClick(
+                    item.supplierId,
+                    item.supplierName
+                )
+            }
             // Click Listeners
             btnEditForm.setOnClickListener { onEditClick(item.id) }
-            btnBalance.setOnClickListener { onHistoryClick(item.supplierId, item.supplierName) }
+            btnBalance.setOnClickListener {
+                onBalanceHistoryClick(
+                    item.supplierId,
+                    item.supplierName
+                )
+            }
         }
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<MilkPurchaseUiModel>() {
         override fun areItemsTheSame(oldItem: MilkPurchaseUiModel, newItem: MilkPurchaseUiModel) =
             oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: MilkPurchaseUiModel, newItem: MilkPurchaseUiModel) =
+
+        override fun areContentsTheSame(
+            oldItem: MilkPurchaseUiModel,
+            newItem: MilkPurchaseUiModel
+        ) =
             oldItem == newItem
     }
 }

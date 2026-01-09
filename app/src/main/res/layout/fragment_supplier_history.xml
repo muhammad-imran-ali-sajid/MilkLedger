@@ -3,23 +3,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.customerandsales.sales.customersalesdetail.CustomerDetailFragment">
+    >
+
+    <com.miassolutions.milkledger.utils.customviews.DateFilterView
+        android:id="@+id/dateFilterView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 
     <TextView
-        android:id="@+id/tv_selected_date"
-        style="@style/TitleText"
-        android:layout_width="0dp"
-        android:padding="8dp"
-        android:text="22 Oct 2025"
-        android:textSize="20sp"
+        android:id="@+id/tvEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No records found for this period"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        android:textColor="?attr/colorOnBackground"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/supplier_summary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/dateFilterView"
+        tools:visibility="gone" />
 
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_supplier_details"
+        android:id="@+id/rvSupplierHistory"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
@@ -28,12 +40,13 @@
         android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_long_2"
         android:scrollbarSize="10dp"
         android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/dateFilterView"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/supplier_summary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_selected_date"
-        tools:listitem="@layout/item_supplier_detail" />
+
+        tools:listitem="@layout/item_supplier_history" />
 
 
     <com.miassolutions.milkledger.utils.customviews.CollapsibleCardView

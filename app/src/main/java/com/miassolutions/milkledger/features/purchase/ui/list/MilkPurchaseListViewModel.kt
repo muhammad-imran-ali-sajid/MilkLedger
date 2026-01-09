@@ -4,6 +4,7 @@ package com.miassolutions.milkledger.features.purchase.ui.list
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.purchase.data.MilkPurchaseRepository
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.*
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -15,7 +16,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MilkPurchaseListViewModel @Inject constructor(
     private val repository: MilkPurchaseRepository
-) : BaseViewModel<PurchaseListUiState, PurchaseListUiEvent, PurchaseListUiEffect>(PurchaseListUiState()) {
+) : BaseViewModel<PurchaseListUiState, PurchaseListUiEvent, PurchaseListUiEffect>(
+    PurchaseListUiState()
+) {
 
     init {
         loadPurchases(LocalDate.now())
@@ -59,19 +62,22 @@ class MilkPurchaseListViewModel @Inject constructor(
     }
 
     override fun onEvent(event: PurchaseListUiEvent) {
-        when(event) {
+        when (event) {
             is PurchaseListUiEvent.OnDateSelected -> loadPurchases(event.date)
             PurchaseListUiEvent.OnDateClick -> emitEffect(PurchaseListUiEffect.OpenDatePicker)
             PurchaseListUiEvent.OnAddPurchaseClick -> emitEffect(PurchaseListUiEffect.NavigateToAddPurchase)
 
             is PurchaseListUiEvent.OnEditClick ->
-                emitEffect(PurchaseListUiEffect.NavigateToEditPurchase(event.purchaseId))
+                emitEffect(NavigateToEditPurchase(event.purchaseId))
 
             is PurchaseListUiEvent.OnBalanceClick -> {
-                emitEffect(PurchaseListUiEffect.OpenBalanceHistorySheet(event.supplierId, event.supplierName))
+                emitEffect(OpenBalanceHistorySheet(event.supplierId, event.supplierName))
             }
 
             is PurchaseListUiEvent.OnDeleteClick -> deletePurchase(event.purchaseId)
+            is PurchaseListUiEvent.OnSupplierHistoryClick -> {
+                emitEffect(OpenSupplierHistory(event.supplierId, event.supplierName))
+            }
         }
     }
 }

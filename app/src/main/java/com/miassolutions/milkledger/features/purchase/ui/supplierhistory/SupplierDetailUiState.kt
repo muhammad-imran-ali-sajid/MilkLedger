@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.purchase.ui.purchasedetail
+package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
 import java.time.LocalDate
 

@@ -128,7 +128,8 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel" android:text="Price" />
+                <TextView style="@style/TextLabel"
+                    android:text="Price" />
                 <TextView
                     android:id="@+id/tvPrice"
                     style="@style/TextValue"

@@ -64,8 +64,8 @@
     </fragment>
     <fragment
         android:id="@+id/supplierDetailFragment"
-        tools:layout="@layout/fragment_supplier_detail"
-        android:name="com.miassolutions.milkledger.features.purchase.ui.purchasedetail.SupplierDetailFragment"
+        tools:layout="@layout/fragment_supplier_history"
+        android:name="com.miassolutions.milkledger.features.purchase.ui.supplierhistory.SupplierHistoryFragment"
         android:label="{supplierName}" >
         <argument
             android:name="supplierName"

@@ -289,6 +289,57 @@ interface MilkDao {
     fun getPurchasesByDate(dateMillis: Long): Flow<List<MilkPurchaseUiModel>>
 
 
+    @Query("""
+        SELECT 
+            m.milkTransId as id,
+            m.dateMillis,
+            m.accountId as supplierId,
+            a.name as supplierName,
+            
+            -- Measurements
+            m.volume,
+            COALESCE(m.fat, 0.0) as fat,
+            COALESCE(m.lr, 0.0) as lr,
+            COALESCE(m.ts, 0.0) as ts,
+            
+            m.rateUsed as rate,
+            m.totalAmount,
+            m.notes as note,
+            
+            -- Payment (Purchase me Payment = Debit)
+            COALESCE(l_pay.debit, 0) as paymentMade,
+            l_pay.dateMillis as paymentDateMillis,
+            
+            -- Running Balance Calculation (Specific for Supplier)
+            (
+                SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
+                FROM financial_ledger_table sub_l
+                WHERE sub_l.accountId = :supplierId 
+                AND sub_l.deletedAtMillis IS NULL
+                AND (
+                    sub_l.dateMillis < m.dateMillis
+                    OR (sub_l.dateMillis = m.dateMillis AND sub_l.createdAtMillis <= m.createdAtMillis)
+                )
+            ) as currentBalance
+            
+        FROM milk_transactions_table m
+        INNER JOIN accounts_table a ON m.accountId = a.accountId
+        
+        LEFT JOIN financial_ledger_table l_pay 
+            ON l_pay.referenceId = m.milkTransId 
+            AND l_pay.type = 'CASH_PAID' 
+            AND l_pay.deletedAtMillis IS NULL
+
+        WHERE m.accountId = :supplierId
+        AND m.type = 'PURCHASE' 
+        AND m.deletedAtMillis IS NULL
+        AND m.dateMillis BETWEEN :startDate AND :endDate
+        
+        ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
+    """)
+    fun getSupplierHistory(supplierId: String, startDate: Long, endDate: Long): Flow<List<MilkPurchaseUiModel>>
+
+
     // Aaj ki date me kin suppliers se purchase hui?
     @Query("SELECT DISTINCT accountId FROM milk_transactions_table WHERE dateMillis = :dateMillis AND type = 'PURCHASE' AND deletedAtMillis IS NULL")
     fun getSuppliersWithPurchaseOnDate(dateMillis: Long): Flow<List<String>>

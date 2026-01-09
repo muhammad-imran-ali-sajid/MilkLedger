@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.purchase.ui.purchasedetail
+package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.pdf.supplierreport.PdfSupplierItemRecord
