@@ -1,19 +1,18 @@
 package com.miassolutions.milkledger.features.purchase.ui.form
 
 
-import android.widget.ArrayAdapter
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.core.ui.BaseFragment
-import com.miassolutions.milkledger.databinding.FragmentPurchaseFormBinding // Make sure Layout name matches
+import com.miassolutions.milkledger.databinding.FragmentPurchaseFormBinding
 import com.miassolutions.milkledger.features.account.domain.Account
+import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
 import com.miassolutions.milkledger.features.purchase.purchaseform.PurchaseFormViewModel
 import com.miassolutions.milkledger.features.purchase.purchaseform.SupplierAdapter
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
@@ -34,7 +33,6 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
     override fun setupViews() {
         super.setupViews()
-
 
 
 //        // 1. Setup Dropdown Adapter
@@ -64,20 +62,6 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         }
 
 
-        // Rate Field
-        // Note: Rate automatic set hota hai, magar user change bhi kr skta hai
-        tvRate.setOnClickListener {
-            // Agar aap chahte hen k Rate clickable ho aur Dialog khule, ya EditText bana den
-            // Filhal XML me ye TextView hai, agar edit krna hai to EditText bana len.
-            // Assuming it's editable via some mechanism or change XML to EditText.
-            // Agar ye EditText hai:
-        }
-        // Agar XML me tv_rate TextView hai aur aap usay edit krwana chahte hain,
-        // To behtar hai usay TextInputEditText bana den.
-        // Assuming XML updated to EditText for Rate, OR handle click logic.
-        // FOR NOW: Assuming it's display only or handled via dialog.
-        // *Fix*: XML me 'tv_rate' TextView hai. Agar edit allow krna hai to EditText replace karein.
-        // *Currently ignoring Rate TextWatcher based on provided XML TextView*
 
         etPayment.doAfterTextChanged { viewModel.onEvent(PurchaseFormUiEvent.OnAmountPaidChanged(it.toString())) }
 
@@ -87,11 +71,18 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         // --- B. Click Listeners ---
 
         // Supplier Selection
-        actvSupplierName.setOnItemClickListener { _, _, position, _ ->
-            val selectedSupplier = suppliersList[position]
-            viewModel.onEvent(PurchaseFormUiEvent.OnSupplierSelected(selectedSupplier))
-            binding.actvSupplierName.clearFocus() // Close keyboard
+        binding.actvSupplierName.setOnItemClickListener { parent, _, position, _ ->
+
+            val item = parent.adapter.getItem(position) as SupplierDropDownUiModel
+            val supplier = item.account
+
+            viewModel.onEvent(
+                PurchaseFormUiEvent.OnSupplierSelected(supplier)
+            )
+
+            binding.actvSupplierName.clearFocus()
         }
+
 
         // Dates
         btnDate.setOnClickListener {
@@ -121,19 +112,8 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         collectFlow(viewModel.suppliersDropDown) { suppliersList ->
             supplierAdapter = SupplierAdapter(requireContext(), suppliersList)
             binding.actvSupplierName.setAdapter(supplierAdapter)
-
-            supplierAdapter.notifyDataSetChanged()
         }
 
-
-        // 1. Observe Suppliers List (Dropdown k liye)
-        collectFlow(viewModel.suppliersList) { suppliers ->
-            suppliersList = suppliers
-            val names = suppliers.map { it.name }
-            supplierAdapter.clear()
-//            supplierAdapter.addAll(names)
-            supplierAdapter.notifyDataSetChanged()
-        }
 
         // 2. Observe UI State
         collectFlow(viewModel.uiState) { state ->
@@ -149,10 +129,8 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
     private fun renderState(state: PurchaseFormUiState) = with(binding) {
         // --- 1. Date Buttons ---
         btnDate.text = state.date.toDisplayDate()
-        // btnPaymentDate text update logic (Button par date likhi ho)
-        // XML me button hai, us par text set kr skty hen.
-        // Agar payment amount > 0 hai tabhi date relevant hai usually, par yahan hamesha show kr den.
-        // (Aap chahain to Button text "Date: 12 Oct" format kr skty hen)
+
+        btnPaymentDate.text = state.paymentDate.toDisplayDate()
 
         // --- 2. Calculated Fields (Auto Update) ---
         // TS Value
@@ -166,9 +144,6 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
         // Balance
         tvBalance.setBalanceWithColorRupee(state.currentBalance, prefix = "Balance: ")
-
-
-        btnPaymentDate.text = state.paymentDate.toDisplayDate()
 
 
         // --- 3. Inputs (Only update if text is different to avoid cursor jumping) ---
