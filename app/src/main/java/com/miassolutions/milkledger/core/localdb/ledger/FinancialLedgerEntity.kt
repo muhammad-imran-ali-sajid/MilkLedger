@@ -39,6 +39,8 @@ data class FinancialLedgerEntity(
 enum class LedgerEntryType {
     MILK_SALE,
     CASH_RECEIVED,
+    OWNER_DRAWING,
+    BUSINESS_EXPENSE,
 
     MILK_PURCHASE, // Doodh khareeda (Udhaar barha - Credit)
     CASH_PAID,      // Paisa diya (Udhaar kam hua - Debit)
@@ -46,7 +48,5 @@ enum class LedgerEntryType {
     SALE_RETURN,      // ✅ Added: Taake report mein pata chale kitna maal wapis aaya
     PURCHASE_RETURN,  // ✅ Added
 
-    EXPENSE,
-    OWNER_WITHDRAWAL,
     OPENING_BALANCE
 }

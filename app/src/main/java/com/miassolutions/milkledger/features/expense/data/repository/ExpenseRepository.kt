@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.features.expense.data.repository
 
 import androidx.room.withTransaction
-import com.miassolutions.milkledger.core.contstants.Constants
 import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
 import com.miassolutions.milkledger.core.contstants.Constants.SHOP_EXPENSE
 import com.miassolutions.milkledger.core.localdb.AppDatabase
@@ -19,96 +18,109 @@ import javax.inject.Inject
 
 class ExpenseRepository @Inject constructor(
     private val expenseDao: ExpenseDao,
-    private val ledgerDao: LedgerDao,  // ✅ Added for Double Entry
-    private val db: AppDatabase        // ✅ Added for Atomic Transactions
+    private val ledgerDao: LedgerDao,
+    private val db: AppDatabase
 ) {
 
     // ------------------------------------------------
-    // 1️⃣ SAVE (Expense + Ledger Update)
+    // 1️⃣ SAVE ALL (Batch Insert)
     // ------------------------------------------------
-
     suspend fun saveAllExpenses(expenses: List<Expense>) {
         db.withTransaction {
             val entities = expenses.map { it.toEntity() }
             expenseDao.insertAll(entities)
 
             val ledgerEntries = entities.map { expenseEntity ->
+                // Logic Selection
+                val isPersonal = expenseEntity.isPersonal
+                val accountId = if (isPersonal) OWNER_ACCOUNT_ID else SHOP_EXPENSE
+                val type = if (isPersonal) LedgerEntryType.OWNER_DRAWING else LedgerEntryType.BUSINESS_EXPENSE
+
+                // Profit Impact Logic
+                val profitImpact = if (isPersonal) 0L else -(expenseEntity.amount)
+
                 FinancialLedgerEntity(
                     dateMillis = expenseEntity.dateMillis,
-                    accountId = if (expenseEntity.isPersonal) OWNER_ACCOUNT_ID else SHOP_EXPENSE,
+                    accountId = accountId,
                     referenceId = expenseEntity.expenseId,
-                    type = if (expenseEntity.isPersonal) LedgerEntryType.OWNER_WITHDRAWAL else LedgerEntryType.EXPENSE,
+                    type = type,
 
-                    debit = 0,
-                    credit = expenseEntity.amount,
+                    // 🔥 FIX: Expense = Debit (Paisa gya/Kharcha hoa)
+                    debit = expenseEntity.amount,
+                    credit = 0,
 
-                    profitImpact = if (expenseEntity.isPersonal) 0 else -(expenseEntity.amount),
-                    note = expenseEntity.note
+                    profitImpact = profitImpact,
+                    note = expenseEntity.note ?: expenseEntity.title
                 )
             }
             ledgerDao.insertAll(ledgerEntries)
         }
     }
 
-
+    // ------------------------------------------------
+    // 2️⃣ SAVE SINGLE (Single Insert)
+    // ------------------------------------------------
     suspend fun saveExpense(expense: Expense) {
         db.withTransaction {
-            // Step 1: Expense Table me save karein
-            val expenseEntity = expense.toEntity() // Aapka LocalDate wala Mapper use ho rha hy
+            // 1. Expense Table
+            val expenseEntity = expense.toEntity()
             expenseDao.insertExpense(expenseEntity)
 
-            // Step 2: Ledger Table me entry dalein (Taake hisaab barabar rahe)
+            // Logic Selection
+            val isPersonal = expense.isPersonal
+            val accountId = if (isPersonal) OWNER_ACCOUNT_ID else SHOP_EXPENSE
+            val type = if (isPersonal) LedgerEntryType.OWNER_DRAWING else LedgerEntryType.BUSINESS_EXPENSE
+            val profitImpact = if (isPersonal) 0L else -(expenseEntity.amount)
+
+            // 2. Ledger Table
             val ledgerEntry = FinancialLedgerEntity(
                 dateMillis = expense.date.toMillis(),
+                accountId = accountId,
+                referenceId = expenseEntity.expenseId,
+                type = type,
 
-                // Expense kisi specific Account ka nahi hota (usually),
-                // ya agar "Owner" ka withdrawal hai to accountId Owner ka hoga.
-                // Filhal hum generic rakh rahe hain, ya aap Owner ID pass kar sakte hain.
-                accountId = if (expense.isPersonal) OWNER_ACCOUNT_ID else SHOP_EXPENSE,
+                // 🔥 FIX: Expense = Debit
+                debit = expenseEntity.amount,
+                credit = 0,
 
-                referenceId = expenseEntity.expenseId, // Link to Expense
-                type = if (expense.isPersonal) LedgerEntryType.OWNER_WITHDRAWAL else LedgerEntryType.EXPENSE,
-
-                debit = 0,
-                credit = expenseEntity.amount, // Paisa ja raha hai (Credit)
-
-                // Profit logic: Personal withdrawal profit kam nahi karta, Business expense karta hai
-                profitImpact = if (expense.isPersonal) 0 else -(expenseEntity.amount),
-
+                profitImpact = profitImpact,
                 note = expense.title
             )
-
-            // Ledger DAO me Insert/Update (Ref ID ki base par check kar lega agar logic likhi ho)
-            // Note: LedgerDao me humne 'getByReferenceId' banaya tha, us logic ko use kr k update kr skty hen
-            // lekin filhal simple insert/replace:
             ledgerDao.insert(ledgerEntry)
         }
     }
 
     // ------------------------------------------------
-    // 4️⃣ UPDATE (Single Expense + Ledger)
+    // 3️⃣ UPDATE (Critical Logic)
     // ------------------------------------------------
     suspend fun updateExpense(updatedExpense: Expense) {
         db.withTransaction {
             // 1. Expense Table Update
             expenseDao.updateExpense(updatedExpense.toEntity())
 
-            // 2. Ledger Update (Reference ID se dhoond kar)
+            // 2. Ledger Update
             val oldLedgerEntry = ledgerDao.getByReferenceId(updatedExpense.expenseId)
 
             oldLedgerEntry?.let { entry ->
+
+                // Logic Re-Check (Agar user ne category change ki ho)
+                val isPersonal = updatedExpense.isPersonal
+                val newAccountId = if (isPersonal) OWNER_ACCOUNT_ID else SHOP_EXPENSE
+                val newType = if (isPersonal) LedgerEntryType.OWNER_DRAWING else LedgerEntryType.BUSINESS_EXPENSE
+                val newProfitImpact = if (isPersonal) 0L else -(updatedExpense.amount)
+
                 val newLedgerEntry = entry.copy(
-                    // Amount update karein
-                    credit = updatedExpense.amount,
+                    dateMillis = updatedExpense.date.toMillis(), // Date bhi update hoskti hy
 
-                    // Agar Personal hai to Profit 0, warna Expense amount minus hogi
-                    profitImpact = if (updatedExpense.isPersonal) 0 else -(updatedExpense.amount),
+                    accountId = newAccountId, // 🔥 Account ID bhi update karein
+                    type = newType,           // 🔥 Type bhi update karein
 
-                    // Agar Title ya Note change hua ho
+                    debit = updatedExpense.amount, // Amount update
+                    credit = 0,
+
+                    profitImpact = newProfitImpact,
                     note = updatedExpense.title,
 
-
-                    // Sync status reset karein taake Cloud pe bhi update ho
                     isSynced = false,
                     updatedAtMillis = System.currentTimeMillis()
                 )
@@ -119,28 +131,23 @@ class ExpenseRepository @Inject constructor(
     }
 
     // ------------------------------------------------
-    // 2️⃣ DELETE (Soft Delete Both)
+    // 4️⃣ DELETE
     // ------------------------------------------------
     suspend fun deleteExpense(expenseId: String) {
         db.withTransaction {
             val currentTime = System.currentTimeMillis()
-
-            // 1. Expense ko soft delete karein
             expenseDao.softDeleteExpense(expenseId, currentTime)
-            // 2. Ledger Table se bhi Soft Delete (Direct Query)
             ledgerDao.softDeleteByReference(expenseId, currentTime)
-
-
         }
     }
 
     // ------------------------------------------------
-    // 3️⃣ READ (Using LocalDate Mapper)
+    // 5️⃣ READ Operations
     // ------------------------------------------------
 
     fun getExpensesByDateRange(start: Long, end: Long): Flow<List<Expense>> {
         return expenseDao.getExpensesByDateRange(start, end).map { entities ->
-            entities.map { it.toDomain() } // ✅ Entity -> Domain (LocalDate)
+            entities.map { it.toDomain() }
         }
     }
 
@@ -160,7 +167,6 @@ class ExpenseRepository @Inject constructor(
         return expenseDao.getExpenseById(id)?.toDomain()
     }
 
-    // Reports
     fun getTotalExpenseAmount(start: Long, end: Long): Flow<Long> {
         return expenseDao.getTotalExpenseAmount(start, end).map { total ->
             total?.toLong() ?: 0L
