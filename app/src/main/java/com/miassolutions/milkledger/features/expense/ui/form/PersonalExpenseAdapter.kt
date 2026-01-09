@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.expense.ui.form
 
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.widget.doAfterTextChanged
@@ -40,21 +41,41 @@ class PersonalExpenseAdapter(
         private val b: ItemPersonalExpenseBinding
     ) : RecyclerView.ViewHolder(b.root) {
 
+        // Watchers ko store krny k liye variables
+        private var titleWatcher: TextWatcher? = null
+        private var amountWatcher: TextWatcher? = null
+
         fun bind(item: PersonalExpenseUi) = with(b) {
 
-            // Only set text if different (prevents cursor jump)
-            etPersonalTitle.setTextIfDifferent(item.title)
-            etPersonalAmount.setTextIfDifferent(item.amount)
+            // 1. Purane Listeners Remove (Must)
+            etPersonalTitle.removeTextChangedListener(titleWatcher)
+            etPersonalAmount.removeTextChangedListener(amountWatcher)
 
-            // Update ViewModel ONLY when focus is lost
-            etPersonalTitle.doAfterTextChanged {
-                onTitleChanged(item.id, it.toString())
+            // 2. UI Update Logic (The Fix is Here)
+            // Agar user is field me type kr rha hy (Focus hy), tu UI update mat kro.
+            // Wo jo likh rha hy wo hi latest hy. ViewModel k pas data ja rha hy background me.
+
+            if (!etPersonalTitle.hasFocus()) {
+                etPersonalTitle.setTextIfDifferent(item.title)
             }
 
-            etPersonalAmount.doAfterTextChanged {
-                onAmountChanged(item.id, it.toString())
+            if (!etPersonalAmount.hasFocus()) {
+                etPersonalAmount.setTextIfDifferent(item.amount)
             }
 
+            // 3. Re-attach Watchers
+
+            titleWatcher = etPersonalTitle.doAfterTextChanged {
+                if (etPersonalTitle.hasFocus()) {
+                    onTitleChanged(item.id, it.toString())
+                }
+            }
+
+            amountWatcher = etPersonalAmount.doAfterTextChanged {
+                if (etPersonalAmount.hasFocus()) {
+                    onAmountChanged(item.id, it.toString())
+                }
+            }
 
             btnRemove.setOnClickListener {
                 onRemove(item.id)

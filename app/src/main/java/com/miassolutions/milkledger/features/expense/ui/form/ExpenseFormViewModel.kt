@@ -99,7 +99,7 @@ class ExpenseFormViewModel @Inject constructor(
                 expensesToSave,
                 date,
                 "Fuel",
-                "Fuel Expense",
+                "Fuel",
                 state.fuelAmount,
                 note
             )
@@ -107,7 +107,7 @@ class ExpenseFormViewModel @Inject constructor(
                 expensesToSave,
                 date,
                 "Vehicle",
-                "Vehicle Maintenance",
+                "Vehicle",
                 state.vehicleAmount,
                 note
             )
