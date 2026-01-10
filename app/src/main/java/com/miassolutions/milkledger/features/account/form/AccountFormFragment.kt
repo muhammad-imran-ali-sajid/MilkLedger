@@ -20,6 +20,7 @@ import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPaisa
+import com.miassolutions.milkledger.utils.extensions.toRupees
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -157,10 +158,11 @@ class AccountFormFragment :
                 showDialog(
                     title = "Cannot Delete!",
                     message = """
-                        Is account ka balance (Rs. ${effect.balance}) baqi hai.
+                        This account has balance of (Rs. ${effect.balance.toRupees()}).
                         
-                        Aap isay delete nahi kar sakte.
-                        Pehle balance clear karein.
+                        You can not delete this.
+                         
+                        First clear balance.
                     """.trimIndent(),
                     positiveText = "OK",
                     onAction = {}
