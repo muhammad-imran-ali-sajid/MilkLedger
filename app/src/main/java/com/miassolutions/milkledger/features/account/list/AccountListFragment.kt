@@ -38,7 +38,7 @@ class AccountListFragment :
             }
         }
 
-        adapter = AccountListAdapter(::onEditClick, ::onDeleteClick)
+        adapter = AccountListAdapter(::onEditClick)
 
         recyclerView.adapter = adapter
 
@@ -67,18 +67,7 @@ class AccountListFragment :
 
     }
 
-    private fun onDeleteClick(id: String) {
-        showDeleteActionDialog {
 
-            viewModel.delete(id)
-            showSnackbar(
-                message = "Account deleted",
-                duration = Snackbar.LENGTH_LONG,
-                actionText = "Undo",
-                onAction = { viewModel.restore(id) }
-            )
-        }
-    }
 
     private fun onEditClick(id: String) {
         Log.d("AccountListFragment", id)

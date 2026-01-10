@@ -12,6 +12,8 @@ data class Account(
     val sortOrder: Int = 0,
     val defaultRate: Double,
 
+    val isActive: Boolean = true,
+
 
     // Sirf Profile me show hoga (No Ledger Effect)
     val advanceAmount: Long?,

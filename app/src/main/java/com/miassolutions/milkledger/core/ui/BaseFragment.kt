@@ -93,7 +93,6 @@ abstract class BaseFragment<VB : ViewBinding>(
     protected open fun setupListeners() {}
 
 
-
     protected fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
@@ -115,14 +114,15 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
 
 
-
-
-
     protected fun setToolbarTitle(title: String) {
         (requireActivity() as? ToolbarOwner)?.setToolbarTitle(title)
     }
 
-    protected fun showDialog(title: String, message: String, onAction: (() -> Unit)?) {
+    protected fun showDialog(
+        title: String,
+        message: String,
+        positiveText: String = "OK", onAction: (() -> Unit)?
+    ) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(title)
             .setMessage(message)
@@ -135,7 +135,6 @@ abstract class BaseFragment<VB : ViewBinding>(
             .setNegativeButton("Cancel", null)
             .show()
     }
-
 
 
 }

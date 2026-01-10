@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.account.repository.AccountRepository
 import com.miassolutions.milkledger.core.ui.BaseViewModel
+import com.miassolutions.milkledger.features.account.form.AccountFormEffect.*
 import com.miassolutions.milkledger.features.account.mapper.toDomain
 import com.miassolutions.milkledger.utils.extensions.toLocalDate // Extension function needed
 import com.miassolutions.milkledger.utils.extensions.toMillis
@@ -37,8 +38,6 @@ class AccountFormViewModel @Inject constructor(
             if (account == null) return@launch
 
             val ledgerDate = repository.getOpeningDate(accountId)
-
-            // Agar Ledger date mili to wo, warna Account ki creation date
             val finalDate = ledgerDate ?: account.createdAtMillis.toLocalDate()
 
             updateState {
@@ -49,6 +48,8 @@ class AccountFormViewModel @Inject constructor(
                     rate = account.defaultRate.toString(),
                     initialBalance = account.initialBalance?.toRupeesStr().orEmpty(),
                     advanceAmount = account.advanceAmount?.toRupeesStr().orEmpty(),
+                    isActive = account.isActive,
+                    showDeleteButton = true,
 
                     openingDate = finalDate
                 )
@@ -80,6 +81,8 @@ class AccountFormViewModel @Inject constructor(
             return AccountFormValidation(rateError = "Rate required")
         }
 
+
+
         return AccountFormValidation(isValid = true)
     }
 
@@ -91,18 +94,57 @@ class AccountFormViewModel @Inject constructor(
             // 🔥 NEW: Handle Date Events
             AccountFormEvent.OnOpeningDateClicked -> {
                 // Pass current selected date in millis to picker
-                emitEffect(AccountFormEffect.OpenDatePicker(currentState.openingDate.toMillis()))
+                emitEffect(OpenDatePicker(currentState.openingDate.toMillis()))
             }
+
             is AccountFormEvent.OnOpeningDateSelected -> {
                 updateState { it.copy(openingDate = event.date) }
+            }
+
+            AccountFormEvent.DeleteClicked -> {
+                checkAndDelete()
+            }
+
+            is AccountFormEvent.OnActiveStatusChanged -> {
+                updateState { it.copy(isActive = event.isActive) }
             }
         }
     }
 
+    private fun checkAndDelete() {
+        viewModelScope.launch {
+            if (accountId == null) return@launch // New account delete nhi hota
+
+            // A. Balance Check Karen
+            val currentBalance = repository.getCurrentBalance(accountId)
+
+            if (currentBalance != 0L) {
+                // Balance Zero nahi hai -> Error dikhayen
+                emitEffect(AccountFormEffect.ShowBalanceError(currentBalance))
+            } else {
+                // Balance Zero hai -> Confirmation maangen
+                val name = currentState.personName
+                emitEffect(AccountFormEffect.ShowDeleteConfirmation(name))
+            }
+        }
+    }
+
+
+    fun confirmDelete() {
+        viewModelScope.launch {
+            repository.deleteAccount(accountId!!)
+            emitEffect(AccountFormEffect.ShowToast("Account deleted"))
+            emitEffect(AccountFormEffect.CloseScreen)
+        }
+    }
+
+
     // ... Other setters same as before ...
     fun onSortOrderChanged(value: String) = updateState { it.copy(sortOrder = value) }
     fun onNameChanged(value: String) = updateState { it.copy(personName = value) }
-    fun onAccountTypeSelected(value: AccountType) = updateState { it.copy(selectAccountType = value) }
+    fun onAccountTypeSelected(value: AccountType) =
+        updateState { it.copy(selectAccountType = value) }
+
     fun onRateChanged(value: String) = updateState { it.copy(rate = value) }
     fun onInitialBalanceChanged(value: String) = updateState { it.copy(initialBalance = value) }
     fun onAdvanceAmountChanged(value: String) = updateState { it.copy(advanceAmount = value) }
@@ -121,7 +163,9 @@ class AccountFormViewModel @Inject constructor(
                 val id = accountId ?: UUID.randomUUID().toString()
 
                 // Note: make sure toDomain() exists and handles basic fields
-                val account = currentState.toDomain(id)
+                val account = currentState.toDomain(id).copy(
+                    isActive = currentState.isActive
+                )
 
                 // 🔥 CRITICAL CHANGE: Pass Date to Repository
                 repository.saveAccount(account, currentState.openingDate)

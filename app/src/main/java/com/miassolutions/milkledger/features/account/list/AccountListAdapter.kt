@@ -16,7 +16,6 @@ import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 
 class AccountListAdapter(
     private val onEditClick: (String) -> Unit,
-    private val onDeleteClick: (String) -> Unit
 ) :
     ListAdapter<AccountUi, AccountListAdapter.AccountVH>(Diff) {
 
@@ -96,9 +95,7 @@ class AccountListAdapter(
 
             tvBalance.setBalanceWithColorRupee(displayBalance)
 
-            root.setOnClickListener {
-                onDeleteClick(item.id)
-            }
+
         }
     }
 }

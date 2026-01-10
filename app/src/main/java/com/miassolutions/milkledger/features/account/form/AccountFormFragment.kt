@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.features.account.form
 
 import android.view.View
 import android.widget.ScrollView
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -9,10 +10,12 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountFormBinding
+import com.miassolutions.milkledger.features.account.form.AccountFormEvent.*
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate // Make sure ye import ho
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
@@ -75,6 +78,17 @@ class AccountFormFragment :
             viewModel.onAdvanceAmountChanged(it.toString())
         }
 
+
+        switchActive.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.onEvent(AccountFormEvent.OnActiveStatusChanged(isChecked))
+            switchActive.text =
+                if (isChecked) "Account Status:Active" else "Account Status: Inactive"
+        }
+
+        btnDelete.setOnClickListener {
+            viewModel.onEvent(AccountFormEvent.DeleteClicked)
+        }
+
         etSortOrder.focusWithScroll(binding.scrollView)
     }
 
@@ -116,7 +130,26 @@ class AccountFormFragment :
                 showLedgerDatePicker(
                     initialDate = effect.currentDateMillis.toLocalDate()
                 ) { selectedDate ->
-                    viewModel.onEvent(AccountFormEvent.OnOpeningDateSelected(selectedDate))
+                    viewModel.onEvent(OnOpeningDateSelected(selectedDate))
+                }
+            }
+
+            is AccountFormEffect.ShowBalanceError -> {
+                showDialog(
+                    title = "Cannot Delete!",
+                    message = "Is account ka balance (Rs. ${effect.balance}) baqi hai. \n\nAap isay Delete nahi kar sakte. \nKya aap isay Deactivate karna chahte hain?",
+                    positiveText = "Deactivate",
+                    onAction = {
+                        // Switch ko OFF kar den
+                        viewModel.onEvent(AccountFormEvent.OnActiveStatusChanged(false))
+                        // Optional: Auto Save bhi karwa sakte hain
+                    }
+                )
+            }
+
+            is AccountFormEffect.ShowDeleteConfirmation -> {
+                showDeleteActionDialog { // Jo aapne extension banayi thi
+                    viewModel.confirmDelete()
                 }
             }
         }
@@ -172,6 +205,13 @@ class AccountFormFragment :
             AccountType.SUPPLIER -> rbSupplier.isChecked = true
             else -> {}
         }
+
+        switchActive.isChecked = state.isActive
+        switchActive.text =
+            if (state.isActive) "Account Status: Active" else "Account Status: Inactive (Archived)"
+
+        // Delete Button Visibility
+        btnDelete.isVisible = state.showDeleteButton
 
         updateBalancePreview(state.selectAccountType, state.initialBalance)
 
