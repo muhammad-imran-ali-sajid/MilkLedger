@@ -7,6 +7,8 @@ import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.account.form.AccountFormUiState
 import com.miassolutions.milkledger.features.account.model.AccountUi
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.extensions.toPaisa
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -15,17 +17,14 @@ import java.util.UUID
 fun Account.toUi(): AccountUi =
     AccountUi(
         id = accountId,
-        personName = name,
-        accountType = type,
+        name = name,
+        type = type,
         sortOrder = sortOrder,
         initialBalance = initialBalance,
+        openingDate = createdAtMillis.toLocalDate(),
         defaultRate = defaultRate,
         advanceAmount = advanceAmount,
-        bgDrawable = when (type) {
-            AccountType.CUSTOMER -> R.color.green_200
-            else -> R.color.blue_100
 
-        }
     )
 
 fun List<Account>.toUiList(): List<AccountUi> = this.map { it.toUi() }
@@ -56,8 +55,8 @@ fun AccountFormUiState.toDomain(
         defaultRate = rate.toDouble(),
         advanceAmount = advanceAmount.toPaisa(),
         initialBalance = initialBalance.toPaisa(),
-
-        )
+        createdAtMillis = openingDate.toMillis(),
+    )
 
 fun AccountType.title(context: Context): String =
     context.getString(

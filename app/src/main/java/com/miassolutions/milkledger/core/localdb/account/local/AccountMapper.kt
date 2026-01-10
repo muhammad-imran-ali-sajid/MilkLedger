@@ -6,6 +6,7 @@ import java.util.UUID
 
 fun AccountEntity.toDomain(): Account {
     return Account(
+        createdAtMillis = this.createdAtMillis,
         accountId = this.accountId,
         name = this.name,
         phone = this.phone,

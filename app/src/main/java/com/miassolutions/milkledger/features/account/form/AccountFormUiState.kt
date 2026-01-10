@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.account.form
 
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
+import java.time.LocalDate
 
 data class AccountFormUiState(
     val isEditMode: Boolean = false,
@@ -9,6 +10,7 @@ data class AccountFormUiState(
     val selectAccountType: AccountType = AccountType.CUSTOMER,
     val rate: String = "",
     val initialBalance: String = "",
+    val openingDate: LocalDate = LocalDate.now(),
     val advanceAmount: String = "",
     val isSaving: Boolean = false,
     val validation: AccountFormValidation = AccountFormValidation()
@@ -24,6 +26,11 @@ data class AccountFormValidation(
 sealed interface AccountFormEvent {
     object SaveClicked : AccountFormEvent
     object CancelClicked : AccountFormEvent
+
+    object OnOpeningDateClicked : AccountFormEvent
+
+    data class OnOpeningDateSelected(val date: LocalDate) : AccountFormEvent
+
 }
 
 
@@ -31,6 +38,9 @@ sealed interface AccountFormEffect {
     object CloseScreen : AccountFormEffect
     data class ShowToast(val message: String) : AccountFormEffect
     data class FocusField(val field: Field) : AccountFormEffect
+
+    data class OpenDatePicker(val currentDateMillis: Long) : AccountFormEffect
+
 }
 
 enum class Field {

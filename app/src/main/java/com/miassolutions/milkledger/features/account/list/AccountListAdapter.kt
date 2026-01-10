@@ -2,11 +2,16 @@ package com.miassolutions.milkledger.features.account.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.databinding.ItemAccountBinding
 import com.miassolutions.milkledger.features.account.model.AccountUi
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 
 
 class AccountListAdapter(
@@ -39,20 +44,45 @@ class AccountListAdapter(
     inner class AccountVH(val binding: ItemAccountBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: AccountUi) = with(binding) {
-            tvAccountName.text = item.personName
-            tvAccountType.text = item.accountType.name
+            // 1. Name & Subtitle
+            tvName.text = item.name
 
-            root.setBackgroundResource(item.bgDrawable)
-            root.setOnClickListener {
-                onEditClick(item.id)
+            // 2. Initial Letter
+            val initial = item.name.firstOrNull()?.toString()?.uppercase() ?: "?"
+            tvInitial.text = initial
+
+            // 3. Color Logic (Customer vs Supplier)
+            val isCustomer = item.type == AccountType.CUSTOMER
+
+            tvSubtitle.text = "Date:${item.openingDate.toCompleteDateFormat()}"
+
+            if (isCustomer) {
+                viewIndicator.setBackgroundResource(R.color.teal_200)
+                layoutIcon.background.setTint(ContextCompat.getColor(root.context, R.color.teal_200))
+            } else {
+                viewIndicator.setBackgroundResource(R.color.orange_700)
+                layoutIcon.background.setTint(ContextCompat.getColor(root.context, R.color.orange_700))
             }
 
             root.setOnLongClickListener {
-                onDeleteClick(item.id)
+                onEditClick(item.id)
                 true
             }
 
+            // --- 🔥 FIXED BALANCE LOGIC ---
+            val rawBalance = item.initialBalance ?: 0L
 
+            // Logic:
+            // Customer: Positive (+) = Lena hai (Asset) -> Green
+            // Supplier: Positive (+) = Dena hai (Liability) -> Isay Negative (-) bana den taake Red ho jaye
+
+            val displayBalance = if (item.type == AccountType.SUPPLIER) {
+                -rawBalance
+            } else {
+                rawBalance
+            }
+
+            tvBalance.setBalanceWithColorRupee(displayBalance)
         }
     }
 }

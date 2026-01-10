@@ -13,6 +13,9 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate // Make sure ye import ho
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPaisa
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,21 +27,16 @@ class AccountFormFragment :
 
     override fun setupViews() {
         super.setupViews()
-
-
-
         setupInputs()
         setupObservers()
         setupClicks()
         setupAccountTypeRadioGroup()
     }
 
-
     private fun setupClicks() = with(binding) {
         btnSave.setOnClickListener {
             viewModel.onEvent(AccountFormEvent.SaveClicked)
         }
-
     }
 
     private fun setupAccountTypeRadioGroup() = with(binding) {
@@ -48,9 +46,7 @@ class AccountFormFragment :
                 R.id.rbSupplier -> viewModel.onAccountTypeSelected(AccountType.SUPPLIER)
             }
         }
-
     }
-
 
     private fun setupInputs() = with(binding) {
         etSortOrder.doAfterTextChanged {
@@ -70,39 +66,33 @@ class AccountFormFragment :
             updateBalancePreview()
         }
 
+        // ✅ 1. Click Listener lagaya
+        etOpeningDate.setOnClickListener {
+            viewModel.onEvent(AccountFormEvent.OnOpeningDateClicked)
+        }
+
         etAdvanceAmount.doAfterTextChanged {
             viewModel.onAdvanceAmountChanged(it.toString())
         }
 
         etSortOrder.focusWithScroll(binding.scrollView)
-
     }
 
     private fun updateBalancePreview(
         forcedType: AccountType? = null,
         forcedAmount: String? = null
     ) = with(binding) {
-
-        // Current Type aur Amount uthayen (State se ya UI se)
-        val type = forcedType ?: if (rbCustomer.isChecked) AccountType.CUSTOMER else AccountType.SUPPLIER
+        val type =
+            forcedType ?: if (rbCustomer.isChecked) AccountType.CUSTOMER else AccountType.SUPPLIER
         val amountString = forcedAmount ?: etInitialBalance.text.toString()
-
-        // Amount ko Paisa me convert karein
         val rawAmount = amountString.toPaisa()
-
-        // LOGIC:
-        // Agar Customer hai to Positive (Lene hen)
-        // Agar Supplier hai to Negative (Dene hen)
         val finalAmount = if (type == AccountType.SUPPLIER) -rawAmount else rawAmount
-
-        // Extension function use karein jo humne pehle banaya tha
         tvBalancePreview.setBalanceWithColorRupee(finalAmount, prefix = "Net Impact: ")
     }
 
     override fun setupObservers() {
         collectFlow(viewModel.uiState) { state ->
             renderState(state)
-
         }
 
         collectEffect(viewModel.uiEffect) { effect ->
@@ -112,17 +102,23 @@ class AccountFormFragment :
 
     private fun handleEffect(effect: AccountFormEffect) = with(binding) {
         when (effect) {
-            is AccountFormEffect.ShowToast ->
-                showToast(effect.message)
+            is AccountFormEffect.ShowToast -> showToast(effect.message)
 
-            AccountFormEffect.CloseScreen ->
-                findNavController().popBackStack(
-                    R.id.accountListFragment, false
-                )
+            AccountFormEffect.CloseScreen -> findNavController().popBackStack(
+                R.id.accountListFragment,
+                false
+            )
 
+            is AccountFormEffect.FocusField -> focusField(effect.field)
 
-            is AccountFormEffect.FocusField ->
-                focusField(effect.field)
+            // ✅ 2. Date Picker Effect Handle kiya
+            is AccountFormEffect.OpenDatePicker -> {
+                showLedgerDatePicker(
+                    initialDate = effect.currentDateMillis.toLocalDate()
+                ) { selectedDate ->
+                    viewModel.onEvent(AccountFormEvent.OnOpeningDateSelected(selectedDate))
+                }
+            }
         }
     }
 
@@ -138,10 +134,7 @@ class AccountFormFragment :
                 etAccountName.setSelection(etAccountName.text?.length ?: 0)
             }
 
-            Field.ACCOUNT_TYPE -> {
-                rgAccountType.requestFocus()
-            }
-
+            Field.ACCOUNT_TYPE -> rgAccountType.requestFocus()
             Field.RATE -> {
                 etDefaultRate.requestFocus()
                 etDefaultRate.setSelection(etDefaultRate.text?.length ?: 0)
@@ -161,33 +154,29 @@ class AccountFormFragment :
         }
     }
 
-
     private fun renderState(state: AccountFormUiState) = with(binding) {
         btnSave.isEnabled = !state.isSaving
         btnSave.text = if (state.isEditMode) "Update" else "Save"
 
-        // 🔹 TEXT FIELDS (EDIT MODE PREFILL)
         etSortOrder.setTextIfDifferent(state.sortOrder)
         etAccountName.setTextIfDifferent(state.personName)
         etDefaultRate.setTextIfDifferent(state.rate)
         etInitialBalance.setTextIfDifferent(state.initialBalance)
         etAdvanceAmount.setTextIfDifferent(state.advanceAmount)
 
-        // 🔹 RADIO BUTTONS
+        // ✅ 3. State se Date text set kiya
+        etOpeningDate.setTextIfDifferent(state.openingDate.toDisplayDate())
+
         when (state.selectAccountType) {
             AccountType.CUSTOMER -> rbCustomer.isChecked = true
             AccountType.SUPPLIER -> rbSupplier.isChecked = true
             else -> {}
         }
 
-        // 🔥 State render hotay waqt bhi preview update karein
         updateBalancePreview(state.selectAccountType, state.initialBalance)
 
-        // 🔹 ERRORS
         sortOrderLayout.error = state.validation.sortOrderError
         nameLayout.error = state.validation.nameError
         rateLayout.error = state.validation.rateError
     }
-
-
 }

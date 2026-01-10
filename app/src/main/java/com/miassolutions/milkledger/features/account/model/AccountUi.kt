@@ -1,15 +1,15 @@
 package com.miassolutions.milkledger.features.account.model
 
-import androidx.annotation.DrawableRes
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
+import java.time.LocalDate
 
 data class AccountUi(
     val id: String,
-    val personName: String,
-    val accountType: AccountType,
+    val name: String,
+    val type: AccountType,
     val sortOrder: Int,
     val initialBalance: Long?,
+    val openingDate: LocalDate,
     val defaultRate: Double,
     val advanceAmount: Long?,
-    @DrawableRes val bgDrawable: Int
 )

@@ -11,107 +11,141 @@ import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
 import com.miassolutions.milkledger.features.account.domain.Account
-import com.miassolutions.milkledger.features.account.model.AccountUi
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import javax.inject.Inject
 
-// @Inject constructor zaroori hai taake Hilt isay pehchan sake
 class AccountRepository @Inject constructor(
     private val dao: AccountDao,
-    private val ledgerDao: LedgerDao, //  Added: Opening Balance k liye
+    private val ledgerDao: LedgerDao,
     private val db: AppDatabase
 ) {
 
-    suspend fun getOwner(): AccountEntity? =
-        dao.getOwner()
+    suspend fun getOwner(): AccountEntity? = dao.getOwner()
 
     suspend fun saveOwner(owner: AccountEntity) {
         dao.upsert(owner)
     }
 
-    // 1. Get List (Reactive Flow)
+    // 1. Get List
     fun getAccountsByType(type: AccountType): Flow<List<Account>> {
         return dao.getAccountsByType(type).map { entities ->
             entities.map { it.toDomain() }
         }
     }
 
-    suspend fun isSortOrderExist(
-        sortOrder: Int,
-        accountType: AccountType,
-        excludeId: String? = null
-    ): Boolean = dao.isSortOrderExist(sortOrder, accountType, excludeId)
+    suspend fun isSortOrderExist(sortOrder: Int, accountType: AccountType, excludeId: String? = null): Boolean =
+        dao.isSortOrderExist(sortOrder, accountType, excludeId)
 
     // 2. Get Single Account
     suspend fun getAccountById(id: String): Account? {
         return dao.getAccountById(id)?.toDomain()
     }
 
-    // 3. Save (Insert / Update)
-    // Advance Amount yahan save ho jaye gi, lekin Ledger update nahi hoga (As per requirement)
-    suspend fun saveAccount(account: Account) {
+
+    suspend fun getOpeningDate(accountId: String): LocalDate? {
+        val entry = ledgerDao.getOpeningBalanceEntry(accountId)
+        return entry?.dateMillis?.toLocalDate()
+    }
+
+    // ---------------------------------------------------------
+    // 3. Save (Insert / Update) with Date Logic 📅
+    // ---------------------------------------------------------
+    suspend fun saveAccount(account: Account, openingDate: LocalDate) {
+
         val entity = account.toEntity()
 
-        // Step A: Account Table me Save/Update
-        dao.insert(entity)
+        db.withTransaction {
+            // Step A: Account Table me Save/Update
+            // (Hum initialBalance save kr rhe hen taake UI me dikha saken,
+            // lekin calculations Ledger table se hongi)
+            dao.insert(entity)
 
-        // step B: ledger logic(opening balance)
-        // pehly puran opening balance del kre agr edit ho raha ho
+            // Step B: Ledger Logic (Opening Balance)
+            // 1. Check karein agar pehle se entry mojood hai (Edit Case)
+            val existingEntry = ledgerDao.getOpeningBalanceEntry(entity.accountId) // DAO me ye query honi chahiye
 
-        ledgerDao.deleteOpeningBalance(entity.accountId)
+            val balance = entity.initialBalance ?: 0L
 
-        // agar initial bal. 0 se zyada hy to nayi entry kren
-        if (entity.initialBalance != null && entity.initialBalance > 0) {
-            // Logic:
-            // Customer ka Balance = DEBIT (Usne humein dene hain - Asset)
-            // Supplier ka Balance = CREDIT (Humne usay dene hain - Liability)
+            if (balance != 0L) {
+                // Logic: Kis side par likhna hai?
+                // Customer: (+ means Debit/Udhaar), (- means Credit/Advance)
+                // Supplier: (+ means Credit/Udhaar), (- means Debit/Advance)
 
-            val isCustomer = entity.accountType == AccountType.CUSTOMER
-            val debitAmount = if (isCustomer) entity.initialBalance else 0L
-            val creditAmount = if (!isCustomer) entity.initialBalance else 0L
+                val isCustomer = entity.accountType == AccountType.CUSTOMER
 
-            val openingEntry = FinancialLedgerEntity(
-                accountId = entity.accountId,
-                dateMillis = entity.createdAtMillis, // Account banne ki tareekh
-                referenceId = null, // Opening balance ka koi specific ref nahi hota
-                type = LedgerEntryType.OPENING_BALANCE,
+                // Debit Calculation
+                val debitAmount = if (isCustomer) {
+                    if (balance > 0) balance else 0
+                } else {
+                    if (balance < 0) -balance else 0 // Supplier ko advance dia (Negative input)
+                }
 
-                debit = debitAmount,
-                credit = creditAmount,
+                // Credit Calculation
+                val creditAmount = if (isCustomer) {
+                    if (balance < 0) -balance else 0 // Customer ne advance dia (Negative input)
+                } else {
+                    if (balance > 0) balance else 0
+                }
 
-                profitImpact = 0, // Opening balance aaj ka profit nahi hai
-                note = "Opening Balance"
-            )
+                if (existingEntry != null) {
+                    // --- UPDATE EXISTING ---
+                    val updatedEntry = existingEntry.copy(
+                        dateMillis = openingDate.toMillis(), // 🔥 Update Date
+                        debit = debitAmount,
+                        credit = creditAmount,
+                        updatedAtMillis = System.currentTimeMillis()
+                    )
+                    ledgerDao.update(updatedEntry)
+                } else {
+                    // --- INSERT NEW ---
+                    val newEntry = FinancialLedgerEntity(
+                        accountId = entity.accountId,
+                        dateMillis = openingDate.toMillis(), // 🔥 Use Selected Date
+                        referenceId = entity.accountId, // Self Reference
+                        type = LedgerEntryType.OPENING_BALANCE,
 
-            ledgerDao.insert(openingEntry)
+                        debit = debitAmount,
+                        credit = creditAmount,
+
+                        profitImpact = 0,
+                        note = "Opening Balance"
+                    )
+                    ledgerDao.insert(newEntry)
+                }
+            } else {
+                // Agar Balance 0 kar dia user ne edit kr k, to purani entry delete kr den
+                if (existingEntry != null) {
+                    ledgerDao.deleteOpeningBalance(entity.accountId)
+                }
+            }
         }
-
     }
 
     // 4. Soft Delete
     suspend fun deleteAccount(accountId: String) {
         db.withTransaction {
             val currentTime = System.currentTimeMillis()
-
-            // Account Soft Delete
             dao.softDelete(accountId, currentTime)
 
-            // Uska Opening Balance bhi delete kar dein Ledger se
-            ledgerDao.deleteOpeningBalance(accountId)
+            // Soft delete the opening balance transaction too
+            // (Agar aap hard delete krna chahen to ledgerDao.deleteOpeningBalance use karen)
+            // Lekin behtar hai Ledger me bhi soft delete ho.
+             ledgerDao.softDeleteOpeningBalance(accountId, currentTime)
+
+            // Filhal aapki logic k mutabiq hard delete:
+//            ledgerDao.deleteOpeningBalance(accountId)
         }
     }
 
-    suspend fun restoreAccount(accountUi: String) {
-        dao.restore(accountUi)
+    suspend fun restoreAccount(accountId: String) {
+        dao.restore(accountId)
     }
 
     suspend fun permanentlyDeleteAllSoftDeletedAccounts() {
         dao.permanentlyDeleteAllAccounts()
     }
-
-//    // 5. Update Sort Order (Drag & Drop)
-//    suspend fun updateSortOrder(accountId: String, newOrder: Int) {
-//        dao.updateSortOrder(accountId, newOrder)
-//    }
 }

@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LedgerDao {
 
+    @Query("SELECT * FROM financial_ledger_table WHERE accountId = :accId AND type = 'OPENING_BALANCE' LIMIT 1")
+    suspend fun getOpeningBalanceEntry(accId: String): FinancialLedgerEntity?
+
 
     // ID aur Type ki bunyad par Ledger dhoondna (Update k liye zaroori hai)
     @Query("SELECT * FROM financial_ledger_table WHERE referenceId = :refId AND type = :type LIMIT 1")
@@ -47,6 +50,13 @@ interface LedgerDao {
     //  Account save/update karte waqt purana balance hatana zaroori hai
     @Query("DELETE FROM financial_ledger_table WHERE accountId = :accountId AND type = 'OPENING_BALANCE'")
     suspend fun deleteOpeningBalance(accountId: String)
+
+    @Query("UPDATE financial_ledger_table SET deletedAtMillis = :time, isSynced = 0 WHERE accountId = :accountId AND type = :type")
+    suspend fun softDeleteOpeningBalance(
+        accountId: String,
+        time: Long,
+        type: LedgerEntryType = LedgerEntryType.OPENING_BALANCE // Default Value
+    )
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(ledgerEntries: List<FinancialLedgerEntity>)
