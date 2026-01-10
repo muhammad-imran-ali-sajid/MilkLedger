@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.features.owner.data
 
 
 import androidx.room.withTransaction
+import com.miassolutions.milkledger.core.contstants.Constants
 import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
@@ -35,33 +36,22 @@ class OwnerRepository @Inject constructor(
             ledgerDao.getOwnerTransactionsInRange(start, end)
         ) { profit, drawings, transactions ->
 
-            // Map Entity to UI Model
             val uiTransactions = transactions.map { entity ->
 
-                // 1. Title Logic:
-                // Agar Note khali hai tu "Cash Withdrawal" (Fallback)
-                // Agar Personal Expense tha, tu wahan se Title 'note' me save hoa tha, wo yahan show ho jayega.
+                // 🔥 LOGIC:
+                // Sirf check karen k ye Expense hai ya nahi?
+                val isExpense = entity.referenceId?.startsWith(Constants.PREFIX_EXPENSE)
+
                 val displayTitle = entity.note ?: "Cash Withdrawal"
-
-                // 2. Icon Logic (Distinction):
-                // Kese pata chalay k ye Cash hai ya Expense?
-                // Expense Repository me humne note save kia tha: "${item.title}"
-                // Cash Withdrawal me humne default rakha tha "Cash Withdrawal"
-
-                // Simple Check: Agar title "Cash Withdrawal" nahi hai, tu ye Personal Expense hai
-                // (Ya phir aap specific prefix use kr skty hen future me)
-                val isExpense = !displayTitle.equals("Cash Withdrawal", ignoreCase = true)
 
                 OwnerTransactionUiModel(
                     id = entity.ledgerId,
                     dateMillis = entity.dateMillis,
                     amount = entity.debit,
-
-                    // 🔥 CHANGE: Ab hum 'note' ko as a Title bhej rahe hain
-                    // Agar Personal Expense hoga to uska Title (e.g. "Grocery") show hoga.
                     note = displayTitle,
 
-                    isPersonalExpense = isExpense
+                    // ✅ Agar 'exp_' hai to TRUE, warna FALSE (matlab Cash Withdrawal)
+                    isPersonalExpense = isExpense == true
                 )
             }
 
