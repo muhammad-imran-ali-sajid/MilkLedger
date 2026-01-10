@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
+import com.miassolutions.milkledger.core.localdb.account.model.AccountWithBalance
 import kotlinx.coroutines.flow.Flow
 
 @Dao

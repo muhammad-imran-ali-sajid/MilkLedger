@@ -27,6 +27,7 @@ fun Account.toEntity(): AccountEntity {
         name = this.name,
         phone = this.phone,
         accountType = this.type,
+        isActive = this.isActive,
         sortOrder = this.sortOrder,
         defaultRate = this.defaultRate,
         advanceAmount = this.advanceAmount,
