@@ -15,104 +15,49 @@ import javax.inject.Inject
 class ExpenseFormViewModel @Inject constructor(
     private val repository: ExpenseRepository,
     savedStateHandle: SavedStateHandle
-) : BaseViewModel<
-        ExpenseFormUiState,
-        ExpenseFormUiEvent,
-        ExpenseFormUiEffect
-        >(ExpenseFormUiState()) {
+) : BaseViewModel<ExpenseFormUiState, ExpenseFormUiEvent, ExpenseFormUiEffect>(ExpenseFormUiState()) {
 
-    /**
-     * 🔹 Draft cache
-     * Typing yahan hoti hai, RecyclerView redraw nahi hota
-     */
+    // 🔹 Single Source of Truth for "Current Editing Data"
     private val draftCache = mutableMapOf<String, PersonalExpenseUi>()
 
     init {
         val dateMillis: Long = savedStateHandle["selectedDate"] ?: -1L
-
-        val initialDate = if (dateMillis != -1L) {
-            dateMillis.toLocalDate()
-        } else {
-            LocalDate.now()
-        }
-
+        val initialDate = if (dateMillis != -1L) dateMillis.toLocalDate() else LocalDate.now()
         updateState { it.copy(date = initialDate) }
     }
 
     override fun onEvent(event: ExpenseFormUiEvent) {
         when (event) {
+            // --- Date ---
+            is ExpenseFormUiEvent.OnDateClick -> emitEffect(ExpenseFormUiEffect.OpenDatePicker)
+            is ExpenseFormUiEvent.OnDateSelected -> updateState { it.copy(date = event.date) }
 
-            // ---------------- DATE ----------------
+            // --- Static Fields ---
+            is ExpenseFormUiEvent.OnFuelChanged -> updateState { it.copy(fuelAmount = event.value, fuelError = null) }
+            is ExpenseFormUiEvent.OnVehicleChanged -> updateState { it.copy(vehicleAmount = event.value, vehicleError = null) }
+            is ExpenseFormUiEvent.OnRefreshmentChanged -> updateState { it.copy(refreshmentAmount = event.value, refreshmentError = null) }
+            is ExpenseFormUiEvent.OnNotesChanged -> updateState { it.copy(notes = event.value) }
 
-            is ExpenseFormUiEvent.OnDateClick -> {
-                emitEffect(ExpenseFormUiEffect.OpenDatePicker)
-            }
-
-            is ExpenseFormUiEvent.OnDateSelected -> {
-                updateState { it.copy(date = event.date) }
-            }
-
-            // ---------------- STATIC FIELDS ----------------
-
-            is ExpenseFormUiEvent.OnFuelChanged -> {
-                updateState {
-                    it.copy(
-                        fuelAmount = event.value,
-                        fuelError = null
-                    )
-                }
-            }
-
-            is ExpenseFormUiEvent.OnVehicleChanged -> {
-                updateState {
-                    it.copy(
-                        vehicleAmount = event.value,
-                        vehicleError = null
-                    )
-                }
-            }
-
-            is ExpenseFormUiEvent.OnRefreshmentChanged -> {
-                updateState {
-                    it.copy(
-                        refreshmentAmount = event.value,
-                        refreshmentError = null
-                    )
-                }
-            }
-
-            is ExpenseFormUiEvent.OnNotesChanged -> {
-                updateState { it.copy(notes = event.value) }
-            }
-
-            // ---------------- PERSONAL EXPENSE (DYNAMIC) ----------------
-
+            // --- Personal Expense Logic ---
             is ExpenseFormUiEvent.OnAddPersonalExpense -> {
                 val newItem = PersonalExpenseUi()
+                // 1. Cache me add karen
                 draftCache[newItem.id] = newItem
-                updateState {
-                    it.copy(
-                        personalExpenses = it.personalExpenses + newItem
-                    )
-                }
+                // 2. State update karen (UI me row add hogi)
+                updateState { it.copy(personalExpenses = it.personalExpenses + newItem) }
             }
 
             is ExpenseFormUiEvent.OnRemovedPersonalExpense -> {
+                // 1. Cache se remove
                 draftCache.remove(event.id)
+                // 2. State se remove
                 updateState { state ->
-                    state.copy(
-                        personalExpenses = state.personalExpenses.filter {
-                            it.id != event.id
-                        }
-                    )
+                    state.copy(personalExpenses = state.personalExpenses.filter { it.id != event.id })
                 }
             }
 
-            /**
-             * 🔹 Draft typing
-             * NO state emit, NO RecyclerView redraw
-             */
             is ExpenseFormUiEvent.OnPersonalDraftChanged -> {
+                // Sirf Cache update hoga (No Re-render, No flickering)
                 val current = draftCache[event.id] ?: return
                 draftCache[event.id] = when (event.field) {
                     DraftField.TITLE -> current.copy(title = event.value)
@@ -120,32 +65,20 @@ class ExpenseFormViewModel @Inject constructor(
                 }
             }
 
-            /**
-             * 🔹 Commit
-             * Yahan actual list update hoti hai
-             */
             is ExpenseFormUiEvent.OnPersonalCommit -> {
+                // Jab focus hatega, tab State sync hogi (Recycling k liye zaroori hai)
                 val draft = draftCache[event.id] ?: return
                 updateState { state ->
-                    state.copy(
-                        personalExpenses = state.personalExpenses.map {
-                            if (it.id == event.id) draft else it
-                        }
-                    )
+                    state.copy(personalExpenses = state.personalExpenses.map {
+                        if (it.id == event.id) draft else it
+                    })
                 }
             }
 
-            // ---------------- SAVE ----------------
-
-            is ExpenseFormUiEvent.OnSaveClicked -> {
-                saveData()
-            }
-
-
+            // --- Save ---
+            is ExpenseFormUiEvent.OnSaveClicked -> saveData()
         }
     }
-
-    // ---------------- SAVE LOGIC ----------------
 
     private fun saveData() {
         val state = currentState
@@ -157,36 +90,19 @@ class ExpenseFormViewModel @Inject constructor(
 
             val expensesToSave = mutableListOf<Expense>()
 
-            // ---- Static expenses ----
-            parseAndAdd(
-                expensesToSave,
-                date,
-                "Fuel",
-                "Fuel",
-                state.fuelAmount,
-                note
-            )
+            // 1. Static Expenses
+            parseAndAdd(expensesToSave, date, "Fuel", "Fuel", state.fuelAmount, note)
+            parseAndAdd(expensesToSave, date, "Vehicle", "Vehicle Maintenance", state.vehicleAmount, note)
+            parseAndAdd(expensesToSave, date, "Refreshment", "Refreshment", state.refreshmentAmount, note)
 
-            parseAndAdd(
-                expensesToSave,
-                date,
-                "Vehicle",
-                "Vehicle",
-                state.vehicleAmount,
-                note
-            )
+            // 2. Personal Expenses (🔥 FIX: Use draftCache directly)
+            // Hum 'state.personalExpenses' use nahi karenge kyunke ho sakta hai user ne abhi type kia ho
+            // aur focus na hataya ho. 'draftCache' me hamesha latest typing hoti hai.
 
-            parseAndAdd(
-                expensesToSave,
-                date,
-                "Refreshment",
-                "Refreshment",
-                state.refreshmentAmount,
-                note
-            )
+            // Hum sirf un items ko uthayenge jo abhi list me valid hain (deleted nahi hain)
+            val currentIds = state.personalExpenses.map { it.id }.toSet()
 
-            // ---- Personal expenses ----
-            state.personalExpenses.forEach { item ->
+            draftCache.values.filter { it.id in currentIds }.forEach { item ->
                 val amount = item.amount.toDoubleOrNull()
                 if (amount != null && amount > 0) {
                     val title = item.title.ifBlank { "Personal Expense" }
@@ -196,20 +112,17 @@ class ExpenseFormViewModel @Inject constructor(
                             title = title,
                             category = "Personal",
                             amount = (amount * 100).toLong(),
-                            isPersonal = true,
+                            isPersonal = true, // ✅ Repository flag check karega
                             note = note
                         )
                     )
                 }
             }
 
+            // 3. Final Check
             if (expensesToSave.isEmpty()) {
                 updateState { it.copy(isSaving = false) }
-                emitEffect(
-                    ExpenseFormUiEffect.ShowSnackbar(
-                        "Please enter at least one amount"
-                    )
-                )
+                emitEffect(ExpenseFormUiEffect.ShowSnackbar("Please enter at least one amount"))
                 return@launch
             }
 
@@ -219,11 +132,7 @@ class ExpenseFormViewModel @Inject constructor(
                 emitEffect(ExpenseFormUiEffect.ExpenseSaved)
             } catch (e: Exception) {
                 updateState { it.copy(isSaving = false) }
-                emitEffect(
-                    ExpenseFormUiEffect.ShowSnackbar(
-                        "Error: ${e.message}"
-                    )
-                )
+                emitEffect(ExpenseFormUiEffect.ShowSnackbar("Error: ${e.message}"))
             }
         }
     }
@@ -236,19 +145,18 @@ class ExpenseFormViewModel @Inject constructor(
         amountStr: String,
         note: String
     ) {
-        amountStr.toDoubleOrNull()?.let { amount ->
-            if (amount > 0) {
-                list.add(
-                    Expense(
-                        date = date,
-                        title = defaultTitle,
-                        category = category,
-                        amount = (amount * 100).toLong(),
-                        isPersonal = false,
-                        note = note
-                    )
+        val amount = amountStr.toDoubleOrNull()
+        if (amount != null && amount > 0) {
+            list.add(
+                Expense(
+                    date = date,
+                    title = defaultTitle,
+                    category = category,
+                    amount = (amount * 100).toLong(),
+                    isPersonal = false, // Business Expense
+                    note = note
                 )
-            }
+            )
         }
     }
 }

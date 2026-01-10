@@ -39,18 +39,25 @@ class ExpenseRepository @Inject constructor(
                 // Profit Impact Logic
                 val profitImpact = if (isPersonal) 0L else -(expenseEntity.amount)
 
+                // 🔥 FIX: Note Logic Behtar ki hai
+                // Agar Note hai to "Title - Note" banayen, warna sirf "Title"
+                val displayNote = if (!expenseEntity.note.isNullOrBlank()) {
+                    "${expenseEntity.title} - ${expenseEntity.note}"
+                } else {
+                    expenseEntity.title
+                }
+
                 FinancialLedgerEntity(
                     dateMillis = expenseEntity.dateMillis,
                     accountId = accountId,
                     referenceId = expenseEntity.expenseId,
                     type = type,
 
-                    // 🔥 FIX: Expense = Debit (Paisa gya/Kharcha hoa)
                     debit = expenseEntity.amount,
                     credit = 0,
 
                     profitImpact = profitImpact,
-                    note = expenseEntity.note ?: expenseEntity.title
+                    note = displayNote // ✅ Ab yahan details ayengi
                 )
             }
             ledgerDao.insertAll(ledgerEntries)
@@ -72,6 +79,13 @@ class ExpenseRepository @Inject constructor(
             val type = if (isPersonal) LedgerEntryType.OWNER_DRAWING else LedgerEntryType.BUSINESS_EXPENSE
             val profitImpact = if (isPersonal) 0L else -(expenseEntity.amount)
 
+            // 🔥 FIX: Note Logic Here
+            val displayNote = if (!expense.note.isNullOrBlank()) {
+                "${expense.title} - ${expense.note}"
+            } else {
+                expense.title
+            }
+
             // 2. Ledger Table
             val ledgerEntry = FinancialLedgerEntity(
                 dateMillis = expense.date.toMillis(),
@@ -79,12 +93,11 @@ class ExpenseRepository @Inject constructor(
                 referenceId = expenseEntity.expenseId,
                 type = type,
 
-                // 🔥 FIX: Expense = Debit
                 debit = expenseEntity.amount,
                 credit = 0,
 
                 profitImpact = profitImpact,
-                note = expense.title
+                note = displayNote // ✅ Fixed: Pehle yahan sirf title tha
             )
             ledgerDao.insert(ledgerEntry)
         }
@@ -103,23 +116,30 @@ class ExpenseRepository @Inject constructor(
 
             oldLedgerEntry?.let { entry ->
 
-                // Logic Re-Check (Agar user ne category change ki ho)
+                // Logic Re-Check
                 val isPersonal = updatedExpense.isPersonal
                 val newAccountId = if (isPersonal) OWNER_ACCOUNT_ID else SHOP_EXPENSE
                 val newType = if (isPersonal) LedgerEntryType.OWNER_DRAWING else LedgerEntryType.BUSINESS_EXPENSE
                 val newProfitImpact = if (isPersonal) 0L else -(updatedExpense.amount)
 
+                // 🔥 FIX: Note Logic Here as well
+                val displayNote = if (!updatedExpense.note.isNullOrBlank()) {
+                    "${updatedExpense.title} - ${updatedExpense.note}"
+                } else {
+                    updatedExpense.title
+                }
+
                 val newLedgerEntry = entry.copy(
-                    dateMillis = updatedExpense.date.toMillis(), // Date bhi update hoskti hy
+                    dateMillis = updatedExpense.date.toMillis(),
 
-                    accountId = newAccountId, // 🔥 Account ID bhi update karein
-                    type = newType,           // 🔥 Type bhi update karein
+                    accountId = newAccountId,
+                    type = newType,
 
-                    debit = updatedExpense.amount, // Amount update
+                    debit = updatedExpense.amount,
                     credit = 0,
 
                     profitImpact = newProfitImpact,
-                    note = updatedExpense.title,
+                    note = displayNote, // ✅ Fixed: Pehle yahan sirf title tha
 
                     isSynced = false,
                     updatedAtMillis = System.currentTimeMillis()
@@ -130,6 +150,7 @@ class ExpenseRepository @Inject constructor(
         }
     }
 
+    // ... (Baki functions same rahenge Delete aur Read walay) ...
     // ------------------------------------------------
     // 4️⃣ DELETE
     // ------------------------------------------------

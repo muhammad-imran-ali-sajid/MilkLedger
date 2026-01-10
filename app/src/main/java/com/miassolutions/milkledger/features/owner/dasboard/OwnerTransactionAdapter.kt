@@ -53,10 +53,10 @@ class OwnerTransactionAdapter(
                 ivIcon.setColorFilter(ContextCompat.getColor(root.context, R.color.red))
             }
 
+                tvNote.text = item.note
             // 3. Note
             if (item.note.isNotBlank()) {
                 tvNote.isVisible = true
-                tvNote.text = item.note
             } else {
                 tvNote.isVisible = false
             }

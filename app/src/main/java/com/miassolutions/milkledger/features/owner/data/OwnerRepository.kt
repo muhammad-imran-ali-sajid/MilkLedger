@@ -37,17 +37,31 @@ class OwnerRepository @Inject constructor(
 
             // Map Entity to UI Model
             val uiTransactions = transactions.map { entity ->
+
+                // 1. Title Logic:
+                // Agar Note khali hai tu "Cash Withdrawal" (Fallback)
+                // Agar Personal Expense tha, tu wahan se Title 'note' me save hoa tha, wo yahan show ho jayega.
+                val displayTitle = entity.note ?: "Cash Withdrawal"
+
+                // 2. Icon Logic (Distinction):
+                // Kese pata chalay k ye Cash hai ya Expense?
+                // Expense Repository me humne note save kia tha: "${item.title}"
+                // Cash Withdrawal me humne default rakha tha "Cash Withdrawal"
+
+                // Simple Check: Agar title "Cash Withdrawal" nahi hai, tu ye Personal Expense hai
+                // (Ya phir aap specific prefix use kr skty hen future me)
+                val isExpense = !displayTitle.equals("Cash Withdrawal", ignoreCase = true)
+
                 OwnerTransactionUiModel(
                     id = entity.ledgerId,
                     dateMillis = entity.dateMillis,
-                    amount = entity.debit, // Debit = Paisa nikala
-                    note = entity.note ?: "Cash Withdrawal",
-                    isPersonalExpense = entity.note?.contains(
-                        "Personal Expense",
-                        ignoreCase = true
-                    ) == true
-                            || entity.accountId == "EXPENSE_ACCOUNT"
-                    // Note: Logic to distinguish Icon (Cash vs Expense)
+                    amount = entity.debit,
+
+                    // 🔥 CHANGE: Ab hum 'note' ko as a Title bhej rahe hain
+                    // Agar Personal Expense hoga to uska Title (e.g. "Grocery") show hoga.
+                    note = displayTitle,
+
+                    isPersonalExpense = isExpense
                 )
             }
 
