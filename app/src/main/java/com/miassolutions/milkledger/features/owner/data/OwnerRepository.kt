@@ -99,5 +99,13 @@ class OwnerRepository @Inject constructor(
     }
 
 
+    suspend fun deleteTransaction(ledgerId: String) {
+        db.withTransaction {
+            // Sirf Ledger table se delete hoga (Soft Delete)
+            ledgerDao.softDeleteLedgerById(ledgerId, System.currentTimeMillis())
+        }
+    }
+
+
 
 }

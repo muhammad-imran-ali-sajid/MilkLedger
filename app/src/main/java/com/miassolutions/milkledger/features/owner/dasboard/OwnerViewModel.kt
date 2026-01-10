@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.owner.dasboard
 
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
+import com.miassolutions.milkledger.features.owner.dasboard.OwnerUiEffect.*
 import com.miassolutions.milkledger.features.owner.data.OwnerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -57,7 +58,7 @@ class OwnerViewModel @Inject constructor(
             // --- Withdrawal Actions ---
             OwnerUiEvent.OnWithdrawClicked -> {
                 // Open Bottom Sheet
-                emitEffect(OwnerUiEffect.OpenWithdrawSheet(currentState.dashboardData.retainedEarnings))
+                emitEffect(OpenWithdrawSheet(currentState.dashboardData.retainedEarnings))
             }
 
             is OwnerUiEvent.OnConfirmWithdrawal -> {
@@ -66,6 +67,10 @@ class OwnerViewModel @Inject constructor(
 
             // --- Navigation ---
             OwnerUiEvent.OnAddExpenseClicked -> emitEffect(OwnerUiEffect.NavigateToAddExpense)
+            is OwnerUiEvent.OnDeleteWithdrawal -> {
+                performDelete(event.id)
+                emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal deleted"))
+            }
         }
     }
 
@@ -83,19 +88,39 @@ class OwnerViewModel @Inject constructor(
 
                 if (id == null) {
                     repository.saveCashWithdrawal(amountPaisa, date, note)
-
+                    emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal Successful"))
                 } else {
                     repository.updateCashWithdrawal(id, amountPaisa, date, note)
+                    emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal updated successful"))
                 }
 
 
-                emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal Successful"))
                 emitEffect(OwnerUiEffect.CloseWithdrawSheet)
 
                 // Data auto-refresh ho jayega kyunke Flow observe ho raha hai
 
             } catch (e: Exception) {
                 emitEffect(OwnerUiEffect.ShowSnackbar("Error: ${e.message}"))
+            }
+        }
+    }
+
+
+    private fun performDelete(id: String) {
+        viewModelScope.launch {
+            try {
+                // 1. DB se delete karein
+                repository.deleteTransaction(id)
+
+                // 2. Success Message
+                emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal deleted"))
+
+                // 3. 🔥 FIX: Sheet Band Karein (Ye line missing thi)
+                emitEffect(OwnerUiEffect.CloseWithdrawSheet)
+
+            } catch (e: Exception) {
+                // 4. 🔥 FIX: Error Chupayen nahi, User ko batayen
+                emitEffect(OwnerUiEffect.ShowSnackbar("Delete Error: ${e.message}"))
             }
         }
     }

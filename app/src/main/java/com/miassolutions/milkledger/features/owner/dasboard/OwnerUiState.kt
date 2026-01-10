@@ -19,9 +19,14 @@ data class OwnerUiState(
 
 sealed class OwnerUiEvent {
     // Dashboard Events
-    data class OnDateFilterChanged(val start: Long, val end: Long, val label: String) : OwnerUiEvent()
+    data class OnDateFilterChanged(val start: Long, val end: Long, val label: String) :
+        OwnerUiEvent()
+
     object OnWithdrawClicked : OwnerUiEvent()
     object OnAddExpenseClicked : OwnerUiEvent()
+
+
+    data class OnDeleteWithdrawal(val id: String) : OwnerUiEvent()
 
     // Withdraw Sheet Events
     data class OnConfirmWithdrawal(
@@ -35,6 +40,8 @@ sealed class OwnerUiEvent {
 sealed class OwnerUiEffect {
     data class ShowSnackbar(val message: String) : OwnerUiEffect()
     object NavigateToAddExpense : OwnerUiEffect()
+
+
 
     // Sheet Control
     data class OpenWithdrawSheet(val availableBalance: Long) : OwnerUiEffect()
