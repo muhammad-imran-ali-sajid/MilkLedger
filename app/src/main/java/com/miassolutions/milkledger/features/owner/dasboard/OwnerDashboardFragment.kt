@@ -3,7 +3,9 @@ package com.miassolutions.milkledger.features.owner.dasboard
 
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentOwnerDashboardBinding
 import com.miassolutions.milkledger.utils.extensions.collectEffect
@@ -20,8 +22,13 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
     private val viewModel: OwnerViewModel by viewModels()
     private val adapter by lazy {
         OwnerTransactionAdapter { item ->
-            if (item.isPersonalExpense){
-                // navigate to personal expense
+            if (item.isPersonalExpense) {
+                showSnackbar(
+                    "Update/Delete Prsnl exp in Expense tab",
+                    actionText = "Open",
+                    onAction = {
+                        findNavController().navigate(R.id.expenseFragment)
+                    })
             } else {
                 val sheet = WithdrawCashBottomSheet.newInstance(
                     availableBalance = viewModel.uiState.value.dashboardData.retainedEarnings,
