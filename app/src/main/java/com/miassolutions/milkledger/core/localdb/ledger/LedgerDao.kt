@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.miassolutions.milkledger.features.cashflow.CashflowSummary
 import com.miassolutions.milkledger.features.owner.domain.DailyProfitTuple
 import kotlinx.coroutines.flow.Flow
 
@@ -155,6 +156,27 @@ interface LedgerDao {
         ORDER BY dateMillis DESC
     """)
     fun getDailyProfitBreakdown(start: Long, end: Long): Flow<List<DailyProfitTuple>>
+
+
+
+    @Query("""
+        SELECT 
+            COALESCE(SUM(credit), 0) as totalIn, 
+            COALESCE(SUM(debit), 0) as totalOut
+        FROM financial_ledger_table
+        WHERE dateMillis BETWEEN :start AND :end
+        AND deletedAtMillis IS NULL
+    """)
+    fun getCashflowSummary(start: Long, end: Long): Flow<CashflowSummary>
+
+    // 2. Transaction List Query (All mixed)
+    @Query("""
+        SELECT * FROM financial_ledger_table
+        WHERE dateMillis BETWEEN :start AND :end
+        AND deletedAtMillis IS NULL
+        ORDER BY dateMillis DESC, createdAtMillis DESC
+    """)
+    fun getLedgerEntriesInRange(start: Long, end: Long): Flow<List<FinancialLedgerEntity>>
 
 
 }

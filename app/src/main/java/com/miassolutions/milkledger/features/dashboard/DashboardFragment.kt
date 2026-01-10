@@ -1,181 +1,112 @@
 package com.miassolutions.milkledger.features.dashboard
 
-
-import android.view.Menu
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
-import com.miassolutions.milkledger.features.cashflow.toPdfSummary
-import com.miassolutions.milkledger.utils.datefilter.DateFilterCallback
-import com.miassolutions.milkledger.utils.datefilter.DateFilterController
-import com.miassolutions.milkledger.utils.datefilter.DatePeriod
+import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.extensions.hide
-import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toPrice
-import com.miassolutions.milkledger.utils.extensions.toMilkAmount
-import com.miassolutions.milkledger.utils.helper.RemoteConfigHelper
-import com.miassolutions.milkledger.utils.pdf.dashboardreport.DashboardReportGenerator
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DashboardFragment :
-    BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate), DateFilterCallback {
+class DashboardFragment : BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
 
-    private val viewModel by viewModels<DashboardViewModel>()
-
-    private lateinit var controller: DateFilterController
-
-
-    override fun getMenuResId(): Int {
-        return R.menu.menu_dashboard
-    }
+    private val viewModel: DashboardViewModel by viewModels()
 
     override fun setupViews() {
+        super.setupViews()
 
-
-        controller = DateFilterController(
-            this,
-            binding.dateFilterLayout,
-            callback = this
-        )
-        controller.init()
-
-        RemoteConfigHelper.fetchValue(viewLifecycleOwner) { isTrialVersion ->
-
-            // If Remote Config says trial is active, enable UI; else disable UI
-            val isTrialExpired = !isTrialVersion
-
-            if (isTrialExpired) {
-                binding.apply {
-                    purchaseCard.isEnabled = false
-                    saleCard.isEnabled = false
-                    expenseCard.isEnabled = false
-                    cardProfit.isEnabled = false
-                    tvTrial.show() // or tvTrial.visibility = View.VISIBLE
-                }
-            } else {
-                binding.apply {
-                    purchaseCard.isEnabled = true
-                    saleCard.isEnabled = true
-                    expenseCard.isEnabled = true
-                    cardProfit.isEnabled = true
-                    tvTrial.hide() // or tvTrial.visibility = View.GONE
-                }
-            }
-        }
-
-
-        val isAdmin = SharedPrefsHelper.isAdmin(requireContext())
-
-        if (!isAdmin) {
-            hideTextViews()
-        }
-
-
-    }
-
-    override fun onMenuCreated(menu: Menu) {
-        val item = menu.findItem(R.id.action_dashboard_pdf)
-
-        item.setOnMenuItemClickListener {
-            if (!isPremiumEnabled) {
-                showSnackbar("Premium feature")
-                return@setOnMenuItemClickListener true
-            }
-
-            showDialog("Generate PDF?", "Do you want to create PDF?") {
-                generatePdfReport()
-            }
-
-            true
+        // 1. Date Filter Setup
+        // Ye callback dega jab screen load hogi ya date change hogi
+        binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
+            viewModel.onEvent(DashboardUiEvent.OnDateFilterChanged(start, end))
         }
     }
-
-
-    private fun generatePdfReport() {
-        val state = viewModel.uiState.value
-
-        val data = state.toPdfSummary()
-
-        DashboardReportGenerator.generateAndSharePdf(
-            context = requireContext(),
-            data = data,
-            baseName = "dashboard",
-        )
-
-    }
-
-    private fun hideTextViews() {
-        binding.apply {
-            tvTotalPurchases.hide()
-            tvTotalExpense.hide()
-            tvTotalSales.hide()
-            tvNetProfit.hide()
-        }
-    }
-
-
-    override fun setupObservers() = with(binding) {
-        collectFlow(viewModel.uiState) { state ->
-            val milkFatLr = state.totalMilkWithFatAndLr
-
-            val qtyDiff = state.milkSold - state.milkPurchase
-
-            dateFilterLayout.tvSelectedDate.text = state.period
-
-            tvTotalPurchases.text = state.purchaseTotal.toPrice()
-            tvTotalSales.text = state.salesTotal.toPrice()
-            tvTotalExpense.text = state.fixedExpense.toPrice()
-            tvNetProfit.text = state.profit.toPrice()
-            tvMilkPurchase.text = "${state.milkPurchase.toMilkAmount("%.0f")} L"
-            tvMilkSold.text = "${state.milkSold.toMilkAmount("%.0f")} L"
-            tvQtyDiff.text = "${qtyDiff.toMilkAmount(" % .0f")} L"
-            tvAvgFat.text = "${state.avgFat.toMilkAmount()}% ($milkFatLr)"
-            tvAvgLr.text = "${state.avgLr.toMilkAmount()} ($milkFatLr)"
-            tvTotalTs.text = "${state.totalTs.toMilkAmount()} ($milkFatLr)"
-            tvAvgSP.text = state.avgSP?.toMilkAmount() ?: "0.0"
-            tvAvgCP.text = state.avgCP?.toMilkAmount() ?: "0.0"
-            tvAvgPriceDiff.text = state.difference?.toMilkAmount() ?: "0.0"
-//            tvPersonalExpense.text = state.personalExpense.toPriceStr()
-            tvRemainingProfit.text = state.profitAfter.toPrice()
-
-
-        }
-    }
-
 
     override fun setupListeners() {
-
-        binding.btnNote.setOnClickListener {
-            val dest = DashboardFragmentDirections.actionDashboardFragmentToNotesListFragment()
-            navigateTo(dest.actionId)
-        }
-
+        super.setupListeners()
 
         binding.btnCashFlow.setOnClickListener {
-
-            if (!isPremiumEnabled) {
-                showSnackbar("This feature requires Premium")
-                return@setOnClickListener
-            }
-
-            val dest = DashboardFragmentDirections.actionDashboardFragmentToStatsFragment()
-            navigateTo(dest.actionId)
+            viewModel.onEvent(DashboardUiEvent.OnCashFlowClicked)
         }
 
-
+        binding.btnNote.setOnClickListener {
+            viewModel.onEvent(DashboardUiEvent.OnNotesClicked)
+        }
     }
 
+    override fun setupObservers() {
+        super.setupObservers()
 
-    private fun navigateTo(destinationId: Int) {
-        findNavController().navigate(destinationId)
+        // --- STATE OBSERVER (Update UI) ---
+        collectFlow(viewModel.uiState) { state ->
+            binding.apply {
+
+                // 1. Financial Cards
+                tvTotalPurchases.text = state.totalPurchases.toPrice()
+                tvTotalSales.text = state.totalSales.toPrice()
+                tvTotalExpense.text = state.totalExpenses.toPrice()
+
+                // Gross Profit
+                tvNetProfit.text = state.grossProfit.toPrice()
+                // Profit Color (Green if > 0, Red if < 0)
+                setProfitColor(tvNetProfit, state.grossProfit)
+
+
+                // 2. Milk Overview (Quantities)
+                tvMilkPurchase.text = "${state.milkPurchasedQty.format(1)} L"
+                tvMilkSold.text = "${state.milkSoldQty.format(1)} L"
+
+                tvQtyDiff.text = "${state.qtyDiff.format(1)} L"
+                setDiffColor(tvQtyDiff, state.qtyDiff) // Custom Color Logic
+
+
+                // 3. Averages
+                tvAvgCP.text = state.avgPurchasePrice.format(1)
+                tvAvgSP.text = state.avgSalePrice.format(1)
+
+                tvAvgPriceDiff.text = state.avgPriceDiff.format(1)
+                setDiffColor(tvAvgPriceDiff, state.avgPriceDiff)
+
+
+                // 4. Quality
+                tvAvgFat.text = state.avgFat.format(2)
+                tvAvgLr.text = state.avgLr.format(2)
+                tvTotalTs.text = state.totalTs.format(2)
+            }
+        }
+
+        // --- EFFECT OBSERVER (Navigation) ---
+        collectEffect(viewModel.uiEffect) { effect ->
+            when(effect) {
+                DashboardUiEffect.NavigateToCashFlow -> {
+                    // Make sure ID matches your nav_graph.xml
+                    findNavController().navigate(DashboardFragmentDirections.actionDashboardFragmentToCashflowFragment())
+                }
+                DashboardUiEffect.NavigateToNotes -> {
+                    // Navigate to Notes Fragment
+                    // findNavController().navigate(R.id.action_dashboard_to_notes)
+                }
+            }
+        }
     }
 
-    override fun onPeriodChanged(period: DatePeriod) {
-        viewModel.loadData(period)
+    // --- Helpers ---
+
+    private fun Double.format(digits: Int) = "%.${digits}f".format(this)
+
+    // Helper to set Text Color (Red/Green) based on value
+    private fun setDiffColor(textView: TextView, value: Double) {
+        val colorRes = if (value >= 0) R.color.green_700 else R.color.red
+        textView.setTextColor(ContextCompat.getColor(requireContext(), colorRes))
+    }
+
+    private fun setProfitColor(textView: TextView, value: Long) {
+        val colorRes = if (value >= 0) R.color.white else R.color.red // Profit card dark green hai, islye white/light-red
+        textView.setTextColor(ContextCompat.getColor(requireContext(), colorRes))
     }
 }

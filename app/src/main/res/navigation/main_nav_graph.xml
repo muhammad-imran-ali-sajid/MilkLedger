@@ -36,11 +36,6 @@
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
-        android:id="@+id/statsFragment"
-        android:name="com.miassolutions.milkledger.features.cashflow.StatsFragment"
-        android:label="Cash Flow"
-        tools:layout="@layout/fragment_stats" />
-    <fragment
         tools:layout="@layout/fragment_dev_settings"
         android:id="@+id/devSettingsFragment"
         android:name="com.miassolutions.milkledger.zplayground.DevSettingsFragment"
@@ -56,11 +51,11 @@
         android:label="Dashboard"
         tools:layout="@layout/fragment_dashboard">
         <action
-            android:id="@+id/action_dashboardFragment_to_statsFragment"
-            app:destination="@id/statsFragment" />
-        <action
             android:id="@+id/action_dashboardFragment_to_notesListFragment"
             app:destination="@id/notesListFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_cashflowFragment"
+            app:destination="@id/cashflowFragment" />
     </fragment>
     <fragment
         android:id="@+id/supplierDetailFragment"
@@ -208,5 +203,10 @@
         android:id="@+id/ownerDashboardFragment"
         android:name="com.miassolutions.milkledger.features.owner.dasboard.OwnerDashboardFragment"
         android:label="My Wallet" />
+    <fragment
+        android:id="@+id/cashflowFragment"
+        tools:layout="@layout/fragment_cashflow"
+        android:name="com.miassolutions.milkledger.features.cashflow.CashflowFragment"
+        android:label="CashflowFragment" />
 
 </navigation>

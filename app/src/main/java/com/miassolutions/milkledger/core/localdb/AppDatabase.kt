@@ -11,6 +11,7 @@ import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
+import com.miassolutions.milkledger.features.dashboard.data.DashboardDao
 import com.miassolutions.milkledger.features.note.data.local.NoteDao
 import com.miassolutions.milkledger.features.note.data.local.NoteEntity
 import com.miassolutions.milkledger.features.profitwithdrawal.ProfitWithdrawalDao
@@ -38,6 +39,8 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun noteDao(): NoteDao
     abstract fun profitWithdrawalDao(): ProfitWithdrawalDao
+
+    abstract fun dashboardDao(): DashboardDao
 
 
 

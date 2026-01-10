@@ -23,9 +23,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <include
-        android:id="@+id/dateFilterLayout"
-        layout="@layout/date_filter_layout"
+    <com.miassolutions.milkledger.utils.customviews.DateFilterView
+        android:id="@+id/dateFilterView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dateFilterLayout">
+        app:layout_constraintTop_toBottomOf="@+id/dateFilterView">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,68 +61,24 @@
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnNote"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:backgroundTint="@color/teal_dark"
-                        android:layout_height="wrap_content"
-                        android:text="My Notes"
-                        android:id="@+id/btnNote"/>
+                        android:text="My Notes" />
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCashFlow"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:backgroundTint="@color/teal_dark"
-                        android:layout_height="wrap_content"
-                        android:text="Cash Flow"
-                        android:id="@+id/btnCashFlow"/>
+                        android:text="Cash Flow" />
 
                 </LinearLayout>
 
-<!--                <com.google.android.material.card.MaterialCardView-->
-<!--                    android:id="@+id/card_personal_expense"-->
-<!--                    style="@style/DashboardCard"-->
-<!--                    app:cardBackgroundColor="@color/orange_700">-->
 
-<!--                    <LinearLayout-->
-<!--                        style="@style/DashboardInnerRow"-->
-<!--                        android:background="@drawable/bg_expense">-->
-
-<!--                        <TextView-->
-<!--                            android:gravity="center"-->
-<!--                            style="@style/DashboardLabel"-->
-<!--                            android:text="My Profile" />-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/tvPersonalExpense"-->
-<!--                            style="@style/DashboardValue"-->
-<!--                            android:text="4,500"-->
-<!--                            android:visibility="gone" />-->
-<!--                    </LinearLayout>-->
-<!--                </com.google.android.material.card.MaterialCardView>-->
-
-<!--                <com.google.android.material.card.MaterialCardView-->
-<!--                    android:id="@+id/cash_flow_card"-->
-<!--                    style="@style/DashboardCard"-->
-<!--                    app:cardBackgroundColor="@color/midnight_blue">-->
-
-<!--                    <LinearLayout-->
-<!--                        style="@style/DashboardInnerRow"-->
-<!--                        android:background="@drawable/bg_expense">-->
-
-<!--                        <TextView-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            style="@style/DashboardValue"-->
-<!--                            android:gravity="center"-->
-<!--                            android:text="Cash Flow"-->
-<!--                            android:textColor="@color/white" />-->
-<!--                    </LinearLayout>-->
-
-
-
-<!--                </com.google.android.material.card.MaterialCardView>-->
-
-
-                <!-- Purchases -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/purchase_card"
                     style="@style/DashboardCard"
@@ -209,7 +164,6 @@
                             android:text="4,500" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
 
 
                 <!-- Remaining Profit -->
