@@ -72,18 +72,9 @@ class AccountViewModel @Inject constructor(
         }
     }
 
-    fun restore(id: String) {
-        viewModelScope.launch {
-            repository.restoreAccount(id)
-        }
-    }
 
-    fun permanentlyDeleteSoftDeleted() {
-        viewModelScope.launch {
 
-            repository.permanentlyDeleteAllSoftDeletedAccounts()
-        }
-    }
+
 
 
 }

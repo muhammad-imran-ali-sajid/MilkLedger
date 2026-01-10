@@ -137,21 +137,11 @@ class AccountRepository @Inject constructor(
             val currentTime = System.currentTimeMillis()
             dao.softDelete(accountId, currentTime)
 
-            // Soft delete the opening balance transaction too
-            // (Agar aap hard delete krna chahen to ledgerDao.deleteOpeningBalance use karen)
-            // Lekin behtar hai Ledger me bhi soft delete ho.
              ledgerDao.softDeleteOpeningBalance(accountId, currentTime)
 
-            // Filhal aapki logic k mutabiq hard delete:
-//            ledgerDao.deleteOpeningBalance(accountId)
+
         }
     }
 
-    suspend fun restoreAccount(accountId: String) {
-        dao.restore(accountId)
-    }
 
-    suspend fun permanentlyDeleteAllSoftDeletedAccounts() {
-        dao.permanentlyDeleteAllAccounts()
-    }
 }
