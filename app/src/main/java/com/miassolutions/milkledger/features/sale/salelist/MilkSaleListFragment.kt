@@ -147,13 +147,13 @@ class MilkSaleListFragment :
                 MilkSaleListUiEffect.OnDateClick -> {
                     // Open Date Picker Extension
                     showLedgerDatePicker(
-                        initialMillis = viewModel.currentState.date.toMillis(),
+                        initialDate = viewModel.currentState.date,
                     ) { selectedDate ->
                         viewModel.onEvent(MilkSaleListUiEvent.OnDateSelected(selectedDate))
                     }
                 }
 
-                else -> Unit
+
             }
         }
 

@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.account.form
 
+import android.text.InputType
 import android.view.View
 import android.widget.ScrollView
 import androidx.core.view.isVisible
@@ -10,11 +11,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountFormBinding
-import com.miassolutions.milkledger.features.account.form.AccountFormEvent.DeleteClicked
-import com.miassolutions.milkledger.features.account.form.AccountFormEvent.OnActiveStatusChanged
-import com.miassolutions.milkledger.features.account.form.AccountFormEvent.OnOpeningDateClicked
-import com.miassolutions.milkledger.features.account.form.AccountFormEvent.OnOpeningDateSelected
-import com.miassolutions.milkledger.features.account.form.AccountFormEvent.SaveClicked
+import com.miassolutions.milkledger.features.account.form.AccountFormEvent.*
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
@@ -34,24 +31,15 @@ class AccountFormFragment :
     override fun setupViews() {
         super.setupViews()
         setupInputs()
-        setupObservers()
         setupClicks()
         setupAccountTypeRadioGroup()
     }
 
     private fun setupClicks() = with(binding) {
-        btnSave.setOnClickListener {
-            viewModel.onEvent(SaveClicked)
-        }
+        btnSave.setOnClickListener { viewModel.onEvent(SaveClicked) }
+        btnDelete.setOnClickListener { viewModel.onEvent(DeleteClicked) }
 
-        btnDelete.setOnClickListener {
-            viewModel.onEvent(DeleteClicked)
-        }
-
-        // ✅ Date Click moved here for clarity
-        etOpeningDate.setOnClickListener {
-            viewModel.onEvent(OnOpeningDateClicked)
-        }
+        // Date listener hum setupInputs me lagayenge taake duplication na ho
     }
 
     private fun setupAccountTypeRadioGroup() = with(binding) {
@@ -74,10 +62,20 @@ class AccountFormFragment :
             updateBalancePreview()
         }
 
-        // 🔥 FIX 1: Switch Listener Setup
-        // Yahan text set mat karein, sirf event bhejen. Text renderState me set hoga.
+        // 🔥 FIX 1: Date Field ko Button jaisa banayen
+        etOpeningDate.apply {
+            inputType = InputType.TYPE_NULL // Keyboard nahi khulega
+            keyListener = null // Typing allowed nahi
+            isFocusable = false // Focus nahi lega
+            isClickable = true
+
+            setOnClickListener {
+                viewModel.onEvent(OnOpeningDateClicked)
+            }
+        }
+
+        // Switch Logic (Prevent Loop)
         switchActive.setOnCheckedChangeListener { _, isChecked ->
-            // Check karein k ye change user ne kia hai ya code ne?
             if (switchActive.isPressed) {
                 viewModel.onEvent(OnActiveStatusChanged(isChecked))
             }
@@ -90,8 +88,7 @@ class AccountFormFragment :
         forcedType: AccountType? = null,
         forcedAmount: String? = null
     ) = with(binding) {
-        val type =
-            forcedType ?: if (rbCustomer.isChecked) AccountType.CUSTOMER else AccountType.SUPPLIER
+        val type = forcedType ?: if (rbCustomer.isChecked) AccountType.CUSTOMER else AccountType.SUPPLIER
         val amountString = forcedAmount ?: etInitialBalance.text.toString()
         val rawAmount = amountString.toPaisa()
         val finalAmount = if (type == AccountType.SUPPLIER) -rawAmount else rawAmount
@@ -116,13 +113,16 @@ class AccountFormFragment :
 
             // 🔥 FIX 2: Date Picker
             is AccountFormEffect.OpenDatePicker -> {
-                // Millis pass karein taake picker sahi initial date uthaye
-                showLedgerDatePicker(effect.currentDateMillis) { selectedDate ->
-                    viewModel.onEvent(OnOpeningDateSelected(selectedDate))
+                showLedgerDatePicker(
+                    initialDate = effect.currentDate
+                ) { selectedDate ->
+                    viewModel.onEvent(
+                        AccountFormEvent.OnOpeningDateSelected(selectedDate)
+                    )
                 }
             }
 
-            // 🔥 FIX 3: Dialog Dismissal
+            // 🔥 FIX 3: Dialog Dismissal Logic
             is AccountFormEffect.ShowBalanceError -> {
                 showDialog(
                     title = "Cannot Delete!",
@@ -130,9 +130,6 @@ class AccountFormFragment :
                     positiveText = "Deactivate",
                     onAction = {
                         viewModel.onEvent(OnActiveStatusChanged(false))
-                        // Note: Dialog khud dismiss ho jana chahiye agar extension sahi hai,
-                        // warna yahan dialog.dismiss() call karna parta hai.
-                        // Assuming your showDialog handles dismissal automatically.
                     }
                 )
             }
@@ -172,22 +169,18 @@ class AccountFormFragment :
         etInitialBalance.setTextIfDifferent(state.initialBalance)
         etAdvanceAmount.setTextIfDifferent(state.advanceAmount)
 
-        // ✅ Date update
+        // ✅ Date Render Fix
+        // Ensure toDisplayDate() extension sahi format return kr rhi ho (e.g., "dd MMM yyyy")
         etOpeningDate.setTextIfDifferent(state.openingDate.toDisplayDate())
 
-        // 🔥 FIX 4: Switch Loop Prevention
-        // Listener ko temporarily null karen taake infinite loop na banay
+        // Switch Logic (Remove listener before setting state to avoid loops)
         switchActive.setOnCheckedChangeListener(null)
         switchActive.isChecked = state.isActive
-        switchActive.text =
-            if (state.isActive) "Account Status: Active" else "Account Status: Inactive (Archived)"
-
-        // Listener wapis lagayen
+        switchActive.text = if (state.isActive) "Account Status: Active" else "Account Status: Inactive (Archived)"
         switchActive.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.onEvent(OnActiveStatusChanged(isChecked))
+            if (switchActive.isPressed) viewModel.onEvent(OnActiveStatusChanged(isChecked))
         }
 
-        // Radio Buttons
         when (state.selectAccountType) {
             AccountType.CUSTOMER -> if (!rbCustomer.isChecked) rbCustomer.isChecked = true
             AccountType.SUPPLIER -> if (!rbSupplier.isChecked) rbSupplier.isChecked = true

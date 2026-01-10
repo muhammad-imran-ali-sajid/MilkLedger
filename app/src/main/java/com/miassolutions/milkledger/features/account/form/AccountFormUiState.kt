@@ -46,7 +46,7 @@ sealed interface AccountFormEffect {
     data class ShowToast(val message: String) : AccountFormEffect
     data class FocusField(val field: Field) : AccountFormEffect
 
-    data class OpenDatePicker(val currentDateMillis: Long) : AccountFormEffect
+    data class OpenDatePicker(val currentDate: LocalDate) : AccountFormEffect
 
     data class ShowDeleteConfirmation(val accountName: String) : AccountFormEffect
     data class ShowBalanceError(val balance: Long) : AccountFormEffect

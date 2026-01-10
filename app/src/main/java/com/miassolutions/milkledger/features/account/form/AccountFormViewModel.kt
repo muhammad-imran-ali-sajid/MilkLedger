@@ -21,8 +21,9 @@ import javax.inject.Inject
 class AccountFormViewModel @Inject constructor(
     private val repository: AccountRepository,
     savedStateHandle: SavedStateHandle
-) :
-    BaseViewModel<AccountFormUiState, AccountFormEvent, AccountFormEffect>(AccountFormUiState()) {
+) : BaseViewModel<AccountFormUiState, AccountFormEvent, AccountFormEffect>(
+    AccountFormUiState()
+) {
 
     private val accountId: String? = savedStateHandle["accountId"]
 
@@ -31,14 +32,17 @@ class AccountFormViewModel @Inject constructor(
         if (accountId != null) loadAccount()
     }
 
+    // --------------------------------------------------
+    // Load Existing Account (Edit Mode)
+    // --------------------------------------------------
+
     private fun loadAccount() {
         viewModelScope.launch {
-            val account = repository.getAccountById(accountId!!)
-            Log.d("AccountEdit", "Loaded account = $account")
-            if (account == null) return@launch
+            val account = repository.getAccountById(accountId!!) ?: return@launch
 
-            val ledgerDate = repository.getOpeningDate(accountId)
-            val finalDate = ledgerDate ?: account.createdAtMillis.toLocalDate()
+            val openingDate =
+                repository.getOpeningDate(accountId)
+                    ?: account.createdAtMillis.toLocalDate()
 
             updateState {
                 it.copy(
@@ -50,85 +54,150 @@ class AccountFormViewModel @Inject constructor(
                     advanceAmount = account.advanceAmount?.toRupeesStr().orEmpty(),
                     isActive = account.isActive,
                     showDeleteButton = true,
-
-                    openingDate = finalDate
+                    openingDate = openingDate
                 )
             }
         }
     }
 
-    private suspend fun validate(): AccountFormValidation {
+    // --------------------------------------------------
+    // Events
+    // --------------------------------------------------
+
+    override fun onEvent(event: AccountFormEvent) {
+        when (event) {
+
+            AccountFormEvent.CancelClicked ->
+                emitEffect(AccountFormEffect.CloseScreen)
+
+            AccountFormEvent.SaveClicked ->
+                onSave()
+
+            AccountFormEvent.OnOpeningDateClicked ->
+                emitEffect(AccountFormEffect.OpenDatePicker(currentState.openingDate))
+
+            is AccountFormEvent.OnOpeningDateSelected ->
+                updateState { it.copy(openingDate = event.date) }
+
+            AccountFormEvent.DeleteClicked ->
+                checkAndDelete()
+
+            is AccountFormEvent.OnActiveStatusChanged ->
+                updateState { it.copy(isActive = event.isActive) }
+        }
+    }
+
+    // --------------------------------------------------
+    // Save Logic
+    // --------------------------------------------------
+
+    private fun onSave() {
+        viewModelScope.launch {
+
+            val validation = validateInputs()
+            if (!validation.isValid) {
+                handleValidationErrors(validation)
+                updateState { it.copy(validation = validation) }
+                return@launch
+            }
+
+            updateState { it.copy(isSaving = true) }
+
+            try {
+                val sortOrder = currentState.sortOrder.toInt()
+                val type = currentState.selectAccountType
+
+                // 🔒 Business rule check (DB)
+                if (repository.isSortOrderExist(sortOrder, type, accountId)) {
+                    updateState {
+                        it.copy(
+                            validation = AccountFormValidation(
+                                sortOrderError = "Sort order already exists"
+                            ),
+                            isSaving = false
+                        )
+                    }
+                    emitEffect(AccountFormEffect.FocusField(Field.SORT_ORDER))
+                    return@launch
+                }
+
+                val id = accountId ?: UUID.randomUUID().toString()
+
+                val account = currentState.toDomain(id).copy(
+                    isActive = currentState.isActive
+                )
+
+                repository.saveAccount(account, currentState.openingDate)
+
+                emitEffect(AccountFormEffect.ShowToast("Account saved successfully"))
+                emitEffect(AccountFormEffect.CloseScreen)
+
+            } catch (e: Exception) {
+                emitEffect(
+                    AccountFormEffect.ShowToast(
+                        e.localizedMessage ?: "Failed to save account"
+                    )
+                )
+            } finally {
+                updateState { it.copy(isSaving = false) }
+            }
+        }
+    }
+
+    // --------------------------------------------------
+    // Validation (PURE)
+    // --------------------------------------------------
+
+    private fun validateInputs(): AccountFormValidation {
         val state = currentState
-        val sort = state.sortOrder.toIntOrNull()
-            ?: return AccountFormValidation(sortOrderError = "Sort Order required")
 
-        val type = state.selectAccountType
-
-        if (repository.isSortOrderExist(sort, type, accountId)) {
-            emitEffect(AccountFormEffect.FocusField(Field.SORT_ORDER))
-            return AccountFormValidation(
-                sortOrderError = "Sort order already exists for this account type"
-            )
+        if (state.sortOrder.toIntOrNull() == null) {
+            return AccountFormValidation(sortOrderError = "Sort Order required")
         }
 
         if (state.personName.isBlank()) {
-            emitEffect(AccountFormEffect.FocusField(Field.NAME))
             return AccountFormValidation(nameError = "Name required")
         }
 
         if (state.rate.isBlank()) {
-            emitEffect(AccountFormEffect.FocusField(Field.RATE))
             return AccountFormValidation(rateError = "Rate required")
         }
-
-
 
         return AccountFormValidation(isValid = true)
     }
 
-    override fun onEvent(event: AccountFormEvent) {
-        when (event) {
-            AccountFormEvent.CancelClicked -> emitEffect(AccountFormEffect.CloseScreen)
-            AccountFormEvent.SaveClicked -> onSave()
+    private fun handleValidationErrors(validation: AccountFormValidation) {
+        when {
+            validation.sortOrderError != null ->
+                emitEffect(AccountFormEffect.FocusField(Field.SORT_ORDER))
 
-            // 🔥 NEW: Handle Date Events
-            AccountFormEvent.OnOpeningDateClicked -> {
-                // Pass current selected date in millis to picker
-                emitEffect(OpenDatePicker(currentState.openingDate.toMillis()))
-            }
+            validation.nameError != null ->
+                emitEffect(AccountFormEffect.FocusField(Field.NAME))
 
-            is AccountFormEvent.OnOpeningDateSelected -> {
-                updateState { it.copy(openingDate = event.date) }
-            }
-
-            AccountFormEvent.DeleteClicked -> {
-                checkAndDelete()
-            }
-
-            is AccountFormEvent.OnActiveStatusChanged -> {
-                updateState { it.copy(isActive = event.isActive) }
-            }
+            validation.rateError != null ->
+                emitEffect(AccountFormEffect.FocusField(Field.RATE))
         }
     }
+
+    // --------------------------------------------------
+    // Delete Logic
+    // --------------------------------------------------
 
     private fun checkAndDelete() {
         viewModelScope.launch {
-            if (accountId == null) return@launch // New account delete nhi hota
+            if (accountId == null) return@launch
 
-            // A. Balance Check Karen
-            val currentBalance = repository.getCurrentBalance(accountId)
+            val balance = repository.getCurrentBalance(accountId)
 
-            if (currentBalance != 0L) {
-                // Balance Zero nahi hai -> Error dikhayen
-                emitEffect(AccountFormEffect.ShowBalanceError(currentBalance))
+            if (balance != 0L) {
+                emitEffect(AccountFormEffect.ShowBalanceError(balance))
             } else {
-                // Balance Zero hai -> Confirmation maangen
-                val name = currentState.personName
-                emitEffect(AccountFormEffect.ShowDeleteConfirmation(name))
+                emitEffect(
+                    AccountFormEffect.ShowDeleteConfirmation(currentState.personName)
+                )
             }
         }
     }
-
 
     fun confirmDelete() {
         viewModelScope.launch {
@@ -138,45 +207,25 @@ class AccountFormViewModel @Inject constructor(
         }
     }
 
+    // --------------------------------------------------
+    // Field Setters
+    // --------------------------------------------------
 
-    // ... Other setters same as before ...
-    fun onSortOrderChanged(value: String) = updateState { it.copy(sortOrder = value) }
-    fun onNameChanged(value: String) = updateState { it.copy(personName = value) }
+    fun onSortOrderChanged(value: String) =
+        updateState { it.copy(sortOrder = value) }
+
+    fun onNameChanged(value: String) =
+        updateState { it.copy(personName = value) }
+
     fun onAccountTypeSelected(value: AccountType) =
         updateState { it.copy(selectAccountType = value) }
 
-    fun onRateChanged(value: String) = updateState { it.copy(rate = value) }
-    fun onInitialBalanceChanged(value: String) = updateState { it.copy(initialBalance = value) }
-    fun onAdvanceAmountChanged(value: String) = updateState { it.copy(advanceAmount = value) }
+    fun onRateChanged(value: String) =
+        updateState { it.copy(rate = value) }
 
-    private fun onSave() {
-        viewModelScope.launch {
-            updateState { it.copy(isSaving = true) }
+    fun onInitialBalanceChanged(value: String) =
+        updateState { it.copy(initialBalance = value) }
 
-            val validation = validate()
-            if (!validation.isValid) {
-                updateState { it.copy(validation = validation, isSaving = false) }
-                return@launch
-            }
-
-            try {
-                val id = accountId ?: UUID.randomUUID().toString()
-
-                // Note: make sure toDomain() exists and handles basic fields
-                val account = currentState.toDomain(id).copy(
-                    isActive = currentState.isActive
-                )
-
-                // 🔥 CRITICAL CHANGE: Pass Date to Repository
-                repository.saveAccount(account, currentState.openingDate)
-
-                emitEffect(AccountFormEffect.ShowToast("Account saved successfully"))
-                emitEffect(AccountFormEffect.CloseScreen)
-            } catch (e: Exception) {
-                emitEffect(AccountFormEffect.ShowToast("${e.localizedMessage}: Failed to save account"))
-            } finally {
-                updateState { it.copy(isSaving = false) }
-            }
-        }
-    }
+    fun onAdvanceAmountChanged(value: String) =
+        updateState { it.copy(advanceAmount = value) }
 }

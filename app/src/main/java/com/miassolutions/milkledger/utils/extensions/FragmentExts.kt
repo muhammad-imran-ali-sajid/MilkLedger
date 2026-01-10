@@ -30,25 +30,41 @@ fun Fragment.showDeleteActionDialog(
 
 
 fun Fragment.showLedgerDatePicker(
-    initialMillis: Long? = null,
-    onDateSelected: (LocalDate) -> Unit
+    initialDate: LocalDate = LocalDate.now(),
+    onPicked: (LocalDate) -> Unit
 ) {
-    val constraintsBuilder = CalendarConstraints.Builder()
-        .setValidator(DateValidatorPointBackward.now()) // Optional: Agar future date mana karni ho
+    val fm = parentFragmentManager
 
-    val datePicker = MaterialDatePicker.Builder.datePicker()
-        .setTitleText("Select Date")
-        .setSelection(initialMillis ?: MaterialDatePicker.todayInUtcMilliseconds())
-        .setCalendarConstraints(constraintsBuilder.build())
-        .build()
-
-    datePicker.addOnPositiveButtonClickListener { selectionMillis ->
-        // Convert UTC millis to Local Date
-        val date = Instant.ofEpochMilli(selectionMillis)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDate()
-        onDateSelected(date)
+    // 🔥 HARD FIX: remove previous picker if exists
+    fm.findFragmentByTag("DATE_PICKER_TAG")?.let {
+        fm.beginTransaction().remove(it).commitNow()
     }
 
-    datePicker.show(childFragmentManager, "DATE_PICKER")
+    val zoneId = ZoneId.systemDefault()
+
+    val initialMillis = initialDate
+        .atStartOfDay(zoneId)
+        .toInstant()
+        .toEpochMilli()
+
+    val constraints = CalendarConstraints.Builder()
+        .setValidator(DateValidatorPointBackward.now())
+        .build()
+
+    val picker = MaterialDatePicker.Builder.datePicker()
+        .setTitleText("Select Date")
+        .setSelection(initialMillis)
+        .setCalendarConstraints(constraints)
+        .build()
+
+    picker.addOnPositiveButtonClickListener { millis ->
+        val selectedDate = Instant.ofEpochMilli(millis)
+            .atZone(zoneId)
+            .toLocalDate()
+
+        onPicked(selectedDate)
+    }
+
+    picker.show(fm, "DATE_PICKER_TAG")
 }
+
