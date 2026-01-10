@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -146,7 +147,7 @@ class MilkSaleListFragment :
                 MilkSaleListUiEffect.OnDateClick -> {
                     // Open Date Picker Extension
                     showLedgerDatePicker(
-                        initialDate = viewModel.currentState.date,
+                        initialMillis = viewModel.currentState.date.toMillis(),
                     ) { selectedDate ->
                         viewModel.onEvent(MilkSaleListUiEvent.OnDateSelected(selectedDate))
                     }

@@ -10,7 +10,6 @@ import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.features.dashboard.data.DashboardDao
 import com.miassolutions.milkledger.features.note.data.local.NoteDao
-import com.miassolutions.milkledger.features.profitwithdrawal.ProfitWithdrawalDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -60,10 +59,6 @@ object DatabaseModule {
     @Provides
     fun provideNoteDao(db: AppDatabase): NoteDao = db.noteDao()
 
-
-    @Singleton
-    @Provides
-    fun provideProfitWithdrawalDao(db: AppDatabase): ProfitWithdrawalDao = db.profitWithdrawalDao()
 
     @Provides
     @Singleton

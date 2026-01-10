@@ -1,6 +1,8 @@
 package com.miassolutions.milkledger.utils.extensions
 
 import androidx.fragment.app.Fragment
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.miassolutions.milkledger.utils.util.DatePickerLogic
@@ -28,41 +30,25 @@ fun Fragment.showDeleteActionDialog(
 
 
 fun Fragment.showLedgerDatePicker(
-    isAuthorized: Boolean = true,
-    initialDate: LocalDate = LocalDate.now(),
-    useConstraints: Boolean = true, // toggle constraints ON/OFF
-    onPicked: (LocalDate) -> Unit
+    initialMillis: Long? = null,
+    onDateSelected: (LocalDate) -> Unit
 ) {
-    // Build constraints only if requested
-    val constraints = if (useConstraints) {
-        DatePickerLogic().buildConstraints(isAuthorized)
-    } else null
+    val constraintsBuilder = CalendarConstraints.Builder()
+        .setValidator(DateValidatorPointBackward.now()) // Optional: Agar future date mana karni ho
 
-    // Convert LocalDate to UTC timestamp
-    val initialTimestamp = initialDate
-        .atStartOfDay(ZoneId.of("UTC"))
-        .toInstant()
-        .toEpochMilli()
-
-    // Build the Material Date Picker
-    val builder = MaterialDatePicker.Builder.datePicker()
+    val datePicker = MaterialDatePicker.Builder.datePicker()
         .setTitleText("Select Date")
-        .setSelection(initialTimestamp)
+        .setSelection(initialMillis ?: MaterialDatePicker.todayInUtcMilliseconds())
+        .setCalendarConstraints(constraintsBuilder.build())
+        .build()
 
-    // Apply constraints only if they exist
-    constraints?.let { builder.setCalendarConstraints(it) }
-
-    val datePicker = builder.build()
-
-    // Handle selected date
-    datePicker.addOnPositiveButtonClickListener { selectedTimestamp ->
-        val selectedDate = Instant.ofEpochMilli(selectedTimestamp)
+    datePicker.addOnPositiveButtonClickListener { selectionMillis ->
+        // Convert UTC millis to Local Date
+        val date = Instant.ofEpochMilli(selectionMillis)
             .atZone(ZoneId.systemDefault())
             .toLocalDate()
-
-        onPicked(selectedDate)
+        onDateSelected(date)
     }
 
-    // Show the picker
-    datePicker.show(parentFragmentManager, "DATE_PICKER_TAG")
+    datePicker.show(childFragmentManager, "DATE_PICKER")
 }
