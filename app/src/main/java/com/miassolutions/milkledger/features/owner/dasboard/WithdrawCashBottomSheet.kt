@@ -40,9 +40,31 @@ class WithdrawCashBottomSheet : BottomSheetDialogFragment() {
         // 1. Get Arguments (Available Balance)
         val availableBalance = arguments?.getLong("availableBalance") ?: 0L
 
+        // 🔥 Edit Mode Data
+        val isEditMode = arguments?.containsKey("editId") == true
+        val editId = arguments?.getString("editId")
+        val editAmount = arguments?.getLong("editAmount") ?: 0L
+        val editDateMillis = arguments?.getLong("editDate") ?: System.currentTimeMillis()
+        val editNote = arguments?.getString("editNote")
+
 
         // UI Setup
         binding.tvAvailableBalance.setBalanceWithColor(availableBalance)
+
+        if (isEditMode) {
+            // Edit Mode Setup
+            binding.tvTitle.text = "Update Withdrawal"
+            binding.etAmount.setText((editAmount / 100.0).toString()) // Paisa to Rupee
+            binding.etNote.setText(editNote)
+            selectedDate = Instant.ofEpochMilli(editDateMillis).atZone(ZoneId.systemDefault()).toLocalDate()
+            binding.btnSave.text = "Update"
+        } else {
+            // New Mode Setup
+            binding.tvTitle.text = "Withdraw Cash"
+            selectedDate = LocalDate.now()
+        }
+
+
         binding.btnDate.text = selectedDate.toDisplayDate()
 
         // 2. Date Picker
@@ -71,8 +93,13 @@ class WithdrawCashBottomSheet : BottomSheetDialogFragment() {
                 return@setOnClickListener
             }
 
-            // 🔥 Event bhejen ViewModel ko
-            viewModel.onEvent(OwnerUiEvent.OnConfirmWithdrawal(amountStr, selectedDate, note))
+            // 🔥 Event bhejen (ID agar null hai to Add, warna Update)
+            viewModel.onEvent(OwnerUiEvent.OnConfirmWithdrawal(
+                id = editId, // Pass ID (null for new, string for edit)
+                amount = amountStr,
+                date = selectedDate,
+                note = note
+            ))
 
             // Sheet band na karein, ViewModel effect bhejega tab band hogi
             // (Ya agar simple rakhna hai to yahan dismiss kar den)
@@ -86,10 +113,25 @@ class WithdrawCashBottomSheet : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(availableBalance: Long): WithdrawCashBottomSheet {
+        // 🔥 Updated `newInstance` jo dono cases handle karega
+        fun newInstance(
+            availableBalance: Long,
+            id: String? = null,      // Optional
+            amount: Long? = null,    // Optional
+            dateMillis: Long? = null,// Optional
+            note: String? = null     // Optional
+        ): WithdrawCashBottomSheet {
             val fragment = WithdrawCashBottomSheet()
             val args = Bundle()
             args.putLong("availableBalance", availableBalance)
+
+            // Agar ID hai to Edit Mode wala data dalo
+            if (id != null) {
+                args.putString("editId", id)
+                args.putLong("editAmount", amount ?: 0L)
+                args.putLong("editDate", dateMillis ?: 0L)
+                args.putString("editNote", note)
+            }
             fragment.arguments = args
             return fragment
         }

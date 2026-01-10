@@ -41,10 +41,16 @@ class OwnerViewModel @Inject constructor(
     }
 
     override fun onEvent(event: OwnerUiEvent) {
-        when(event) {
+        when (event) {
             // --- Date Filter ---
             is OwnerUiEvent.OnDateFilterChanged -> {
-                updateState { it.copy(startDate = event.start, endDate = event.end, dateLabel = event.label) }
+                updateState {
+                    it.copy(
+                        startDate = event.start,
+                        endDate = event.end,
+                        dateLabel = event.label
+                    )
+                }
                 loadDashboardData()
             }
 
@@ -55,7 +61,7 @@ class OwnerViewModel @Inject constructor(
             }
 
             is OwnerUiEvent.OnConfirmWithdrawal -> {
-                saveWithdrawal(event.amount, event.date, event.note)
+                saveWithdrawal(event.id, event.amount, event.date, event.note)
             }
 
             // --- Navigation ---
@@ -63,7 +69,7 @@ class OwnerViewModel @Inject constructor(
         }
     }
 
-    private fun saveWithdrawal(amountStr: String, date: LocalDate, note: String) {
+    private fun saveWithdrawal(id: String?, amountStr: String, date: LocalDate, note: String) {
         val amount = amountStr.toDoubleOrNull() ?: 0.0
         if (amount <= 0) {
             emitEffect(OwnerUiEffect.ShowSnackbar("Please enter valid amount"))
@@ -75,7 +81,13 @@ class OwnerViewModel @Inject constructor(
                 // Convert to Paisa (Long)
                 val amountPaisa = (amount * 100).toLong()
 
-                repository.saveCashWithdrawal(amountPaisa, date, note)
+                if (id == null) {
+                    repository.saveCashWithdrawal(amountPaisa, date, note)
+
+                } else {
+                    repository.updateCashWithdrawal(id, amountPaisa, date, note)
+                }
+
 
                 emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal Successful"))
                 emitEffect(OwnerUiEffect.CloseWithdrawSheet)

@@ -24,7 +24,12 @@ sealed class OwnerUiEvent {
     object OnAddExpenseClicked : OwnerUiEvent()
 
     // Withdraw Sheet Events
-    data class OnConfirmWithdrawal( val amount: String, val date: LocalDate, val note: String) : OwnerUiEvent()
+    data class OnConfirmWithdrawal(
+        val id: String? = null, // 🔥 New Field
+        val amount: String,
+        val date: LocalDate,
+        val note: String
+    ) : OwnerUiEvent()
 }
 
 sealed class OwnerUiEffect {

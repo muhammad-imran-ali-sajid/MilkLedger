@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.features.owner.dasboard
 
 
-
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +18,23 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
 ) {
 
     private val viewModel: OwnerViewModel by viewModels()
-    private val adapter by lazy { OwnerTransactionAdapter() }
+    private val adapter by lazy {
+        OwnerTransactionAdapter { item ->
+            if (item.isPersonalExpense){
+                // navigate to personal expense
+            } else {
+                val sheet = WithdrawCashBottomSheet.newInstance(
+                    availableBalance = viewModel.uiState.value.dashboardData.retainedEarnings,
+                    id = item.id,
+                    amount = item.amount,
+                    dateMillis = item.dateMillis,
+                    note = item.note
+                )
+
+                sheet.show(childFragmentManager, "EditWithDrawSheet")
+            }
+        }
+    }
 
     override fun setupViews() {
         super.setupViews()
@@ -73,7 +88,7 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
 
         // B. Observe Effects
         collectEffect(viewModel.uiEffect) { effect ->
-            when(effect) {
+            when (effect) {
                 is OwnerUiEffect.ShowSnackbar -> showSnackbar(effect.message)
 
                 is OwnerUiEffect.OpenWithdrawSheet -> {
@@ -85,7 +100,8 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
 
                 OwnerUiEffect.CloseWithdrawSheet -> {
                     // Try to find and dismiss if open
-                    val sheet = childFragmentManager.findFragmentByTag("WithdrawSheet") as? WithdrawCashBottomSheet
+                    val sheet =
+                        childFragmentManager.findFragmentByTag("WithdrawSheet") as? WithdrawCashBottomSheet
                     sheet?.dismiss()
                 }
 

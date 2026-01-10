@@ -15,7 +15,9 @@ import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
-class OwnerTransactionAdapter :
+class OwnerTransactionAdapter(
+    private val onItemClick: (OwnerTransactionUiModel) -> Unit
+) :
     ListAdapter<OwnerTransactionUiModel, OwnerTransactionAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -57,6 +59,11 @@ class OwnerTransactionAdapter :
                 tvNote.text = item.note
             } else {
                 tvNote.isVisible = false
+            }
+
+            root.setOnLongClickListener {
+                onItemClick(item)
+                true
             }
         }
     }
