@@ -3,15 +3,14 @@ package com.miassolutions.milkledger.features.owner.dasboard
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemOwnerTransactionBinding
 import com.miassolutions.milkledger.features.owner.domain.OwnerTransactionUiModel
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
@@ -35,31 +34,20 @@ class OwnerTransactionAdapter(
 
         fun bind(item: OwnerTransactionUiModel) = with(binding) {
             // 1. Date & Amount
-            tvDate.text = item.dateMillis.toLocalDate().toCompleteDateFormat()
+            tvDate.text = "${item.dateMillis.toLocalDate().toDisplayDate()}: "
             tvAmount.text = "- ${item.amount.toPrice()}" // Minus sign for visual clarity
 
             // 2. Title & Icon Logic
             if (item.isPersonalExpense) {
                 // 🛍️ Personal Expense
-                tvTitle.text = "Personal Expense"
-//                ivIcon.setImageResource(R.drawable.ic_receipt_long_24) // Receipt Icon
-//                iconBg.setBackgroundResource(R.drawable.bg_circle_light_blue) // Blue bg
-                ivIcon.setColorFilter(ContextCompat.getColor(root.context, R.color.blue_700))
+                tvTitle.text = "Prsnl Exp."
             } else {
                 // 💵 Cash Withdrawal
-                tvTitle.text = "Cash Withdrawal"
-//                ivIcon.setImageResource(R.drawable.ic_money_off_24) // Money Icon
-//                iconBg.setBackgroundResource(R.drawable.bg_circle_light_red) // Red bg
-                ivIcon.setColorFilter(ContextCompat.getColor(root.context, R.color.red))
+                tvTitle.text = "Withdrawal"
             }
 
-                tvNote.text = item.note
-            // 3. Note
-            if (item.note.isNotBlank()) {
-                tvNote.isVisible = true
-            } else {
-                tvNote.isVisible = false
-            }
+            tvNote.text = item.note
+
 
             root.setOnLongClickListener {
                 onItemClick(item)
