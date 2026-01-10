@@ -53,7 +53,7 @@ class ExpenseFormFragment :
         )
 
         rvPersonalExpense.adapter = personalExpenseAdapter
-        rvPersonalExpense.setHasFixedSize(true)
+//        rvPersonalExpense.setHasFixedSize(true)
         rvPersonalExpense.isNestedScrollingEnabled = false
     }
 

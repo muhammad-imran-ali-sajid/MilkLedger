@@ -15,6 +15,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPersonalTitle"
+            style="@style/TextInputMinimalStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapWords" />
@@ -22,8 +23,8 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="0dp"
         android:id="@+id/personalAmountLayout"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_weight="1"
@@ -31,6 +32,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etPersonalAmount"
+            style="@style/TextInputMinimalStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />

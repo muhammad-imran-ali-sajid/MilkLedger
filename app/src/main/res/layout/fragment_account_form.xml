@@ -31,6 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="number"
+                    style="@style/TextInputMinimalStyle"
                     android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -39,6 +40,7 @@
                 android:id="@+id/nameLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:layout_marginTop="12dp"
                 android:hint="Person Name">
 
@@ -46,6 +48,7 @@
                     android:id="@+id/etAccountName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/TextInputMinimalStyle"
                     android:inputType="textCapWords"
                     android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -91,6 +94,7 @@
                     android:id="@+id/etDefaultRate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/TextInputMinimalStyle"
                     android:inputType="numberDecimal"
                     android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -107,6 +111,7 @@
                     android:id="@+id/etInitialBalance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/TextInputMinimalStyle"
                     android:inputType="numberSigned"
                     android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -134,6 +139,7 @@
                     android:id="@+id/etAdvanceAmount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    style="@style/TextInputMinimalStyle"
                     android:inputType="numberDecimal"
                     android:imeOptions="actionDone" />
             </com.google.android.material.textfield.TextInputLayout>

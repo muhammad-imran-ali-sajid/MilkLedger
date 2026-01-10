@@ -7,25 +7,21 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tvTotalExpense"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total Expenses : Rs. 1000"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
-        android:id="@+id/tvTotalExpense"/>
+        android:text="Total Expenses : Rs. 1000" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="24dp">
-
+            android:padding="16dp">
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -37,6 +33,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDate"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
@@ -47,51 +44,132 @@
 
             <!-- STATIC EXPENSE FIELDS -->
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/fuelLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Fuel">
+                android:layout_marginTop="8dp"
+                android:text="Business Expenses"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/fuelLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Fuel">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etFuelAmount"
+                        style="@style/TextInputMinimalStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/vehicleLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Vehicle">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etVehicleAmount"
+                        style="@style/TextInputMinimalStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/refreshLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Refreshment">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRefreshmentAmount"
+                        style="@style/TextInputMinimalStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="match_parent" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilOtherLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Other Business Exp.">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etOtherBusinessExpense"
+                        style="@style/TextInputMinimalStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/notesLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:hint="Notes">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etFuelAmount"
+                    android:id="@+id/etNotes"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/vehicleLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                app:dividerColor="@color/deep_forest_green"
+                android:layout_marginVertical="8dp"/>
+
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Vehicle">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etVehicleAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/refreshLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Refreshment">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etRefreshmentAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
+                android:text="Personal Expenses"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddPersonal"
@@ -107,6 +185,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPersonalExpense"
                 android:layout_width="match_parent"
+                android:nestedScrollingEnabled="false"
                 android:layout_height="200dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="3"
@@ -114,24 +193,11 @@
 
 
             <!-- NOTES -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/notesLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="Notes">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNotes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
 
         </LinearLayout>
 
-    </ScrollView>
 
 
     <!-- SAVE BUTTON -->

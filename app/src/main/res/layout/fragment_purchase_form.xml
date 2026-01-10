@@ -70,8 +70,7 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
-                        android:minHeight="48dp"
-                        android:paddingVertical="8dp" />
+                        style="@style/TextInputMinimalStyle" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View
