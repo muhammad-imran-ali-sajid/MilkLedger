@@ -48,7 +48,6 @@ sealed interface AccountFormEffect {
 
     data class OpenDatePicker(val currentDate: LocalDate) : AccountFormEffect
 
-    data class ShowDeleteConfirmation(val accountName: String) : AccountFormEffect
     data class ShowBalanceError(val balance: Long) : AccountFormEffect
 
 }

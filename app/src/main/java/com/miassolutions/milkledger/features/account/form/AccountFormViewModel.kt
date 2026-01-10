@@ -1,25 +1,23 @@
 package com.miassolutions.milkledger.features.account.form
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
-import com.miassolutions.milkledger.features.account.data.AccountRepository
 import com.miassolutions.milkledger.core.ui.BaseViewModel
+import com.miassolutions.milkledger.features.account.domain.usecase.*
 import com.miassolutions.milkledger.features.account.form.AccountFormEffect.*
 import com.miassolutions.milkledger.features.account.mapper.toDomain
-import com.miassolutions.milkledger.utils.extensions.toLocalDate // Extension function needed
-import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.extensions.toRupeesStr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountFormViewModel @Inject constructor(
-    private val repository: AccountRepository,
+    private val saveAccount: SaveAccountUseCase,
+    private val loadAccountForEdit: LoadAccountForEditUseCase,
+    private val deleteAccount: DeleteAccountUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<AccountFormUiState, AccountFormEvent, AccountFormEffect>(
     AccountFormUiState()
@@ -32,17 +30,14 @@ class AccountFormViewModel @Inject constructor(
         if (accountId != null) loadAccount()
     }
 
-    // --------------------------------------------------
-    // Load Existing Account (Edit Mode)
-    // --------------------------------------------------
+    /* --------------------------------------------------
+     * Load (Edit Mode)
+     * -------------------------------------------------- */
 
     private fun loadAccount() {
         viewModelScope.launch {
-            val account = repository.getAccountById(accountId!!) ?: return@launch
-
-            val openingDate =
-                repository.getOpeningDate(accountId)
-                    ?: account.createdDate
+            val (account, openingDate) =
+                loadAccountForEdit(accountId!!)
 
             updateState {
                 it.copy(
@@ -60,36 +55,36 @@ class AccountFormViewModel @Inject constructor(
         }
     }
 
-    // --------------------------------------------------
-    // Events
-    // --------------------------------------------------
+    /* --------------------------------------------------
+     * Events
+     * -------------------------------------------------- */
 
     override fun onEvent(event: AccountFormEvent) {
         when (event) {
 
-            AccountFormEvent.CancelClicked ->
-                emitEffect(AccountFormEffect.CloseScreen)
-
             AccountFormEvent.SaveClicked ->
                 onSave()
 
+            AccountFormEvent.DeleteClicked ->
+                onDelete()
+
+            AccountFormEvent.CancelClicked ->
+                emitEffect(CloseScreen)
+
             AccountFormEvent.OnOpeningDateClicked ->
-                emitEffect(AccountFormEffect.OpenDatePicker(currentState.openingDate))
+                emitEffect(OpenDatePicker(currentState.openingDate))
 
             is AccountFormEvent.OnOpeningDateSelected ->
                 updateState { it.copy(openingDate = event.date) }
-
-            AccountFormEvent.DeleteClicked ->
-                checkAndDelete()
 
             is AccountFormEvent.OnActiveStatusChanged ->
                 updateState { it.copy(isActive = event.isActive) }
         }
     }
 
-    // --------------------------------------------------
-    // Save Logic
-    // --------------------------------------------------
+    /* --------------------------------------------------
+     * Save
+     * -------------------------------------------------- */
 
     private fun onSave() {
         viewModelScope.launch {
@@ -103,50 +98,64 @@ class AccountFormViewModel @Inject constructor(
 
             updateState { it.copy(isSaving = true) }
 
-            try {
-                val sortOrder = currentState.sortOrder.toInt()
-                val type = currentState.selectAccountType
+            val id = accountId ?: UUID.randomUUID().toString()
+            val account = currentState.toDomain(id).copy(
+                isActive = currentState.isActive
+            )
 
-                //  Business rule check (DB)
-                if (repository.isSortOrderExist(sortOrder, type, accountId)) {
-                    updateState {
-                        it.copy(
-                            validation = AccountFormValidation(
-                                sortOrderError = "Sort order already exists"
-                            ),
-                            isSaving = false
-                        )
-                    }
-                    emitEffect(AccountFormEffect.FocusField(Field.SORT_ORDER))
-                    return@launch
+            when (
+                saveAccount(
+                    account = account,
+                    openingDate = currentState.openingDate,
+                    excludeId = accountId
+                )
+            ) {
+
+                SaveAccountResult.Success -> {
+                    emitEffect(ShowToast("Account saved successfully"))
+                    emitEffect(CloseScreen)
                 }
 
-                val id = accountId ?: UUID.randomUUID().toString()
+                SaveAccountResult.SortOrderExists -> {
+                    updateState {
+                        it.copy(
+                            isSaving = false,
+                            validation = AccountFormValidation(
+                                sortOrderError = "Sort order already exists"
+                            )
+                        )
+                    }
+                    emitEffect(FocusField(Field.SORT_ORDER))
+                }
+            }
 
-                val account = currentState.toDomain(id).copy(
-                    isActive = currentState.isActive
-                )
+            updateState { it.copy(isSaving = false) }
+        }
+    }
 
-                repository.saveAccount(account, currentState.openingDate)
+    /* --------------------------------------------------
+     * Delete
+     * -------------------------------------------------- */
 
-                emitEffect(AccountFormEffect.ShowToast("Account saved successfully"))
-                emitEffect(AccountFormEffect.CloseScreen)
+    private fun onDelete() {
+        viewModelScope.launch {
 
-            } catch (e: Exception) {
-                emitEffect(
-                    AccountFormEffect.ShowToast(
-                        e.localizedMessage ?: "Failed to save account"
-                    )
-                )
-            } finally {
-                updateState { it.copy(isSaving = false) }
+            when (val result = deleteAccount(accountId!!)) {
+
+                is DeleteAccountResult.BalanceNotZero ->
+                    emitEffect(ShowBalanceError(result.balance))
+
+                DeleteAccountResult.Deleted -> {
+                    emitEffect(ShowToast("Account deleted"))
+                    emitEffect(CloseScreen)
+                }
             }
         }
     }
 
-    // --------------------------------------------------
-    // Validation (PURE)
-    // --------------------------------------------------
+    /* --------------------------------------------------
+     * Validation (UI-only)
+     * -------------------------------------------------- */
 
     private fun validateInputs(): AccountFormValidation {
         val state = currentState
@@ -169,47 +178,19 @@ class AccountFormViewModel @Inject constructor(
     private fun handleValidationErrors(validation: AccountFormValidation) {
         when {
             validation.sortOrderError != null ->
-                emitEffect(AccountFormEffect.FocusField(Field.SORT_ORDER))
+                emitEffect(FocusField(Field.SORT_ORDER))
 
             validation.nameError != null ->
-                emitEffect(AccountFormEffect.FocusField(Field.NAME))
+                emitEffect(FocusField(Field.NAME))
 
             validation.rateError != null ->
-                emitEffect(AccountFormEffect.FocusField(Field.RATE))
+                emitEffect(FocusField(Field.RATE))
         }
     }
 
-    // --------------------------------------------------
-    // Delete Logic
-    // --------------------------------------------------
-
-    private fun checkAndDelete() {
-        viewModelScope.launch {
-            if (accountId == null) return@launch
-
-            val balance = repository.getCurrentBalance(accountId)
-
-            if (balance != 0L) {
-                emitEffect(AccountFormEffect.ShowBalanceError(balance))
-            } else {
-                emitEffect(
-                    AccountFormEffect.ShowDeleteConfirmation(currentState.personName)
-                )
-            }
-        }
-    }
-
-    fun confirmDelete() {
-        viewModelScope.launch {
-            repository.deleteAccount(accountId!!)
-            emitEffect(AccountFormEffect.ShowToast("Account deleted"))
-            emitEffect(AccountFormEffect.CloseScreen)
-        }
-    }
-
-    // --------------------------------------------------
-    // Field Setters
-    // --------------------------------------------------
+    /* --------------------------------------------------
+     * Field Setters (UI → State)
+     * -------------------------------------------------- */
 
     fun onSortOrderChanged(value: String) =
         updateState { it.copy(sortOrder = value) }
