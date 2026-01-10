@@ -5,6 +5,8 @@ import androidx.room.withTransaction
 import com.miassolutions.milkledger.core.contstants.Constants
 import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
 import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
+import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
@@ -21,8 +23,16 @@ import javax.inject.Inject
 
 class OwnerRepository @Inject constructor(
     private val ledgerDao: LedgerDao,
+    private val accountDao: AccountDao,
     private val db: AppDatabase
 ) {
+
+    suspend fun getOwner(): AccountEntity? = accountDao.getOwner()
+
+    suspend fun saveOwner(owner: AccountEntity) {
+        accountDao.upsert(owner)
+    }
+
 
     fun getProfitBreakdown(start: Long, end: Long): Flow<List<DailyProfitTuple>> {
         return ledgerDao.getDailyProfitBreakdown(start, end)

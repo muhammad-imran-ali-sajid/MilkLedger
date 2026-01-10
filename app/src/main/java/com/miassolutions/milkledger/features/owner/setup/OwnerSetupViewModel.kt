@@ -6,13 +6,14 @@ import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
 import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.features.account.data.AccountRepository
+import com.miassolutions.milkledger.features.owner.data.OwnerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class OwnerSetupViewModel @Inject constructor(
-    private val repository: AccountRepository
+    private val repository: OwnerRepository
 ) : ViewModel() {
 
     fun saveOwner(
