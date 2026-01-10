@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switchActive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Account Status: Active"
+        android:checked="true"
+        android:textSize="16sp" />
+
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.Material3.Button.IconButton.Outlined"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Delete Account"
+        android:textColor="@color/red"
+        app:icon="@drawable/ic_delete"
+        app:iconGravity="textEnd"
+        app:iconPadding="8dp"
+        android:id="@+id/btnDelete"
+        app:iconTint="@color/red"/>
+
+
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/scrollView"
         android:layout_weight="1">
 
         <LinearLayout
@@ -28,11 +52,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSortOrder"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    style="@style/TextInputMinimalStyle"
-                    android:imeOptions="actionNext" />
+                    android:imeOptions="actionNext"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Person Name -->
@@ -46,11 +70,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAccountName"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextInputMinimalStyle"
-                    android:inputType="textCapWords"
-                    android:imeOptions="actionNext" />
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Account Type (Radio Buttons) -->
@@ -92,11 +116,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDefaultRate"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextInputMinimalStyle"
-                    android:inputType="numberDecimal"
-                    android:imeOptions="actionNext" />
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
@@ -116,23 +140,23 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etInitialBalance"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextInputMinimalStyle"
-                    android:inputType="numberSigned"
-                    android:imeOptions="actionNext" />
+                    android:imeOptions="actionNext"
+                    android:inputType="numberSigned" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tvBalancePreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
                 android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="+ Rs. 5,000"
-                tools:textColor="@color/green"/>
+                tools:textColor="@color/green" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/openingDateLayout"
@@ -141,19 +165,18 @@
                 android:layout_marginTop="12dp"
                 android:hint="Opening Date (As of)"
                 app:startIconDrawable="@drawable/ic_calendar">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etOpeningDate"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextInputMinimalStyle"
-                    android:focusable="false"
                     android:clickable="true"
                     android:cursorVisible="false"
+                    android:focusable="false"
                     android:text="10 Jan 2026" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-
 
 
             <!-- Advance Amount (Last Field) -->
@@ -166,15 +189,12 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAdvanceAmount"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextInputMinimalStyle"
-                    android:inputType="numberDecimal"
-                    android:imeOptions="actionDone" />
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
 
 
         </LinearLayout>

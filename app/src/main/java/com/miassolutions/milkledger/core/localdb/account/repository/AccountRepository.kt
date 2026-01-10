@@ -24,6 +24,10 @@ class AccountRepository @Inject constructor(
     private val db: AppDatabase
 ) {
 
+    suspend fun getCurrentBalance(accountId: String): Long {
+        return ledgerDao.getAccountNetBalance(accountId) ?: 0L
+    }
+
     suspend fun getOwner(): AccountEntity? = dao.getOwner()
 
     suspend fun saveOwner(owner: AccountEntity) {
@@ -31,9 +35,11 @@ class AccountRepository @Inject constructor(
     }
 
     // 1. Get List
+    // Repository
     fun getAccountsByType(type: AccountType): Flow<List<Account>> {
-        return dao.getAccountsByType(type).map { entities ->
-            entities.map { it.toDomain() }
+        // Sirf Active accounts layen
+        return dao.getAccountsByType(type).map { list ->
+            list.filter { it.isActive } .map { it.toDomain() }
         }
     }
 

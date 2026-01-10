@@ -9,15 +9,18 @@ import com.miassolutions.milkledger.features.account.mapper.toUiList
 import com.miassolutions.milkledger.features.account.mapper.toUiListFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
@@ -25,6 +28,9 @@ class AccountViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) :
     ViewModel() {
+
+    private val _events = Channel<AccountListEvent>()
+    val events = _events.receiveAsFlow()
 
     private companion object {
         const val KEY_SELECTED_TAB = "selected_tab"
@@ -51,7 +57,18 @@ class AccountViewModel @Inject constructor(
 
     fun delete(id: String) {
         viewModelScope.launch {
+            // 1. Check Balance
+            val balance = repository.getCurrentBalance(id)
+
+            // Agar balance 0 nahi hai (Positive ya Negative)
+            if (balance != 0L) {
+                _events.send(AccountListEvent.ShowSnackbar("Cannot delete! Balance is not Zero."))
+                return@launch
+            }
+
+            // 2. Agar 0 hai to Delete karen
             repository.deleteAccount(id)
+            _events.send(AccountListEvent.ShowSnackbar("Account deleted successfully"))
         }
     }
 
@@ -69,4 +86,8 @@ class AccountViewModel @Inject constructor(
     }
 
 
+}
+
+sealed class AccountListEvent {
+    data class ShowSnackbar(val message: String) : AccountListEvent()
 }

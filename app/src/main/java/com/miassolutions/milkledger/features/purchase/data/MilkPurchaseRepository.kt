@@ -36,10 +36,17 @@ class MilkPurchaseRepository @Inject constructor(
     }
 
     fun getAccountLedgerHistory(accountId: String) = ledgerDao.getLedgerHistory(accountId)
-    fun getSuppliers(): Flow<List<Account>> =
-        accountDao.getAccountsByType(AccountType.SUPPLIER).map { list ->
-            list.map { it.toDomain() }
+//    fun getSuppliers(): Flow<List<Account>> =
+//        accountDao.getAccountsByType(AccountType.SUPPLIER).map { list ->
+//            list.map { it.toDomain() }
+//        }
+
+    fun getSuppliers(): Flow<List<Account>> {
+        // Sirf Active accounts layen
+        return accountDao.getAccountsByType(AccountType.SUPPLIER).map { list ->
+            list.filter { it.isActive } .map { it.toDomain() }
         }
+    }
 
     fun getSuppliersWithPurchaseOnDate(date: Long): Flow<List<String>> =
         milkDao.getSuppliersWithPurchaseOnDate(date)

@@ -44,6 +44,8 @@ class AccountListAdapter(
     inner class AccountVH(val binding: ItemAccountBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: AccountUi) = with(binding) {
+
+
             // 1. Name & Subtitle
             tvName.text = item.name
 
@@ -58,10 +60,20 @@ class AccountListAdapter(
 
             if (isCustomer) {
                 viewIndicator.setBackgroundResource(R.color.teal_200)
-                layoutIcon.background.setTint(ContextCompat.getColor(root.context, R.color.teal_200))
+                layoutIcon.background.setTint(
+                    ContextCompat.getColor(
+                        root.context,
+                        R.color.teal_200
+                    )
+                )
             } else {
                 viewIndicator.setBackgroundResource(R.color.orange_700)
-                layoutIcon.background.setTint(ContextCompat.getColor(root.context, R.color.orange_700))
+                layoutIcon.background.setTint(
+                    ContextCompat.getColor(
+                        root.context,
+                        R.color.orange_700
+                    )
+                )
             }
 
             root.setOnLongClickListener {
@@ -83,6 +95,10 @@ class AccountListAdapter(
             }
 
             tvBalance.setBalanceWithColorRupee(displayBalance)
+
+            root.setOnClickListener {
+                onDeleteClick(item.id)
+            }
         }
     }
 }

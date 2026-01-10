@@ -19,6 +19,7 @@ data class AccountEntity(
     val name: String,
     val phone: String?,
     val accountType: AccountType, // Enum niche defined hai
+    val isActive: Boolean = true, // Default True
 
     val sortOrder: Int = 0,
     val advanceAmount: Long?,

@@ -98,6 +98,14 @@ class AccountListFragment :
             binding.tabLayout.getTabAt(type.ordinal)?.select()
         }
 
+        collectFlow(viewModel.events) { event ->
+            when (event) {
+                is AccountListEvent.ShowSnackbar -> {
+                    showSnackbar(event.message)
+                }
+            }
+        }
+
     }
 
 

@@ -13,6 +13,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LedgerDao {
 
+    @Query("""    
+        SELECT (COALESCE(SUM(debit), 0) - COALESCE(SUM(credit), 0)) 
+        FROM financial_ledger_table 
+        WHERE accountId = :accountId 
+        AND deletedAtMillis IS NULL
+    """)
+    suspend fun getAccountNetBalance(accountId: String): Long?
+
     @Query("SELECT * FROM financial_ledger_table WHERE accountId = :accId AND type = 'OPENING_BALANCE' LIMIT 1")
     suspend fun getOpeningBalanceEntry(accId: String): FinancialLedgerEntity?
 
