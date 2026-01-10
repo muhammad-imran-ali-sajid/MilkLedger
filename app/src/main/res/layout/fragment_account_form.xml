@@ -6,78 +6,84 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/switchActive"
+    <!-- ========================= -->
+    <!-- HEADER : ACCOUNT STATUS  -->
+    <!-- ========================= -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Account Status: Active"
-        android:checked="true"
-        android:textSize="16sp" />
+        android:layout_margin="16dp"
+        app:cardElevation="1dp">
 
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/switchActive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Account Status: Active"
+            android:textSize="16sp"
+            android:checked="true" />
+    </com.google.android.material.card.MaterialCardView>
 
-    <com.google.android.material.button.MaterialButton
-        style="@style/Widget.Material3.Button.IconButton.Outlined"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="Delete Account"
-        android:textColor="@color/red"
-        app:icon="@drawable/ic_delete"
-        app:iconGravity="textEnd"
-        app:iconPadding="8dp"
-        android:id="@+id/btnDelete"
-        app:iconTint="@color/red"/>
-
-
+    <!-- ========================= -->
+    <!-- FORM CONTENT             -->
+    <!-- ========================= -->
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="16dp">
+
+            <!-- ===== BASIC INFO ===== -->
+            <TextView
+                android:text="Basic Information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/TextAppearance.Material3.TitleSmall"
+                android:layout_marginBottom="8dp" />
 
             <!-- Sort Order -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/sortOrderLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:hint="Sort Order">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSortOrder"
-                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="number" />
+                    style="@style/TextInputMinimalStyle"
+                    android:inputType="number"
+                    android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Person Name -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
 
+                android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:hint="Person Name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAccountName"
-                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="textCapWords" />
+                    style="@style/TextInputMinimalStyle"
+                    android:inputType="textCapWords"
+                    android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Account Type (Radio Buttons) -->
+            <!-- Account Type -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,9 +104,9 @@
                         android:text="Customer" />
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:id="@+id/rbSupplier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/rbSupplier"
                         android:layout_marginStart="24dp"
                         android:text="Supplier" />
                 </RadioGroup>
@@ -116,70 +122,84 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDefaultRate"
-                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="numberDecimal" />
+                    style="@style/TextInputMinimalStyle"
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionNext" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-            </LinearLayout>
-
-            <!-- Initial Balance -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/initialBalanceLayout"
+            <!-- ===== FINANCIAL INFO ===== -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="Initial Balance">
+                android:layout_marginTop="16dp"
+                app:cardElevation="0dp"
+                >
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etInitialBalance"
-                    style="@style/TextInputMinimalStyle"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="numberSigned" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvBalancePreview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:text="+ Rs. 5,000"
-                tools:textColor="@color/green" />
+                    <TextView
+                        android:text="Balance Preview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/TextAppearance.Material3.LabelLarge" />
 
+                    <!-- Initial Balance -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/initialBalanceLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:hint="Initial Balance">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etInitialBalance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/TextInputMinimalStyle"
+                            android:inputType="numberSigned"
+                            android:imeOptions="actionNext" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:id="@+id/tvBalancePreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        tools:text="+ Rs. 5,000"
+                        tools:textColor="@color/green" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Opening Date -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/openingDateLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:hint="Opening Date (As of)"
-                app:startIconDrawable="@drawable/ic_calendar">
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_calendar">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etOpeningDate"
                     style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
                     android:clickable="true"
                     android:cursorVisible="false"
-                    android:focusable="false"
-                    android:text="10 Jan 2026" />
-
+                    tools:text="10 Jan 2026" />
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <!-- Advance Amount (Last Field) -->
+            <!-- Advance Amount -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/advanceAmountLayout"
                 android:layout_width="match_parent"
@@ -192,22 +212,37 @@
                     style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:imeOptions="actionDone"
-                    android:inputType="numberDecimal" />
+                    android:inputType="numberDecimal"
+                    android:imeOptions="actionDone" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
         </LinearLayout>
     </ScrollView>
 
-    <!-- SAVE BUTTON -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSave"
+    <!-- ========================= -->
+    <!-- FOOTER ACTIONS           -->
+    <!-- ========================= -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/primary"
-        android:text="Save" />
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDelete"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:text="Delete Account"
+            android:textColor="@color/red" />
+    </LinearLayout>
 
 </LinearLayout>
