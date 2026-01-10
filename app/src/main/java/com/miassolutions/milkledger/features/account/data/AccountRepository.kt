@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.localdb.account.repository
+package com.miassolutions.milkledger.features.account.data
 
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.core.localdb.AppDatabase

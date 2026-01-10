@@ -1,9 +1,10 @@
 package com.miassolutions.milkledger.features.account.domain
 
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
+import java.time.LocalDate
 
 data class Account(
-    val createdAtMillis: Long,
+    val createdDate: LocalDate,
     val accountId: String = "",
     val name: String,
     val phone: String? = null,
@@ -12,7 +13,7 @@ data class Account(
     val sortOrder: Int = 0,
     val defaultRate: Double,
 
-    val isActive: Boolean = true,
+    val isActive: Boolean,
 
 
     // Sirf Profile me show hoga (No Ledger Effect)

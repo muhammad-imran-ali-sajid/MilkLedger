@@ -21,7 +21,7 @@ fun Account.toUi(): AccountUi =
         type = type,
         sortOrder = sortOrder,
         initialBalance = initialBalance,
-        openingDate = createdAtMillis.toLocalDate(),
+        openingDate = createdDate,
         defaultRate = defaultRate,
         advanceAmount = advanceAmount,
 
@@ -55,7 +55,8 @@ fun AccountFormUiState.toDomain(
         defaultRate = rate.toDouble(),
         advanceAmount = advanceAmount.toPaisa(),
         initialBalance = initialBalance.toPaisa(),
-        createdAtMillis = openingDate.toMillis(),
+        isActive = isActive,
+        createdDate = openingDate,
     )
 
 fun AccountType.title(context: Context): String =

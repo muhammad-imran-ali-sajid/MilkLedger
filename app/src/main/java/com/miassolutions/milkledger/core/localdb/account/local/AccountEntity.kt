@@ -31,7 +31,7 @@ data class AccountEntity(
     // Money Field -> Stored as Paisa (e.g., 500000 = Rs 5000.00)
     val initialBalance: Long?,
 
-    val createdAtMillis: Long = System.currentTimeMillis(),
+    val createdAtMillis: Long,
     val updatedAtMillis: Long = System.currentTimeMillis(),
     val isSynced: Boolean = false,
     val deletedAtMillis: Long? = null

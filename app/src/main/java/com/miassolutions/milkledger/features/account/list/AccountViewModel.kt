@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
-import com.miassolutions.milkledger.core.localdb.account.repository.AccountRepository
+import com.miassolutions.milkledger.features.account.data.AccountRepository
 import com.miassolutions.milkledger.features.account.mapper.toUiList
 import com.miassolutions.milkledger.features.account.mapper.toUiListFlow
 import dagger.hilt.android.lifecycle.HiltViewModel

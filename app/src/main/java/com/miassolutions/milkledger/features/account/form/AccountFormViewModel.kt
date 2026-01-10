@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
-import com.miassolutions.milkledger.core.localdb.account.repository.AccountRepository
+import com.miassolutions.milkledger.features.account.data.AccountRepository
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.account.form.AccountFormEffect.*
 import com.miassolutions.milkledger.features.account.mapper.toDomain
@@ -42,7 +42,7 @@ class AccountFormViewModel @Inject constructor(
 
             val openingDate =
                 repository.getOpeningDate(accountId)
-                    ?: account.createdAtMillis.toLocalDate()
+                    ?: account.createdDate
 
             updateState {
                 it.copy(
@@ -107,7 +107,7 @@ class AccountFormViewModel @Inject constructor(
                 val sortOrder = currentState.sortOrder.toInt()
                 val type = currentState.selectAccountType
 
-                // 🔒 Business rule check (DB)
+                //  Business rule check (DB)
                 if (repository.isSortOrderExist(sortOrder, type, accountId)) {
                     updateState {
                         it.copy(

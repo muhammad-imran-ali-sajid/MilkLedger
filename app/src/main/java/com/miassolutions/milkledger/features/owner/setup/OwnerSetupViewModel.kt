@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
 import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
-import com.miassolutions.milkledger.core.localdb.account.repository.AccountRepository
+import com.miassolutions.milkledger.features.account.data.AccountRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +28,8 @@ class OwnerSetupViewModel @Inject constructor(
             defaultRate = 0.0,
             initialBalance = 0,
             advanceAmount = null,
-            sortOrder = 0
+            sortOrder = 0,
+            createdAtMillis = System.currentTimeMillis(),
         )
 
         viewModelScope.launch {
@@ -36,3 +37,4 @@ class OwnerSetupViewModel @Inject constructor(
         }
     }
 }
+
