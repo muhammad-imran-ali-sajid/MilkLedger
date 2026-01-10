@@ -61,6 +61,10 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
     override fun setupListeners() {
         super.setupListeners()
 
+        binding.layoutProfit.setOnClickListener {
+            viewModel.onEvent(OwnerUiEvent.OnNetProfitClicked)
+        }
+
         // 1. Withdraw Button
         binding.btnWithdraw.setOnClickListener {
             viewModel.onEvent(OwnerUiEvent.OnWithdrawClicked)
@@ -117,6 +121,11 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
                     // findNavController().navigate(OwnerDashboardFragmentDirections.actionOwnerToExpenseForm())
                     // Or explicit ID if action not defined yet:
                     // findNavController().navigate(R.id.expenseFormFragment)
+                }
+
+                is OwnerUiEffect.OpenProfitDetailsSheet -> {
+                    val sheet = ProfitDetailsBottomSheet(effect.data)
+                    sheet.show(childFragmentManager, ProfitDetailsBottomSheet.TAG)
                 }
             }
         }

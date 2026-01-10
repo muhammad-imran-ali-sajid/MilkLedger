@@ -8,6 +8,7 @@ import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
+import com.miassolutions.milkledger.features.owner.domain.DailyProfitTuple
 import com.miassolutions.milkledger.features.owner.domain.OwnerDashboardData
 import com.miassolutions.milkledger.features.owner.domain.OwnerTransactionUiModel
 import com.miassolutions.milkledger.utils.extensions.toMillis
@@ -22,6 +23,10 @@ class OwnerRepository @Inject constructor(
     private val ledgerDao: LedgerDao,
     private val db: AppDatabase
 ) {
+
+    fun getProfitBreakdown(start: Long, end: Long): Flow<List<DailyProfitTuple>> {
+        return ledgerDao.getDailyProfitBreakdown(start, end)
+    }
 
     // ------------------------------------------------
     // 1️⃣ DASHBOARD DATA (Combined Flow)

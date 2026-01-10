@@ -66,11 +66,31 @@ class OwnerViewModel @Inject constructor(
             }
 
             // --- Navigation ---
-            OwnerUiEvent.OnAddExpenseClicked -> emitEffect(OwnerUiEffect.NavigateToAddExpense)
+            OwnerUiEvent.OnAddExpenseClicked -> emitEffect(NavigateToAddExpense)
             is OwnerUiEvent.OnDeleteWithdrawal -> {
                 performDelete(event.id)
-                emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal deleted"))
+                emitEffect(ShowSnackbar("Withdrawal deleted"))
             }
+
+            OwnerUiEvent.OnNetProfitClicked -> {
+                loadProfitBreakdown()
+            }
+        }
+    }
+
+
+    private fun loadProfitBreakdown() {
+        val start = currentState.startDate
+        val end = currentState.endDate
+
+        viewModelScope.launch {
+            // Hum One-Time collect karenge kyunke ye "Report" hai
+            // (Ya Flow collect kr k bhi bhej skte hen)
+            repository.getProfitBreakdown(start, end)
+                .collect { list ->
+                    // List UI ko bhej den
+                    emitEffect(OwnerUiEffect.OpenProfitDetailsSheet(list))
+                }
         }
     }
 

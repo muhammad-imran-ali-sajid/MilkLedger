@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.miassolutions.milkledger.features.owner.domain.DailyProfitTuple
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -137,6 +138,23 @@ interface LedgerDao {
     """
     )
     fun getOwnerTransactionsInRange(start: Long, end: Long): Flow<List<FinancialLedgerEntity>>
+
+
+    // 🔥 Daily Profit Breakdown
+    // Hum ProfitImpact ko sum karenge, Din k hisaab se group kar k.
+    // Condition: Sirf wo entries jinka profit impact hai (transaction delete na ho).
+    @Query("""
+        SELECT 
+            dateMillis, 
+            SUM(profitImpact) as dailyTotal
+        FROM financial_ledger_table
+        WHERE dateMillis BETWEEN :start AND :end
+        AND deletedAtMillis IS NULL
+        AND profitImpact != 0
+        GROUP BY dateMillis
+        ORDER BY dateMillis DESC
+    """)
+    fun getDailyProfitBreakdown(start: Long, end: Long): Flow<List<DailyProfitTuple>>
 
 
 }
