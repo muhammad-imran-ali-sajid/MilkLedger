@@ -16,6 +16,7 @@ data class ExpenseFormUiState(
     val fuelAmount: String = "",
     val vehicleAmount: String = "",
     val refreshmentAmount: String = "",
+    val otherBusiness: String = "",
     val personalExpenses: List<PersonalExpenseUi> = emptyList(),
     val notes: String = "",
 
@@ -23,6 +24,7 @@ data class ExpenseFormUiState(
     val fuelError: String? = null,
     val vehicleError: String? = null,
     val refreshmentError: String? = null,
+    val otherBusinessError: String? = null,
 
     val isSaving: Boolean = false
 ){
@@ -55,6 +57,8 @@ sealed interface ExpenseFormUiEvent {
     data class OnFuelChanged(val value: String) : ExpenseFormUiEvent
     data class OnVehicleChanged(val value: String) : ExpenseFormUiEvent
     data class OnRefreshmentChanged(val value: String) : ExpenseFormUiEvent
+
+    data class OnOtherChanged(val value: String) : ExpenseFormUiEvent
 
     data object OnAddPersonalExpense : ExpenseFormUiEvent
     data class OnRemovedPersonalExpense(val id: String) : ExpenseFormUiEvent

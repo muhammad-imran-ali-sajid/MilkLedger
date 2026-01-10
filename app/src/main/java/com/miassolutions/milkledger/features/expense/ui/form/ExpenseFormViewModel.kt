@@ -33,10 +33,34 @@ class ExpenseFormViewModel @Inject constructor(
             is ExpenseFormUiEvent.OnDateSelected -> updateState { it.copy(date = event.date) }
 
             // --- Static Fields ---
-            is ExpenseFormUiEvent.OnFuelChanged -> updateState { it.copy(fuelAmount = event.value, fuelError = null) }
-            is ExpenseFormUiEvent.OnVehicleChanged -> updateState { it.copy(vehicleAmount = event.value, vehicleError = null) }
-            is ExpenseFormUiEvent.OnRefreshmentChanged -> updateState { it.copy(refreshmentAmount = event.value, refreshmentError = null) }
+            is ExpenseFormUiEvent.OnFuelChanged -> updateState {
+                it.copy(
+                    fuelAmount = event.value,
+                    fuelError = null
+                )
+            }
+
+            is ExpenseFormUiEvent.OnVehicleChanged -> updateState {
+                it.copy(
+                    vehicleAmount = event.value,
+                    vehicleError = null
+                )
+            }
+
+            is ExpenseFormUiEvent.OnRefreshmentChanged -> updateState {
+                it.copy(
+                    refreshmentAmount = event.value,
+                    refreshmentError = null
+                )
+            }
+
             is ExpenseFormUiEvent.OnNotesChanged -> updateState { it.copy(notes = event.value) }
+            is ExpenseFormUiEvent.OnOtherChanged -> updateState {
+                it.copy(
+                    otherBusiness = event.value,
+                    otherBusinessError = null
+                )
+            }
 
             // --- Personal Expense Logic ---
             is ExpenseFormUiEvent.OnAddPersonalExpense -> {
@@ -92,8 +116,16 @@ class ExpenseFormViewModel @Inject constructor(
 
             // 1. Static Expenses
             parseAndAdd(expensesToSave, date, "Fuel", "Fuel", state.fuelAmount, note)
-            parseAndAdd(expensesToSave, date, "Vehicle", "Vehicle Maintenance", state.vehicleAmount, note)
-            parseAndAdd(expensesToSave, date, "Refreshment", "Refreshment", state.refreshmentAmount, note)
+            parseAndAdd(expensesToSave, date, "Vehicle", "Vehicle", state.vehicleAmount, note)
+            parseAndAdd(
+                expensesToSave,
+                date,
+                "Refreshment",
+                "Refreshment",
+                state.refreshmentAmount,
+                note
+            )
+            parseAndAdd(expensesToSave, date, "Other", "Other", state.otherBusiness, note)
 
             // 2. Personal Expenses (🔥 FIX: Use draftCache directly)
             // Hum 'state.personalExpenses' use nahi karenge kyunke ho sakta hai user ne abhi type kia ho

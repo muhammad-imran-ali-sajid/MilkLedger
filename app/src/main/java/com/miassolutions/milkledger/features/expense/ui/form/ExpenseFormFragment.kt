@@ -79,6 +79,9 @@ class ExpenseFormFragment :
             etRefreshmentAmount.setTextIfDifferent(state.refreshmentAmount)
             refreshLayout.error = state.refreshmentError
 
+            etOtherBusinessExpense.setTextIfDifferent(state.otherBusiness)
+            tilOtherLayout.error = state.otherBusinessError
+
             etNotes.setTextIfDifferent(state.notes)
 
             btnSave.isEnabled = !state.isSaving
@@ -144,6 +147,12 @@ class ExpenseFormFragment :
         etRefreshmentAmount.doAfterTextChanged {
             viewModel.onEvent(
                 ExpenseFormUiEvent.OnRefreshmentChanged(it.toString())
+            )
+        }
+
+        etOtherBusinessExpense.doAfterTextChanged {
+            viewModel.onEvent(
+                ExpenseFormUiEvent.OnOtherChanged(it.toString())
             )
         }
 
