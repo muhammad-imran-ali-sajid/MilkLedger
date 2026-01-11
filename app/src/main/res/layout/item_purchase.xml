@@ -190,7 +190,7 @@
                         android:paddingStart="4dp"
                         android:text="(20/11)"
                         android:textSize="18sp"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
                 </LinearLayout>
             </LinearLayout>
 

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
@@ -52,10 +53,12 @@ class MilkPurchaseAdapter(
             val payDate = item.paymentDate
             val saleDate = item.dateMillis.toLocalDate()
 
+//            tvPaymentDate.text = payDate?.toDisplayDate()
+
             if (payDate != null && !payDate.isEqual(saleDate) && item.paymentMade > 0) {
                 tvPaymentDate.isVisible = true
                 // Format: (20/11)
-                tvPaymentDate.text = "(${payDate.dayOfMonth}/${payDate.monthValue})"
+                tvPaymentDate.text = payDate.toDisplayDate()
             } else {
                 tvPaymentDate.isVisible = false
             }
