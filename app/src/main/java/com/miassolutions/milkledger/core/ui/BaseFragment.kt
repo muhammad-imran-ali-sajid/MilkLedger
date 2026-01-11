@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -15,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.miassolutions.milkledger.databinding.LayoutLoadingDialogBinding
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.premiumfeatures.FeatureManager
 import jakarta.inject.Inject
@@ -28,6 +30,36 @@ abstract class BaseFragment<VB : ViewBinding>(
     lateinit var featureManager: FeatureManager
 
     protected var isPremiumEnabled: Boolean = false
+
+    private var progressDialog: AlertDialog? = null
+    private var loadingBinding: LayoutLoadingDialogBinding? = null
+
+
+    fun showLoading(isLoading: Boolean, message: String? = null) {
+        if (isLoading) {
+            if (progressDialog == null) {
+                // Loading binding ko inflate karein
+                loadingBinding = LayoutLoadingDialogBinding.inflate(layoutInflater)
+
+                progressDialog = AlertDialog.Builder(requireContext())
+                    .setView(loadingBinding!!.root)
+                    .setCancelable(false)
+                    .create()
+
+                // Dialog background transparent karne ke liye (Optional)
+                progressDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            }
+
+            // Message update karein
+            loadingBinding?.tvLoadingMessage?.text = message ?: "Please wait..."
+
+            if (progressDialog?.isShowing == false) {
+                progressDialog?.show()
+            }
+        } else {
+            progressDialog?.dismiss()
+        }
+    }
 
 
     private var _binding: VB? = null

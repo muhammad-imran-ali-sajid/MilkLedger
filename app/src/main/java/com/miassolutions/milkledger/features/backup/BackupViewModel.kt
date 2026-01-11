@@ -23,15 +23,14 @@ class BackupRestoreViewModel @Inject constructor(
     private val _status = MutableSharedFlow<String>(replay = 1) // SharedFlow for status/progress
     val status = _status.asSharedFlow()
 
-    fun backup(uri: Uri): BackupResult {
+    suspend fun backup(uri: Uri): BackupResult {
+
         return backupManager.backupTo(uri)
     }
 
-    fun restore(uri: Uri): BackupResult {
+    suspend fun restore(uri: Uri): BackupResult {
         return backupManager.restoreFrom(uri)
     }
-
-
 
 
 }

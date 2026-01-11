@@ -25,14 +25,24 @@ class DriveBackupFragment :
     ) { uri ->
         uri ?: return@registerForActivityResult
 
-        when (val result = viewModel.backup(uri)) {
-            is BackupResult.Success ->
-                showSnackbar("Backup successful")
+        // Coroutine start ki
+        lifecycleScope.launch {
+            showLoading(true)
 
-            is BackupResult.Error -> {
-                showSnackbar(result.message)
+            val result = viewModel.backup(uri)
+
+            showLoading(false)
+            when (result) {
+                is BackupResult.Success ->
+                    showSnackbar("Backup successful")
+
+                is BackupResult.Error -> {
+                    showSnackbar(result.message)
+                }
             }
         }
+
+
     }
 
     private val restoreLauncher = registerForActivityResult(
@@ -40,22 +50,27 @@ class DriveBackupFragment :
     ) { uri ->
         uri ?: return@registerForActivityResult
 
-        when (val result = viewModel.restore(uri)) {
-            is BackupResult.Error -> {
-                showSnackbar(result.message)
-            }
 
-            BackupResult.Success -> {
-                showSnackbar("Restore Successful")
+        lifecycleScope.launch {
+            showLoading(true)
 
-                // Delay thora kam kar dein taake user ko lag na feel ho
-                lifecycleScope.launch {
-                    delay(300)
-                    // Context pass karein
+            val result = viewModel.restore(uri)
+
+            showLoading(false)
+
+            when (result) {
+                is BackupResult.Error -> showSnackbar("Restore Failed: ${result.message}")
+
+                BackupResult.Success -> {
+                    showSnackbar("Restore Successful. Restarting app...")
+                    // Thora wait taake user message parh sake
+                    delay(1000)
                     RestartHelper.restart(requireActivity())
                 }
             }
         }
+
+
     }
 
 
