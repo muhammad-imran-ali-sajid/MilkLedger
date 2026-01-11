@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/PurchaseCard"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,44 +14,37 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="2"
+            android:layout_height="wrap_content"
             android:background="@drawable/bg_purchase"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="start"
-            android:layoutDirection="ltr"
-            android:orientation="horizontal"
-            android:weightSum="8">
+            android:gravity="center_vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/btn_edit_form"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:backgroundTint="@color/transparent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_edit_form"
-                app:tint="@color/white"
-                tools:ignore="NestedWeights" />
-
+                app:tint="@color/white" />
 
             <TextView
                 android:id="@+id/tvName"
-                style="@style/TextLabel"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:layout_weight="1"
                 android:text="Ali"
-                android:textColor="@color/white" />
-
+                android:textColor="@color/white"
+                android:textStyle="bold" />
 
             <ImageButton
                 android:id="@+id/btnSupplierHistory"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:backgroundTint="@color/transparent"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:rotation="180"
                 android:src="@drawable/ic_arrow"
                 app:tint="@color/white" />
@@ -63,8 +55,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_edittext_readable"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/bg_edittext_readable"
             android:orientation="horizontal"
             android:weightSum="4">
 
@@ -143,15 +135,11 @@
             </LinearLayout>
         </LinearLayout>
 
-<!--        <com.google.android.material.divider.MaterialDivider-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="2dp" />-->
 
         <!-- Row 2 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:background="@drawable/bg_edittext_readable"
             android:orientation="horizontal"
             android:paddingVertical="8dp"
@@ -164,7 +152,10 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel" android:text="Price" />
+                <TextView
+                    style="@style/TextLabel"
+                    android:text="Price" />
+
                 <TextView
                     android:id="@+id/tvPrice"
                     style="@style/TextValue"
@@ -178,7 +169,8 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel"
+                <TextView
+                    style="@style/TextLabel"
                     android:text="Payment" />
 
                 <LinearLayout
@@ -196,8 +188,8 @@
                         android:id="@+id/tvPaymentDate"
                         style="@style/TextValue"
                         android:paddingStart="4dp"
-                        android:textSize="18sp"
                         android:text="(20/11)"
+                        android:textSize="18sp"
                         android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
@@ -217,20 +209,22 @@
                 <TextView
                     android:id="@+id/tvBalance"
                     style="@style/TextValue"
-                    tools:text="10000" />
+                    tools:text="1,000"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:maxLines="1"
+
+                    app:autoSizeTextType="uniform"
+                    app:autoSizeMinTextSize="12sp"
+                    app:autoSizeMaxTextSize="32sp"
+                    app:autoSizeStepGranularity="2sp"
+                     />
             </LinearLayout>
         </LinearLayout>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="3dp"
-            app:dividerColor="#eee" />
-        <!-- Notes Row -->
         <TextView
             android:id="@+id/tvNotes"
-            style="@style/TextValue"
+            style="@style/TextLabel"
             android:layout_marginStart="12dp"
             tools:text="Note : no note" />
 
