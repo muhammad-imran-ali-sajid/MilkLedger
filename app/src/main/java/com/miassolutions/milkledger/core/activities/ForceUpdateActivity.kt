@@ -14,11 +14,12 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.ui.BaseActivity
 import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.databinding.ActivityForceUpdateBinding
 import java.io.File
 
-class ForceUpdateActivity : AppCompatActivity() {
+class ForceUpdateActivity : BaseActivity() {
 
     private val binding by lazy {
         ActivityForceUpdateBinding.inflate(layoutInflater)

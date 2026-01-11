@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
+import com.miassolutions.milkledger.core.ui.BaseActivity
 import com.miassolutions.milkledger.databinding.ActivityLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * Email/Username and Password, and a Forgot Password recovery link.
  */
 @AndroidEntryPoint
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
 
     // Tag for logging purposes

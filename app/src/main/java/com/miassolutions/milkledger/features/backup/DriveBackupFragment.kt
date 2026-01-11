@@ -1,17 +1,17 @@
 package com.miassolutions.milkledger.features.backup
 
-import android.net.Uri
+import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.miassolutions.milkledger.core.localdb.backup.BackupConfig
+import com.miassolutions.milkledger.core.localdb.backup.BackupResult
+import com.miassolutions.milkledger.core.localdb.backup.RestartHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentDriveBackupBinding
-import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.ByteArrayInputStream
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class DriveBackupFragment :
@@ -19,81 +19,88 @@ class DriveBackupFragment :
 
     private val viewModel: BackupRestoreViewModel by viewModels()
 
-    // Restore SAF launcher
-    private val restoreFilePicker =
-        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
-            if (uri != null) {
-                lifecycleScope.launch {
-                    try {
-                        context?.contentResolver?.openInputStream(uri)?.use { inputStream ->
-                            // Pass a buffered copy to avoid Stream Closed
-                            val bytes = inputStream.readBytes()
-                            viewModel.restoreDatabaseFromInputStream(ByteArrayInputStream(bytes))
-                        }
-                    } catch (e: Exception) {
-                        showToast("Restore failed: ${e.message}")
-                    }
-                }
-            } else showToast("No file selected")
-        }
 
-    // Backup SAF launcher
-    private val createBackupFileLauncher = registerForActivityResult(
-        ActivityResultContracts.CreateDocument("application/json")
-    ) { uri: Uri? ->
-        if (uri != null) {
-            lifecycleScope.launch {
-                try {
-                    viewModel.backupDatabaseToUri(uri)
-                } catch (e: Exception) {
-                    showToast("Backup failed: ${e.message}")
-                }
+    private val createBackupLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/octet-stream")
+    ) { uri ->
+        uri ?: return@registerForActivityResult
+
+        when (val result = viewModel.backup(uri)) {
+            is BackupResult.Success ->
+                showSnackbar("Backup successful")
+
+            is BackupResult.Error -> {
+                showSnackbar(result.message)
             }
-        } else showToast("Backup cancelled")
+        }
     }
 
-    override fun setupViews() {
-        binding.btnBackup.setOnClickListener {
-            if (!isPremiumEnabled) {
-                showSnackbar("This feature requires Premium")
-                return@setOnClickListener
+    private val restoreLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        uri ?: return@registerForActivityResult
+
+        when (val result = viewModel.restore(uri)) {
+            is BackupResult.Error -> {
+                showSnackbar(result.message)
             }
 
-            showDialog(
-                title = "Confirmation",
-                message = "Do you want backup",
-                onAction = {
+            BackupResult.Success -> {
+                showSnackbar("Restore Successful")
 
-                    val timestamp =
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"))
-                    createBackupFileLauncher.launch("milk_ledger_backup_$timestamp.json")
+                // Delay thora kam kar dein taake user ko lag na feel ho
+                lifecycleScope.launch {
+                    delay(300)
+                    // Context pass karein
+                    RestartHelper.restart(requireActivity())
                 }
-            )
-
-
-        }
-
-        binding.btnRestore.setOnClickListener {
-
-            if (!isPremiumEnabled) {
-                showSnackbar("This feature requires Premium")
-                return@setOnClickListener
             }
+        }
+    }
 
 
-            showDialog(
-                title = "WARNING!!",
-                message = "Are you sure? This will overwrite you existing database.",
-                onAction = {
-                    restoreFilePicker.launch(arrayOf("application/json"))
-                }
-            )
+    override fun setupListeners() = with(binding) {
+        super.setupListeners()
+
+        btnBackup.setOnClickListener {
+            val fileName = "${BackupConfig.BACKUP_PREFIX}${System.currentTimeMillis()}.db"
+            createBackupLauncher.launch(fileName)
         }
 
-        collectFlow(viewModel.status) { message ->
-
-            showSnackbar(message)
+        btnRestore.setOnClickListener {
+            showRestoreConfirmation()
         }
+
+
+    }
+
+    private fun showRestoreConfirmation() {
+        showDialog(
+            title = "Restore Backup",
+            message = "Existing data will be overwritten. Continue?",
+            positiveText = "Restore",
+            onAction = {
+                restoreLauncher.launch(
+                    arrayOf("application/octet-stream")
+                )
+            }
+        )
+    }
+
+
+    private fun restartApp() {
+        val intent = requireActivity().packageManager
+            .getLaunchIntentForPackage(requireActivity().packageName)
+
+        intent?.addFlags(
+            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+        )
+
+        requireActivity().startActivity(intent)
+        requireActivity().finish()
+        Runtime.getRuntime().exit(0)
     }
 
 

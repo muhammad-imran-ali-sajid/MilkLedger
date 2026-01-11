@@ -25,6 +25,7 @@ import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
+import com.miassolutions.milkledger.core.ui.BaseActivity
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
@@ -35,7 +36,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), ToolbarOwner {
+class MainActivity : BaseActivity(), ToolbarOwner {
 
     @Inject lateinit var featureManager: FeatureManager
     @Inject lateinit var remote: RemoteConfigManager
