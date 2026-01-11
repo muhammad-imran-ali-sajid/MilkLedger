@@ -196,13 +196,16 @@
     </fragment>
     <fragment
         android:id="@+id/purchaseFormFragment"
-        tools:layout="@layout/fragment_purchase_form"
         android:name="com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormFragment"
-        android:label="PurchaseFormFragment" >
+        android:label="Purchase Form"
+        tools:layout="@layout/fragment_purchase_form">
         <argument
             android:name="purchaseId"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="purchaseDate"
+            app:argType="long" />
     </fragment>
     <fragment
         tools:layout="@layout/fragment_owner_dashboard"

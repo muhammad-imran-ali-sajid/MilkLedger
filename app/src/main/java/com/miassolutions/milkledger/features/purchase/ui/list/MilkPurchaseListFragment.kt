@@ -15,6 +15,7 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 
@@ -123,7 +124,8 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                 PurchaseListUiEffect.NavigateToAddPurchase -> {
                     findNavController().navigate(
                         MilkPurchaseListFragmentDirections.actionPurchaseListFragmentToPurchaseFormFragment(
-                            null
+                            null,
+                            viewModel.uiState.value.date.toMillis()
                         )
                     )
                 }
@@ -131,7 +133,8 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                 is PurchaseListUiEffect.NavigateToEditPurchase -> {
                     findNavController().navigate(
                         MilkPurchaseListFragmentDirections.actionPurchaseListFragmentToPurchaseFormFragment(
-                            effect.id
+                            effect.id,
+                            viewModel.uiState.value.date.toMillis()
                         )
                     )
                 }

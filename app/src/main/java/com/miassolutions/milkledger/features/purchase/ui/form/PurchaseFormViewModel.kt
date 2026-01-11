@@ -37,6 +37,9 @@ class PurchaseFormViewModel @Inject constructor(
 ) {
 
     private val purchaseId: String? = savedStateHandle["purchaseId"]
+    private val purchaseDate:Long? = savedStateHandle["purchaseDate"]
+
+    private val purchaseDateLocal = purchaseDate?.toLocalDate() ?: LocalDate.now()
 
 
     private val _suppliersDropDown = MutableStateFlow<List<SupplierDropDownUiModel>>(emptyList())
@@ -83,7 +86,7 @@ class PurchaseFormViewModel @Inject constructor(
             loadPurchaseForEdit(purchaseId)
         } else {
             // New Entry Defaults
-            updateState { it.copy(date = LocalDate.now(), paymentDate = LocalDate.now()) }
+            updateState { it.copy(date = purchaseDateLocal , paymentDate = purchaseDateLocal) }
         }
     }
 
