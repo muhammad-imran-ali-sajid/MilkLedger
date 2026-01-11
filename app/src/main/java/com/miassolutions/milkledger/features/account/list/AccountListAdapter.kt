@@ -55,14 +55,14 @@ class AccountListAdapter(
             // 3. Color Logic (Customer vs Supplier)
             val isCustomer = item.type == AccountType.CUSTOMER
 
-            tvSubtitle.text = "Date:${item.openingDate.toCompleteDateFormat()}"
+            tvSubtitle.text = "Since: ${item.openingDate.toCompleteDateFormat()}"
 
             if (isCustomer) {
-                viewIndicator.setBackgroundResource(R.color.teal_200)
+                viewIndicator.setBackgroundResource(R.color.teal_700)
                 layoutIcon.background.setTint(
                     ContextCompat.getColor(
                         root.context,
-                        R.color.teal_200
+                        R.color.teal_700
                     )
                 )
             } else {

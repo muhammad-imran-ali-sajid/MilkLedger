@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.utils.util.DatePickerLogic
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 
 fun Fragment.showDeleteActionDialog(
     title: String = "Caution!!",
@@ -35,15 +36,13 @@ fun Fragment.showLedgerDatePicker(
 ) {
     val fm = parentFragmentManager
 
-    // 🔥 HARD FIX: remove previous picker if exists
     fm.findFragmentByTag("DATE_PICKER_TAG")?.let {
         fm.beginTransaction().remove(it).commitNow()
     }
 
-    val zoneId = ZoneId.systemDefault()
-
+    // ✅ Convert LocalDate → UTC midnight millis
     val initialMillis = initialDate
-        .atStartOfDay(zoneId)
+        .atStartOfDay(ZoneOffset.UTC)
         .toInstant()
         .toEpochMilli()
 
@@ -58,8 +57,9 @@ fun Fragment.showLedgerDatePicker(
         .build()
 
     picker.addOnPositiveButtonClickListener { millis ->
+        // ✅ Convert back from UTC → LocalDate
         val selectedDate = Instant.ofEpochMilli(millis)
-            .atZone(zoneId)
+            .atZone(ZoneOffset.UTC)
             .toLocalDate()
 
         onPicked(selectedDate)
@@ -67,4 +67,5 @@ fun Fragment.showLedgerDatePicker(
 
     picker.show(fm, "DATE_PICKER_TAG")
 }
+
 
