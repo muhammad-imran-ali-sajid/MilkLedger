@@ -89,6 +89,10 @@ class DriveBackupFragment :
             showRestoreConfirmation()
         }
 
+        btnWipe.setOnClickListener {
+            showWipeConfirmation()
+        }
+
 
     }
 
@@ -106,19 +110,37 @@ class DriveBackupFragment :
     }
 
 
-    private fun restartApp() {
-        val intent = requireActivity().packageManager
-            .getLaunchIntentForPackage(requireActivity().packageName)
-
-        intent?.addFlags(
-            Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                    Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+    private fun showWipeConfirmation() {
+        showDialog(
+            title = "Wipe All Data?",
+            message = "Kya aap waqai tamam data delete karna chahte hain? Is se Accounts aur Transactions sab khatam ho jayega.",
+            positiveText = "Yes, Delete Everything",
+            onAction = {
+                performWipeOperation()
+            }
         )
+    }
 
-        requireActivity().startActivity(intent)
-        requireActivity().finish()
-        Runtime.getRuntime().exit(0)
+    private fun performWipeOperation() {
+        lifecycleScope.launch {
+            showLoading(true, "Cleaning Database...")
+
+            // 2️⃣ ViewModel ka function call karein
+            val result = viewModel.clearAllData()
+
+            showLoading(false)
+
+            if (result.isSuccess) {
+                showSnackbar("Data cleared successfully")
+
+                // 3️⃣ App restart lazmi hai taake Room refresh ho jaye
+                showLoading(true, "Restarting app...")
+                delay(2000)
+                RestartHelper.restart(requireActivity())
+            } else {
+                showSnackbar("Error: ${result.exceptionOrNull()?.message}")
+            }
+        }
     }
 
 
