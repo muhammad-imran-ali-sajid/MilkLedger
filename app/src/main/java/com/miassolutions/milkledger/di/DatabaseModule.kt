@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
@@ -28,6 +29,8 @@ object DatabaseModule {
         @ApplicationContext appContext: Context,
     ): AppDatabase =
         Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
+            // 🔥 YEH LINE ADD KAREIN - MAGIC FIX
+            .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
             .fallbackToDestructiveMigration(true) // todo()
             .build()
 

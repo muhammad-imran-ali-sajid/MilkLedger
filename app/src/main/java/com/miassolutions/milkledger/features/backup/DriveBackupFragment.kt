@@ -29,6 +29,7 @@ class DriveBackupFragment :
         lifecycleScope.launch {
             showLoading(true)
 
+            delay(5000)
             val result = viewModel.backup(uri)
 
             showLoading(false)
@@ -62,9 +63,11 @@ class DriveBackupFragment :
                 is BackupResult.Error -> showSnackbar("Restore Failed: ${result.message}")
 
                 BackupResult.Success -> {
+                    showLoading(true, "App will restart")
                     showSnackbar("Restore Successful. Restarting app...")
                     // Thora wait taake user message parh sake
-                    delay(1000)
+                    delay(5000)
+                    showLoading(false)
                     RestartHelper.restart(requireActivity())
                 }
             }

@@ -12,6 +12,13 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AccountDao {
 
+
+    @Query("SELECT COUNT(*) FROM accounts_table WHERE accountId = :id")
+    suspend fun isAccountExist(id: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertIgnore(account: AccountEntity)
+
     @Query(
         """
         SELECT 

@@ -7,7 +7,9 @@ import com.miassolutions.milkledger.features.expense.data.repository.ExpenseRepo
 import com.miassolutions.milkledger.features.expense.domain.Expense
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -159,7 +161,12 @@ class ExpenseFormViewModel @Inject constructor(
             }
 
             try {
-                repository.saveAllExpenses(expensesToSave)
+
+                withContext(NonCancellable) {
+                    repository.saveAllExpenses(expensesToSave)
+
+                }
+
                 emitEffect(ExpenseFormUiEffect.ShowSnackbar("Saved successfully"))
                 emitEffect(ExpenseFormUiEffect.ExpenseSaved)
             } catch (e: Exception) {

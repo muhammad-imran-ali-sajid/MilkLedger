@@ -47,7 +47,7 @@ abstract class BaseFragment<VB : ViewBinding>(
                     .create()
 
                 // Dialog background transparent karne ke liye (Optional)
-                progressDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+//                progressDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
             }
 
             // Message update karein

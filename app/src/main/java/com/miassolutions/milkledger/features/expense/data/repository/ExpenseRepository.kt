@@ -1,9 +1,13 @@
 package com.miassolutions.milkledger.features.expense.data.repository
 
 import androidx.room.withTransaction
+import com.miassolutions.milkledger.core.contstants.Constants
 import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
 import com.miassolutions.milkledger.core.contstants.Constants.SHOP_EXPENSE
 import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
+import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
@@ -19,14 +23,52 @@ import javax.inject.Inject
 class ExpenseRepository @Inject constructor(
     private val expenseDao: ExpenseDao,
     private val ledgerDao: LedgerDao,
+    private val accountDao: AccountDao,
     private val db: AppDatabase
 ) {
+
+
+    // 🔥 HELPER: Ensure System Accounts Exist
+    private suspend fun ensureSystemAccountsExist() {
+        // 1. Check Shop Expense Account (Business Expenses k liye zaroori)
+        if (accountDao.isAccountExist(Constants.SHOP_EXPENSE) == 0) {
+            accountDao.insertIgnore(
+                AccountEntity(
+                    accountId = SHOP_EXPENSE,
+                    name = "Shop Expense", // Ye user ko nahi dikhega, internal hai
+                    accountType = AccountType.OWNER,
+                    phone = null,
+                    initialBalance = 0L,
+                    createdAtMillis = System.currentTimeMillis(),
+                    advanceAmount = 0L
+                )
+            )
+        }
+
+        // 2. Check Owner Account (Personal Withdrawals k liye zaroori)
+        if (accountDao.isAccountExist(Constants.OWNER_ACCOUNT_ID) == 0) {
+            accountDao.insertIgnore(
+                AccountEntity(
+                    accountId = Constants.OWNER_ACCOUNT_ID,
+                    name = "Owner",
+                    accountType = AccountType.OWNER,
+                    phone = null,
+                    initialBalance = 0L,
+                    createdAtMillis = System.currentTimeMillis(),
+                    advanceAmount = 0L
+                )
+            )
+        }
+    }
 
     // ------------------------------------------------
     // 1️⃣ SAVE ALL (Batch Insert)
     // ------------------------------------------------
     suspend fun saveAllExpenses(expenses: List<Expense>) {
         db.withTransaction {
+
+            ensureSystemAccountsExist()
+
             val entities = expenses.map { it.toEntity() }
             expenseDao.insertAll(entities)
 
@@ -69,6 +111,8 @@ class ExpenseRepository @Inject constructor(
     // ------------------------------------------------
     suspend fun saveExpense(expense: Expense) {
         db.withTransaction {
+
+            ensureSystemAccountsExist()
             // 1. Expense Table
             val expenseEntity = expense.toEntity()
             expenseDao.insertExpense(expenseEntity)

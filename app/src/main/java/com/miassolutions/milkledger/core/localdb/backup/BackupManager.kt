@@ -8,7 +8,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.IOException
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,119 +19,155 @@ class BackupManager @Inject constructor(
     private val db: AppDatabase
 ) {
 
-    private val dbName = db.openHelper.databaseName!!
+    private val dbName = db.openHelper.databaseName!! // "milk_ledger_database"
     private fun dbFile() = context.getDatabasePath(dbName)
+
+    // TRUNCATE Mode me WAL/SHM files nahi hotin, lekin purani safai k liye rakh rahy hain
     private fun walFile() = File(dbFile().absolutePath + "-wal")
     private fun shmFile() = File(dbFile().absolutePath + "-shm")
 
     /* ============================================================
-       BACKUP (Fixed Stream Issue)
+       📥 BACKUP FUNCTION
+       Strategy: Since we use TRUNCATE mode, the .db file always
+       contains the latest data. We just need to copy it safely.
        ============================================================ */
-
     suspend fun backupTo(uri: Uri): BackupResult = withContext(Dispatchers.IO) {
-        return@withContext try {
-            // 1️⃣ Ensure WAL content is merged into main DB
-            checkpointWal()
+        // Synchronized block ensure karta hai k backup k doran koi aur thread interfere na kare
+        synchronized(this) {
+            return@withContext try {
 
-            val dbFile = dbFile()
-            if (!dbFile.exists()) return@withContext BackupResult.Error("Database file not found")
-
-            // 2️⃣ Open Stream safely once
-            context.contentResolver.openOutputStream(uri)?.use { output ->
-                dbFile.inputStream().use { input ->
-                    input.copyTo(output)
+                // 1. Ensure DB is open (Flush any pending memory operations)
+                if (db.isOpen) {
+                    // Ek dummy query run krte hain taake ensure ho jaye k connection active hai
+                    // aur data file me write ho chuka hai.
+                    db.openHelper.readableDatabase.query("SELECT 1").close()
                 }
-            } ?: return@withContext BackupResult.Error("Unable to access backup location")
 
-            BackupResult.Success
+                val sourceFile = dbFile()
 
-        } catch (e: Exception) {
-            e.printStackTrace()
-            BackupResult.Error(e.message ?: "Backup failed")
-        }
-    }
-
-    /* ============================================================
-       RESTORE (Fixed Safety Logic)
-       ============================================================ */
-
-    suspend fun restoreFrom(uri: Uri): BackupResult = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val targetDb = dbFile()
-            val tempDb = File(context.cacheDir, "$dbName.restore.tmp")
-
-            // 1️⃣ Copy backup into TEMP file first
-            context.contentResolver.openInputStream(uri)?.use { input ->
-                tempDb.outputStream().use { output ->
-                    input.copyTo(output)
+                if (!sourceFile.exists()) {
+                    return@withContext BackupResult.Error("Database file does not exist.")
                 }
-            } ?: return@withContext BackupResult.Error("Unable to read backup file")
 
-            // 2️⃣ Integrity check on TEMP file (Safety Check)
-            if (!integrityCheck(tempDb)) {
-                tempDb.delete()
-                return@withContext BackupResult.Error("Backup file is corrupted or invalid")
-            }
-
-            // 3️⃣ Close Room completely
-            db.close()
-
-            // 4️⃣ Safe Replacement Logic
-            // Agar target DB exist karti hai, tabhi delete karein jab naya file ready ho
-            if (targetDb.exists()) {
-                // Pehly backup le lein (Optional safety, but good)
-                val backupSafe = File(context.cacheDir, "$dbName.bak.safety")
-                targetDb.copyTo(backupSafe, overwrite = true)
-
-                if (targetDb.delete()) {
-                    if (tempDb.renameTo(targetDb)) {
-                        // Success! Cleanup safety backup
-                        backupSafe.delete()
-                    } else {
-                        // CRITICAL FAILURE: Restore old DB from safety
-                        backupSafe.copyTo(targetDb, overwrite = true)
-                        return@withContext BackupResult.Error("System prevented file restore. Reverted to original.")
+                // 2. Copy File to User Selected URI
+                context.contentResolver.openOutputStream(uri)?.use { output ->
+                    FileInputStream(sourceFile).use { input ->
+                        input.copyTo(output)
                     }
-                } else {
-                    return@withContext BackupResult.Error("Could not clear old database.")
-                }
-            } else {
-                // Agar pehly se DB nahi hai (Fresh Install)
-                if (!tempDb.renameTo(targetDb)) {
-                    // Fallback using copy if rename fails
-                    tempDb.copyTo(targetDb, overwrite = true)
-                }
+                } ?: return@withContext BackupResult.Error("Unable to access backup location.")
+
+                BackupResult.Success
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                BackupResult.Error("Backup Failed: ${e.message}")
             }
-
-            // Cleanup Temp
-            if(tempDb.exists()) tempDb.delete()
-
-            // 5️⃣ Cleanup WAL / SHM (Room will recreate these)
-            walFile().delete()
-            shmFile().delete()
-
-            BackupResult.Success
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-            BackupResult.Error(e.message ?: "Restore failed")
         }
     }
 
     /* ============================================================
-       INTERNAL HELPERS
+       📤 RESTORE FUNCTION (Fail-Safe)
+       Strategy:
+       1. Download to Temp -> 2. Check Integrity -> 3. Backup Current (Safety)
+       4. Replace DB -> 5. Restart Helper
        ============================================================ */
+    suspend fun restoreFrom(uri: Uri): BackupResult = withContext(Dispatchers.IO) {
+        synchronized(this) {
+            val currentDb = dbFile()
+            val safetyBackup = File(context.cacheDir, "safety_backup.db") // Purana data bachane k liye
+            val incomingTemp = File(context.cacheDir, "incoming_restore.tmp") // Naya data check krne k liye
 
-    private fun checkpointWal() {
-        try {
-            db.openHelper.writableDatabase.query("PRAGMA wal_checkpoint(FULL)").close()
-        } catch (e: Exception) {
-            // Log error but don't crash, standard DB copy might still work partially
-            e.printStackTrace()
+            return@withContext try {
+
+                // 1. Copy Incoming File to Temp (Validation k liye)
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    FileOutputStream(incomingTemp).use { output ->
+                        input.copyTo(output)
+                    }
+                } ?: return@withContext BackupResult.Error("Could not read selected file.")
+
+                // 2. Integrity Check (Kya ye valid SQLite file hai?)
+                if (!checkIntegrity(incomingTemp)) {
+                    incomingTemp.delete()
+                    return@withContext BackupResult.Error("File is corrupted or not a valid database.")
+                }
+
+                // 3. Create Safety Backup of CURRENT Data (Rollback Plan)
+                if (currentDb.exists()) {
+                    // Close DB connection before touching files
+                    if (db.isOpen) db.close()
+
+                    // Backup le lo
+                    currentDb.copyTo(safetyBackup, overwrite = true)
+                }
+
+                // 4. Force Close & Delete Old Files
+                if (db.isOpen) db.close()
+                val deleted = deleteCurrentDbFiles()
+
+                if (!deleted) {
+                    // Agar delete fail ho, to wapis safety restore kr den
+                    if(safetyBackup.exists()) safetyBackup.copyTo(currentDb, overwrite = true)
+                    return@withContext BackupResult.Error("System could not replace old database.")
+                }
+
+                // 5. Move New File to Main Location
+                if (incomingTemp.renameTo(currentDb)) {
+                    // ✅ SUCCESS
+
+                    // Cleanup garbage
+                    safetyBackup.delete()
+                    walFile().delete() // Purani WAL files bhi ura dein
+                    shmFile().delete()
+
+                    BackupResult.Success
+                } else {
+                    // ❌ FAIL - ROLLBACK
+                    // Nayi file move nahi ho saki, purana data wapis lao
+                    if (safetyBackup.exists()) {
+                        safetyBackup.copyTo(currentDb, overwrite = true)
+                    }
+                    BackupResult.Error("Restore failed during file replacement.")
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                // Critical Failure par bhi Rollback koshish karein
+                if (safetyBackup.exists()) {
+                    try {
+                        safetyBackup.copyTo(currentDb, overwrite = true)
+                    } catch (ex: Exception) { ex.printStackTrace() }
+                }
+
+                BackupResult.Error("Critical Error: ${e.message}")
+            } finally {
+                if (incomingTemp.exists()) incomingTemp.delete()
+            }
         }
     }
 
-    private fun integrityCheck(file: File): Boolean {
+    /* ============================================================
+       🛠️ HELPERS
+       ============================================================ */
+
+    private fun deleteCurrentDbFiles(): Boolean {
+        return try {
+            val dbDeleted = !dbFile().exists() || dbFile().delete()
+            // TRUNCATE mode me inki zaroorat nahi, par safety k liye delete krna acha hai
+            val walDeleted = !walFile().exists() || walFile().delete()
+            val shmDeleted = !shmFile().exists() || shmFile().delete()
+
+            dbDeleted && walDeleted && shmDeleted
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    /**
+     * SQLite command chala kr check krta hai k file corrupted to nahi
+     */
+    private fun checkIntegrity(file: File): Boolean {
         return try {
             SQLiteDatabase.openDatabase(
                 file.absolutePath,
@@ -142,6 +179,7 @@ class BackupManager @Inject constructor(
                 }
             }
         } catch (e: Exception) {
+            // Agar file SQLite format ki nahi hai to exception ayega
             false
         }
     }
