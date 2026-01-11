@@ -63,7 +63,13 @@ class MilkPurchaseListViewModel @Inject constructor(
 
     override fun onEvent(event: PurchaseListUiEvent) {
         when (event) {
-            is PurchaseListUiEvent.OnDateSelected -> loadPurchases(event.date)
+
+            is PurchaseListUiEvent.OnDateSelected -> {
+
+
+
+                loadPurchases(event.date)
+            }
             PurchaseListUiEvent.OnDateClick -> emitEffect(PurchaseListUiEffect.OpenDatePicker)
             PurchaseListUiEvent.OnAddPurchaseClick -> emitEffect(PurchaseListUiEffect.NavigateToAddPurchase)
 

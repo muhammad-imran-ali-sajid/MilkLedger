@@ -16,6 +16,7 @@ import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
@@ -67,8 +68,16 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
         }
 
         binding.dateHeader.btnNextDate.setOnClickListener {
-            val nextDate = viewModel.uiState.value.date.plusDays(1)
-            viewModel.onEvent(PurchaseListUiEvent.OnDateSelected(nextDate))
+            val current = viewModel.uiState.value.date
+            val today = LocalDate.now()
+            val nextDate = current.plusDays(1)
+
+            if (nextDate.isAfter(today)) {
+                showSnackbar("Future date allowed is not allowed")
+            } else {
+                viewModel.onEvent(PurchaseListUiEvent.OnDateSelected(nextDate))
+            }
+
         }
 
         binding.dateHeader.tvSelectedDate.setOnClickListener {
@@ -93,6 +102,7 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
 
             // 3. Date Header
             binding.dateHeader.tvSelectedDate.text = state.date.toDisplayDate()
+
 
             // 4. Summary Card (Assuming CollapsibleCardView layout logic)
             binding.cardSummary.apply {
@@ -127,9 +137,10 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                 }
 
 
-                PurchaseListUiEffect.OpenDatePicker -> openDatePicker{ date ->
+                PurchaseListUiEffect.OpenDatePicker -> openDatePicker { date ->
                     viewModel.onEvent(PurchaseListUiEvent.OnDateSelected(date))
                 }
+
                 is PurchaseListUiEffect.OpenBalanceHistorySheet -> {
                     val sheet = BalanceHistoryBottomSheet.newInstance(
                         accountId = effect.id,
