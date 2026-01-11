@@ -21,7 +21,7 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
-import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
@@ -148,11 +148,11 @@ class SaleFormFragment :
             SaleFormUiEffect.NavigateBack -> findNavController().navigateUp()
 
             SaleFormUiEffect.OpenDatePicker -> {
-                showLedgerDatePicker { date -> viewModel.onEvent(OnDateSelected(date)) }
+                openDatePicker { date -> viewModel.onEvent(OnDateSelected(date)) }
             }
 
             SaleFormUiEffect.OpenPaymentDatePicker -> {
-                showLedgerDatePicker { date -> viewModel.onEvent(OnPaymentDateSelected(date)) }
+                openDatePicker { date -> viewModel.onEvent(OnPaymentDateSelected(date)) }
             }
 
             is SaleFormUiEffect.ShowSnackbar -> showSnackbar(effect.message)

@@ -4,7 +4,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkPurchaseListBinding
 import com.miassolutions.milkledger.features.purchase.ui.balancehistory.BalanceHistoryBottomSheet
@@ -14,11 +13,9 @@ import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffe
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Instant
-import java.time.ZoneId
 
 @AndroidEntryPoint
 class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
@@ -130,7 +127,7 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                 }
 
 
-                PurchaseListUiEffect.OpenDatePicker -> showLedgerDatePicker{ date ->
+                PurchaseListUiEffect.OpenDatePicker -> openDatePicker{ date ->
                     viewModel.onEvent(PurchaseListUiEvent.OnDateSelected(date))
                 }
                 is PurchaseListUiEffect.OpenBalanceHistorySheet -> {

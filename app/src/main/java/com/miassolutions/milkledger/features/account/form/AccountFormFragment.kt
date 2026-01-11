@@ -17,10 +17,8 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
-import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
-import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
-import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPaisa
 import com.miassolutions.milkledger.utils.extensions.toRupees
 import dagger.hilt.android.AndroidEntryPoint
@@ -153,7 +151,7 @@ class AccountFormFragment :
                 focusField(effect.field)
 
             is AccountFormEffect.OpenDatePicker -> {
-                showLedgerDatePicker(
+                openDatePicker(
                     initialDate = effect.currentDate
                 ) { selectedDate ->
                     viewModel.onEvent(

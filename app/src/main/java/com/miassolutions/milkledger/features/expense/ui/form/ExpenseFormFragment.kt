@@ -10,9 +10,8 @@ import com.miassolutions.milkledger.databinding.FragmentAddExpenseBinding
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
-import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
-import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -104,7 +103,7 @@ class ExpenseFormFragment :
 
                 is ExpenseFormUiEffect.OpenDatePicker -> {
 
-                    showLedgerDatePicker { date ->
+                    openDatePicker { date ->
                         viewModel.onEvent(
                             ExpenseFormUiEvent.OnDateSelected(date)
                         )

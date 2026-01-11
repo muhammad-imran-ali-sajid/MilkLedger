@@ -5,10 +5,8 @@ import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.miassolutions.milkledger.utils.util.DatePickerLogic
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 import java.time.ZoneOffset
 
 fun Fragment.showDeleteActionDialog(
@@ -30,7 +28,7 @@ fun Fragment.showDeleteActionDialog(
 }
 
 
-fun Fragment.showLedgerDatePicker(
+fun Fragment.openDatePicker(
     initialDate: LocalDate = LocalDate.now(),
     onPicked: (LocalDate) -> Unit
 ) {

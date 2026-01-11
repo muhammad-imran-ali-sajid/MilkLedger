@@ -37,7 +37,7 @@ class BalanceHistoryBottomSheet : BottomSheetDialogFragment() {
         val accountName = arguments?.getString("accountName") ?: "History"
 
         // Setup UI
-        binding.tvSheetTitle.text = "$accountName - History"
+        binding.tvSheetTitle.text = "$accountName - Balance"
 
         val adapter = BalanceHistoryAdapter()
         binding.rvHistory.layoutManager = LinearLayoutManager(context)
