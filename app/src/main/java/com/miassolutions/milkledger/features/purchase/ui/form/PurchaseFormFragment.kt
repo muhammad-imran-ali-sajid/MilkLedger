@@ -4,7 +4,6 @@ package com.miassolutions.milkledger.features.purchase.ui.form
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchaseFormBinding
 import com.miassolutions.milkledger.features.account.domain.Account
@@ -13,12 +12,11 @@ import com.miassolutions.milkledger.features.purchase.purchaseform.PurchaseFormV
 import com.miassolutions.milkledger.features.purchase.purchaseform.SupplierAdapter
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.Instant
-import java.time.ZoneId
 
 @AndroidEntryPoint
 class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
@@ -189,38 +187,20 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
             }
 
             PurchaseFormUiEffect.OpenDatePicker -> {
-                openDatePicker(isPaymentDate = false)
+                openDatePicker { date ->
+                    viewModel.onEvent(PurchaseFormUiEvent.OnDateSelected(date))
+
+                }
             }
 
             PurchaseFormUiEffect.OpenPaymentDatePicker -> {
-                openDatePicker(isPaymentDate = true)
+                openDatePicker { date ->
+                    viewModel.onEvent(PurchaseFormUiEvent.OnPaymentDateSelected(date))
+
+                }
             }
         }
     }
 
-    private fun openDatePicker(isPaymentDate: Boolean) {
-        // Initial Selection Logic
-        // Agar Payment Date khol rahe hen to State se payment date uthayen, warna sale date
-        // Filhal hum current system date ya previously selected date utha skty hen ViewModel se logic k through
-        // but for simplicity, using Today or handling in callback.
 
-        val picker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText(if (isPaymentDate) "Select Payment Date" else "Select Purchase Date")
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .build()
-
-        picker.addOnPositiveButtonClickListener { selection ->
-            val date = Instant.ofEpochMilli(selection)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate()
-
-            if (isPaymentDate) {
-                viewModel.onEvent(PurchaseFormUiEvent.OnPaymentDateSelected(date))
-            } else {
-                viewModel.onEvent(PurchaseFormUiEvent.OnDateSelected(date))
-            }
-        }
-
-        picker.show(childFragmentManager, "PurchaseDatePicker")
-    }
 }
