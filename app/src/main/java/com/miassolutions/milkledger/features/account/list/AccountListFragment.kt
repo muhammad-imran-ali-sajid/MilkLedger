@@ -2,7 +2,6 @@ package com.miassolutions.milkledger.features.account.list
 
 import android.view.Menu
 import android.view.MenuItem
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
@@ -21,15 +20,20 @@ class AccountListFragment :
     private val viewModel by viewModels<AccountViewModel>()
     private lateinit var adapter: AccountListAdapter
 
-    /* --------------------------------------------------
-     * MENU CONFIG (BaseFragment hook)
-     * -------------------------------------------------- */
+    /** 🔑 SINGLE SOURCE OF TRUTH FOR TAB ORDER */
+    private val tabTypes = listOf(
+        AccountType.SUPPLIER,   // ✅ FIRST TAB
+        AccountType.CUSTOMER
+    )
+
+    /* -------------------------------------------------- */
+    /* MENU (optional – still works if you keep it)       */
+    /* -------------------------------------------------- */
 
     override fun getMenuResId(): Int = R.menu.menu_account_list
 
     override fun onMenuCreated(menu: Menu) {
-        val item = menu.findItem(R.id.menu_show_archived)
-        item.isChecked =
+        menu.findItem(R.id.menu_show_archived)?.isChecked =
             viewModel.visibility.value ==
                     AccountViewModel.AccountVisibility.ALL
     }
@@ -40,35 +44,34 @@ class AccountListFragment :
                 viewModel.toggleVisibility()
                 true
             }
-
             else -> false
         }
     }
 
-    /* --------------------------------------------------
-     * Views
-     * -------------------------------------------------- */
+    /* -------------------------------------------------- */
+    /* VIEWS                                             */
+    /* -------------------------------------------------- */
 
     override fun setupViews() = with(binding) {
         super.setupViews()
 
+        // Add Account
         btnAddAccount.setOnClickListener {
             val action =
                 AccountListFragmentDirections
                     .actionAccountListFragmentToAccountFormFragment(
-                        null,
-                        type = viewModel.selectedTab.value.name,
+                        accountId = null,
+                        type = viewModel.selectedTab.value.name
                     )
             findNavController().navigate(action)
         }
 
+        // RecyclerView
         adapter = AccountListAdapter(::onEditClick)
         recyclerView.adapter = adapter
 
-        // Tabs = Account TYPE
-        val types = AccountType.entries.filter { it != AccountType.OWNER }
-
-        types.forEach { type ->
+        // Tabs
+        tabTypes.forEach { type ->
             tabLayout.addTab(
                 tabLayout.newTab().setText(type.title(requireContext()))
             )
@@ -77,7 +80,7 @@ class AccountListFragment :
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 tab ?: return
-                viewModel.onTabSelected(types[tab.position])
+                viewModel.onTabSelected(tabTypes[tab.position])
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -85,37 +88,36 @@ class AccountListFragment :
         })
     }
 
-    /* --------------------------------------------------
-     * Observers
-     * -------------------------------------------------- */
+    /* -------------------------------------------------- */
+    /* OBSERVERS                                         */
+    /* -------------------------------------------------- */
 
     override fun setupObservers() {
 
-        // Accounts list
-        collectFlow(viewModel.accounts) { list ->
-            adapter.submitList(list)
+        collectFlow(viewModel.accounts) {
+            adapter.submitList(it)
         }
 
-        // Restore selected tab (process-safe)
+        // Restore tab (process / rotation safe)
         collectFlow(viewModel.selectedTab) { type ->
-            val index = AccountType.entries
-                .filter { it != AccountType.OWNER }
-                .indexOf(type)
-
-            if (index >= 0) {
+            val index = tabTypes.indexOf(type)
+            if (index >= 0 && binding.tabLayout.selectedTabPosition != index) {
                 binding.tabLayout.getTabAt(index)?.select()
             }
         }
     }
 
-    /* --------------------------------------------------
-     * Navigation
-     * -------------------------------------------------- */
+    /* -------------------------------------------------- */
+    /* NAVIGATION                                        */
+    /* -------------------------------------------------- */
 
     private fun onEditClick(id: String) {
         val action =
             AccountListFragmentDirections
-                .actionAccountListFragmentToAccountFormFragment(id, null)
+                .actionAccountListFragmentToAccountFormFragment(
+                    accountId = id,
+                    type = null
+                )
         findNavController().navigate(action)
     }
 }

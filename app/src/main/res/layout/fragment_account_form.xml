@@ -98,17 +98,20 @@
                     android:paddingTop="8dp">
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rbSupplier"
+
+                        android:text="Supplier" />
+
+                    <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/rbCustomer"
+                        android:layout_marginStart="24dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Customer" />
 
-                    <com.google.android.material.radiobutton.MaterialRadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/rbSupplier"
-                        android:layout_marginStart="24dp"
-                        android:text="Supplier" />
+
                 </RadioGroup>
             </com.google.android.material.textfield.TextInputLayout>
 

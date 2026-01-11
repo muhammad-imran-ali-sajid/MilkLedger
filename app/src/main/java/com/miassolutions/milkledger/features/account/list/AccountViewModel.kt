@@ -23,23 +23,23 @@ class AccountViewModel @Inject constructor(
         private const val KEY_VISIBILITY = "visibility"
     }
 
-    /* --------------------------------------------------
-     * TAB = Account TYPE (Primary)
-     * -------------------------------------------------- */
+    /* -------------------------------------------------- */
+    /* PRIMARY FILTER: ACCOUNT TYPE (TAB)                 */
+    /* -------------------------------------------------- */
 
     private val _selectedTab = MutableStateFlow(
-        savedStateHandle[KEY_SELECTED_TAB] ?: AccountType.CUSTOMER
+        savedStateHandle[KEY_SELECTED_TAB] ?: AccountType.SUPPLIER // ✅ DEFAULT
     )
-    val selectedTab = _selectedTab.asStateFlow()
+    val selectedTab: StateFlow<AccountType> = _selectedTab.asStateFlow()
 
     fun onTabSelected(type: AccountType) {
         _selectedTab.value = type
         savedStateHandle[KEY_SELECTED_TAB] = type
     }
 
-    /* --------------------------------------------------
-     * FILTER = Account STATUS (Secondary)
-     * -------------------------------------------------- */
+    /* -------------------------------------------------- */
+    /* SECONDARY FILTER: VISIBILITY                       */
+    /* -------------------------------------------------- */
 
     enum class AccountVisibility {
         ACTIVE_ONLY,
@@ -49,44 +49,38 @@ class AccountViewModel @Inject constructor(
     private val _visibility = MutableStateFlow(
         savedStateHandle[KEY_VISIBILITY] ?: AccountVisibility.ACTIVE_ONLY
     )
-    val visibility = _visibility.asStateFlow()
+    val visibility: StateFlow<AccountVisibility> = _visibility.asStateFlow()
 
     fun toggleVisibility() {
-        val newValue =
+        val next =
             if (_visibility.value == AccountVisibility.ACTIVE_ONLY)
                 AccountVisibility.ALL
             else
                 AccountVisibility.ACTIVE_ONLY
 
-        _visibility.value = newValue
-        savedStateHandle[KEY_VISIBILITY] = newValue
+        _visibility.value = next
+        savedStateHandle[KEY_VISIBILITY] = next
     }
 
-    /* --------------------------------------------------
-     * FINAL ACCOUNTS LIST (Tab + Filter combined)
-     * -------------------------------------------------- */
+    /* -------------------------------------------------- */
+    /* FINAL LIST (TAB + FILTER COMBINED)                 */
+    /* -------------------------------------------------- */
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val accounts: StateFlow<List<AccountUi>> =
-        combine(
-            selectedTab,
-            visibility
-        ) { type, visibility ->
+        combine(selectedTab, visibility) { type, visibility ->
             type to visibility
         }.flatMapLatest { (type, visibility) ->
-
             repository.getAccountsByType(type)
                 .map { list ->
                     when (visibility) {
                         AccountVisibility.ACTIVE_ONLY ->
                             list.filter { it.isActive }
-
                         AccountVisibility.ALL ->
                             list
                     }
                 }
                 .toUiListFlow()
-
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),

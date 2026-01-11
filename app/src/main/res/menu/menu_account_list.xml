@@ -7,6 +7,4 @@
         android:checkable="true"
         android:showAsAction="never" />
 
-
-
 </menu>
