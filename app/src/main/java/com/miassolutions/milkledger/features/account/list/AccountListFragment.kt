@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.features.account.list
 
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayout
@@ -39,6 +40,7 @@ class AccountListFragment :
                 viewModel.toggleVisibility()
                 true
             }
+
             else -> false
         }
     }
@@ -53,7 +55,10 @@ class AccountListFragment :
         btnAddAccount.setOnClickListener {
             val action =
                 AccountListFragmentDirections
-                    .actionAccountListFragmentToAccountFormFragment(null)
+                    .actionAccountListFragmentToAccountFormFragment(
+                        null,
+                        type = viewModel.selectedTab.value.name,
+                    )
             findNavController().navigate(action)
         }
 
@@ -110,7 +115,7 @@ class AccountListFragment :
     private fun onEditClick(id: String) {
         val action =
             AccountListFragmentDirections
-                .actionAccountListFragmentToAccountFormFragment(id)
+                .actionAccountListFragmentToAccountFormFragment(id, null)
         findNavController().navigate(action)
     }
 }

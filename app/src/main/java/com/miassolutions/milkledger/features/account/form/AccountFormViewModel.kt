@@ -4,8 +4,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.ui.BaseViewModel
-import com.miassolutions.milkledger.features.account.domain.usecase.*
-import com.miassolutions.milkledger.features.account.form.AccountFormEffect.*
+import com.miassolutions.milkledger.features.account.domain.usecase.DeleteAccountResult
+import com.miassolutions.milkledger.features.account.domain.usecase.DeleteAccountUseCase
+import com.miassolutions.milkledger.features.account.domain.usecase.LoadAccountForEditUseCase
+import com.miassolutions.milkledger.features.account.domain.usecase.SaveAccountResult
+import com.miassolutions.milkledger.features.account.domain.usecase.SaveAccountUseCase
+import com.miassolutions.milkledger.features.account.form.AccountFormEffect.CloseScreen
+import com.miassolutions.milkledger.features.account.form.AccountFormEffect.FocusField
+import com.miassolutions.milkledger.features.account.form.AccountFormEffect.OpenDatePicker
+import com.miassolutions.milkledger.features.account.form.AccountFormEffect.ShowBalanceError
+import com.miassolutions.milkledger.features.account.form.AccountFormEffect.ShowToast
 import com.miassolutions.milkledger.features.account.mapper.toDomain
 import com.miassolutions.milkledger.utils.extensions.toRupeesStr
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +37,13 @@ class AccountFormViewModel @Inject constructor(
         updateState { it.copy(isEditMode = accountId != null) }
         if (accountId != null) loadAccount()
     }
+
+
+    fun setInitialAccountType(type: AccountType) {
+        updateState { it.copy(selectAccountType = type) }
+
+    }
+
 
     /* --------------------------------------------------
      * Load (Edit Mode)

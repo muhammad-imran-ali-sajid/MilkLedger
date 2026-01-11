@@ -7,6 +7,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -28,9 +29,15 @@ class AccountFormFragment :
     BaseFragment<FragmentAccountFormBinding>(FragmentAccountFormBinding::inflate) {
 
     private val viewModel by viewModels<AccountFormViewModel>()
+    private val args by navArgs<AccountFormFragmentArgs>()
 
     override fun setupViews() {
         super.setupViews()
+
+        args.type?.let {
+            viewModel.setInitialAccountType(AccountType.valueOf(it))
+        }
+
         setupInputs()
         setupClicks()
         setupAccountTypeRadioGroup()

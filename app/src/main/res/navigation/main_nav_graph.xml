@@ -116,6 +116,10 @@
             android:name="accountId"
             app:argType="string"
             app:nullable="true" />
+        <argument
+            android:name="type"
+            app:argType="string"
+            app:nullable="true"/>
     </fragment>
     <fragment
         android:id="@+id/ownerSetupFragment"
