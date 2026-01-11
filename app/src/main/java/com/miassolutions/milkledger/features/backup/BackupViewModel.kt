@@ -39,10 +39,10 @@ class BackupRestoreViewModel @Inject constructor(
     // BackupManager.kt mein add karein
     suspend fun clearAllData(): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            // 1. Sab tables khali karein
+            // 1. Tables clear karein
             db.clearAllTables()
 
-            // 2. IDs reset karein (Optional: taake transaction IDs 1 se start hon)
+            // 2. Auto-increment IDs reset karein
             db.openHelper.writableDatabase.execSQL("DELETE FROM sqlite_sequence")
 
             Result.success(Unit)

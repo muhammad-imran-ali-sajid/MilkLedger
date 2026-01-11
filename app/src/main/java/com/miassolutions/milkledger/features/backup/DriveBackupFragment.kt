@@ -125,20 +125,23 @@ class DriveBackupFragment :
         lifecycleScope.launch {
             showLoading(true, "Cleaning Database...")
 
-            // 2️⃣ ViewModel ka function call karein
+            // ViewModel function call
             val result = viewModel.clearAllData()
 
-            showLoading(false)
-
             if (result.isSuccess) {
-                showSnackbar("Data cleared successfully")
-
-                // 3️⃣ App restart lazmi hai taake Room refresh ho jaye
-                showLoading(true, "Restarting app...")
+                showLoading(true, "Data Cleared. Restarting...")
+                // Snackbar aksar restart se pehle nazar nahi aata, isliye delay zaroori hai
                 delay(2000)
+
+                showLoading(false)
+                // Ensure RestartHelper sahi context use kar raha hai
                 RestartHelper.restart(requireActivity())
             } else {
-                showSnackbar("Error: ${result.exceptionOrNull()?.message}")
+                showLoading(false)
+                val errorMsg = result.exceptionOrNull()?.message ?: "Unknown Error"
+                showSnackbar("Error: $errorMsg")
+                // Logcat mein error check karne ke liye:
+                android.util.Log.e("WIPE_ERROR", errorMsg)
             }
         }
     }

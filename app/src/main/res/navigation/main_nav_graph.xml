@@ -42,9 +42,9 @@
         android:label="DevSettingsFragment" />
     <fragment
         android:id="@+id/driveBackupFragment"
-        tools:layout="@layout/fragment_drive_backup"
         android:name="com.miassolutions.milkledger.features.backup.DriveBackupFragment"
-        android:label="DriveBackupFragment" />
+        android:label="Backup/Restore"
+        tools:layout="@layout/fragment_drive_backup" />
     <fragment
         android:id="@+id/dashboardFragment"
         android:name="com.miassolutions.milkledger.features.dashboard.DashboardFragment"
