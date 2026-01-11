@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffe
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
@@ -129,7 +130,9 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                 }
 
 
-                PurchaseListUiEffect.OpenDatePicker -> openDatePicker()
+                PurchaseListUiEffect.OpenDatePicker -> showLedgerDatePicker{ date ->
+                    viewModel.onEvent(PurchaseListUiEvent.OnDateSelected(date))
+                }
                 is PurchaseListUiEffect.OpenBalanceHistorySheet -> {
                     val sheet = BalanceHistoryBottomSheet.newInstance(
                         accountId = effect.id,
@@ -151,15 +154,5 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
         }
     }
 
-    private fun openDatePicker() {
-        val picker = MaterialDatePicker.Builder.datePicker()
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .build()
 
-        picker.addOnPositiveButtonClickListener { selection ->
-            val date = Instant.ofEpochMilli(selection).atZone(ZoneId.systemDefault()).toLocalDate()
-            viewModel.onEvent(PurchaseListUiEvent.OnDateSelected(date))
-        }
-        picker.show(childFragmentManager, "PurchaseListDate")
-    }
 }

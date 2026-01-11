@@ -19,6 +19,7 @@ import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.showLedgerDatePicker
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPaisa
 import com.miassolutions.milkledger.utils.extensions.toRupees
@@ -194,7 +195,7 @@ class AccountFormFragment :
         etAdvanceAmount.setTextIfDifferent(state.advanceAmount)
 
         etOpeningDate.setTextIfDifferent(
-            state.openingDate.toDisplayDate()
+            state.openingDate.toCompleteDateFormat()
         )
 
         // Switch

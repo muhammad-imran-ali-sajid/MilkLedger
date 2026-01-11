@@ -51,8 +51,7 @@ class AccountFormViewModel @Inject constructor(
 
     private fun loadAccount() {
         viewModelScope.launch {
-            val (account, openingDate) =
-                loadAccountForEdit(accountId!!)
+            val (account, openingDate) = loadAccountForEdit(accountId!!)
 
             updateState {
                 it.copy(
