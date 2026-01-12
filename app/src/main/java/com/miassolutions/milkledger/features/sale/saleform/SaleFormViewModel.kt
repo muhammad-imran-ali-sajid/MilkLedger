@@ -154,11 +154,14 @@ class SaleFormViewModel @Inject constructor(
             }
 
             is SaleFormUiEvent.OnNoteChanged -> updateState { it.copy(note = event.value) }
-            is SaleFormUiEvent.OnSaveClicked -> saveSale()
+            is SaleFormUiEvent.OnSaveClicked -> saveSale(true)
 
             SaleFormUiEvent.OnDateClick -> emitEffect(SaleFormUiEffect.OpenDatePicker)
             SaleFormUiEvent.OnPaymentDateClick -> emitEffect(SaleFormUiEffect.OpenPaymentDatePicker)
             is SaleFormUiEvent.LoadSaleForEdit -> loadSaleForEdit(event.saleId)
+            SaleFormUiEvent.OnSaveAndNewClicked -> {
+                saveSale(false)
+            }
         }
     }
 
@@ -179,9 +182,10 @@ class SaleFormViewModel @Inject constructor(
         updateState { it.copy(calculatedTotal = total) }
     }
 
-    private fun saveSale() {
+    private fun saveSale(exitAfterSave: Boolean) {
         val state = currentState
 
+        // --- Validation Logic (Same as before) ---
         if (state.selectedCustomer == null) {
             emitEffect(SaleFormUiEffect.ShowSnackbar("Please select a customer"))
             return
@@ -203,11 +207,13 @@ class SaleFormViewModel @Inject constructor(
             emitEffect(SaleFormUiEffect.ShowSnackbar("Deduction cannot be greater than Volume"))
             return
         }
+        // ----------------------------------------
 
         viewModelScope.launch {
             updateState { it.copy(isSaving = true) }
             try {
                 if (saleId != null) {
+                    // === EDIT MODE ===
                     val updateRequest = UpdateSaleRequest(
                         saleId = saleId,
                         accountId = state.selectedCustomer!!.accountId,
@@ -221,7 +227,12 @@ class SaleFormViewModel @Inject constructor(
                     )
                     repository.updateMilkSale(updateRequest)
                     emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Updated Successfully"))
+
+                    // Edit hamesha screen close karega
+                    emitEffect(SaleFormUiEffect.NavigateBack)
+
                 } else {
+                    // === NEW ENTRY MODE ===
                     repository.saveMilkSale(
                         accountId = state.selectedCustomer!!.accountId,
                         volume = vol,
@@ -233,14 +244,45 @@ class SaleFormViewModel @Inject constructor(
                         paymentDate = state.paymentDate
                     )
                     emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Saved Successfully"))
+
+                    if (exitAfterSave) {
+                        // 🚪 Agar 'OK' dabaya to wapis jao
+                        emitEffect(SaleFormUiEffect.NavigateBack)
+                    } else {
+                        // 🔄 Agar 'OK & New' dabaya to Form Reset kro (Screen close nahi hogi)
+                        resetFormForNewEntry()
+                    }
                 }
-                emitEffect(SaleFormUiEffect.NavigateBack)
+
+                // ❌ YAHAN SE NAVIGATE BACK REMOVE KAR DIYA HAI
+
             } catch (e: Exception) {
                 Log.e("SaleFormViewModel", "Error saving sale", e)
                 emitEffect(SaleFormUiEffect.ShowSnackbar("Error: ${e.message}"))
             } finally {
                 updateState { it.copy(isSaving = false) }
             }
+        }
+    }
+
+    private fun resetFormForNewEntry() {
+        updateState {
+            it.copy(
+                // Note: Date aur PaymentDate hum CHANGE NAHI kr rahay,
+                // kyun ke user aksar ek hi date ki entries lagatar karta hai.
+
+                selectedCustomer = null, // Customer clear karein
+                volume = "",
+                deduction = "",
+                amountPaid = "",
+                note = "",
+                rate = "",
+                currentBalance = 0L,
+                calculatedTotal = 0.0,
+
+                // Edit mode khatam, kyunke ab ye nayi entry hai
+                isEditMode = false
+            )
         }
     }
 }

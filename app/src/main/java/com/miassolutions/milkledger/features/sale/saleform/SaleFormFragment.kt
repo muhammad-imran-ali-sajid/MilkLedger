@@ -53,6 +53,7 @@ class SaleFormFragment :
         btnDate.setOnClickListener { viewModel.onEvent(OnDateClick) }
         btnPaymentDate.setOnClickListener { viewModel.onEvent(OnPaymentDateClick) }
         btnSave.setOnClickListener { viewModel.onEvent(OnSaveClicked) }
+        btnSaveNew.setOnClickListener { viewModel.onEvent(OnSaveAndNewClicked) }
     }
 
     override fun setupObservers() {
@@ -96,13 +97,13 @@ class SaleFormFragment :
         actvCustomerName.isEnabled = !state.isEditMode
         actvCustomerName.alpha = if (state.isEditMode) 0.7f else 1.0f
 
-        // --- Update Customer Name ---
-        if (state.selectedCustomer != null) {
-            val currentText = actvCustomerName.text.toString()
-            val newText = state.selectedCustomer.name
-            if (currentText != newText) {
-                actvCustomerName.setText(newText)
-            }
+        // --- Update Customer Name (FIXED) ---
+        // Pehle hum sirf null check kr rhy thy, ab hum empty string bhi handle karein gy
+        val currentText = actvCustomerName.text.toString()
+        val newText = state.selectedCustomer?.name ?: "" // Agar null hai to Empty String
+
+        if (currentText != newText) {
+            actvCustomerName.setText(newText)
         }
 
         // --- Dates ---

@@ -68,6 +68,8 @@ sealed interface SaleFormUiEvent {
     data class OnNoteChanged(val value: String) : SaleFormUiEvent
 
     data object OnSaveClicked : SaleFormUiEvent
+
+    object OnSaveAndNewClicked : SaleFormUiEvent
 }
 
 sealed interface SaleFormUiEffect {
