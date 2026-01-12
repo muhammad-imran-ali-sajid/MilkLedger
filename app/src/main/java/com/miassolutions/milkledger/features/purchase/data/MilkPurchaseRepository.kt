@@ -31,7 +31,11 @@ class MilkPurchaseRepository @Inject constructor(
     private val db: AppDatabase
 ) {
 
-    fun getSupplierHistory(supplierId: String, start: Long, end: Long): Flow<List<MilkPurchaseUiModel>> {
+    fun getSupplierHistory(
+        supplierId: String,
+        start: Long,
+        end: Long
+    ): Flow<List<MilkPurchaseUiModel>> {
         return milkDao.getSupplierHistory(supplierId, start, end)
     }
 
@@ -44,7 +48,7 @@ class MilkPurchaseRepository @Inject constructor(
     fun getSuppliers(): Flow<List<Account>> {
         // Sirf Active accounts layen
         return accountDao.getAccountsByType(AccountType.SUPPLIER).map { list ->
-            list.filter { it.isActive } .map { it.toDomain() }
+            list.filter { it.isActive }.map { it.toDomain() }
         }
     }
 
@@ -77,58 +81,59 @@ class MilkPurchaseRepository @Inject constructor(
     ) {
         db.withTransaction {
             // 1. Calculations
-            // Note: TS formula aapke Utils wala use ho raha hai
             val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
             val totalPriceDouble = MilkCalculationUtils.calculatePrice(volume, fat, lr, rate)
             val totalPricePaisa = totalPriceDouble.toLongPaisa()
+
+            // 🔥 NEW: Fetch Supplier Name for Note
+            val supplierAccount = accountDao.getAccountById(supplierId)
+            val supplierName = supplierAccount?.name ?: "Supplier"
 
             // 2. Save Milk Entity (PURCHASE)
             val milkEntity = MilkTransactionEntity(
                 accountId = supplierId,
                 dateMillis = date.toMillis(),
-                type = TransactionType.PURCHASE, // 🔥 Purchase Type
-
+                type = TransactionType.PURCHASE,
                 volume = volume,
                 fat = fat,
                 lr = lr,
                 ts = ts,
-                quantity = volume, // Purchase me net quantity usually volume hi hoti hai
-                deduction = 0.0,   // Usually purchase me deduction nahi hoti, agar ho to add kr len
-
+                quantity = volume,
+                deduction = 0.0,
                 rateUsed = rate,
                 totalAmount = totalPricePaisa,
                 notes = note
             )
             milkDao.insert(milkEntity)
 
-            // 3. Ledger Entry: MILK_PURCHASE (Credit - Dena hai)
+            // 3. Ledger Entry: MILK_PURCHASE (Credit)
             val purchaseLedger = FinancialLedgerEntity(
                 dateMillis = date.toMillis(),
                 accountId = supplierId,
                 referenceId = milkEntity.milkTransId,
-                type = LedgerEntryType.MILK_PURCHASE, // 🔥
-
+                type = LedgerEntryType.MILK_PURCHASE,
                 debit = 0,
-                credit = totalPricePaisa, // Supplier ka udhaar barh gaya
+                credit = totalPricePaisa,
+                profitImpact = -totalPricePaisa,
 
-                profitImpact = -totalPricePaisa, // Purchase expense hai (Negative Impact)
+                // Purchase Note: "Purchase: 50L (Fat: 5.0)"
                 note = "Purchase: $volume Ltr (F:$fat, L:$lr)"
             )
             ledgerDao.insert(purchaseLedger)
 
-            // 4. Ledger Entry: CASH_PAID (Debit - Diya hai)
+            // 4. Ledger Entry: CASH_PAID (Debit)
             if (amountPaid > 0) {
                 val paymentLedger = FinancialLedgerEntity(
-                    dateMillis = paymentDate.toMillis(), // Payment Date
+                    dateMillis = paymentDate.toMillis(),
                     accountId = supplierId,
-                    type = LedgerEntryType.CASH_PAID, // 🔥
+                    type = LedgerEntryType.CASH_PAID,
                     referenceId = milkEntity.milkTransId,
-
-                    debit = amountPaid, // Udhaar kam hua (Supplier ko dia)
+                    debit = amountPaid,
                     credit = 0,
-
                     profitImpact = 0,
-                    note = "Payment with purchase"
+
+                    // 🔥 UPDATED NOTE: Ab CashFlow me naam show hoga
+                    note = "Paid to $supplierName"
                 )
                 ledgerDao.insert(paymentLedger)
             }
@@ -146,6 +151,10 @@ class MilkPurchaseRepository @Inject constructor(
                 request.rate
             )
             val totalPricePaisa = totalPriceDouble.toLongPaisa()
+
+            // 🔥 NEW: Fetch Name again (in case supplier changed or just for record)
+            val supplierAccount = accountDao.getAccountById(request.supplierId)
+            val supplierName = supplierAccount?.name ?: "Supplier"
 
             val oldPurchase = milkDao.getMilkTransactionById(request.purchaseId)
                 ?: throw Exception("Purchase not found")
@@ -165,13 +174,13 @@ class MilkPurchaseRepository @Inject constructor(
             )
             milkDao.update(updatedMilk)
 
-            // 3. Update Ledger (Purchase Entry - Credit)
+            // 3. Update Ledger (Purchase Entry)
             val purchaseLedger =
                 ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.MILK_PURCHASE)
             purchaseLedger?.let {
                 val updated = it.copy(
                     dateMillis = request.date.toMillis(),
-                    credit = totalPricePaisa, // Update Cost
+                    credit = totalPricePaisa,
                     profitImpact = -totalPricePaisa,
                     note = "Purchase: ${request.volume} Ltr (F:${request.fat}, L:${request.lr})",
                     updatedAtMillis = System.currentTimeMillis()
@@ -189,7 +198,11 @@ class MilkPurchaseRepository @Inject constructor(
                     ledgerDao.update(
                         paymentLedger.copy(
                             dateMillis = request.paymentDate.toMillis(),
-                            debit = request.amountPaid, // Update Paid Amount
+                            debit = request.amountPaid,
+
+                            // 🔥 UPDATED NOTE
+                            note = "Paid to $supplierName",
+
                             updatedAtMillis = System.currentTimeMillis()
                         )
                     )
@@ -208,10 +221,15 @@ class MilkPurchaseRepository @Inject constructor(
                         debit = request.amountPaid,
                         credit = 0,
                         profitImpact = 0,
-                        note = "Payment with purchase (Updated)"
+
+                        // 🔥 NEW NOTE
+                        note = "Paid to $supplierName"
                     )
                 )
             }
         }
     }
+
+
+
 }
