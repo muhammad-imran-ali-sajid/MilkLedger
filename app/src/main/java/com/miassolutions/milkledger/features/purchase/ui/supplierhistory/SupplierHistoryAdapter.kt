@@ -1,12 +1,16 @@
 package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemSupplierHistoryBinding // Ensure naming matches your XML file name
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.utils.extensions.*
@@ -16,7 +20,8 @@ class SupplierHistoryAdapter(
 ) : ListAdapter<MilkPurchaseUiModel, SupplierHistoryAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemSupplierHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding =
+            ItemSupplierHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -51,6 +56,17 @@ class SupplierHistoryAdapter(
             // Financials
             tvPrice.text = item.totalAmount.toPrice()
 
+            val isRateChanged = item.previousRate != null && item.previousRate != item.rate
+
+            if (isRateChanged) {
+                rateAlert.show()
+                rateAlert.text =
+                    "Rate: ${item.previousRate} -> ${item.rate}"  //Show Alert: Rate Changed from
+                root.setCardBackgroundColor(
+                    ContextCompat.getColor(root.context, R.color.orange_200)
+                )
+            }
+
             // Payment Logic
             if (item.paymentMade > 0) {
                 tvPayment.text = item.paymentMade.toPrice()
@@ -84,7 +100,12 @@ class SupplierHistoryAdapter(
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<MilkPurchaseUiModel>() {
-        override fun areItemsTheSame(oldItem: MilkPurchaseUiModel, newItem: MilkPurchaseUiModel) = oldItem.id == newItem.id
-        override fun areContentsTheSame(oldItem: MilkPurchaseUiModel, newItem: MilkPurchaseUiModel) = oldItem == newItem
+        override fun areItemsTheSame(oldItem: MilkPurchaseUiModel, newItem: MilkPurchaseUiModel) =
+            oldItem.id == newItem.id
+
+        override fun areContentsTheSame(
+            oldItem: MilkPurchaseUiModel,
+            newItem: MilkPurchaseUiModel
+        ) = oldItem == newItem
     }
 }

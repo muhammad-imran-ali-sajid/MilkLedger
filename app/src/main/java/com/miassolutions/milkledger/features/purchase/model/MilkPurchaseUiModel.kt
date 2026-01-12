@@ -19,6 +19,8 @@ data class MilkPurchaseUiModel(
     val rate: Double,
     val totalAmount: Long,
 
+    val previousRate: Double? = null,
+
     val paymentDateMillis: Long?,
     val paymentMade: Long = 0, // Amount Paid
     val currentBalance: Long = 0,

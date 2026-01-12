@@ -307,6 +307,20 @@ interface MilkDao {
             COALESCE(m.ts, 0.0) as ts,
             
             m.rateUsed as rate,
+            
+            -- 🔥 NEW: Previous Rate Logic (Subquery)
+            -- Ye query check karegi ke is date se pehle, isi supplier ka last rate kya tha
+            (
+                SELECT prev.rateUsed 
+                FROM milk_transactions_table prev 
+                WHERE prev.accountId = m.accountId 
+                AND prev.type = 'PURCHASE' 
+                AND prev.deletedAtMillis IS NULL
+                AND prev.dateMillis < m.dateMillis -- Is date se purana
+                ORDER BY prev.dateMillis DESC -- Sab se qareebi purana
+                LIMIT 1
+            ) as previousRate,
+            
             m.totalAmount,
             m.notes as note,
             

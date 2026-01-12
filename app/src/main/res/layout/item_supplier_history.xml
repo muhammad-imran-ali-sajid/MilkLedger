@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp"
+            android:id="@+id/header"
             android:backgroundTint="@color/grey"
             android:background="@drawable/bg_edittext_readable">
 
