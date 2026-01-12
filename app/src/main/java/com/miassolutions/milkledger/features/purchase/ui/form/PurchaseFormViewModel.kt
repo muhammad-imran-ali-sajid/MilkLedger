@@ -15,6 +15,7 @@ import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
@@ -36,6 +37,7 @@ class PurchaseFormViewModel @Inject constructor(
     PurchaseFormUiState()
 ) {
 
+    private var balanceJob: Job? = null
     private val purchaseId: String? = savedStateHandle["purchaseId"]
     private val purchaseDate:Long? = savedStateHandle["purchaseDate"]
 
@@ -175,7 +177,8 @@ class PurchaseFormViewModel @Inject constructor(
             PurchaseFormUiEvent.OnPaymentDateClick -> emitEffect(PurchaseFormUiEffect.OpenPaymentDatePicker)
 
             // --- Actions ---
-            PurchaseFormUiEvent.OnSaveClicked -> savePurchase()
+            PurchaseFormUiEvent.OnSaveClicked -> savePurchase(exitAfterSave = true)
+            PurchaseFormUiEvent.OnSaveAndNewClicked -> savePurchase(exitAfterSave = false)
             PurchaseFormUiEvent.OnBackClicked -> emitEffect(PurchaseFormUiEffect.NavigateBack)
         }
     }
@@ -203,17 +206,25 @@ class PurchaseFormViewModel @Inject constructor(
     }
 
     private fun fetchBalance(accountId: String) {
-        viewModelScope.launch {
+        balanceJob?.cancel() // Purana listener band karein
+        balanceJob = viewModelScope.launch {
             repository.getAccountBalance(accountId).collect { balance ->
                 updateState { it.copy(currentBalance = balance) }
             }
         }
     }
 
-    private fun savePurchase() {
+    private fun savePurchase(exitAfterSave: Boolean) {
         viewModelScope.launch {
             updateState { it.copy(isSaving = true) }
             val s = currentState
+
+            // Validation (Optional: UseCase wese bhi handle krta hy)
+            if (s.selectedSupplier == null) {
+                emitEffect(PurchaseFormUiEffect.ShowSnackbar("Select Supplier"))
+                updateState { it.copy(isSaving = false) }
+                return@launch
+            }
 
             val result = savePurchaseUseCase(
                 isEditMode = purchaseId != null,
@@ -222,8 +233,8 @@ class PurchaseFormViewModel @Inject constructor(
                 date = s.date,
                 paymentDate = s.paymentDate,
                 volumeStr = s.volume,
-                fatStr = s.fat, // UseCase khud 0 handle karega
-                lrStr = s.lr,   // UseCase khud 0 handle karega
+                fatStr = s.fat,
+                lrStr = s.lr,
                 rateStr = s.rate,
                 paymentStr = s.amountPaid,
                 note = s.note
@@ -231,12 +242,47 @@ class PurchaseFormViewModel @Inject constructor(
 
             result.onSuccess { msg ->
                 emitEffect(PurchaseFormUiEffect.ShowSnackbar(msg))
-                emitEffect(PurchaseFormUiEffect.NavigateBack)
+
+                if (purchaseId != null) {
+                    // Edit Mode: Hamesha Exit karein
+                    emitEffect(PurchaseFormUiEffect.NavigateBack)
+                } else {
+                    // New Entry Mode
+                    if (exitAfterSave) {
+                        emitEffect(PurchaseFormUiEffect.NavigateBack)
+                    } else {
+                        resetFormForNewEntry()
+                    }
+                }
             }.onFailure { e ->
                 emitEffect(PurchaseFormUiEffect.ShowSnackbar(e.message ?: "Error"))
             }
 
             updateState { it.copy(isSaving = false) }
+        }
+    }
+
+    private fun resetFormForNewEntry() {
+        // Balance sunna band karein taake 0 overwrite na ho
+        balanceJob?.cancel()
+
+        updateState {
+            it.copy(
+                selectedSupplier = null, // Supplier Clear
+                volume = "",
+                fat = "",
+                lr = "",
+                amountPaid = "",
+                note = "",
+                rate = "",
+
+                currentBalance = 0L,     // Balance Reset
+                calculatedTs = 0.0,
+                calculatedTotal = 0L,
+
+                isEditMode = false
+                // Date aur PaymentDate same rahengi (User flow k liye behtar hai)
+            )
         }
     }
 }

@@ -74,7 +74,9 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
         // Actions
         btnSave.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked) }
-        btnSaveNew.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked) }
+        btnSaveNew.setOnClickListener {
+            viewModel.onEvent(PurchaseFormUiEvent.OnSaveAndNewClicked)
+        }
     }
 
     override fun setupObservers() {
@@ -130,10 +132,11 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         if (etPayment.text.toString() != state.amountPaid) etPayment.setText(state.amountPaid)
         if (etNote.text.toString() != state.note) etNote.setText(state.note)
 
-        // --- Supplier Name Logic ---
-        // Edit mode me ya selection ke baad text update karein
-        if (state.selectedSupplier != null && actvSupplierName.text.toString() != state.selectedSupplier.name) {
-            actvSupplierName.setText(state.selectedSupplier.name)
+        val currentText = actvSupplierName.text.toString()
+        val newText = state.selectedSupplier?.name ?: ""
+
+        if (currentText != newText) {
+            actvSupplierName.setText(newText)
         }
 
         // Disable Interaction during saving

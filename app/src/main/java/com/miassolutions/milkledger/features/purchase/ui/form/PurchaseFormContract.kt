@@ -53,6 +53,7 @@ sealed class PurchaseFormUiEvent {
 
     // Actions
     object OnSaveClicked : PurchaseFormUiEvent()
+    object OnSaveAndNewClicked : PurchaseFormUiEvent()
     object OnBackClicked : PurchaseFormUiEvent() // Optional
 }
 
