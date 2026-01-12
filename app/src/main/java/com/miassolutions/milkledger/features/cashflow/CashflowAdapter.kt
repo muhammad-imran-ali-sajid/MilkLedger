@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
-import com.miassolutions.milkledger.databinding.ItemLedgerHistoryBinding
+import com.miassolutions.milkledger.databinding.ItemCashFlowBinding
 import com.miassolutions.milkledger.databinding.ItemSectionHeaderBinding
-import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
@@ -34,7 +34,7 @@ class CashflowAdapter : ListAdapter<LedgerListItem, RecyclerView.ViewHolder>(Dif
             )
             HeaderViewHolder(binding)
         } else {
-            val binding = ItemLedgerHistoryBinding.inflate(
+            val binding = ItemCashFlowBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
             TransactionViewHolder(binding)
@@ -58,44 +58,42 @@ class CashflowAdapter : ListAdapter<LedgerListItem, RecyclerView.ViewHolder>(Dif
         }
     }
 
-    inner class TransactionViewHolder(private val binding: ItemLedgerHistoryBinding) :
+    inner class TransactionViewHolder(private val binding: ItemCashFlowBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(itemWrapper: LedgerListItem.Transaction) = with(binding) {
             val item = itemWrapper.data
 
-            tvDate.text = item.dateMillis.toLocalDate().toCompleteDateFormat()
-            tvType.text = item.note ?: getTypeLabel(item.type)
+            // 1. Date Formatting
+            // Sirf Date aur Month dikhayen taake jagah kam lay (e.g., "12 Oct")
+            tvDate.text = item.dateMillis.toLocalDate().toDisplayDate()
 
-            // Logic for Cash In / Cash Out colors
-            // Note: Cashflow screen hai, is liye hum sirf Cash movements dekh rahe hain
+            // 2. Description
+            tvDescription.text = item.note ?: getTypeLabel(item.type)
 
-            // Green Logic (Paisa Aya)
-            if (item.type == LedgerEntryType.CASH_RECEIVED) {
-                tvCredit.text = "+ ${item.credit.toPrice()}"
-                tvCredit.setTextColor(ContextCompat.getColor(root.context, R.color.green_700))
-                tvDebit.text = "" // Hide Debit field
+            // 3. Amount Logic (Single TextView) 🟢🔴
+            val isCashIn = item.type == LedgerEntryType.CASH_RECEIVED
 
-                // Optional Icon Logic
-                // ivIcon.setImageResource(R.drawable.ic_arrow_downward)
-
-            }
-            // Red Logic (Paisa Gaya)
-            else {
-                tvDebit.text = "- ${item.debit.toPrice()}"
-                tvDebit.setTextColor(ContextCompat.getColor(root.context, R.color.red))
-                tvCredit.text = "" // Hide Credit field
-
-                // ivIcon.setImageResource(R.drawable.ic_arrow_upward)
+            if (isCashIn) {
+                // 🟢 CASH IN (Green)
+                val amount = item.credit // Cash In hamesha Credit column me hota hai
+                tvAmount.text = "+ ${amount.toPrice()}"
+                tvAmount.setTextColor(ContextCompat.getColor(root.context, R.color.green_700))
+            } else {
+                // 🔴 CASH OUT (Red)
+                // Paid, Expense, Drawing sab Debit column me hotay hen
+                val amount = item.debit
+                tvAmount.text = "- ${amount.toPrice()}"
+                tvAmount.setTextColor(ContextCompat.getColor(root.context, R.color.red))
             }
         }
 
         private fun getTypeLabel(type: LedgerEntryType): String {
-            return when (type) {
-                LedgerEntryType.CASH_RECEIVED -> "Received from Customer"
-                LedgerEntryType.CASH_PAID -> "Paid to Supplier"
+            return when(type) {
+                LedgerEntryType.CASH_RECEIVED -> "Received"
+                LedgerEntryType.CASH_PAID -> "Payment"
                 LedgerEntryType.BUSINESS_EXPENSE -> "Expense"
-                LedgerEntryType.OWNER_DRAWING -> "Owner Drawing"
+                LedgerEntryType.OWNER_DRAWING -> "Drawing"
                 else -> "Transaction"
             }
         }
