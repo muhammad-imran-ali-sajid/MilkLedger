@@ -2,11 +2,15 @@ package com.miassolutions.milkledger.features.sale.ui.list
 
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
+import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect
-import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.*
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.NavigateToAddSale
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.NavigateToCustomerLedger
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.NavigateToEditSale
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.OnDateClick
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.ShowSnackbar
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiState
-import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -68,6 +72,10 @@ class MilkSaleListViewModel @Inject constructor(
 
             is MilkSaleListUiEvent.OnDeleteClicked -> {
                 onDeleteSaleClicked(event.saleId)
+            }
+
+            is MilkSaleListUiEvent.OnBalanceClick -> {
+               emitEffect(MilkSaleListUiEffect.OpenBalanceHistorySheet(event.customerId, event.customerName))
             }
         }
     }

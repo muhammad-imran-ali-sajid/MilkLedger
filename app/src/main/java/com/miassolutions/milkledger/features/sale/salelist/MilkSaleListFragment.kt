@@ -7,6 +7,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkSaleListBinding
+import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.*
 import com.miassolutions.milkledger.features.sale.ui.list.MilkSaleListViewModel
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
@@ -43,12 +46,19 @@ class MilkSaleListFragment :
         onBalanceClick = { id, name ->
             // Navigate to Bottom Sheet
 
-            val action =
-                MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerBalanceHistoryBottomSheet(
-                    customerId = id,
-                    customerName = name
+            viewModel.onEvent(
+                MilkSaleListUiEvent.OnBalanceClick(
+                    id,
+                    name
                 )
-            findNavController().navigate(action)
+            )
+//
+//            val action =
+//                MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerBalanceHistoryBottomSheet(
+//                    customerId = id,
+//                    customerName = name
+//                )
+//            findNavController().navigate(action)
 
         }
 
@@ -147,11 +157,17 @@ class MilkSaleListFragment :
                     openDatePicker(
                         initialDate = viewModel.currentState.date,
                     ) { selectedDate ->
-                        viewModel.onEvent(MilkSaleListUiEvent.OnDateSelected(selectedDate))
+                        viewModel.onEvent(OnDateSelected(selectedDate))
                     }
                 }
 
-
+                is MilkSaleListUiEffect.OpenBalanceHistorySheet -> {
+                    val sheet = BalanceHistoryBottomSheet.newInstance(
+                        accountId = effect.id,  // Customer ki ID
+                        accountName = effect.name
+                    )
+                    sheet.show(childFragmentManager, "History")
+                }
             }
         }
 

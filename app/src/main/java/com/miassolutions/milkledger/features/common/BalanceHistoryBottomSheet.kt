@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.purchase.ui.balancehistory
+package com.miassolutions.milkledger.features.common
 
 
 import android.os.Bundle

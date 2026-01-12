@@ -1,5 +1,7 @@
 package com.miassolutions.milkledger.features.sale.salelist
 
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 
 
@@ -28,6 +30,9 @@ sealed interface MilkSaleListUiEvent {
     data object OnDateClick : MilkSaleListUiEvent // Date Picker kholne k liye
     data class OnDateSelected(val date: LocalDate) : MilkSaleListUiEvent
 
+    data class OnBalanceClick(val customerId: String, val customerName: String) :
+        MilkSaleListUiEvent
+
     // --- Actions ---
     data object OnAddSaleClicked : MilkSaleListUiEvent
 
@@ -47,6 +52,8 @@ sealed interface MilkSaleListUiEffect {
 
     // Existing Sale edit karne k liye (Transaction ID pass hogi)
     data class NavigateToEditSale(val saleId: String) : MilkSaleListUiEffect
+
+    data class OpenBalanceHistorySheet(val id: String, val name: String) : MilkSaleListUiEffect
 
 
     // Customer ka khata kholne k liye

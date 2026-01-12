@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.purchase.ui.balancehistory
+package com.miassolutions.milkledger.features.common
 
 data class DailyLedgerUiModel(
     val dateMillis: Long,

@@ -6,7 +6,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkPurchaseListBinding
-import com.miassolutions.milkledger.features.purchase.ui.balancehistory.BalanceHistoryBottomSheet
+import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
 import com.miassolutions.milkledger.features.purchase.ui.list.MilkPurchaseAdapter
 import com.miassolutions.milkledger.features.purchase.ui.list.MilkPurchaseListViewModel
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect
