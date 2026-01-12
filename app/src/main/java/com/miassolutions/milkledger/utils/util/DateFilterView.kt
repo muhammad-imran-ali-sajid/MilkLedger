@@ -14,7 +14,6 @@ import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import java.time.Instant
 import java.time.LocalDate
-import java.time.Year
 import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -33,6 +32,7 @@ class DateFilterView @JvmOverloads constructor(
     // State Management
     private var currentMode = FilterMode.ALL
     private var selectedDate: LocalDate = LocalDate.now()
+    private var customRangeLabel: String = "" // Custom Range Text store karne k liye
 
     enum class FilterMode { ALL, DAY, MONTH, YEAR, CUSTOM }
 
@@ -40,12 +40,13 @@ class DateFilterView @JvmOverloads constructor(
         setupChipListeners()
         setupNavListeners()
 
-        // 🔥 Click Listener for Date/Month Text
+        // Click Listener for Date/Range Text
         binding.tvCurrentRange.setOnClickListener {
-            if (currentMode == FilterMode.DAY) {
-                openSingleDatePicker(isMonthMode = false)
-            } else if (currentMode == FilterMode.MONTH) {
-                openSingleDatePicker(isMonthMode = true)
+            when (currentMode) {
+                FilterMode.DAY -> openSingleDatePicker(isMonthMode = false)
+                FilterMode.MONTH -> openSingleDatePicker(isMonthMode = true)
+                FilterMode.CUSTOM -> openDateRangePicker() // Custom pr click krne se dobara picker khule
+                else -> {}
             }
         }
 
@@ -55,7 +56,8 @@ class DateFilterView @JvmOverloads constructor(
     fun setup(fm: FragmentManager, listener: (Long, Long, String) -> Unit) {
         this.fragmentManager = fm
         this.onDateRangeSelected = listener
-        emitCurrentState() // Initial Call (Load All)
+        // Initial state emit na karein agar aap chahte hain screen load hote hi default "All" rahe
+        // emitCurrentState()
     }
 
     private fun setupChipListeners() = with(binding) {
@@ -109,24 +111,17 @@ class DateFilterView @JvmOverloads constructor(
         emitCurrentState()
     }
 
-    // ✅ Helper to Pick Date or Month
     private fun openSingleDatePicker(isMonthMode: Boolean) {
-        val title = if (isMonthMode) "Select Month (Pick any date in month)" else "Select Date"
-
+        val title = if (isMonthMode) "Select Month" else "Select Date"
         val picker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(title)
-            .setSelection(
-                selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            )
+            .setSelection(selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
             .build()
 
         picker.addOnPositiveButtonClickListener { selectionMillis ->
-            val newDate = Instant.ofEpochMilli(selectionMillis)
+            selectedDate = Instant.ofEpochMilli(selectionMillis)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
-
-            // Update State
-            selectedDate = newDate
             refreshUI()
             emitCurrentState()
         }
@@ -135,52 +130,76 @@ class DateFilterView @JvmOverloads constructor(
     }
 
     private fun openDateRangePicker() {
+        // 1. Current Locale save karein (taake baad me wapis set kr sakein)
+        val defaultLocale = java.util.Locale.getDefault()
+
+        // 2. Temporary Locale ko UK set karein (UK me DD/MM/YYYY hota hai)
+        java.util.Locale.setDefault(java.util.Locale.UK)
+
         val picker = MaterialDatePicker.Builder.dateRangePicker()
-            .setTitleText("Select Custom Range")
-            .setSelection(
-                Pair(
-                    MaterialDatePicker.todayInUtcMilliseconds(),
-                    MaterialDatePicker.todayInUtcMilliseconds()
-                )
-            )
+            .setTitleText("Enter Date Range (DD/MM/YYYY)") // Title me hint de dia
+
+            // Theme wahi purani wali (Select All wali)
+            .setTheme(R.style.MyDatePickerTheme)
+
+            // Selection NULL rakhein taake field empty ho
+            .setSelection(null)
+
+            .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
             .build()
 
+        // 3. Picker banne k foran baad Locale wapis purana wala set kr den
+        // (Taake app ki baaki cheezain affect na hon)
+        java.util.Locale.setDefault(defaultLocale)
+
         picker.addOnPositiveButtonClickListener { selection ->
-            val start = selection.first
-            val end = selection.second
+            val startMillis = selection.first
+            val endMillis = selection.second
 
-            val startStr = LocalDate.ofEpochDay(start / 86400000).toDisplayDate()
-            val endStr = LocalDate.ofEpochDay(end / 86400000).toDisplayDate()
+            val startLocal = Instant.ofEpochMilli(startMillis).atZone(ZoneId.systemDefault()).toLocalDate()
+            val endLocal = Instant.ofEpochMilli(endMillis).atZone(ZoneId.systemDefault()).toLocalDate()
 
-            binding.chipCustom.text = "Custom"
-            onDateRangeSelected?.invoke(start, end, "$startStr - $endStr")
+            customRangeLabel = "${startLocal.toDisplayDate()} - ${endLocal.toDisplayDate()}"
+
+            refreshUI()
+
+            onDateRangeSelected?.invoke(startMillis, endMillis, customRangeLabel)
         }
 
         picker.addOnNegativeButtonClickListener {
             binding.chipAll.isChecked = true
             currentMode = FilterMode.ALL
             refreshUI()
+            emitCurrentState()
         }
 
         fragmentManager?.let { picker.show(it, "RangePicker") }
     }
 
-    private fun refreshUI() = with(binding) {
-        // Show Navigation only for Day or Month
-        layoutNavigation.isVisible =
-            (currentMode == FilterMode.DAY || currentMode == FilterMode.MONTH || currentMode == FilterMode.YEAR)
 
-        // Text Update Logic
+    private fun refreshUI() = with(binding) {
+        val isNavigable = (currentMode == FilterMode.DAY || currentMode == FilterMode.MONTH || currentMode == FilterMode.YEAR)
+        val isCustom = (currentMode == FilterMode.CUSTOM)
+
+        // Navigation Layout visible agar navigable ho YA custom ho
+        layoutNavigation.isVisible = isNavigable || isCustom
+
+        // Prev/Next buttons sirf tab visible jab navigation allow ho (Day/Month/Year)
+        btnPrev.isVisible = isNavigable
+        btnNext.isVisible = isNavigable
+
+        // Text Update
         tvCurrentRange.text = when (currentMode) {
-            FilterMode.DAY -> selectedDate.toDisplayDate() // "08 Jan 2026"
-            FilterMode.MONTH -> selectedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy")) // "January 2026"
+            FilterMode.DAY -> selectedDate.toDisplayDate()
+            FilterMode.MONTH -> selectedDate.format(DateTimeFormatter.ofPattern("MMMM yyyy"))
             FilterMode.YEAR -> selectedDate.year.toString()
+            FilterMode.CUSTOM -> customRangeLabel // Saved text show karein
             else -> ""
         }
 
-        // Dropdown Icon Visibility
-        val showIcon = (currentMode == FilterMode.DAY || currentMode == FilterMode.MONTH)
-        val endDrawable = if (showIcon) R.drawable.ic_arrow_pick else 0
+        // Icon Logic (Dropdown icon agar text clickable hai)
+        val showIcon = isNavigable || isCustom
+        val endDrawable = if (showIcon) R.drawable.ic_arrow_down else 0 // Ensure drawable exists
         tvCurrentRange.setCompoundDrawablesWithIntrinsicBounds(0, 0, endDrawable, 0)
     }
 
@@ -190,41 +209,26 @@ class DateFilterView @JvmOverloads constructor(
         var label = "All History"
 
         when (currentMode) {
-            FilterMode.ALL -> {} // Default 0 to Max
-
+            FilterMode.ALL -> {}
             FilterMode.DAY -> {
                 start = selectedDate.atStartOfDay().toMillis()
                 end = selectedDate.plusDays(1).atStartOfDay().toMillis() - 1
                 label = selectedDate.toDisplayDate()
             }
-
             FilterMode.MONTH -> {
                 val yearMonth = YearMonth.from(selectedDate)
-                // Month start: 1st day 00:00
                 start = yearMonth.atDay(1).atStartOfDay().toMillis()
-                // Month end: Last day 23:59:59
                 end = yearMonth.atEndOfMonth().plusDays(1).atStartOfDay().toMillis() - 1
                 label = selectedDate.format(DateTimeFormatter.ofPattern("MMM yyyy"))
             }
-
             FilterMode.YEAR -> {
                 val year = selectedDate.year
-
-                start = LocalDate.of(year, 1, 1)
-                    .atStartOfDay()
-                    .toMillis()
-
-                end = LocalDate.of(year + 1, 1, 1)
-                    .atStartOfDay()
-                    .toMillis() - 1
-
+                start = LocalDate.of(year, 1, 1).atStartOfDay().toMillis()
+                end = LocalDate.of(year + 1, 1, 1).atStartOfDay().toMillis() - 1
                 label = year.toString()
             }
-
-            FilterMode.CUSTOM -> return // Handled by Picker Callback
-
+            FilterMode.CUSTOM -> return // Handled via Picker Callback
         }
-
         onDateRangeSelected?.invoke(start, end, label)
     }
 }

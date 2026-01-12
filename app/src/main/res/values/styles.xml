@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="MyCustomEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:selectAllOnFocus">true</item>
+        <item name="android:inputType">date</item> </style>
+
+    <style name="MyCustomTextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="editTextStyle">@style/MyCustomEditText</item>
+        <item name="android:editTextStyle">@style/MyCustomEditText</item>
+    </style>
+
+    <style name="MyDatePickerTheme" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="textInputStyle">@style/MyCustomTextInputLayout</item>
+    </style>
+
 
     <style name="DateToggleButtonStyle" parent="Widget.Material3.Button.OutlinedButton">
         <item name="android:textSize">13sp</item>
