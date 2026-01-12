@@ -4,9 +4,11 @@ package com.miassolutions.milkledger.features.sale.saleform
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.databinding.BottomSheetCustomerSelectionBinding
@@ -36,6 +38,17 @@ class CustomerSelectionBottomSheet(
 
     private fun setupRecyclerView() {
         adapter = CustomerSelectionAdapter { uiModel ->
+            if (uiModel.isEntryDoneToday) {
+                // User ko message dikhayen
+                Toast.makeText(requireContext(), "Already Exist for today", Toast.LENGTH_SHORT).show()
+
+                // Optional: Agar vibration deni ho to
+                view?.performHapticFeedback(HapticFeedbackConstants.REJECT)
+
+                return@CustomerSelectionAdapter // Aagy na jayen
+            }
+
+
             onCustomerSelected(uiModel.account)
             dismiss()
         }

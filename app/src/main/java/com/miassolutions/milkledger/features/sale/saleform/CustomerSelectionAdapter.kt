@@ -19,6 +19,15 @@ class CustomerSelectionAdapter(
             binding.tvCustomerName.text = item.account.name
             binding.ivStatus.isVisible = item.isEntryDoneToday
 
+
+            if (item.isEntryDoneToday) {
+                binding.tvCustomerName.alpha = 0.5f // Text dhundla (dim) karein
+                binding.root.isEnabled = true // Clickable rakhen taake Toast dikha saken
+            } else {
+                binding.tvCustomerName.alpha = 1.0f // Normal Text
+                binding.root.isEnabled = true
+            }
+
             binding.root.setOnClickListener {
                 onCustomerClick(item)
             }
