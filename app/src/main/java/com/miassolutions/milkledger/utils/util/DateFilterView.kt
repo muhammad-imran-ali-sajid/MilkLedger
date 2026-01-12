@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ViewDateFilterBinding
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import java.time.Instant
@@ -57,7 +58,7 @@ class DateFilterView @JvmOverloads constructor(
         this.fragmentManager = fm
         this.onDateRangeSelected = listener
         // Initial state emit na karein agar aap chahte hain screen load hote hi default "All" rahe
-        // emitCurrentState()
+         emitCurrentState()
     }
 
     private fun setupChipListeners() = with(binding) {
@@ -113,15 +114,23 @@ class DateFilterView @JvmOverloads constructor(
 
     private fun openSingleDatePicker(isMonthMode: Boolean) {
         val title = if (isMonthMode) "Select Month" else "Select Date"
+
+        // 1. Fix Selection: Local Date ko UTC Millis me convert karen
+        // Agar hum systemDefault() use karenge to ye peeche wali date pick kar lega
+        val utcSelection = selectedDate.atStartOfDay(ZoneId.of("UTC")).toInstant().toEpochMilli()
+
         val picker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(title)
-            .setSelection(selectedDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli())
+            .setSelection(utcSelection) // Updated
             .build()
 
         picker.addOnPositiveButtonClickListener { selectionMillis ->
+            // 2. Fix Result: UTC Millis ko wapis Date me layen (UTC Zone use karke)
+            // SystemDefault use karne se date shift ho jati hai
             selectedDate = Instant.ofEpochMilli(selectionMillis)
-                .atZone(ZoneId.systemDefault())
+                .atZone(ZoneId.of("UTC")) // IMPORTANT: Use UTC here
                 .toLocalDate()
+
             refreshUI()
             emitCurrentState()
         }
@@ -130,43 +139,35 @@ class DateFilterView @JvmOverloads constructor(
     }
 
     private fun openDateRangePicker() {
-        // 1. Current Locale save karein (taake baad me wapis set kr sakein)
-        val defaultLocale = java.util.Locale.getDefault()
-
-        // 2. Temporary Locale ko UK set karein (UK me DD/MM/YYYY hota hai)
-        java.util.Locale.setDefault(java.util.Locale.UK)
-
         val picker = MaterialDatePicker.Builder.dateRangePicker()
-            .setTitleText("Enter Date Range (DD/MM/YYYY)") // Title me hint de dia
-
-            // Theme wahi purani wali (Select All wali)
-            .setTheme(R.style.MyDatePickerTheme)
-
-            // Selection NULL rakhein taake field empty ho
-            .setSelection(null)
-
-            .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
+            .setTitleText("Select Custom Range")
+            .setSelection(
+                Pair(
+                    MaterialDatePicker.todayInUtcMilliseconds(),
+                    MaterialDatePicker.todayInUtcMilliseconds()
+                )
+            )
             .build()
-
-        // 3. Picker banne k foran baad Locale wapis purana wala set kr den
-        // (Taake app ki baaki cheezain affect na hon)
-        java.util.Locale.setDefault(defaultLocale)
 
         picker.addOnPositiveButtonClickListener { selection ->
             val startMillis = selection.first
             val endMillis = selection.second
 
+            // Display text update
             val startLocal = Instant.ofEpochMilli(startMillis).atZone(ZoneId.systemDefault()).toLocalDate()
             val endLocal = Instant.ofEpochMilli(endMillis).atZone(ZoneId.systemDefault()).toLocalDate()
 
-            customRangeLabel = "${startLocal.toDisplayDate()} - ${endLocal.toDisplayDate()}"
+            customRangeLabel = "${startLocal.toCompleteDateFormat()} to ${endLocal.toCompleteDateFormat()}"
 
+            // UI Refresh taake text show ho jaye
             refreshUI()
 
+            // Callback trigger
             onDateRangeSelected?.invoke(startMillis, endMillis, customRangeLabel)
         }
 
         picker.addOnNegativeButtonClickListener {
+            // Cancel pr wapis All pr chale jao ya jo logic apko chahiye
             binding.chipAll.isChecked = true
             currentMode = FilterMode.ALL
             refreshUI()
@@ -175,7 +176,6 @@ class DateFilterView @JvmOverloads constructor(
 
         fragmentManager?.let { picker.show(it, "RangePicker") }
     }
-
 
     private fun refreshUI() = with(binding) {
         val isNavigable = (currentMode == FilterMode.DAY || currentMode == FilterMode.MONTH || currentMode == FilterMode.YEAR)
