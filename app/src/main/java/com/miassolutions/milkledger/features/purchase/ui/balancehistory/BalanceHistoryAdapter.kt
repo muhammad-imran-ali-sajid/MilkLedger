@@ -16,7 +16,7 @@ import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
-class BalanceHistoryAdapter : ListAdapter<FinancialLedgerEntity, BalanceHistoryAdapter.ViewHolder>(DiffCallback) {
+class BalanceHistoryAdapter : ListAdapter<DailyLedgerUiModel, BalanceHistoryAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemLedgerHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -28,51 +28,32 @@ class BalanceHistoryAdapter : ListAdapter<FinancialLedgerEntity, BalanceHistoryA
     }
 
     class ViewHolder(private val binding: ItemLedgerHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: FinancialLedgerEntity) = with(binding) {
+        fun bind(item: DailyLedgerUiModel) = with(binding) {
             tvDate.text = item.dateMillis.toLocalDate().toDisplayDate()
 
-            // Type formatting
-            tvType.text = when(item.type) {
-                LedgerEntryType.MILK_SALE -> "Milk Sale"
-                LedgerEntryType.CASH_RECEIVED -> "Cash Rec."
-                LedgerEntryType.MILK_PURCHASE -> "Milk Purch."
-                LedgerEntryType.CASH_PAID -> "Cash Paid"
-                else -> "Other"
-            }
+            // Ab Type ki jagah Description/Summary ayegi
+            tvType.text = item.description
 
-            // Amounts
-            if (item.debit > 0) {
-                tvDebit.text = item.debit.toPrice()
+            // Debit Display
+            if (item.totalDebit > 0) {
+                tvDebit.text = item.totalDebit.toPrice()
                 tvDebit.isVisible = true
             } else {
                 tvDebit.text = "--"
-//                 tvDebit.isVisible = false // Optional: keep alignment
             }
 
-            if (item.credit > 0) {
-                tvCredit.text = item.credit.toPrice()
+            // Credit Display
+            if (item.totalCredit > 0) {
+                tvCredit.text = item.totalCredit.toPrice()
                 tvCredit.isVisible = true
             } else {
                 tvCredit.text = "--"
-//                tvCredit.isVisible = false
             }
-
-            // Note Icon
-//            ivNote.isVisible = !item.note.isNullOrBlank()
-//            if (!item.note.isNullOrBlank()) {
-//                root.setOnClickListener {
-//                    Snackbar.make(
-//                        binding.root,      // any attached view
-//                        item.note ?: "",
-//                        Snackbar.LENGTH_LONG
-//                    ).show()
-//                }
-//            }
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<FinancialLedgerEntity>() {
-        override fun areItemsTheSame(oldItem: FinancialLedgerEntity, newItem: FinancialLedgerEntity) = oldItem.ledgerId == newItem.ledgerId
-        override fun areContentsTheSame(oldItem: FinancialLedgerEntity, newItem: FinancialLedgerEntity) = oldItem == newItem
+    companion object DiffCallback : DiffUtil.ItemCallback<DailyLedgerUiModel>() {
+        override fun areItemsTheSame(oldItem: DailyLedgerUiModel, newItem: DailyLedgerUiModel) = oldItem.dateMillis == newItem.dateMillis
+        override fun areContentsTheSame(oldItem: DailyLedgerUiModel, newItem: DailyLedgerUiModel) = oldItem == newItem
     }
 }

@@ -10,7 +10,7 @@ data class AccountFormUiState(
     val selectAccountType: AccountType = AccountType.CUSTOMER,
     val rate: String = "",
     val initialBalance: String = "",
-    val openingDate: LocalDate = LocalDate.now(),
+    val openingDate: LocalDate? = null,
     val advanceAmount: String = "",
 
     val isActive: Boolean = true, // 🔥 For Switch
@@ -24,6 +24,7 @@ data class AccountFormValidation(
     val sortOrderError: String? = null,
     val nameError: String? = null,
     val rateError: String? = null,
+    val openingDateError: String? = null,
     val isValid: Boolean = false
 )
 
@@ -50,7 +51,6 @@ sealed interface AccountFormEffect {
 
     data class ShowBalanceError(val balance: Long) : AccountFormEffect
 
-
 }
 
 enum class Field {
@@ -58,7 +58,8 @@ enum class Field {
     NAME,
     ACCOUNT_TYPE,
     RATE,
-    INITIAL_BALANCE
+    INITIAL_BALANCE,
+    OPENING_DATE
 }
 
 

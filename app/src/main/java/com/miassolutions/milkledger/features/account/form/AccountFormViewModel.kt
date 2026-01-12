@@ -18,6 +18,7 @@ import com.miassolutions.milkledger.features.account.mapper.toDomain
 import com.miassolutions.milkledger.utils.extensions.toRupeesStr
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -85,8 +86,11 @@ class AccountFormViewModel @Inject constructor(
             AccountFormEvent.CancelClicked ->
                 emitEffect(CloseScreen)
 
-            AccountFormEvent.OnOpeningDateClicked ->
-                emitEffect(OpenDatePicker(currentState.openingDate))
+            AccountFormEvent.OnOpeningDateClicked -> {
+                val dateToShow = currentState.openingDate ?: LocalDate.now()
+                emitEffect(OpenDatePicker(dateToShow))
+
+            }
 
             is AccountFormEvent.OnOpeningDateSelected ->
                 updateState { it.copy(openingDate = event.date) }
@@ -117,10 +121,11 @@ class AccountFormViewModel @Inject constructor(
                 isActive = currentState.isActive
             )
 
+            val openingDate = currentState.openingDate!!
             when (
                 saveAccount(
                     account = account,
-                    openingDate = currentState.openingDate,
+                    openingDate = openingDate,
                     excludeId = accountId
                 )
             ) {
@@ -186,6 +191,10 @@ class AccountFormViewModel @Inject constructor(
             return AccountFormValidation(rateError = "Rate required")
         }
 
+        if (state.openingDate == null) {
+            return AccountFormValidation(openingDateError = "Opening Date required")
+        }
+
         return AccountFormValidation(isValid = true)
     }
 
@@ -199,6 +208,11 @@ class AccountFormViewModel @Inject constructor(
 
             validation.rateError != null ->
                 emitEffect(FocusField(Field.RATE))
+
+            validation.openingDateError != null -> {
+                emitEffect(ShowToast(validation.openingDateError)) // Show toast
+                emitEffect(FocusField(Field.OPENING_DATE)) // Focus/Shake field
+            }
         }
     }
 

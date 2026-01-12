@@ -9,7 +9,7 @@ class LoadAccountForEditUseCase @Inject constructor(
     private val repository: AccountRepository
 ) {
 
-    suspend operator fun invoke(accountId: String): Pair<Account, LocalDate> {
+    suspend operator fun invoke(accountId: String): Pair<Account, LocalDate?> {
 
         val account = repository.getAccountById(accountId)
             ?: error("Account not found")

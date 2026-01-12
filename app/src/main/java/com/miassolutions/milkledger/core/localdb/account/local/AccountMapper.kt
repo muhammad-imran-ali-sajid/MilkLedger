@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.core.localdb.account.local
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
+import java.time.LocalDate
 import java.util.UUID
 
 
@@ -32,6 +33,6 @@ fun Account.toEntity(): AccountEntity {
         defaultRate = this.defaultRate,
         advanceAmount = this.advanceAmount,
         initialBalance = this.initialBalance,
-        createdAtMillis = this.createdDate.toMillis()
+        createdAtMillis = this.createdDate?.toMillis() ?: LocalDate.now().toMillis()
     )
 }

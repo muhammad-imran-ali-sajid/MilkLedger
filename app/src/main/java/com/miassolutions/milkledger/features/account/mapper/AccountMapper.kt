@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.extensions.toPaisa
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import java.util.UUID
 
 fun Account.toUi(): AccountUi =
@@ -21,7 +22,7 @@ fun Account.toUi(): AccountUi =
         type = type,
         sortOrder = sortOrder,
         initialBalance = initialBalance,
-        openingDate = createdDate,
+        openingDate = createdDate?: LocalDate.now(),
         defaultRate = defaultRate,
         advanceAmount = advanceAmount,
 

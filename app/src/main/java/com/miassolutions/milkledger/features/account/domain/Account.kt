@@ -4,7 +4,7 @@ import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import java.time.LocalDate
 
 data class Account(
-    val createdDate: LocalDate,
+    val createdDate: LocalDate?,
     val accountId: String = "",
     val name: String,
     val phone: String? = null,

@@ -12,9 +12,9 @@ fun autoSelectOnFocus(editText: EditText) {
 
 
 // Helper extension
-fun AppCompatEditText.setTextIfDifferent(value: String) {
-    if (text.toString() != value) {
-        setText(value)
-        setSelection(value.length)
+fun AppCompatEditText.setTextIfDifferent(text: String?) {
+    val newText = text.orEmpty()
+    if (this.text.toString() != newText) {
+        setText(newText)
     }
 }

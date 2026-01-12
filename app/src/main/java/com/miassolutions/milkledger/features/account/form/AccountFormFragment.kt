@@ -139,7 +139,7 @@ class AccountFormFragment :
         when (effect) {
 
             is AccountFormEffect.ShowToast ->
-                showToast(effect.message)
+                showSnackbar(effect.message)
 
             AccountFormEffect.CloseScreen ->
                 findNavController().popBackStack(
@@ -193,8 +193,10 @@ class AccountFormFragment :
         etAdvanceAmount.setTextIfDifferent(state.advanceAmount)
 
         etOpeningDate.setTextIfDifferent(
-            state.openingDate.toCompleteDateFormat()
+            state.openingDate?.toCompleteDateFormat() ?: ""
         )
+
+        openingDateLayout.error = state.validation.openingDateError
 
         // Switch
         switchActive.setOnCheckedChangeListener(null)
@@ -268,6 +270,10 @@ class AccountFormFragment :
             Field.ACCOUNT_TYPE -> rgAccountType.requestFocus()
             Field.RATE -> etDefaultRate.requestFocus()
             Field.INITIAL_BALANCE -> etInitialBalance.requestFocus()
+            Field.OPENING_DATE -> {
+                etOpeningDate.requestFocus()
+                // Optional: You can perform a shake animation here if desired
+            }
         }
     }
 
