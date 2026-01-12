@@ -2,10 +2,12 @@ package com.miassolutions.milkledger.features.sale.customerhistory
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding // CardView wala XML
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
@@ -64,6 +66,17 @@ class CustomerHistoryAdapter(
 
             // 4. Financials
             tvPrice.text = item.totalAmount.toPrice()
+
+            val isRateChanged = item.previousRate != null && item.previousRate != item.rate
+
+            if (isRateChanged) {
+                rateAlert.show()
+                rateAlert.text =
+                    "Rate: ${item.previousRate} -> ${item.rate}"  //Show Alert: Rate Changed from
+                root.setCardBackgroundColor(
+                    ContextCompat.getColor(root.context, R.color.orange_200)
+                )
+            }
 
             // Payment Logic
             if (item.paymentReceived > 0) {

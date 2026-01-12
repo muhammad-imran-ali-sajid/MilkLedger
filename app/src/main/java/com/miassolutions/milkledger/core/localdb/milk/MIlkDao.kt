@@ -154,21 +154,34 @@ interface MilkDao {
             m.totalAmount,
             m.notes as note,
             m.rateUsed as rate,
+
+            -- 🔥 NEW: Previous Rate Logic (Subquery for Sale)
+            -- Ye check karega ke is customer ka pichla rate kya tha
+            (
+                SELECT prev.rateUsed 
+                FROM milk_transactions_table prev 
+                WHERE prev.accountId = m.accountId 
+                AND prev.type = 'SALE' -- ✅ Ensure SALE type
+                AND prev.deletedAtMillis IS NULL
+                AND prev.dateMillis < m.dateMillis -- Is date se purana
+                ORDER BY prev.dateMillis DESC -- Sab se qareebi purana
+                LIMIT 1
+            ) as previousRate,
             
             -- Payment Data
             COALESCE(l_pay.credit, 0) as paymentReceived, 
             l_pay.dateMillis as paymentDateMillis,
             
-            -- 🔥 RUNNING BALANCE CALCULATION FOR SPECIFIC CUSTOMER 🔥
+            -- Running Balance Calculation
             (
                 SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
                 FROM financial_ledger_table sub_l
-                WHERE sub_l.accountId = :accountId  -- ✅ Sirf is customer ka hisaab
+                WHERE sub_l.accountId = :accountId 
                 AND sub_l.deletedAtMillis IS NULL
                 AND (
                     sub_l.dateMillis < m.dateMillis
                     OR
-                    (sub_l.dateMillis = m.dateMillis)
+                    (sub_l.dateMillis = m.dateMillis AND sub_l.createdAtMillis <= m.createdAtMillis)
                 )
             ) as currentBalance
             
@@ -181,12 +194,12 @@ interface MilkDao {
             AND l_pay.type = 'CASH_RECEIVED' 
             AND l_pay.deletedAtMillis IS NULL
 
-        -- 🔥 FILTER LOGIC HERE
         WHERE m.accountId = :accountId 
         AND m.deletedAtMillis IS NULL
         AND m.dateMillis BETWEEN :startDate AND :endDate
         
-        ORDER BY m.dateMillis ASC, m.createdAtMillis ASC
+        -- History usually Newest First hoti hai (DESC)
+        ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
     """)
     fun getCustomerSalesHistory(accountId: String, startDate: Long, endDate: Long): Flow<List<MilkSaleUiModel>>
 
