@@ -18,21 +18,24 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/TitleText"
-            android:textSize="20sp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:layout_marginBottom="12dp"
-            android:text="Withdraw Cash" />
+            android:textSize="26sp"
+            android:layout_gravity="center_vertical"
+            android:text="Withdraw Cash"
+             />
 
-        <com.google.android.material.button.MaterialButton
+        <ImageView
             android:id="@+id/btnDelete"
-            style="@style/Widget.Material3.Button.IconButton.Outlined"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cornerRadius="4dp"
-            app:icon="@drawable/ic_delete"
-            app:iconTint="@color/red" />
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:padding="12dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/ic_delete"
+            android:tint="@color/red" />
 
     </LinearLayout>
 
@@ -46,15 +49,11 @@
         android:orientation="horizontal"
         android:padding="12dp">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            app:tint="#1565C0" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:text="Available Earnings:"
             android:textColor="#1565C0" />
 
