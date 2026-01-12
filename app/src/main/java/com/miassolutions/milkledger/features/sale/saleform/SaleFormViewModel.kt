@@ -11,6 +11,7 @@ import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -28,6 +29,7 @@ class SaleFormViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(SaleFormUiState()) {
 
+    private var balanceJob: Job? = null
     private val saleId: String? = savedStateHandle["saleId"]
     val passedDate = savedStateHandle["saleDate"] ?: -1L
 
@@ -166,7 +168,10 @@ class SaleFormViewModel @Inject constructor(
     }
 
     private fun fetchBalance(accountId: String) {
-        viewModelScope.launch {
+        // Purana listener cancel karein taake overlapping na ho
+        balanceJob?.cancel()
+
+        balanceJob = viewModelScope.launch {
             repository.getAccountBalance(accountId).collect { balance ->
                 updateState { it.copy(currentBalance = balance) }
             }
@@ -266,8 +271,11 @@ class SaleFormViewModel @Inject constructor(
     }
 
     private fun resetFormForNewEntry() {
+        // 🔥 ZAROORI STEP: Balance sunna band karein
+        balanceJob?.cancel()
         updateState {
             it.copy(
+
                 // Note: Date aur PaymentDate hum CHANGE NAHI kr rahay,
                 // kyun ke user aksar ek hi date ki entries lagatar karta hai.
 
