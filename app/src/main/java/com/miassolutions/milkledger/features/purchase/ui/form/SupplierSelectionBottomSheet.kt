@@ -3,9 +3,11 @@ package com.miassolutions.milkledger.features.purchase.ui.form
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.databinding.BottomSheetSupplierSelectionBinding
 import com.miassolutions.milkledger.features.account.domain.Account
@@ -37,6 +39,18 @@ class SupplierSelectionBottomSheet(
 
     private fun setupRecyclerView() {
         adapter = SupplierSelectionAdapter { uiModel ->
+            // 🔥 CHECK: Agar aaj entry ho chuki hai to rok dein
+            if (uiModel.isEntryDoneToday) {
+                // User ko message dikhayen
+                Toast.makeText(requireContext(), "Already Exist for today", Toast.LENGTH_SHORT).show()
+
+                // Optional: Agar vibration deni ho to
+                 view?.performHapticFeedback(HapticFeedbackConstants.REJECT)
+
+                return@SupplierSelectionAdapter // Aagy na jayen
+            }
+            
+            
             onSupplierSelected(uiModel.account)
             dismiss()
         }

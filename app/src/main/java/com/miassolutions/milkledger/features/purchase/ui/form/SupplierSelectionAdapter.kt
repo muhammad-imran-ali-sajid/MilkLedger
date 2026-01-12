@@ -21,6 +21,15 @@ class SupplierSelectionAdapter(
             // Show check mark if entry is done today
             binding.ivStatus.isVisible = item.isEntryDoneToday
 
+
+            if (item.isEntryDoneToday) {
+                binding.tvSupplierName.alpha = 0.5f // Text dhundla (dim) karein
+                binding.root.isEnabled = true // Clickable rakhen taake Toast dikha saken
+            } else {
+                binding.tvSupplierName.alpha = 1.0f // Normal Text
+                binding.root.isEnabled = true
+            }
+
             binding.root.setOnClickListener {
                 onSupplierClick(item)
             }
