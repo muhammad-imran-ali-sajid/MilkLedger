@@ -8,6 +8,6 @@
     android:paddingBottom="8dp"
     android:text="Today's Sales"
     android:textColor="@color/teal_700"
-    android:textStyle="bold|italic"
+    android:textStyle="bold"
     android:textAllCaps="true"
     android:background="@color/white"/>
