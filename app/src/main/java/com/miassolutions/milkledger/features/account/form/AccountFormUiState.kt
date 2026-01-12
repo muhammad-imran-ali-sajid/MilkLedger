@@ -50,6 +50,7 @@ sealed interface AccountFormEffect {
 
     data class ShowBalanceError(val balance: Long) : AccountFormEffect
 
+
 }
 
 enum class Field {

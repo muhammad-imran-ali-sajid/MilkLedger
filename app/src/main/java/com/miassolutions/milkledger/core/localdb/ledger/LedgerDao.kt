@@ -179,19 +179,34 @@ interface LedgerDao {
 
     @Query("""
         SELECT 
-            COALESCE(SUM(credit), 0) as totalIn, 
-            COALESCE(SUM(debit), 0) as totalOut
+            -- 🟢 CASH IN: Sirf jab Cash Receive hua ho
+            COALESCE(SUM(
+                CASE 
+                    WHEN type = 'CASH_RECEIVED' THEN credit 
+                    ELSE 0 
+                END
+            ), 0) as totalIn, 
+
+            -- 🔴 CASH OUT: Jab Payment ki, Kharcha hua, ya Malik ne nikala
+            COALESCE(SUM(
+                CASE 
+                    WHEN type IN ('CASH_PAID', 'BUSINESS_EXPENSE', 'OWNER_DRAWING') THEN debit 
+                    ELSE 0 
+                END
+            ), 0) as totalOut
+
         FROM financial_ledger_table
         WHERE dateMillis BETWEEN :start AND :end
         AND deletedAtMillis IS NULL
     """)
     fun getCashflowSummary(start: Long, end: Long): Flow<CashflowSummary>
 
-    // 2. Transaction List Query (All mixed)
+    // 🔥 Updated: Sirf Cash transactions laane ke liye
     @Query("""
         SELECT * FROM financial_ledger_table
         WHERE dateMillis BETWEEN :start AND :end
         AND deletedAtMillis IS NULL
+        AND type IN ('CASH_RECEIVED', 'CASH_PAID', 'BUSINESS_EXPENSE', 'OWNER_DRAWING')
         ORDER BY dateMillis DESC, createdAtMillis DESC
     """)
     fun getLedgerEntriesInRange(start: Long, end: Long): Flow<List<FinancialLedgerEntity>>
