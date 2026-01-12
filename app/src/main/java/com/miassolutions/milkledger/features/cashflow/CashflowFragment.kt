@@ -13,7 +13,7 @@ class CashflowFragment : BaseFragment<FragmentCashflowBinding>(FragmentCashflowB
 
     private val viewModel: CashflowViewModel by viewModels()
     // Reuse your existing LedgerAdapter or create a generic one
-    private val adapter by lazy { LedgerAdapter() }
+    private val adapter by lazy { CashflowAdapter() }
 
     override fun setupViews() {
         super.setupViews()
