@@ -214,8 +214,8 @@
         android:label="My Wallet" />
     <fragment
         android:id="@+id/cashflowFragment"
-        tools:layout="@layout/fragment_cashflow"
         android:name="com.miassolutions.milkledger.features.cashflow.CashflowFragment"
-        android:label="CashflowFragment" />
+        android:label="Cash Flow"
+        tools:layout="@layout/fragment_cashflow" />
 
 </navigation>

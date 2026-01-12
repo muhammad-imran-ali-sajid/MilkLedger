@@ -101,23 +101,25 @@ class OwnerViewModel @Inject constructor(
             return
         }
 
+        // 🔥 FIX: Yahan check karein. Agar note blank hai to "Withdraw" set karein
+        val finalNote = note.ifBlank { "Withdraw" }
+
         viewModelScope.launch {
             try {
                 // Convert to Paisa (Long)
                 val amountPaisa = (amount * 100).toLong()
 
                 if (id == null) {
-                    repository.saveCashWithdrawal(amountPaisa, date, note)
+                    // ✅ finalNote use karein
+                    repository.saveCashWithdrawal(amountPaisa, date, finalNote)
                     emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal Successful"))
                 } else {
-                    repository.updateCashWithdrawal(id, amountPaisa, date, note)
+                    // ✅ finalNote use karein
+                    repository.updateCashWithdrawal(id, amountPaisa, date, finalNote)
                     emitEffect(OwnerUiEffect.ShowSnackbar("Withdrawal updated successful"))
                 }
 
-
                 emitEffect(OwnerUiEffect.CloseWithdrawSheet)
-
-                // Data auto-refresh ho jayega kyunke Flow observe ho raha hai
 
             } catch (e: Exception) {
                 emitEffect(OwnerUiEffect.ShowSnackbar("Error: ${e.message}"))
