@@ -11,6 +11,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.miassolutions.milkledger.databinding.BottomSheetWithdrawCashBinding
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.Instant
@@ -86,7 +87,7 @@ class WithdrawCashBottomSheet : BottomSheetDialogFragment() {
         }
 
 
-        binding.btnDate.text = selectedDate.toDisplayDate()
+        binding.btnDate.text = selectedDate.toCompleteDateFormat()
 
         // 2. Date Picker
         binding.btnDate.setOnClickListener {

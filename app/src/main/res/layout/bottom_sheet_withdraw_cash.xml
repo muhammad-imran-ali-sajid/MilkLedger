@@ -4,11 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:backgroundTint="@color/white"
+    android:background="@drawable/bg_milk_overview"
     android:padding="16dp">
 
     <View
         android:layout_width="40dp"
         android:layout_height="4dp"
+        android:background="@color/deep_forest_green"
         android:layout_gravity="center"
         android:layout_marginBottom="16dp" />
 
@@ -35,7 +38,7 @@
             android:padding="12dp"
             android:layout_marginBottom="8dp"
             android:src="@drawable/ic_delete"
-            android:tint="@color/red" />
+            app:tint="@color/red" />
 
     </LinearLayout>
 
@@ -44,7 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:background="#E3F2FD"
+        android:background="@drawable/bg_edittext_readable"
+        android:backgroundTint="#E3F2FD"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="12dp">
@@ -53,7 +57,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
             android:text="Available Earnings:"
             android:textColor="#1565C0" />
 
@@ -84,6 +87,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etAmount"
+            style="@style/TextInputMinimalStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="numberDecimal" />
@@ -92,11 +96,13 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:layout_marginTop="8dp"
         android:hint="Note (Optional)">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etNote"
+            style="@style/TextInputMinimalStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapSentences" />
