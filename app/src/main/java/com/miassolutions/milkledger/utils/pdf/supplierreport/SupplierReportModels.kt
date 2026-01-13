@@ -16,8 +16,8 @@ data class PdfSupplierItemRecord(
     val date: String,
     val quantity: Double,
     val ts: Double,
-    val rate: Double,
-    val amount: Double,
-    val paid: Double,
-    val balance: Double
+    val rate: Long,
+    val amount: Long,
+    val paid: Long,
+    val balance: Long
 )

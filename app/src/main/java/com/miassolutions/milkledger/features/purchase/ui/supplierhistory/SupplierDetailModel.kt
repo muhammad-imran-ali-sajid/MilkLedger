@@ -21,19 +21,19 @@ data class SupplierDetailModel(
     )
 
 
-fun List<SupplierDetailModel>.toRecordList(): List<PdfSupplierItemRecord> {
-
-    return this.map { item ->
-        PdfSupplierItemRecord(
-            date = item.date.toCompleteDateFormat(),
-            quantity = item.milkAmount,
-            ts = item.ts,
-            rate = item.rateUsed,
-            amount = item.milkPrice,
-            paid = item.payment,
-            balance = item.balance
-        )
-    }
-}
+//fun List<SupplierDetailModel>.toRecordList(): List<PdfSupplierItemRecord> {
+//
+//    return this.map { item ->
+//        PdfSupplierItemRecord(
+//            date = item.date.toCompleteDateFormat(),
+//            quantity = item.milkAmount,
+//            ts = item.ts,
+//            rate = item.rateUsed,
+//            amount = item.milkPrice,
+//            paid = item.payment,
+//            balance = item.balance
+//        )
+//    }
+//}
 
 

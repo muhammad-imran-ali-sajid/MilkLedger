@@ -13,14 +13,14 @@ data class ProfitReceiptPdf(
 
 data class PdfProfitItemRecord(
     val date: String,
-    val grossProfit: Double,
-    val netProfit: Double,
-    val profitReceived: Double,
-    val balance: Double
+    val grossProfit: Long,
+    val netProfit: Long,
+    val profitReceived: Long,
+    val balance: Long
 )
 
 data class PdfProfitSummary(
-    val totalProfit : Double,
-    val totalReceived: Double,
-    val balance : Double
+    val totalProfit : Long,
+    val totalReceived: Long,
+    val balance : Long
 )

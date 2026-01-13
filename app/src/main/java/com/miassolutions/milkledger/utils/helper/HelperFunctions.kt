@@ -2,7 +2,6 @@ package com.miassolutions.milkledger.utils.helper
 
 import android.graphics.Color
 import androidx.core.graphics.toColorInt
-import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 
 fun handleZeroData(value: Double): String {
@@ -31,18 +30,3 @@ fun textColor(amount: Double): Int {
 }
 
 
-fun numberFormat(amount: Double): String {
-    // Only consider the whole number part of the balance for sign logic
-    val wholeAmount = amount.toLong()
-
-    return when {
-        // If the whole number is 0 (e.g., balance is -0.99 to +0.99)
-        wholeAmount == 0L -> 0.0.toPrice() // Display as '0' without sign or decimal if toPriceStr uses %.0f
-
-        // If the whole number is positive (e.g., 1, 2, etc.)
-        wholeAmount > 0 -> "+${amount.toPrice()}" // Show + sign
-
-        // If the whole number is negative (e.g., -1, -2, etc.)
-        else -> amount.toPrice() // Show - sign (toPriceStr handles this)
-    }
-}

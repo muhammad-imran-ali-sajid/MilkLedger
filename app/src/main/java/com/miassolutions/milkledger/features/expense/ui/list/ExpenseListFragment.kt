@@ -73,7 +73,7 @@ class ExpenseListFragment :
 
 
                 binding.tvTotalExpense.text = "Rs. ${state.displayTotal.toPrice()}"
-                binding.tvAvgExpenses.text = "Rs. ${state.displayAvgExpense.toPrice("%.2f")}"
+                binding.tvAvgExpenses.text = "Rs. ${state.displayAvgExpense.toLong().toPrice()}"
             }
         }
     }

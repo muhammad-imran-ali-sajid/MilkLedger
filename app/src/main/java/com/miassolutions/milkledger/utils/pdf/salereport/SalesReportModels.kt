@@ -21,7 +21,7 @@ data class PdfSalesItemRecord(
     val milkVolume: Double = 0.0,
     val deduction: Double = 0.0,
     val rate: Double = 0.0,
-    val amount: Double = 0.0,
-    val paid: Double= 0.0,
-    val balance: Double= 0.0,
+    val amount: Long = 0,
+    val paid: Long= 0,
+    val balance: Long= 0,
 )

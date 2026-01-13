@@ -5,6 +5,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.miassolutions.milkledger.R
 import kotlin.math.abs
+import kotlin.math.roundToLong
 
 fun Long.toSignedBalanceRupee(): String {
     val rupees = this / 100.0
@@ -64,22 +65,18 @@ fun TextView.setBalanceWithColorRupee(amountPaisa: Long, prefix: String = "") {
     this.setTextColor(ContextCompat.getColor(context, colorRes))
 }
 
-fun TextView.setBalanceWithColor(amountPaisa: Long, prefix: String = "") {
+fun TextView.setBalanceWithColor(amountPaisa: Long) {
 
-    // 1. Text Set Karen (Sign wala function use kr k)
-    val signedAmount = amountPaisa.toSignedBalance()
-    this.text = "$prefix$signedAmount"
+    // Calculate Rupees (Rounded)
+    val rupees = (amountPaisa / 100.0).roundToLong()
 
-    // 2. Context len (Color uthane k liye)
-    val context = this.context
+    // Set Text with Commas (e.g. Rs. 5,000)
+    text = "Rs. %,d".format(rupees)
 
-    // 3. Color Logic
-    val colorRes = when {
-        amountPaisa > 0 -> R.color.green // Positive (+) = Leny hen (Green)
-        amountPaisa < 0 -> R.color.red   // Negative (-) = Deny hen (Red)
-        else -> R.color.black              // Zero
+    // Set Color based on Positive/Negative
+    if (amountPaisa >= 0) {
+        setTextColor(ContextCompat.getColor(context, R.color.green_700)) // Ya jo apka color ho
+    } else {
+        setTextColor(ContextCompat.getColor(context, R.color.red))
     }
-
-    // 4. Color Apply Karen
-    this.setTextColor(ContextCompat.getColor(context, colorRes))
 }
