@@ -13,10 +13,11 @@
         android:layout_height="4dp"
         android:background="@color/deep_forest_green"
         android:layout_gravity="center"
-        android:layout_marginBottom="16dp" />
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_marginVertical="16dp"
         android:layout_height="wrap_content">
 
         <TextView
@@ -24,19 +25,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="start"
+            android:gravity="center"
             android:textSize="26sp"
             android:layout_gravity="center_vertical"
-            android:text="Withdraw Cash"
-             />
+            android:text="Withdraw Cash" />
 
         <ImageView
             android:id="@+id/btnDelete"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:padding="12dp"
-            android:layout_marginBottom="8dp"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_delete"
             app:tint="@color/red" />
 
