@@ -34,6 +34,10 @@ class ExpenseAdapter(
             binding.apply {
                 tvExpenseTitle.text = item.title
 
+                val initial = tvExpenseTitle.text.firstOrNull()?.toString()?.uppercase() ?: ""
+
+                tvInitial.text = initial
+
                 // Paisa -> Rupees Conversion logic
                 val rupees = item.amount / 100.0
                 tvExpenseAmount.text = "Rs. ${String.format("%.0f", rupees)}"
