@@ -57,20 +57,12 @@ class ExpenseListViewModel @Inject constructor(
                 emitEffect(ExpenseListUiEffect.NavigateToEditExpense(event.expense))
             }
 
-            is ExpenseListUiEvent.OnDeleteClicked -> {
-                deleteExpense(event.id)
-            }
+
 
 
         }
     }
 
-    private fun deleteExpense(id: String) {
-        viewModelScope.launch {
-            repository.deleteExpense(id)
-            emitEffect(ExpenseListUiEffect.ShowSnackbar("Expense deleted"))
-        }
-    }
 
     private fun loadExpenses(date: LocalDate) {
         // Purana flow cancel karein taake overlapping na ho

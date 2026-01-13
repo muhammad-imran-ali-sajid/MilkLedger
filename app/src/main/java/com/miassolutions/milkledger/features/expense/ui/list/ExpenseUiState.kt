@@ -30,7 +30,6 @@ sealed interface ExpenseListUiEvent {
     data class OnDateSelected(val date: LocalDate) : ExpenseListUiEvent
 
     data object OnAddExpenseClicked : ExpenseListUiEvent
-    data class OnDeleteClicked(val id: String): ExpenseListUiEvent
     data class OnExpenseClicked(val expense: Expense) : ExpenseListUiEvent
 }
 

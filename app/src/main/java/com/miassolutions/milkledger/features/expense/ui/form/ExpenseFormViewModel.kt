@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.expense.data.repository.ExpenseRepository
 import com.miassolutions.milkledger.features.expense.domain.Expense
+import com.miassolutions.milkledger.features.expense.ui.list.ExpenseListUiEffect
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.NonCancellable
@@ -105,6 +106,8 @@ class ExpenseFormViewModel @Inject constructor(
             is ExpenseFormUiEvent.OnSaveClicked -> saveData()
         }
     }
+
+
 
     private fun saveData() {
         val state = currentState

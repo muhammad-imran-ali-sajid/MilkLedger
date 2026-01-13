@@ -6,6 +6,8 @@ import androidx.navigation.fragment.navArgs
 import com.miassolutions.milkledger.core.ui.BaseBottomSheet
 import com.miassolutions.milkledger.databinding.BottomSheetEditExpenseBinding
 import com.miassolutions.milkledger.features.expense.domain.Expense
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,8 +31,16 @@ class EditExpenseBottomSheet : BaseBottomSheet<BottomSheetEditExpenseBinding>(
         // 1. Expense Load karein (Agar object pass kiya hai to direct use karein)
         val expense = args.expense // Assuming Parcelable pass kiya hai
 
+
         setupViews(expense)
         setupClick(expense)
+        collectEvents()
+    }
+
+    private fun collectEvents() {
+        collectFlow(viewModel.updateStatus) { msg ->
+            showToast(message = msg)
+        }
     }
 
     private fun setupViews(expense: Expense) {
@@ -55,6 +65,16 @@ class EditExpenseBottomSheet : BaseBottomSheet<BottomSheetEditExpenseBinding>(
     }
 
     private fun setupClick(originalExpense: Expense) {
+
+        binding.btnDelete.setOnClickListener {
+            showDeleteActionDialog {
+                viewModel.deleteExpense(originalExpense.expenseId)
+                dismiss()
+
+            }
+        }
+
+
         binding.btnUpdate.setOnClickListener {
             val newTitle = binding.etTitle.text.toString()
             val newAmountStr = binding.etAmount.text.toString()

@@ -4,13 +4,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
-import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
-import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -25,12 +22,6 @@ class ExpenseListFragment :
     private val adapter = ExpenseAdapter(
         onItemClick = { expense ->
             viewModel.onEvent(ExpenseListUiEvent.OnExpenseClicked(expense))
-        },
-        onDeleteClick = {
-            showDeleteActionDialog {
-
-                viewModel.onEvent(ExpenseListUiEvent.OnDeleteClicked(it))
-            }
         }
     )
 
