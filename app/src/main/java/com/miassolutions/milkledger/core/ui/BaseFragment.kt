@@ -13,6 +13,9 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavDirections
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -166,6 +169,26 @@ abstract class BaseFragment<VB : ViewBinding>(
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+
+    protected fun navigate(
+        directions: NavDirections,
+        navOptions: NavOptions? = null
+    ) {
+        try {
+            findNavController().navigate(directions, navOptions)
+        } catch (e: IllegalArgumentException) {
+            // multiple click / already navigated
+        }
+    }
+
+    protected fun navigateUp() {
+        findNavController().navigateUp()
+    }
+
+    protected fun popBackStack() {
+        findNavController().popBackStack()
     }
 
 

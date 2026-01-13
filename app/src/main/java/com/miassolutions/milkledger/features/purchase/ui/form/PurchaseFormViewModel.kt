@@ -18,7 +18,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.firstOrNull
@@ -39,7 +38,7 @@ class PurchaseFormViewModel @Inject constructor(
 
     private var balanceJob: Job? = null
     private val purchaseId: String? = savedStateHandle["purchaseId"]
-    private val purchaseDate:Long? = savedStateHandle["purchaseDate"]
+    private val purchaseDate: Long? = savedStateHandle["purchaseDate"]
 
     private val purchaseDateLocal = purchaseDate?.toLocalDate() ?: LocalDate.now()
 
@@ -88,7 +87,7 @@ class PurchaseFormViewModel @Inject constructor(
             loadPurchaseForEdit(purchaseId)
         } else {
             // New Entry Defaults
-            updateState { it.copy(date = purchaseDateLocal , paymentDate = purchaseDateLocal) }
+            updateState { it.copy(date = purchaseDateLocal, paymentDate = purchaseDateLocal) }
         }
     }
 
@@ -180,6 +179,18 @@ class PurchaseFormViewModel @Inject constructor(
             PurchaseFormUiEvent.OnSaveClicked -> savePurchase(exitAfterSave = true)
             PurchaseFormUiEvent.OnSaveAndNewClicked -> savePurchase(exitAfterSave = false)
             PurchaseFormUiEvent.OnBackClicked -> emitEffect(PurchaseFormUiEffect.NavigateBack)
+            is PurchaseFormUiEvent.OnDeleteClicked -> {
+                purchaseId?.let {
+                    deletePurchase(purchaseId)
+                    emitEffect(PurchaseFormUiEffect.ShowSnackbar("Purchase deleted"))
+                }
+            }
+        }
+    }
+
+    private fun deletePurchase(purchaseId: String) {
+        viewModelScope.launch {
+            repository.deletePurchase(purchaseId)
         }
     }
 

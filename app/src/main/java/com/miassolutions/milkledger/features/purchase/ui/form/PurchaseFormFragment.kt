@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.purchase.ui.form
 
 import android.text.InputType
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,6 +13,8 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
@@ -56,6 +59,15 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         }
         etNote.doAfterTextChanged {
             viewModel.onEvent(PurchaseFormUiEvent.OnNoteChanged(it.toString()))
+        }
+
+        btnDelete.setOnClickListener {
+
+            showDeleteActionDialog {
+                viewModel.onEvent(PurchaseFormUiEvent.OnDeleteClicked)
+                navigateUp()
+
+            }
         }
 
         // --- Supplier Click (OPEN BOTTOM SHEET) ---
@@ -116,14 +128,14 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
     private fun renderState(state: PurchaseFormUiState) = with(binding) {
         // Date Buttons
-        btnDate.text = state.date.toDisplayDate()
+        btnDate.text = "Dated: ${state.date.toCompleteDateFormat()}"
         btnPaymentDate.text = state.paymentDate.toDisplayDate()
 
         // Calculations
         tvTs.text = "TS: ${String.format("%.2f", state.calculatedTs)}"
-        tvMilkPrice.text = "Price: ${state.calculatedTotal.toLong().toPrice()}"
+        tvMilkPrice.text = "Price: ${state.calculatedTotal.toPrice()}"
         tvRate.text = "Rate: ${state.rate}"
-        tvBalance.setBalanceWithColorRupee(state.currentBalance, prefix = "Balance: ")
+        tvBalance.setBalanceWithColorRupee(state.currentBalance)
 
         // Inputs Update (Avoid Cursor Jumps)
         if (etMilkVolume.text.toString() != state.volume) etMilkVolume.setText(state.volume)
@@ -147,6 +159,8 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         tilSupplierName.isEnabled = !state.isEditMode
         // Agar edit mode hai to click bhi disable kar dein taake sheet na khule
         actvSupplierName.isEnabled = !state.isEditMode
+
+        btnDelete.isVisible = state.isEditMode
     }
 
     private fun handleEffect(effect: PurchaseFormUiEffect) {
@@ -156,8 +170,15 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
             PurchaseFormUiEffect.OpenDatePicker -> {
                 openDatePicker { date -> viewModel.onEvent(PurchaseFormUiEvent.OnDateSelected(date)) }
             }
+
             PurchaseFormUiEffect.OpenPaymentDatePicker -> {
-                openDatePicker { date -> viewModel.onEvent(PurchaseFormUiEvent.OnPaymentDateSelected(date)) }
+                openDatePicker { date ->
+                    viewModel.onEvent(
+                        PurchaseFormUiEvent.OnPaymentDateSelected(
+                            date
+                        )
+                    )
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.purchase.data
 
 
+import androidx.room.Transaction
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
@@ -66,6 +67,13 @@ class MilkPurchaseRepository @Inject constructor(
 
     suspend fun getPurchaseById(id: String): MilkPurchaseUiModel? {
         return milkDao.getPurchaseDetailById(id)
+    }
+
+    @Transaction
+    suspend fun deletePurchase(saleId: String) {
+        val currentTime = System.currentTimeMillis()
+        milkDao.softDeleteMilkTransaction(saleId, currentTime)
+        ledgerDao.softDeleteLedgerByReference(saleId, currentTime)
     }
 
     suspend fun saveMilkPurchase(

@@ -54,6 +54,8 @@ sealed class PurchaseFormUiEvent {
     // Actions
     object OnSaveClicked : PurchaseFormUiEvent()
     object OnSaveAndNewClicked : PurchaseFormUiEvent()
+
+    data object OnDeleteClicked : PurchaseFormUiEvent()
     object OnBackClicked : PurchaseFormUiEvent() // Optional
 }
 
@@ -64,5 +66,6 @@ sealed class PurchaseFormUiEffect {
     data class ShowSnackbar(val message: String) : PurchaseFormUiEffect()
     object NavigateBack : PurchaseFormUiEffect()
     object OpenDatePicker : PurchaseFormUiEffect()
+
     object OpenPaymentDatePicker : PurchaseFormUiEffect()
 }
