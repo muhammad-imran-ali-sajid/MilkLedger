@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
@@ -59,8 +60,9 @@ class ExpenseListFragment :
             viewModel.onEvent(ExpenseListUiEvent.OnNextDate)
         }
         binding.dateHeader.tvSelectedDate.setOnClickListener {
-            // Yahan DatePicker dialog open kar k OnDateSelected call karein
-            // Filhal simple rakhte hain
+            openDatePicker { date ->
+                viewModel.onEvent(ExpenseListUiEvent.OnDateSelected(date))
+            }
 
         }
     }
