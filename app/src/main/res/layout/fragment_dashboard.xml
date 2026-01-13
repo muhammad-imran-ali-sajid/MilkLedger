@@ -68,6 +68,10 @@
                         android:backgroundTint="@color/teal_dark"
                         android:text="My Notes" />
 
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="wrap_content" />
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCashFlow"
                         android:layout_width="0dp"
@@ -96,7 +100,7 @@
                         <TextView
                             android:id="@+id/tvTotalPurchases"
                             style="@style/DashboardValue"
-                            android:text="7,500" />
+                            android:text="7,5000000" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -200,11 +204,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="8dp"
-
-                    android:padding="12dp"
+                    android:background="@drawable/bg_edittext_readable"
+                    android:padding="8dp"
                     android:text="Milk Overview"
                     android:textColor="@color/black"
-                    android:textSize="22sp" />
+                    android:textSize="30sp" />
 
 
                 <LinearLayout
@@ -218,280 +222,153 @@
                     <!-- Milk Purchased -->
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_width="match_parent">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
+
+                        <LinearLayout style="@style/DashboardInnerRow">
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Purchased"
-                                android:textSize="20sp" />
+                                style="@style/DashboardMilkLabel"
+                                android:text="Purchases" />
 
                             <TextView
-                                android:id="@+id/tv_milk_purchase"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="Rs. 7,500"
-                                android:textSize="20sp" />
+                                android:id="@+id/tvMilkSold"
+                                style="@style/DashboardMilkValue"
+                                android:text="100 Ltr" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                     <!-- Milk Sold -->
+                    <!-- Milk Purchased -->
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_width="match_parent">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
+
+                        <LinearLayout style="@style/DashboardInnerRow">
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Sold"
-                                android:textSize="20sp" />
+                                style="@style/DashboardMilkLabel"
+                                android:text="Sales" />
 
                             <TextView
-                                android:id="@+id/tv_milk_sold"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="Rs. 8,200"
-                                android:textSize="20sp" />
+                                android:id="@+id/tvMilkPurchase"
+                                style="@style/DashboardMilkValue"
+                                android:text="110 Ltr" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
 
+                    <!-- Milk Purchased -->
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_width="match_parent">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
+
+                        <LinearLayout style="@style/DashboardInnerRow">
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Qty Diff"
-                                android:textSize="20sp" />
+                                style="@style/DashboardMilkLabel"
+                                android:text="Qty Diff" />
 
                             <TextView
                                 android:id="@+id/tvQtyDiff"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="Rs. 8,200"
-                                android:textSize="20sp" />
+                                style="@style/DashboardMilkValue"
+                                android:text="10 Ltr" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+
+                    <!-- Milk Purchased -->
+                    <com.google.android.material.card.MaterialCardView
+                        style="@style/DashboardCard"
+                        android:layout_width="match_parent">
+
+
+                        <LinearLayout style="@style/DashboardInnerRow">
+
+                            <TextView
+                                style="@style/DashboardMilkLabel"
+                                android:text="Avg Purch. Price" />
+
+                            <TextView
+                                android:id="@+id/tvAvgPurchasePrice"
+                                style="@style/DashboardMilkValue"
+                                android:text="Rs. 150" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
+                    <com.google.android.material.card.MaterialCardView
+                        style="@style/DashboardCard"
+                        android:layout_width="match_parent">
+                        <LinearLayout style="@style/DashboardInnerRow">
+
+                            <TextView
+                                style="@style/DashboardMilkLabel"
+                                android:text="Avg Sale Price" />
+
+                            <TextView
+                                android:id="@+id/tvAvgFat"
+                                style="@style/DashboardMilkValue"
+                                android:text="Rs. 110" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent">
 
-                        >
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
+                        <LinearLayout style="@style/DashboardInnerRow">
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Avg S.P."
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/tvAvgSP"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="180.0"
-                                android:textSize="20sp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Avg P.P."
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/tvAvgCP"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="160.0"
-                                android:textSize="20sp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Avg Price Diff"
-                                android:textSize="20sp" />
+                                style="@style/DashboardMilkLabel"
+                                android:text="Price Diff" />
 
                             <TextView
                                 android:id="@+id/tvAvgPriceDiff"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="20.0"
-                                android:textSize="20sp" />
+                                style="@style/DashboardMilkValue"
+                                android:text="Rs. 40" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                     <!-- Avg Fat -->
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent">
 
-                        >
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
+                        <LinearLayout style="@style/DashboardInnerRow">
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Avg Fat"
-                                android:textSize="20sp" />
+                                style="@style/DashboardMilkLabel"
+                                android:text="Avg Fat" />
 
                             <TextView
-                                android:id="@+id/tv_avg_fat"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="4.2"
-                                android:textSize="20sp" />
+                                android:id="@+id/tvAvgSalePrice"
+                                style="@style/DashboardMilkValue"
+                                android:text="5%" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                     <!-- Avg LR -->
                     <com.google.android.material.card.MaterialCardView
                         style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_width="match_parent">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
+                        <LinearLayout style="@style/DashboardInnerRow">
+                            <TextView
+                                style="@style/DashboardMilkLabel"
+                                android:text="Avg LR" />
 
                             <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Avg LR"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/tv_avg_lr"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="28.5"
-                                android:textSize="20sp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Total TS -->
-                    <com.google.android.material.card.MaterialCardView
-                        style="@style/DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Total TS"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:id="@+id/tv_total_ts"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="end"
-                                android:text="12.3"
-                                android:textSize="20sp" />
+                                android:id="@+id/tvAvgLr"
+                                style="@style/DashboardMilkValue"
+                                android:text="25" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 

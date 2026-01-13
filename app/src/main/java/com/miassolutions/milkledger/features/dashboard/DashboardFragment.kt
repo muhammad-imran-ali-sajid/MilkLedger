@@ -13,7 +13,8 @@ import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class DashboardFragment : BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
+class DashboardFragment :
+    BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
 
     private val viewModel: DashboardViewModel by viewModels()
 
@@ -66,8 +67,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(FragmentDashboa
 
 
                 // 3. Averages
-                tvAvgCP.text = state.avgPurchasePrice.format(1)
-                tvAvgSP.text = state.avgSalePrice.format(1)
+                tvAvgPurchasePrice.text = state.avgPurchasePrice.format(1)
+                tvAvgSalePrice.text = state.avgSalePrice.format(1)
 
                 tvAvgPriceDiff.text = state.avgPriceDiff.format(1)
                 setDiffColor(tvAvgPriceDiff, state.avgPriceDiff)
@@ -76,17 +77,17 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(FragmentDashboa
                 // 4. Quality
                 tvAvgFat.text = state.avgFat.format(2)
                 tvAvgLr.text = state.avgLr.format(2)
-                tvTotalTs.text = state.totalTs.format(2)
             }
         }
 
         // --- EFFECT OBSERVER (Navigation) ---
         collectEffect(viewModel.uiEffect) { effect ->
-            when(effect) {
+            when (effect) {
                 DashboardUiEffect.NavigateToCashFlow -> {
                     // Make sure ID matches your nav_graph.xml
                     findNavController().navigate(DashboardFragmentDirections.actionDashboardFragmentToCashflowFragment())
                 }
+
                 DashboardUiEffect.NavigateToNotes -> {
                     // Navigate to Notes Fragment
                     // findNavController().navigate(R.id.action_dashboard_to_notes)
@@ -106,7 +107,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(FragmentDashboa
     }
 
     private fun setProfitColor(textView: TextView, value: Long) {
-        val colorRes = if (value >= 0) R.color.white else R.color.red // Profit card dark green hai, islye white/light-red
+        val colorRes =
+            if (value >= 0) R.color.white else R.color.red // Profit card dark green hai, islye white/light-red
         textView.setTextColor(ContextCompat.getColor(requireContext(), colorRes))
     }
 }
