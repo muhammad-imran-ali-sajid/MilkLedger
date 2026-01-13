@@ -69,6 +69,8 @@ sealed interface SaleFormUiEvent {
 
     data object OnSaveClicked : SaleFormUiEvent
 
+    data object OnDeleteClicked: SaleFormUiEvent
+
     object OnSaveAndNewClicked : SaleFormUiEvent
 }
 

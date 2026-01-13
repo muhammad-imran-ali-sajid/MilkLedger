@@ -7,7 +7,14 @@
 
     <include
         android:id="@+id/dateHeader"
-        layout="@layout/date_header_layout" />
+        layout="@layout/date_header_layout"
+        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/emptyStateLayout"

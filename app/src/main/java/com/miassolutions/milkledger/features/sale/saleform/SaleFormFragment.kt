@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.sale.saleform
 
 import android.text.InputType
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -49,6 +50,12 @@ class SaleFormFragment :
             openCustomerBottomSheet()
         }
 
+        btnDelete.setOnClickListener {
+            showDeleteActionDialog {
+                viewModel.onEvent(SaleFormUiEvent.OnDeleteClicked)
+                navigateUp()
+            }
+        }
         // --- Dates & Save ---
         btnDate.setOnClickListener { viewModel.onEvent(OnDateClick) }
         btnPaymentDate.setOnClickListener { viewModel.onEvent(OnPaymentDateClick) }
@@ -120,11 +127,12 @@ class SaleFormFragment :
         tvNetMilk.text = state.displayNetMilk
         tvMilkPrice.text = "Price: ${state.calculatedTotal.toPrice()}"
         tvRate.text = state.displayRate
-        tvBalance.setBalanceWithColorRupee(state.currentBalance, prefix = "Balance: ")
+        tvBalance.setBalanceWithColorRupee(state.currentBalance)
 
         // --- Save Button ---
         btnSave.text = if (state.isEditMode) "Update" else "Save"
         btnSave.isEnabled = !state.isSaving
+        btnDelete.isVisible = state.isEditMode
     }
 
     private fun handleEffect(effect: SaleFormUiEffect) {
@@ -133,11 +141,14 @@ class SaleFormFragment :
             SaleFormUiEffect.OpenDatePicker -> {
                 openDatePicker { date -> viewModel.onEvent(OnDateSelected(date)) }
             }
+
             SaleFormUiEffect.OpenPaymentDatePicker -> {
                 openDatePicker { date -> viewModel.onEvent(OnPaymentDateSelected(date)) }
             }
+
             is SaleFormUiEffect.ShowSnackbar -> showSnackbar(effect.message)
-            is SaleFormUiEffect.OpenPaymentDatePicker -> { /* Handled in VM */ }
+            is SaleFormUiEffect.OpenPaymentDatePicker -> { /* Handled in VM */
+            }
         }
     }
 }

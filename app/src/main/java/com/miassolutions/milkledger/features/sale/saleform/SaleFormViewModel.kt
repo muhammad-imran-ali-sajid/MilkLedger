@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
 import com.miassolutions.milkledger.features.sale.model.UpdateSaleRequest
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.ShowSnackbar
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
@@ -163,6 +164,28 @@ class SaleFormViewModel @Inject constructor(
             is SaleFormUiEvent.LoadSaleForEdit -> loadSaleForEdit(event.saleId)
             SaleFormUiEvent.OnSaveAndNewClicked -> {
                 saveSale(false)
+            }
+
+            is SaleFormUiEvent.OnDeleteClicked -> {
+                saleId?.let {
+                    onDeleteSaleClicked(saleId)
+                    emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Deleted Successfully"))
+                }
+            }
+        }
+    }
+
+
+    fun onDeleteSaleClicked(saleId: String) {
+        viewModelScope.launch {
+            updateState { it.copy(isLoading = true) }
+            try {
+                repository.deleteSale(saleId)
+
+            } catch (e: Exception) {
+                emitEffect(SaleFormUiEffect.ShowSnackbar("Error: ${e.message}"))
+            } finally {
+                updateState { it.copy(isLoading = false) }
             }
         }
     }

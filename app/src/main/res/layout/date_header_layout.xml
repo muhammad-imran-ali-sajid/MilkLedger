@@ -37,7 +37,8 @@
             android:gravity="center"
             android:padding="8dp"
             android:textSize="20sp"
-            android:text="📅 12-10-2025"
+            android:drawableStart="@drawable/ic_calendar"
+            android:text="12-10-2025"
             android:textStyle="bold" />
 
         <ImageButton

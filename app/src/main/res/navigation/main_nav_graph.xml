@@ -153,9 +153,9 @@
     </dialog>
     <fragment
         android:id="@+id/milkSaleListFragment"
-        tools:layout="@layout/fragment_milk_sale_list"
         android:name="com.miassolutions.milkledger.features.sale.salelist.MilkSaleListFragment"
-        android:label="MilkSaleListFragment" >
+        android:label="@string/sales"
+        tools:layout="@layout/fragment_milk_sale_list">
         <action
             android:id="@+id/action_milkSaleListFragment_to_saleAddFragment"
             app:destination="@id/saleAddFragment" />

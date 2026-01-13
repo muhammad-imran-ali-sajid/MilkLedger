@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEven
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.AndroidEntryPoint
@@ -102,7 +103,7 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
             binding.emptyLayout.root.isVisible = !state.isLoading && state.purchases.isEmpty()
 
             // 3. Date Header
-            binding.dateHeader.tvSelectedDate.text = state.date.toDisplayDate()
+            binding.dateHeader.tvSelectedDate.text = state.date.toCompleteDateFormat()
 
 
             // 4. Summary Card (Assuming CollapsibleCardView layout logic)
