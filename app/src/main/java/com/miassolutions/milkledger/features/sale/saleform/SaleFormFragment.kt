@@ -133,6 +133,7 @@ class SaleFormFragment :
         btnSave.text = if (state.isEditMode) "Update" else "Save"
         btnSave.isEnabled = !state.isSaving
         btnDelete.isVisible = state.isEditMode
+        btnSaveNew.isVisible = !state.isEditMode
     }
 
     private fun handleEffect(effect: SaleFormUiEffect) {

@@ -15,6 +15,8 @@ fun Long.toPrice(showCurrency: Boolean = false): String {
     return "%,d".format(rupees)
 }
 
+
+
 fun String.toLongPaisa(): Long {
     return (this.toDouble() * 100).toLong()
 }

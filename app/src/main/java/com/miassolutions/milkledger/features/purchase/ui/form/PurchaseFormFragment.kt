@@ -155,12 +155,15 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         btnSave.isEnabled = !state.isSaving
         btnSaveNew.isEnabled = !state.isSaving
 
+        btnSave.text = if (state.isEditMode) "Update" else "Save"
         // Disable Supplier Change in Edit Mode
+
         tilSupplierName.isEnabled = !state.isEditMode
         // Agar edit mode hai to click bhi disable kar dein taake sheet na khule
         actvSupplierName.isEnabled = !state.isEditMode
 
         btnDelete.isVisible = state.isEditMode
+        btnSaveNew.isVisible = !state.isEditMode
     }
 
     private fun handleEffect(effect: PurchaseFormUiEffect) {

@@ -9,7 +9,9 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentDashboardBinding
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toRupeesStr
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

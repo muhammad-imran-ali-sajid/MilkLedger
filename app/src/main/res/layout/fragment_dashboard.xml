@@ -312,7 +312,7 @@
                                 android:text="Avg Sale Price" />
 
                             <TextView
-                                android:id="@+id/tvAvgFat"
+                                android:id="@+id/tvAvgSalePrice"
                                 style="@style/DashboardMilkValue"
                                 android:text="Rs. 110" />
                         </LinearLayout>
@@ -349,7 +349,7 @@
                                 android:text="Avg Fat" />
 
                             <TextView
-                                android:id="@+id/tvAvgSalePrice"
+                                android:id="@+id/tvAvgFat"
                                 style="@style/DashboardMilkValue"
                                 android:text="5%" />
                         </LinearLayout>

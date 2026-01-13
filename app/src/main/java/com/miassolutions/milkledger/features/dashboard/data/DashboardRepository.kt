@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.dashboard.data
 
 import com.miassolutions.milkledger.features.dashboard.DashboardUiState
+import com.miassolutions.milkledger.utils.extensions.toRupees
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
@@ -18,10 +19,10 @@ class DashboardRepository @Inject constructor(
 
             // 1. Calculations
             val avgPP = if (purchase.totalVolume > 0)
-                (purchase.totalAmount / purchase.totalVolume) else 0.0
+                (purchase.totalAmount.toRupees() / purchase.totalVolume) else 0.0
 
             val avgSP = if (sale.totalVolume > 0)
-                (sale.totalAmount / sale.totalVolume) else 0.0
+                (sale.totalAmount.toRupees() / sale.totalVolume) else 0.0
 
             val grossProfit = sale.totalAmount - (purchase.totalAmount + expenseTotal)
 
