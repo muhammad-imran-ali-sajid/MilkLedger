@@ -10,7 +10,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.databinding.ItemAccountBinding
 import com.miassolutions.milkledger.features.account.model.AccountUi
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
+import com.miassolutions.milkledger.utils.extensions.setBalanceColorWithRoundRupee
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 
 
@@ -93,7 +93,7 @@ class AccountListAdapter(
                 rawBalance
             }
 
-            tvBalance.setBalanceWithColorRupee(displayBalance)
+            tvBalance.setBalanceColorWithRoundRupee(displayBalance)
 
 
         }

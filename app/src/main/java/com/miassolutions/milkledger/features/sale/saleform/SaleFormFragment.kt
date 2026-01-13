@@ -125,9 +125,9 @@ class SaleFormFragment :
 
         // --- Calculations ---
         tvNetMilk.text = state.displayNetMilk
-        tvMilkPrice.text = "Price: ${state.calculatedTotal.toLong().toPrice()}"
+        tvMilkPrice.text = "Price: ${state.calculatedTotal.toPrice()}"
         tvRate.text = state.displayRate
-        tvBalance.setBalanceWithColorRupee(state.currentBalance)
+        tvBalance.setBalanceColorWithRoundRupee(state.currentBalance)
 
         // --- Save Button ---
         btnSave.text = if (state.isEditMode) "Update" else "Save"

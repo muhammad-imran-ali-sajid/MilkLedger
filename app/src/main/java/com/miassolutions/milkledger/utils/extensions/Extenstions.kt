@@ -5,7 +5,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import java.time.LocalDate
-import kotlin.math.roundToLong
+
 
 
 // --- 1. VISIBILITY ---
@@ -35,15 +35,8 @@ fun Double.toMilkAmount(format: String = "%.2f"): String {
     return String.format(format, this)
 }
 
-// 1️⃣ Simple formatting (sirf number return karega commas k sath)
-fun Long.toPrice(): String {
-    // Logic:
-    // 1. Paisa -> Rupee (Divide by 100.0)
-    // 2. Round to nearest whole number (e.g. 150.8 -> 151)
-    val rupees = (this / 100.0).roundToLong()
-
-    // "%,d" automatic commas laga deta hai (e.g., 1,250)
-    return "Rs. %,d".format(rupees)
+fun Double.toPrice(format: String = "%.0f"): String {
+    return String.format(format, this)
 }
 
 

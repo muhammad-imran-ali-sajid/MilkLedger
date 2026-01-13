@@ -12,7 +12,7 @@ import com.miassolutions.milkledger.features.purchase.purchaseform.PurchaseFormV
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
@@ -135,7 +135,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         tvTs.text = "TS: ${String.format("%.2f", state.calculatedTs)}"
         tvMilkPrice.text = "Price: ${state.calculatedTotal.toPrice()}"
         tvRate.text = "Rate: ${state.rate}"
-        tvBalance.setBalanceWithColorRupee(state.currentBalance)
+        tvBalance.setBalanceWithColor(state.currentBalance)
 
         // Inputs Update (Avoid Cursor Jumps)
         if (etMilkVolume.text.toString() != state.volume) etMilkVolume.setText(state.volume)

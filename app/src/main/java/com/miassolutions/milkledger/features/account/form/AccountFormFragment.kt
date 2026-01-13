@@ -15,7 +15,7 @@ import com.miassolutions.milkledger.databinding.FragmentAccountFormBinding
 import com.miassolutions.milkledger.features.account.form.AccountFormEvent.*
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
+import com.miassolutions.milkledger.utils.extensions.setBalanceColorWithRoundRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
@@ -257,7 +257,7 @@ class AccountFormFragment :
         val finalAmount =
             if (type == AccountType.SUPPLIER) -rawAmount else rawAmount
 
-        tvBalancePreview.setBalanceWithColorRupee(
+        tvBalancePreview.setBalanceColorWithRoundRupee(
             finalAmount,
             prefix = "Net Impact: "
         )

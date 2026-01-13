@@ -12,7 +12,7 @@ fun Long.toPrice(showCurrency: Boolean = false): String {
     val rupees = (this / 100.0).roundToLong()
 
     // "%,d" automatic commas laga deta hai (e.g., 1,250)
-    return "Rs. %,d".format(rupees)
+    return "%,d".format(rupees)
 }
 
 fun String.toLongPaisa(): Long {

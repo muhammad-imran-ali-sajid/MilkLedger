@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemBalanceHitoryBinding
 import com.miassolutions.milkledger.features.sale.model.BalanceHistoryUi
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColorRupee
+import com.miassolutions.milkledger.utils.extensions.setBalanceColorWithRoundRupee
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toRupeesStr
 
@@ -55,7 +55,7 @@ class BalanceHistoryAdapter :
                 tvNetChange.text = "Day Total: $sign${item.netChange.toRupeesStr()}"
 
                 // ✅ MAIN: Closing Balance
-                tvClosingBalance.setBalanceWithColorRupee(item.closingBalance)
+                tvClosingBalance.setBalanceColorWithRoundRupee(item.closingBalance)
             }
         }
     }

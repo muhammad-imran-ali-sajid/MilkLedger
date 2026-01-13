@@ -48,7 +48,7 @@
             <!-- Customer Name -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_customer_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
@@ -60,6 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:minHeight="48dp"
+                    android:paddingHorizontal="8dp"
                     android:paddingVertical="8dp"
                     android:inputType="none"
                     tools:ignore="LabelFor" />
@@ -181,14 +182,31 @@
             </LinearLayout>
 
             <!-- Balance -->
-            <TextView
-                android:id="@+id/tvBalance"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_edittext_readable"
+                android:id="@+id/tilBalance"
                 android:padding="12dp"
-                android:text="Balance: 0" />
+                android:clickable="true"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:background="@drawable/bg_edittext_readable">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Balance: " />
+
+                <!-- Balance -->
+                <TextView
+                    android:id="@+id/tvBalance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="12300" />
+
+
+            </LinearLayout>
 
             <!-- Note -->
             <com.google.android.material.textfield.TextInputLayout

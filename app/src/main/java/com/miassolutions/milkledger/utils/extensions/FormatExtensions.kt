@@ -45,24 +45,20 @@ fun Long.toSignedBalance(): String {
 
 
 
-fun TextView.setBalanceWithColorRupee(amountPaisa: Long, prefix: String = "") {
+fun TextView.setBalanceColorWithRoundRupee(amountPaisa: Long, prefix: String = "") {
 
-    // 1. Text Set Karen (Sign wala function use kr k)
-    val signedAmount = amountPaisa.toSignedBalanceRupee()
-    this.text = "$prefix$signedAmount"
+    // Calculate Rupees (Rounded)
+    val rupees = (amountPaisa / 100.0).roundToLong()
 
-    // 2. Context len (Color uthane k liye)
-    val context = this.context
+    // Set Text with Commas (e.g. Rs. 5,000)
+    text = "%,d".format(rupees)
 
-    // 3. Color Logic
-    val colorRes = when {
-        amountPaisa > 0 -> R.color.green // Positive (+) = Leny hen (Green)
-        amountPaisa < 0 -> R.color.red   // Negative (-) = Deny hen (Red)
-        else -> R.color.black              // Zero
+    // Set Color based on Positive/Negative
+    if (amountPaisa >= 0) {
+        setTextColor(ContextCompat.getColor(context, R.color.green_700)) // Ya jo apka color ho
+    } else {
+        setTextColor(ContextCompat.getColor(context, R.color.red))
     }
-
-    // 4. Color Apply Karen
-    this.setTextColor(ContextCompat.getColor(context, colorRes))
 }
 
 fun TextView.setBalanceWithColor(amountPaisa: Long) {
@@ -71,7 +67,7 @@ fun TextView.setBalanceWithColor(amountPaisa: Long) {
     val rupees = (amountPaisa / 100.0).roundToLong()
 
     // Set Text with Commas (e.g. Rs. 5,000)
-    text = "Rs. %,d".format(rupees)
+    text = "%,d".format(rupees)
 
     // Set Color based on Positive/Negative
     if (amountPaisa >= 0) {
