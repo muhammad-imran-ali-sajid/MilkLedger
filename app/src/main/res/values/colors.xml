@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Refactor plan-->
+
+    <color name="seed">#006C4C</color>
+    <color name="milk_primary">#006C4C</color>
+    <color name="milk_on_primary">#FFFFFF</color>
+    <color name="milk_primary_container">#89F8C7</color>
+    <color name="milk_on_primary_container">#002114</color>
+    <color name="milk_secondary">#4D6357</color>
+    <color name="milk_on_secondary">#FFFFFF</color>
+    <color name="milk_secondary_container">#CFE9D9</color>
+    <color name="milk_on_secondary_container">#092016</color>
+
+    <color name="milk_error">#BA1A1A</color>
+    <color name="milk_on_error">#FFFFFF</color>
+
+    <color name="milk_surface">#FBFDF9</color>
+    <color name="milk_on_surface">#191C1A</color>
+    <color name="milk_surface_variant">#DBE5DE</color>
+    <color name="milk_on_surface_variant">#404944</color>
+
+
+    <!-- End -->
 
 
     <color name="teal_dark">#00796B</color>
@@ -11,16 +33,14 @@
     <color name="soft_black">#17202A</color>
 
     <!-- Primary Brand Color (A strong, accessible blue) -->
-<!--    <color name="primary">#00796B</color>-->
+    <!--    <color name="primary">#00796B</color>-->
     <color name="primary">#45B39D</color>
     <!-- Text/Icons ON Primary (Should always be white for contrast) -->
     <color name="on_primary">#eee</color>
 
 
-
-
     <!-- Secondary Accent Color (A neutral green for secondary actions or completion status) -->
-<!--    <color name="secondary">#4D8B31</color>-->
+    <!--    <color name="secondary">#4D8B31</color>-->
     <color name="secondary">#0000aa</color>
     <!-- Text/Icons ON Secondary -->
     <color name="on_secondary">#FFFFFF</color>
@@ -38,7 +58,6 @@
     <color name="orange_300">#ee3820</color>
 
 
-
     <color name="blue_700">#1236DD</color>
     <color name="blue_300">#13aAF9</color>
     <color name="blue_200">#90CAF9</color>
@@ -50,10 +69,6 @@
     <color name="bg_dark2">#223333</color>
     <color name="bg_color1">#1b1b1d</color>
     <color name="bg_color2">#2b2b2d</color>
-
-
-
-
 
 
     <!--    App specific colors-->
@@ -76,10 +91,6 @@
     <color name="icon_color">#000000</color>
     <color name="blue">#2196F3</color>
     <color name="blue_100">#B3E5FC</color>
-
-
-
-
 
 
     <color name="edittext_bg_tint">#FFFFFF</color>       <!-- EditText white -->

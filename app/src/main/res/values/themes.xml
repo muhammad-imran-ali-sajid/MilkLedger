@@ -1,32 +1,50 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="Base.Theme.MilkLedger" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
+    <style name="Base.Theme.MilkLedger" parent="Theme.Material3.Light.NoActionBar">
 
-        <!-- Brand Colors -->
-        <item name="colorPrimary">@color/primary</item>
-
-<!--        <item name="android:colorControlNormal">@color/white</item>-->
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
 
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:navigationBarColor">@color/milk_surface</item>
 
-        <item name="android:textStyle">bold</item>
-        <item name="colorOnPrimary">@color/on_primary</item>
-        <item name="colorSecondary">@color/secondary</item>
-        <item name="colorOnSecondary">@color/on_secondary</item>
-
+        <item name="colorPrimary">@color/milk_primary</item>
+        <item name="colorOnPrimary">@color/milk_on_primary</item>
+        <item name="colorPrimaryContainer">@color/milk_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/milk_on_primary_container</item>
 
 
+
+        <item name="colorSecondary">@color/milk_secondary</item>
+        <item name="colorOnSecondary">@color/milk_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/milk_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/milk_on_secondary_container</item>
+
+        <item name="colorError">@color/milk_error</item>
+        <item name="colorOnError">@color/milk_on_error</item>
+
+        <item name="android:colorBackground">@color/milk_surface</item>
+        <item name="colorSurface">@color/milk_surface</item>
+        <item name="colorOnSurface">@color/milk_on_surface</item>
+        <item name="colorSurfaceVariant">@color/milk_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/milk_on_surface_variant</item>
+
+
+        <!--texts -->
+        <item name="textAppearanceBodyLarge">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceBodyMedium">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceBodySmall">@style/Type.MilkLedger.ClientForce</item>
+
+        <item name="textAppearanceLabelLarge">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceLabelMedium">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceLabelSmall">@style/Type.MilkLedger.ClientForce</item>
+
+        <item name="textAppearanceTitleLarge">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceTitleMedium">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceTitleSmall">@style/Type.MilkLedger.ClientForce</item>
 
     </style>
 
     <style name="Theme.MilkLedger" parent="Base.Theme.MilkLedger" />
-
     <style name="Theme.Launcher" parent="Theme.MilkLedger" />
-
     <style name="Theme.Auth" parent="Theme.MilkLedger" />
-
 
 </resources>
