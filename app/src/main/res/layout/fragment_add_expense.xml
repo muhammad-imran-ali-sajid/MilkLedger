@@ -4,16 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"> <TextView
-    android:id="@+id/tvTotalExpense"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="24dp"
-    android:layout_marginTop="16dp"
-    android:text="Total Expenses : Rs. 1000"
-    android:textSize="18sp"
-    android:textStyle="bold" />
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="?attr/colorErrorContainer"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+        app:strokeWidth="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                style="@style/Text.MilkLedger.Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Expenses:"
+                android:textColor="?attr/colorOnErrorContainer" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvTotalExpense"
+                style="@style/Text.MilkLedger.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorOnErrorContainer"
+                tools:text="Rs. 1,000" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -25,67 +53,69 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="16dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dateLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                style="@style/Widget.MilkLedger.Input"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:hint="Expense Date">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDate"
-                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="true"
+                    android:drawableEnd="@drawable/ic_calendar"
+                    android:drawableTint="?attr/colorPrimary"
                     android:focusable="false"
                     android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
+                style="@style/Text.MilkLedger.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="12dp"
                 android:text="Business Expenses"
-                android:textStyle="bold"/>
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/fuelLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Widget.MilkLedger.Input"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:hint="Fuel">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etFuelAmount"
+                        android:imeOptions="actionNext"
                         style="@style/TextInputMinimalStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="match_parent" />
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/vehicleLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Widget.MilkLedger.Input"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:hint="Vehicle">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etVehicleAmount"
+                        android:imeOptions="actionNext"
                         style="@style/TextInputMinimalStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -96,33 +126,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/refreshLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Widget.MilkLedger.Input"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:hint="Refreshment">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etRefreshmentAmount"
                         style="@style/TextInputMinimalStyle"
+                        android:imeOptions="actionNext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="match_parent" />
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilOtherLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    style="@style/Widget.MilkLedger.Input"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:hint="Other Exp.">
 
@@ -130,6 +157,7 @@
                         android:id="@+id/etOtherBusinessExpense"
                         style="@style/TextInputMinimalStyle"
                         android:layout_width="match_parent"
+                        android:imeOptions="actionNext"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -138,30 +166,40 @@
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                app:dividerColor="@color/deep_forest_green"
-                android:layout_marginVertical="16dp"/>
+                android:layout_marginVertical="16dp"
+                app:dividerColor="?attr/colorOutlineVariant" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Personal Expenses"
-                android:textStyle="bold"/>
+                android:layout_marginBottom="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAddPersonal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:backgroundTint="@color/primary"
-                android:text="Add Personal Expense"
-                app:icon="@drawable/ic_add"
-                app:iconTint="@color/white" />
+                <TextView
+                    style="@style/Text.MilkLedger.Title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Personal Expenses"
+                    android:textSize="20sp" />
+
+                <Button
+                    android:id="@+id/btnAddPersonal"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add New"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    app:icon="@drawable/ic_add"
+                    app:iconTint="?attr/colorOnSecondaryContainer" />
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPersonalExpense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:nestedScrollingEnabled="false"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="2"
@@ -169,31 +207,37 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/notesLayout"
+                style="@style/Widget.MilkLedger.Input"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Notes">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etNotes"
-                    style="@style/TextInputMinimalStyle"
+                    android:imeOptions="actionDone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences|textMultiLine"
-                    android:minLines="2"/>
+                    android:minLines="2" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSave"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/primary"
-        android:text="Save"
-        android:paddingVertical="12dp"/>
+        android:background="?attr/colorSurface"
+        android:elevation="8dp"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btnSave"
+            style="@style/Widget.MilkLedger.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Expense" />
+    </LinearLayout>
 
 </LinearLayout>

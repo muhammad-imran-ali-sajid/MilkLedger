@@ -76,6 +76,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etMilkVolume"
                         style="@style/TextInputMinimalStyle"
+                        android:imeOptions="actionNext"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -90,6 +91,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDeduction"
+                        android:imeOptions="actionNext"
                         style="@style/TextInputMinimalStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -271,6 +273,7 @@
                     android:id="@+id/etNote"
                     style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
+                    android:imeOptions="actionDone"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>

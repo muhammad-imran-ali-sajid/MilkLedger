@@ -2,9 +2,13 @@
     <style name="Base.Theme.MilkLedger" parent="Theme.Material3.Light.NoActionBar">
 
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <!-- false means white  aur true means dark-->
         <item name="android:windowLightStatusBar">true</item>
 
-        <item name="android:navigationBarColor">@color/milk_surface</item>
+
+
+
+        <item name="colorSurface">@color/milk_surface</item>
 
         <item name="colorPrimary">@color/milk_primary</item>
         <item name="colorOnPrimary">@color/milk_on_primary</item>

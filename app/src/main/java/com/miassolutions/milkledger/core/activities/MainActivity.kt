@@ -81,14 +81,15 @@ class MainActivity : BaseActivity(), ToolbarOwner {
 
         applySavedBackground()
 
-        enableEdgeToEdge()
 
         setContentView(binding.root)
 
+
+
         applyWindowInsets()
 
-        WindowInsetsControllerCompat(window, window.decorView)
-            .isAppearanceLightStatusBars = false
+
+
 
         setupDrawerHeader()
 

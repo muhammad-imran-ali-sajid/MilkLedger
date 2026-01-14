@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -65,7 +66,7 @@ class ExpenseFormFragment :
         // 1️⃣ UI STATE
         collectFlow(viewModel.uiState) { state ->
 
-            tvTotalExpense.text = "Total Expenses: Rs. ${state.totalExpense}"
+            tvTotalExpense.text = state.totalExpense.toString()
 
             etDate.setTextIfDifferent(state.date.toCompleteDateFormat())
             dateLayout.error = state.dateError
