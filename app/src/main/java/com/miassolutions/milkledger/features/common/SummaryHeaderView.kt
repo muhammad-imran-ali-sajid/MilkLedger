@@ -83,21 +83,20 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.tvMainAmount.text = totalAmount.toPrice()
 
         // Details Mapping
-        binding.lbl2.hide()
-        binding.tvVal2.hide()
-//        binding.lbl1.text = "Gross Vol"
-//        binding.tvVal1.text = "${String.format("%.1f", grossVol)}"
+
+        binding.lbl1.text = "Gross Vol"
+        binding.tvVal1.text = "${String.format("%.1f", grossVol)}"
 
         binding.lbl2.text = "Deduction"
         binding.tvVal2.text = "-${String.format("%.1f", deduction)}"
 
-        binding.lbl3.text = "Avg Rate"
-        binding.tvVal3.text = avgRate.toPrice()
+//        binding.lbl3.text = "Avg Rate"
+//        binding.tvVal3.text = avgRate.toPrice()
 
         binding.lbl4.text = "Received"
         binding.tvVal4.text = totalReceived.toPrice()
 
-        binding.lbl5.text = "Net Milk"
-        binding.tvVal5.text = netVol.toPrice()
+        binding.lbl5.text = "Avg Rate"
+        binding.tvVal5.text = avgRate.toPrice()
     }
 }

@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -92,111 +93,139 @@
 
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/layoutDetails"
             android:layout_width="match_parent"
-            android:layout_gravity="end"
             android:layout_height="wrap_content"
-            android:paddingVertical="12dp"
-            android:paddingTop="8dp"
+            android:orientation="vertical"
             android:paddingHorizontal="8dp"
+            android:paddingTop="8dp"
+            android:paddingVertical="12dp"
             android:visibility="gone"
             tools:visibility="visible">
 
-            <TextView
-                android:id="@+id/lbl1"
-                android:layout_width="wrap_content"
+            <!-- Row 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:text="Avg Fat"
-                app:layout_constraintEnd_toStartOf="@+id/lbl2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvVal1"
-                android:layout_width="wrap_content"
+                <!-- Avg Fat -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/lbl1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Avg Fat" />
+
+                    <TextView
+                        android:id="@+id/tvVal1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5.2" />
+                </LinearLayout>
+
+                <!-- Avg LR -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/lbl2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Avg LR" />
+
+                    <TextView
+                        android:id="@+id/tvVal2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="28.5" />
+                </LinearLayout>
+
+                <!-- Avg TS -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:id="@+id/lbl5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Avg TS" />
+
+                    <TextView
+                        android:id="@+id/tvVal5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="45" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Row 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="5.2"
-                app:layout_constraintEnd_toEndOf="@+id/lbl1"
-                app:layout_constraintStart_toStartOf="@+id/lbl1"
-                app:layout_constraintTop_toBottomOf="@id/lbl1" />
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp">
 
-            <TextView
-                android:id="@+id/lbl2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:text="Avg LR"
-                app:layout_constraintEnd_toStartOf="@+id/lbl5"
-                app:layout_constraintTop_toTopOf="parent" />
+                <!-- Avg Rate -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/tvVal2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="28.5"
-                app:layout_constraintEnd_toEndOf="@+id/lbl2"
-                app:layout_constraintStart_toStartOf="@+id/lbl2"
-                app:layout_constraintTop_toBottomOf="@id/lbl2" />
+                    <TextView
+                        android:id="@+id/lbl3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Avg Rate" />
 
+                    <TextView
+                        android:id="@+id/tvVal3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rs. 210" />
+                </LinearLayout>
 
-            <TextView
-                android:id="@+id/lbl5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="Avg TS"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/lbl2" />
+                <!-- Paid -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/tvVal5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="45"
-                app:layout_constraintEnd_toEndOf="@+id/lbl5"
-                app:layout_constraintStart_toStartOf="@+id/lbl5"
-                app:layout_constraintTop_toBottomOf="@+id/lbl5" />
+                    <TextView
+                        android:id="@+id/lbl4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Paid" />
 
-            <TextView
-                android:id="@+id/lbl3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Avg Rate"
-                app:layout_constraintEnd_toEndOf="@+id/lbl1"
-                app:layout_constraintTop_toBottomOf="@+id/tvVal1" />
+                    <TextView
+                        android:id="@+id/tvVal4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rs. 200,000" />
+                </LinearLayout>
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvVal3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rs. 210"
-                app:layout_constraintEnd_toEndOf="@+id/lbl3"
-                app:layout_constraintStart_toStartOf="@+id/lbl3"
-                app:layout_constraintTop_toBottomOf="@id/lbl3" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/lbl4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Paid"
-                app:layout_constraintEnd_toEndOf="@+id/lbl5"
-                app:layout_constraintStart_toStartOf="@+id/lbl5"
-                app:layout_constraintTop_toTopOf="@+id/lbl3" />
-
-            <TextView
-                android:id="@+id/tvVal4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="40dp"
-                android:text="Rs. 200,000"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/lbl4"
-                app:layout_constraintTop_toBottomOf="@id/lbl4" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
