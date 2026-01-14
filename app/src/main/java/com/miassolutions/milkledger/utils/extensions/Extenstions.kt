@@ -5,7 +5,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import java.time.LocalDate
-
+import kotlin.math.roundToLong
 
 
 // --- 1. VISIBILITY ---
@@ -36,7 +36,10 @@ fun Double.toMilkAmount(format: String = "%.2f"): String {
 }
 
 fun Double.toPrice(format: String = "%.0f"): String {
-    return String.format(format, this)
+    val rupees = (this / 100.0).roundToLong()
+
+    // "%,d" automatic commas laga deta hai (e.g., 1,250)
+    return "%,d".format(rupees)
 }
 
 

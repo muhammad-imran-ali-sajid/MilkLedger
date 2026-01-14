@@ -98,133 +98,120 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="8dp"
-            android:paddingTop="8dp"
+            android:background="@drawable/bg_edittext_readable"
+            android:paddingHorizontal="12dp"
             android:paddingVertical="12dp"
             android:visibility="gone"
             tools:visibility="visible">
 
-            <!-- Row 1 -->
+            <!-- Avg Fat -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:id="@+id/lbl1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Avg Fat" />
+
+                <TextView
+                    android:id="@+id/tvVal1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5.2" />
+            </LinearLayout>
+
+            <!-- Avg LR -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:id="@+id/lbl2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Avg LR" />
+
+                <TextView
+                    android:id="@+id/tvVal2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="28.5" />
+            </LinearLayout>
+
+            <!-- Avg TS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:id="@+id/lbl3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Avg TS" />
+
+                <TextView
+                    android:id="@+id/tvVal3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="45" />
+            </LinearLayout>
+
+            <!-- Avg Rate -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:id="@+id/lbl4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Avg Rate" />
+
+                <TextView
+                    android:id="@+id/tvVal4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rs. 210" />
+            </LinearLayout>
+
+            <!-- Paid -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <!-- Avg Fat -->
-                <LinearLayout
+                <TextView
+                    android:id="@+id/lbl5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+                    android:text="Paid" />
 
-                    <TextView
-                        android:id="@+id/lbl1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Avg Fat" />
-
-                    <TextView
-                        android:id="@+id/tvVal1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="5.2" />
-                </LinearLayout>
-
-                <!-- Avg LR -->
-                <LinearLayout
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/tvVal5"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:id="@+id/lbl2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Avg LR" />
-
-                    <TextView
-                        android:id="@+id/tvVal2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="28.5" />
-                </LinearLayout>
-
-                <!-- Avg TS -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:id="@+id/lbl5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Avg TS" />
-
-                    <TextView
-                        android:id="@+id/tvVal5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="45" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Row 2 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="8dp">
-
-                <!-- Avg Rate -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:id="@+id/lbl3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Avg Rate" />
-
-                    <TextView
-                        android:id="@+id/tvVal3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rs. 210" />
-                </LinearLayout>
-
-                <!-- Paid -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
-
-                    <TextView
-                        android:id="@+id/lbl4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Paid" />
-
-                    <TextView
-                        android:id="@+id/tvVal4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rs. 200,000" />
-                </LinearLayout>
+                    android:text="Rs. 200,000" />
             </LinearLayout>
 
         </LinearLayout>
+
+
+
 
 
     </LinearLayout>

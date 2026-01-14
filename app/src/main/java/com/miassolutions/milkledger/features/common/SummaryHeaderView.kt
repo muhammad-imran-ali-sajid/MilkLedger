@@ -56,14 +56,14 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.lbl2.text = "Avg LR"
         binding.tvVal2.text = String.format("%.1f", avgLr)
 
-        binding.lbl5.text = "Avg TS"
-        binding.tvVal5.text = String.format("%.1f", avgTs)
+        binding.lbl3.text = "Avg TS"
+        binding.tvVal3.text = String.format("%.1f", avgTs)
 
-        binding.lbl3.text = "Avg Rate"
-        binding.tvVal3.text = avgRate.toPrice()
+        binding.lbl4.text = "Avg Rate"
+        binding.tvVal4.text = avgRate.toPrice()
 
-        binding.lbl4.text = "Total Paid"
-        binding.tvVal4.text = totalPaid.toPrice()
+        binding.lbl5.text = "Total Paid"
+        binding.tvVal5.text = totalPaid.toPrice()
 
         // Hide unused if any (Optional)
     }
@@ -84,19 +84,21 @@ class SummaryHeaderView @JvmOverloads constructor(
 
         // Details Mapping
 
-        binding.lbl1.text = "Gross Vol"
+        binding.lbl1.text = "Net Vol"
         binding.tvVal1.text = "${String.format("%.1f", grossVol)}"
 
-        binding.lbl2.text = "Deduction"
-        binding.tvVal2.text = "-${String.format("%.1f", deduction)}"
+        binding.lbl2.text = "Deduc."
+        binding.tvVal2.text = "${String.format("%.1f", deduction)}"
 
-//        binding.lbl3.text = "Avg Rate"
-//        binding.tvVal3.text = avgRate.toPrice()
 
-        binding.lbl4.text = "Received"
-        binding.tvVal4.text = totalReceived.toPrice()
 
-        binding.lbl5.text = "Avg Rate"
-        binding.tvVal5.text = avgRate.toPrice()
+        binding.lbl3.text = "Total Received"
+        binding.tvVal3.text = totalReceived.toPrice()
+
+        binding.lbl4.text = "Avg Rate"
+        binding.tvVal4.text = avgRate.toPrice()
+
+        binding.tvVal5.hide()
+        binding.lbl5.hide()
     }
 }
