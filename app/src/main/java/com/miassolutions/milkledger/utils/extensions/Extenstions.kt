@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import com.miassolutions.milkledger.R
 import java.time.LocalDate
 import kotlin.math.roundToLong
 
@@ -46,6 +47,10 @@ fun Double.toPrice(format: String = "%.0f"): String {
 fun Double.toLongPaisa() = (this * 100).toLong()
 
 
+// --- Helpers ---
+
+fun Double.format(digits: Int) = "%.${digits}f".format(this)
+
 
 
 // --- 1. UI (String) to Database (Paisa/Long) ---
@@ -80,8 +85,6 @@ fun Long.toRupeesStr(): String {
         String.format("%.2f", rupees)
     }
 }
-
-
 
 
 fun View.hide() {

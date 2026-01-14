@@ -16,6 +16,12 @@
     <color name="milk_error">#BA1A1A</color>
     <color name="milk_on_error">#FFFFFF</color>
 
+
+    <color name="milk_purchase_color">#F4511E</color>
+    <color name="milk_sale_color">#006C4C</color>
+    <color name="milk_expense_color">#7B1FA2</color>
+    <color name="milk_profit_color">#1E88E5</color>
+
     <color name="milk_surface">#FBFDF9</color>
     <color name="milk_on_surface">#191C1A</color>
     <color name="milk_surface_variant">#DBE5DE</color>

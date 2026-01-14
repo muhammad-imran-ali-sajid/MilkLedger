@@ -27,6 +27,11 @@
         <item name="colorSurfaceVariant">@color/milk_surface_variant</item>
         <item name="colorOnSurfaceVariant">@color/milk_on_surface_variant</item>
 
+        <!-- Ledger semantic colors -->
+        <item name="purchaseColor">@color/milk_purchase_color</item>
+        <item name="saleColor">@color/milk_sale_color</item>
+        <item name="profitColor">@color/milk_profit_color</item>
+
 
         <!--texts -->
         <item name="textAppearanceBodyLarge">@style/Type.MilkLedger.ClientForce</item>

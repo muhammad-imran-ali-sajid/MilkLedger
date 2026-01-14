@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Ledger specific colors -->
+    <attr name="purchaseColor" format="color" />
+    <attr name="saleColor" format="color" />
+    <attr name="profitColor" format="color" />
+
+</resources>
