@@ -132,9 +132,9 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         btnPaymentDate.text = state.paymentDate.toDisplayDate()
 
         // Calculations
-        tvTs.text = "TS: ${String.format("%.2f", state.calculatedTs)}"
-        tvMilkPrice.text = "Price: ${state.calculatedTotal.toPrice()}"
-        tvRate.text = "Rate: ${state.rate}"
+        tvTs.text = String.format("%.2f", state.calculatedTs)
+        tvMilkPrice.text = state.calculatedTotal.toPrice()
+        tvRate.text = state.rate
         tvBalance.setBalanceWithColor(state.currentBalance)
 
         // Inputs Update (Avoid Cursor Jumps)
