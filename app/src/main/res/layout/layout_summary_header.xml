@@ -90,9 +90,11 @@
             </LinearLayout>
         </LinearLayout>
 
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutDetails"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_gravity="end"
             android:layout_height="wrap_content"
             android:paddingVertical="12dp"
@@ -108,6 +110,7 @@
                 android:layout_marginEnd="24dp"
                 android:text="Avg Fat"
                 app:layout_constraintEnd_toStartOf="@+id/lbl2"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -163,7 +166,6 @@
                 android:layout_marginTop="8dp"
                 android:text="Avg Rate"
                 app:layout_constraintEnd_toEndOf="@+id/lbl1"
-                app:layout_constraintStart_toStartOf="@+id/lbl1"
                 app:layout_constraintTop_toBottomOf="@+id/tvVal1" />
 
             <TextView

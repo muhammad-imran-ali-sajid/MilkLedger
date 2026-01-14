@@ -75,7 +75,12 @@ class MilkSaleListViewModel @Inject constructor(
             }
 
             is MilkSaleListUiEvent.OnBalanceClick -> {
-               emitEffect(MilkSaleListUiEffect.OpenBalanceHistorySheet(event.customerId, event.customerName))
+                emitEffect(
+                    MilkSaleListUiEffect.OpenBalanceHistorySheet(
+                        event.customerId,
+                        event.customerName
+                    )
+                )
             }
         }
     }
@@ -127,6 +132,13 @@ class MilkSaleListViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+
+        viewModelScope.launch {
+            repository.getGlobalSaleStats(date.toMillis(), date.toMillis())
+                .collect { summary ->
+                    updateState { it.copy(summary = summary) }
+                }
+        }
     }
 }
 

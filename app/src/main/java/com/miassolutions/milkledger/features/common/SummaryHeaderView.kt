@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.miassolutions.milkledger.databinding.LayoutSummaryHeaderBinding
+import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class SummaryHeaderView @JvmOverloads constructor(
@@ -82,8 +83,10 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.tvMainAmount.text = totalAmount.toPrice()
 
         // Details Mapping
-        binding.lbl1.text = "Gross Vol"
-        binding.tvVal1.text = "${String.format("%.1f", grossVol)}"
+        binding.lbl2.hide()
+        binding.tvVal2.hide()
+//        binding.lbl1.text = "Gross Vol"
+//        binding.tvVal1.text = "${String.format("%.1f", grossVol)}"
 
         binding.lbl2.text = "Deduction"
         binding.tvVal2.text = "-${String.format("%.1f", deduction)}"
@@ -93,5 +96,8 @@ class SummaryHeaderView @JvmOverloads constructor(
 
         binding.lbl4.text = "Received"
         binding.tvVal4.text = totalReceived.toPrice()
+
+        binding.lbl5.text = "Net Milk"
+        binding.tvVal5.text = netVol.toPrice()
     }
 }

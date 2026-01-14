@@ -47,7 +47,7 @@
         android:paddingHorizontal="4dp"
         android:paddingBottom="62dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/cardSalesSummary"
+        app:layout_constraintBottom_toTopOf="@+id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,13 +62,13 @@
         android:layout_marginBottom="4dp"
         android:text="Add Sales"
         app:icon="@drawable/ic_add"
-        app:layout_constraintBottom_toTopOf="@id/cardSalesSummary"
+        app:layout_constraintBottom_toTopOf="@id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
 
-    <com.miassolutions.milkledger.utils.customviews.CollapsibleCardView
-        android:id="@+id/cardSalesSummary"
+    <com.miassolutions.milkledger.features.common.SummaryHeaderView
+        android:id="@+id/summaryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

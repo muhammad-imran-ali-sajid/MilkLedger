@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.sale.salelist
 
+import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
@@ -14,6 +15,7 @@ data class MilkSaleListUiState(
 
     // List Data
     val sales: List<MilkSaleUiModel> = emptyList(),
+    val summary: SaleSummary = SaleSummary(),
 
     // Summary Data (Bottom Card k liye)
     val totalMilk: Double = 0.0,
@@ -37,9 +39,11 @@ sealed interface MilkSaleListUiEvent {
     data object OnAddSaleClicked : MilkSaleListUiEvent
 
     data class OnDeleteClicked(val saleId: String) : MilkSaleListUiEvent
+
     // List Item Clicks
     data class OnEditSaleClicked(val saleId: String) : MilkSaleListUiEvent
-    data class OnCustomerDetailClicked(val customerId: String, val customerName: String) : MilkSaleListUiEvent
+    data class OnCustomerDetailClicked(val customerId: String, val customerName: String) :
+        MilkSaleListUiEvent
 }
 
 // 3️⃣ EFFECT: One-time actions (Navigation/Toast)
@@ -57,7 +61,8 @@ sealed interface MilkSaleListUiEffect {
 
 
     // Customer ka khata kholne k liye
-    data class NavigateToCustomerLedger(val customerId: String, val customerName: String) : MilkSaleListUiEffect
+    data class NavigateToCustomerLedger(val customerId: String, val customerName: String) :
+        MilkSaleListUiEffect
 
     data class ShowSnackbar(val message: String) : MilkSaleListUiEffect
 }

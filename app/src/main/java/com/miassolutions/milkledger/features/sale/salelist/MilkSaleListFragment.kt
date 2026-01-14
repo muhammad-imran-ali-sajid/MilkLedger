@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkSaleListBinding
 import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
+import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.*
 import com.miassolutions.milkledger.features.sale.ui.list.MilkSaleListViewModel
@@ -28,16 +29,16 @@ class MilkSaleListFragment :
     private val adapter = MilkSaleListAdapter(
         onEditClick = { item ->
             Log.d("MilkSaleListFragment", item)
-            viewModel.onEvent(MilkSaleListUiEvent.OnEditSaleClicked(item))
+            viewModel.onEvent(OnEditSaleClicked(item))
         },
         onDeleteClick = {
             showDeleteActionDialog {
-                viewModel.onEvent(MilkSaleListUiEvent.OnDeleteClicked(it))
+                viewModel.onEvent(OnDeleteClicked(it))
             }
         },
         onDetailClick = { item ->
             viewModel.onEvent(
-                MilkSaleListUiEvent.OnCustomerDetailClicked(
+                OnCustomerDetailClicked(
                     item.customerId,
                     item.customerName
                 )
@@ -47,7 +48,7 @@ class MilkSaleListFragment :
             // Navigate to Bottom Sheet
 
             viewModel.onEvent(
-                MilkSaleListUiEvent.OnBalanceClick(
+                OnBalanceClick(
                     id,
                     name
                 )
@@ -77,23 +78,23 @@ class MilkSaleListFragment :
     private fun setupClicks() {
         // FAB (Add Sale)
         binding.fabAddSale.setOnClickListener {
-            viewModel.onEvent(MilkSaleListUiEvent.OnAddSaleClicked)
+            viewModel.onEvent(OnAddSaleClicked)
         }
 
         // Date Header Actions
         binding.dateHeader.btnPrevDate.setOnClickListener {
-            viewModel.onEvent(MilkSaleListUiEvent.OnPrevDate)
+            viewModel.onEvent(OnPrevDate)
         }
         binding.dateHeader.btnNextDate.setOnClickListener {
-            viewModel.onEvent(MilkSaleListUiEvent.OnNextDate)
+            viewModel.onEvent(OnNextDate)
         }
         binding.dateHeader.tvSelectedDate.setOnClickListener {
             // Date Picker Event
-            viewModel.onEvent(MilkSaleListUiEvent.OnDateClick) // ViewModel effect trigger karega
+            viewModel.onEvent(OnDateClick) // ViewModel effect trigger karega
         }
     }
 
-    override fun setupObservers() {
+    override fun setupObservers() = with(binding) {
         super.setupObservers()
 
 
@@ -113,7 +114,7 @@ class MilkSaleListFragment :
             tvDate.text = state.date.toCompleteDateFormat()
 
             // D. Update Summary Card (Custom View Handling)
-            updateSummary(state.totalMilk, state.totalAmount)
+            updateSummary(state.summary, state.date.toCompleteDateFormat())
         }
 
 
@@ -175,20 +176,16 @@ class MilkSaleListFragment :
     }
 
 
-    private fun updateSummary(totalMilk: Double, totalAmount: Long) {
-        // Aapke CustomView (CollapsibleCardView) ke andar views access kar rahe hain
-        // Behtar hai ke CustomView class me 'setData' function banayen.
-        // Filhal direct access (Assuming standard IDs exist inside custom view layout):
-
-        /* Agar Custom View methods expose nahi karta, to aapko Custom View
-           ki class me ye method add karna chahiye:
-           fun setSummary(milk: String, amount: String) { ... }
-        */
-
-        // Example implementation assuming IDs:
-        // binding.cardSalesSummary.binding.tvTotalMilk.text = totalMilk.toMilkAmount()
-
-        // OR using findViewById on the custom view if methods don't exist:
+    private fun updateSummary(summary: SaleSummary, date: String) = with(binding) {
+        summaryView.bindSale(
+            dateRange = date,
+            grossVol = summary.grossVolume,
+            deduction = summary.totalDeduction,
+            netVol = summary.netVolume,
+            totalAmount = summary.totalAmount,
+            avgRate = summary.avgRate,
+            totalReceived = summary.totalReceived
+        )
 
     }
 }

@@ -13,6 +13,7 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
+import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.features.sale.model.UpdateSaleRequest
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
@@ -56,6 +57,9 @@ class MilkSaleRepository @Inject constructor(
     fun getAccountBalance(accountId: String): Flow<Long> {
         return ledgerDao.getAccountBalance(accountId)
     }
+
+    fun getGlobalSaleStats(start: Long, end: Long): Flow<SaleSummary> =
+        milkDao.getGlobalSaleStats(start, end)
 
     @Transaction
     suspend fun deleteSale(saleId: String) {
