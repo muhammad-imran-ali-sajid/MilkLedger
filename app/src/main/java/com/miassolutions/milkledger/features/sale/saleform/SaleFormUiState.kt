@@ -35,16 +35,11 @@ data class SaleFormUiState(
     private val deductionDouble: Double
         get() = deduction.toDoubleOrNull() ?: 0.0
 
-    private val rateDouble: Double
-        get() = rate.toDoubleOrNull() ?: 0.0
+    val totalPrice: Double
+        get() = calculatedTotal * 100.0
 
-    private val netMilk: Double
+    val netMilk: Double
         get() = volumeDouble - deductionDouble
-
-    val displayRate: String
-        get() = "Rate: $rateDouble"
-    val displayNetMilk: String
-        get() = "Net Milk: ${netMilk.toMilkAmount()}"
 
 
 }
@@ -69,7 +64,7 @@ sealed interface SaleFormUiEvent {
 
     data object OnSaveClicked : SaleFormUiEvent
 
-    data object OnDeleteClicked: SaleFormUiEvent
+    data object OnDeleteClicked : SaleFormUiEvent
 
     object OnSaveAndNewClicked : SaleFormUiEvent
 }
