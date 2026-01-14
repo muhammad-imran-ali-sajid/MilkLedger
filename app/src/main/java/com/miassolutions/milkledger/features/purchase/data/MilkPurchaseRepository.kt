@@ -14,7 +14,9 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
+import com.miassolutions.milkledger.features.dashboard.model.PurchaseStats
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
+import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
 import com.miassolutions.milkledger.features.purchase.model.UpdatePurchaseRequest
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
@@ -40,11 +42,8 @@ class MilkPurchaseRepository @Inject constructor(
         return milkDao.getSupplierHistory(supplierId, start, end)
     }
 
-    fun getAccountLedgerHistory(accountId: String) = ledgerDao.getLedgerHistory(accountId)
-//    fun getSuppliers(): Flow<List<Account>> =
-//        accountDao.getAccountsByType(AccountType.SUPPLIER).map { list ->
-//            list.map { it.toDomain() }
-//        }
+    fun getGlobalPurchaseStats(start: Long, end: Long): Flow<PurchaseSummary> =
+        milkDao.getGlobalPurchaseStats(start, end)
 
     fun getSuppliers(): Flow<List<Account>> {
         // Sirf Active accounts layen
@@ -237,7 +236,6 @@ class MilkPurchaseRepository @Inject constructor(
             }
         }
     }
-
 
 
 }

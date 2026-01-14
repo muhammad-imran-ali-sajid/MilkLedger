@@ -15,7 +15,6 @@ import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
-import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -107,15 +106,20 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
 
 
             // 4. Summary Card (Assuming CollapsibleCardView layout logic)
-            binding.cardSummary.apply {
-//                // FindViews using IDs from your summary layout
-//                findViewById<TextView>(R.id.tvTotalMilk)?.text = state.totalVolume.toMilkAmount()
-//                findViewById<TextView>(R.id.tvTotalAmount)?.text = state.totalPrice.toPrice() // Label: "Total Price"
-//                findViewById<TextView>(R.id.tvTotalPaid)?.text = state.totalPaid.toPrice()    // Label: "Paid"
+            binding.summaryView.bindPurchase(
+                dateRange = state.date.toCompleteDateFormat(), // e.g. "1 Jan - 31 Jan"
 
-                // Balance ya Net Payable
-                // findViewById<TextView>(R.id.tvNetPayable)?.text = (state.totalPrice - state.totalPaid).toPrice()
-            }
+                totalVol = state.summary.totalVolume,
+                totalAmount = state.summary.totalAmount,
+
+                avgFat = state.summary.avgFat,
+                avgLr = state.summary.avgLr,
+                avgRate = state.summary.avgRate,
+                avgTs = state.summary.avgTs,
+
+                totalPaid = state.summary.totalPaid
+            )
+
         }
 
         collectEffect(viewModel.uiEffect) { effect ->

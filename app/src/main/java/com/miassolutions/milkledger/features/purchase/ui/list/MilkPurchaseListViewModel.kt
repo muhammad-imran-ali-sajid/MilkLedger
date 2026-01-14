@@ -24,8 +24,10 @@ class MilkPurchaseListViewModel @Inject constructor(
     private var searchJob: Job? = null
 
     init {
+
         loadPurchases(LocalDate.now())
     }
+
 
     private fun loadPurchases(date: LocalDate) {
         // 1. Purani job cancel karein taake conflicts na hon
@@ -52,6 +54,15 @@ class MilkPurchaseListViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+
+
+        viewModelScope.launch {
+            repository.getGlobalPurchaseStats(date.toMillis(), date.toMillis())
+                .collect { summary ->
+                    updateState { it.copy(summary = summary) }
+                }
+        }
+
     }
 
     private fun deletePurchase(id: String) {
@@ -70,6 +81,7 @@ class MilkPurchaseListViewModel @Inject constructor(
             is PurchaseListUiEvent.OnDateSelected -> {
                 loadPurchases(event.date)
             }
+
             PurchaseListUiEvent.OnDateClick -> emitEffect(OpenDatePicker)
             PurchaseListUiEvent.OnAddPurchaseClick -> emitEffect(NavigateToAddPurchase)
 

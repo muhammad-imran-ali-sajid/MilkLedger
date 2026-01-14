@@ -1,12 +1,15 @@
 package com.miassolutions.milkledger.features.purchase.ui.list
 
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
+import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import java.time.LocalDate
 
 data class PurchaseListUiState(
     val isLoading: Boolean = false,
     val date: LocalDate = LocalDate.now(),
     val purchases: List<MilkPurchaseUiModel> = emptyList(),
+
+    val summary: PurchaseSummary = PurchaseSummary(),
 
     // Summary
     val totalVolume: Double = 0.0,

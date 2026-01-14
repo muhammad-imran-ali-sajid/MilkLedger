@@ -5,12 +5,96 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.miassolutions.milkledger.features.dashboard.model.PurchaseStats
+import com.miassolutions.milkledger.features.dashboard.model.SaleStats
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
+import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MilkDao {
+
+    // 1️⃣ ALL PURCHASES (Weighted Stats)
+    @Query(
+        """
+    SELECT 
+        COALESCE(SUM(totalAmount), 0) as totalAmount,
+        COALESCE(SUM(volume), 0.0) as totalVolume,
+        COALESCE(SUM(CASE WHEN fat > 0 THEN (volume * fat) ELSE 0 END) / NULLIF(SUM(CASE WHEN fat > 0 THEN volume ELSE 0 END), 0), 0.0) as avgFat,
+        COALESCE(SUM(CASE WHEN lr > 0 THEN (volume * lr) ELSE 0 END) / NULLIF(SUM(CASE WHEN lr > 0 THEN volume ELSE 0 END), 0), 0.0) as avgLr,
+        COALESCE(SUM(CASE WHEN ts > 0 THEN (volume * ts) ELSE 0 END) / NULLIF(SUM(CASE WHEN ts > 0 THEN volume ELSE 0 END), 0), 0.0) as avgTs,
+        -- Rate Weighted by Volume
+        COALESCE(SUM(totalAmount) / NULLIF(SUM(volume), 0), 0.0) as avgRate,
+        
+        -- Total Paid (Ledger Join)
+        (SELECT COALESCE(SUM(debit), 0) FROM financial_ledger_table WHERE type='CASH_PAID' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalPaid
+        
+    FROM milk_transactions_table
+    WHERE dateMillis BETWEEN :start AND :end AND type = 'PURCHASE' AND deletedAtMillis IS NULL
+"""
+    )
+    fun getGlobalPurchaseStats(start: Long, end: Long): Flow<PurchaseSummary>
+
+    // 2️⃣ SUPPLIER SPECIFIC (Weighted Stats)
+//    @Query(
+//        """
+//    SELECT
+//        COALESCE(SUM(totalAmount), 0) as totalAmount,
+//        COALESCE(SUM(volume), 0.0) as totalVolume,
+//        COALESCE(SUM(CASE WHEN fat > 0 THEN (volume * fat) ELSE 0 END) / NULLIF(SUM(CASE WHEN fat > 0 THEN volume ELSE 0 END), 0), 0.0) as avgFat,
+//        COALESCE(SUM(CASE WHEN lr > 0 THEN (volume * lr) ELSE 0 END) / NULLIF(SUM(CASE WHEN lr > 0 THEN volume ELSE 0 END), 0), 0.0) as avgLr,
+//        COALESCE(SUM(totalAmount) / NULLIF(SUM(volume), 0), 0.0) as avgRate,
+//
+//        -- Specific Supplier Paid
+//        (SELECT COALESCE(SUM(debit), 0) FROM financial_ledger_table WHERE accountId = :id AND type='CASH_PAID' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalPaid
+//
+//    FROM milk_transactions_table
+//    WHERE accountId = :id AND dateMillis BETWEEN :start AND :end AND type = 'PURCHASE' AND deletedAtMillis IS NULL
+//"""
+//    )
+//    fun getSupplierStats(id: String, start: Long, end: Long): Flow<PurchaseStats>
+
+
+    // 3️⃣ ALL SALES (Stats)
+//    @Query(
+//        """
+//    SELECT
+//        COALESCE(SUM(totalAmount), 0) as totalAmount,
+//        COALESCE(SUM(volume), 0.0) as grossVolume,
+//        COALESCE(SUM(deduction), 0.0) as totalDeduction,
+//        COALESCE(SUM(quantity), 0.0) as netVolume,
+//        -- Rate Weighted by Net Volume
+//        COALESCE(SUM(totalAmount) / NULLIF(SUM(quantity), 0), 0.0) as avgRate,
+//
+//        -- Total Received
+//        (SELECT COALESCE(SUM(credit), 0) FROM financial_ledger_table WHERE type='CASH_RECEIVED' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalReceived
+//
+//    FROM milk_transactions_table
+//    WHERE dateMillis BETWEEN :start AND :end AND type = 'SALE' AND deletedAtMillis IS NULL
+//"""
+//    )
+//    fun getGlobalSaleStats(start: Long, end: Long): Flow<SaleStats>
+
+
+    // 4️⃣ CUSTOMER SPECIFIC (Stats)
+//    @Query(
+//        """
+//    SELECT
+//        COALESCE(SUM(totalAmount), 0) as totalAmount,
+//        COALESCE(SUM(volume), 0.0) as grossVolume,
+//        COALESCE(SUM(deduction), 0.0) as totalDeduction,
+//        COALESCE(SUM(quantity), 0.0) as netVolume,
+//        COALESCE(SUM(totalAmount) / NULLIF(SUM(quantity), 0), 0.0) as avgRate,
+//
+//        -- Specific Customer Received
+//        (SELECT COALESCE(SUM(credit), 0) FROM financial_ledger_table WHERE accountId = :id AND type='CASH_RECEIVED' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalReceived
+//
+//    FROM milk_transactions_table
+//    WHERE accountId = :id AND dateMillis BETWEEN :start AND :end AND type = 'SALE' AND deletedAtMillis IS NULL
+//"""
+//    )
+//    fun getCustomerStats(id: String, start: Long, end: Long): Flow<SaleStats>
 
     // 2️⃣ FOR EDIT SCREEN UI (Pura UI Model fetch karne k liye)
     // Yeh wohi query hai jo List k liye thi, bas WHERE condition change ki hai (ID match)
@@ -90,7 +174,8 @@ interface MilkDao {
     suspend fun softDeleteMilkTransaction(id: String, deleteTime: Long)
 
 
-    @Query("""
+    @Query(
+        """
     SELECT 
         m.milkTransId as id,
         m.dateMillis,
@@ -137,12 +222,13 @@ interface MilkDao {
     AND m.deletedAtMillis IS NULL
     
     ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
-""")
+"""
+    )
     fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
 
 
-
-    @Query("""
+    @Query(
+        """
         SELECT 
             m.milkTransId as id,
             m.dateMillis,
@@ -200,15 +286,21 @@ interface MilkDao {
         
         -- History usually Newest First hoti hai (DESC)
         ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
-    """)
-    fun getCustomerSalesHistory(accountId: String, startDate: Long, endDate: Long): Flow<List<MilkSaleUiModel>>
+    """
+    )
+    fun getCustomerSalesHistory(
+        accountId: String,
+        startDate: Long,
+        endDate: Long
+    ): Flow<List<MilkSaleUiModel>>
 
 
     /************************** Purchase ******************************/
 
 
     // 🔥 PURCHASE DETAIL QUERY
-    @Query("""
+    @Query(
+        """
         SELECT 
             m.milkTransId as id,
             m.dateMillis,
@@ -252,11 +344,13 @@ interface MilkDao {
 
         WHERE m.milkTransId = :id
         LIMIT 1
-    """)
+    """
+    )
     suspend fun getPurchaseDetailById(id: String): MilkPurchaseUiModel?
 
     // 🔥 PURCHASE LIST BY DATE
-    @Query("""
+    @Query(
+        """
     SELECT 
         m.milkTransId as id,
         m.dateMillis,
@@ -302,11 +396,13 @@ interface MilkDao {
     AND m.deletedAtMillis IS NULL
     
     ORDER BY m.createdAtMillis DESC
-""")
+"""
+    )
     fun getPurchasesByDate(dateMillis: Long): Flow<List<MilkPurchaseUiModel>>
 
 
-    @Query("""
+    @Query(
+        """
         SELECT 
             m.milkTransId as id,
             m.dateMillis,
@@ -367,8 +463,13 @@ interface MilkDao {
         AND m.dateMillis BETWEEN :startDate AND :endDate
         
         ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
-    """)
-    fun getSupplierHistory(supplierId: String, startDate: Long, endDate: Long): Flow<List<MilkPurchaseUiModel>>
+    """
+    )
+    fun getSupplierHistory(
+        supplierId: String,
+        startDate: Long,
+        endDate: Long
+    ): Flow<List<MilkPurchaseUiModel>>
 
 
     // Aaj ki date me kin suppliers se purchase hui?

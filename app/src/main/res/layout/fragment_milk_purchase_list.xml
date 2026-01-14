@@ -16,12 +16,12 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnAddPurchase"
+        style="@style/ExtendedFABStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Purchases"
-        style="@style/ExtendedFABStyle"
         app:icon="@drawable/ic_add"
-        app:layout_constraintBottom_toTopOf="@+id/card_summary"
+        app:layout_constraintBottom_toTopOf="@+id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -56,7 +56,8 @@
         android:paddingHorizontal="2dp"
         android:paddingBottom="62dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/card_summary"
+
+        app:layout_constraintBottom_toTopOf="@+id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,9 +65,9 @@
         app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/item_purchase" />
 
-    <com.miassolutions.milkledger.utils.customviews.CollapsibleCardView
-        android:id="@+id/card_summary"
-        android:layout_width="0dp"
+    <com.miassolutions.milkledger.features.common.SummaryHeaderView
+        android:id="@+id/summaryView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
