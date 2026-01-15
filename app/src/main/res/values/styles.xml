@@ -19,7 +19,6 @@
     </style>
 
 
-
     <style name="Widget.MilkLedger.DashboardCard" parent="Widget.Material3.CardView.Filled">
         <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
         <item name="contentPadding">16dp</item>
@@ -68,43 +67,45 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-        <style name="Widget.MilkLedger.Input" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-            <item name="boxStrokeColor">?attr/colorPrimary</item>
-            <item name="android:layout_width">match_parent</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:layout_marginBottom">8dp</item>
-            <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Small</item>
-            <item name="android:theme">@style/Theme.MilkLedger.InputTextSize</item>
-        </style>
+    <style name="Widget.MilkLedger.Input" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Small</item>
+        <item name="android:theme">@style/Theme.MilkLedger.InputTextSize</item>
+    </style>
 
-        <style name="Theme.MilkLedger.InputTextSize" parent="ThemeOverlay.Material3.TextInputEditText">
-            <item name="android:textSize">22sp</item>
-        </style>
+    <style name="Theme.MilkLedger.InputTextSize" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="android:textSize">22sp</item>
+    </style>
 
-        <style name="Widget.MilkLedger.Card" parent="Widget.Material3.CardView.Filled">
-            <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
-            <item name="contentPadding">12dp</item>
-            <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Medium</item>
-            <item name="strokeWidth">0dp</item>
-        </style>
+    <style name="Widget.MilkLedger.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
+        <item name="contentPadding">12dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Medium</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
 
-        <style name="Widget.MilkLedger.Button.Primary" parent="Widget.Material3.Button">
-            <item name="backgroundTint">?attr/colorPrimary</item>
-            <item name="android:textColor">?attr/colorOnPrimary</item>
-            <item name="android:layout_width">match_parent</item>
-            <item name="android:layout_height">wrap_content</item>
-            <item name="android:paddingVertical">12dp</item>
-            <item name="android:textSize">22sp</item> <item name="android:textStyle">bold</item>
-        </style>
+    <style name="Widget.MilkLedger.Button.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
-        <style name="Text.MilkLedger.Label" parent="Type.MilkLedger.ClientForce">
-            <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
-            <item name="android:textSize">22sp</item> </style>
+    <style name="Text.MilkLedger.Label" parent="Type.MilkLedger.ClientForce">
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textSize">22sp</item>
+    </style>
 
-        <style name="Text.MilkLedger.Title" parent="Type.MilkLedger.ClientForce">
-            <item name="android:textColor">?attr/colorOnSurface</item>
-            <item name="android:textSize">24sp</item> </style>
-
+    <style name="Text.MilkLedger.Title" parent="Type.MilkLedger.ClientForce">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textSize">24sp</item>
+    </style>
 
 
     <style name="MyCustomEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
@@ -213,34 +214,16 @@
     </style>
 
     <!-- Style for all label TextViews -->
-    <style name="TextLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="TextLabel" parent="Text.Normal" />
 
-
-        <item name="android:textColor">@color/black</item>
-        <item name="android:gravity">center</item>
-    </style>
 
     <style name="TextLabel2" parent="TextLabel">
         <item name="android:gravity">start</item>
     </style>
 
     <!-- Style for all value TextViews -->
-    <style name="TextValue">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:gravity">center</item>
+    <style name="TextValue" parent="Text.Normal" />
 
-        <item name="android:maxLines">1</item>
-        <item name="android:lines">1</item>
-
-        <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMinTextSize">12sp</item>
-        <item name="autoSizeMaxTextSize">22sp</item>
-        <item name="autoSizeStepGranularity">1sp</item>
-    </style>
 
     <!-- Special style for Urdu title (Price, Paid, Balance labels) -->
     <style name="TextTitleUrdu" parent="TextLabel">

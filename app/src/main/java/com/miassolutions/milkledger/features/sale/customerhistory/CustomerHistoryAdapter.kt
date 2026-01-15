@@ -36,14 +36,7 @@ class CustomerHistoryAdapter(
     inner class HistoryViewHolder(private val binding: ItemCustomerDetailBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        init {
-//            binding.root.setOnClickListener {
-//                val position = bindingAdapterPosition
-//                if (position != RecyclerView.NO_POSITION) {
-//                    onItemClick(getItem(position))
-//                }
-//            }
-        }
+
 
         fun bind(item: MilkSaleUiModel) = with(binding) {
             // 1. Date
@@ -54,14 +47,7 @@ class CustomerHistoryAdapter(
             tvDeduction.text = item.deduction.toString()
             tvNetMilk.text = item.netQuantity.toMilkAmount()
 
-            // Deduction UI Visibility
-            val hasDeduction = item.deduction > 0
-            // (Agar aapke XML me Deduction ka poora column layout/linear layout hai to usay hide kr skty hen)
-            // e.g. layoutDeduction.isVisible = hasDeduction
 
-            // 3. Rate Alert
-            // Logic: Rate change show krna ya hide krna (Assuming standard rate logic)
-            // Filhal hardcoded ya hidden rakhein jab tak logic final na ho
             rateAlert.isVisible = false
 
             // 4. Financials
@@ -72,9 +58,9 @@ class CustomerHistoryAdapter(
             if (isRateChanged) {
                 rateAlert.show()
                 rateAlert.text =
-                    "Rate: ${item.previousRate} -> ${item.rate}"  //Show Alert: Rate Changed from
+                    "Rate Alert: ${item.previousRate} -> ${item.rate}"  //Show Alert: Rate Changed from
                 root.setCardBackgroundColor(
-                    ContextCompat.getColor(root.context, R.color.orange_200)
+                    ContextCompat.getColor(root.context, R.color.md_theme_primaryContainer)
                 )
             }
 

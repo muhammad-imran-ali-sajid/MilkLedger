@@ -1,45 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/SaleCard"
+    style="@style/Widget.MilkLedger.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
->
+    android:layout_margin="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="vertical">
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/grey"
         android:padding="8dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_date"
+            style="@style/TextLabel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:backgroundTint="@color/grey"
-            android:background="@drawable/bg_edittext_readable">
+            android:layout_weight="1"
+            android:gravity="start"
 
-            <TextView
-                android:id="@+id/tv_date"
-                style="@style/TextLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:paddingStart="12dp"
-                android:text="18 Oct 2025" />
-
-            <TextView
-                android:id="@+id/rateAlert"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Rate Applied"
-                android:textColor="@color/red"
-                 />
-
-
-        </LinearLayout>
+            android:text="18 Oct 2025" />
 
 
         <!-- Row 1: Labels and Values -->
@@ -104,18 +90,12 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp" />
 
         <!-- Row 2: Urdu Labels -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:background="@drawable/bg_edittext_readable"
             android:orientation="horizontal"
             android:paddingVertical="8dp"
             android:weightSum="4">
@@ -127,7 +107,10 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel" android:text="Price" />
+                <TextView
+                    style="@style/TextLabel"
+                    android:text="Price" />
+
                 <TextView
                     android:id="@+id/tvPrice"
                     style="@style/TextValue"
@@ -141,7 +124,8 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel"
+                <TextView
+                    style="@style/TextLabel"
                     android:text="Payment" />
 
                 <LinearLayout
@@ -159,8 +143,8 @@
                         android:id="@+id/tvPaymentDate"
                         style="@style/TextValue"
                         android:paddingStart="4dp"
-                        android:textSize="18sp"
                         android:text="(20/11)"
+                        android:textSize="18sp"
                         android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
@@ -184,6 +168,17 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/rateAlert"
+            style="@style/Text.MilkLedger.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:drawablePadding="8dp"
+            android:drawableStart="@drawable/ic_info"
+            android:textColor="@color/md_theme_error"
+            android:text="New Rate Applied" />
+
         <!-- Notes -->
         <TextView
             android:id="@+id/tvNotes"
@@ -191,4 +186,4 @@
             android:layout_marginStart="12dp"
             tools:text="Note: no note" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
