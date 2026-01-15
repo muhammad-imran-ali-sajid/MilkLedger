@@ -64,7 +64,7 @@ class DashboardFragment :
 
                 // Profit Color Helper (Header k liye)
                 val profitColor =
-                    if (state.grossProfit >= 0) R.color.milk_profit_color else R.color.red
+                    if (state.grossProfit >= 0) R.color.green_700 else R.color.red
                 tvNetProfit.setTextColor(ContextCompat.getColor(requireContext(), profitColor))
 
 
@@ -117,6 +117,6 @@ class DashboardFragment :
 
     // Helper to return Color Resource ID
     private fun getDiffColor(value: Double): Int {
-        return if (value >= 0) R.color.milk_primary else R.color.milk_error // Green or Red
+        return if (value >= 0) R.color.primary else R.color.md_theme_error // Green or Red
     }
 }

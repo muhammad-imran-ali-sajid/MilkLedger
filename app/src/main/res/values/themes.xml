@@ -8,28 +8,28 @@
 
 
 
-        <item name="colorSurface">@color/milk_surface</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
 
-        <item name="colorPrimary">@color/milk_primary</item>
-        <item name="colorOnPrimary">@color/milk_on_primary</item>
-        <item name="colorPrimaryContainer">@color/milk_primary_container</item>
-        <item name="colorOnPrimaryContainer">@color/milk_on_primary_container</item>
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
 
 
 
-        <item name="colorSecondary">@color/milk_secondary</item>
-        <item name="colorOnSecondary">@color/milk_on_secondary</item>
-        <item name="colorSecondaryContainer">@color/milk_secondary_container</item>
-        <item name="colorOnSecondaryContainer">@color/milk_on_secondary_container</item>
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
 
-        <item name="colorError">@color/milk_error</item>
-        <item name="colorOnError">@color/milk_on_error</item>
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
 
-        <item name="android:colorBackground">@color/milk_surface</item>
-        <item name="colorSurface">@color/milk_surface</item>
-        <item name="colorOnSurface">@color/milk_on_surface</item>
-        <item name="colorSurfaceVariant">@color/milk_surface_variant</item>
-        <item name="colorOnSurfaceVariant">@color/milk_on_surface_variant</item>
+        <item name="android:colorBackground">@color/md_theme_background</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
 
         <!-- Ledger semantic colors -->
         <item name="purchaseColor">@color/milk_purchase_color</item>

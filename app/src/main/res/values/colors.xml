@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources>
 
     <!-- Refactor plan-->
 
-    <color name="seed">#006C4C</color>
-    <color name="milk_primary">#006C4C</color>
-    <color name="milk_on_primary">#FFFFFF</color>
-    <color name="milk_primary_container">#89F8C7</color>
-    <color name="milk_on_primary_container">#002114</color>
-    <color name="milk_secondary">#4D6357</color>
-    <color name="milk_on_secondary">#FFFFFF</color>
-    <color name="milk_secondary_container">#CFE9D9</color>
-    <color name="milk_on_secondary_container">#092016</color>
 
-    <color name="milk_error">#BA1A1A</color>
-    <color name="milk_on_error">#FFFFFF</color>
+    <!-- ========= PRIMARY ========= -->
+    <color name="md_theme_primary">#006C4C</color>
+    <color name="md_theme_onPrimary">#FFFFFF</color>
+    <color name="md_theme_primaryContainer">#89F8C7</color>
+    <color name="md_theme_onPrimaryContainer">#002114</color>
+
+    <!-- ========= SECONDARY ========= -->
+    <color name="md_theme_secondary">#4D6357</color>
+    <color name="md_theme_onSecondary">#FFFFFF</color>
+    <color name="md_theme_secondaryContainer">#CFE9D9</color>
+    <color name="md_theme_onSecondaryContainer">#092016</color>
+
+    <!-- ========= ERROR ========= -->
+    <color name="md_theme_error">#BA1A1A</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+
+    <!-- ========= BACKGROUND ========= -->
+    <color name="md_theme_background">#FBFDF9</color>
+    <color name="md_theme_onBackground">#191C1A</color>
+
+    <!-- ========= SURFACE ========= -->
+    <color name="md_theme_surface">#FBFDF9</color>
+    <color name="md_theme_onSurface">#191C1A</color>
+    <color name="md_theme_surfaceVariant">#DBE5DE</color>
+    <color name="md_theme_onSurfaceVariant">#404944</color>
 
 
     <color name="milk_purchase_color">#F4511E</color>
     <color name="milk_sale_color">#006C4C</color>
     <color name="milk_expense_color">#7B1FA2</color>
     <color name="milk_profit_color">#1E88E5</color>
-
-    <color name="milk_surface">#FBFDF9</color>
-    <color name="milk_on_surface">#191C1A</color>
-    <color name="milk_surface_variant">#DBE5DE</color>
-    <color name="milk_on_surface_variant">#404944</color>
 
 
     <!-- End -->
