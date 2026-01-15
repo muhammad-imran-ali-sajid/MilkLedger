@@ -27,12 +27,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 android:text="All"
                 app:chipStrokeColor="@color/primary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipDay"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 style="@style/Widget.Material3.Chip.Filter.Elevated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,6 +46,7 @@
                 android:id="@+id/chipMonth"
                 style="@style/Widget.Material3.Chip.Filter.Elevated"
                 android:layout_width="wrap_content"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 android:layout_height="wrap_content"
                 android:text="Month"
                 app:chipStrokeColor="@color/primary"
@@ -51,6 +54,7 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipYear"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 style="@style/Widget.Material3.Chip.Filter.Elevated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,6 +65,7 @@
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCustom"
                 style="@style/Widget.Material3.Chip.Filter.Elevated"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Custom"
@@ -101,14 +106,15 @@
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:drawableEnd="@drawable/ic_arrow_down"
+                android:drawableEnd="@drawable/ic_info"
                 android:drawablePadding="8dp"
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
                 android:text="October 2025"
-                android:textStyle="bold" />
+                style="@style/Text.Normal"
+                />
 
         </FrameLayout>
 
