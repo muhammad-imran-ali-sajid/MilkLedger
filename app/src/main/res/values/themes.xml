@@ -5,12 +5,6 @@
         <!-- false means white  aur true means dark-->
         <item name="android:windowLightStatusBar">true</item>
 
-        <item name="bottomSheetStyle">@style/Widget.MilkLedger.BottomSheet</item>
-
-
-
-
-        <item name="colorSurface">@color/md_theme_surface</item>
 
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
@@ -37,6 +31,10 @@
         <item name="purchaseColor">@color/milk_purchase_color</item>
         <item name="saleColor">@color/milk_sale_color</item>
         <item name="profitColor">@color/milk_profit_color</item>
+
+
+
+
 
 
         <!--texts -->

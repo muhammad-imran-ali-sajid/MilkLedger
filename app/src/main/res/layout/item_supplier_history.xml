@@ -1,49 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MilkLedger.Card"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/PurchaseCard"
-    >
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="4dp">
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/tv_date"
+            style="@style/TextLabel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:id="@+id/header"
-            android:backgroundTint="@color/grey"
-            android:background="@drawable/bg_edittext_readable">
-
-            <TextView
-                android:id="@+id/tv_date"
-                style="@style/TextLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:paddingStart="12dp"
-                android:text="18 Oct 2025" />
-
-            <TextView
-                android:id="@+id/rateAlert"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="New Rate Applied"
-                android:textColor="@color/red"
-                 />
-
-
-        </LinearLayout>
-        <!-- Customer Name -->
-
-
+            android:gravity="start"
+            android:textColor="?attr/colorSecondary"
+            android:text="18 Oct 2025" />
 
 
         <!-- Row 1: Labels and Values -->
@@ -51,94 +26,87 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginVertical="12dp"
             android:weightSum="4">
 
             <!-- Volume -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
-                    android:text="Volume"
-                    style="@style/TextLabel" />
+                    style="@style/TextLabel"
+                    android:text="Volume" />
 
                 <TextView
                     android:id="@+id/tvMilk"
-                    tools:text="40.0"
-                    style="@style/TextValue" />
+                    style="@style/TextValue"
+                    tools:text="40.0" />
             </LinearLayout>
 
             <!-- Deduction -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
-                    android:text="Fat"
-                    style="@style/TextLabel" />
+                    style="@style/TextLabel"
+                    android:text="Fat" />
 
                 <TextView
                     android:id="@+id/tv_fat"
-                    tools:text="2.0"
-                    style="@style/TextValue" />
+                    style="@style/TextValue"
+                    tools:text="2.0" />
             </LinearLayout>
 
             <!-- Deduction -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
-                    android:text="LR"
-                    style="@style/TextLabel" />
+                    style="@style/TextLabel"
+                    android:text="LR" />
 
                 <TextView
                     android:id="@+id/tv_lr"
-                    tools:text="2.0"
-                    style="@style/TextValue" />
+                    style="@style/TextValue"
+                    tools:text="2.0" />
             </LinearLayout>
 
             <!-- Total -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
-                    android:text="TS"
-                    style="@style/TextLabel" />
+                    style="@style/TextLabel"
+                    android:text="TS" />
 
                 <TextView
                     android:id="@+id/tv_ts"
-                    tools:text="38.0"
-                    style="@style/TextValue" />
+                    style="@style/TextValue"
+                    tools:text="38.0" />
             </LinearLayout>
         </LinearLayout>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_marginHorizontal="14dp"
-            android:layout_height="1dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:background="@drawable/bg_edittext_readable"
             android:orientation="horizontal"
-            android:paddingVertical="8dp"
             android:weightSum="4">
 
             <LinearLayout
@@ -148,8 +116,10 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel"
+                <TextView
+                    style="@style/TextLabel"
                     android:text="Price" />
+
                 <TextView
                     android:id="@+id/tvPrice"
                     style="@style/TextValue"
@@ -163,7 +133,8 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <TextView style="@style/TextLabel"
+                <TextView
+                    style="@style/TextLabel"
                     android:text="Payment" />
 
                 <LinearLayout
@@ -181,8 +152,8 @@
                         android:id="@+id/tvPaymentDate"
                         style="@style/TextValue"
                         android:paddingStart="4dp"
-                        android:textSize="18sp"
                         android:text="(20/11)"
+                        android:textSize="18sp"
                         android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
@@ -206,11 +177,23 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/rateAlert"
+            style="@style/Text.MilkLedger.Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="4dp"
+            android:drawableStart="@drawable/ic_info"
+            android:drawablePadding="8dp"
+            android:text="New Rate Applied"
+            android:textColor="@color/md_theme_error" />
+
         <!-- Notes -->
         <TextView
-            android:paddingStart="16dp"
             android:id="@+id/tvNotes"
-            tools:text="Not: no note"
-            style="@style/TextValue" />
+            style="@style/TextValue"
+            android:paddingStart="16dp"
+            tools:text="Not: no note" />
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

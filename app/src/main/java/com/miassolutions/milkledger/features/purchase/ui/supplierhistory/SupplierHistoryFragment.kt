@@ -8,7 +8,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSupplierHistoryBinding
-import com.miassolutions.milkledger.utils.extensions.*
+import com.miassolutions.milkledger.utils.extensions.collectEffect
+import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -57,24 +58,17 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
             binding.rvSupplierHistory.isVisible = !isEmpty
 
             // 3. Update Bottom Sheet Summary
-            binding.supplierSummary.apply {
-                // IDs match karein apne CollapsibleCardView layout se
-//                findViewById<TextView>(R.id.tvTotalMilk)?.text = state.summaryMilk.toMilkAmount()
-//                findViewById<TextView>(R.id.tvTotalAmount)?.text = state.summaryAmount.toPrice()
-//                findViewById<TextView>(R.id.tvTotalPaid)?.text = state.summaryPaid.toPrice() // Paid
-//
-//                // Current Balance
-//                findViewById<TextView>(R.id.tvCurrentBalance)?.setBalanceWithColor(state.currentTotalBalance)
-            }
+
         }
 
         collectEffect(viewModel.uiEffect) { effect ->
-            when(effect) {
+            when (effect) {
                 is SupplierHistoryUiEffect.NavigateToEditPurchase -> {
 //                    val action = SupplierHistoryFragmentDirections
 //                        .actionSupplierHistoryFragmentToPurchaseFormFragment(effect.purchaseId)
 //                    findNavController().navigate(action)
                 }
+
                 SupplierHistoryUiEffect.NavigateBack -> findNavController().navigateUp()
                 is SupplierHistoryUiEffect.ShowSnackbar -> showSnackbar(effect.message)
             }

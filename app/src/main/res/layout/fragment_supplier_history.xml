@@ -22,7 +22,7 @@
         android:textAppearance="?attr/textAppearanceBodyMedium"
         android:textColor="?attr/colorOnBackground"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/supplier_summary"
+        app:layout_constraintBottom_toTopOf="@id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dateFilterView"
@@ -42,15 +42,15 @@
         android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@id/dateFilterView"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/supplier_summary"
+        app:layout_constraintBottom_toTopOf="@id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
         tools:listitem="@layout/item_supplier_history" />
 
 
-    <com.miassolutions.milkledger.utils.customviews.CollapsibleCardView
-        android:id="@+id/supplier_summary"
+    <com.miassolutions.milkledger.features.common.SummaryHeaderView
+        android:id="@+id/summaryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

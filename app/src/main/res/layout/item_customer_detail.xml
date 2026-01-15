@@ -12,19 +12,15 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/grey"
-        android:padding="8dp">
+
 
         <TextView
             android:id="@+id/tv_date"
             style="@style/TextLabel"
+            android:textColor="?attr/colorSecondary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:gravity="start"
-
             android:text="18 Oct 2025" />
 
 
@@ -97,7 +93,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:orientation="horizontal"
-            android:paddingVertical="8dp"
             android:weightSum="4">
 
             <LinearLayout

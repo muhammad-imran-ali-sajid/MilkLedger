@@ -78,14 +78,7 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
 
 
 
-        // 4. Update Summary Card
-        customerSummary.apply {
-            // NOTE: Replace these IDs with actual IDs from your CollapsibleCardView layout
-            // Agar aap methods nahi banaye, to findViewById use karein:
-            findViewById<TextView>(R.id.tvMilk)?.text = state.summaryMilk.toMilkAmount()
-            findViewById<TextView>(R.id.tvPayment)?.text = state.summaryReceived.toPrice()
-            findViewById<TextView>(R.id.tvBalance)?.setBalanceWithColor(state.currentTotalBalance)
-        }
+
     }
 
     private fun handleEffect(effect: CustomerHistoryUiEffect) {

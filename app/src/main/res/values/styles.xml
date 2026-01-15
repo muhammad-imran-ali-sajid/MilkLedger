@@ -4,19 +4,7 @@
     <!-- Refactor plan-->
 
 
-    <style name="Widget.MilkLedger.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
-        <item name="backgroundTint">@color/green</item>
 
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.BottomSheet</item>
-    </style>
-
-    <style name="ShapeAppearance.MilkLedger.BottomSheet" parent="">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopLeft">28dp</item>
-        <item name="cornerSizeTopRight">28dp</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-    </style>
 
 
     <style name="Widget.MilkLedger.DashboardCard" parent="Widget.Material3.CardView.Filled">
