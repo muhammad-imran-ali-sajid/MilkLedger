@@ -3,41 +3,41 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:backgroundTint="@color/white"
     android:background="@drawable/bg_milk_overview"
+    android:backgroundTint="@color/white"
+    android:orientation="vertical"
     android:padding="16dp">
 
     <View
         android:layout_width="40dp"
         android:layout_height="4dp"
-        android:background="@color/deep_forest_green"
         android:layout_gravity="center"
-        />
+        android:background="@color/deep_forest_green" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginVertical="16dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="16dp">
 
         <TextView
+            style="@style/Text.Normal"
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
-            android:textSize="26sp"
-            android:layout_gravity="center_vertical"
-            android:text="Withdraw Cash" />
+            android:text="Withdraw Cash"
+            android:textSize="26sp" />
 
         <ImageView
             android:id="@+id/btnDelete"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="56dp"
             android:layout_height="56dp"
-            android:visibility="gone"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_delete"
+            android:visibility="gone"
             app:tint="@color/red" />
 
     </LinearLayout>
@@ -55,6 +55,7 @@
 
 
         <TextView
+            style="@style/Text.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Available Earnings:"
@@ -62,6 +63,7 @@
 
         <TextView
             android:id="@+id/tvAvailableBalance"
+            style="@style/Text.Normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -77,10 +79,13 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:text="Today, 12 Oct"
+        android:textSize="22sp"
+        android:textStyle="bold"
         app:icon="@drawable/ic_calendar" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilAmount"
+        style="@style/Widget.MilkLedger.Input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Amount to Withdraw">
@@ -94,9 +99,9 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MilkLedger.Input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="8dp"
         android:hint="Note (Optional)">
 
@@ -110,6 +115,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
+        style="@style/Widget.Material3.Button.OutlinedButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"

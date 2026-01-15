@@ -8,10 +8,10 @@
     <include
         android:id="@+id/dateHeader"
         layout="@layout/date_header_layout"
-        android:layout_height="wrap_content"
         android:layout_width="0dp"
-        android:layout_marginTop="2dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="6dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -77,9 +77,9 @@
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddExpense"
-        style="@style/ExtendedFABStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="Add New Expense"
         app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@+id/expensesSummary"
@@ -90,7 +90,7 @@
         android:id="@+id/expensesSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_edittext_readable"
+        android:background="?attr/colorSecondaryContainer"
         android:orientation="horizontal"
         android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -106,7 +106,7 @@
             android:orientation="vertical">
 
             <TextView
-
+                style="@style/Text.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Avg Expense"
@@ -116,6 +116,7 @@
 
             <TextView
                 android:id="@+id/tvAvgExpenses"
+                style="@style/Text.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rs. 84.3"
@@ -131,18 +132,17 @@
             android:orientation="vertical">
 
             <TextView
-
+                style="@style/Text.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total Expenses" />
 
             <TextView
                 android:id="@+id/tvTotalExpense"
-
+                style="@style/Text.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rs. 10500"
-                 />
+                android:text="Rs. 10500" />
         </LinearLayout>
     </LinearLayout>
 

@@ -9,6 +9,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/personalTitleLayout"
         android:layout_width="0dp"
+        style="@style/Widget.MilkLedger.Input"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:hint="Title">
@@ -25,6 +26,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/personalAmountLayout"
         android:layout_width="0dp"
+        style="@style/Widget.MilkLedger.Input"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_weight="1"

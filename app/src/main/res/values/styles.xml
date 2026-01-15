@@ -350,7 +350,7 @@
         <item name="android:fadeScrollbars">true</item>
         <item name="android:scrollbarSize">10dp</item>
         <item name="android:scrollbarDefaultDelayBeforeFade">
-            @integer/material_motion_duration_long_2
+            @integer/material_motion_duration_long_1
         </item>
     </style>
 
@@ -497,7 +497,7 @@
 
     <style name="TextInputMinimalStyle">
         <item name="android:minHeight">48dp</item>
-        <item name="android:paddingVertical">12dp</item>
+        <item name="android:paddingTop">16dp</item>
     </style>
 
 

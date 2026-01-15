@@ -9,19 +9,19 @@
 
     <TextView
         android:id="@+id/tvDate"
+        style="@style/Text.Normal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        tools:text="12 Oct 2025"
-        />
+        tools:text="12 Oct 2025" />
 
     <TextView
         android:id="@+id/tvAmount"
+        style="@style/Text.Normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="+ 5,000"
         android:textColor="@color/blue"
         android:textStyle="bold"
-        />
+        tools:text="+ 5,000" />
 
 </LinearLayout>

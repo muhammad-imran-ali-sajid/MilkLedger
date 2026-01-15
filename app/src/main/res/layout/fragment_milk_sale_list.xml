@@ -29,10 +29,10 @@
     <include
         android:id="@+id/dateHeader"
         layout="@layout/date_header_layout"
-        android:layout_height="wrap_content"
         android:layout_width="0dp"
-        android:layout_marginTop="2dp"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="6dp"
+        android:layout_marginTop="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,8 +41,8 @@
         android:id="@+id/rvSales"
         style="@style/RecyclerViewStyle"
         android:layout_width="0dp"
-android:layout_marginTop="4dp"
         android:layout_height="0dp"
+        android:layout_marginTop="4dp"
         android:clipToPadding="false"
         android:paddingBottom="62dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -55,7 +55,6 @@ android:layout_marginTop="4dp"
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabAddSale"
-        style="@style/ExtendedFABStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
