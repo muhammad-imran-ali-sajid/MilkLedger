@@ -3,6 +3,23 @@
 
     <!-- Refactor plan-->
 
+
+    <style name="Widget.MilkLedger.BottomSheet" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="backgroundTint">@color/green</item>
+
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.BottomSheet</item>
+    </style>
+
+    <style name="ShapeAppearance.MilkLedger.BottomSheet" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">28dp</item>
+        <item name="cornerSizeTopRight">28dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+
+
     <style name="Widget.MilkLedger.DashboardCard" parent="Widget.Material3.CardView.Filled">
         <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
         <item name="contentPadding">16dp</item>
@@ -74,40 +91,6 @@
             <item name="android:textColor">?attr/colorOnSurface</item>
             <item name="android:textSize">24sp</item> </style>
 
-
-
-<!--    <style name="Widget.MilkLedger.Input" parent="Widget.Material3.TextInputLayout.OutlinedBox">-->
-<!--        <item name="boxStrokeColor">?attr/colorPrimary</item>-->
-<!--        <item name="android:layout_width">match_parent</item>-->
-<!--        <item name="android:layout_height">wrap_content</item>-->
-<!--        <item name="android:layout_marginBottom">16dp</item>-->
-<!--        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Small</item>-->
-<!--    </style>-->
-
-<!--    <style name="Widget.MilkLedger.Button.Primary" parent="Widget.Material3.Button">-->
-<!--        <item name="backgroundTint">?attr/colorPrimary</item>-->
-<!--        <item name="android:textColor">?attr/colorOnPrimary</item>-->
-<!--        <item name="android:layout_width">match_parent</item>-->
-<!--        <item name="android:layout_height">wrap_content</item>-->
-<!--        <item name="android:paddingVertical">12dp</item>-->
-<!--    </style>-->
-
-<!--    <style name="Widget.MilkLedger.Card" parent="Widget.Material3.CardView.Filled">-->
-<!--        <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>-->
-<!--        <item name="cardElevation">0dp</item>-->
-<!--        <item name="contentPadding">16dp</item>-->
-<!--        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Medium</item>-->
-<!--        <item name="android:layout_marginBottom">8dp</item>-->
-<!--    </style>-->
-
-<!--    <style name="Text.MilkLedger.Title" parent="TextAppearance.Material3.TitleMedium">-->
-<!--        <item name="android:textColor">?attr/colorOnSurface</item>-->
-<!--        <item name="android:textStyle">bold</item>-->
-<!--    </style>-->
-
-<!--    <style name="Text.MilkLedger.Label" parent="TextAppearance.Material3.LabelMedium">-->
-<!--        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>-->
-<!--    </style>-->
 
 
     <style name="MyCustomEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">

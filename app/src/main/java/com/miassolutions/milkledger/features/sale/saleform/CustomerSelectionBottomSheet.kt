@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.BottomSheetCustomerSelectionBinding
 import com.miassolutions.milkledger.features.account.domain.Account
 

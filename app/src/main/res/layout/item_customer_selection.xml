@@ -10,10 +10,7 @@
 
     <TextView
         android:id="@+id/tvCustomerName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textColor="?attr/colorOnSurface"
+        style="@style/Text.MilkLedger.DashboardLabel"
         tools:text="Imran Khan" />
 
     <ImageView

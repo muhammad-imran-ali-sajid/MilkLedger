@@ -5,6 +5,8 @@
         <!-- false means white  aur true means dark-->
         <item name="android:windowLightStatusBar">true</item>
 
+        <item name="bottomSheetStyle">@style/Widget.MilkLedger.BottomSheet</item>
+
 
 
 
