@@ -3,13 +3,17 @@ package com.miassolutions.milkledger.features.sale.salelist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.miassolutions.milkledger.databinding.DialogPaymentInfoBinding
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.extensions.toPrice
@@ -47,16 +51,32 @@ class MilkSaleListAdapter(
                 // Financial Info
                 tvPrice.text = item.totalAmount.toPrice() // Price (Bill)
 
-                tvPaymentDate.text = "(${item.paymentDate?.toDisplayDate()})"
 
-                // Payment Info (Agar payment feature linked ho to yahan show karein)
+                // Payment info
                 if (item.paymentReceived > 0) {
                     tvPayment.text = item.paymentReceived.toPrice()
-                    tvPaymentDate.isVisible = true // Date toggle logic if needed
+
+                    tilPayment.setOnClickListener {
+                        val context = it.context
+                        val inflater = LayoutInflater.from(context)
+                        val binding = DialogPaymentInfoBinding.inflate(inflater)
+
+                        binding.tvMessage.text =
+                            "Payment Date: ${item.paymentDate?.toDisplayDate() ?: "Not available"}"
+
+                        MaterialAlertDialogBuilder(context)
+                            .setView(binding.root)
+                            .setPositiveButton("OK", null)
+                            .show()
+                    }
+
                 } else {
                     tvPayment.text = "-"
-                    tvPaymentDate.isVisible = false
+                    tvPayment.setOnClickListener(null)
                 }
+
+
+
 
                 tvBalance.setBalanceWithColor(item.currentBalance)
 
