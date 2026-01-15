@@ -5,15 +5,16 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
+    android:background="?attr/colorSurface"
     android:padding="16dp"
-    android:background="?attr/selectableItemBackground">
+    >
 
     <TextView
         android:id="@+id/tvSupplierName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textColor="?attr/colorOnSurface"
+        style="@style/Text.Normal"
         tools:text="Ali Hassan" />
 
     <ImageView
