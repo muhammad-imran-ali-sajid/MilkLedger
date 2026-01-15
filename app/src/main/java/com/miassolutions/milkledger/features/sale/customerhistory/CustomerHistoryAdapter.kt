@@ -62,6 +62,10 @@ class CustomerHistoryAdapter(
                 root.setCardBackgroundColor(
                     ContextCompat.getColor(root.context, R.color.md_theme_primaryContainer)
                 )
+            } else {
+                root.setCardBackgroundColor(
+                    ContextCompat.getColor(root.context, R.color.md_theme_surfaceVariant)
+                )
             }
 
             // Payment Logic
