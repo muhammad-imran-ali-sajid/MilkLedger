@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@drawable/bg_milk_overview"
+    android:orientation="vertical"
     android:paddingBottom="16dp">
 
     <View
@@ -27,7 +27,7 @@
         <TextView
             android:id="@+id/tvSheetTitle"
 
-            android:textSize="24sp"
+            style="@style/Text.Normal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -36,48 +36,50 @@
         <TextView
             android:id="@+id/tvCurrentBalance"
             style="@style/TitleText"
-            android:textSize="24sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red"
+            android:textSize="24sp"
             tools:text="- 50,000" />
     </LinearLayout>
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:background="?attr/colorSecondaryContainer"
         android:padding="12dp"
-        android:background="#F5F5F5"
         android:weightSum="3">
 
         <TextView
-            android:text="Date"
-            android:textStyle="bold"
+            style="@style/Text.Normal"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1.2"
-            android:layout_height="wrap_content"/>
+            android:text="Date"
+            />
 
         <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:gravity="end"
+            style="@style/Text.Normal"
             android:text="Paid"
-            android:textStyle="bold"
-            android:gravity="end"
-            android:layout_width="0dp"
-            android:layout_weight="0.9"
-            android:layout_height="wrap_content"/>
+             />
 
         <TextView
-            android:text="Bill"
-            android:textStyle="bold"
-            android:gravity="end"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0.9"
-            android:layout_height="wrap_content"/>
-
+            android:gravity="end"
+            style="@style/Text.Normal"
+            android:text="Bill"
+             />
 
 
     </LinearLayout>

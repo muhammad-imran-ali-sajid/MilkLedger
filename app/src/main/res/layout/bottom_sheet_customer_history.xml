@@ -32,6 +32,6 @@
         android:layout_height="300dp"
         android:clipToPadding="false"
         android:paddingHorizontal="16dp"
-        tools:listitem="@layout/item_balance_hitory" />
+        tools:listitem="@layout/item_ledger_history" />
 
 </LinearLayout>
