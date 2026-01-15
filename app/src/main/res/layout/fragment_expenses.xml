@@ -8,9 +8,9 @@
     <include
         android:id="@+id/dateHeader"
         layout="@layout/date_header_layout"
-        android:layout_marginTop="8dp"
         android:layout_height="wrap_content"
         android:layout_width="0dp"
+        android:layout_marginTop="2dp"
         android:layout_marginHorizontal="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,12 +67,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:clipToPadding="false"
-
         android:paddingBottom="78dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/expensesSummary"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateHeader"
         tools:listitem="@layout/item_expenses" />

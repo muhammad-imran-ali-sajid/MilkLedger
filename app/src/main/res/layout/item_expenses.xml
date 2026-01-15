@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.MilkLedger.Card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
-    app:cardBackgroundColor="#EEE"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="6dp"
-    app:strokeWidth="1dp">
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginTop="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
+        android:orientation="vertical">
 
         <!-- Top Row -->
         <LinearLayout
@@ -36,6 +30,7 @@
 
                 <TextView
                     android:id="@+id/tvInitial"
+                    style="@style/Text.Normal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -47,10 +42,11 @@
             <!-- Title -->
             <TextView
                 android:id="@+id/tvExpenseTitle"
+                style="@style/Text.Expense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
                 android:layout_weight="3"
                 android:text="Fuel"
                 android:textStyle="bold" />
@@ -58,11 +54,12 @@
             <!-- Amount -->
             <TextView
                 android:id="@+id/tvExpenseAmount"
+                style="@style/Text.Expense"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="2"
                 android:layout_marginEnd="8dp"
+                android:layout_weight="2"
                 android:gravity="end"
                 android:text="Rs. 25.50" />
 
@@ -79,9 +76,9 @@
         <TextView
             android:id="@+id/tvExpenseNote"
             style="@style/TextValue"
-            android:gravity="start"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="start"
             android:text="Note: My Note" />
 
     </LinearLayout>
