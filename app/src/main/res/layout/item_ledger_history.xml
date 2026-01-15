@@ -1,52 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/selectableItemBackground"
     android:orientation="horizontal"
     android:paddingHorizontal="4dp"
     android:paddingVertical="12dp"
-    android:background="?attr/selectableItemBackground"
     android:weightSum="5">
 
 
     <TextView
         android:id="@+id/tvDate"
+        style="@style/Text.Normal"
         android:layout_width="0dp"
         android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:gravity="start"
+        android:textColor="?attr/colorOnSurface"
         tools:text="12 Oct" />
-
-
 
 
     <TextView
         android:id="@+id/tvType"
+        style="@style/Text.Normal"
         android:layout_width="0dp"
-        android:layout_weight="2"
         android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="start"
+        android:textColor="?attr/colorOnSurface"
         tools:text="Milk Purchase" />
 
     <TextView
         android:id="@+id/tvDebit"
-        style="@style/TextValue"
+        style="@style/Text.Normal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="end"
-        android:textColor="#388E3C"
+        android:textColor="?attr/saleColor"
         tools:text="5000" />
 
     <TextView
         android:id="@+id/tvCredit"
-        style="@style/TextValue"
+        style="@style/Text.Normal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="end"
-        android:textColor="#D32F2F"
+        android:textColor="?attr/purchaseColor"
         tools:text="0" />
 
 </LinearLayout>

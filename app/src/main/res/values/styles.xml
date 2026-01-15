@@ -42,6 +42,13 @@
         <item name="android:gravity">end</item>
     </style>
 
+    <style name="Text.Normal" parent="Text.MilkLedger.HeadlineSmall">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">end</item>
+    </style>
+
     <style name="Text.MilkLedger.SectionHeader" parent="Text.MilkLedger.HeadlineLarge">
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">26sp</item>

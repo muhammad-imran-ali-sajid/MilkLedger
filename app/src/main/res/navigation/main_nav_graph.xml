@@ -9,7 +9,7 @@
         android:id="@+id/purchaseListFragment"
         android:name="com.miassolutions.milkledger.features.purchase.list.MilkPurchaseListFragment"
         android:label="Purchases"
-        tools:layout="@layout/fragment_milk_purchase_list" >
+        tools:layout="@layout/fragment_milk_purchase_list">
         <action
             android:id="@+id/action_purchaseListFragment_to_purchaseFormFragment"
             app:destination="@id/purchaseFormFragment" />
@@ -21,7 +21,7 @@
         android:id="@+id/expenseFragment"
         android:name="com.miassolutions.milkledger.features.expense.ui.list.ExpenseListFragment"
         android:label="Expenses"
-        tools:layout="@layout/fragment_expenses" >
+        tools:layout="@layout/fragment_expenses">
 
         <action
             android:id="@+id/action_expenseFragment_to_expenseFormFragment"
@@ -36,10 +36,10 @@
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
-        tools:layout="@layout/fragment_dev_settings"
         android:id="@+id/devSettingsFragment"
         android:name="com.miassolutions.milkledger.zplayground.DevSettingsFragment"
-        android:label="DevSettingsFragment" />
+        android:label="DevSettingsFragment"
+        tools:layout="@layout/fragment_dev_settings" />
     <fragment
         android:id="@+id/driveBackupFragment"
         android:name="com.miassolutions.milkledger.features.backup.DriveBackupFragment"
@@ -59,9 +59,9 @@
     </fragment>
     <fragment
         android:id="@+id/supplierDetailFragment"
-        tools:layout="@layout/fragment_supplier_history"
         android:name="com.miassolutions.milkledger.features.purchase.ui.supplierhistory.SupplierHistoryFragment"
-        android:label="{supplierName}" >
+        android:label="{supplierName}"
+        tools:layout="@layout/fragment_supplier_history">
         <argument
             android:name="supplierName"
             app:argType="string" />
@@ -73,7 +73,7 @@
         android:id="@+id/notesListFragment"
         android:name="com.miassolutions.milkledger.features.note.ui.list.NotesListFragment"
         android:label="Notes"
-        tools:layout="@layout/fragment_notes_list" >
+        tools:layout="@layout/fragment_notes_list">
         <action
             android:id="@+id/action_notesListFragment_to_addEditNoteFragment"
             app:destination="@id/addEditNoteFragment" />
@@ -89,7 +89,7 @@
         android:id="@+id/saleAddFragment"
         android:name="com.miassolutions.milkledger.features.sale.saleform.SaleFormFragment"
         android:label="Add Sales"
-        tools:layout="@layout/fragment_add_sale" >
+        tools:layout="@layout/fragment_add_sale">
         <argument
             android:name="saleId"
             app:argType="string"
@@ -102,7 +102,7 @@
         android:id="@+id/accountListFragment"
         android:name="com.miassolutions.milkledger.features.account.list.AccountListFragment"
         android:label="Accounts"
-        tools:layout="@layout/fragment_account_list" >
+        tools:layout="@layout/fragment_account_list">
         <action
             android:id="@+id/action_accountListFragment_to_accountFormFragment"
             app:destination="@id/accountFormFragment" />
@@ -119,7 +119,7 @@
         <argument
             android:name="type"
             app:argType="string"
-            app:nullable="true"/>
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/ownerSetupFragment"
@@ -134,19 +134,19 @@
     </fragment>
     <fragment
         android:id="@+id/expenseFormFragment"
-        tools:layout="@layout/fragment_add_expense"
         android:name="com.miassolutions.milkledger.features.expense.ui.form.ExpenseFormFragment"
-        android:label="ExpenseFormFragment" >
+        android:label="ExpenseFormFragment"
+        tools:layout="@layout/fragment_add_expense">
         <argument
             android:name="selectedDate"
-            app:argType="long"
-            android:defaultValue="-1L" />
+            android:defaultValue="-1L"
+            app:argType="long" />
     </fragment>
     <dialog
-        tools:layout="@layout/bottom_sheet_edit_expense"
         android:id="@+id/editExpenseBottomSheet"
         android:name="com.miassolutions.milkledger.features.expense.ui.form.EditExpenseBottomSheet"
-        android:label="EditExpenseBottomSheet" >
+        android:label="EditExpenseBottomSheet"
+        tools:layout="@layout/bottom_sheet_edit_expense">
         <argument
             android:name="expense"
             app:argType="com.miassolutions.milkledger.features.expense.domain.Expense" />
@@ -159,34 +159,16 @@
         <action
             android:id="@+id/action_milkSaleListFragment_to_saleAddFragment"
             app:destination="@id/saleAddFragment" />
-        <action
-            android:id="@+id/action_milkSaleListFragment_to_customerBalanceHistoryBottomSheet"
-            app:destination="@id/customerBalanceHistoryBottomSheet" />
+
         <action
             android:id="@+id/action_milkSaleListFragment_to_customerHistoryFragment"
             app:destination="@id/customerHistoryFragment" />
     </fragment>
-    <dialog
-        tools:layout="@layout/bottomsheet_balance_history"
-        android:id="@+id/customerBalanceHistoryBottomSheet"
-        android:name="com.miassolutions.milkledger.features.sale.balancehistory.CustomerBalanceHistoryBottomSheet"
-        android:label="CustomerBalanceHistoryBottomSheet">
-
-        <argument
-            android:name="customerName"
-            app:argType="string"
-            app:nullable="false" />
-
-        <argument
-            android:name="customerId"
-            app:argType="string"
-            app:nullable="false" />
-    </dialog>
     <fragment
-        tools:layout="@layout/fragment_customer_history"
         android:id="@+id/customerHistoryFragment"
         android:name="com.miassolutions.milkledger.features.sale.customerhistory.CustomerHistoryFragment"
-        android:label="{customerName}'s History" >
+        android:label="{customerName}'s History"
+        tools:layout="@layout/fragment_customer_history">
         <argument
             android:name="customerId"
             app:argType="string" />
@@ -208,10 +190,10 @@
             app:argType="long" />
     </fragment>
     <fragment
-        tools:layout="@layout/fragment_owner_dashboard"
         android:id="@+id/ownerDashboardFragment"
         android:name="com.miassolutions.milkledger.features.owner.dasboard.OwnerDashboardFragment"
-        android:label="My Wallet" />
+        android:label="My Wallet"
+        tools:layout="@layout/fragment_owner_dashboard" />
     <fragment
         android:id="@+id/cashflowFragment"
         android:name="com.miassolutions.milkledger.features.cashflow.CashflowFragment"
