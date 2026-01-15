@@ -86,6 +86,9 @@ class MainActivity : BaseActivity(), ToolbarOwner {
 
 
 
+
+
+
         applyWindowInsets()
 
 
@@ -157,9 +160,7 @@ class MainActivity : BaseActivity(), ToolbarOwner {
 
         val headerBinding =
             DrawerHeaderBinding.bind(binding.navigationView.getHeaderView(0))
-        headerBinding.drawerLayout.setBackgroundColor(
-            ContextCompat.getColor(this, R.color.primary)
-        )
+
         headerBinding.tvVersion.text = "${role.uppercase()} Version"
         headerBinding.tvEmail.text = email
     }

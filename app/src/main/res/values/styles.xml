@@ -28,21 +28,21 @@
         <item name="strokeWidth">0dp</item>
     </style>
 
-    <style name="Text.MilkLedger.DashboardLabel" parent="Type.MilkLedger.ClientForce">
+    <style name="Text.MilkLedger.DashboardLabel" parent="Text.MilkLedger.HeadlineSmall">
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
     </style>
 
-    <style name="Text.MilkLedger.DashboardValue" parent="Type.MilkLedger.ClientForce">
+    <style name="Text.MilkLedger.DashboardValue" parent="Text.MilkLedger.HeadlineSmall">
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">end</item>
     </style>
 
-    <style name="Text.MilkLedger.SectionHeader" parent="Type.MilkLedger.ClientForce">
+    <style name="Text.MilkLedger.SectionHeader" parent="Text.MilkLedger.HeadlineLarge">
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textSize">26sp</item>
         <item name="android:gravity">center</item>
@@ -50,7 +50,7 @@
     </style>
 
     <style name="Type.MilkLedger.ClientForce" parent="TextAppearance.Material3.BodyMedium">
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

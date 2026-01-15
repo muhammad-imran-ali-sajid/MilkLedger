@@ -1,6 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- ================================================= -->
+    <!-- DISPLAY (Rare use – very large text) -->
+    <!-- ================================================= -->
+
+    <style name="Text.MilkLedger.DisplayLarge"
+        parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:textSize">34sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">42sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.DisplayMedium"
+        parent="TextAppearance.Material3.DisplayMedium">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">38sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.DisplaySmall"
+        parent="TextAppearance.Material3.DisplaySmall">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">34sp</item>
+    </style>
+
+
+    <!-- ================================================= -->
+    <!-- HEADLINE (Screen titles) -->
+    <!-- ================================================= -->
+
+    <style name="Text.MilkLedger.HeadlineLarge"
+        parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Text.MilkLedger.HeadlineMedium"
+        parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">32sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.HeadlineSmall"
+        parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">30sp</item>
+    </style>
+
+
+    <!-- ================================================= -->
+    <!-- TITLE (Card titles, drawer header name) -->
+    <!-- ================================================= -->
+
+    <style name="Text.MilkLedger.TitleLarge"
+        parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">30sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.TitleMedium"
+        parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">21sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">28sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.TitleSmall"
+        parent="TextAppearance.Material3.TitleSmall">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">28sp</item>
+    </style>
+
+
+    <!-- ================================================= -->
+    <!-- BODY (MOST IMPORTANT – main content) -->
+    <!-- ================================================= -->
+
+    <style name="Text.MilkLedger.BodyLarge"
+        parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">30sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.BodyMedium"
+        parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">19sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineHeight">28sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.BodySmall"
+        parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineHeight">26sp</item>
+    </style>
+
+
+    <!-- ================================================= -->
+    <!-- LABEL (Buttons, small UI – still readable) -->
+    <!-- ================================================= -->
+
+    <style name="Text.MilkLedger.LabelLarge"
+        parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="android:lineHeight">24sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.LabelMedium"
+        parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">17sp</item>
+        <item name="android:lineHeight">22sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.LabelSmall"
+        parent="TextAppearance.Material3.LabelSmall">
+        <item name="android:textSize">16sp</item>
+        <item name="android:lineHeight">22sp</item>
+    </style>
+
+
+
+
+
+
+
+
     <!-- Headlines -->
     <style name="Text.H1" parent="TextAppearance.Material3.TitleLarge.Emphasized">
         <item name="android:fontFamily">@font/poppins_bold</item>

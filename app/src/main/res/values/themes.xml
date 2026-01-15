@@ -40,17 +40,17 @@
 
 
         <!--texts -->
-        <item name="textAppearanceBodyLarge">@style/Type.MilkLedger.ClientForce</item>
-        <item name="textAppearanceBodyMedium">@style/Type.MilkLedger.ClientForce</item>
-        <item name="textAppearanceBodySmall">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceBodyLarge">@style/Text.MilkLedger.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/Text.MilkLedger.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/Text.MilkLedger.BodySmall</item>
 
-        <item name="textAppearanceLabelLarge">@style/Type.MilkLedger.ClientForce</item>
-        <item name="textAppearanceLabelMedium">@style/Type.MilkLedger.ClientForce</item>
-        <item name="textAppearanceLabelSmall">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceLabelLarge">@style/Text.MilkLedger.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/Text.MilkLedger.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/Text.MilkLedger.LabelSmall</item>
 
-        <item name="textAppearanceTitleLarge">@style/Type.MilkLedger.ClientForce</item>
-        <item name="textAppearanceTitleMedium">@style/Type.MilkLedger.ClientForce</item>
-        <item name="textAppearanceTitleSmall">@style/Type.MilkLedger.ClientForce</item>
+        <item name="textAppearanceTitleLarge">@style/Text.MilkLedger.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/Text.MilkLedger.TitleMedium</item>
+        <item name="textAppearanceTitleSmall">@style/Text.MilkLedger.TitleSmall</item>
 
     </style>
 
