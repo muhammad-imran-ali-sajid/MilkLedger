@@ -1,7 +1,6 @@
 package com.miassolutions.milkledger.features.sale.salelist
 
 
-import android.util.Log
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -9,13 +8,20 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkSaleListBinding
 import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
 import com.miassolutions.milkledger.features.purchase.model.SaleSummary
-import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
-import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.*
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnAddSaleClicked
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnBalanceClick
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnCustomerDetailClicked
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnDateClick
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnDateSelected
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnDeleteClicked
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnEditSaleClicked
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnNextDate
+import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnPrevDate
 import com.miassolutions.milkledger.features.sale.ui.list.MilkSaleListViewModel
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,7 +34,6 @@ class MilkSaleListFragment :
     // Adapter Initialization
     private val adapter = MilkSaleListAdapter(
         onEditClick = { item ->
-            Log.d("MilkSaleListFragment", item)
             viewModel.onEvent(OnEditSaleClicked(item))
         },
         onDeleteClick = {
@@ -45,22 +50,7 @@ class MilkSaleListFragment :
             )
         },
         onBalanceClick = { id, name ->
-            // Navigate to Bottom Sheet
-
-            viewModel.onEvent(
-                OnBalanceClick(
-                    id,
-                    name
-                )
-            )
-//
-//            val action =
-//                MilkSaleListFragmentDirections.actionMilkSaleListFragmentToCustomerBalanceHistoryBottomSheet(
-//                    customerId = id,
-//                    customerName = name
-//                )
-//            findNavController().navigate(action)
-
+            viewModel.onEvent(OnBalanceClick(id, name))
         }
 
     )
@@ -76,12 +66,11 @@ class MilkSaleListFragment :
     }
 
     private fun setupClicks() {
-        // FAB (Add Sale)
+
         binding.fabAddSale.setOnClickListener {
             viewModel.onEvent(OnAddSaleClicked)
         }
 
-        // Date Header Actions
         binding.dateHeader.btnPrevDate.setOnClickListener {
             viewModel.onEvent(OnPrevDate)
         }
@@ -89,7 +78,6 @@ class MilkSaleListFragment :
             viewModel.onEvent(OnNextDate)
         }
         binding.dateHeader.tvSelectedDate.setOnClickListener {
-            // Date Picker Event
             viewModel.onEvent(OnDateClick) // ViewModel effect trigger karega
         }
     }
@@ -103,10 +91,10 @@ class MilkSaleListFragment :
             adapter.submitList(state.sales)
 
             // B. Handle Empty State & Loading
-            binding.progressBar.isVisible = state.isLoading
-            binding.emptyLayout.emptyStateLayout.isVisible =
+            progressBar.isVisible = state.isLoading
+            emptyLayout.emptyStateLayout.isVisible =
                 !state.isLoading && state.sales.isEmpty()
-            binding.rvSales.isVisible = !state.isLoading && state.sales.isNotEmpty()
+            rvSales.isVisible = !state.isLoading && state.sales.isNotEmpty()
 
             // C. Update Date Text
             // Note: Ensure IDs match your included layout
@@ -129,7 +117,6 @@ class MilkSaleListFragment :
                     findNavController().navigate(action)
                 }
 
-                // ... baqi existing cases ...
                 is MilkSaleListUiEffect.NavigateToAddSale -> {
                     val action = MilkSaleListFragmentDirections
                         .actionMilkSaleListFragmentToSaleAddFragment(

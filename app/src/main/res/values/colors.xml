@@ -21,11 +21,11 @@
     <color name="md_theme_onError">#FFFFFF</color>
 
     <!-- ========= BACKGROUND ========= -->
-    <color name="md_theme_background">#FBFDF9</color>
+    <color name="md_theme_background">#FAFAFA</color>
     <color name="md_theme_onBackground">#191C1A</color>
 
     <!-- ========= SURFACE ========= -->
-    <color name="md_theme_surface">#FBFDF9</color>
+    <color name="md_theme_surface">#FAFAFA</color>
     <color name="md_theme_onSurface">#191C1A</color>
     <color name="md_theme_surfaceVariant">#DBE5DE</color>
     <color name="md_theme_onSurfaceVariant">#404944</color>

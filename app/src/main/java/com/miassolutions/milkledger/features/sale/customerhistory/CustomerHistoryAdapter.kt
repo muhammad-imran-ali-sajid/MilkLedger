@@ -19,7 +19,6 @@ import com.miassolutions.milkledger.utils.extensions.toMilkAmount
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class CustomerHistoryAdapter(
-//    private val onItemClick: (MilkSaleUiModel) -> Unit
 ) : ListAdapter<MilkSaleUiModel, CustomerHistoryAdapter.HistoryViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {

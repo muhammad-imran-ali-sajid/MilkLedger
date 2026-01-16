@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomerHistoryBinding
+import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
@@ -24,14 +25,7 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
     private val viewModel: CustomerHistoryViewModel by viewModels()
     private val args: CustomerHistoryFragmentArgs by navArgs()
 
-    private val adapter by lazy {
-        CustomerHistoryAdapter(
-//            onItemClick = { saleItem ->
-//                // Item click par Edit Event fire karein
-//                viewModel.onEvent(CustomerHistoryUiEvent.OnTransactionClick(saleItem.id))
-//            }
-        )
-    }
+    private val adapter by lazy { CustomerHistoryAdapter() }
 
     override fun setupViews() {
         super.setupViews()
@@ -43,12 +37,7 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
             adapter = this@CustomerHistoryFragment.adapter
         }
 
-        // ✅ 3. Setup Date Filter View
-        // Ye code bilkul same rahega. View khud logic chalaye ga (Arrows/Calendar)
-        // aur jab user final karega, ye callback chalega.
         binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
-
-            // ViewModel ko naya range bhejen
             viewModel.onEvent(CustomerHistoryUiEvent.OnDateFilterChanged(start, end, label))
         }
     }
@@ -76,22 +65,29 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
         tvEmptyState.isVisible = isEmpty
         rvCustomerDetail.isVisible = !isEmpty
 
+        updateSummary(state.dateRangeText, state.summary)
 
 
+    }
+
+    fun updateSummary(dateRange: String, summary: SaleSummary) = with(binding) {
+        summary.apply {
+            summaryView.bindSale(
+                dateRange = dateRange,
+                grossVol = grossVolume,
+                deduction = totalDeduction,
+                netVol = netVolume,
+                totalAmount = totalAmount,
+                avgRate = avgRate,
+                totalReceived = totalReceived
+            )
+        }
 
     }
 
     private fun handleEffect(effect: CustomerHistoryUiEffect) {
         when (effect) {
-            is CustomerHistoryUiEffect.NavigateToEditSale -> {
-                // ✅ Navigation to Sale Form
-//                val action = CustomerHistoryFragmentDirections
-//                    .actionCustomerHistoryFragmentToSaleFormFragment(
-//                        saleId = effect.saleId,
-//                        saleDate = -1L
-//                    )
-//                findNavController().navigate(action)
-            }
+
 
             CustomerHistoryUiEffect.NavigateBack -> {
                 findNavController().navigateUp()
@@ -101,7 +97,6 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
                 showSnackbar(effect.message)
             }
 
-            else -> {}
         }
     }
 }
