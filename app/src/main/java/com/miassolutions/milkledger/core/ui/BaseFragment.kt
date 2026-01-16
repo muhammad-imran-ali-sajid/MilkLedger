@@ -85,7 +85,7 @@ abstract class BaseFragment<VB : ViewBinding>(
 
             },
             viewLifecycleOwner,
-            Lifecycle.State.RESUMED
+            Lifecycle.State.STARTED
         )
     }
 

@@ -17,12 +17,12 @@
 
         <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/switchActive"
+            style="@style/Text.Normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:padding="16dp"
-            android:text="Account Status: Active"
-            android:textSize="16sp"
-            android:checked="true" />
+            android:text="Account Status: Active" />
     </com.google.android.material.card.MaterialCardView>
 
     <!-- ========================= -->
@@ -43,11 +43,12 @@
 
             <!-- ===== BASIC INFO ===== -->
             <TextView
-                android:text="Basic Information"
+                style="@style/DashboardMilkValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/TextAppearance.Material3.TitleSmall"
-                android:layout_marginBottom="8dp" />
+
+                android:layout_marginBottom="8dp"
+                android:text="Basic Information" />
 
             <!-- Sort Order -->
             <com.google.android.material.textfield.TextInputLayout
@@ -58,11 +59,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etSortOrder"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextInputMinimalStyle"
-                    android:inputType="number"
-                    android:imeOptions="actionNext" />
+                    android:imeOptions="actionNext"
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Person Name -->
@@ -76,11 +77,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etAccountName"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextInputMinimalStyle"
-                    android:inputType="textCapWords"
-                    android:imeOptions="actionNext" />
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapWords" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Account Type -->
@@ -98,17 +99,17 @@
                     android:paddingTop="8dp">
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
+                        android:id="@+id/rbSupplier"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/rbSupplier"
 
                         android:text="Supplier" />
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/rbCustomer"
-                        android:layout_marginStart="24dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
                         android:text="Customer" />
 
 
@@ -125,11 +126,11 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDefaultRate"
+                    style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/TextInputMinimalStyle"
-                    android:inputType="numberDecimal"
-                    android:imeOptions="actionNext" />
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- ===== FINANCIAL INFO ===== -->
@@ -137,20 +138,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardElevation="0dp"
-                >
+                app:cardElevation="0dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:padding="16dp">
 
                     <TextView
-                        android:text="Balance Preview"
+                        style="@style/Text.Normal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/TextAppearance.Material3.LabelLarge" />
+                        android:text="Balance Preview" />
+
+
+                    <TextView
+                        android:id="@+id/tvBalancePreview"
+                        style="@style/Text.Normal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        tools:text="+ Rs. 5,000"
+                        tools:textColor="?attr/saleColor" />
 
                     <!-- Initial Balance -->
                     <com.google.android.material.textfield.TextInputLayout
@@ -162,22 +172,14 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etInitialBalance"
+                            style="@style/TextInputMinimalStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            style="@style/TextInputMinimalStyle"
-                            android:inputType="numberSigned"
-                            android:imeOptions="actionNext" />
+                            android:imeOptions="actionNext"
+                            android:inputType="numberSigned" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:id="@+id/tvBalancePreview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        tools:text="+ Rs. 5,000"
-                        tools:textColor="@color/green" />
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -188,17 +190,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="Opening Date (As of)"
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_calendar">
+                app:endIconDrawable="@drawable/ic_calendar"
+                app:endIconMode="custom">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etOpeningDate"
                     style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="false"
                     android:clickable="true"
                     android:cursorVisible="false"
+                    android:focusable="false"
                     tools:text="10 Jan 2026" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -215,8 +217,8 @@
                     style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:imeOptions="actionDone" />
+                    android:imeOptions="actionDone"
+                    android:inputType="numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>

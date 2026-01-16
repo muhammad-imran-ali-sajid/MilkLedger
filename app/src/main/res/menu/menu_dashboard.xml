@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/accountListFragment"
+        android:iconTint="?attr/colorPrimary"
+        android:orderInCategory="100"
+        android:title="Accounts"
+        app:showAsAction="never" />
+
+
     <item
         android:id="@+id/action_dashboard_pdf"
-        android:title="Pdf Report"
-        android:iconTint="?attr/colorPrimary"
         android:icon="@drawable/ic_pdf"
-        app:showAsAction="never"
-        />
+        android:iconTint="?attr/colorPrimary"
+        android:orderInCategory="200"
+        android:title="Pdf Report"
+        app:showAsAction="never" />
 
 
     <item
         android:id="@+id/menuWorkingDate"
+        android:orderInCategory="50"
         android:title="Date"
         app:actionLayout="@layout/menu_working_date_button"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 </menu>

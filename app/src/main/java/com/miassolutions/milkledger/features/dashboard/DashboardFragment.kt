@@ -95,8 +95,16 @@ class DashboardFragment :
                     )
                 }
             }
+
+            val accountItem =
+                menu.findItem(R.id.accountListFragment) ?: return@setupMenuWithCustomView
+            accountItem.setOnMenuItemClickListener {
+                findNavController().navigate(R.id.accountListFragment)
+                true
+            }
         }
     }
+
 
 
 
