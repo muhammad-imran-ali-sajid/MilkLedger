@@ -31,24 +31,26 @@ class MilkSaleListFragment :
     private val viewModel: MilkSaleListViewModel by viewModels()
 
     // Adapter Initialization
-    private val adapter = MilkSaleListAdapter(
-        onEditClick = { item ->
-            viewModel.onEvent(OnEditSaleClicked(item))
-        },
+    private val adapter by lazy {
+        MilkSaleListAdapter(
+            onEditClick = { item ->
+                viewModel.onEvent(OnEditSaleClicked(item))
+            },
 
-        onDetailClick = { item ->
-            viewModel.onEvent(
-                OnCustomerDetailClicked(
-                    item.customerId,
-                    item.customerName
+            onDetailClick = { item ->
+                viewModel.onEvent(
+                    OnCustomerDetailClicked(
+                        item.customerId,
+                        item.customerName
+                    )
                 )
-            )
-        },
-        onBalanceClick = { id, name ->
-            viewModel.onEvent(OnBalanceClick(id, name))
-        }
+            },
+            onBalanceClick = { id, name ->
+                viewModel.onEvent(OnBalanceClick(id, name))
+            }
 
-    )
+        )
+    }
 
     override fun setupViews() {
         super.setupViews()
@@ -80,8 +82,6 @@ class MilkSaleListFragment :
             } else {
                 viewModel.onEvent(OnNextDate)
             }
-
-
 
 
         }

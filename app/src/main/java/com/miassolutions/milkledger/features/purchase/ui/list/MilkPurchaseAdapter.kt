@@ -7,6 +7,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.miassolutions.milkledger.databinding.DialogPaymentInfoBinding
 import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
@@ -49,19 +51,31 @@ class MilkPurchaseAdapter(
             // Balance logic
             tvBalance.setBalanceWithColor(item.currentBalance)
 
-            // Payment Date Logic (Show only if different from Sale Date)
-            val payDate = item.paymentDate
-            val saleDate = item.dateMillis.toLocalDate()
 
-//            tvPaymentDate.text = payDate?.toDisplayDate()
+            // Payment info
+            if (item.paymentMade > 0) {
+                tvPayment.text = item.paymentMade.toPrice()
 
-            if (payDate != null && !payDate.isEqual(saleDate) && item.paymentMade > 0) {
-                tvPaymentDate.isVisible = true
-                // Format: (20/11)
-                tvPaymentDate.text = payDate.toDisplayDate()
+                tilPayment.setOnClickListener {
+                    val context = it.context
+                    val inflater = LayoutInflater.from(context)
+                    val binding = DialogPaymentInfoBinding.inflate(inflater)
+
+                    binding.tvMessage.text =
+                        "Payment Date: ${item.paymentDate?.toDisplayDate() ?: "Not available"}"
+
+                    MaterialAlertDialogBuilder(context)
+                        .setView(binding.root)
+                        .setPositiveButton("OK", null)
+                        .show()
+                }
+
             } else {
-                tvPaymentDate.isVisible = false
+                tvPayment.text = "-"
+                tvPayment.setOnClickListener(null)
             }
+
+
 
             // Note
             if (!item.note.isNullOrBlank()) {

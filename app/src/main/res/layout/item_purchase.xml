@@ -186,6 +186,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/tilPayment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
@@ -193,34 +194,23 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:drawableEnd="@drawable/ic_info"
+                        android:drawablePadding="6dp"
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Payment" />
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/tvPayment"
+                        style="@style/Text.MilkLedger.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="bottom"
-                        android:orientation="horizontal">
+                        tools:text="10,000" />
 
-                        <TextView
-                            android:id="@+id/tvPayment"
-                            style="@style/Text.MilkLedger.Title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:text="10,000" />
 
-                        <TextView
-                            android:id="@+id/tvPaymentDate"
-                            style="@style/Text.MilkLedger.Label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginStart="4dp"
-                            android:textSize="20sp"
-                            tools:text="(20/11)" />
-                    </LinearLayout>
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -232,6 +222,8 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:drawableEnd="@drawable/ic_info"
+                        android:drawablePadding="4dp"
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
