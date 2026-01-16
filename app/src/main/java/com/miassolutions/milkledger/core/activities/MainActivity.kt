@@ -116,15 +116,10 @@ class MainActivity : BaseActivity(), ToolbarOwner {
         // -------------------- AppBarConfiguration --------------------
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.ownerSetupFragment,
                 R.id.dashboardFragment,
                 R.id.settingsFragment,
-                R.id.notesListFragment,
-                R.id.milkSaleListFragment,
-                R.id.purchaseListFragment,
-                R.id.expenseFragment,
-                R.id.ownerDashboardFragment,
-                R.id.accountListFragment
+                R.id.accountListFragment,
+                R.id.driveBackupFragment,
             ),
             binding.drawerLayout
         )
@@ -136,19 +131,7 @@ class MainActivity : BaseActivity(), ToolbarOwner {
             appBarConfiguration
         )
 
-        // Bottom navigation
-//        binding.bottomNav.setupWithNavController(navController)
-
-        // Drawer navigation
         setupDrawerNavigation()
-
-        // -------------------- Navigation Listener (Visibility + Icon Color) --------------------
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//
-//            binding.bottomNav.visibility =
-//                if (destination.id in bottomNavDestinations) View.VISIBLE else View.GONE
-//
-//        }
     }
 
     // ------------------------------------------------------------------------
