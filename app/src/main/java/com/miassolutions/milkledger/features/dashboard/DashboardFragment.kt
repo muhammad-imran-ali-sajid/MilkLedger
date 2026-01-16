@@ -204,8 +204,9 @@ class DashboardFragment :
                 state.avgPriceDiff.format(2),
                 getDiffColor(state.avgPriceDiff)
             ),
-            DashboardStat("Avg Fat", state.avgFat.format(2)),
-            DashboardStat("Avg LR", state.avgLr.format(2))
+            DashboardStat("Avg Fat", "${state.avgFat.format(2)} (${state.qualityVolume.format(0)})"),
+            DashboardStat("Avg LR", "${state.avgLr.format(2)} (${state.qualityVolume.format(0)})"),
+            DashboardStat("Total TS", "${state.totalTs.format(1)} (${state.qualityVolume.format(0)})")
         )
     }
 

@@ -21,8 +21,8 @@ class DashboardRepository @Inject constructor(
             val avgPP = if (purchase.totalVolume > 0)
                 (purchase.totalAmount.toRupees() / purchase.totalVolume) else 0.0
 
-            val avgSP = if (sale.totalVolume > 0)
-                (sale.totalAmount.toRupees() / sale.totalVolume) else 0.0
+            val avgSP = if (purchase.totalVolume > 0)
+                (sale.totalAmount.toRupees() / purchase.totalVolume) else 0.0
 
             val grossProfit = sale.totalAmount - (purchase.totalAmount + expenseTotal)
 
@@ -49,7 +49,8 @@ class DashboardRepository @Inject constructor(
                 // Quality
                 avgFat = purchase.avgFat,
                 avgLr = purchase.avgLr,
-                totalTs = purchase.avgTs // Ya total TS agar sum krna ho
+                qualityVolume = purchase.qualityVolume,
+                totalTs = purchase.totalTs // Ya total TS agar sum krna ho
             )
         }
     }

@@ -9,7 +9,8 @@ data class PurchaseStats(
     @ColumnInfo(name = "totalVolume") val totalVolume: Double = 0.0,
     @ColumnInfo(name = "avgFat") val avgFat: Double = 0.0,
     @ColumnInfo(name = "avgLr") val avgLr: Double = 0.0,
-    @ColumnInfo(name = "avgTs") val avgTs: Double = 0.0
+    @ColumnInfo(name = "totalTs") val totalTs: Double = 0.0,
+    @ColumnInfo(name = "qualityVolume") val qualityVolume: Double = 0.0
 )
 
 // Sale ka data hold karne k liye

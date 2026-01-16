@@ -33,6 +33,7 @@ data class DashboardUiState(
     // Quality
     val avgFat: Double = 0.0,
     val avgLr: Double = 0.0,
+    val qualityVolume: Double = 0.0,
     val totalTs: Double = 0.0
 )
 

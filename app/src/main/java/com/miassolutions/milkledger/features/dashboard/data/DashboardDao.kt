@@ -41,35 +41,33 @@ interface DashboardDao {
     /* Weightage Average Query */
     @Query("""
     SELECT 
-        -- 1. Total Amount & Volume (Simple Sum)
-        COALESCE(SUM(totalAmount), 0) as totalAmount,
-        COALESCE(SUM(volume), 0.0) as totalVolume,
+        -- 1. Totals
+        COALESCE(SUM(totalAmount), 0)      AS totalAmount,
+        COALESCE(SUM(volume), 0.0)         AS totalVolume,
 
-        -- 2. Weighted Average FAT
-        -- Formula: Sum(Volume * Fat) / Sum(Volume jinki Fat > 0 thi)
-        COALESCE(
-            SUM(CASE WHEN fat > 0 THEN (volume * fat) ELSE 0 END) / 
-            NULLIF(SUM(CASE WHEN fat > 0 THEN volume ELSE 0 END), 0)
-        , 0.0) as avgFat,
+        -- 2. Simple Average FAT (sirf jahan quality di gai)
+        COALESCE(AVG(CASE WHEN fat > 0 THEN fat END), 0.0) AS avgFat,
 
-        -- 3. Weighted Average LR
-        COALESCE(
-            SUM(CASE WHEN lr > 0 THEN (volume * lr) ELSE 0 END) / 
-            NULLIF(SUM(CASE WHEN lr > 0 THEN volume ELSE 0 END), 0)
-        , 0.0) as avgLr,
+        -- 3. Simple Average LR (sirf jahan quality di gai)
+        COALESCE(AVG(CASE WHEN fat > 0 THEN lr END), 0.0)  AS avgLr,
 
-        -- 4. Weighted Average TS
-        COALESCE(
-            SUM(CASE WHEN ts > 0 THEN (volume * ts) ELSE 0 END) / 
-            NULLIF(SUM(CASE WHEN ts > 0 THEN volume ELSE 0 END), 0)
-        , 0.0) as avgTs
+        -- 4. TOTAL TS
+        COALESCE(SUM(CASE WHEN ts > 0 THEN ts ELSE 0 END), 0.0) AS totalTs,
+
+        -- 5. Quality Coverage Volume (Fat + LR dono diye gaye)
+        COALESCE(SUM(CASE WHEN fat > 0 THEN volume ELSE 0 END), 0.0) AS qualityVolume
 
     FROM milk_transactions_table
     WHERE dateMillis BETWEEN :start AND :end
-    AND type = 'PURCHASE'
-    AND deletedAtMillis IS NULL
+      AND type = 'PURCHASE'
+      AND deletedAtMillis IS NULL
 """)
-    fun getPurchaseStats(start: Long, end: Long): Flow<PurchaseStats>
+    fun getPurchaseStats(
+        start: Long,
+        end: Long
+    ): Flow<PurchaseStats>
+
+
 
     // 2️⃣ Sale Stats (Sum Only)
     @Query(
