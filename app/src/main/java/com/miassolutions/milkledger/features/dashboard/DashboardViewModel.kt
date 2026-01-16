@@ -1,9 +1,11 @@
 package com.miassolutions.milkledger.features.dashboard
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.*
 import com.miassolutions.milkledger.features.dashboard.data.DashboardRepository
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -12,12 +14,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val repository: DashboardRepository
+    private val repository: DashboardRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<
         DashboardUiState,
         DashboardUiEvent,
         DashboardUiEffect
-        >(DashboardUiState()) {
+        >(
+    DashboardUiState(
+        workingDate = savedStateHandle["workingDate"] ?: LocalDate.now()
+    )
+) {
+
 
     override fun onEvent(event: DashboardUiEvent) {
         when (event) {
@@ -30,9 +38,6 @@ class DashboardViewModel @Inject constructor(
                         reportStartDate = event.startDate,
                         reportEndDate = event.endDate,
 
-                        // UX RULE:
-                        // last selected date = working date
-                        workingDate = event.endDate
                     )
                 }
 
@@ -88,6 +93,7 @@ class DashboardViewModel @Inject constructor(
             }
 
             is DashboardUiEvent.OnWorkingDateChanged -> {
+                savedStateHandle["workingDate"] = event.date
                 updateState { it.copy(workingDate = event.date) }
             }
         }
@@ -99,8 +105,8 @@ class DashboardViewModel @Inject constructor(
         end: LocalDate
     ) {
         repository.getDashboardData(
-            start.toEpochDay(),
-            end.toEpochDay()
+            start.toMillis(),
+            end.toMillis()
         )
             .onEach { dashboardState ->
                 // Repository already calculated data return kar raha hai

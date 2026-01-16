@@ -27,18 +27,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:textAppearance="@style/Text.MilkLedger.Label"
                 android:text="All"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 app:chipStrokeColor="@color/primary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipDay"
-                android:textAppearance="@style/Text.MilkLedger.Label"
                 style="@style/Widget.Material3.Chip.Filter.Elevated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Day"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 app:chipStrokeColor="@color/primary"
                 app:chipStrokeWidth="1dp" />
 
@@ -46,29 +46,29 @@
                 android:id="@+id/chipMonth"
                 style="@style/Widget.Material3.Chip.Filter.Elevated"
                 android:layout_width="wrap_content"
-                android:textAppearance="@style/Text.MilkLedger.Label"
                 android:layout_height="wrap_content"
                 android:text="Month"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 app:chipStrokeColor="@color/primary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipYear"
-                android:textAppearance="@style/Text.MilkLedger.Label"
                 style="@style/Widget.Material3.Chip.Filter.Elevated"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Year"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 app:chipStrokeColor="@color/primary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipCustom"
                 style="@style/Widget.Material3.Chip.Filter.Elevated"
-                android:textAppearance="@style/Text.MilkLedger.Label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Custom"
+                android:textAppearance="@style/Text.MilkLedger.Label"
                 app:chipStrokeColor="@color/primary"
                 app:chipStrokeWidth="1dp" />
 
@@ -91,7 +91,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_left"
+            android:src="@drawable/ic_arrow"
             app:tint="?attr/colorOnSurface" />
 
         <FrameLayout
@@ -99,22 +99,23 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
+
+
             <TextView
                 android:id="@+id/tvCurrentRange"
+                style="@style/Text.Normal"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true"
-                android:drawableEnd="@drawable/ic_info"
+                android:drawableEnd="@drawable/ic_arrow_pick"
                 android:drawablePadding="8dp"
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
-                android:text="October 2025"
-                style="@style/Text.Normal"
-                />
+                android:text="October 2025" />
 
         </FrameLayout>
 
@@ -123,7 +124,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_arrow_right"
+            android:rotation="180"
+            android:src="@drawable/ic_arrow"
             app:tint="?attr/colorOnSurface" />
 
     </LinearLayout>
