@@ -26,7 +26,6 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
 ) {
 
     private val viewModel: MilkPurchaseListViewModel by viewModels()
-    private val args: MilkPurchaseListFragmentArgs by navArgs()
 
 
     private val adapter by lazy {

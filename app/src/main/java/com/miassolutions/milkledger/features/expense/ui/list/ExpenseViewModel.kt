@@ -1,9 +1,11 @@
 package com.miassolutions.milkledger.features.expense.ui.list
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.expense.data.repository.ExpenseRepository
 import com.miassolutions.milkledger.features.expense.ui.list.ExpenseListUiEffect.NavigateToAddExpense
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -15,13 +17,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExpenseListViewModel @Inject constructor(
-    private val repository: ExpenseRepository
+    private val repository: ExpenseRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<ExpenseListUiState, ExpenseListUiEvent, ExpenseListUiEffect>(ExpenseListUiState()) {
 
     private var expenseJob: Job? = null
+    private val initialDate: Long = savedStateHandle["workingDate"] ?: -1L
 
     init {
-        loadExpenses(LocalDate.now())
+
+        updateState { it.copy(date = initialDate.toLocalDate()) }
+
+        if (initialDate != -1L) {
+            loadExpenses(initialDate.toLocalDate())
+        }
     }
 
     override fun onEvent(event: ExpenseListUiEvent) {
@@ -56,8 +65,6 @@ class ExpenseListViewModel @Inject constructor(
                 // Future: Open Edit Screen
                 emitEffect(ExpenseListUiEffect.NavigateToEditExpense(event.expense))
             }
-
-
 
 
         }

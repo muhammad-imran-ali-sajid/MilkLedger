@@ -2,6 +2,7 @@
 
 package com.miassolutions.milkledger.features.sale.salelist
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
@@ -9,6 +10,7 @@ import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.NavigateToCustomerLedger
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.NavigateToEditSale
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.OnDateClick
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,14 +25,21 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MilkSaleListViewModel @Inject constructor(
-    private val repository: MilkSaleRepository
+    private val repository: MilkSaleRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<MilkSaleListUiState, MilkSaleListUiEvent, MilkSaleListUiEffect>(
     MilkSaleListUiState()
 ) {
 
     private val dateFlow = MutableStateFlow<LocalDate?>(null)
 
+    private val initialDate: Long = savedStateHandle["workingDate"] ?: -1L
+
     init {
+
+        updateState { it.copy(date = initialDate.toLocalDate()) }
+
+
         dateFlow
             .filterNotNull()
             .flatMapLatest { date ->
