@@ -24,7 +24,7 @@ interface MilkDao {
         COALESCE(SUM(volume), 0.0) as totalVolume,
         COALESCE(SUM(CASE WHEN fat > 0 THEN (volume * fat) ELSE 0 END) / NULLIF(SUM(CASE WHEN fat > 0 THEN volume ELSE 0 END), 0), 0.0) as avgFat,
         COALESCE(SUM(CASE WHEN lr > 0 THEN (volume * lr) ELSE 0 END) / NULLIF(SUM(CASE WHEN lr > 0 THEN volume ELSE 0 END), 0), 0.0) as avgLr,
-        COALESCE(SUM(CASE WHEN ts > 0 THEN (volume * ts) ELSE 0 END) / NULLIF(SUM(CASE WHEN ts > 0 THEN volume ELSE 0 END), 0), 0.0) as avgTs,
+        COALESCE(SUM(CASE WHEN ts > 0 THEN (volume * ts) ELSE 0 END) / NULLIF(SUM(CASE WHEN ts > 0 THEN volume ELSE 0 END), 0), 0.0) as totalTs,
         -- Rate Weighted by Volume
         COALESCE(SUM(totalAmount) / NULLIF(SUM(volume), 0), 0.0) as avgRate,
         
@@ -38,23 +38,24 @@ interface MilkDao {
     fun getGlobalPurchaseStats(start: Long, end: Long): Flow<PurchaseSummary>
 
     // 2️⃣ SUPPLIER SPECIFIC (Weighted Stats)
-//    @Query(
-//        """
-//    SELECT
-//        COALESCE(SUM(totalAmount), 0) as totalAmount,
-//        COALESCE(SUM(volume), 0.0) as totalVolume,
-//        COALESCE(SUM(CASE WHEN fat > 0 THEN (volume * fat) ELSE 0 END) / NULLIF(SUM(CASE WHEN fat > 0 THEN volume ELSE 0 END), 0), 0.0) as avgFat,
-//        COALESCE(SUM(CASE WHEN lr > 0 THEN (volume * lr) ELSE 0 END) / NULLIF(SUM(CASE WHEN lr > 0 THEN volume ELSE 0 END), 0), 0.0) as avgLr,
-//        COALESCE(SUM(totalAmount) / NULLIF(SUM(volume), 0), 0.0) as avgRate,
-//
-//        -- Specific Supplier Paid
-//        (SELECT COALESCE(SUM(debit), 0) FROM financial_ledger_table WHERE accountId = :id AND type='CASH_PAID' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalPaid
-//
-//    FROM milk_transactions_table
-//    WHERE accountId = :id AND dateMillis BETWEEN :start AND :end AND type = 'PURCHASE' AND deletedAtMillis IS NULL
-//"""
-//    )
-//    fun getSupplierStats(id: String, start: Long, end: Long): Flow<PurchaseStats>
+    @Query(
+        """
+    SELECT
+        COALESCE(SUM(totalAmount), 0) as totalAmount,
+        COALESCE(SUM(volume), 0.0) as totalVolume,
+        COALESCE(SUM(CASE WHEN fat > 0 THEN (volume * fat) ELSE 0 END) / NULLIF(SUM(CASE WHEN fat > 0 THEN volume ELSE 0 END), 0), 0.0) as avgFat,
+        COALESCE(SUM(CASE WHEN lr > 0 THEN (volume * lr) ELSE 0 END) / NULLIF(SUM(CASE WHEN lr > 0 THEN volume ELSE 0 END), 0), 0.0) as avgLr,
+        COALESCE(SUM(CASE WHEN ts > 0 THEN (volume * ts) ELSE 0 END) / NULLIF(SUM(CASE WHEN ts > 0 THEN volume ELSE 0 END), 0), 0.0) as totalTs,
+        COALESCE(SUM(totalAmount) / NULLIF(SUM(volume), 0), 0.0) as avgRate,
+
+        -- Specific Supplier Paid
+        (SELECT COALESCE(SUM(debit), 0) FROM financial_ledger_table WHERE accountId = :id AND type='CASH_PAID' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalPaid
+
+    FROM milk_transactions_table
+    WHERE accountId = :id AND dateMillis BETWEEN :start AND :end AND type = 'PURCHASE' AND deletedAtMillis IS NULL
+"""
+    )
+    fun getSupplierSummary(id: String, start: Long, end: Long): Flow<PurchaseSummary>
 
 
     // 3️⃣ ALL SALES (Stats)

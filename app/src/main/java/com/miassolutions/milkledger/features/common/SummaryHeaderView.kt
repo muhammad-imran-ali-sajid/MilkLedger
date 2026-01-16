@@ -56,7 +56,7 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.lbl2.text = "Avg LR"
         binding.tvVal2.text = String.format("%.1f", avgLr)
 
-        binding.lbl3.text = "Avg TS"
+        binding.lbl3.text = "Total TS"
         binding.tvVal3.text = String.format("%.1f", avgTs)
 
         binding.lbl4.text = "Avg Rate"

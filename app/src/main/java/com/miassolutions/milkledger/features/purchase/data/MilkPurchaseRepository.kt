@@ -19,6 +19,7 @@ import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
 import com.miassolutions.milkledger.features.purchase.model.UpdatePurchaseRequest
+import com.miassolutions.milkledger.features.purchase.ui.supplierhistory.SupplierSummary
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
@@ -33,6 +34,14 @@ class MilkPurchaseRepository @Inject constructor(
     private val ledgerDao: LedgerDao,
     private val db: AppDatabase
 ) {
+
+    fun getSupplierSummary(
+        supplierId: String,
+        start: Long,
+        end: Long
+    ): Flow<PurchaseSummary> {
+        return milkDao.getSupplierSummary(supplierId, start, end)
+    }
 
     fun getSupplierHistory(
         supplierId: String,
