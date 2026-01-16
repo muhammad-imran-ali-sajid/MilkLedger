@@ -52,6 +52,7 @@ class AccountListAdapter(
             val initial = item.name.firstOrNull()?.toString()?.uppercase() ?: "?"
             tvInitial.text = initial
 
+
             // 3. Color Logic (Customer vs Supplier)
             val isCustomer = item.type == AccountType.CUSTOMER
 
@@ -95,6 +96,7 @@ class AccountListAdapter(
 
             tvBalance.setBalanceColorWithRoundRupee(displayBalance)
 
+            tvRate.text = item.defaultRate.toString()
 
         }
     }

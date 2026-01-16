@@ -11,10 +11,7 @@ data class PurchaseListUiState(
 
     val summary: PurchaseSummary = PurchaseSummary(),
 
-    // Summary
-    val totalVolume: Double = 0.0,
-    val totalPrice: Long = 0,
-    val totalPaid: Long = 0
+
 )
 
 sealed class PurchaseListUiEvent {
@@ -30,7 +27,6 @@ sealed class PurchaseListUiEvent {
     data class OnBalanceClick(val supplierId: String, val supplierName: String) :
         PurchaseListUiEvent()
 
-    data class OnDeleteClick(val purchaseId: String) : PurchaseListUiEvent()
 }
 
 sealed class PurchaseListUiEffect {

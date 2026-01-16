@@ -223,7 +223,7 @@ interface MilkDao {
     AND m.type = 'SALE'
     AND m.deletedAtMillis IS NULL
     
-    ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
+    ORDER BY sortOrder ASC
 """
     )
     fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
@@ -397,7 +397,7 @@ interface MilkDao {
     AND m.dateMillis = :dateMillis
     AND m.deletedAtMillis IS NULL
     
-    ORDER BY m.createdAtMillis DESC
+    ORDER BY sortOrder ASC
 """
     )
     fun getPurchasesByDate(dateMillis: Long): Flow<List<MilkPurchaseUiModel>>

@@ -1,12 +1,23 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.miassolutions.milkledger.features.purchase.ui.list
 
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.purchase.data.MilkPurchaseRepository
-import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.*
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.NavigateToAddPurchase
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.NavigateToEditPurchase
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.OpenBalanceHistorySheet
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.OpenDatePicker
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.OpenSupplierHistory
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -22,59 +33,69 @@ class MilkPurchaseListViewModel @Inject constructor(
 
     // Job variable to track the current flow
     private var searchJob: Job? = null
+    private val dateFlow = MutableStateFlow<LocalDate?>(null)
 
     init {
-
-        loadPurchases(LocalDate.now())
-    }
-
-
-    private fun loadPurchases(date: LocalDate) {
-        // 1. Purani job cancel karein taake conflicts na hon
-        searchJob?.cancel()
-
-        updateState { it.copy(isLoading = true, date = date) }
-
-        // 2. Naya flow start karein
-        searchJob = repository.getPurchasesByDate(date.toMillis())
-            .onEach { list ->
-                // Summary Calculation
-                val totalVol = list.sumOf { it.volume }
-                val totalPrice = list.sumOf { it.totalAmount }
-                val totalPaid = list.sumOf { it.paymentMade }
-
+        dateFlow
+            .filterNotNull()
+            .flatMapLatest { date ->
+                combine(
+                    repository.getPurchasesByDate(date.toMillis()),
+                    repository.getGlobalPurchaseStats(date.toMillis(), date.toMillis())
+                ) { purchases, summary ->
+                    purchases to summary
+                }
+            }
+            .onEach { (p, s) ->
                 updateState {
                     it.copy(
                         isLoading = false,
-                        purchases = list,
-                        totalVolume = totalVol,
-                        totalPrice = totalPrice,
-                        totalPaid = totalPaid
+                        purchases = p,
+                        summary = s
                     )
                 }
             }
             .launchIn(viewModelScope)
 
-
-        viewModelScope.launch {
-            repository.getGlobalPurchaseStats(date.toMillis(), date.toMillis())
-                .collect { summary ->
-                    updateState { it.copy(summary = summary) }
-                }
-        }
-
     }
 
-    private fun deletePurchase(id: String) {
-        viewModelScope.launch {
-            try {
-                // repository.deletePurchase(id) // Uncomment when repo is ready
-                emitEffect(ShowSnackbar("Deleted"))
-            } catch (e: Exception) {
-                emitEffect(ShowSnackbar("Error: ${e.message}"))
-            }
-        }
+    private fun loadPurchases(date: LocalDate) {
+        updateState { it.copy(isLoading = true, date = date) }
+        dateFlow.value = date
     }
+
+//    private fun loadPurchases(date: LocalDate) {
+//        // 1. Purani job cancel karein taake conflicts na hon
+//        searchJob?.cancel()
+//
+//        updateState { it.copy(isLoading = true, date = date) }
+//
+//
+//
+//        // 2. Naya flow start karein
+//        searchJob = repository.getPurchasesByDate(date.toMillis())
+//            .onEach { list ->
+//
+//                updateState {
+//                    it.copy(
+//                        isLoading = false,
+//                        purchases = list,
+//
+//                        )
+//                }
+//            }
+//            .launchIn(viewModelScope)
+//
+//
+//        viewModelScope.launch {
+//            repository.getGlobalPurchaseStats(date.toMillis(), date.toMillis())
+//                .collect { summary ->
+//                    updateState { it.copy(summary = summary) }
+//                }
+//        }
+//
+//    }
+
 
     override fun onEvent(event: PurchaseListUiEvent) {
         when (event) {
@@ -92,7 +113,6 @@ class MilkPurchaseListViewModel @Inject constructor(
                 emitEffect(OpenBalanceHistorySheet(event.supplierId, event.supplierName))
             }
 
-            is PurchaseListUiEvent.OnDeleteClick -> deletePurchase(event.purchaseId)
             is PurchaseListUiEvent.OnSupplierHistoryClick -> {
                 emitEffect(OpenSupplierHistory(event.supplierId, event.supplierName))
             }
