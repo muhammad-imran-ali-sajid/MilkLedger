@@ -48,17 +48,17 @@ class SummaryHeaderView @JvmOverloads constructor(
         hideForSupplier: Boolean = false
     ) {
         binding.tvDateRange.text = dateRange
-        binding.tvMainVol.text = "${"%.1f".format(totalVol)} L"
+        binding.tvMainVol.text = "${"%.0f".format(totalVol)} L"
         binding.tvMainAmount.text = totalAmount.toPrice()
 
         binding.lbl1.text = "Avg Fat"
-        binding.tvVal1.text = "%.1f".format(avgFat)
+        binding.tvVal1.text = "%.2f".format(avgFat)
 
         binding.lbl2.text = "Avg LR"
-        binding.tvVal2.text = "%.1f".format(avgLr)
+        binding.tvVal2.text = "%.2f".format(avgLr)
 
         binding.lbl3.text = "Total TS"
-        binding.tvVal3.text = "%.1f".format(avgTs)
+        binding.tvVal3.text = "%.2f".format(avgTs)
 
         binding.lbl4.text = "Avg Rate"
         binding.tvVal4.text = avgRate.toPrice()
