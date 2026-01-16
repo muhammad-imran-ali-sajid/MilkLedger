@@ -190,18 +190,18 @@ class DashboardFragment :
 
     private fun buildStatsList(state: DashboardUiState): List<DashboardStat> {
         return listOf(
-            DashboardStat("Purchases", "${state.milkPurchasedQty.format(1)} L"),
-            DashboardStat("Sales", "${state.milkSoldQty.format(1)} L"),
+            DashboardStat("Purchases", "${state.milkPurchasedQty.format(0)} L"),
+            DashboardStat("Sales", "${state.milkSoldQty.format(0)} L"),
             DashboardStat(
                 "Qty Diff",
-                "${state.qtyDiff.format(1)} L",
+                "${state.qtyDiff.format(0)} L",
                 getDiffColor(state.qtyDiff)
             ),
-            DashboardStat("Avg Buy Price", state.avgPurchasePrice.format(1)),
-            DashboardStat("Avg Sell Price", state.avgSalePrice.format(1)),
+            DashboardStat("Avg Buy Price", state.avgPurchasePrice.format(2)),
+            DashboardStat("Avg Sell Price", state.avgSalePrice.format(2)),
             DashboardStat(
                 "Price Diff",
-                state.avgPriceDiff.format(1),
+                state.avgPriceDiff.format(2),
                 getDiffColor(state.avgPriceDiff)
             ),
             DashboardStat("Avg Fat", state.avgFat.format(2)),
