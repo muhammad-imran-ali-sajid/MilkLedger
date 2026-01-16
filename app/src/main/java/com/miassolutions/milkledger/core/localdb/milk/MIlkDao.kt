@@ -80,23 +80,23 @@ interface MilkDao {
 
 
     // 4️⃣ CUSTOMER SPECIFIC (Stats)
-//    @Query(
-//        """
-//    SELECT
-//        COALESCE(SUM(totalAmount), 0) as totalAmount,
-//        COALESCE(SUM(volume), 0.0) as grossVolume,
-//        COALESCE(SUM(deduction), 0.0) as totalDeduction,
-//        COALESCE(SUM(quantity), 0.0) as netVolume,
-//        COALESCE(SUM(totalAmount) / NULLIF(SUM(quantity), 0), 0.0) as avgRate,
-//
-//        -- Specific Customer Received
-//        (SELECT COALESCE(SUM(credit), 0) FROM financial_ledger_table WHERE accountId = :id AND type='CASH_RECEIVED' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalReceived
-//
-//    FROM milk_transactions_table
-//    WHERE accountId = :id AND dateMillis BETWEEN :start AND :end AND type = 'SALE' AND deletedAtMillis IS NULL
-//"""
-//    )
-//    fun getCustomerStats(id: String, start: Long, end: Long): Flow<SaleStats>
+    @Query(
+        """
+    SELECT
+        COALESCE(SUM(totalAmount), 0) as totalAmount,
+        COALESCE(SUM(volume), 0.0) as grossVolume,
+        COALESCE(SUM(deduction), 0.0) as totalDeduction,
+        COALESCE(SUM(quantity), 0.0) as netVolume,
+        COALESCE(SUM(totalAmount) / NULLIF(SUM(quantity), 0), 0.0) as avgRate,
+
+        -- Specific Customer Received
+        (SELECT COALESCE(SUM(credit), 0) FROM financial_ledger_table WHERE accountId = :id AND type='CASH_RECEIVED' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalReceived
+
+    FROM milk_transactions_table
+    WHERE accountId = :id AND dateMillis BETWEEN :start AND :end AND type = 'SALE' AND deletedAtMillis IS NULL
+"""
+    )
+    fun getCustomerSummary(id: String, start: Long, end: Long): Flow<SaleSummary>
 
     // 2️⃣ FOR EDIT SCREEN UI (Pura UI Model fetch karne k liye)
     // Yeh wohi query hai jo List k liye thi, bas WHERE condition change ki hai (ID match)
