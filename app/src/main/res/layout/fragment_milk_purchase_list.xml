@@ -44,9 +44,8 @@
         style="@style/RecyclerViewStyle"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingBottom="62dp"
+        android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
         app:layout_constraintBottom_toTopOf="@+id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -55,21 +54,11 @@
         app:layout_constraintVertical_bias="1.0"
         tools:listitem="@layout/item_purchase" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/btnAddPurchase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Add Purchases"
-        app:icon="@drawable/ic_add"
-        app:layout_constraintBottom_toTopOf="@+id/summaryView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <com.miassolutions.milkledger.features.common.SummaryHeaderView
         android:id="@+id/summaryView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <item
+        android:id="@+id/actionAdd"
+        android:title="Add Purch."
+        app:actionLayout="@layout/menu_add_purchase"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/actionShowSummary"
+        android:title="Show Summary"
+        app:showAsAction="never" />
+
+
+</menu>

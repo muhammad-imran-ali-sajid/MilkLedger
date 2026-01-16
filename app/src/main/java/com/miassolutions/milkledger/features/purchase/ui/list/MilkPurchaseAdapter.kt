@@ -51,7 +51,6 @@ class MilkPurchaseAdapter(
             // Balance logic
             tvBalance.setBalanceWithColor(item.currentBalance)
 
-
             // Payment info
             if (item.paymentMade > 0) {
                 tvPayment.text = item.paymentMade.toPrice()

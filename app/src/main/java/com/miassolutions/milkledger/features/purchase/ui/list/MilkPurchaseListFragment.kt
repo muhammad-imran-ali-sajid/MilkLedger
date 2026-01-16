@@ -3,8 +3,9 @@ package com.miassolutions.milkledger.features.purchase.list
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.button.MaterialButton
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkPurchaseListBinding
 import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
@@ -14,7 +15,9 @@ import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffe
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
+import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,7 +63,36 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@MilkPurchaseListFragment.adapter
         }
+
+        addPurchaseAction()
     }
+
+    private fun addPurchaseAction() {
+        setupMenuWithCustomView(R.menu.menu_purchase_list) { menu ->
+            val item = menu.findItem(R.id.actionAdd) ?: return@setupMenuWithCustomView
+            val btn = item.actionView
+                ?.findViewById<MaterialButton>(R.id.btnAddPurchase)
+                ?: return@setupMenuWithCustomView
+
+            btn.setOnClickListener {
+                viewModel.onEvent(PurchaseListUiEvent.OnAddPurchaseClick)
+            }
+
+            val summaryItem =
+                menu.findItem(R.id.actionShowSummary) ?: return@setupMenuWithCustomView
+            summaryItem.setOnMenuItemClickListener {
+                val isVisible = binding.summaryView.isShown
+                if (isVisible){
+                    binding.summaryView.hide()
+                } else {
+                    binding.summaryView.show()
+                }
+                true
+            }
+
+        }
+    }
+
 
     override fun setupListeners() {
         super.setupListeners()
@@ -87,9 +119,6 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
             viewModel.onEvent(PurchaseListUiEvent.OnDateClick)
         }
 
-        binding.btnAddPurchase.setOnClickListener {
-            viewModel.onEvent(PurchaseListUiEvent.OnAddPurchaseClick)
-        }
     }
 
     override fun setupObservers() {
