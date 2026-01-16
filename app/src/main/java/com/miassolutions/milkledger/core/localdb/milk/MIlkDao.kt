@@ -286,8 +286,8 @@ interface MilkDao {
         AND m.deletedAtMillis IS NULL
         AND m.dateMillis BETWEEN :startDate AND :endDate
         
-        -- History usually Newest First hoti hai (DESC)
-        ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
+        
+        ORDER BY m.dateMillis ASC, m.createdAtMillis ASC
     """
     )
     fun getCustomerSalesHistory(
@@ -464,7 +464,7 @@ interface MilkDao {
         AND m.deletedAtMillis IS NULL
         AND m.dateMillis BETWEEN :startDate AND :endDate
         
-        ORDER BY m.dateMillis DESC, m.createdAtMillis DESC
+        ORDER BY m.dateMillis ASC, m.createdAtMillis ASC
     """
     )
     fun getSupplierHistory(
