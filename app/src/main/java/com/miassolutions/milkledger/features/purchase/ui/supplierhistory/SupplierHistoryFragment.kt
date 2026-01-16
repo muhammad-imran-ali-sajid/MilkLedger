@@ -20,13 +20,7 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
     private val viewModel: SupplierHistoryViewModel by viewModels()
     private val args: SupplierHistoryFragmentArgs by navArgs()
 
-    private val adapter by lazy {
-        SupplierHistoryAdapter(
-            onItemClick = { purchaseId ->
-                viewModel.onEvent(SupplierHistoryUiEvent.OnTransactionClick(purchaseId))
-            }
-        )
-    }
+    private val adapter by lazy { SupplierHistoryAdapter() }
 
     override fun setupViews() {
         super.setupViews()
@@ -63,14 +57,7 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
 
         collectEffect(viewModel.uiEffect) { effect ->
             when (effect) {
-                is SupplierHistoryUiEffect.NavigateToEditPurchase -> {
-//                    val action = SupplierHistoryFragmentDirections
-//                        .actionSupplierHistoryFragmentToPurchaseFormFragment(effect.purchaseId)
-//                    findNavController().navigate(action)
-                }
-
                 SupplierHistoryUiEffect.NavigateBack -> findNavController().navigateUp()
-                is SupplierHistoryUiEffect.ShowSnackbar -> showSnackbar(effect.message)
             }
         }
     }

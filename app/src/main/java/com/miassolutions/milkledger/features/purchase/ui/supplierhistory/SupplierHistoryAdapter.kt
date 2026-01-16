@@ -1,22 +1,23 @@
 package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.databinding.ItemSupplierHistoryBinding // Ensure naming matches your XML file name
+import com.miassolutions.milkledger.databinding.ItemSupplierHistoryBinding
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
-import com.miassolutions.milkledger.utils.extensions.*
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.show
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class SupplierHistoryAdapter(
-    private val onItemClick: (String) -> Unit
 ) : ListAdapter<MilkPurchaseUiModel, SupplierHistoryAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -32,13 +33,7 @@ class SupplierHistoryAdapter(
     inner class ViewHolder(private val binding: ItemSupplierHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        init {
-            binding.root.setOnClickListener {
-                if (bindingAdapterPosition != RecyclerView.NO_POSITION) {
-                    onItemClick(getItem(bindingAdapterPosition).id)
-                }
-            }
-        }
+
 
         fun bind(item: MilkPurchaseUiModel) = with(binding) {
             // Date
