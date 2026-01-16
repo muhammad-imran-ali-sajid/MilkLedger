@@ -4,9 +4,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.button.MaterialButton
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentExpensesBinding
+import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
+import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +35,35 @@ class ExpenseListFragment :
         setupClicks()
         observeState()
         observeEffects()
+        actionMenus()
+    }
+
+
+    private fun actionMenus() {
+        setupMenuWithCustomView(R.menu.menu_expense_list) { menu ->
+            val item = menu.findItem(R.id.actionAdd) ?: return@setupMenuWithCustomView
+            val btn = item.actionView
+                ?.findViewById<MaterialButton>(R.id.btnAddExpense)
+                ?: return@setupMenuWithCustomView
+
+            btn.setOnClickListener {
+
+                viewModel.onEvent(ExpenseListUiEvent.OnAddExpenseClicked)
+            }
+
+            val summaryItem =
+                menu.findItem(R.id.actionShowSummary) ?: return@setupMenuWithCustomView
+            summaryItem.setOnMenuItemClickListener {
+                val isVisible = binding.expensesSummary.isShown
+                if (isVisible) {
+                    binding.expensesSummary.hide()
+                } else {
+                    binding.expensesSummary.show()
+                }
+                true
+            }
+
+        }
     }
 
 
@@ -39,9 +72,7 @@ class ExpenseListFragment :
     }
 
     private fun setupClicks() {
-        binding.fabAddExpense.setOnClickListener {
-            viewModel.onEvent(ExpenseListUiEvent.OnAddExpenseClicked)
-        }
+
 
         // Date Header Clicks (Assuming IDs inside included layout)
         binding.dateHeader.btnPrevDate.setOnClickListener {

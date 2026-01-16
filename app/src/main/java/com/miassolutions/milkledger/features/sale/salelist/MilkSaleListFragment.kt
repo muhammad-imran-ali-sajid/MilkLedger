@@ -4,11 +4,12 @@ package com.miassolutions.milkledger.features.sale.salelist
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.button.MaterialButton
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkSaleListBinding
 import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
 import com.miassolutions.milkledger.features.purchase.model.SaleSummary
-import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnAddSaleClicked
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnBalanceClick
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnCustomerDetailClicked
@@ -19,7 +20,9 @@ import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.O
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnPrevDate
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
+import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
@@ -60,13 +63,39 @@ class MilkSaleListFragment :
 
         // 2. Click Listeners
         setupClicks()
+
+        actionMenus()
+    }
+
+    private fun actionMenus() {
+        setupMenuWithCustomView(R.menu.menu_sale_list) { menu ->
+            val item = menu.findItem(R.id.actionAdd) ?: return@setupMenuWithCustomView
+            val btn = item.actionView
+                ?.findViewById<MaterialButton>(R.id.btnAddSale)
+                ?: return@setupMenuWithCustomView
+
+            btn.setOnClickListener {
+                viewModel.onEvent(OnAddSaleClicked)
+            }
+
+            val summaryItem =
+                menu.findItem(R.id.actionShowSummary) ?: return@setupMenuWithCustomView
+            summaryItem.setOnMenuItemClickListener {
+                val isVisible = binding.summaryView.isShown
+                if (isVisible) {
+                    binding.summaryView.hide()
+                } else {
+                    binding.summaryView.show()
+                }
+                true
+            }
+
+        }
     }
 
     private fun setupClicks() {
 
-        binding.fabAddSale.setOnClickListener {
-            viewModel.onEvent(OnAddSaleClicked)
-        }
+
 
         binding.dateHeader.btnPrevDate.setOnClickListener {
             viewModel.onEvent(OnPrevDate)

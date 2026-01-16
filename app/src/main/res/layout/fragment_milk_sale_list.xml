@@ -44,7 +44,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="4dp"
         android:clipToPadding="false"
-        android:paddingBottom="62dp"
+        android:paddingBottom="16dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,21 +53,13 @@
         app:layout_constraintTop_toBottomOf="@+id/dateHeader"
         tools:listitem="@layout/item_sales" />
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/fabAddSale"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="Add Sales"
-        app:icon="@drawable/ic_add"
-        app:layout_constraintBottom_toTopOf="@id/summaryView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
 
 
     <com.miassolutions.milkledger.features.common.SummaryHeaderView
         android:id="@+id/summaryView"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
