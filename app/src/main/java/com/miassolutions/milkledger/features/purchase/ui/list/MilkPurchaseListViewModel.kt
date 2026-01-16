@@ -2,6 +2,7 @@
 
 package com.miassolutions.milkledger.features.purchase.ui.list
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.purchase.data.MilkPurchaseRepository
@@ -10,6 +11,7 @@ import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffe
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.OpenBalanceHistorySheet
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.OpenDatePicker
 import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect.OpenSupplierHistory
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +28,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MilkPurchaseListViewModel @Inject constructor(
-    private val repository: MilkPurchaseRepository
+    private val repository: MilkPurchaseRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<PurchaseListUiState, PurchaseListUiEvent, PurchaseListUiEffect>(
     PurchaseListUiState()
 ) {
@@ -34,7 +37,17 @@ class MilkPurchaseListViewModel @Inject constructor(
 
     private val dateFlow = MutableStateFlow<LocalDate?>(null)
 
+    private val initialDate: Long = savedStateHandle["workingDate"] ?: -1L
+
+
     init {
+
+        if (initialDate != -1L) {
+            loadPurchases(initialDate.toLocalDate())
+
+        }
+
+
         dateFlow
             .filterNotNull()
             .flatMapLatest { date ->

@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.purchase.list
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkPurchaseListBinding
@@ -25,6 +26,8 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
 ) {
 
     private val viewModel: MilkPurchaseListViewModel by viewModels()
+    private val args: MilkPurchaseListFragmentArgs by navArgs()
+
 
     private val adapter by lazy {
         MilkPurchaseAdapter(
