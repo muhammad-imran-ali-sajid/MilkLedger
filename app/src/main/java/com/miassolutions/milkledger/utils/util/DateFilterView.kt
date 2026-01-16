@@ -199,7 +199,7 @@ class DateFilterView @JvmOverloads constructor(
 
         // Icon Logic (Dropdown icon agar text clickable hai)
         val showIcon = isNavigable || isCustom
-        val endDrawable = if (showIcon) R.drawable.ic_arrow_down else 0 // Ensure drawable exists
+        val endDrawable = if (showIcon) R.drawable.ic_arrow_pick else 0
         tvCurrentRange.setCompoundDrawablesWithIntrinsicBounds(0, 0, endDrawable, 0)
     }
 
