@@ -28,32 +28,50 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="horizontal">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnNote"
-                    style="@style/Widget.MilkLedger.Button.Primary"
+                    style="@style/Widget.MilkLedger.Button.Icon"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:text="My Notes" />
 
-                <View
-                    android:layout_width="8dp"
-                    android:layout_height="0dp" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCashFlow"
-                    style="@style/Widget.MilkLedger.Button.Primary"
+                    style="@style/Widget.MilkLedger.Button.Icon"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:text="Cash Flow" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnWallet"
+                    style="@style/Widget.MilkLedger.Button.Icon"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="My Wallet" />
+
+
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/tvWorkingDate"
+                style="@style/Text.Normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp"
+                android:text="01-01-2026" />
+
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnPurchase"
                 style="@style/Widget.MilkLedger.DashboardCard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:clickable="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -73,9 +91,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSale"
                 style="@style/Widget.MilkLedger.DashboardCard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:clickable="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -95,9 +115,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnExpense"
                 style="@style/Widget.MilkLedger.DashboardCard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:clickable="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -119,8 +141,7 @@
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.MilkLedger.DashboardCard"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -135,18 +156,18 @@
                     <TextView
                         android:id="@+id/tvNetProfit"
                         style="@style/Text.MilkLedger.DashboardValue"
-                        tools:text="4,500"
-                        android:textColor="?attr/profitColor" />
+                        android:textColor="?attr/profitColor"
+                        tools:text="4,500" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
 
             <TextView
-                android:text="Milk Overview"
                 style="@style/Text.MilkLedger.SectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:text="Milk Overview" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMilkStats"

@@ -85,6 +85,16 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="Widget.MilkLedger.Button.Icon" parent="Widget.Material3.Button.IconButton.Outlined">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="Text.MilkLedger.Label" parent="Type.MilkLedger.ClientForce">
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:textSize">22sp</item>

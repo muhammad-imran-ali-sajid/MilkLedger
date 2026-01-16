@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_purchaseListFragment_to_supplierDetailFragment"
             app:destination="@id/supplierDetailFragment" />
+        <argument
+            android:name="workingDate"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/expenseFragment"
@@ -29,6 +32,9 @@
         <action
             android:id="@+id/action_expenseFragment_to_editExpenseBottomSheet"
             app:destination="@id/editExpenseBottomSheet" />
+        <argument
+            android:name="workingDate"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -56,6 +62,18 @@
         <action
             android:id="@+id/action_dashboardFragment_to_cashflowFragment"
             app:destination="@id/cashflowFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_expenseFragment"
+            app:destination="@id/expenseFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_milkSaleListFragment"
+            app:destination="@id/milkSaleListFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_purchaseListFragment"
+            app:destination="@id/purchaseListFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_ownerDashboardFragment"
+            app:destination="@id/ownerDashboardFragment" />
     </fragment>
     <fragment
         android:id="@+id/supplierDetailFragment"
@@ -163,6 +181,9 @@
         <action
             android:id="@+id/action_milkSaleListFragment_to_customerHistoryFragment"
             app:destination="@id/customerHistoryFragment" />
+        <argument
+            android:name="workingDate"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/customerHistoryFragment"
@@ -193,11 +214,19 @@
         android:id="@+id/ownerDashboardFragment"
         android:name="com.miassolutions.milkledger.features.owner.dasboard.OwnerDashboardFragment"
         android:label="My Wallet"
-        tools:layout="@layout/fragment_owner_dashboard" />
+        tools:layout="@layout/fragment_owner_dashboard" >
+        <argument
+            android:name="workingDate"
+            app:argType="long" />
+    </fragment>
     <fragment
         android:id="@+id/cashflowFragment"
         android:name="com.miassolutions.milkledger.features.cashflow.CashflowFragment"
         android:label="Cash Flow"
-        tools:layout="@layout/fragment_cashflow" />
+        tools:layout="@layout/fragment_cashflow" >
+        <argument
+            android:name="workingDate"
+            app:argType="long" />
+    </fragment>
 
 </navigation>

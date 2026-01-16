@@ -11,8 +11,13 @@ import com.miassolutions.milkledger.features.dashboard.model.DashboardStat
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.format
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class DashboardFragment :
@@ -20,103 +25,170 @@ class DashboardFragment :
 
     private val viewModel: DashboardViewModel by viewModels()
 
-    // Adapter define karen
     private val statsAdapter = DashboardStatsAdapter()
 
     override fun setupViews() {
         super.setupViews()
 
-        // 1. Setup RecyclerView
+        // RecyclerView
         binding.rvMilkStats.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = statsAdapter
             setHasFixedSize(true)
         }
 
-        // 2. Date Filter Setup
-        binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
-            viewModel.onEvent(DashboardUiEvent.OnDateFilterChanged(start, end))
+        // Date Filter (Report Range)
+        binding.dateFilterView.setup(childFragmentManager) { start, end, _ ->
+            viewModel.onEvent(
+                DashboardUiEvent.OnDateFilterChanged(
+                    startDate = start.toLocalDate(),
+                    endDate = end.toLocalDate()
+                )
+            )
         }
     }
 
-    override fun setupListeners() {
+    override fun setupListeners() = with(binding) {
         super.setupListeners()
-        binding.btnCashFlow.setOnClickListener {
+
+        btnCashFlow.setOnClickListener {
             viewModel.onEvent(DashboardUiEvent.OnCashFlowClicked)
         }
-        binding.btnNote.setOnClickListener {
+
+        btnNote.setOnClickListener {
             viewModel.onEvent(DashboardUiEvent.OnNotesClicked)
+        }
+
+        btnPurchase.setOnClickListener {
+            viewModel.onEvent(DashboardUiEvent.OnPurchaseClicked)
+        }
+
+        btnSale.setOnClickListener {
+            viewModel.onEvent(DashboardUiEvent.OnSaleClicked)
+        }
+
+        btnExpense.setOnClickListener {
+            viewModel.onEvent(DashboardUiEvent.OnExpenseClicked)
+        }
+
+        btnWallet.setOnClickListener {
+            viewModel.onEvent(DashboardUiEvent.OnWalletClicked)
+        }
+
+        tvWorkingDate.setOnClickListener {
+            openDatePicker { date ->
+                viewModel.onEvent(
+                    DashboardUiEvent.OnWorkingDateChanged(date)
+                )
+            }
         }
     }
 
     override fun setupObservers() {
         super.setupObservers()
 
-        // --- STATE OBSERVER ---
+        // --- STATE ---
         collectFlow(viewModel.uiState) { state ->
             binding.apply {
 
-                // 1. Financial Cards (Static Header Views)
+                // Header Cards
                 tvTotalPurchases.text = state.totalPurchases.toPrice()
                 tvTotalSales.text = state.totalSales.toPrice()
                 tvTotalExpense.text = state.totalExpenses.toPrice()
                 tvNetProfit.text = state.grossProfit.toPrice()
 
-                // Profit Color Helper (Header k liye)
                 val profitColor =
-                    if (state.grossProfit >= 0) R.color.green_700 else R.color.red
-                tvNetProfit.setTextColor(ContextCompat.getColor(requireContext(), profitColor))
-
-
-                // 2. Milk Overview List (Dynamic RecyclerView Data)
-                // Yahan hum State ko convert kr k List banayen gy adapter k liye
-                val statsList = listOf(
-                    DashboardStat("Purchases", "${state.milkPurchasedQty.format(1)} L"),
-
-                    DashboardStat("Sales", "${state.milkSoldQty.format(1)} L"),
-
-                    DashboardStat(
-                        "Qty Diff",
-                        "${state.qtyDiff.format(1)} L",
-                        getDiffColor(state.qtyDiff)
-                    ),
-
-                    DashboardStat("Avg Buy Price", state.avgPurchasePrice.format(1)),
-
-                    DashboardStat("Avg Sell Price", state.avgSalePrice.format(1)),
-
-                    DashboardStat(
-                        "Price Diff",
-                        state.avgPriceDiff.format(1),
-                        getDiffColor(state.avgPriceDiff)
-                    ),
-
-                    DashboardStat("Avg Fat", state.avgFat.format(2)),
-
-                    DashboardStat("Avg LR", state.avgLr.format(2))
+                    if (state.grossProfit >= 0) R.color.md_theme_primary else R.color.md_theme_error
+                tvNetProfit.setTextColor(
+                    ContextCompat.getColor(requireContext(), profitColor)
                 )
 
-                // Adapter ko list update karen
-                statsAdapter.submitList(statsList)
+                // RecyclerView Stats
+                statsAdapter.submitList(
+                    buildStatsList(state)
+                )
+
+                // (Optional UX)
+                tvWorkingDate.text =
+                    "Working Date: ${state.workingDate.toCompleteDateFormat()}"
             }
         }
 
-        // --- EFFECT OBSERVER ---
+        // --- EFFECTS (Navigation) ---
         collectEffect(viewModel.uiEffect) { effect ->
             when (effect) {
-                DashboardUiEffect.NavigateToCashFlow -> {
-                    findNavController().navigate(DashboardFragmentDirections.actionDashboardFragmentToCashflowFragment())
+
+                is DashboardUiEffect.NavigateToCashFlow -> {
+                    findNavController().navigate(
+                        DashboardFragmentDirections
+                            .actionDashboardFragmentToCashflowFragment(effect.date.toMillis())
+                    )
+                }
+
+                is DashboardUiEffect.NavigateToPurchase -> {
+                    findNavController().navigate(
+                        DashboardFragmentDirections
+                            .actionDashboardFragmentToPurchaseListFragment(effect.date.toMillis())
+                    )
+                }
+
+                is DashboardUiEffect.NavigateToSale -> {
+                    findNavController().navigate(
+                        DashboardFragmentDirections
+                            .actionDashboardFragmentToMilkSaleListFragment(effect.date.toMillis())
+                    )
+                }
+
+                is DashboardUiEffect.NavigateToExpense -> {
+                    findNavController().navigate(
+                        DashboardFragmentDirections
+                            .actionDashboardFragmentToExpenseFragment(effect.date.toMillis())
+                    )
+                }
+
+                is DashboardUiEffect.NavigateToWallet -> {
+                    findNavController().navigate(
+                        DashboardFragmentDirections
+                            .actionDashboardFragmentToOwnerDashboardFragment(effect.date.toMillis())
+                    )
                 }
 
                 DashboardUiEffect.NavigateToNotes -> {
-                    // findNavController().navigate(R.id.action_dashboard_to_notes)
+                    findNavController().navigate(
+                        DashboardFragmentDirections.actionDashboardFragmentToNotesListFragment()
+                    )
                 }
             }
         }
     }
 
-    // Helper to return Color Resource ID
+    // --- Helpers ---
+
+    private fun buildStatsList(state: DashboardUiState): List<DashboardStat> {
+        return listOf(
+            DashboardStat("Purchases", "${state.milkPurchasedQty.format(1)} L"),
+            DashboardStat("Sales", "${state.milkSoldQty.format(1)} L"),
+            DashboardStat(
+                "Qty Diff",
+                "${state.qtyDiff.format(1)} L",
+                getDiffColor(state.qtyDiff)
+            ),
+            DashboardStat("Avg Buy Price", state.avgPurchasePrice.format(1)),
+            DashboardStat("Avg Sell Price", state.avgSalePrice.format(1)),
+            DashboardStat(
+                "Price Diff",
+                state.avgPriceDiff.format(1),
+                getDiffColor(state.avgPriceDiff)
+            ),
+            DashboardStat("Avg Fat", state.avgFat.format(2)),
+            DashboardStat("Avg LR", state.avgLr.format(2))
+        )
+    }
+
     private fun getDiffColor(value: Double): Int {
-        return if (value >= 0) R.color.primary else R.color.md_theme_error // Green or Red
+        return if (value >= 0)
+            R.color.md_theme_primary
+        else
+            R.color.md_theme_error
     }
 }

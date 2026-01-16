@@ -49,13 +49,13 @@ class MainActivity : BaseActivity(), ToolbarOwner {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     /** ONLY bottom navigation destinations */
-    private val bottomNavDestinations = setOf(
-        R.id.dashboardFragment,
-        R.id.milkSaleListFragment,
-        R.id.purchaseListFragment,
-        R.id.expenseFragment,
-        R.id.ownerDashboardFragment
-    )
+//    private val bottomNavDestinations = setOf(
+//        R.id.dashboardFragment,
+//        R.id.milkSaleListFragment,
+//        R.id.purchaseListFragment,
+//        R.id.expenseFragment,
+//        R.id.ownerDashboardFragment
+//    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,18 +137,18 @@ class MainActivity : BaseActivity(), ToolbarOwner {
         )
 
         // Bottom navigation
-        binding.bottomNav.setupWithNavController(navController)
+//        binding.bottomNav.setupWithNavController(navController)
 
         // Drawer navigation
         setupDrawerNavigation()
 
         // -------------------- Navigation Listener (Visibility + Icon Color) --------------------
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-
-            binding.bottomNav.visibility =
-                if (destination.id in bottomNavDestinations) View.VISIBLE else View.GONE
-
-        }
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//
+//            binding.bottomNav.visibility =
+//                if (destination.id in bottomNavDestinations) View.VISIBLE else View.GONE
+//
+//        }
     }
 
     // ------------------------------------------------------------------------
