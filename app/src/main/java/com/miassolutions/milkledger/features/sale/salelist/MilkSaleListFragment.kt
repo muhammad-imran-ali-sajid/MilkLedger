@@ -8,6 +8,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkSaleListBinding
 import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
 import com.miassolutions.milkledger.features.purchase.model.SaleSummary
+import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnAddSaleClicked
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnBalanceClick
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnCustomerDetailClicked
@@ -21,6 +22,7 @@ import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.LocalDate
 
 @AndroidEntryPoint
 class MilkSaleListFragment :
@@ -68,7 +70,20 @@ class MilkSaleListFragment :
             viewModel.onEvent(OnPrevDate)
         }
         binding.dateHeader.btnNextDate.setOnClickListener {
-            viewModel.onEvent(OnNextDate)
+
+            val current = viewModel.uiState.value.date
+            val today = LocalDate.now()
+            val nextDate = current.plusDays(1)
+
+            if (nextDate.isAfter(today)) {
+                showSnackbar("Future date allowed is not allowed")
+            } else {
+                viewModel.onEvent(OnNextDate)
+            }
+
+
+
+
         }
         binding.dateHeader.tvSelectedDate.setOnClickListener {
             viewModel.onEvent(OnDateClick) // ViewModel effect trigger karega
