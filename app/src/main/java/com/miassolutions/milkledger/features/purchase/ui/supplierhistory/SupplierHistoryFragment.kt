@@ -67,7 +67,9 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
                 avgLr = avgLr,
                 avgTs = totalTs,
                 avgRate = avgRate,
-                totalPaid = totalPaid
+                totalPaid = totalPaid,
+                hideForSupplier = true
+
             )
         }
     }

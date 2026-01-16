@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -43,21 +44,21 @@ class SummaryHeaderView @JvmOverloads constructor(
         avgLr: Double,
         avgTs: Double,
         avgRate: Double,
-        totalPaid: Long
+        totalPaid: Long,
+        hideForSupplier: Boolean = false
     ) {
         binding.tvDateRange.text = dateRange
-        binding.tvMainVol.text = "${String.format("%.1f", totalVol)} L"
+        binding.tvMainVol.text = "${"%.1f".format(totalVol)} L"
         binding.tvMainAmount.text = totalAmount.toPrice()
 
-        // Details Mapping
         binding.lbl1.text = "Avg Fat"
-        binding.tvVal1.text = String.format("%.1f", avgFat)
+        binding.tvVal1.text = "%.1f".format(avgFat)
 
         binding.lbl2.text = "Avg LR"
-        binding.tvVal2.text = String.format("%.1f", avgLr)
+        binding.tvVal2.text = "%.1f".format(avgLr)
 
         binding.lbl3.text = "Total TS"
-        binding.tvVal3.text = String.format("%.1f", avgTs)
+        binding.tvVal3.text = "%.1f".format(avgTs)
 
         binding.lbl4.text = "Avg Rate"
         binding.tvVal4.text = avgRate.toPrice()
@@ -65,8 +66,19 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.lbl5.text = "Total Paid"
         binding.tvVal5.text = totalPaid.toPrice()
 
-        // Hide unused if any (Optional)
+        // Supplier specific UI
+        if (hideForSupplier) {
+            binding.lbl4.isGone = true
+            binding.tvVal4.isGone = true
+        } else {
+            binding.lbl4.isVisible = true
+            binding.tvVal4.isVisible = true
+        }
     }
+
+
+
+
 
     // 🔵 OPTION B: SALE DATA
     fun bindSale(
