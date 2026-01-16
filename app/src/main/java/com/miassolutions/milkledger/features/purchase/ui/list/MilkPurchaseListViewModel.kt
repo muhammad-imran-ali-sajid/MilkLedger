@@ -31,8 +31,7 @@ class MilkPurchaseListViewModel @Inject constructor(
     PurchaseListUiState()
 ) {
 
-    // Job variable to track the current flow
-    private var searchJob: Job? = null
+
     private val dateFlow = MutableStateFlow<LocalDate?>(null)
 
     init {
@@ -63,38 +62,6 @@ class MilkPurchaseListViewModel @Inject constructor(
         updateState { it.copy(isLoading = true, date = date) }
         dateFlow.value = date
     }
-
-//    private fun loadPurchases(date: LocalDate) {
-//        // 1. Purani job cancel karein taake conflicts na hon
-//        searchJob?.cancel()
-//
-//        updateState { it.copy(isLoading = true, date = date) }
-//
-//
-//
-//        // 2. Naya flow start karein
-//        searchJob = repository.getPurchasesByDate(date.toMillis())
-//            .onEach { list ->
-//
-//                updateState {
-//                    it.copy(
-//                        isLoading = false,
-//                        purchases = list,
-//
-//                        )
-//                }
-//            }
-//            .launchIn(viewModelScope)
-//
-//
-//        viewModelScope.launch {
-//            repository.getGlobalPurchaseStats(date.toMillis(), date.toMillis())
-//                .collect { summary ->
-//                    updateState { it.copy(summary = summary) }
-//                }
-//        }
-//
-//    }
 
 
     override fun onEvent(event: PurchaseListUiEvent) {

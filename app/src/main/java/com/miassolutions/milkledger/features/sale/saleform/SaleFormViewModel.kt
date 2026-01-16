@@ -62,7 +62,7 @@ class SaleFormViewModel @Inject constructor(
                     .distinctUntilChanged()
                     .flatMapLatest { date ->
                         // Us date ki sales layen taake check kar saken kiski entry ho gyi
-                        repository.getSalesByDate(date.toMillis(), date.toMillis())
+                        repository.getSalesByDate(date.toMillis())
                     }
             ) { customers, salesOnDate ->
 

@@ -13,15 +13,12 @@ import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.O
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnCustomerDetailClicked
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnDateClick
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnDateSelected
-import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnDeleteClicked
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnEditSaleClicked
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnNextDate
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnPrevDate
-import com.miassolutions.milkledger.features.sale.ui.list.MilkSaleListViewModel
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
-import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -36,11 +33,7 @@ class MilkSaleListFragment :
         onEditClick = { item ->
             viewModel.onEvent(OnEditSaleClicked(item))
         },
-        onDeleteClick = {
-            showDeleteActionDialog {
-                viewModel.onEvent(OnDeleteClicked(it))
-            }
-        },
+
         onDetailClick = { item ->
             viewModel.onEvent(
                 OnCustomerDetailClicked(

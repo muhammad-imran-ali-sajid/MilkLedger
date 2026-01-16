@@ -20,7 +20,6 @@ import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class MilkSaleListAdapter(
     private val onEditClick: (saleId: String) -> Unit,
-    private val onDeleteClick: (saleId: String) -> Unit,
     private val onDetailClick: (MilkSaleUiModel) -> Unit,
     private val onBalanceClick: (customerId: String, customerName: String) -> Unit
 ) : ListAdapter<MilkSaleUiModel, MilkSaleListAdapter.SaleViewHolder>(DiffCallback()) {
@@ -95,11 +94,6 @@ class MilkSaleListAdapter(
                     onBalanceClick(item.customerId, item.customerName)
                 }
 
-
-                tvName.setOnLongClickListener {
-                    onDeleteClick(item.id)
-                    true
-                }
             }
         }
     }

@@ -5,8 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.miassolutions.milkledger.features.dashboard.model.PurchaseStats
-import com.miassolutions.milkledger.features.dashboard.model.SaleStats
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import com.miassolutions.milkledger.features.purchase.model.SaleSummary
@@ -218,7 +216,7 @@ interface MilkDao {
         AND l_pay.type = 'CASH_RECEIVED' 
         AND l_pay.deletedAtMillis IS NULL
 
-    WHERE m.dateMillis BETWEEN :start AND :end
+    WHERE m.dateMillis =:dateMillis
     AND m.deletedAtMillis IS NULL
     AND m.type = 'SALE'
     AND m.deletedAtMillis IS NULL
@@ -226,7 +224,7 @@ interface MilkDao {
     ORDER BY sortOrder ASC
 """
     )
-    fun getMilkSalesByDate(start: Long, end: Long): Flow<List<MilkSaleUiModel>>
+    fun getMilkSalesByDate(dateMillis: Long): Flow<List<MilkSaleUiModel>>
 
 
     @Query(

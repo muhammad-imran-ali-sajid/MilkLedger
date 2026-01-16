@@ -38,7 +38,6 @@ sealed interface MilkSaleListUiEvent {
     // --- Actions ---
     data object OnAddSaleClicked : MilkSaleListUiEvent
 
-    data class OnDeleteClicked(val saleId: String) : MilkSaleListUiEvent
 
     // List Item Clicks
     data class OnEditSaleClicked(val saleId: String) : MilkSaleListUiEvent

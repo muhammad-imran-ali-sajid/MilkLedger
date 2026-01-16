@@ -1,22 +1,23 @@
-package com.miassolutions.milkledger.features.sale.ui.list
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
+package com.miassolutions.milkledger.features.sale.salelist
 
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
-import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.NavigateToAddSale
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.NavigateToCustomerLedger
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.NavigateToEditSale
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.OnDateClick
-import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.ShowSnackbar
-import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent
-import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiState
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -27,11 +28,25 @@ class MilkSaleListViewModel @Inject constructor(
     MilkSaleListUiState()
 ) {
 
-    private var dataJob: Job? = null
+    private val dateFlow = MutableStateFlow<LocalDate?>(null)
 
     init {
-        // App khultay hi Aaj ka data load karein
-        loadSalesForDate(LocalDate.now())
+        dateFlow
+            .filterNotNull()
+            .flatMapLatest { date ->
+                combine(
+                    repository.getSalesByDate(date.toMillis()),
+                    repository.getGlobalSaleStats(date.toMillis(), date.toMillis())
+                ) { sales, summary ->
+                    sales to summary
+                }
+            }
+            .onEach { (sales, summary) ->
+                updateState { it.copy(isLoading = false, sales = sales, summary = summary) }
+            }
+            .launchIn(viewModelScope)
+
+
     }
 
     override fun onEvent(event: MilkSaleListUiEvent) {
@@ -70,9 +85,6 @@ class MilkSaleListViewModel @Inject constructor(
                 emitEffect(NavigateToCustomerLedger(event.customerId, event.customerName))
             }
 
-            is MilkSaleListUiEvent.OnDeleteClicked -> {
-                onDeleteSaleClicked(event.saleId)
-            }
 
             is MilkSaleListUiEvent.OnBalanceClick -> {
                 emitEffect(
@@ -85,60 +97,10 @@ class MilkSaleListViewModel @Inject constructor(
         }
     }
 
-    fun onDeleteSaleClicked(saleId: String) {
-        viewModelScope.launch {
-            updateState { it.copy(isLoading = true) }
-            try {
-                repository.deleteSale(saleId)
-
-                // Success Message
-                emitEffect(ShowSnackbar("Sale Deleted Successfully"))
-
-                // List auto-refresh ho jayegi kyunke Flow use ho raha hai
-
-            } catch (e: Exception) {
-                emitEffect(ShowSnackbar("Error: ${e.message}"))
-            } finally {
-                updateState { it.copy(isLoading = false) }
-            }
-        }
-    }
 
     private fun loadSalesForDate(date: LocalDate) {
-        // 1. State me Date update karein
-        updateState { it.copy(date = date, isLoading = true) }
-
-        // 2. Query ke liye Start/End time nikalein
-        val startOfDay = date.atStartOfDay().toMillis()
-        val endOfDay = date.plusDays(1).atStartOfDay().toMillis() - 1
-
-        // 3. Purani flow cancel karein (Fast switching ke liye)
-        dataJob?.cancel()
-
-        // 4. Data fetch karein
-        dataJob = repository.getSalesByDate(startOfDay, endOfDay)
-            .onEach { list ->
-                // Summary Calculation (List aate hi total kar lein)
-                val totalMilk = list.sumOf { it.netQuantity }
-                val totalAmt = list.sumOf { it.totalAmount }
-
-                updateState {
-                    it.copy(
-                        isLoading = false,
-                        sales = list,
-                        totalMilk = totalMilk,
-                        totalAmount = totalAmt
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-
-        viewModelScope.launch {
-            repository.getGlobalSaleStats(date.toMillis(), date.toMillis())
-                .collect { summary ->
-                    updateState { it.copy(summary = summary) }
-                }
-        }
+        updateState { it.copy(isLoading = true, date = date) }
+        dateFlow.value = date
     }
 }
 
