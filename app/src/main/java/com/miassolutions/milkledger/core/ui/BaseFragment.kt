@@ -64,6 +64,31 @@ abstract class BaseFragment<VB : ViewBinding>(
         }
     }
 
+    protected fun setupMenuWithCustomView(
+        menuRes: Int,
+        onReady: (Menu) -> Unit
+    ) {
+        val menuHost: MenuHost = requireActivity()
+
+        menuHost.addMenuProvider(
+            object : MenuProvider {
+
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menu.clear()
+                    menuInflater.inflate(menuRes, menu)
+                    onReady(menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return false
+                }
+
+            },
+            viewLifecycleOwner,
+            Lifecycle.State.RESUMED
+        )
+    }
+
 
     private var _binding: VB? = null
     protected val binding get() = _binding!!

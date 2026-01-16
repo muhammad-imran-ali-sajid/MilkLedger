@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.dashboard
 
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -17,14 +18,13 @@ import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
 
 @AndroidEntryPoint
 class DashboardFragment :
     BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
 
     private val viewModel: DashboardViewModel by viewModels()
-
+    private var workingDateButton: TextView? = null
     private val statsAdapter = DashboardStatsAdapter()
 
     override fun setupViews() {
@@ -75,14 +75,30 @@ class DashboardFragment :
             viewModel.onEvent(DashboardUiEvent.OnWalletClicked)
         }
 
-        tvWorkingDate.setOnClickListener {
-            openDatePicker { date ->
-                viewModel.onEvent(
-                    DashboardUiEvent.OnWorkingDateChanged(date)
-                )
+        setupWorkingDate()
+    }
+
+    private fun setupWorkingDate() {
+        setupMenuWithCustomView(R.menu.menu_dashboard) { menu ->
+
+            val item = menu.findItem(R.id.menuWorkingDate) ?: return@setupMenuWithCustomView
+            val btn = item.actionView
+                ?.findViewById<TextView>(R.id.btnWorkingDate)
+                ?: return@setupMenuWithCustomView
+
+            workingDateButton = btn
+
+            btn.setOnClickListener {
+                openDatePicker { date ->
+                    viewModel.onEvent(
+                        DashboardUiEvent.OnWorkingDateChanged(date)
+                    )
+                }
             }
         }
     }
+
+
 
     override fun setupObservers() {
         super.setupObservers()
@@ -108,9 +124,9 @@ class DashboardFragment :
                     buildStatsList(state)
                 )
 
-                // (Optional UX)
-                tvWorkingDate.text =
-                    "Working Date: ${state.workingDate.toCompleteDateFormat()}"
+                workingDateButton?.text =
+                    state.workingDate.toCompleteDateFormat()
+
             }
         }
 

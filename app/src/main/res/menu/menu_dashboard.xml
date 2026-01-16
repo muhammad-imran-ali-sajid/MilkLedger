@@ -3,8 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_dashboard_pdf"
-        android:title="Edit"
+        android:title="Pdf Report"
+        android:iconTint="?attr/colorPrimary"
         android:icon="@drawable/ic_pdf"
-        app:showAsAction="always"
+        app:showAsAction="never"
         />
+
+
+    <item
+        android:id="@+id/menuWorkingDate"
+        android:title="Date"
+        app:actionLayout="@layout/menu_working_date_button"
+        app:showAsAction="always"/>
 </menu>

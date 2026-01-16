@@ -36,7 +36,10 @@
                     style="@style/Widget.MilkLedger.Button.Icon"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text="My Notes" />
+                    android:text="My Notes"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    app:iconGravity="top"
+                    app:iconPadding="8dp" />
 
 
                 <com.google.android.material.button.MaterialButton
@@ -44,29 +47,24 @@
                     style="@style/Widget.MilkLedger.Button.Icon"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text="Cash Flow" />
+                    android:text="Cash Flow"
+                    app:icon="@drawable/ic_cashflow"
+                    app:iconGravity="top"
+                    app:iconPadding="8dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWallet"
                     style="@style/Widget.MilkLedger.Button.Icon"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:text="My Wallet" />
+                    android:text="My Wallet"
+                    app:icon="@drawable/ic_wallet_1"
+                    app:iconGravity="top"
+                    app:iconPadding="8dp" />
 
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvWorkingDate"
-                style="@style/Text.Normal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="8dp"
-                android:drawableEnd="@drawable/ic_info"
-                android:drawablePadding="8dp"
-                android:padding="8dp"
-                android:text="01-01-2026" />
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
