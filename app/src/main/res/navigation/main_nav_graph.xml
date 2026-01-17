@@ -225,7 +225,7 @@
         android:label="My Wallet"
         tools:layout="@layout/fragment_owner_dashboard" >
         <argument
-            android:name="workingDate"
+            android:name="date"
             app:argType="long" />
     </fragment>
     <fragment

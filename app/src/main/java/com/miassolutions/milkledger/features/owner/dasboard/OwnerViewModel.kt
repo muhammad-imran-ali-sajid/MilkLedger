@@ -1,10 +1,12 @@
 package com.miassolutions.milkledger.features.owner.dasboard
 
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.owner.dasboard.OwnerUiEffect.*
 import com.miassolutions.milkledger.features.owner.data.OwnerRepository
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -14,12 +16,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class OwnerViewModel @Inject constructor(
-    private val repository: OwnerRepository
+    private val repository: OwnerRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<OwnerUiState, OwnerUiEvent, OwnerUiEffect>(OwnerUiState()) {
 
     init {
-        // Initial Data Load (Current Month)
-        loadDashboardData()
+// 🟢 1. Handle Incoming Date Argument
+        val argDateMillis: Long = savedStateHandle["date"] ?: -1L
+
+        if (argDateMillis != -1L) {
+            val date = argDateMillis.toLocalDate()
+
+            // Initial State update karein
+            updateState { it.copy(selectedDate = date) }
+        }
+
+
     }
 
     private fun loadDashboardData() {
@@ -49,7 +61,10 @@ class OwnerViewModel @Inject constructor(
                     it.copy(
                         startDate = event.start,
                         endDate = event.end,
-                        dateLabel = event.label
+                        dateLabel = event.label,
+                        // 🔥 State Save karein
+                        selectedDate = event.selectedDate,
+                        filterMode = event.mode
                     )
                 }
                 loadDashboardData()

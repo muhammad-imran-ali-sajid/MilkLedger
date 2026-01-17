@@ -52,9 +52,29 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
             adapter = this@OwnerDashboardFragment.adapter
         }
 
-        // Setup Date Filter
+        // 🔥 STEP 1: RESTORE STATE (ViewModel se purani date uthayen)
+        val currentState = viewModel.uiState.value
+        binding.dateFilterView.restoreFilterState(
+            mode = currentState.filterMode,
+            date = currentState.selectedDate
+        )
+
         binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
-            viewModel.onEvent(OwnerUiEvent.OnDateFilterChanged(start, end, label))
+
+            // View se current properties uthayen
+            val anchorDate = binding.dateFilterView.selectedDate
+            val currentMode = binding.dateFilterView.currentMode
+
+            // ViewModel ko bhejen
+            viewModel.onEvent(
+                OwnerUiEvent.OnDateFilterChanged(
+                    start = start,
+                    end = end,
+                    label = label,
+                    selectedDate = anchorDate, // 👈 New
+                    mode = currentMode         // 👈 New
+                )
+            )
         }
     }
 

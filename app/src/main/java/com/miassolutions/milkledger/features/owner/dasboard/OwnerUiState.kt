@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.owner.dasboard
 
 import com.miassolutions.milkledger.features.owner.domain.DailyProfitTuple
 import com.miassolutions.milkledger.features.owner.domain.OwnerDashboardData
+import com.miassolutions.milkledger.utils.customviews.DateFilterView
 import java.time.LocalDate
 
 data class OwnerUiState(
@@ -13,6 +14,11 @@ data class OwnerUiState(
     val endDate: Long = Long.MAX_VALUE,
     val dateLabel: String = "All History",
 
+    // 🔥 FOR STATE RESTORATION
+    val selectedDate: LocalDate = LocalDate.now(),
+    val filterMode: DateFilterView.FilterMode = DateFilterView.FilterMode.DAY,
+
+
     // Main Data
     // Default empty object
     val dashboardData: OwnerDashboardData = OwnerDashboardData(0, 0, emptyList())
@@ -20,7 +26,13 @@ data class OwnerUiState(
 
 sealed class OwnerUiEvent {
     // Dashboard Events
-    data class OnDateFilterChanged(val start: Long, val end: Long, val label: String) :
+    data class OnDateFilterChanged(
+        val start: Long,
+        val end: Long,
+        val label: String,
+        val selectedDate: LocalDate,
+        val mode: DateFilterView.FilterMode
+    ) :
         OwnerUiEvent()
 
     object OnWithdrawClicked : OwnerUiEvent()
