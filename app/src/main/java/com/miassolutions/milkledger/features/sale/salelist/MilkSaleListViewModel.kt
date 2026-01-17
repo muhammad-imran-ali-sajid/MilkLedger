@@ -37,8 +37,14 @@ class MilkSaleListViewModel @Inject constructor(
 
     init {
 
-        updateState { it.copy(date = initialDate.toLocalDate()) }
+        val date = initialDate.toLocalDate()
+        updateState { it.copy(date = date, isLoading = true) }
+        dateFlow.value = date
+        observeDataFlow()
 
+    }
+
+    private fun observeDataFlow() {
 
         dateFlow
             .filterNotNull()
@@ -54,8 +60,6 @@ class MilkSaleListViewModel @Inject constructor(
                 updateState { it.copy(isLoading = false, sales = sales, summary = summary) }
             }
             .launchIn(viewModelScope)
-
-
     }
 
     override fun onEvent(event: MilkSaleListUiEvent) {
