@@ -1,21 +1,47 @@
 package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
 
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.miassolutions.milkledger.core.pdf.PdfGenerator
+import com.miassolutions.milkledger.core.pdf.PdfMapper
+import com.miassolutions.milkledger.core.pdf.PdfReportModel
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSupplierHistoryBinding
 import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
     FragmentSupplierHistoryBinding::inflate
 ) {
+
+    @Inject
+    lateinit var pdfGenerator: PdfGenerator
+
+    // Current Data hold karne k liye
+    private var currentPdfModel: PdfReportModel? = null
+
+    private val createPdfLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/pdf")
+    ) { uri ->
+        uri?.let {
+            currentPdfModel?.let { model ->
+                lifecycleScope.launch {
+                    pdfGenerator.generatePdf(it, model) // 🔥 Call Engine
+                    showSnackbar("Pdf saved")
+                }
+            }
+        }
+    }
 
     private val viewModel: SupplierHistoryViewModel by viewModels()
 
@@ -32,6 +58,25 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
         // Setup Date Filter
         binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
             viewModel.onEvent(SupplierHistoryUiEvent.OnDateFilterChanged(start, end, label))
+        }
+
+        generatePdfReport()
+    }
+
+    private fun generatePdfReport() {
+        binding.btnPdf.setOnClickListener {
+            val state = viewModel.uiState.value
+
+            // 1. Prepare Data
+            currentPdfModel = PdfMapper.mapSupplierHistoryToPdf(
+                supplierName = state.supplierName,
+                dateRange = state.dateRangeText,
+                list = state.transactions,
+                stats = state.summary
+            )
+
+            // 2. Open File Picker
+            createPdfLauncher.launch(currentPdfModel?.fileName ?: "report.pdf")
         }
     }
 
