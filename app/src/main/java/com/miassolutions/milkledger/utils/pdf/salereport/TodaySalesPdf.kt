@@ -10,7 +10,7 @@ import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
 import com.miassolutions.milkledger.utils.extensions.toPrice
-import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
 import com.miassolutions.milkledger.databinding.ItemCustomerRecordRowBinding
 import com.miassolutions.milkledger.databinding.LayoutTodaySaleReceiptBinding
 import com.miassolutions.milkledger.utils.pdf.PdfUtils
@@ -62,9 +62,9 @@ object TodaySalesPdf {
                 ItemCustomerRecordRowBinding.inflate(inflater, binding.recordContainer, false)
 
             rowBinding.tvCustomer.text = item.customerName
-            rowBinding.tvQty.text = item.milkVolume.toMilkAmount()
-            rowBinding.tvDeduction.text = item.deduction.toMilkAmount()
-            rowBinding.tvRate.text = item.rate.toMilkAmount()
+            rowBinding.tvQty.text = item.milkVolume.toFormattedMilk()
+            rowBinding.tvDeduction.text = item.deduction.toFormattedMilk()
+            rowBinding.tvRate.text = item.rate.toFormattedMilk()
             rowBinding.tvAmount.text = item.amount.toPrice()
             rowBinding.tvPaid.text = item.paid.toPrice()
             rowBinding.tvBalance.text = item.balance.toPrice()

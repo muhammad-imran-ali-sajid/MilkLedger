@@ -2,13 +2,13 @@ package com.miassolutions.milkledger.utils.helper
 
 import android.graphics.Color
 import androidx.core.graphics.toColorInt
-import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
 
 fun handleZeroData(value: Double): String {
     return if (value == 0.0) {
         "--"
     } else {
-        value.toMilkAmount("%.2f")
+        value.toFormattedMilk("%.2f")
     }
 }
 

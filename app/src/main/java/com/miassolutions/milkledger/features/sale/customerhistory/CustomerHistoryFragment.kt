@@ -1,29 +1,42 @@
 package com.miassolutions.milkledger.features.sale.customerhistory
 
-import android.widget.TextView
+import android.net.Uri
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.PdfGenerator
+import com.miassolutions.milkledger.core.pdf.PdfReportModel
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomerHistoryBinding
 import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
-import com.miassolutions.milkledger.utils.extensions.toMilkAmount
-import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
     FragmentCustomerHistoryBinding::inflate
 ) {
 
+    @Inject
+    lateinit var pdfGenerator: PdfGenerator
+    private var currentPdfModel: PdfReportModel? = null
+
     private val viewModel: CustomerHistoryViewModel by viewModels()
-    private val args: CustomerHistoryFragmentArgs by navArgs()
+
+
+    override fun onPdfUriCreated(uri: Uri) {
+        val model = currentPdfModel ?: return
+        lifecycleScope.launch {
+            pdfGenerator.generatePdf(uri, model)
+            showSnackbar("Pdf Saved")
+        }
+    }
 
     private val adapter by lazy { CustomerHistoryAdapter() }
 

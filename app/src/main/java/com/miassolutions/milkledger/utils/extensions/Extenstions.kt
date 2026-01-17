@@ -32,7 +32,7 @@ fun Fragment.hideKeyboard() {
     view?.hideKeyboard()
 }
 
-fun Double.toMilkAmount(format: String = "%.2f"): String {
+fun Double.toFormattedMilk(format: String = "%.2f"): String {
     return String.format(format, this)
 }
 
@@ -50,6 +50,16 @@ fun Double.toLongPaisa() = (this * 100).toLong()
 // --- Helpers ---
 
 fun Double.format(digits: Int) = "%.${digits}f".format(this)
+
+
+// Helper to format balance with +/- sign
+fun Long.formatSignedBalance(): String {
+    return when {
+        this > 0L -> "+${this.toPrice()}"   // Advance
+        this < 0L -> this.toPrice()         // Due
+        else -> "0"
+    }
+}
 
 
 

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 
 import com.miassolutions.milkledger.utils.extensions.toPrice
-import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
 import com.miassolutions.milkledger.databinding.ItemRecordRowBinding
 import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
 
@@ -62,7 +62,7 @@ object SupplierReportGenerator {
             val rowBinding = ItemRecordRowBinding.inflate(inflater, binding.recordContainer, false)
             rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
-            rowBinding.tvTS.text = item.ts.toMilkAmount()
+            rowBinding.tvTS.text = item.ts.toFormattedMilk()
             rowBinding.tvRate.text = item.rate.toPrice()
             rowBinding.tvAmount.text = item.amount.toPrice()
             rowBinding.tvPaid.text = item.paid.toPrice()
@@ -136,11 +136,11 @@ object SupplierReportGenerator {
                 ItemSaleRecordRowBinding.inflate(inflater, binding.recordContainer, false)
             rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
-            rowBinding.tvDeduction.text = item.deduction.toMilkAmount()
+            rowBinding.tvDeduction.text = item.deduction.toFormattedMilk()
             rowBinding.tvRate.text = item.rate.toString()
-            rowBinding.tvAmount.text = item.amount.toMilkAmount()
-            rowBinding.tvPaid.text = item.paid.toMilkAmount()
-            rowBinding.tvBalance.text = item.balance.toMilkAmount()
+            rowBinding.tvAmount.text = item.amount.toFormattedMilk()
+            rowBinding.tvPaid.text = item.paid.toFormattedMilk()
+            rowBinding.tvBalance.text = item.balance.toFormattedMilk()
             binding.recordContainer.addView(rowBinding.root)
         }
 

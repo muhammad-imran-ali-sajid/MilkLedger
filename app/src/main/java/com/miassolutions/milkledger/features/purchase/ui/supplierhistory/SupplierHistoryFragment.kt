@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
 
+import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -30,16 +31,25 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
     // Current Data hold karne k liye
     private var currentPdfModel: PdfReportModel? = null
 
-    private val createPdfLauncher = registerForActivityResult(
-        ActivityResultContracts.CreateDocument("application/pdf")
-    ) { uri ->
-        uri?.let {
-            currentPdfModel?.let { model ->
-                lifecycleScope.launch {
-                    pdfGenerator.generatePdf(it, model) // 🔥 Call Engine
-                    showSnackbar("Pdf saved")
-                }
-            }
+//    private val createPdfLauncher = registerForActivityResult(
+//        ActivityResultContracts.CreateDocument("application/pdf")
+//    ) { uri ->
+//        uri?.let {
+//            currentPdfModel?.let { model ->
+//                lifecycleScope.launch {
+//                    pdfGenerator.generatePdf(it, model) // 🔥 Call Engine
+//                    showSnackbar("Pdf saved")
+//                }
+//            }
+//        }
+//    }
+
+    override fun onPdfUriCreated(uri: Uri) {
+        super.onPdfUriCreated(uri)
+        val model = currentPdfModel ?: return
+        lifecycleScope.launch {
+            pdfGenerator.generatePdf(uri, model)
+            showSnackbar("Pdf Saved")
         }
     }
 

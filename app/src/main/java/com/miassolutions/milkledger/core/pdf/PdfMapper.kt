@@ -4,6 +4,7 @@ import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
+import com.miassolutions.milkledger.utils.extensions.toSignedBalance
 
 object PdfMapper {
 
@@ -15,7 +16,7 @@ object PdfMapper {
     ): PdfReportModel {
 
         // 1. Columns Setup (Added "TS" column)
-        val headers = listOf("Date", "Vol", "Fat", "LR", "TS", "Rate", "Total", "Paid", "Bal")
+        val headers = listOf("Date", "Vol", "Fat", "LR", "TS", "Rate", "Price", "Paid", "Bal")
 
         // Weights adjust kiye taake TS aur Bal fit ho saken
         // Total sum ~ 10-11 range me rakha hai taake page par fit ho
@@ -87,7 +88,7 @@ object PdfMapper {
                 item.paymentMade.toPrice(),
 
                 // Balance with Explicit Sign (+/-)
-                formatBalance(runningBalance)
+                runningBalance.toSignedBalance()
             )
         }
 

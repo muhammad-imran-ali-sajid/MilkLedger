@@ -12,7 +12,7 @@ data class MilkSaleUiModel(
     // Milk Details
     val quantity: Double,
     val deduction: Double = 0.0,
-    val netQuantity: Double,
+    val netQuantity: Double, //after deduction
     val totalAmount: Long,
 
     val rate: Double,

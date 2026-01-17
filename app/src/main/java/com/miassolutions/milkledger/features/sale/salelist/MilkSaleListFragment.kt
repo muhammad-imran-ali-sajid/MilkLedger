@@ -1,11 +1,15 @@
 package com.miassolutions.milkledger.features.sale.salelist
 
 
+import android.net.Uri
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.PdfGenerator
+import com.miassolutions.milkledger.core.pdf.PdfReportModel
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkSaleListBinding
 import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
@@ -25,11 +29,15 @@ import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MilkSaleListFragment :
     BaseFragment<FragmentMilkSaleListBinding>(FragmentMilkSaleListBinding::inflate) {
+
+
 
     private val viewModel: MilkSaleListViewModel by viewModels()
 
@@ -54,6 +62,8 @@ class MilkSaleListFragment :
 
         )
     }
+
+
 
     override fun setupViews() {
         super.setupViews()
@@ -94,7 +104,6 @@ class MilkSaleListFragment :
     }
 
     private fun setupClicks() {
-
 
 
         binding.dateHeader.btnPrevDate.setOnClickListener {

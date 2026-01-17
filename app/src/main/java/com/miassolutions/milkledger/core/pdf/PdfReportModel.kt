@@ -11,7 +11,7 @@ data class PdfReportModel(
 
     val rows: List<List<String>>,
 
-    // 🔥 NEW: Table ke sab se neeche wali line (Footer)
+    //Table ke sab se neeche wali line (Footer)
     val summaryRow: List<String>? = null,
 
     // Bottom Summary (Optional ab, kyunke table me summary agayi hai)

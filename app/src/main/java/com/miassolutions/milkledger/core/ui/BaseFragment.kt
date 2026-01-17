@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.core.ui
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -8,6 +9,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -88,6 +91,20 @@ abstract class BaseFragment<VB : ViewBinding>(
             Lifecycle.State.STARTED
         )
     }
+
+    protected lateinit var createPdfLauncher: ActivityResultLauncher<String>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        createPdfLauncher = registerForActivityResult(
+            ActivityResultContracts.CreateDocument("application/pdf")
+        ) { uri ->
+            uri?.let { onPdfUriCreated(it) }
+        }
+
+    }
+
+    protected open fun onPdfUriCreated(uri: Uri) {}
 
 
     private var _binding: VB? = null

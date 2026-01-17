@@ -15,7 +15,7 @@ import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
-import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class CustomerHistoryAdapter(
@@ -42,9 +42,9 @@ class CustomerHistoryAdapter(
             tvDate.text = item.dateMillis.toLocalDate().toCompleteDateFormat()
 
             // 2. Milk Details
-            tvMilk.text = item.quantity.toMilkAmount()
+            tvMilk.text = item.quantity.toFormattedMilk()
             tvDeduction.text = item.deduction.toString()
-            tvNetMilk.text = item.netQuantity.toMilkAmount()
+            tvNetMilk.text = item.netQuantity.toFormattedMilk()
 
 
             rateAlert.isVisible = false

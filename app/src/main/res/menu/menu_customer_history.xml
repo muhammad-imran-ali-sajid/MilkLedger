@@ -4,7 +4,7 @@
 
 
     <item android:title="Pdf"
-        android:id="@+id/action_profit_gen_pdf"
+        android:id="@+id/action_pdf"
         android:icon="@drawable/ic_pdf"
         app:showAsAction="ifRoom"
         />

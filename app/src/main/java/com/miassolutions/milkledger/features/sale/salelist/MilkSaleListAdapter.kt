@@ -3,7 +3,6 @@ package com.miassolutions.milkledger.features.sale.salelist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.widget.TooltipCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -13,9 +12,8 @@ import com.miassolutions.milkledger.databinding.DialogPaymentInfoBinding
 import com.miassolutions.milkledger.databinding.ItemSalesBinding
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
-import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
-import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class MilkSaleListAdapter(
@@ -43,9 +41,9 @@ class MilkSaleListAdapter(
                 tvName.text = item.customerName
 
                 // Volume Info
-                tvMilk.text = item.quantity.toMilkAmount()
-                tvDeduction.text = item.deduction.toMilkAmount()
-                tvNetMilk.text = item.netQuantity.toMilkAmount()
+                tvMilk.text = item.quantity.toFormattedMilk()
+                tvDeduction.text = item.deduction.toFormattedMilk()
+                tvNetMilk.text = item.netQuantity.toFormattedMilk()
 
                 // Financial Info
                 tvPrice.text = item.totalAmount.toPrice() // Price (Bill)

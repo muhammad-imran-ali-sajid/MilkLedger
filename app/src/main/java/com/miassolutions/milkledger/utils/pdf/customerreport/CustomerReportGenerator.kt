@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.pdf.PdfDocument
 import android.view.LayoutInflater
 import android.view.View
-import com.miassolutions.milkledger.utils.extensions.toMilkAmount
+import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
 import com.miassolutions.milkledger.databinding.ItemSaleRecordRowBinding
 import com.miassolutions.milkledger.databinding.LayoutSalesReceiptBinding
 import com.miassolutions.milkledger.utils.pdf.PdfUtils
@@ -57,12 +57,12 @@ object CustomerReportGenerator {
                 ItemSaleRecordRowBinding.inflate(inflater, binding.recordContainer, false)
             rowBinding.tvDate.text = item.date
             rowBinding.tvQty.text = item.quantity.toString()
-            rowBinding.tvDeduction.text = item.deduction.toMilkAmount()
-            rowBinding.tvNetMilk.text = item.netMilk.toMilkAmount()
+            rowBinding.tvDeduction.text = item.deduction.toFormattedMilk()
+            rowBinding.tvNetMilk.text = item.netMilk.toFormattedMilk()
             rowBinding.tvRate.text = item.rate.toString()
-            rowBinding.tvAmount.text = item.amount.toMilkAmount()
-            rowBinding.tvPaid.text = item.paid.toMilkAmount()
-            rowBinding.tvBalance.text = item.balance.toMilkAmount()
+            rowBinding.tvAmount.text = item.amount.toFormattedMilk()
+            rowBinding.tvPaid.text = item.paid.toFormattedMilk()
+            rowBinding.tvBalance.text = item.balance.toFormattedMilk()
             binding.recordContainer.addView(rowBinding.root)
         }
 

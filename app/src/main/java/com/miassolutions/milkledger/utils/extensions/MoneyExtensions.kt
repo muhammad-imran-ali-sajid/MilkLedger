@@ -1,8 +1,6 @@
 package com.miassolutions.milkledger.utils.extensions
 
 
-import java.text.NumberFormat
-import java.util.Locale
 import kotlin.math.roundToLong
 
 // --- 1. MONEY (Long -> String) ---
@@ -25,7 +23,7 @@ fun String.toLongPaisa(): Long {
 
 // --- 2. MILK QUANTITY (Double -> String) ---
 
-fun Double.toMilkAmount(): String {
+fun Double.toFormattedMilk(): String {
     return String.format("%.2f", this) // e.g., "40.50"
 }
 

@@ -124,7 +124,7 @@ class SaleFormFragment :
         etNote.setTextIfDifferent(state.note)
 
         // --- Calculations ---
-        tvNetMilk.text = state.netMilk.toMilkAmount()
+        tvNetMilk.text = state.netMilk.toFormattedMilk()
         tvMilkPrice.text = state.totalPrice.toPrice()
         tvRate.text = state.rate
         tvBalance.setBalanceColorWithRoundRupee(state.currentBalance)
