@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.purchase.list
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButton
 import com.miassolutions.milkledger.R
@@ -29,6 +30,7 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
 ) {
 
     private val viewModel: MilkPurchaseListViewModel by viewModels()
+    private val args: MilkPurchaseListFragmentArgs by navArgs()
 
 
     private val adapter by lazy {
@@ -63,6 +65,8 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
             layoutManager = LinearLayoutManager(requireContext())
             adapter = this@MilkPurchaseListFragment.adapter
         }
+
+        viewModel.setDateAndLoad(args.date)
 
         addPurchaseAction()
     }

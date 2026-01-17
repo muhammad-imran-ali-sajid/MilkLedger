@@ -15,14 +15,12 @@ import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -37,17 +35,26 @@ class MilkPurchaseListViewModel @Inject constructor(
 
     private val dateFlow = MutableStateFlow<LocalDate?>(null)
 
-    private val initialDate: Long = savedStateHandle["workingDate"] ?: -1L
-
-
     init {
 
-        if (initialDate != -1L) {
-            loadPurchases(initialDate.toLocalDate())
+        observeDataFlow()
+    }
 
+    fun setDateAndLoad(dateMillis: Long) {
+        // Agar date already loaded hai (Rotation case), to wapis load na karein
+        if (dateFlow.value != null) return
+
+        val date = if (dateMillis != -1L) {
+            dateMillis.toLocalDate()
+        } else {
+            LocalDate.now()
         }
 
+        loadPurchases(date)
+    }
 
+
+    private fun observeDataFlow() {
         dateFlow
             .filterNotNull()
             .flatMapLatest { date ->
@@ -68,7 +75,6 @@ class MilkPurchaseListViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
-
     }
 
     private fun loadPurchases(date: LocalDate) {

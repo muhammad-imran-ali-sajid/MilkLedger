@@ -33,7 +33,8 @@ class DashboardViewModel @Inject constructor(
                         isLoading = true,
                         reportStartDate = event.startDate,
                         reportEndDate = event.endDate,
-                        selectedDate = event.selectedSingleDate
+                        selectedDate = event.selectedSingleDate,
+                        filterMode = event.mode
 
                     )
                 }
@@ -72,21 +73,20 @@ class DashboardViewModel @Inject constructor(
     }
 
     // 🔵 Dashboard stats loader (report range only)
-    private fun loadDashboardData(
-        start: LocalDate,
-        end: LocalDate
-    ) {
-        repository.getDashboardData(
-            start.toMillis(),
-            end.toMillis()
-        )
+    private fun loadDashboardData(start: LocalDate, end: LocalDate) {
+        repository.getDashboardData(start.toMillis(), end.toMillis())
             .onEach { dashboardState ->
-                // Repository already calculated data return kar raha hai
-                updateState {
+                updateState { currentState ->
                     dashboardState.copy(
                         reportStartDate = start,
                         reportEndDate = end,
-                        isLoading = false
+                        isLoading = false,
+
+                        // ✅ FIX 1: Date preserve karein
+                        selectedDate = currentState.selectedDate,
+
+                        // ✅ FIX 2: Filter Mode bhi preserve karein (Warna ye default DAY ho jayega)
+                        filterMode = currentState.filterMode
                     )
                 }
             }

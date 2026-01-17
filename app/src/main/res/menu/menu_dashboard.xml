@@ -19,10 +19,4 @@
         app:showAsAction="never" />
 
 
-    <item
-        android:id="@+id/menuWorkingDate"
-        android:orderInCategory="50"
-        android:title="Date"
-        app:actionLayout="@layout/menu_working_date_button"
-        app:showAsAction="always" />
 </menu>

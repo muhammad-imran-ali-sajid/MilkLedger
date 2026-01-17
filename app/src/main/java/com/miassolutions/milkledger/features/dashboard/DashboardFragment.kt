@@ -33,16 +33,26 @@ class DashboardFragment :
             setHasFixedSize(true)
         }
 
+        val currentState = viewModel.uiState.value
+        binding.dateFilterView.restoreFilterState(
+            mode = currentState.filterMode,
+            date = currentState.selectedDate
+        )
+
+        // Ab Setup call karein
+        // Chunki humne uper state restore kr di hai, ab ye 'Default Today' emit nahi karega,
+        // balki 'Saved Date' emit karega.
         binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
 
-            // View se current selected Anchor date uthayen
             val anchorDate = binding.dateFilterView.selectedDate
+            val currentMode = binding.dateFilterView.currentMode
 
             viewModel.onEvent(
                 DashboardUiEvent.OnDateFilterChanged(
                     startDate = start.toLocalDate(),
                     endDate = end.toLocalDate(),
-                    selectedSingleDate = anchorDate // 👈 Yahan se pass ho rahi hai
+                    selectedSingleDate = anchorDate,
+                    mode = currentMode
                 )
             )
         }
@@ -65,7 +75,6 @@ class DashboardFragment :
         setupMenuWithCustomView(R.menu.menu_dashboard) { menu ->
 
 
-
             val accountItem =
                 menu.findItem(R.id.accountListFragment) ?: return@setupMenuWithCustomView
             accountItem.setOnMenuItemClickListener {
@@ -76,14 +85,23 @@ class DashboardFragment :
     }
 
 
-
-
     override fun setupObservers() {
         super.setupObservers()
 
         // --- STATE ---
         collectFlow(viewModel.uiState) { state ->
             binding.apply {
+
+                if (dateFilterView.selectedDate != state.selectedDate || dateFilterView.currentMode != state.filterMode) {
+
+                    dateFilterView.restoreFilterState(
+                        mode = state.filterMode,
+                        date = state.selectedDate,
+                        // Agar custom label state me save nahi kia to empty chor den,
+                        // ya state me add kr len
+                        customLabel = ""
+                    )
+                }
 
                 // Header Cards
                 tvTotalPurchases.text = state.totalPurchases.toPrice()
@@ -101,7 +119,6 @@ class DashboardFragment :
                 statsAdapter.submitList(
                     buildStatsList(state)
                 )
-
 
 
             }
@@ -173,9 +190,15 @@ class DashboardFragment :
                 state.avgPriceDiff.format(2),
                 getDiffColor(state.avgPriceDiff)
             ),
-            DashboardStat("Avg Fat", "${state.avgFat.format(2)} (${state.qualityVolume.format(0)})"),
+            DashboardStat(
+                "Avg Fat",
+                "${state.avgFat.format(2)} (${state.qualityVolume.format(0)})"
+            ),
             DashboardStat("Avg LR", "${state.avgLr.format(2)} (${state.qualityVolume.format(0)})"),
-            DashboardStat("Total TS", "${state.totalTs.format(1)} (${state.qualityVolume.format(0)})")
+            DashboardStat(
+                "Total TS",
+                "${state.totalTs.format(1)} (${state.qualityVolume.format(0)})"
+            )
         )
     }
 

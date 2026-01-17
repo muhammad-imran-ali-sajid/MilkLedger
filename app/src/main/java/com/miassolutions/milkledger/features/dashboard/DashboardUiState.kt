@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.dashboard
 
+import com.miassolutions.milkledger.utils.customviews.DateFilterView
 import java.time.LocalDate
 
 
@@ -11,11 +12,9 @@ data class DashboardUiState(
     val reportStartDate: LocalDate = LocalDate.now(),
     val reportEndDate: LocalDate = LocalDate.now(),
 
-
-
     val selectedDate: LocalDate = LocalDate.now(),
 
-
+    val filterMode: DateFilterView.FilterMode = DateFilterView.FilterMode.DAY,
 
     // Financials
     val totalPurchases: Long = 0,
@@ -45,10 +44,14 @@ sealed interface DashboardUiEvent {
 
     // Report filter change
     data class OnDateFilterChanged(
-        val startDate: LocalDate, val endDate: LocalDate,val selectedSingleDate: LocalDate
+        val startDate: LocalDate,
+        val endDate: LocalDate,
+        val selectedSingleDate: LocalDate,
+        val mode: DateFilterView.FilterMode
     ) : DashboardUiEvent
 
     // Click actions
+
 
     object OnNotesClicked : DashboardUiEvent
     object OnCashFlowClicked : DashboardUiEvent

@@ -21,16 +21,7 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipAll"
-                style="@style/Widget.Material3.Chip.Filter.Elevated"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="All"
-                android:textAppearance="@style/Text.MilkLedger.Label"
-                app:chipStrokeColor="@color/primary"
-                app:chipStrokeWidth="1dp" />
+
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipDay"
@@ -58,6 +49,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Year"
+                android:textAppearance="@style/Text.MilkLedger.Label"
+                app:chipStrokeColor="@color/primary"
+                app:chipStrokeWidth="1dp" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAll"
+                style="@style/Widget.Material3.Chip.Filter.Elevated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="All"
                 android:textAppearance="@style/Text.MilkLedger.Label"
                 app:chipStrokeColor="@color/primary"
                 app:chipStrokeWidth="1dp" />

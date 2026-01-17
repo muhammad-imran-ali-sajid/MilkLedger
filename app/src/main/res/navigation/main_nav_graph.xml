@@ -17,7 +17,7 @@
             android:id="@+id/action_purchaseListFragment_to_supplierDetailFragment"
             app:destination="@id/supplierDetailFragment" />
         <argument
-            android:name="workingDate"
+            android:name="date"
             app:argType="long" />
     </fragment>
     <fragment
