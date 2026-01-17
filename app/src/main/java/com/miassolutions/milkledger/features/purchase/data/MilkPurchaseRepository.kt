@@ -14,12 +14,9 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
-import com.miassolutions.milkledger.features.dashboard.model.PurchaseStats
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
-import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
 import com.miassolutions.milkledger.features.purchase.model.UpdatePurchaseRequest
-import com.miassolutions.milkledger.features.purchase.ui.supplierhistory.SupplierSummary
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
@@ -78,10 +75,10 @@ class MilkPurchaseRepository @Inject constructor(
     }
 
     @Transaction
-    suspend fun deletePurchase(saleId: String) {
+    suspend fun deletePurchase(purchaseId: String) {
         val currentTime = System.currentTimeMillis()
-        milkDao.softDeleteMilkTransaction(saleId, currentTime)
-        ledgerDao.softDeleteLedgerByReference(saleId, currentTime)
+        milkDao.softDeleteMilkTransaction(purchaseId, currentTime)
+        ledgerDao.softDeleteLedgerByReference(purchaseId, currentTime)
     }
 
     suspend fun saveMilkPurchase(

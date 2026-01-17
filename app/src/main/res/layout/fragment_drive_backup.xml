@@ -3,43 +3,24 @@
     android:id="@+id/drive_backup_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
+    android:orientation="vertical"
     android:padding="24dp">
-
 
 
     <Button
         android:id="@+id/btnBackup"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Backup Data"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:text="Backup Data" />
 
     <Button
         android:id="@+id/btnRestore"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Restore Backup"
-        android:layout_marginTop="16dp"/>
-
-
-
-    <Button
-        android:id="@+id/btnSeeder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Seed Data"
-        android:layout_marginTop="16dp"/>
-
-
-    <Button
-        android:id="@+id/btnWipe"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Clean all database"
-        android:layout_marginTop="16dp"/>
-
+        android:layout_marginTop="16dp"
+        android:text="Restore Backup" />
 
 
 </LinearLayout>

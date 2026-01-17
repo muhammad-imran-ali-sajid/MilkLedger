@@ -44,11 +44,7 @@ class MilkSaleRepository @Inject constructor(
         return milkDao.getMilkSalesByDate(date)
     }
 
-//    fun getCustomers(): Flow<List<Account>> {
-//        return accountDao.getAccountsByType(AccountType.CUSTOMER).map { list ->
-//            list.map { it.toDomain() }
-//        }
-//    }
+
 
     fun getCustomers(): Flow<List<Account>> {
         // Sirf Active accounts layen

@@ -75,9 +75,7 @@ class PurchaseFormViewModel @Inject constructor(
         }
     }
 
-    // Suppliers List (For Dropdown)
-    val suppliersList =
-        repository.getSuppliers() // Note: Repository me getSuppliers (AccountType.SUPPLIER) bana len
+
 
     init {
         monitorSuppliersStatus()

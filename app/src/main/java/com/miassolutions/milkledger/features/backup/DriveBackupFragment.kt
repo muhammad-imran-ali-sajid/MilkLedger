@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.features.backup
 
-import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -9,20 +8,15 @@ import com.miassolutions.milkledger.core.localdb.backup.BackupResult
 import com.miassolutions.milkledger.core.localdb.backup.RestartHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentDriveBackupBinding
-import com.miassolutions.milkledger.debug.DebugDataSeeder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class DriveBackupFragment :
     BaseFragment<FragmentDriveBackupBinding>(FragmentDriveBackupBinding::inflate) {
 
     private val viewModel: BackupRestoreViewModel by viewModels()
-
-    @Inject
-    lateinit var debugSeeder: DebugDataSeeder
 
 
     private val createBackupLauncher = registerForActivityResult(
@@ -92,24 +86,6 @@ class DriveBackupFragment :
 
         btnRestore.setOnClickListener {
             showRestoreConfirmation()
-        }
-
-        btnSeeder.setOnClickListener {
-            lifecycleScope.launch {
-
-                showLoading(true)
-
-                showToast("Seeding Data...")
-                debugSeeder.seedDummyData()
-
-                showLoading(false)
-                showToast("Data Added")
-            }
-
-        }
-
-        btnWipe.setOnClickListener {
-            showWipeConfirmation()
         }
 
 
