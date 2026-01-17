@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.features.dashboard
 
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,8 +11,6 @@ import com.miassolutions.milkledger.features.dashboard.model.DashboardStat
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.format
-import com.miassolutions.milkledger.utils.extensions.openDatePicker
-import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.extensions.toPrice
@@ -24,7 +21,6 @@ class DashboardFragment :
     BaseFragment<FragmentDashboardBinding>(FragmentDashboardBinding::inflate) {
 
     private val viewModel: DashboardViewModel by viewModels()
-    private var workingDateButton: TextView? = null
     private val statsAdapter = DashboardStatsAdapter()
 
     override fun setupViews() {
@@ -37,12 +33,16 @@ class DashboardFragment :
             setHasFixedSize(true)
         }
 
-        // Date Filter (Report Range)
-        binding.dateFilterView.setup(childFragmentManager) { start, end, _ ->
+        binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
+
+            // View se current selected Anchor date uthayen
+            val anchorDate = binding.dateFilterView.selectedDate
+
             viewModel.onEvent(
                 DashboardUiEvent.OnDateFilterChanged(
                     startDate = start.toLocalDate(),
-                    endDate = end.toLocalDate()
+                    endDate = end.toLocalDate(),
+                    selectedSingleDate = anchorDate // 👈 Yahan se pass ho rahi hai
                 )
             )
         }
@@ -51,50 +51,20 @@ class DashboardFragment :
     override fun setupListeners() = with(binding) {
         super.setupListeners()
 
-        btnCashFlow.setOnClickListener {
-            viewModel.onEvent(DashboardUiEvent.OnCashFlowClicked)
-        }
+        btnCashFlow.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnCashFlowClicked) }
+        btnNote.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnNotesClicked) }
+        btnPurchase.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnPurchaseClicked) }
+        btnSale.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnSaleClicked) }
+        btnExpense.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnExpenseClicked) }
+        btnWallet.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnWalletClicked) }
 
-        btnNote.setOnClickListener {
-            viewModel.onEvent(DashboardUiEvent.OnNotesClicked)
-        }
-
-        btnPurchase.setOnClickListener {
-            viewModel.onEvent(DashboardUiEvent.OnPurchaseClicked)
-        }
-
-        btnSale.setOnClickListener {
-            viewModel.onEvent(DashboardUiEvent.OnSaleClicked)
-        }
-
-        btnExpense.setOnClickListener {
-            viewModel.onEvent(DashboardUiEvent.OnExpenseClicked)
-        }
-
-        btnWallet.setOnClickListener {
-            viewModel.onEvent(DashboardUiEvent.OnWalletClicked)
-        }
-
-        setupWorkingDate()
+        setupToolbarMenu()
     }
 
-    private fun setupWorkingDate() {
+    private fun setupToolbarMenu() {
         setupMenuWithCustomView(R.menu.menu_dashboard) { menu ->
 
-            val item = menu.findItem(R.id.menuWorkingDate) ?: return@setupMenuWithCustomView
-            val btn = item.actionView
-                ?.findViewById<TextView>(R.id.btnWorkingDate)
-                ?: return@setupMenuWithCustomView
 
-            workingDateButton = btn
-
-            btn.setOnClickListener {
-                openDatePicker { date ->
-                    viewModel.onEvent(
-                        DashboardUiEvent.OnWorkingDateChanged(date)
-                    )
-                }
-            }
 
             val accountItem =
                 menu.findItem(R.id.accountListFragment) ?: return@setupMenuWithCustomView
@@ -132,8 +102,7 @@ class DashboardFragment :
                     buildStatsList(state)
                 )
 
-                workingDateButton?.text =
-                    state.workingDate.toCompleteDateFormat()
+
 
             }
         }

@@ -11,8 +11,11 @@ data class DashboardUiState(
     val reportStartDate: LocalDate = LocalDate.now(),
     val reportEndDate: LocalDate = LocalDate.now(),
 
-    // 🟢 Working Date (Forms ke liye – MOST IMPORTANT)
-    val workingDate: LocalDate = LocalDate.now(),
+
+
+    val selectedDate: LocalDate = LocalDate.now(),
+
+
 
     // Financials
     val totalPurchases: Long = 0,
@@ -42,11 +45,11 @@ sealed interface DashboardUiEvent {
 
     // Report filter change
     data class OnDateFilterChanged(
-        val startDate: LocalDate, val endDate: LocalDate
+        val startDate: LocalDate, val endDate: LocalDate,val selectedSingleDate: LocalDate
     ) : DashboardUiEvent
 
     // Click actions
-    data class OnWorkingDateChanged(val date: LocalDate) : DashboardUiEvent
+
     object OnNotesClicked : DashboardUiEvent
     object OnCashFlowClicked : DashboardUiEvent
     object OnWalletClicked : DashboardUiEvent

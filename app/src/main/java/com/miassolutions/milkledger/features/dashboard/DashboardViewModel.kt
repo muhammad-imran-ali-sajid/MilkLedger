@@ -20,11 +20,7 @@ class DashboardViewModel @Inject constructor(
         DashboardUiState,
         DashboardUiEvent,
         DashboardUiEffect
-        >(
-    DashboardUiState(
-        workingDate = savedStateHandle["workingDate"] ?: LocalDate.now()
-    )
-) {
+        >(DashboardUiState()) {
 
 
     override fun onEvent(event: DashboardUiEvent) {
@@ -37,6 +33,7 @@ class DashboardViewModel @Inject constructor(
                         isLoading = true,
                         reportStartDate = event.startDate,
                         reportEndDate = event.endDate,
+                        selectedDate = event.selectedSingleDate
 
                     )
                 }
@@ -49,53 +46,28 @@ class DashboardViewModel @Inject constructor(
 
             // 🟢 Navigation clicks (forms open with workingDate)
             DashboardUiEvent.OnPurchaseClicked -> {
-                emitEffect(
-                    NavigateToPurchase(
-                        uiState.value.workingDate
-                    )
-                )
+                emitEffect(NavigateToPurchase(uiState.value.selectedDate))
             }
 
             DashboardUiEvent.OnSaleClicked -> {
-                emitEffect(
-                    NavigateToSale(
-                        uiState.value.workingDate
-                    )
-                )
+                emitEffect(NavigateToSale(uiState.value.selectedDate))
             }
 
             DashboardUiEvent.OnExpenseClicked -> {
-                emitEffect(
-                    NavigateToExpense(
-                        uiState.value.workingDate
-                    )
-                )
+                emitEffect(NavigateToExpense(uiState.value.selectedDate))
             }
 
             DashboardUiEvent.OnWalletClicked -> {
-                emitEffect(
-                    NavigateToWallet(
-                        uiState.value.workingDate
-                    )
-                )
+                emitEffect(NavigateToWallet(uiState.value.selectedDate))
             }
 
             DashboardUiEvent.OnCashFlowClicked -> {
-                emitEffect(
-                    NavigateToCashFlow(
-                        uiState.value.workingDate
-                    )
-                )
+                emitEffect(NavigateToCashFlow(uiState.value.selectedDate))
             }
 
-            DashboardUiEvent.OnNotesClicked -> {
-                emitEffect(DashboardUiEffect.NavigateToNotes)
-            }
+            DashboardUiEvent.OnNotesClicked -> emitEffect(DashboardUiEffect.NavigateToNotes)
 
-            is DashboardUiEvent.OnWorkingDateChanged -> {
-                savedStateHandle["workingDate"] = event.date
-                updateState { it.copy(workingDate = event.date) }
-            }
+
         }
     }
 
@@ -114,7 +86,6 @@ class DashboardViewModel @Inject constructor(
                     dashboardState.copy(
                         reportStartDate = start,
                         reportEndDate = end,
-                        workingDate = it.workingDate, // preserve
                         isLoading = false
                     )
                 }
