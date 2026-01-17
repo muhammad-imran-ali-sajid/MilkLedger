@@ -30,7 +30,9 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:scrollbarFadeDuration="@integer/material_motion_duration_long_1"
+                android:paddingVertical="8dp"
+
                 android:orientation="horizontal">
 
                 <LinearLayout
