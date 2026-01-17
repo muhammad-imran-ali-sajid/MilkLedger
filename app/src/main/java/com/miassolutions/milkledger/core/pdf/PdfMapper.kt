@@ -1,104 +1,133 @@
 package com.miassolutions.milkledger.core.pdf
 
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
 object PdfMapper {
 
-
     fun mapSupplierHistoryToPdf(
         supplierName: String,
         dateRange: String,
         list: List<MilkPurchaseUiModel>,
-        initialBalance: Long = 0 // Agar pichla balance bhi lana ho
+        initialBalance: Long = 0
     ): PdfReportModel {
 
-        // 1. Columns Setup (Balance Added)
-        val headers = listOf("Date", "Vol", "Fat", "LR", "Rate", "Total", "Paid", "Bal")
-        // Weights adjust kiye taake Balance fit ho sake
-        val weights = floatArrayOf(2f, 1.2f, 0.8f, 0.8f, 1f, 1.5f, 1.5f, 1.8f)
+        // 1. Columns Setup (Added "TS" column)
+        val headers = listOf("Date", "Vol", "Fat", "LR", "TS", "Rate", "Total", "Paid", "Bal")
+
+        // Weights adjust kiye taake TS aur Bal fit ho saken
+        // Total sum ~ 10-11 range me rakha hai taake page par fit ho
+        val weights = floatArrayOf(1.2f, 1.1f, 0.8f, 0.8f, 1.2f, 1f, 1.2f, 1.2f, 1.2f)
 
         // Variables for Calculation
         var runningBalance = initialBalance
 
-        // Accumulators for Summary
+        // Accumulators for Totals
         var sumVol = 0.0
         var sumAmount = 0L
         var sumPaid = 0L
 
-        // Weighted Average Accumulators
-        var sumVolFat = 0.0 // Vol * Fat
-        var sumVolLr = 0.0  // Vol * LR
-        var sumVolTs = 0.0  // Vol * TS
-        var validVolFat = 0.0 // Vol where Fat > 0
+        // Accumulators for Simple Averages (Sum of values)
+        var sumFat = 0.0
+        var sumLr = 0.0
+        var sumTs = 0.0
+        var sumRate = 0.0
 
-        // 2. Process Rows
-        // List ko reverse karein agar purani date upar dikhani hai (Ledger style)
-        // Usually Ledger: Oldest -> Newest
+        // Counters (Kin entries me data majood tha)
+        var countFat = 0
+        var countLr = 0
+        var countTs = 0
+        var countRate = 0
+
+        // 2. Process Rows (Sorted Oldest -> Newest for correct Ledger balance)
         val sortedList = list.sortedBy { it.dateMillis }
 
         val rows = sortedList.map { item ->
 
-            // A. Update Running Balance (Purchase Logic)
-            // Balance barhta hai TotalAmount se, kam hota hai Paid se
-            val netChange = item.totalAmount - item.paymentMade
+            // A. Balance Logic (User Requirement: Pay More = Positive)
+            // Balance = Payment (Credit) - Purchase Amount (Debit)
+            val netChange = item.paymentMade - item.totalAmount
             runningBalance += netChange
 
-            // B. Accumulate Stats for Summary
+            // B. Accumulate for Summary (Simple Sums)
             sumVol += item.volume
             sumAmount += item.totalAmount
             sumPaid += item.paymentMade
 
+            // Logic for Simple Averages (Zero values exclude krne k liye)
             if (item.fat > 0) {
-                sumVolFat += (item.volume * item.fat)
-                sumVolLr += (item.volume * item.lr)
-                sumVolTs += (item.volume * item.ts)
-                validVolFat += item.volume
+                sumFat += item.fat
+                countFat++
+            }
+            if (item.lr > 0) {
+                sumLr += item.lr
+                countLr++
+            }
+            if (item.ts > 0) {
+                sumTs += item.ts
+                countTs++
+            }
+            // Rate logic: Agar rate 0 se bara hai to count karo
+            if (item.rate > 0) {
+                sumRate += item.rate
+                countRate++
             }
 
             // C. Create Row Data
             listOf(
-                item.dateMillis.toLocalDate().toString(),
+                item.dateMillis.toLocalDate().toCompleteDateFormat(),
                 String.format("%.1f", item.volume),
                 String.format("%.1f", item.fat),
                 String.format("%.1f", item.lr),
+                String.format("%.2f", item.ts), // 🔥 New TS Column
                 item.rate.toInt().toString(),
                 item.totalAmount.toPrice(),
                 item.paymentMade.toPrice(),
-                runningBalance.toPrice() // 🔥 Date wise Balance
+
+                // Balance with Explicit Sign (+/-)
+                formatBalance(runningBalance)
             )
         }
 
-        // 3. Calculate Averages
-        val avgFat = if (validVolFat > 0) sumVolFat / validVolFat else 0.0
-        val avgLr = if (validVolFat > 0) sumVolLr / validVolFat else 0.0
-        val avgTs = if (validVolFat > 0) sumVolTs / validVolFat else 0.0
-
-        // Average Rate (Weighted)
-        val avgRate = if (sumVol > 0) (sumAmount.toDouble() / sumVol) else 0.0
+        // 3. Calculate Simple Averages (Flat Average)
+        val avgFat = if (countFat > 0) sumFat / countFat else 0.0
+        val avgLr = if (countLr > 0) sumLr / countLr else 0.0
+        val avgTs = if (countTs > 0) sumTs / countTs else 0.0
+        val avgRate = if (countRate > 0) sumRate / countRate else 0.0
 
         // 4. Create Summary Row
         val summaryRow = listOf(
-            "TOTAL",                    // Date Column me "TOTAL" likha ayega
-            String.format("%.1f", sumVol),
-            String.format("%.1f", avgFat),
-            String.format("%.1f", avgLr),
-            avgRate.toInt().toString(), // Avg Rate
-            sumAmount.toPrice(),
-            sumPaid.toPrice(),
-            runningBalance.toPrice()    // Closing Balance
+            "TOTAL",
+            String.format("%.1f", sumVol), // Total Volume
+            String.format("%.2f", avgFat), // Simple Avg Fat
+            String.format("%.2f", avgLr),  // Simple Avg LR
+            String.format("%.2f", avgTs),  // Simple Avg TS
+            avgRate.toInt().toString(),    // Simple Avg Rate
+            sumAmount.toPrice(),           // Total Purchase Amount
+            sumPaid.toPrice(),             // Total Paid
+            formatBalance(runningBalance)  // Closing Balance
         )
 
         return PdfReportModel(
             fileName = "Ledger_${supplierName}.pdf",
-            shopName = "Bismillah Milk Shop", // Apni shop ka naam dynamic kar len
+            shopName = "GMC Milk Collection",
             reportTitle = "Supplier Ledger: $supplierName",
             dateRange = dateRange,
             columnHeaders = headers,
             columnWeights = weights,
             rows = rows,
-            summaryRow = summaryRow // 🔥 Pass Summary Row
+            summaryRow = summaryRow
         )
+    }
+
+    // Helper to format balance with +/- sign
+    private fun formatBalance(balance: Long): String {
+        return when {
+            balance > 0 -> "+${balance.toPrice()}" // Advance (Positive)
+            balance < 0 -> balance.toPrice()       // Due (Negative, toPrice usually handles minus or brackets)
+            else -> "0"
+        }
     }
 }

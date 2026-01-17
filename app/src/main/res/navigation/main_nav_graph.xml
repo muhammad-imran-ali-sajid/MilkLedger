@@ -74,6 +74,9 @@
         <action
             android:id="@+id/action_dashboardFragment_to_ownerDashboardFragment"
             app:destination="@id/ownerDashboardFragment" />
+        <action
+            android:id="@+id/action_dashboardFragment_to_accountListFragment"
+            app:destination="@id/accountListFragment" />
     </fragment>
     <fragment
         android:id="@+id/supplierDetailFragment"
@@ -124,6 +127,12 @@
         <action
             android:id="@+id/action_accountListFragment_to_accountFormFragment"
             app:destination="@id/accountFormFragment" />
+        <action
+            android:id="@+id/action_accountListFragment_to_customerHistoryFragment"
+            app:destination="@id/customerHistoryFragment" />
+        <action
+            android:id="@+id/action_accountListFragment_to_supplierDetailFragment"
+            app:destination="@id/supplierDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/accountFormFragment"

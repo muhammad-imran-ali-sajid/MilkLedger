@@ -48,14 +48,6 @@ class MainActivity : BaseActivity(), ToolbarOwner {
     private val viewModel: AppStartViewModel by viewModels()
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    /** ONLY bottom navigation destinations */
-//    private val bottomNavDestinations = setOf(
-//        R.id.dashboardFragment,
-//        R.id.milkSaleListFragment,
-//        R.id.purchaseListFragment,
-//        R.id.expenseFragment,
-//        R.id.ownerDashboardFragment
-//    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,7 +110,6 @@ class MainActivity : BaseActivity(), ToolbarOwner {
             setOf(
                 R.id.dashboardFragment,
                 R.id.settingsFragment,
-                R.id.accountListFragment,
                 R.id.driveBackupFragment,
             ),
             binding.drawerLayout

@@ -67,9 +67,8 @@ class DashboardViewModel @Inject constructor(
                 emitEffect(NavigateToCashFlow(getDateForNavigation()))
             }
 
-            DashboardUiEvent.OnNotesClicked -> emitEffect(DashboardUiEffect.NavigateToNotes)
-
-
+            DashboardUiEvent.OnNotesClicked -> emitEffect(NavigateToNotes)
+            DashboardUiEvent.OnAccountClicked -> emitEffect(NavigateToAccounts)
         }
     }
 

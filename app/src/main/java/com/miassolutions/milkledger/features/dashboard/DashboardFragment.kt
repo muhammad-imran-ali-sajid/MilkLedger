@@ -67,6 +67,7 @@ class DashboardFragment :
         btnSale.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnSaleClicked) }
         btnExpense.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnExpenseClicked) }
         btnWallet.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnWalletClicked) }
+        btnAccount.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnAccountClicked) }
 
         setupToolbarMenu()
     }
@@ -74,13 +75,9 @@ class DashboardFragment :
     private fun setupToolbarMenu() {
         setupMenuWithCustomView(R.menu.menu_dashboard) { menu ->
 
+            //pdf report
 
-            val accountItem =
-                menu.findItem(R.id.accountListFragment) ?: return@setupMenuWithCustomView
-            accountItem.setOnMenuItemClickListener {
-                findNavController().navigate(R.id.accountListFragment)
-                true
-            }
+
         }
     }
 
@@ -167,6 +164,13 @@ class DashboardFragment :
                     findNavController().navigate(
                         DashboardFragmentDirections.actionDashboardFragmentToNotesListFragment()
                     )
+                }
+
+                DashboardUiEffect.NavigateToAccounts -> {
+                    findNavController().navigate(
+                        DashboardFragmentDirections.actionDashboardFragmentToAccountListFragment()
+                    )
+
                 }
             }
         }

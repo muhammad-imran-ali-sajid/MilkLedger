@@ -53,10 +53,11 @@ sealed interface DashboardUiEvent {
     // Click actions
 
 
-    object OnNotesClicked : DashboardUiEvent
+    data object OnAccountClicked : DashboardUiEvent
     object OnCashFlowClicked : DashboardUiEvent
     object OnWalletClicked : DashboardUiEvent
     object OnPurchaseClicked : DashboardUiEvent
+    object OnNotesClicked : DashboardUiEvent
     object OnSaleClicked : DashboardUiEvent
     object OnExpenseClicked : DashboardUiEvent
 }
@@ -66,6 +67,9 @@ sealed interface DashboardUiEvent {
 sealed interface DashboardUiEffect {
 
     object NavigateToNotes : DashboardUiEffect
+    data object NavigateToAccounts : DashboardUiEffect
+
+
 
     data class NavigateToCashFlow(
         val date: LocalDate
