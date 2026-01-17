@@ -1,23 +1,43 @@
 package com.miassolutions.milkledger.features.cashflow
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
 import com.miassolutions.milkledger.core.ui.BaseViewModel
+import com.miassolutions.milkledger.utils.customviews.DateFilterView
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
 class CashflowViewModel @Inject constructor(
-    private val repository: CashflowRepository
+    private val repository: CashflowRepository,
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel<CashflowUiState, CashflowUiEvent, CashflowUiEffect>(CashflowUiState()) {
 
+
+    init {
+
+        val argDateMillis: Long = savedStateHandle["date"] ?: -1L
+
+        if (argDateMillis != -1L) {
+            val date = argDateMillis.toLocalDate()
+            updateState { it.copy(selectedDate = date) }
+        }
+
+    }
+
+
     override fun onEvent(event: CashflowUiEvent) {
-        when(event) {
+        when (event) {
             is CashflowUiEvent.OnDateFilterChanged -> {
+                updateState { it.copy(selectedDate = event.selectedDate, filterMode = event.mode) }
+
                 loadData(event.start, event.end)
             }
         }
@@ -92,12 +112,21 @@ data class CashflowUiState(
     val totalOut: Long = 0,
     val netCash: Long = 0,
 
-    // 🔥 Changed from List<Entity> to List<LedgerListItem>
-    val transactions: List<LedgerListItem> = emptyList()
+    val transactions: List<LedgerListItem> = emptyList(),
+
+    val selectedDate: LocalDate = LocalDate.now(),
+    val filterMode: DateFilterView.FilterMode = DateFilterView.FilterMode.DAY
 )
 
 sealed class CashflowUiEvent {
-    data class OnDateFilterChanged(val start: Long, val end: Long) : CashflowUiEvent()
+    data class OnDateFilterChanged(
+        val start: Long,
+        val end: Long,
+        val selectedDate: LocalDate,
+        val mode: DateFilterView.FilterMode
+    ) : CashflowUiEvent()
+
+
 }
 
 sealed interface CashflowUiEffect {

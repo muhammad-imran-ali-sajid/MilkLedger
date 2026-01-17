@@ -20,10 +20,27 @@ class CashflowFragment : BaseFragment<FragmentCashflowBinding>(FragmentCashflowB
 
         binding.rvTransactions.adapter = adapter
 
-        // Setup Date Filter
+        val currentState = viewModel.currentState
+        binding.dateFilterView.restoreFilterState(
+            mode = currentState.filterMode,
+            date = currentState.selectedDate
+        )
+
         binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
-            // Jab date change ho, ViewModel ko batayen
-            viewModel.onEvent(CashflowUiEvent.OnDateFilterChanged(start, end))
+
+            // View se current properties uthayen
+            val anchorDate = binding.dateFilterView.selectedDate
+            val currentMode = binding.dateFilterView.currentMode
+
+            // ViewModel ko bhejen
+            viewModel.onEvent(
+                CashflowUiEvent.OnDateFilterChanged(
+                    start = start,
+                    end = end,
+                    selectedDate = anchorDate, // Pass curent date
+                    mode = currentMode         // Pass current mode
+                )
+            )
         }
     }
 

@@ -105,16 +105,6 @@ class DriveBackupFragment :
     }
 
 
-    private fun showWipeConfirmation() {
-        showDialog(
-            title = "Wipe All Data?",
-            message = "Kya aap waqai tamam data delete karna chahte hain? Is se Accounts aur Transactions sab khatam ho jayega.",
-            positiveText = "Yes, Delete Everything",
-            onAction = {
-                performWipeOperation()
-            }
-        )
-    }
 
     private fun performWipeOperation() {
         lifecycleScope.launch {

@@ -234,7 +234,7 @@
         android:label="Cash Flow"
         tools:layout="@layout/fragment_cashflow" >
         <argument
-            android:name="workingDate"
+            android:name="date"
             app:argType="long" />
     </fragment>
 
