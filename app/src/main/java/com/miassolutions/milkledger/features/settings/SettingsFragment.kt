@@ -1,16 +1,22 @@
 package com.miassolutions.milkledger.features.settings
 
 
+import androidx.lifecycle.lifecycleScope
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingsFragment :
     BaseFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
+
+    private val themePreferences by lazy {
+        ThemePreferences(requireContext())
+    }
 
     @Inject
     lateinit var appPreferences: AppPreferencesManager
@@ -18,46 +24,34 @@ class SettingsFragment :
     override fun setupViews() {
         setToolbarTitle(getString(R.string.settings))
 
-        // Load and apply saved color at startup
-        val savedColorId = appPreferences.loadBackgroundColor()
-        applyBackgroundColor(savedColorId)
+        val rg = binding.rgTheme
 
-
-        // --- Background Color Buttons ---
-        binding.btnTealDark.setOnClickListener {
-            saveAndApplyColor(R.color.teal_dark)
+        // Observe saved theme
+        lifecycleScope.launch {
+            themePreferences.themeFlow.collect { theme ->
+                when (theme) {
+                    AppTheme.SYSTEM -> rg.check(R.id.rbSystem)
+                    AppTheme.LIGHT -> rg.check(R.id.rbLight)
+                    AppTheme.DARK -> rg.check(R.id.rbDark)
+                }
+            }
         }
 
-        binding.btnSteelBlue.setOnClickListener {
-            saveAndApplyColor(R.color.steel_blue)
+        rg.setOnCheckedChangeListener { _, checkedId ->
+            val selectedTheme = when (checkedId) {
+                R.id.rbLight -> AppTheme.LIGHT
+                R.id.rbDark -> AppTheme.DARK
+                else -> AppTheme.SYSTEM
+            }
+
+            lifecycleScope.launch {
+                themePreferences.setTheme(selectedTheme)
+            }
         }
-
-        binding.btnMidnightBlue.setOnClickListener {
-            saveAndApplyColor(R.color.midnight_blue)
-        }
-
-        binding.btnDeepForest.setOnClickListener {
-            saveAndApplyColor(R.color.deep_forest_green)
-        }
-
-        binding.btnSageGreen.setOnClickListener {
-            saveAndApplyColor(R.color.sage_green)
-        }
-
-        binding.btnPrimaryColor.setOnClickListener {
-            saveAndApplyColor(R.color.primary)
-        }
-
-
     }
 
-    private fun saveAndApplyColor(colorId: Int) {
-        appPreferences.saveBackgroundColor(colorId)
-        applyBackgroundColor(colorId)
-    }
 
-    private fun applyBackgroundColor(colorId: Int) {
-        val colorInt = requireContext().getColor(colorId)
-        requireActivity().window.decorView.setBackgroundColor(colorInt)
-    }
 }
+
+
+

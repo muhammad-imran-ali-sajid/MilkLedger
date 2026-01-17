@@ -4,37 +4,31 @@
 
 
     <!-- ========= PRIMARY ========= -->
-    <color name="md_theme_primary">#006C4C</color>
-    <color name="md_theme_onPrimary">#FFFFFF</color>
-    <color name="md_theme_primaryContainer">#89F8C7</color>
-    <color name="md_theme_onPrimaryContainer">#002114</color>
+    <color name="md_theme_primary">#6ADDB0</color>
+    <color name="md_theme_onPrimary">#003828</color>
+    <color name="md_theme_primaryContainer">#00513C</color>
+    <color name="md_theme_onPrimaryContainer">#89F8C7</color>
 
     <!-- ========= SECONDARY ========= -->
-    <color name="md_theme_secondary">#4D6357</color>
-    <color name="md_theme_onSecondary">#FFFFFF</color>
-    <color name="md_theme_secondaryContainer">#CFE9D9</color>
-    <color name="md_theme_onSecondaryContainer">#092016</color>
+    <color name="md_theme_secondary">#B3CCBD</color>
+    <color name="md_theme_onSecondary">#1F3529</color>
+    <color name="md_theme_secondaryContainer">#354B3E</color>
+    <color name="md_theme_onSecondaryContainer">#CFE9D9</color>
 
     <!-- ========= ERROR ========= -->
-    <color name="md_theme_error">#BA1A1A</color>
-    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_error">#FFB4AB</color>
+    <color name="md_theme_onError">#690005</color>
 
     <!-- ========= BACKGROUND ========= -->
-    <color name="md_theme_background">#FAFAFA</color>
-    <color name="md_theme_onBackground">#191C1A</color>
+    <color name="md_theme_background">#0F1512</color>
+    <color name="md_theme_onBackground">#E0E3DF</color>
 
     <!-- ========= SURFACE ========= -->
-    <color name="md_theme_surface">#FAFAFA</color>
-    <color name="md_theme_onSurface">#191C1A</color>
-    <color name="md_theme_surfaceVariant">#DBE5DE</color>
-<!--    <color name="md_theme_surfaceVariant">#EEF3F1</color>-->
-    <color name="md_theme_onSurfaceVariant">#404944</color>
+    <color name="md_theme_surface">#0F1512</color>
+    <color name="md_theme_onSurface">#E0E3DF</color>
+    <color name="md_theme_surfaceVariant">#404944</color>
+    <color name="md_theme_onSurfaceVariant">#C0C9C2</color>
 
-
-    <color name="milk_purchase_color">#F4511E</color>
-    <color name="milk_sale_color">#006C4C</color>
-    <color name="milk_expense_color">#7B1FA2</color>
-    <color name="milk_profit_color">#1E88E5</color>
 
 
     <!-- End -->

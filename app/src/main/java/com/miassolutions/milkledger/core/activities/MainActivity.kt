@@ -29,6 +29,8 @@ import com.miassolutions.milkledger.core.ui.BaseActivity
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
+import com.miassolutions.milkledger.features.settings.ThemeManager
+import com.miassolutions.milkledger.features.settings.ThemePreferences
 import com.miassolutions.milkledger.utils.premiumfeatures.FeatureManager
 import com.miassolutions.milkledger.utils.premiumfeatures.RemoteConfigManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,9 +40,16 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : BaseActivity(), ToolbarOwner {
 
-    @Inject lateinit var featureManager: FeatureManager
-    @Inject lateinit var remote: RemoteConfigManager
-    @Inject lateinit var appPreferences: AppPreferencesManager
+    @Inject
+    lateinit var featureManager: FeatureManager
+    @Inject
+    lateinit var remote: RemoteConfigManager
+    @Inject
+    lateinit var appPreferences: AppPreferencesManager
+
+    private val themePreferences by lazy {
+        ThemePreferences(this)
+    }
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
@@ -51,6 +60,13 @@ class MainActivity : BaseActivity(), ToolbarOwner {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            themePreferences.themeFlow.collect { theme ->
+                ThemeManager.apply(theme)
+            }
+        }
+
 
         // -------------------- Remote config / force update --------------------
         lifecycleScope.launch {
