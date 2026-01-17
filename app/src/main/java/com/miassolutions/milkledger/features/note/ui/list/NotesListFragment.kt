@@ -1,153 +1,133 @@
 package com.miassolutions.milkledger.features.note.ui.list
 
-import android.view.View
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
-import androidx.core.widget.addTextChangedListener
+
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.snackbar.Snackbar
-import com.miassolutions.milkledger.core.notification.AppNotifier
-import com.miassolutions.milkledger.core.notification.NotificationPermissionHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentNotesListBinding
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
-import com.miassolutions.milkledger.features.note.ui.form.NoteFormBottomSheet
-import com.miassolutions.milkledger.features.note.ui.form.NoteUiEvent
-import com.miassolutions.milkledger.features.note.ui.form.NotesViewModel
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class NotesListFragment :
-    BaseFragment<FragmentNotesListBinding>(FragmentNotesListBinding::inflate) {
+class NoteListFragment : BaseFragment<FragmentNotesListBinding>(
+    FragmentNotesListBinding::inflate
+) {
 
-    private val viewModel by viewModels<NotesViewModel>()
-    private lateinit var adapter: NotesListAdapter
+    private val viewModel: NoteListViewModel by viewModels()
 
-    private val notificationPermissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                showToast("Thanks! Permission Granted")
-            } else {
-                // ❌ Permission denied — check if permanently denied
-                showToast("Permission not granted, notification now not will be shown")
-                NotificationPermissionHelper.handlePermissionDenied(this)
-            }
+    private val adapter by lazy {
+        NoteListAdapter { noteId ->
+            // Navigate to Edit Mode
+            val action = NoteListFragmentDirections.actionNoteListFragmentToAddEditNoteFragment(noteId)
+            findNavController().navigate(action)
         }
+    }
 
     override fun setupViews() {
-        setupRecyclerView()
-        setupObservers()
-        setupListeners()
+        super.setupViews()
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                checkNotificationPermission()
-
-            }
-        }
-        AppNotifier.init(requireContext())
-    }
-
-    private fun checkNotificationPermission() {
-        NotificationPermissionHelper.requestPermissionIfNeeded(this, notificationPermissionLauncher)
-    }
-
-    private fun setupRecyclerView() {
-        adapter = NotesListAdapter(
-            onItemClick = { note ->
-                NoteFormBottomSheet.Companion.newInstance(note)
-                    .show(parentFragmentManager, "AddEditNote")
-            },
-            onDeleteClick = { note ->
-                showDeleteConfirmation(note)
-            },
-
-        )
-
+        // Setup RecyclerView with Staggered Layout (Google Keep Style)
         binding.rvNotes.apply {
-            adapter = this@NotesListFragment.adapter
-
-
-            //Add scroll listener for FAB hide/show
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    if (dy > 0 && binding.fabAddNote.isShown) {
-                        binding.fabAddNote.animate().translationY(binding.fabAddNote.height.toFloat() + 50).alpha(0f).start()
-                    } else if (dy < 0 && binding.fabAddNote.alpha == 0f) {
-                        binding.fabAddNote.animate().translationY(0f).alpha(1f).start()
-                    }
-                }
-            })
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+            adapter = this@NoteListFragment.adapter
         }
-    }
 
+        // Setup Swipe to Delete
+        setupSwipeToDelete()
+    }
 
     override fun setupListeners() {
-        binding.fabAddNote.setOnClickListener {
-            NoteFormBottomSheet.Companion.newInstance(null).show(parentFragmentManager, "AddEditNote")
-        }
-        binding.etSearch.addTextChangedListener { editable ->
-            viewModel.onSearchQueryChanged(editable?.toString().orEmpty())
-        }
+        super.setupListeners()
 
+        binding.fabAddNote.setOnClickListener {
+            // Navigate to Add Mode (ID is null)
+            val action = NoteListFragmentDirections.actionNoteListFragmentToAddEditNoteFragment(null)
+            findNavController().navigate(action)
+        }
     }
 
     override fun setupObservers() {
-        // Collect UI state
+        super.setupObservers()
 
-        collectFlow(viewModel.uiState) { state ->
-            binding.progressBar.visibility =
-                if (state.isLoading) View.VISIBLE else View.GONE
+        // Observe Notes
+        collectFlow(viewModel.notes) { list ->
+            adapter.submitList(list)
 
-            adapter.submitList(state.notes)
-
-            state.error?.let { showSnackbar(it) }
+            // Empty State
+            binding.layoutEmpty.isVisible = list.isEmpty()
+            binding.rvNotes.isVisible = list.isNotEmpty()
         }
 
-
-        // Collect UI events
-
-        collectFlow(viewModel.eventFlow) { event ->
-            when (event) {
-                is NoteUiEvent.NoteDeleted -> {
-                    showUndoSnackbar(event.noteEntity)
-                }
-
-                NoteUiEvent.NoteSaved -> {
-                    showSnackbar("Note saved")
-                }
-
-                is NoteUiEvent.ShowMessage -> {
-                    showSnackbar(event.message)
-                }
-
-                else -> Unit
-            }
-
+        // Observe Loading
+        collectFlow(viewModel.isLoading) { isLoading ->
+            binding.progressBar.isVisible = isLoading
         }
     }
 
-    private fun showDeleteConfirmation(note: NoteEntity) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("Delete Note?")
-            .setMessage("Are you sure you want to delete this note?")
-            .setPositiveButton("Delete") { _, _ ->
-                viewModel.deleteNote(note)
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
+    // --- SWIPE TO DELETE LOGIC ---
+    private fun setupSwipeToDelete() {
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean = false
 
-    private fun showUndoSnackbar(note: NoteEntity) {
-        showSnackbar("Note Deleted", Snackbar.LENGTH_LONG) {
-            viewModel.addOrUpdateNote(note)
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val noteToDelete = adapter.currentList[position]
+
+                // 1. Delete from ViewModel
+                viewModel.deleteNote(noteToDelete)
+
+                // 2. Show Undo Option
+                Snackbar.make(binding.root, "Note deleted", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        // Undo logic yahan implement ki ja sakti hai agar repository me restore function ho
+                        // Filhal k liye hum sirf soft delete kar rahy hain
+                    }
+                    .show()
+            }
+
+            // Optional: Background color while swiping
+            override fun onChildDraw(
+                c: Canvas, rv: RecyclerView, vh: RecyclerView.ViewHolder,
+                dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean
+            ) {
+                val itemView = vh.itemView
+                val background = ColorDrawable(Color.RED)
+
+                // Draw Red background
+                if (dX > 0) { // Swiping Right
+                    background.setBounds(
+                        itemView.left, itemView.top,
+                        itemView.left + dX.toInt(), itemView.bottom
+                    )
+                } else if (dX < 0) { // Swiping Left
+                    background.setBounds(
+                        itemView.right + dX.toInt(), itemView.top,
+                        itemView.right, itemView.bottom
+                    )
+                } else {
+                    background.setBounds(0, 0, 0, 0)
+                }
+                background.draw(c)
+
+                super.onChildDraw(c, rv, vh, dX, dY, actionState, isCurrentlyActive)
+            }
         }
+
+        ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.rvNotes)
     }
 }

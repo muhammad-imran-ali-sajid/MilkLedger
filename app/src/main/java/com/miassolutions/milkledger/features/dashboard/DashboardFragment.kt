@@ -162,7 +162,7 @@ class DashboardFragment :
 
                 DashboardUiEffect.NavigateToNotes -> {
                     findNavController().navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToNotesListFragment()
+                        DashboardFragmentDirections.actionDashboardFragmentToNoteListFragment()
                     )
                 }
 

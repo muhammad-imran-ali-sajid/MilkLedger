@@ -77,6 +77,7 @@
                         android:id="@+id/etMilkVolume"
                         style="@style/TextInputMinimalStyle"
                         android:imeOptions="actionNext"
+                        android:nextFocusForward="@id/etDeduction"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -93,6 +94,7 @@
                         android:id="@+id/etDeduction"
                         android:imeOptions="actionNext"
                         style="@style/TextInputMinimalStyle"
+                        android:nextFocusForward="@id/etPayment"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -204,6 +206,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPayment"
+                        android:nextFocusForward="@id/etMilkVolume"
                         android:layout_width="match_parent"
                         android:imeOptions="actionNext"
                         style="@style/TextInputMinimalStyle"

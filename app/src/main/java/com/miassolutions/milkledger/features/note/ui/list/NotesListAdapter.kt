@@ -2,74 +2,67 @@ package com.miassolutions.milkledger.features.note.ui.list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.miassolutions.milkledger.core.ui.FilterableDelegate
-import com.miassolutions.milkledger.core.ui.FilterableList
 import com.miassolutions.milkledger.databinding.ItemNoteBinding
 import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 
-
-class NotesListAdapter(
-    private val onItemClick: (NoteEntity) -> Unit,
-    private val onDeleteClick: (NoteEntity) -> Unit,
-
-    ) : ListAdapter<NoteEntity, NotesListAdapter.NoteViewHolder>(DiffCallback),
-    FilterableList<NoteEntity> {
-
-    private val filterDelegate = FilterableDelegate(this) { item, query ->
-        item.title.lowercase().contains(query) || item.content.lowercase().contains(query)
-    }
-
-    inner class NoteViewHolder(private val binding: ItemNoteBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-//        fun bind(note: NoteEntity) = with(binding) {
-//            tvNoteTitle.text = note.title
-//            tvNoteContent.text = note.content
-//            tvNoteDate.text = "Dated: ${note.createdDate.format(dateFormatter)}"
-//            tvAlarm.text = note.alarmDateTime?.format(dateTimeFormatter) ?: "No Alarm"
-//
-//
-//            val pastColor = "#FF9100".toColorInt()
-//
-//            if (LocalDateTime.now() > note.alarmDateTime) tillTitle.setBackgroundColor(pastColor) else {
-//                tillTitle.setBackgroundColor("#00000000".toColorInt())
-//            }
-//
-//            root.setOnClickListener { onItemClick(note) }
-//
-//            root.setOnLongClickListener { onDeleteClick(note); true }
-//
-//
-//        }
-    }
+class NoteListAdapter(
+    private val onNoteClick: (String) -> Unit
+) : ListAdapter<NoteEntity, NoteListAdapter.NoteViewHolder>(NoteDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
         val binding = ItemNoteBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
         return NoteViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
-//        holder.bind(getItem(position))
+        val item = getItem(position)
+        holder.bind(item)
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<NoteEntity>() {
-        override fun areItemsTheSame(oldItem: NoteEntity, newItem: NoteEntity) =
-            oldItem.noteId == newItem.noteId
+    inner class NoteViewHolder(private val binding: ItemNoteBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-        override fun areContentsTheSame(oldItem: NoteEntity, newItem: NoteEntity) =
-            oldItem == newItem
+        init {
+            binding.root.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val note = getItem(position)
+                    onNoteClick(note.noteId)
+                }
+            }
+        }
+
+        fun bind(note: NoteEntity) {
+            binding.apply {
+                tvTitle.text = note.title
+                tvContent.text = note.content
+
+                // Date Formatting
+                tvDate.text = note.createdAtMillis.toLocalDate().toCompleteDateFormat()
+
+                // Alarm Icon Logic
+                ivAlarm.isVisible = note.alarmAtMillis != null
+            }
+        }
     }
 
-    override fun setOriginalList(list: List<NoteEntity>) {
-        filterDelegate.setOriginalList(list)
-    }
+    class NoteDiffCallback : DiffUtil.ItemCallback<NoteEntity>() {
+        override fun areItemsTheSame(oldItem: NoteEntity, newItem: NoteEntity): Boolean {
+            return oldItem.noteId == newItem.noteId
+        }
 
-    override fun filter(query: String) {
-        filterDelegate.filter(query)
+        override fun areContentsTheSame(oldItem: NoteEntity, newItem: NoteEntity): Boolean {
+            return oldItem == newItem
+        }
     }
 }

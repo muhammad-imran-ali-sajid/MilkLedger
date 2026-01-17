@@ -65,7 +65,7 @@ class DriveBackupFragment :
                     showLoading(true, "App will restart")
                     showSnackbar("Restore Successful. Restarting app...")
                     // Thora wait taake user message parh sake
-                    delay(5000)
+                    delay(1000)
                     showLoading(false)
                     RestartHelper.restart(requireActivity())
                 }

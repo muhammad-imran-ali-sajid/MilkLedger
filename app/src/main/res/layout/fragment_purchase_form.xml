@@ -85,6 +85,7 @@
                         style="@style/TextInputMinimalStyle"
                         android:layout_width="match_parent"
                         android:imeOptions="actionNext"
+                        android:nextFocusForward="@id/etFat"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -92,6 +93,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MilkLedger.Input"
                     android:layout_width="0dp"
+                    android:nextFocusForward="@id/etLr"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:hint="Fat">
@@ -100,6 +102,7 @@
                         android:id="@+id/etFat"
                         android:layout_width="match_parent"
                         android:imeOptions="actionNext"
+                        android:nextFocusForward="@id/etLr"
                         style="@style/TextInputMinimalStyle"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -115,6 +118,7 @@
                         android:id="@+id/etLr"
                         android:layout_width="match_parent"
                         android:imeOptions="actionNext"
+                        android:nextFocusForward="@id/etPayment"
                         style="@style/TextInputMinimalStyle"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -229,6 +233,7 @@
                         android:id="@+id/etPayment"
                         android:layout_width="match_parent"
                         android:imeOptions="actionNext"
+                        android:nextFocusForward="@id/etMilkVolume"
                         style="@style/TextInputMinimalStyle"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal" />
@@ -296,7 +301,6 @@
                     android:id="@+id/etNote"
                     style="@style/TextInputMinimalStyle"
                     android:layout_width="match_parent"
-                    android:imeOptions="actionDone"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences" />
             </com.google.android.material.textfield.TextInputLayout>
