@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.sale.customerhistory
 
+import android.content.Intent
 import android.net.Uri
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -7,6 +8,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.PdfCustomerMapper
 import com.miassolutions.milkledger.core.pdf.PdfGenerator
 import com.miassolutions.milkledger.core.pdf.PdfReportModel
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -34,15 +38,58 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
         val model = currentPdfModel ?: return
         lifecycleScope.launch {
             pdfGenerator.generatePdf(uri, model)
-            showSnackbar("Pdf Saved")
+            showSnackbar(
+                message = "Pdf Saved",
+                actionText = "OPEN",
+                duration = Snackbar.LENGTH_LONG
+            ) {
+                openPdf(uri)
+            }
+        }
+    }
+
+    private fun openPdf(uri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "application/pdf")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            showSnackbar("No app found to open PDF")
         }
     }
 
     private val adapter by lazy { CustomerHistoryAdapter() }
 
+    private fun setupMenu() {
+        setupMenuWithCustomView(R.menu.menu_customer_history) { menu ->
+            val item = menu.findItem(R.id.action_pdf) ?: return@setupMenuWithCustomView
+            item.setOnMenuItemClickListener {
+                generatePdfReport()
+                true
+            }
+        }
+    }
+
+    private fun generatePdfReport() {
+        val state = viewModel.currentState
+
+        currentPdfModel = PdfCustomerMapper.mapCustomerHistoryToPdf(
+            customerName = state.customerName,
+            dateRang = state.dateRangeText,
+            list = state.transactions,
+            initialBalance = 0L
+        )
+
+        createPdfLauncher.launch(currentPdfModel?.fileName ?: "report.pdf")
+    }
+
     override fun setupViews() {
         super.setupViews()
 
+        setupMenu()
 
         // 2. Setup RecyclerView
         binding.rvCustomerDetail.apply {

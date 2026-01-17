@@ -1,11 +1,12 @@
 package com.miassolutions.milkledger.core.pdf
 
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
+import com.miassolutions.milkledger.utils.extensions.format
+import com.miassolutions.milkledger.utils.extensions.formatSignedBalance
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
-import com.miassolutions.milkledger.utils.extensions.toSignedBalance
 
 object PdfCustomerMapper {
 
@@ -15,9 +16,9 @@ object PdfCustomerMapper {
         list: List<MilkSaleUiModel>,
         initialBalance: Long = 0
     ): PdfReportModel {
-        val headers = listOf("Date", "Vol", "Deduc", "Rate", "Price", "Rec.", "Bal")
+        val headers = listOf("Date", "Vol", "Ded.", "Net", "Rate", "Price", "Rec.", "Bal")
         //total sum 10~11 me ho ta ke page pr fit aa skay
-        val weights = floatArrayOf(2f, 0.9f, 0.9f, 0.9f, 1.2f, 1.2f, 1.2f)
+        val weights = floatArrayOf(1.0f, 0.9f, 0.9f, 0.9f,0.9f, 1.2f, 1.2f, 1.2f)
 
         var runningBalance = initialBalance
 
@@ -25,6 +26,7 @@ object PdfCustomerMapper {
         //accumulators for totals
         var sumVol = 0.0
         var sumDeduction = 0.0
+        var sumNetVol = 0.0
         var sumAmount = 0.0
         var sumReceived = 0.0
 
@@ -46,6 +48,7 @@ object PdfCustomerMapper {
             // accumulate for summary
             sumVol += item.quantity
             sumDeduction += item.deduction
+            sumNetVol += item.netQuantity
             sumAmount += item.totalAmount
             sumReceived += item.paymentReceived
 
@@ -59,10 +62,11 @@ object PdfCustomerMapper {
                 item.dateMillis.toLocalDate().toCompleteDateFormat(),
                 item.quantity.toFormattedMilk(),
                 item.deduction.toFormattedMilk(),
-                item.rate.toInt().toString(),
+                item.netQuantity.toFormattedMilk(),
+                item.rate.format(1),
                 item.totalAmount.toPrice(),
                 item.paymentReceived.toPrice(),
-                runningBalance.toSignedBalance()
+                runningBalance.formatSignedBalance()
             )
 
         }
@@ -73,10 +77,11 @@ object PdfCustomerMapper {
             "TOTAL",
             sumVol.toFormattedMilk(),
             sumDeduction.toFormattedMilk(),
-            avgRate.toPrice(),
+            sumNetVol.toFormattedMilk(),
+            avgRate.format(1),
             sumAmount.toPrice(),
             sumReceived.toPrice(),
-            runningBalance.toSignedBalance()
+            runningBalance.formatSignedBalance()
 
         )
 

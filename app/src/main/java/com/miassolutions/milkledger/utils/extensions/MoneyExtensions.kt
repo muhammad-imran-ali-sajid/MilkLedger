@@ -24,7 +24,7 @@ fun String.toLongPaisa(): Long {
 // --- 2. MILK QUANTITY (Double -> String) ---
 
 fun Double.toFormattedMilk(): String {
-    return String.format("%.2f", this) // e.g., "40.50"
+    return String.format("%.1f", this) // e.g., "40.50"
 }
 
 // --- 3. GENERAL ---
