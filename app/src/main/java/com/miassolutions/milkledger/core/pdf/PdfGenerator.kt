@@ -15,10 +15,10 @@ import javax.inject.Inject
 class PdfGenerator @Inject constructor(@ApplicationContext private val context: Context) {
 
     private val fontBold = Font(Font.FontFamily.HELVETICA, 12f, Font.BOLD)
-    private val fontNormal = Font(Font.FontFamily.HELVETICA, 10f, Font.NORMAL)
+    private val fontNormal = Font(Font.FontFamily.HELVETICA, 10f, Font.BOLD)
     private val fontHeader = Font(Font.FontFamily.HELVETICA, 18f, Font.BOLD)
     private val fontSubHeader =
-        Font(Font.FontFamily.HELVETICA, 12f, Font.NORMAL, BaseColor.DARK_GRAY)
+        Font(Font.FontFamily.HELVETICA, 12f, Font.BOLD, BaseColor.DARK_GRAY)
 
     suspend fun generatePdf(uri: Uri, model: PdfReportModel) = withContext(Dispatchers.IO) {
         var outputStream: OutputStream? = null
@@ -86,7 +86,7 @@ class PdfGenerator @Inject constructor(@ApplicationContext private val context: 
                 cell.setPadding(5f)
 
                 // Alignment: First column Left, others Right (Numbers)
-                cell.horizontalAlignment = if (index == 0) Element.ALIGN_LEFT else Element.ALIGN_RIGHT
+                cell.horizontalAlignment = if (index == 0) Element.ALIGN_LEFT else Element.ALIGN_CENTER
                 table.addCell(cell)
             }
         }
@@ -95,8 +95,8 @@ class PdfGenerator @Inject constructor(@ApplicationContext private val context: 
         model.summaryRow?.let { footerData ->
             footerData.forEach { cellValue ->
                 val cell = PdfPCell(Phrase(cellValue, fontBold)) // Bold Font
-                cell.horizontalAlignment = Element.ALIGN_RIGHT
-                cell.backgroundColor = BaseColor.GRAY // Thora Dark Gray
+                cell.horizontalAlignment = Element.ALIGN_CENTER
+                cell.backgroundColor = BaseColor.LIGHT_GRAY // Thora Dark Gray
                 cell.setPadding(6f)
                 table.addCell(cell)
             }
