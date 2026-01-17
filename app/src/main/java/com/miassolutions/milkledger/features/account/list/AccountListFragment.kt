@@ -4,6 +4,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.common.stats.StatsEvent
 import com.google.android.material.tabs.TabLayout
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
@@ -44,6 +45,7 @@ class AccountListFragment :
                 viewModel.toggleVisibility()
                 true
             }
+
             else -> false
         }
     }
@@ -67,7 +69,7 @@ class AccountListFragment :
         }
 
         // RecyclerView
-        adapter = AccountListAdapter(::onEditClick)
+        adapter = AccountListAdapter(::onEditClick, ::onNavClick)
         recyclerView.adapter = adapter
 
         // Tabs
@@ -110,6 +112,29 @@ class AccountListFragment :
     /* -------------------------------------------------- */
     /* NAVIGATION                                        */
     /* -------------------------------------------------- */
+
+    private fun onNavClick(id: String, name: String, type: String) {
+
+        val customer = type == AccountType.CUSTOMER.name
+
+        if (customer) {
+            val action =
+                AccountListFragmentDirections.actionAccountListFragmentToCustomerHistoryFragment(
+                    customerId = id,
+                    customerName = name
+                )
+            findNavController().navigate(action)
+        } else {
+            val action =
+                AccountListFragmentDirections.actionAccountListFragmentToSupplierDetailFragment(
+                    supplierId = id,
+                    supplierName = name
+                )
+            findNavController().navigate(action)
+        }
+
+
+    }
 
     private fun onEditClick(id: String) {
         val action =
