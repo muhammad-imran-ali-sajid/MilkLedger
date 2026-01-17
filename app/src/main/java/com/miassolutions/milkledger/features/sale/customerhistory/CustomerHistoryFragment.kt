@@ -48,18 +48,7 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
         }
     }
 
-    private fun openPdf(uri: Uri) {
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            setDataAndType(uri, "application/pdf")
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
 
-        try {
-            startActivity(intent)
-        } catch (e: Exception) {
-            showSnackbar("No app found to open PDF")
-        }
-    }
 
     private val adapter by lazy { CustomerHistoryAdapter() }
 

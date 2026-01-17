@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.core.ui
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,6 +40,20 @@ abstract class BaseFragment<VB : ViewBinding>(
 
     private var progressDialog: AlertDialog? = null
     private var loadingBinding: LayoutLoadingDialogBinding? = null
+
+    protected fun openPdf(uri: Uri) {
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "application/pdf")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            showSnackbar("No app found to open PDF")
+        }
+    }
+
 
 
     fun showLoading(isLoading: Boolean, message: String? = null) {

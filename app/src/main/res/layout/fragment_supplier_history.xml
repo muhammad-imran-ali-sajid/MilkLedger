@@ -13,14 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <Button
-        android:id="@+id/btnPdf"
-        android:text="Pdf Report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/summaryView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+
 
 
     <TextView
@@ -38,7 +31,6 @@
         tools:visibility="gone" />
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSupplierHistory"
         android:layout_width="match_parent"
@@ -49,12 +41,14 @@
         android:scrollbarDefaultDelayBeforeFade="@integer/material_motion_duration_long_2"
         android:scrollbarSize="10dp"
         android:scrollbars="vertical"
-        app:layout_constraintTop_toBottomOf="@id/dateFilterView"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/btnPdf"
+        app:layout_constraintBottom_toTopOf="@+id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
+        app:layout_constraintTop_toBottomOf="@id/dateFilterView"
+
+        tools:itemCount="1"
         tools:listitem="@layout/item_supplier_history" />
 
 

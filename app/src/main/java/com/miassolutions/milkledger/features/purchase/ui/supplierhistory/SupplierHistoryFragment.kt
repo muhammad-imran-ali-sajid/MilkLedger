@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.pdf.PdfGenerator
 import com.miassolutions.milkledger.core.pdf.PdfMapper
 import com.miassolutions.milkledger.core.pdf.PdfReportModel
@@ -27,38 +29,42 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
 
     @Inject
     lateinit var pdfGenerator: PdfGenerator
-
-    // Current Data hold karne k liye
     private var currentPdfModel: PdfReportModel? = null
 
-//    private val createPdfLauncher = registerForActivityResult(
-//        ActivityResultContracts.CreateDocument("application/pdf")
-//    ) { uri ->
-//        uri?.let {
-//            currentPdfModel?.let { model ->
-//                lifecycleScope.launch {
-//                    pdfGenerator.generatePdf(it, model) // 🔥 Call Engine
-//                    showSnackbar("Pdf saved")
-//                }
-//            }
-//        }
-//    }
+
 
     override fun onPdfUriCreated(uri: Uri) {
         super.onPdfUriCreated(uri)
         val model = currentPdfModel ?: return
         lifecycleScope.launch {
             pdfGenerator.generatePdf(uri, model)
-            showSnackbar("Pdf Saved")
+            showSnackbar(
+                message = "Pdf Saved",
+                actionText = "OPEN",
+                duration = Snackbar.LENGTH_LONG
+            ) {
+                openPdf(uri)
+            }
         }
     }
 
+    private fun setupMenu() {
+        setupMenuWithCustomView(R.menu.menu_supplier_history) { menu ->
+            val item = menu.findItem(R.id.action_pdf) ?: return@setupMenuWithCustomView
+            item.setOnMenuItemClickListener {
+                generatePdfReport()
+                true
+            }
+        }
+    }
     private val viewModel: SupplierHistoryViewModel by viewModels()
 
     private val adapter by lazy { SupplierHistoryAdapter() }
 
     override fun setupViews() {
         super.setupViews()
+
+        setupMenu()
 
         binding.rvSupplierHistory.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -70,24 +76,21 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
             viewModel.onEvent(SupplierHistoryUiEvent.OnDateFilterChanged(start, end, label))
         }
 
-        generatePdfReport()
     }
 
     private fun generatePdfReport() {
-        binding.btnPdf.setOnClickListener {
-            val state = viewModel.uiState.value
+        val state = viewModel.uiState.value
 
-            // 1. Prepare Data
-            currentPdfModel = PdfMapper.mapSupplierHistoryToPdf(
-                supplierName = state.supplierName,
-                dateRange = state.dateRangeText,
-                list = state.transactions,
-                initialBalance = 0L
-            )
+        // 1. Prepare Data
+        currentPdfModel = PdfMapper.mapSupplierHistoryToPdf(
+            supplierName = state.supplierName,
+            dateRange = state.dateRangeText,
+            list = state.transactions,
+            initialBalance = 0L
+        )
 
-            // 2. Open File Picker
-            createPdfLauncher.launch(currentPdfModel?.fileName ?: "report.pdf")
-        }
+        // 2. Open File Picker
+        createPdfLauncher.launch(currentPdfModel?.fileName ?: "report.pdf")
     }
 
     override fun setupObservers() {
