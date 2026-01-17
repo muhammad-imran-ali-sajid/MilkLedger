@@ -23,7 +23,7 @@ class DashboardRepository @Inject constructor(
             else 0.0
 
             val avgSP = if (sale.totalVolume > 0)
-                (sale.totalAmount.toRupees() / sale.totalVolume)
+                (sale.totalAmount.toRupees() / purchase.totalVolume)
             else 0.0
 
 
