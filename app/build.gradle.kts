@@ -76,8 +76,9 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    implementation(project(":Sort-Filter"))
-    implementation(project(":datesort"))
+
+
+    implementation("com.itextpdf:itextg:5.5.10")
 
 
     // Firebase BOM

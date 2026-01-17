@@ -21,5 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Milk Ledger"
 include(":app")
-include(":Sort-Filter")
-include(":datesort")
+

@@ -183,8 +183,8 @@ class DashboardFragment :
                 "${state.qtyDiff.format(0)} L",
                 getDiffColor(state.qtyDiff)
             ),
-            DashboardStat("Avg Buy Price", state.avgPurchasePrice.format(2)),
             DashboardStat("Avg Sell Price", state.avgSalePrice.format(2)),
+            DashboardStat("Avg Buy Price", state.avgPurchasePrice.format(2)),
             DashboardStat(
                 "Price Diff",
                 state.avgPriceDiff.format(2),
@@ -192,12 +192,12 @@ class DashboardFragment :
             ),
             DashboardStat(
                 "Avg Fat",
-                "${state.avgFat.format(2)} (${state.qualityVolume.format(0)})"
+                "${state.avgFat.format(2)} (${state.qualityVolume.format(1)})"
             ),
-            DashboardStat("Avg LR", "${state.avgLr.format(2)} (${state.qualityVolume.format(0)})"),
+            DashboardStat("Avg LR", "${state.avgLr.format(2)} (${state.qualityVolume.format(1)})"),
             DashboardStat(
                 "Total TS",
-                "${state.totalTs.format(1)} (${state.qualityVolume.format(0)})"
+                "${state.totalTs.format(2)} (${state.qualityVolume.format(1)})"
             )
         )
     }
