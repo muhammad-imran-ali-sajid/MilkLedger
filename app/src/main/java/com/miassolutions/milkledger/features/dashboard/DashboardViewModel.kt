@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.*
 import com.miassolutions.milkledger.features.dashboard.data.DashboardRepository
+import com.miassolutions.milkledger.utils.customviews.DateFilterView
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -47,28 +48,42 @@ class DashboardViewModel @Inject constructor(
 
             // 🟢 Navigation clicks (forms open with workingDate)
             DashboardUiEvent.OnPurchaseClicked -> {
-                emitEffect(NavigateToPurchase(uiState.value.selectedDate))
+                emitEffect(NavigateToPurchase(getDateForNavigation()))
             }
 
             DashboardUiEvent.OnSaleClicked -> {
-                emitEffect(NavigateToSale(uiState.value.selectedDate))
+                emitEffect(NavigateToSale(getDateForNavigation()))
             }
 
             DashboardUiEvent.OnExpenseClicked -> {
-                emitEffect(NavigateToExpense(uiState.value.selectedDate))
+                emitEffect(NavigateToExpense(getDateForNavigation()))
             }
 
             DashboardUiEvent.OnWalletClicked -> {
-                emitEffect(NavigateToWallet(uiState.value.selectedDate))
+                emitEffect(NavigateToWallet(getDateForNavigation()))
             }
 
             DashboardUiEvent.OnCashFlowClicked -> {
-                emitEffect(NavigateToCashFlow(uiState.value.selectedDate))
+                emitEffect(NavigateToCashFlow(getDateForNavigation()))
             }
 
             DashboardUiEvent.OnNotesClicked -> emitEffect(DashboardUiEffect.NavigateToNotes)
 
 
+        }
+    }
+
+    // Ye decide karega k konsi date aage bhejni hai
+    private fun getDateForNavigation(): LocalDate {
+        val state = uiState.value
+
+        return if (state.filterMode == DateFilterView.FilterMode.DAY) {
+            // Agar DAY mode hai, to jo date user dekh raha hai wahi pass karo
+            state.selectedDate
+        } else {
+            // Agar Month/Year/Custom hai, to 'AAJ' ki date pass karo
+            // Taake user ghalti se purani entry na kar de
+            LocalDate.now()
         }
     }
 
