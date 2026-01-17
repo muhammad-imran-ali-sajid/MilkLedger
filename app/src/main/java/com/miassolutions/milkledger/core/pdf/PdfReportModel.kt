@@ -1,18 +1,19 @@
 package com.miassolutions.milkledger.core.pdf
 
 data class PdfReportModel(
-    val fileName: String,       // e.g., "History_Ali_Store.pdf"
-    val shopName: String,       // Header Top Left
-    val reportTitle: String,    // e.g., "Supplier History"
-    val dateRange: String,      // e.g., "1 Jan - 31 Jan"
+    val fileName: String,
+    val shopName: String,
+    val reportTitle: String,
+    val dateRange: String,
 
-    // Table Config
-    val columnHeaders: List<String>, // ["Date", "Vol", "Rate", "Total"]
-    val columnWeights: FloatArray,   // [2f, 1f, 1f, 2f] (Column ki choraai)
+    val columnHeaders: List<String>,
+    val columnWeights: FloatArray,
 
-    // Data Rows (List of List of Strings)
     val rows: List<List<String>>,
 
-    // Summary Bottom
-    val summaryLabels: List<Pair<String, String>> // [("Total Milk", "500L"), ("Net Amount", "5000")]
+    // 🔥 NEW: Table ke sab se neeche wali line (Footer)
+    val summaryRow: List<String>? = null,
+
+    // Bottom Summary (Optional ab, kyunke table me summary agayi hai)
+    val summaryLabels: List<Pair<String, String>> = emptyList()
 )

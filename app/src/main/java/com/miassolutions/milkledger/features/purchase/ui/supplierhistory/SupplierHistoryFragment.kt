@@ -72,7 +72,7 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
                 supplierName = state.supplierName,
                 dateRange = state.dateRangeText,
                 list = state.transactions,
-                stats = state.summary
+                initialBalance = 0L
             )
 
             // 2. Open File Picker

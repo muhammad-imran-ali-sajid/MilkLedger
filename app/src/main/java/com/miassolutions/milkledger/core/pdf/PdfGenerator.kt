@@ -65,32 +65,39 @@ class PdfGenerator @Inject constructor(@ApplicationContext private val context: 
     }
 
     private fun addTable(document: Document, model: PdfReportModel) {
-        // Setup Table
         val table = PdfPTable(model.columnWeights)
         table.widthPercentage = 100f
         table.spacingBefore = 10f
         table.spacingAfter = 10f
 
-        // A. Headers
+        // 1. HEADERS
         model.columnHeaders.forEach { headerTitle ->
             val cell = PdfPCell(Phrase(headerTitle, fontBold))
             cell.horizontalAlignment = Element.ALIGN_CENTER
             cell.backgroundColor = BaseColor.LIGHT_GRAY
-            cell.setPadding(5f)
+            cell.setPadding(6f)
             table.addCell(cell)
         }
 
-        // B. Data Rows
+        // 2. DATA ROWS
         model.rows.forEach { rowData ->
             rowData.forEachIndexed { index, cellValue ->
                 val cell = PdfPCell(Phrase(cellValue, fontNormal))
                 cell.setPadding(5f)
 
-                // Align Numbers to Right, Text to Left
-                // (Assuming pehla column Date hai, baki numbers)
-                if (index == 0) cell.horizontalAlignment = Element.ALIGN_LEFT
-                else cell.horizontalAlignment = Element.ALIGN_RIGHT
+                // Alignment: First column Left, others Right (Numbers)
+                cell.horizontalAlignment = if (index == 0) Element.ALIGN_LEFT else Element.ALIGN_RIGHT
+                table.addCell(cell)
+            }
+        }
 
+        // 3. 🔥 SUMMARY ROW (Footer)
+        model.summaryRow?.let { footerData ->
+            footerData.forEach { cellValue ->
+                val cell = PdfPCell(Phrase(cellValue, fontBold)) // Bold Font
+                cell.horizontalAlignment = Element.ALIGN_RIGHT
+                cell.backgroundColor = BaseColor.GRAY // Thora Dark Gray
+                cell.setPadding(6f)
                 table.addCell(cell)
             }
         }
