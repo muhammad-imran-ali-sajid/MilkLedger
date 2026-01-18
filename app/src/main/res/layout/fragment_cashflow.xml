@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cash In"
-                    android:textColor="#2E7D32" />
+                    android:textColor="?attr/colorProfit" />
 
                 <TextView
                     android:id="@+id/tvTotalIn"
@@ -49,7 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="#2E7D32"
+                    android:textColor="?attr/colorProfit"
                     android:textStyle="bold"
                     tools:text="50,000" />
             </LinearLayout>
@@ -76,7 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cash Out"
-                    android:textColor="#C62828" />
+                    android:textColor="?attr/colorExpense" />
 
                 <TextView
                     android:id="@+id/tvTotalOut"
@@ -84,8 +84,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textColor="#C62828"
-                    android:textStyle="bold"
+                    android:textColor="?attr/colorExpense"
                     tools:text="20,000" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -111,6 +110,7 @@
             <TextView
                 style="@style/Text.Normal"
                 android:layout_width="0dp"
+                android:textColor="?attr/colorProfit"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Net Cash Flow:"
@@ -119,6 +119,7 @@
             <TextView
                 android:id="@+id/tvNetCash"
                 style="@style/Text.Normal"
+                android:textColor="?attr/colorProfit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"

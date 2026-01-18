@@ -18,14 +18,21 @@
             style="@style/Text.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?android:attr/textColorSecondary"
+            android:textColor="?attr/colorDate"
             tools:text="12/12" />
+
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="65dp"
+            app:dividerColor="?attr/colorOutline"
+            android:layout_height="2dp"/>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal"
             android:weightSum="3">
 
@@ -35,7 +42,7 @@
                 style="@style/Text.Normal"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2.2"
+                android:layout_weight="2"
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:textColor="?attr/colorOnSurface"
@@ -48,11 +55,11 @@
                 style="@style/Text.Normal"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.8"
+                android:layout_weight="1"
                 android:gravity="end|center_vertical"
                 android:textStyle="bold"
                 tools:text="+ 5,000"
-                tools:textColor="#388E3C" />
+                android:textColor="?attr/colorProfit" />
 
 
         </LinearLayout>

@@ -32,6 +32,7 @@
         <item name="colorSale">@color/milk_sale_color</item>
         <item name="colorProfit">@color/milk_profit_color</item>
         <item name="colorExpense">@color/milk_expense_color</item>
+        <item name="colorDate">@color/milk_date_color</item>
 
 
         <!--texts -->

@@ -71,8 +71,8 @@ fun TextView.setBalanceWithColor(amountPaisa: Long) {
 
     // Set Color based on Positive/Negative
     if (amountPaisa >= 0) {
-        setTextColor(ContextCompat.getColor(context, R.color.green_700)) // Ya jo apka color ho
+        setTextColor(ContextCompat.getColor(context, R.color.milk_profit_color)) // Ya jo apka color ho
     } else {
-        setTextColor(ContextCompat.getColor(context, R.color.red))
+        setTextColor(ContextCompat.getColor(context, R.color.milk_expense_color))
     }
 }

@@ -6,5 +6,6 @@
     <attr name="colorSale" format="color" />
     <attr name="colorProfit" format="color" />
     <attr name="colorExpense" format="color" />
+    <attr name="colorDate" format="color" />
 
 </resources>

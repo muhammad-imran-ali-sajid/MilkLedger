@@ -78,13 +78,13 @@ class CashflowAdapter : ListAdapter<LedgerListItem, RecyclerView.ViewHolder>(Dif
                 // 🟢 CASH IN (Green)
                 val amount = item.credit // Cash In hamesha Credit column me hota hai
                 tvAmount.text = "+ ${amount.toPrice()}"
-                tvAmount.setTextColor(ContextCompat.getColor(root.context, R.color.green_700))
+                tvAmount.setTextColor(ContextCompat.getColor(root.context, R.color.milk_profit_color))
             } else {
                 // 🔴 CASH OUT (Red)
                 // Paid, Expense, Drawing sab Debit column me hotay hen
                 val amount = item.debit
                 tvAmount.text = "- ${amount.toPrice()}"
-                tvAmount.setTextColor(ContextCompat.getColor(root.context, R.color.red))
+                tvAmount.setTextColor(ContextCompat.getColor(root.context, R.color.milk_expense_color))
             }
         }
 
