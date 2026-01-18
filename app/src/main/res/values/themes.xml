@@ -2,7 +2,7 @@
 
     <style name="Base.Theme.MilkLedger" parent="Theme.Material3.DayNight.NoActionBar">
 
-        <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
+                <item name="android:statusBarColor">@android:color/transparent</item>
         <!-- false means white  aur true means dark-->
         <!--        <item name="android:windowLightStatusBar">true</item>-->
 

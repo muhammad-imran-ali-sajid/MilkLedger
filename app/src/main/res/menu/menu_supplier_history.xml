@@ -6,6 +6,7 @@
     <item android:title="Pdf"
         android:id="@+id/action_pdf"
         android:icon="@drawable/ic_pdf"
+        android:iconTint="@color/black"
         app:showAsAction="ifRoom"
         />
 </menu>

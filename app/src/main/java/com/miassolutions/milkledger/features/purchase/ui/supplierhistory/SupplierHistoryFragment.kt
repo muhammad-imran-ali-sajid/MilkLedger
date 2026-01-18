@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -51,6 +52,9 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
     private fun setupMenu() {
         setupMenuWithCustomView(R.menu.menu_supplier_history) { menu ->
             val item = menu.findItem(R.id.action_pdf) ?: return@setupMenuWithCustomView
+
+
+
             item.setOnMenuItemClickListener {
                 generatePdfReport()
                 true

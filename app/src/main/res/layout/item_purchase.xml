@@ -22,7 +22,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="4dp">
+            android:paddingVertical="2dp">
 
             <ImageButton
                 android:id="@+id/btn_edit_form"
@@ -196,6 +196,7 @@
                     <TextView
                         android:drawableEnd="@drawable/ic_info"
                         android:drawablePadding="6dp"
+                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -224,6 +225,7 @@
                     <TextView
                         android:drawableEnd="@drawable/ic_info"
                         android:drawablePadding="4dp"
+                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
