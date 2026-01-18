@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.sale.saleform
 
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.R
@@ -37,6 +39,7 @@ class CustomerSelectionBottomSheet(
         setupSearch()
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun setupRecyclerView() {
         adapter = CustomerSelectionAdapter { uiModel ->
             if (uiModel.isEntryDoneToday) {

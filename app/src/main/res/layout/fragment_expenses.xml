@@ -79,6 +79,7 @@
     <LinearLayout
         android:id="@+id/expensesSummary"
         android:layout_width="match_parent"
+        android:baselineAligned="false"
         android:visibility="gone"
         android:layout_height="wrap_content"
         android:background="?attr/colorSecondaryContainer"

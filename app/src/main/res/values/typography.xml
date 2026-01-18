@@ -150,7 +150,7 @@
     <!-- Subheadings -->
     <style name="Text.Title" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

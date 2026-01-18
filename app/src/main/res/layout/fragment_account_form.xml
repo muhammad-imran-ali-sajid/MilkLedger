@@ -160,7 +160,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         tools:text="+ Rs. 5,000"
-                        tools:textColor="?attr/saleColor" />
+                        tools:textColor="?attr/colorSale" />
 
                     <!-- Initial Balance -->
                     <com.google.android.material.textfield.TextInputLayout

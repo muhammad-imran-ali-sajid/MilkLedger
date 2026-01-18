@@ -39,22 +39,20 @@ class NoteAlarmReceiver : BroadcastReceiver() {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // Channel Creation (Android 8+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Note Reminders",
-                NotificationManager.IMPORTANCE_HIGH // 🔥 HIGH zaroori hai
-            ).apply {
-                description = "Alarm Notifications"
-                enableLights(true)
-                enableVibration(true)
-                setSound(
-                    RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
-                    AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build()
-                )
-            }
-            notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannel(
+            CHANNEL_ID,
+            "Note Reminders",
+            NotificationManager.IMPORTANCE_HIGH // 🔥 HIGH zaroori hai
+        ).apply {
+            description = "Alarm Notifications"
+            enableLights(true)
+            enableVibration(true)
+            setSound(
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION),
+                AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).build()
+            )
         }
+        notificationManager.createNotificationChannel(channel)
 
         // Notification Build
         val appIntent = Intent(context, MainActivity::class.java)

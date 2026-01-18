@@ -9,11 +9,6 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class MilkLedgerApp : Application() {
 
-
-
-
-
-
     override fun onCreate() {
         super.onCreate()
 
@@ -21,11 +16,6 @@ class MilkLedgerApp : Application() {
         RemoteConfigHelper.init()
 
 
-
-
-//        dataRepository.initialize()
-
-//
         DynamicColors.applyToActivitiesIfAvailable(this)
 
     }

@@ -27,7 +27,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="6"
-        android:drawableTint="?attr/colorOnSurface"
+        app:drawableTint="?attr/colorOnSurface"
         android:gravity="center"
         android:padding="8dp"
         android:drawableEnd="@drawable/ic_arrow_pick"

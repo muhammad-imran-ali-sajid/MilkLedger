@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.purchase.ui.form
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.miassolutions.milkledger.databinding.BottomSheetSupplierSelectionBinding
 import com.miassolutions.milkledger.features.account.domain.Account
@@ -37,6 +39,7 @@ class SupplierSelectionBottomSheet(
         setupSearch()
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     private fun setupRecyclerView() {
         adapter = SupplierSelectionAdapter { uiModel ->
             // 🔥 CHECK: Agar aaj entry ho chuki hai to rok dein
