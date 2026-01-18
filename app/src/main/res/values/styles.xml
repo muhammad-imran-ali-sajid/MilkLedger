@@ -4,14 +4,11 @@
     <!-- Refactor plan-->
 
 
-
-
-
     <style name="Widget.MilkLedger.DashboardCard" parent="Widget.Material3.CardView.Filled">
         <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
         <item name="contentPadding">8dp</item>
         <item name="android:layout_marginBottom">12dp</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Medium</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Large</item>
         <item name="strokeWidth">0dp</item>
     </style>
 
