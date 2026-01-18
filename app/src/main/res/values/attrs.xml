@@ -2,8 +2,9 @@
 <resources>
 
     <!-- Ledger specific colors -->
-    <attr name="purchaseColor" format="color" />
-    <attr name="saleColor" format="color" />
-    <attr name="profitColor" format="color" />
+    <attr name="colorPurchase" format="color" />
+    <attr name="colorSale" format="color" />
+    <attr name="colorProfit" format="color" />
+    <attr name="colorExpense" format="color" />
 
 </resources>

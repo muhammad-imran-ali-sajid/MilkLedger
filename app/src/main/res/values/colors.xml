@@ -31,10 +31,10 @@
     <color name="md_theme_onSurfaceVariant">#404944</color>
 
 
-    <color name="milk_purchase_color">#F4511E</color>
-    <color name="milk_sale_color">#006C4C</color>
-    <color name="milk_expense_color">#7B1FA2</color>
-    <color name="milk_profit_color">#1E88E5</color>
+    <color name="milk_sale_color">#006E1C</color>
+    <color name="milk_purchase_color">#005FB0</color>
+    <color name="milk_expense_color">#B3261E</color>
+    <color name="milk_profit_color">#006E1C</color>
 
 
     <!-- End -->

@@ -14,46 +14,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-
-        android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateFilterView">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="8dp">
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbarFadeDuration="@integer/material_motion_duration_long_1"
-                android:paddingVertical="8dp"
-
-                android:orientation="horizontal">
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal"
+                android:scrollbars="none">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAccount"
                         style="@style/Widget.MilkLedger.Button.Icon"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
                         android:text="Accounts"
                         app:iconPadding="8dp" />
-
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCashFlow"
                         style="@style/Widget.MilkLedger.Button.Icon"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
                         android:text="Cash Flow"
                         app:iconGravity="top"
                         app:iconPadding="8dp" />
@@ -61,8 +64,9 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnWallet"
                         style="@style/Widget.MilkLedger.Button.Icon"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
                         android:text="My Wallet"
                         app:iconGravity="top"
                         app:iconPadding="8dp" />
@@ -70,78 +74,58 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnNote"
                         style="@style/Widget.MilkLedger.Button.Icon"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="My Notes"
                         app:iconGravity="top"
                         app:iconPadding="8dp" />
 
                 </LinearLayout>
-
-
             </HorizontalScrollView>
 
-
-            <androidx.core.widget.NestedScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
                     android:orientation="vertical">
-
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/btnPurchase"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true">
-
+                        android:layout_marginBottom="12dp"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="vertical"
+                            android:padding="8dp">
 
                             <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 style="@style/Text.MilkLedger.DashboardLabel"
-
+                                android:layout_marginBottom="8dp"
                                 android:text="Purchases" />
 
                             <TextView
                                 android:id="@+id/tvTotalPurchases"
                                 style="@style/Text.MilkLedger.DashboardValue"
-                                android:drawableEnd="@drawable/ic_arrow_right"
-                                android:textColor="?attr/purchaseColor"
-                                tools:text="7,500,000" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/btnSale"
-                        style="@style/Widget.MilkLedger.DashboardCard"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                style="@style/Text.MilkLedger.DashboardLabel"
-                                android:text="Sales" />
-
-                            <TextView
-                                android:id="@+id/tvTotalSales"
-                                style="@style/Text.MilkLedger.DashboardValue"
-                                android:drawableEnd="@drawable/ic_arrow_right"
-                                android:textColor="?attr/saleColor"
-                                tools:text="12,000" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorPurchase"
+                                tools:text="7.5 M" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -150,70 +134,128 @@
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true">
+                        android:layout_marginBottom="12dp"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="vertical"
+                            android:padding="8dp">
 
                             <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 style="@style/Text.MilkLedger.DashboardLabel"
+                                android:layout_marginBottom="8dp"
                                 android:text="Expenses" />
 
                             <TextView
                                 android:id="@+id/tvTotalExpense"
                                 style="@style/Text.MilkLedger.DashboardValue"
-                                android:drawableEnd="@drawable/ic_arrow_right"
-                                android:textColor="?attr/colorError"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorExpense"
                                 tools:text="4,500" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+
+                    android:orientation="vertical">
+
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/btnSale"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:clickable="true"
+                        android:focusable="true">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="vertical"
+                            android:padding="8dp">
 
                             <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 style="@style/Text.MilkLedger.DashboardLabel"
-                                android:text="Gross Profit"
-                                android:textColor="?attr/colorOnPrimaryContainer" />
+                                android:layout_marginBottom="8dp"
+                                android:text="Sales" />
+
+                            <TextView
+                                android:id="@+id/tvTotalSales"
+                                style="@style/Text.MilkLedger.DashboardValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorSale"
+                                tools:text="12K" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardProfit"
+                        style="@style/Widget.MilkLedger.DashboardCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp">
+
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/Text.MilkLedger.DashboardLabel"
+                                android:layout_marginBottom="8dp"
+                                android:text="Net Profit" />
 
                             <TextView
                                 android:id="@+id/tvNetProfit"
                                 style="@style/Text.MilkLedger.DashboardValue"
-                                android:textColor="?attr/profitColor"
-                                tools:text="4,500" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorProfit"
+                                tools:text="55K" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-
-                    <TextView
-                        style="@style/Text.MilkLedger.SectionHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:text="Milk Overview" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvMilkStats"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_dashboard_stat" />
-
                 </LinearLayout>
 
-            </androidx.core.widget.NestedScrollView>
+            </LinearLayout>
 
+            <TextView
+                style="@style/Text.MilkLedger.SectionHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:text="Milk Overview" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMilkStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_dashboard_stat" />
 
         </LinearLayout>
-    </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

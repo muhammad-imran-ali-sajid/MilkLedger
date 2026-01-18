@@ -111,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:textColor="?attr/profitColor"
+            android:textColor="?attr/colorProfit"
             app:layout_constraintBottom_toBottomOf="@+id/tvName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvName"

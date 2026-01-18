@@ -26,7 +26,7 @@ class MilkLedgerApp : Application() {
 //        dataRepository.initialize()
 
 //
-//        DynamicColors.applyToActivitiesIfAvailable(this)
+        DynamicColors.applyToActivitiesIfAvailable(this)
 
     }
 }

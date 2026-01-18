@@ -1,16 +1,16 @@
 <resources>
-    <style name="Base.Theme.MilkLedger" parent="Theme.Material3.Light.NoActionBar">
 
-        <item name="android:statusBarColor">@android:color/transparent</item>
+    <style name="Base.Theme.MilkLedger" parent="Theme.Material3.DayNight.NoActionBar">
+
+        <!--        <item name="android:statusBarColor">@android:color/transparent</item>-->
         <!-- false means white  aur true means dark-->
-        <item name="android:windowLightStatusBar">true</item>
+        <!--        <item name="android:windowLightStatusBar">true</item>-->
 
 
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
-
 
 
         <item name="colorSecondary">@color/md_theme_secondary</item>
@@ -28,13 +28,10 @@
         <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
 
         <!-- Ledger semantic colors -->
-        <item name="purchaseColor">@color/milk_purchase_color</item>
-        <item name="saleColor">@color/milk_sale_color</item>
-        <item name="profitColor">@color/milk_profit_color</item>
-
-
-
-
+        <item name="colorPurchase">@color/milk_purchase_color</item>
+        <item name="colorSale">@color/milk_sale_color</item>
+        <item name="colorProfit">@color/milk_profit_color</item>
+        <item name="colorExpense">@color/milk_expense_color</item>
 
 
         <!--texts -->
@@ -53,7 +50,9 @@
     </style>
 
     <style name="Theme.MilkLedger" parent="Base.Theme.MilkLedger" />
+
     <style name="Theme.Launcher" parent="Theme.MilkLedger" />
+
     <style name="Theme.Auth" parent="Theme.MilkLedger" />
 
 </resources>

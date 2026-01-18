@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="start"
-        android:textColor="?attr/saleColor"
+        android:textColor="?attr/colorSale"
         tools:text="5000" />
 
     <TextView
@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="end"
-        android:textColor="?attr/purchaseColor"
+        android:textColor="?attr/colorPurchase"
         tools:text="0" />
 
 </LinearLayout>

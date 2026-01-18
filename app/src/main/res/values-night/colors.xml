@@ -31,6 +31,14 @@
 
 
 
+    <!--    App specific colors-->
+    <color name="milk_sale_color">#76DF8F</color>
+    <color name="milk_purchase_color">#A2C9FF</color>
+    <color name="milk_expense_color">#F2B8B5</color>
+    <color name="milk_profit_color">#76DF8F</color>
+
+
+
     <!-- End -->
 
 
@@ -80,14 +88,6 @@
     <color name="bg_color2">#2b2b2d</color>
 
 
-    <!--    App specific colors-->
-    <color name="sale_color">#008060</color>
-
-    <color name="purchase_color">#103766</color>
-
-    <color name="expense_color">#A03E48</color>
-
-    <color name="profit_color">#CCA000</color>
     <color name="title_color">#fff</color>
 
 
