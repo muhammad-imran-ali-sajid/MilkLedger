@@ -67,7 +67,7 @@
 
     <style name="Widget.MilkLedger.Card" parent="Widget.Material3.CardView.Filled">
         <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
-        <item name="contentPadding">12dp</item>
+        <item name="contentPadding">10dp</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Medium</item>
         <item name="strokeWidth">0dp</item>
     </style>
@@ -98,6 +98,7 @@
         <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
         <item name="android:textSize">20sp</item>
     </style>
+
 
     <style name="Text.MilkLedger.Title" parent="Type.MilkLedger.ClientForce">
         <item name="android:textColor">?attr/colorOnSurface</item>

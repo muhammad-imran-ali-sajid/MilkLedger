@@ -125,7 +125,7 @@ class MilkSaleRepository @Inject constructor(
                     credit = amountPaid,
                     profitImpact = 0,
                     // ✅ Yahan specifically "Received from Name" ayega
-                    note = "Received from $customerName"
+                    note = "Rec. from $customerName"
                 )
                 ledgerDao.insert(paymentLedger)
             }

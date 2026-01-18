@@ -16,8 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp"
         android:baselineAligned="false"
+        android:paddingHorizontal="12dp"
         app:layout_constraintTop_toBottomOf="@id/dateFilterView">
 
         <com.google.android.material.card.MaterialCardView
@@ -97,6 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
+        style="@style/Widget.MilkLedger.Card"
         app:cardBackgroundColor="?attr/colorSurfaceVariant"
         app:layout_constraintTop_toBottomOf="@id/layoutSummary">
 

@@ -7,7 +7,8 @@
     android:paddingTop="16dp"
     android:paddingBottom="8dp"
     android:text="Today's Sales"
-    android:textColor="@color/white"
+    android:textAppearance="@style/Text.MilkLedger.LabelSmall"
+    android:textColor="?attr/colorOnSecondary"
     android:textStyle="bold"
     android:textAllCaps="true"
-    android:background="@color/teal_700"/>
+    android:background="?attr/colorSecondary"/>
