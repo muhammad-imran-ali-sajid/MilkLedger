@@ -4,7 +4,7 @@
 
                 <item name="android:statusBarColor">@android:color/transparent</item>
         <!-- false means white  aur true means dark-->
-                <item name="android:windowLightStatusBar">true</item>
+                <item name="android:windowLightStatusBar">false</item>
 
 
         <item name="colorPrimary">@color/md_theme_primary</item>
