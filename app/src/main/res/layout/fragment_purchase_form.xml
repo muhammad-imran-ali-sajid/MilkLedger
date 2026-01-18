@@ -82,7 +82,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etMilkVolume"
-                        style="@style/TextInputMinimalStyle"
+                        style="@style/Theme.MilkLedger.InputTextSize"
                         android:layout_width="match_parent"
                         android:imeOptions="actionNext"
                         android:nextFocusForward="@id/etFat"

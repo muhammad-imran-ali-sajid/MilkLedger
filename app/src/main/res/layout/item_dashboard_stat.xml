@@ -6,6 +6,7 @@
     android:id="@+id/cardRoot"
     style="@style/Widget.MilkLedger.DashboardCard"
     android:layout_width="match_parent"
+    app:contentPadding="16dp"
     android:layout_height="wrap_content">
 
     <LinearLayout
