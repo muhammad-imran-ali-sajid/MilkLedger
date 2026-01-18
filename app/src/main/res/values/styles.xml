@@ -72,16 +72,6 @@
         <item name="strokeWidth">0dp</item>
     </style>
 
-    <style name="Widget.MilkLedger.SmallCard" parent="Widget.Material3.CardView.Filled">
-        <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
-        <item name="contentPadding">4dp</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Medium</item>
-        <item name="strokeWidth">0dp</item>
-    </style>
-
-
-
-
 
     <style name="Widget.MilkLedger.Button.Primary" parent="Widget.Material3.Button">
         <item name="backgroundTint">?attr/colorPrimary</item>
@@ -115,62 +105,12 @@
     </style>
 
 
-    <style name="MyCustomEditText" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
-        <item name="android:selectAllOnFocus">true</item>
-        <item name="android:inputType">date</item>
-    </style>
-
-    <style name="MyCustomTextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="editTextStyle">@style/MyCustomEditText</item>
-        <item name="android:editTextStyle">@style/MyCustomEditText</item>
-    </style>
-
-    <style name="MyDatePickerTheme" parent="ThemeOverlay.Material3.MaterialCalendar">
-        <item name="textInputStyle">@style/MyCustomTextInputLayout</item>
-    </style>
-
-
     <!--End-->
-
-
-
-    <style name="Style.InputLabel" parent="TextLabel2">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">2</item>
-    </style>
-
-    <style name="Style.TextViewValue" parent="TextValue">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">4</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:background">@drawable/bg_edittext_readable</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-
-
-
-
 
 
     <style name="TextAppearance.MilkLedger.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
         <!-- Increase from default 16sp to 18sp -->
         <item name="android:textSize">@dimen/text_size_body_large_custom</item>
-    </style>
-
-    <style name="TextAppearance.MilkLedger.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
-        <!-- Increase from default 22sp to 24sp and make bold for emphasis -->
-        <item name="android:textSize">@dimen/text_size_title_large_custom</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextAppearance.MilkLedger.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
-        <!-- Increase size and add extra weight -->
-        <item name="android:textSize">@dimen/text_size_headline_medium_custom</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
 
@@ -186,10 +126,6 @@
     <style name="TextLabel" parent="Text.Normal" />
 
 
-    <style name="TextLabel2" parent="TextLabel">
-        <item name="android:gravity">start</item>
-    </style>
-
     <!-- Style for all value TextViews -->
     <style name="TextValue" parent="Text.Normal" />
 
@@ -202,115 +138,21 @@
     </style>
 
     <!-- Notes style -->
-    <style name="TextNote">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#444444</item>
-        <item name="android:gravity">start</item>
-        <item name="android:paddingTop">4dp</item>
-    </style>
 
 
     <!-- Buttons -->
-    <style name="Button.Filled" parent="Widget.Material3.Button">
-        <item name="cornerRadius">@dimen/corner_medium</item>
-        <item name="textAppearanceButton">@style/Text.Button</item>
-        <item name="elevation">@dimen/elevation_high</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
-
-
-    </style>
 
 
     <!-- Cards -->
-    <style name="Card.Filled" parent="Widget.Material3.CardView.Filled">
-        <item name="cardCornerRadius">@dimen/corner_medium</item>
-        <item name="cardElevation">@dimen/elevation_low</item>
-
-    </style>
-
-    <style name="Card.Outlined" parent="Widget.Material3.CardView.Outlined">
-        <item name="cardCornerRadius">@dimen/corner_large</item>
-    </style>
 
     <!-- Inputs -->
-    <style name="TextInput" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="boxCornerRadiusTopStart">@dimen/corner_medium</item>
-        <item name="boxCornerRadiusTopEnd">@dimen/corner_medium</item>
-        <item name="boxCornerRadiusBottomStart">@dimen/corner_medium</item>
-        <item name="boxCornerRadiusBottomEnd">@dimen/corner_medium</item>
-    </style>
 
-    <style name="ExtendedFABStyle" parent="Widget.Material3.ExtendedFloatingActionButton.Secondary">
-        <item name="backgroundTint">@color/primary</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="iconTint">@color/white</item>
-        <item name="elevation">8dp</item>
-
-    </style>
-
-
-    <style name="MaterialButtonStyle" parent="Widget.Material3.Button.ElevatedButton">
-        <item name="backgroundTint">@color/primary</item>
-        <item name="elevation">6dp</item>
-        <item name="cornerRadius">12dp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="iconTint">@color/white</item>
-
-    </style>
-
-
-    <style name="BaseCardStyle" parent="Widget.Material3.CardView.Elevated">
-        <item name="cardBackgroundColor">@color/blue_700</item>
-        <item name="android:layout_margin">4dp</item>
-
-    </style>
-
-    <style name="SupplierCardStyle" parent="BaseCardStyle">
-        <item name="cardBackgroundColor">#ddd</item>
-    </style>
 
     <!--    <style name="DashboardCard" parent="BaseCardStyle">-->
     <!--        <item name="android:clickable">true</item>-->
     <!--        <item name="android:focusable">true</item>-->
     <!--    </style>-->
 
-    <style name="PurchaseCard">
-        <item name="cardBackgroundColor">@color/white</item>
-        <item name="cardElevation">8dp</item>
-        <item name="android:layout_margin">4dp</item>
-        <item name="cardCornerRadius">12dp</item>
-        <item name="strokeColor">@color/white</item>
-
-    </style>
-
-
-    <style name="SaleCard">
-        <item name="cardBackgroundColor">@color/white</item>
-        <item name="cardElevation">8dp</item>
-        <item name="android:layout_margin">4dp</item>
-        <item name="cardCornerRadius">12dp</item>
-        <item name="strokeColor">@color/white</item>
-
-    </style>
-
-    <style name="SupplierDetailCard" parent="BaseCardStyle">
-        <item name="cardBackgroundColor">#E2E8EB</item>
-        <item name="strokeColor">#E2E8EB</item>
-
-    </style>
-
-    <style name="CustomerDetailCard" parent="BaseCardStyle">
-        <item name="cardBackgroundColor">#E2E8EB</item>
-        <item name="strokeColor">#E2E8EB</item>
-
-    </style>
 
     <style name="RecyclerViewStyle">
         <item name="android:scrollbars">vertical</item>
@@ -324,110 +166,12 @@
     </style>
 
 
-    <style name="CompactToggleButton" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">40dp</item>
-        <item name="android:paddingHorizontal">4dp</item>
-        <item name="strokeWidth">1dp</item>
-        <item name="android:textColor">@color/textview_text_color</item>
-        <item name="strokeColor">@color/primary</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="cornerRadius">8dp</item>
-    </style>
-
     <style name="PdfSummaryTextStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/blue_700</item>
         <item name="android:textSize">8sp</item>
         <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="TextViewSummaryStyle">
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="SummaryPdfStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:weightSum">2</item>
-    </style>
-
-    <style name="SummaryPdfLabelStyle">
-        <item name="android:textColor">@color/black</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-    </style>
-
-
-    <style name="PdfRowStyle">
-
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:paddingVertical">6dp</item>
-    </style>
-
-    <style name="PdfLabel">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">2</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="PdfValue">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">start</item>
-
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="PdfSectionTitle">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:layout_marginVertical">16dp</item>
-    </style>
-
-
-    <style name="DashboardCard">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_marginTop">6dp</item>
-        <item name="android:elevation">4dp</item>
-        <item name="cardBackgroundColor">@color/white</item>
-        <item name="android:radius">12dp</item>
-    </style>
-
-
-    <style name="DashboardInnerRow">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:orientation">horizontal</item>
-
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingHorizontal">16dp</item>
-        <item name="android:paddingVertical">12dp</item>
-    </style>
-
-
-    <style name="DashboardMilkLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textSize">24sp</item>
     </style>
 
 
@@ -439,22 +183,6 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-
-    <style name="DashboardLabel">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="DashboardValue">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
 
     <style name="PDFRowRecordStyle">
         <item name="android:layout_width">0dp</item>

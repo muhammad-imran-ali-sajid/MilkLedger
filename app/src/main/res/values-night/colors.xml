@@ -21,7 +21,6 @@
 
     <!-- ========= BACKGROUND ========= -->
     <color name="md_theme_background">#0F1512</color>
-    <color name="md_theme_onBackground">#E0E3DF</color>
 
     <!-- ========= SURFACE ========= -->
     <color name="md_theme_surface">#0F1512</color>
@@ -42,71 +41,42 @@
     <!-- End -->
 
 
-    <color name="teal_dark">#00796B</color>
-    <color name="steel_blue">#4682B4</color>
-    <color name="midnight_blue">#1C2833</color>
     <color name="deep_forest_green">#2C3E50</color>
-    <color name="sage_green">#45B39D</color>
-    <color name="soft_black">#17202A</color>
 
     <!-- Primary Brand Color (A strong, accessible blue) -->
     <!--    <color name="primary">#00796B</color>-->
     <color name="primary">#45B39D</color>
     <!-- Text/Icons ON Primary (Should always be white for contrast) -->
-    <color name="on_primary">#eee</color>
 
 
     <!-- Secondary Accent Color (A neutral green for secondary actions or completion status) -->
     <!--    <color name="secondary">#4D8B31</color>-->
-    <color name="secondary">#0000aa</color>
     <!-- Text/Icons ON Secondary -->
-    <color name="on_secondary">#FFFFFF</color>
 
     <!-- UI Background Surfaces (Near-white for light theme) -->
-    <color name="surface">#232323</color>
-    <color name="background">#333</color>
     <!-- Text/Icons ON Surfaces (Near-black for contrast) -->
-    <color name="on_surface">#eee</color>
 
     <color name="teal_700">#00796B</color>
-    <color name="teal_200">#80CBC4</color>
     <color name="orange_700">#E65100</color>
     <color name="orange_200">#eecD90</color>
-    <color name="orange_300">#ee3820</color>
 
 
     <color name="blue_700">#1236DD</color>
-    <color name="blue_300">#13aAF9</color>
-    <color name="blue_200">#90CAF9</color>
     <color name="green_700">#2E7D32</color>
     <color name="green">#2faD32</color>
-    <color name="green_200">#A5D6A7</color>
-    <color name="green_300">#aca512</color>
-    <color name="bg_dark">#222332</color>
-    <color name="bg_dark2">#223333</color>
-    <color name="bg_color1">#1b1b1d</color>
-    <color name="bg_color2">#2b2b2d</color>
-
-
-    <color name="title_color">#fff</color>
 
 
     <color name="white">#fff</color>
     <color name="black">#000</color>
-    <color name="transparent">#00000000</color>
-    <color name="light_black">#ccc</color>
     <color name="grey">#eeeeee</color>
     <color name="red">#F44336</color>
-    <color name="icon_color">#000000</color>
     <color name="blue">#2196F3</color>
     <color name="blue_100">#B3E5FC</color>
 
 
-    <color name="edittext_bg_tint">#FFFFFF</color>       <!-- EditText white -->
-    <color name="textview_bg_tint">#FFF3E0</color>       <!-- Light orange-ish for TextViews -->
-    <color name="textview_text_color">#000</color>
+    <!-- EditText white -->
+    <!-- Light orange-ish for TextViews -->
 
 
     <!-- Divider -->
-    <color name="divider">#E0E0E0</color>
 </resources>

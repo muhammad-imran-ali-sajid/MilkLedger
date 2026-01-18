@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout_date_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
@@ -12,34 +11,35 @@
 
 
     <ImageButton
-        android:id="@+id/btn_prev_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
+        android:id="@+id/btnPrevDate"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="12dp"
         android:src="@drawable/ic_arrow"
         app:tint="?attr/colorOnSurface" />
 
     <TextView
-        android:id="@+id/tv_selected_date"
         style="@style/Text.Normal"
+        android:id="@+id/tvSelectedDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="6"
         app:drawableTint="?attr/colorOnSurface"
         android:gravity="center"
         android:padding="8dp"
+
         android:drawableEnd="@drawable/ic_arrow_pick"
         android:text="12-10-2025"
         android:textSize="20sp"
         app:drawableStartCompat="@drawable/ic_calendar" />
 
     <ImageButton
-        android:id="@+id/btn_next_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="2"
+        android:id="@+id/btnNextDate"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="12dp"
         android:rotation="180"

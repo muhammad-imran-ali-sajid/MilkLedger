@@ -56,7 +56,7 @@
         app:layout_constraintTop_toTopOf="@id/guideline_top">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_email"
+            android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress" />
@@ -77,8 +77,8 @@
         android:layout_marginTop="16dp">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_password"
             android:layout_width="match_parent"
+            android:id="@+id/etPassword"
             android:layout_height="wrap_content"
             android:inputType="textPassword" />
 
@@ -100,10 +100,10 @@
 
     <!-- Forgot Password Link/Button -->
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btn_forgot_password"
         style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/btnForgotPassword"
         android:text="Forgot Password?"
         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
         android:textColor="?attr/colorPrimary"
@@ -113,7 +113,7 @@
 
     <!-- Error/Status Message -->
     <TextView
-        android:id="@+id/tv_status_message"
+        android:id="@+id/tvStatusMessage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAlignment="center"

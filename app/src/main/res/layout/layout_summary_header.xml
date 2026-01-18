@@ -53,7 +53,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvTotalMilkLabel"
                     style="@style/Text.Normal"
                     android:text="Total Milk"
                     android:textColor="?attr/colorOnSurfaceVariant" />
@@ -74,7 +73,6 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvTotalAmountLabel"
                     style="@style/Text.Normal"
                     android:text="Total Amount"
                     android:textColor="?attr/colorOnSurfaceVariant" />

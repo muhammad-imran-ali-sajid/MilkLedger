@@ -35,7 +35,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_receipt"
             style="@style/TextTitleUrdu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -158,7 +157,6 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/summaryContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -172,7 +170,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                tools:ignore="UselessParent">
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

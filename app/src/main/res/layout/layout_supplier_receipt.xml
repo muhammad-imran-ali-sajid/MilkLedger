@@ -35,7 +35,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_receipt"
             style="@style/TextTitleUrdu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -157,7 +156,6 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:id="@+id/summaryContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -195,7 +193,6 @@
                     android:textColor="#616161" />
 
                 <TextView
-                    android:id="@+id/tv_avg_ts"
                     style="@style/PdfSummaryTextStyle"
                     android:textColor="#000000"
                     tools:text="24" />
