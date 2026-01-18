@@ -9,12 +9,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="+ Add Sale"
+        android:paddingHorizontal="14dp"
+        style="@style/Widget.Material3.Button"
         android:textColor="?attr/colorOnPrimary"
-        android:paddingHorizontal="4dp"
-        app:backgroundTint="?attr/colorSale"
-        style="@style/Widget.Material3.Button.IconButton"
-         />
-
+        app:backgroundTint="?attr/colorSale" />
 
 
 </FrameLayout>

@@ -6,15 +6,15 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddExpense"
+        style="@style/Widget.Material3.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingHorizontal="14dp"
         android:text="+ Add Exp."
         android:textColor="?attr/colorOnPrimary"
-        android:paddingHorizontal="4dp"
         app:backgroundTint="?attr/colorExpense"
-        style="@style/Widget.Material3.Button.IconButton"
-         />
 
+        />
 
 
 </FrameLayout>
