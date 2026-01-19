@@ -13,6 +13,7 @@ import com.miassolutions.milkledger.databinding.ItemPurchaseBinding
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
+import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
@@ -39,10 +40,10 @@ class MilkPurchaseAdapter(
             tvName.text = item.supplierName
 
             // Measurements
-            tvVolume.text = String.format("%.1f", item.volume)
-            tvFat.text = String.format("%.1f", item.fat)
-            tvLr.text = String.format("%.1f", item.lr)
-            tvTs.text = String.format("%.2f", item.ts)
+            tvVolume.text = item.volume.toFormattedMilk()
+            tvFat.text = item.fat.toFormattedMilk()
+            tvLr.text = item.lr.toFormattedMilk()
+            tvTs.text =  item.ts.toFormattedMilk()
 
             // Financials
             tvPrice.text = item.totalAmount.toPrice()
