@@ -32,7 +32,7 @@ sealed interface MilkSaleListUiEvent {
     data object OnDateClick : MilkSaleListUiEvent // Date Picker kholne k liye
     data class OnDateSelected(val date: LocalDate) : MilkSaleListUiEvent
 
-    data class OnBalanceClick(val customerId: String, val customerName: String) :
+    data class OnBalanceClick(val customerId: String, val customerName: String, val dateMillis: Long) :
         MilkSaleListUiEvent
 
     // --- Actions ---
@@ -56,7 +56,7 @@ sealed interface MilkSaleListUiEffect {
     // Existing Sale edit karne k liye (Transaction ID pass hogi)
     data class NavigateToEditSale(val saleId: String) : MilkSaleListUiEffect
 
-    data class OpenBalanceHistorySheet(val id: String, val name: String) : MilkSaleListUiEffect
+    data class OpenBalanceHistorySheet(val id: String, val name: String, val dateMillis: Long) : MilkSaleListUiEffect
 
 
     // Customer ka khata kholne k liye

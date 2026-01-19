@@ -38,11 +38,12 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
             onEditClick = { id ->
                 viewModel.onEvent(PurchaseListUiEvent.OnEditClick(id))
             },
-            onBalanceHistoryClick = { id, name ->
+            onBalanceHistoryClick = { id, name, dateMillis ->
                 viewModel.onEvent(
                     PurchaseListUiEvent.OnBalanceClick(
                         id,
-                        name
+                        name,
+                        dateMillis
                     )
                 )
             },
@@ -86,7 +87,7 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                 menu.findItem(R.id.actionShowSummary) ?: return@setupMenuWithCustomView
             summaryItem.setOnMenuItemClickListener {
                 val isVisible = binding.summaryView.isShown
-                if (isVisible){
+                if (isVisible) {
                     binding.summaryView.hide()
                 } else {
                     binding.summaryView.show()
@@ -185,11 +186,11 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
                 }
 
                 is PurchaseListUiEffect.OpenBalanceHistorySheet -> {
-                    val sheet = BalanceHistoryBottomSheet.newInstance(
+                    BalanceHistoryBottomSheet.newInstance(
                         accountId = effect.id,
-                        accountName = effect.name
-                    )
-                    sheet.show(childFragmentManager, "BalanceHistorySheet")
+                        accountName = effect.name,
+                        dateLimit = effect.dateMillis // 🔥 Us item ki date
+                    ).show(childFragmentManager, "History")
 
                 }
 

@@ -103,7 +103,8 @@ class MilkSaleListViewModel @Inject constructor(
                 emitEffect(
                     MilkSaleListUiEffect.OpenBalanceHistorySheet(
                         event.customerId,
-                        event.customerName
+                        event.customerName,
+                        event.dateMillis
                     )
                 )
             }

@@ -24,7 +24,7 @@ sealed class PurchaseListUiEvent {
 
 
     data class OnEditClick(val purchaseId: String) : PurchaseListUiEvent()
-    data class OnBalanceClick(val supplierId: String, val supplierName: String) :
+    data class OnBalanceClick(val supplierId: String, val supplierName: String, val dateMillis: Long) :
         PurchaseListUiEvent()
 
 }
@@ -38,5 +38,5 @@ sealed class PurchaseListUiEffect {
 
     object NavigateToAddPurchase : PurchaseListUiEffect()
     data class NavigateToEditPurchase(val id: String) : PurchaseListUiEffect()
-    data class OpenBalanceHistorySheet(val id: String, val name: String) : PurchaseListUiEffect()
+    data class OpenBalanceHistorySheet(val id: String, val name: String, val dateMillis: Long) : PurchaseListUiEffect()
 }

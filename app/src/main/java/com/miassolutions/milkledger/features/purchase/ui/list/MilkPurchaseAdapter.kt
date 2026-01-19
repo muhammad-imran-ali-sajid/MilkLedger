@@ -18,7 +18,7 @@ import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class MilkPurchaseAdapter(
     private val onEditClick: (String) -> Unit,
-    private val onBalanceHistoryClick: (String, String) -> Unit,
+    private val onBalanceHistoryClick: (supplierId: String, supplierName: String, dateMillis: Long) -> Unit,
     private val onSupplierHistoryClick: (supplierId: String, supplierName: String) -> Unit
 ) : ListAdapter<MilkPurchaseUiModel, MilkPurchaseAdapter.PurchaseViewHolder>(DiffCallback) {
 
@@ -75,7 +75,6 @@ class MilkPurchaseAdapter(
             }
 
 
-
             // Note
             if (!item.note.isNullOrBlank()) {
                 tvNotes.isVisible = true
@@ -95,7 +94,8 @@ class MilkPurchaseAdapter(
             btnBalance.setOnClickListener {
                 onBalanceHistoryClick(
                     item.supplierId,
-                    item.supplierName
+                    item.supplierName,
+                    item.dateMillis
                 )
             }
         }

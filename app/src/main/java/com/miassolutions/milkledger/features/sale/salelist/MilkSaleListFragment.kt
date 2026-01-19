@@ -56,8 +56,8 @@ class MilkSaleListFragment :
                     )
                 )
             },
-            onBalanceClick = { id, name ->
-                viewModel.onEvent(OnBalanceClick(id, name))
+            onBalanceClick = { id, name, date ->
+                viewModel.onEvent(OnBalanceClick(id, name, date))
             }
 
         )
@@ -197,8 +197,9 @@ class MilkSaleListFragment :
 
                 is MilkSaleListUiEffect.OpenBalanceHistorySheet -> {
                     val sheet = BalanceHistoryBottomSheet.newInstance(
-                        accountId = effect.id,  // Customer ki ID
-                        accountName = effect.name
+                        accountId = effect.id,
+                        accountName = effect.name,
+                        dateLimit = effect.dateMillis
                     )
                     sheet.show(childFragmentManager, "History")
                 }

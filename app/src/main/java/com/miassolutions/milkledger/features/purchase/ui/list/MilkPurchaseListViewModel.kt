@@ -96,7 +96,13 @@ class MilkPurchaseListViewModel @Inject constructor(
                 emitEffect(NavigateToEditPurchase(event.purchaseId))
 
             is PurchaseListUiEvent.OnBalanceClick -> {
-                emitEffect(OpenBalanceHistorySheet(event.supplierId, event.supplierName))
+                emitEffect(
+                    OpenBalanceHistorySheet(
+                        event.supplierId,
+                        event.supplierName,
+                        event.dateMillis
+                    )
+                )
             }
 
             is PurchaseListUiEvent.OnSupplierHistoryClick -> {
