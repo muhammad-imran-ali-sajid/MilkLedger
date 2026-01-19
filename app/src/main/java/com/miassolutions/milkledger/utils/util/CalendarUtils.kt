@@ -130,37 +130,7 @@ class ConditionalPastDateValidator(
 
 
 
-class DatePickerLogic {
 
-    fun buildConstraints(isAuthorized: Boolean): CalendarConstraints {
-        val today = CalendarUtils.getTodayUtcTimestampAtMidnight()
-
-        val constraintsBuilder = CalendarConstraints.Builder()
-
-
-        constraintsBuilder.setEnd(today)
-
-
-        val validator = ConditionalPastDateValidator(isAuthorized, today)
-
-        constraintsBuilder.setFirstDayOfWeek(Calendar.MONDAY)
-            .setValidator(validator)
-
-
-        if (isAuthorized) {
-            // Allow the calendar to scroll back to a reasonable date (e.g., 100 years ago)
-            val pastDate = Calendar.getInstance(TimeZone.getTimeZone("UTC")).apply {
-                add(Calendar.YEAR, -100)
-            }.timeInMillis
-            constraintsBuilder.setStart(pastDate)
-        } else {
-            // For unauthorized users, we only allow scrolling back to the current month.
-            constraintsBuilder.setStart(today)
-        }
-
-        return constraintsBuilder.build()
-    }
-}
 
 
 

@@ -3,7 +3,6 @@ package com.miassolutions.milkledger.app
 import android.app.Application
 import com.google.android.material.color.DynamicColors
 import com.google.firebase.FirebaseApp
-import com.miassolutions.milkledger.utils.helper.RemoteConfigHelper
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -13,9 +12,6 @@ class MilkLedgerApp : Application() {
         super.onCreate()
 
         FirebaseApp.initializeApp(this)
-        RemoteConfigHelper.init()
-
-
         DynamicColors.applyToActivitiesIfAvailable(this)
 
     }
