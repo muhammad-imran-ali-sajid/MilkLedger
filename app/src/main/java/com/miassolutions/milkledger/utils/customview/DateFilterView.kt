@@ -1,7 +1,6 @@
-package com.miassolutions.milkledger.utils.customviews
+package com.miassolutions.milkledger.utils.customview
 
 import android.content.Context
-import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet

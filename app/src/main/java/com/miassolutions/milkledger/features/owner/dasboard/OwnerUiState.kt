@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.features.owner.dasboard
 
 import com.miassolutions.milkledger.features.owner.domain.DailyProfitTuple
 import com.miassolutions.milkledger.features.owner.domain.OwnerDashboardData
-import com.miassolutions.milkledger.utils.customviews.DateFilterView
+import com.miassolutions.milkledger.utils.customview.DateFilterView
 import java.time.LocalDate
 
 data class OwnerUiState(

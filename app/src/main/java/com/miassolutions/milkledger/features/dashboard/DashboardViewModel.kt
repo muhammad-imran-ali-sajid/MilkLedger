@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.*
 import com.miassolutions.milkledger.features.dashboard.data.DashboardRepository
-import com.miassolutions.milkledger.utils.customviews.DateFilterView
+import com.miassolutions.milkledger.utils.customview.DateFilterView
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
 import com.miassolutions.milkledger.core.ui.BaseViewModel
-import com.miassolutions.milkledger.utils.customviews.DateFilterView
+import com.miassolutions.milkledger.utils.customview.DateFilterView
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.combine

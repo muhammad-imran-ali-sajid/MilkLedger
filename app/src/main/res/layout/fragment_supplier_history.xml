@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     >
 
-    <com.miassolutions.milkledger.utils.customviews.DateFilterView
+    <com.miassolutions.milkledger.utils.customview.DateFilterView
         android:id="@+id/dateFilterView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

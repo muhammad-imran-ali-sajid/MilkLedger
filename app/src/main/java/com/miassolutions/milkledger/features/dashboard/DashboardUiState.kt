@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.features.dashboard
 
-import com.miassolutions.milkledger.utils.customviews.DateFilterView
+import com.miassolutions.milkledger.utils.customview.DateFilterView
 import java.time.LocalDate
 
 
