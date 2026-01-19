@@ -168,7 +168,7 @@ android:layout_margin="4dp"
                     android:id="@+id/tilPayment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -179,7 +179,7 @@ android:layout_margin="4dp"
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Payment" />
+                        android:text="Receive" />
 
                     <TextView
                         android:id="@+id/tvPayment"

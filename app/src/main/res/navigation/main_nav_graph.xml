@@ -78,7 +78,7 @@
     <fragment
         android:id="@+id/supplierDetailFragment"
         android:name="com.miassolutions.milkledger.features.purchase.ui.supplierhistory.SupplierHistoryFragment"
-        android:label="{supplierName}"
+        android:label="{supplierName}'s History"
         tools:layout="@layout/fragment_supplier_history">
         <argument
             android:name="supplierName"
@@ -145,7 +145,7 @@
     <fragment
         android:id="@+id/expenseFormFragment"
         android:name="com.miassolutions.milkledger.features.expense.ui.form.ExpenseFormFragment"
-        android:label="ExpenseFormFragment"
+        android:label="Expense Form"
         tools:layout="@layout/fragment_add_expense">
         <argument
             android:name="selectedDate"
@@ -155,7 +155,7 @@
     <dialog
         android:id="@+id/editExpenseBottomSheet"
         android:name="com.miassolutions.milkledger.features.expense.ui.form.EditExpenseBottomSheet"
-        android:label="EditExpenseBottomSheet"
+        android:label="Edit Expense"
         tools:layout="@layout/bottom_sheet_edit_expense">
         <argument
             android:name="expense"
@@ -223,7 +223,7 @@
     <fragment
         android:id="@+id/noteListFragment"
         android:name="com.miassolutions.milkledger.features.note.ui.list.NoteListFragment"
-        android:label="NoteListFragment">
+        android:label="Notes">
         <action
             android:id="@+id/action_noteListFragment_to_addEditNoteFragment"
             app:destination="@id/addEditNoteFragment" />
@@ -231,7 +231,7 @@
     <fragment
         android:id="@+id/addEditNoteFragment"
         android:name="com.miassolutions.milkledger.features.note.ui.form.AddEditNoteFragment"
-        android:label="AddEditNoteFragment">
+        android:label="Note Form">
         <argument
             android:name="noteId"
             app:argType="string"

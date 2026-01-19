@@ -3,19 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottomSheetRoot"
     android:layout_width="match_parent"
-    android:gravity="center_vertical"
     android:layout_height="match_parent"
+    android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="24dp">
 
     <TextView
+        style="@style/Text.Normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        style="@style/Text.Normal"
         android:padding="24dp"
-        android:text="Owner Details"/>
-
+        android:text="Owner Details" />
 
 
     <com.google.android.material.textfield.TextInputLayout
@@ -37,7 +36,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-
         android:hint="Phone number">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -49,32 +47,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
-
-<!--    <com.google.android.material.textfield.TextInputLayout-->
-<!--        android:id="@+id/etAdvanceLayout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="12dp"-->
-<!--        android:hint="Advance Amount">-->
-
-<!--        <com.google.android.material.textfield.TextInputEditText-->
-<!--            android:id="@+id/etAdvanceAmount"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:imeOptions="actionDone"-->
-<!--            android:inputType="numberDecimal" />-->
-<!--    </com.google.android.material.textfield.TextInputLayout>-->
-
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSave"
-
         style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="300dp"
         android:text="Save" />
 
 </LinearLayout>

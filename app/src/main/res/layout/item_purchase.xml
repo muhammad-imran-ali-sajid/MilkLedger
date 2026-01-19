@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MilkLedger.Card"
     android:layout_width="match_parent"
-    android:layout_margin="4dp"
     android:layout_height="wrap_content"
+    android:layout_margin="4dp"
     app:contentPadding="0dp">
 
     <LinearLayout
@@ -63,12 +62,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="5">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -131,13 +131,14 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
+
                         android:layout_height="wrap_content"
                         android:text="TS" />
 
@@ -181,34 +182,32 @@
                         style="@style/Text.MilkLedger.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="10000" />
+                        tools:text="000,000" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/tilPayment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
-                        android:drawableEnd="@drawable/ic_info"
-                        android:drawablePadding="6dp"
-                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Payment" />
+                        android:drawableEnd="@drawable/ic_info"
+                        android:drawablePadding="6dp"
+                        android:drawableTint="?attr/colorOnSecondaryContainer"
+                        android:text="Paid" />
 
                     <TextView
                         android:id="@+id/tvPayment"
                         style="@style/Text.MilkLedger.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="10,000" />
-
-
+                        tools:text="000,000" />
 
 
                 </LinearLayout>
@@ -222,12 +221,12 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:drawableEnd="@drawable/ic_info"
-                        android:drawablePadding="4dp"
-                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_info"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         android:text="Bal." />
 
                     <TextView
@@ -241,7 +240,7 @@
                         app:autoSizeMaxTextSize="24sp"
                         app:autoSizeMinTextSize="14sp"
                         app:autoSizeTextType="uniform"
-                        tools:text="1,000" />
+                        tools:text="000,000" />
                 </LinearLayout>
             </LinearLayout>
 
