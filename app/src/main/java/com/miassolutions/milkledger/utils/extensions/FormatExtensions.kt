@@ -5,43 +5,24 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.miassolutions.milkledger.R
 import kotlin.math.abs
+import kotlin.math.round
 import kotlin.math.roundToLong
-
-fun Long.toSignedBalanceRupee(): String {
-    val rupees = this / 100.0
-    val absRupees = abs(rupees) // Minus sign hata dein, hum khud lagayenge
-
-    // Decimal formatting (Zero hatao agar nahi hai)
-    val formattedPrice = if (absRupees % 1.0 == 0.0) {
-        String.format("%.0f", absRupees)
-    } else {
-        String.format("%.2f", absRupees)
-    }
-
-    return when {
-        this > 0 -> "+ Rs. $formattedPrice" // Positive: Leny hen
-        this < 0 -> "- Rs. $formattedPrice" // Negative: Deny hen
-        else -> "Rs. 0"                     // Zero
-    }
-}
 
 fun Long.toSignedBalance(): String {
     val rupees = this / 100.0
-    val absRupees = abs(rupees) // Minus sign hata dein, hum khud lagayenge
 
-    // Decimal formatting (Zero hatao agar nahi hai)
-    val formattedPrice = if (absRupees % 1.0 == 0.0) {
-        String.format("%.0f", absRupees)
-    } else {
-        String.format("%.2f", absRupees)
-    }
+    // Rounded absolute value
+    val rounded = round(abs(rupees)).toLong()
+
+    // Zero case — sab se pehle handle karo
+    if (rounded == 0L) return "0"
 
     return when {
-        this > 0 -> "+$formattedPrice" // Positive: Leny hen
-        this < 0 -> "-$formattedPrice" // Negative: Deny hen
-        else -> "Rs. 0"                     // Zero
+        this > 0 -> "+$rounded"
+        else -> "-$rounded"
     }
 }
+
 
 
 

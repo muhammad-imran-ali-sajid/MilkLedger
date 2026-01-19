@@ -83,10 +83,10 @@ object PdfMapper {
             // C. Create Row Data
             listOf(
                 item.dateMillis.toLocalDate().toCompleteDateFormat(),
-                String.format("%.1f", item.volume),
-                String.format("%.1f", item.fat),
-                String.format("%.1f", item.lr),
-                String.format("%.2f", item.ts), // 🔥 New TS Column
+                item.volume.toFormattedMilk(),
+                item.fat.toFormattedMilk(),
+                item.lr.toFormattedMilk(),
+                item.ts.toFormattedMilk(),
                 item.rate.toInt().toString(),
                 item.totalAmount.toPrice(),
                 item.paymentMade.toPrice(),
@@ -105,10 +105,10 @@ object PdfMapper {
         // 4. Create Summary Row
         val summaryRow = listOf(
             "TOTAL",
-            String.format("%.1f", sumVol), // Total Volume
-            String.format("%.2f", avgFat), // Simple Avg Fat
-            String.format("%.2f", avgLr),  // Simple Avg LR
-            String.format("%.2f", avgTs),  // Simple Avg TS
+            sumVol.toFormattedMilk(),
+            avgFat.toFormattedMilk(),
+            avgLr.toFormattedMilk(),
+            avgTs.toFormattedMilk(),
             avgRate.toInt().toString(),    // Simple Avg Rate
             sumAmount.toPrice(),           // Total Purchase Amount
             sumPaid.toPrice(),             // Total Paid
