@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MilkLedger.Card"
     android:layout_width="match_parent"
-    android:layout_marginTop="8dp"
+    android:layout_margin="4dp"
     android:layout_height="wrap_content"
     app:contentPadding="0dp">
 
