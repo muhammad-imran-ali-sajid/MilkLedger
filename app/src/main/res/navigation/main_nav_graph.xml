@@ -41,11 +41,7 @@
         android:name="com.miassolutions.milkledger.features.settings.SettingsFragment"
         android:label="Settings"
         tools:layout="@layout/fragment_settings" />
-    <fragment
-        android:id="@+id/devSettingsFragment"
-        android:name="com.miassolutions.milkledger.zplayground.DevSettingsFragment"
-        android:label="DevSettingsFragment"
-        tools:layout="@layout/fragment_dev_settings" />
+
     <fragment
         android:id="@+id/driveBackupFragment"
         android:name="com.miassolutions.milkledger.features.backup.DriveBackupFragment"
@@ -227,7 +223,7 @@
     <fragment
         android:id="@+id/noteListFragment"
         android:name="com.miassolutions.milkledger.features.note.ui.list.NoteListFragment"
-        android:label="NoteListFragment" >
+        android:label="NoteListFragment">
         <action
             android:id="@+id/action_noteListFragment_to_addEditNoteFragment"
             app:destination="@id/addEditNoteFragment" />
@@ -235,7 +231,7 @@
     <fragment
         android:id="@+id/addEditNoteFragment"
         android:name="com.miassolutions.milkledger.features.note.ui.form.AddEditNoteFragment"
-        android:label="AddEditNoteFragment" >
+        android:label="AddEditNoteFragment">
         <argument
             android:name="noteId"
             app:argType="string"
