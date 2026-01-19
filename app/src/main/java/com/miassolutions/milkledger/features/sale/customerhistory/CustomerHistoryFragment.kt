@@ -10,8 +10,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.pdf.PdfCustomerMapper
 import com.miassolutions.milkledger.core.pdf.PdfGenerator
+import com.miassolutions.milkledger.core.pdf.PdfMapper
 import com.miassolutions.milkledger.core.pdf.PdfReportModel
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomerHistoryBinding
@@ -65,7 +65,7 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
     private fun generatePdfReport() {
         val state = viewModel.currentState
 
-        currentPdfModel = PdfCustomerMapper.mapCustomerHistoryToPdf(
+        currentPdfModel = PdfMapper.mapCustomerHistoryToPdf(
             customerName = state.customerName,
             dateRang = state.dateRangeText,
             list = state.transactions,
