@@ -18,9 +18,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class BalanceHistoryBottomSheet : BottomSheetDialogFragment() {
 
-    // Is fragment ka ViewModel (Neeche defined hai)
     private val viewModel: BalanceHistoryViewModel by viewModels()
-
     private var _binding: FragmentBalanceHistorySheetBinding? = null
     private val binding get() = _binding!!
 
@@ -32,28 +30,31 @@ class BalanceHistoryBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Argument se Account ID lein
         val accountId = arguments?.getString("accountId") ?: return
         val accountName = arguments?.getString("accountName") ?: "History"
 
-        // Setup UI
-        binding.tvSheetTitle.text = "$accountName - Balance"
+        // 🔥 Date Argument Retrieve karein
+        val dateLimit = if (arguments?.containsKey("dateLimit") == true) {
+            arguments?.getLong("dateLimit")
+        } else {
+            null // Null ka matlab "Abhi tak ka sara data"
+        }
+
+        binding.tvSheetTitle.text = "$accountName - Balance History"
 
         val adapter = BalanceHistoryAdapter()
         binding.rvHistory.layoutManager = LinearLayoutManager(context)
         binding.rvHistory.adapter = adapter
 
-        // Fetch Data
-        viewModel.loadHistory(accountId)
+        // 🔥 ViewModel ko Date pass karein
+        viewModel.loadHistory(accountId, dateLimit)
 
-        // Observe List
         lifecycleScope.launch {
             viewModel.historyFlow.collectLatest { list ->
                 adapter.submitList(list)
             }
         }
 
-        // Observe Current Balance
         lifecycleScope.launch {
             viewModel.balanceFlow.collectLatest { balance ->
                 binding.tvCurrentBalance.setBalanceWithColor(balance)
@@ -67,11 +68,22 @@ class BalanceHistoryBottomSheet : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(accountId: String, accountName: String): BalanceHistoryBottomSheet {
+        // 🔥 Updated newInstance: Accepts optional dateLimit
+        fun newInstance(
+            accountId: String,
+            accountName: String,
+            dateLimit: Long? = null // Optional Parameter
+        ): BalanceHistoryBottomSheet {
             val fragment = BalanceHistoryBottomSheet()
             val args = Bundle()
             args.putString("accountId", accountId)
             args.putString("accountName", accountName)
+
+            // Agar date provided hai to add karein
+            if (dateLimit != null) {
+                args.putLong("dateLimit", dateLimit)
+            }
+
             fragment.arguments = args
             return fragment
         }

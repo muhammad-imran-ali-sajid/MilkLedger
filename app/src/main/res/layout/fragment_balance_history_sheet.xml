@@ -17,31 +17,38 @@
         android:layout_marginBottom="12dp"
         android:background="?attr/colorOutline" />
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/tvSheetTitle"
+        style="@style/Text.Normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="12dp">
+        android:gravity="center_horizontal"
+        android:text="Balance History" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="8dp"
+        android:layout_gravity="center">
 
         <TextView
-            android:id="@+id/tvSheetTitle"
-
             style="@style/Text.Normal"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Balance History" />
+            android:layout_marginEnd="8dp"
+            android:text="Total Balance:" />
 
         <TextView
             android:id="@+id/tvCurrentBalance"
-            style="@style/TitleText"
+            style="@style/Text.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/red"
-            android:textSize="24sp"
             tools:text="- 50,000" />
+
     </LinearLayout>
+
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
@@ -50,8 +57,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:background="?attr/colorSecondaryContainer"
+        android:orientation="horizontal"
         android:padding="12dp"
         android:weightSum="3">
 
@@ -60,26 +67,23 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1.2"
-            android:text="Date"
-            />
+            android:text="Date" />
 
         <TextView
+            style="@style/Text.Normal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.9"
             android:gravity="end"
-            style="@style/Text.Normal"
-            android:text="Paid"
-             />
+            android:text="Paid" />
 
         <TextView
+            style="@style/Text.Normal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.9"
             android:gravity="end"
-            style="@style/Text.Normal"
-            android:text="Bill"
-             />
+            android:text="Bill" />
 
 
     </LinearLayout>

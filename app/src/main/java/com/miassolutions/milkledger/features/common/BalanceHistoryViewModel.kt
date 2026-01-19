@@ -23,17 +23,22 @@ class BalanceHistoryViewModel @Inject constructor(
     private val _balanceFlow = MutableStateFlow<Long>(0)
     val balanceFlow = _balanceFlow.asStateFlow()
 
-    fun loadHistory(accountId: String) {
+    // 🔥 Updated Function: Accepts optional dateLimit
+    fun loadHistory(accountId: String, dateLimit: Long?) {
+
+        // Agar dateLimit null hai (matlab user ne simple balance click kia), to aaj ki date le lo
+        val targetDate = dateLimit ?: System.currentTimeMillis()
+
         viewModelScope.launch {
-            // 1. Get History List
-            ledgerDao.getLedgerHistory(accountId).collectLatest {
+            // 1. Get History (Up to target date)
+            ledgerDao.getLedgerHistoryUntil(accountId, targetDate).collectLatest {
                 _historyFlow.value = it
             }
         }
 
         viewModelScope.launch {
-            // 2. Get Current Balance
-            ledgerDao.getAccountBalance(accountId).collectLatest {
+            // 2. Get Balance (As of target date)
+            ledgerDao.getAccountBalanceUntil(accountId, targetDate).collectLatest {
                 _balanceFlow.value = it
             }
         }

@@ -112,6 +112,33 @@ interface LedgerDao {
     fun getLedgerHistory(accountId: String): Flow<List<FinancialLedgerEntity>>
 
 
+    // 🔥 1. Balance up to specific date
+    @Query(
+        """
+    SELECT (TOTAL(debit) - TOTAL(credit)) 
+    FROM financial_ledger_table 
+    WHERE accountId = :accountId 
+    AND deletedAtMillis IS NULL
+    AND dateMillis <= :dateLimit  -- 🔥 Ye line naya magic karegi
+"""
+    )
+    fun getAccountBalanceUntil(accountId: String, dateLimit: Long): Flow<Long>
+
+
+    // 🔥 2. History up to specific date
+    @Query(
+        """
+    SELECT * FROM financial_ledger_table 
+    WHERE accountId = :accountId 
+    AND deletedAtMillis IS NULL
+    AND dateMillis <= :dateLimit  -- 🔥 Sirf us din tak ka data
+    ORDER BY dateMillis DESC 
+    LIMIT 50
+"""
+    )
+    fun getLedgerHistoryUntil(accountId: String, dateLimit: Long): Flow<List<FinancialLedgerEntity>>
+
+
     // ----------------------------------------------------------------
     // 🔥 OWNER DASHBOARD QUERIES
     // ----------------------------------------------------------------
