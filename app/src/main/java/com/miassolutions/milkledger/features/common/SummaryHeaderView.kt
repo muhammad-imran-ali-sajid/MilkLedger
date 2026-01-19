@@ -5,12 +5,13 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.miassolutions.milkledger.databinding.LayoutSummaryHeaderBinding
+import com.miassolutions.milkledger.utils.extensions.format
 import com.miassolutions.milkledger.utils.extensions.hide
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
 class SummaryHeaderView @JvmOverloads constructor(
@@ -60,24 +61,14 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.lbl3.text = "Total TS"
         binding.tvVal3.text = "%.2f".format(avgTs)
 
-        binding.lbl4.text = "Avg Rate"
-        binding.tvVal4.text = avgRate.toPrice()
+        binding.lbl4.text = "Total Paid"
+        binding.tvVal4.text = totalPaid.toPrice()
 
-        binding.lbl5.text = "Total Paid"
-        binding.tvVal5.text = totalPaid.toPrice()
+        binding.lbl5.text = "Total Balance"
+        binding.tvVal5.setBalanceWithColor(totalPaid - totalAmount)
 
-        // Supplier specific UI
-        if (hideForSupplier) {
-            binding.lbl4.isGone = true
-            binding.tvVal4.isGone = true
-        } else {
-            binding.lbl4.isVisible = true
-            binding.tvVal4.isVisible = true
-        }
+
     }
-
-
-
 
 
     // 🔵 OPTION B: SALE DATA
@@ -91,24 +82,24 @@ class SummaryHeaderView @JvmOverloads constructor(
         totalReceived: Long
     ) {
         binding.tvDateRange.text = dateRange
-        binding.tvMainVol.text = "${String.format("%.1f", netVol)} L" // Main me Net Milk dikhayen
+        binding.tvMainVol.text = netVol.format(1)
         binding.tvMainAmount.text = totalAmount.toPrice()
 
         // Details Mapping
 
-        binding.lbl1.text = "Net Vol"
-        binding.tvVal1.text = "${String.format("%.1f", grossVol)}"
+        binding.lbl1.text = "Gross Vol."
+        binding.tvVal1.text = grossVol.format(1)
 
         binding.lbl2.text = "Deduc."
-        binding.tvVal2.text = "${String.format("%.1f", deduction)}"
+        binding.tvVal2.text = deduction.format(1)
 
 
 
         binding.lbl3.text = "Total Received"
         binding.tvVal3.text = totalReceived.toPrice()
 
-        binding.lbl4.text = "Avg Rate"
-        binding.tvVal4.text = avgRate.toPrice()
+        binding.lbl4.text = "Total Bal."
+        binding.tvVal4.setBalanceWithColor(totalAmount - totalReceived)
 
         binding.tvVal5.hide()
         binding.lbl5.hide()

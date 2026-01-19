@@ -16,11 +16,12 @@
 
         <TextView
             android:id="@+id/tv_date"
-            style="@style/TextLabel"
+            style="@style/Text.Normal"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:textColor="?attr/colorSecondary"
+            android:textColor="?attr/colorDate"
             android:text="18 Oct 2025" />
 
 
@@ -40,12 +41,12 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextLabel"
+                    style="@style/Text.Normal"
                     android:text="Volume" />
 
                 <TextView
                     android:id="@+id/tvMilk"
-                    style="@style/TextValue"
+                    style="@style/Text.Normal"
                     tools:text="40.0" />
             </LinearLayout>
 
@@ -58,12 +59,12 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextLabel"
+                    style="@style/Text.Normal"
                     android:text="Fat" />
 
                 <TextView
                     android:id="@+id/tv_fat"
-                    style="@style/TextValue"
+                    style="@style/Text.Normal"
                     tools:text="2.0" />
             </LinearLayout>
 
@@ -76,12 +77,12 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextLabel"
+                    style="@style/Text.Normal"
                     android:text="LR" />
 
                 <TextView
                     android:id="@+id/tv_lr"
-                    style="@style/TextValue"
+                    style="@style/Text.Normal"
                     tools:text="2.0" />
             </LinearLayout>
 
@@ -94,12 +95,12 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextLabel"
+                    style="@style/Text.Normal"
                     android:text="TS" />
 
                 <TextView
                     android:id="@+id/tv_ts"
-                    style="@style/TextValue"
+                    style="@style/Text.Normal"
                     tools:text="38.0" />
             </LinearLayout>
         </LinearLayout>
@@ -120,7 +121,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextLabel"
+                    style="@style/Text.Normal"
                     android:text="Price" />
 
                 <TextView
@@ -137,8 +138,8 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextLabel"
-                    android:text="Payment" />
+                    style="@style/Text.Normal"
+                    android:text="Paid" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -148,7 +149,7 @@
 
                     <TextView
                         android:id="@+id/tvPayment"
-                        style="@style/TextValue"
+                        style="@style/Text.Normal"
                         tools:text="10,000" />
 
                     <TextView
@@ -170,32 +171,32 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/TextLabel"
+                    style="@style/Text.Normal"
                     android:text="Bal." />
 
                 <TextView
                     android:id="@+id/tvBalance"
-                    style="@style/TextValue"
+                    style="@style/Text.Normal"
                     tools:text="10000" />
             </LinearLayout>
         </LinearLayout>
 
         <TextView
             android:id="@+id/rateAlert"
-            style="@style/Text.MilkLedger.Label"
+            style="@style/Text.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="4dp"
             android:drawableStart="@drawable/ic_info"
             android:drawablePadding="8dp"
+            android:drawableTint="?attr/colorError"
             android:text="New Rate Applied"
-            android:textColor="@color/md_theme_error" />
+            android:textColor="?attr/colorError" />
 
         <!-- Notes -->
         <TextView
             android:id="@+id/tvNotes"
-            style="@style/TextValue"
+            style="@style/Text.Normal"
             app:paddingStart="16dp"
             tools:text="Not: no note" />
     </LinearLayout>

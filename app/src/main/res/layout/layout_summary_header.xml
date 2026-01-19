@@ -54,7 +54,7 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:text="Total Milk"
+                    android:text="Net Milk"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
                 <TextView
@@ -105,7 +105,7 @@
 
                 <TextView
                     android:id="@+id/lbl1"
-                    style="@style/Text.MilkLedger.BodyLarge"
+                    style="@style/Text.Normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -128,7 +128,7 @@
 
                 <TextView
                     android:id="@+id/lbl2"
-                    style="@style/Text.MilkLedger.BodyLarge"
+                    style="@style/Text.Normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -151,7 +151,7 @@
 
                 <TextView
                     android:id="@+id/lbl3"
-                    style="@style/Text.MilkLedger.BodyLarge"
+                    style="@style/Text.Normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -174,7 +174,7 @@
 
                 <TextView
                     android:id="@+id/lbl4"
-                    style="@style/Text.MilkLedger.BodyLarge"
+                    style="@style/Text.Normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -196,7 +196,7 @@
 
                 <TextView
                     android:id="@+id/lbl5"
-                    style="@style/Text.MilkLedger.BodyLarge"
+                    style="@style/Text.Normal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
