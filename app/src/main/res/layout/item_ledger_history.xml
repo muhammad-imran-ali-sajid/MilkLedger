@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:paddingHorizontal="4dp"
     android:paddingVertical="12dp"
     android:weightSum="5">
@@ -14,41 +13,48 @@
     <TextView
         android:id="@+id/tvDate"
         style="@style/Text.Normal"
-        android:layout_width="0dp"
-        android:layout_weight="1"
+        android:layout_width="wrap_content"
         android:gravity="start"
-        android:textColor="?attr/colorOnSurface"
+        android:textColor="?attr/colorDate"
         tools:text="12 Oct" />
 
 
-    <TextView
-        android:id="@+id/tvType"
-        style="@style/Text.Normal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:gravity="start"
-        android:textColor="?attr/colorOnSurface"
-        tools:text="Milk Purchase" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tvDebit"
-        style="@style/Text.Normal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="start"
-        android:textColor="?attr/colorSale"
-        tools:text="5000" />
+        <TextView
+            android:id="@+id/tvType"
+            style="@style/Text.Normal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="start"
+            android:textColor="?attr/colorOnSurface"
+            tools:text="Milk Purchase" />
 
-    <TextView
-        android:id="@+id/tvCredit"
-        style="@style/Text.Normal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="end"
-        android:textColor="?attr/colorPurchase"
-        tools:text="0" />
+        <TextView
+            android:id="@+id/tvDebit"
+            style="@style/Text.Normal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:textColor="?attr/colorSale"
+            tools:text="5000" />
+
+        <TextView
+            android:id="@+id/tvCredit"
+            style="@style/Text.Normal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:textColor="?attr/colorPurchase"
+            tools:text="0" />
+
+
+    </LinearLayout>
+
 
 </LinearLayout>
