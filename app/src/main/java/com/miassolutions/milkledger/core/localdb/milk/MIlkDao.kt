@@ -306,16 +306,15 @@ interface MilkDao {
             
             -- Running Balance Calculation
             (
-                SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
-                FROM financial_ledger_table sub_l
-                WHERE sub_l.accountId = :accountId 
-                AND sub_l.deletedAtMillis IS NULL
-                AND (
-                    sub_l.dateMillis < m.dateMillis
-                    OR
-                    (sub_l.dateMillis = m.dateMillis AND sub_l.createdAtMillis <= m.createdAtMillis)
-                )
-            ) as currentBalance
+            SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
+            FROM financial_ledger_table sub_l
+            WHERE sub_l.accountId = m.accountId 
+            AND sub_l.deletedAtMillis IS NULL
+            AND (
+                sub_l.dateMillis < m.dateMillis
+                OR (sub_l.dateMillis = m.dateMillis)
+            )
+        ) as currentBalance
             
         FROM milk_transactions_table m
         
@@ -485,15 +484,15 @@ interface MilkDao {
             
             -- Running Balance Calculation (Specific for Supplier)
             (
-                SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
-                FROM financial_ledger_table sub_l
-                WHERE sub_l.accountId = :supplierId 
-                AND sub_l.deletedAtMillis IS NULL
-                AND (
-                    sub_l.dateMillis < m.dateMillis
-                    OR (sub_l.dateMillis = m.dateMillis AND sub_l.createdAtMillis <= m.createdAtMillis)
-                )
-            ) as currentBalance
+            SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
+            FROM financial_ledger_table sub_l
+            WHERE sub_l.accountId = m.accountId 
+            AND sub_l.deletedAtMillis IS NULL
+            AND (
+                sub_l.dateMillis < m.dateMillis
+                OR (sub_l.dateMillis = m.dateMillis)
+            )
+        ) as currentBalance
             
         FROM milk_transactions_table m
         INNER JOIN accounts_table a ON m.accountId = a.accountId
