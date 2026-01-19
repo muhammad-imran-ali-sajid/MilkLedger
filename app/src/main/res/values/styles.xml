@@ -116,7 +116,7 @@
 
     <style name="TextAppearance.MilkLedger.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
         <!-- Increase from default 16sp to 18sp -->
-        <item name="android:textSize">@dimen/text_size_body_large_custom</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
 
