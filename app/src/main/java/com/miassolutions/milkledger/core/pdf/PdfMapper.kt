@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.core.pdf
 
+import com.miassolutions.milkledger.features.dashboard.DashboardUiState
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.format
@@ -217,6 +218,70 @@ object PdfMapper {
 
             )
 
+    }
+
+
+    /**
+     * Maps Dashboard State to PDF Model.
+     * Structures data as a 2-column table: [Metric Name] | [Value]
+     */
+    fun mapDashboardToPdf(
+        state: DashboardUiState,
+        dateRange: String
+    ): PdfReportModel {
+
+        // 1. Column Setup
+        val headers = listOf("Description", "Value")
+        // Weight: 70% width for Description, 30% for Value
+        val weights = floatArrayOf(2.0f, 1.0f)
+
+        // 2. Build Rows (Categorized for readability)
+        val rows = mutableListOf<List<String>>()
+
+        // --- SECTION: FINANCIALS ---
+        rows.add(listOf("Total Sales (Revenue)", state.totalSales.toPrice()))
+        rows.add(listOf("Total Purchases (Cost)", state.totalPurchases.toPrice()))
+        rows.add(listOf("Total Expenses", state.totalExpenses.toPrice()))
+        rows.add(listOf("GROSS PROFIT", state.grossProfit.toPrice()))
+
+        // Spacer Row (Empty strings to create visual gap if needed, or just list sequentially)
+        // Note: If you want clear sections, you might prefix names like "MILK - Purchased"
+
+        // --- SECTION: MILK QUANTITY ---
+        rows.add(listOf("Milk Purchased", "${state.milkPurchasedQty.format(1)} L"))
+        rows.add(listOf("Milk Sold", "${state.milkSoldQty.format(1)} L"))
+        rows.add(listOf("Quantity Difference", "${state.qtyDiff.format(1)} L"))
+
+        // --- SECTION: PRICING ---
+        rows.add(listOf("Avg. Purchase Price", state.avgPurchasePrice.format(1)))
+        rows.add(listOf("Avg. Sale Price", state.avgSalePrice.format(1)))
+        rows.add(listOf("Price Margin", state.avgPriceDiff.format(2)))
+
+        // --- SECTION: QUALITY (Avg) ---
+        // Using qualityVolume to show what volume these averages are based on
+        val volStr = "(${state.qualityVolume.format(0)} L)"
+        rows.add(listOf("Avg Fat $volStr", state.avgFat.format(2)))
+        rows.add(listOf("Avg LR $volStr", state.avgLr.format(2)))
+        rows.add(listOf("Total TS $volStr", state.totalTs.format(2)))
+
+        // 3. Bottom Summary (Highlighting key Financial Result)
+        // Since the table rows are distinct metrics (not a sum-able list),
+        // we use the bottom summary to re-emphasize the Net Profit.
+        val summaryLabels = listOf(
+            "NET PROFIT" to state.grossProfit.toPrice()
+        )
+
+        return PdfReportModel(
+            fileName = "Dashboard_Report.pdf",
+            shopName = "GMC Milk Collection", // Or inject this from a UserPreference
+            reportTitle = "Business Overview",
+            dateRange = dateRange,
+            columnHeaders = headers,
+            columnWeights = weights,
+            rows = rows,
+            summaryRow = null, // No footer row needed for the table itself
+            summaryLabels = summaryLabels
+        )
     }
 
     // Helper to format balance with +/- sign
