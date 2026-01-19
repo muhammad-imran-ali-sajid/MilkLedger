@@ -136,30 +136,6 @@
     <style name="TextValue" parent="Text.Normal" />
 
 
-    <!-- Special style for Urdu title (Price, Paid, Balance labels) -->
-    <style name="TextTitleUrdu" parent="TextLabel">
-        <item name="android:textSize">20sp</item>
-        <item name="fontFamily">@font/mehr_nastaleeq</item>
-        <item name="android:textColor">#000</item>
-    </style>
-
-    <!-- Notes style -->
-
-
-    <!-- Buttons -->
-
-
-    <!-- Cards -->
-
-    <!-- Inputs -->
-
-
-    <!--    <style name="DashboardCard" parent="BaseCardStyle">-->
-    <!--        <item name="android:clickable">true</item>-->
-    <!--        <item name="android:focusable">true</item>-->
-    <!--    </style>-->
-
-
     <style name="RecyclerViewStyle">
         <item name="android:scrollbars">vertical</item>
         <item name="android:clipToPadding">false</item>
