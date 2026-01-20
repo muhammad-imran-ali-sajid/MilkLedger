@@ -51,7 +51,7 @@ class AccountListAdapter(
 
             // 2. Initial Letter
             val initial = item.name.firstOrNull()?.toString()?.uppercase() ?: "?"
-            tvInitial.text = initial
+//            tvInitial.text = initial
 
 
             // 3. Color Logic (Customer vs Supplier)
@@ -61,20 +61,20 @@ class AccountListAdapter(
 
             if (isCustomer) {
                 viewIndicator.setBackgroundResource(R.color.teal_700)
-                layoutIcon.background.setTint(
-                    ContextCompat.getColor(
-                        root.context,
-                        R.color.teal_700
-                    )
-                )
+//                layoutIcon.background.setTint(
+//                    ContextCompat.getColor(
+//                        root.context,
+//                        R.color.teal_700
+//                    )
+//                )
             } else {
                 viewIndicator.setBackgroundResource(R.color.orange_700)
-                layoutIcon.background.setTint(
-                    ContextCompat.getColor(
-                        root.context,
-                        R.color.orange_700
-                    )
-                )
+//                layoutIcon.background.setTint(
+//                    ContextCompat.getColor(
+//                        root.context,
+//                        R.color.orange_700
+//                    )
+//                )
             }
 
             root.setOnLongClickListener {

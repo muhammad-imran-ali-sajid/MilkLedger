@@ -30,33 +30,33 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <FrameLayout
-            android:id="@+id/layoutIcon"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/bg_circle_light_gray"
-            app:layout_constraintBottom_toBottomOf="@+id/textView"
-            app:layout_constraintStart_toEndOf="@id/viewIndicator"
-            app:layout_constraintTop_toTopOf="@+id/tvName">
+<!--        <FrameLayout-->
+<!--            android:id="@+id/layoutIcon"-->
+<!--            android:layout_width="48dp"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:layout_marginStart="12dp"-->
+<!--            android:background="@drawable/bg_circle_light_gray"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/textView"-->
+<!--            app:layout_constraintStart_toEndOf="@id/viewIndicator"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvName">-->
 
-            <TextView
-                android:id="@+id/tvInitial"
-                style="@style/Text.Normal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                tools:text="A" />
-        </FrameLayout>
+<!--            <TextView-->
+<!--                android:id="@+id/tvInitial"-->
+<!--                style="@style/Text.Normal"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:gravity="center"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textStyle="bold"-->
+<!--                tools:text="A" />-->
+<!--        </FrameLayout>-->
 
         <TextView
             android:id="@+id/tvName"
             style="@style/Text.Normal"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:ellipsize="end"
@@ -64,8 +64,7 @@
             android:textColor="?attr/colorOnSurface"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/tvBalance"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/layoutIcon"
+            app:layout_constraintStart_toEndOf="@+id/viewIndicator"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Ali General Store" />
 
@@ -119,10 +118,10 @@
 
         <TextView
             android:id="@+id/tvBalanceLabel"
-            style="@style/Text.MilkLedger.LabelMedium"
+            style="@style/Text.Normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Balance"
+            android:text="Init. Bal."
             android:textColor="?attr/colorOnSecondaryContainer"
             app:layout_constraintBottom_toBottomOf="@+id/tvRate"
             app:layout_constraintEnd_toEndOf="@+id/tvBalance"
