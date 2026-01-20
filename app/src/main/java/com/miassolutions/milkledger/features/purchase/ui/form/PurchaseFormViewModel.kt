@@ -42,50 +42,43 @@ class PurchaseFormViewModel @Inject constructor(
 
     private val purchaseDateLocal = purchaseDate?.toLocalDate() ?: LocalDate.now()
 
-
     private val _suppliersDropDown = MutableStateFlow<List<SupplierDropDownUiModel>>(emptyList())
     val suppliersDropDown = _suppliersDropDown.asStateFlow()
-
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private fun monitorSuppliersStatus() {
         viewModelScope.launch {
             combine(
-                repository.getSuppliers(), // 1. All Suppliers Flow
-
-                uiState
-                    .map { it.date }            // Sirf Date change ko observe karein
-                    .distinctUntilChanged()     // Jab tak Date change na ho, dubara na chalayen
-                    .flatMapLatest { date ->    // Date change par DB query karein
-                        repository.getSuppliersWithPurchaseOnDate(date.toMillis())
-                    }
+                repository.getSuppliers(),
+                uiState.map { it.date }.distinctUntilChanged().flatMapLatest { date ->
+                    repository.getSuppliersWithPurchaseOnDate(date.toMillis())
+                }
             ) { suppliers, completedIds ->
-
-                // Combine Logic: Suppliers ko check karein k wo list me hain ya nahi
                 suppliers.map { account ->
                     SupplierDropDownUiModel(
                         account = account,
                         isEntryDoneToday = completedIds.contains(account.accountId)
                     )
                 }
-
             }.collect { mappedList ->
                 _suppliersDropDown.value = mappedList
             }
         }
     }
 
-
-
     init {
         monitorSuppliersStatus()
-
 
         if (purchaseId != null) {
             loadPurchaseForEdit(purchaseId)
         } else {
-            // New Entry Defaults
-            updateState { it.copy(date = purchaseDateLocal, paymentDate = purchaseDateLocal) }
+            // New Entry: Payment Date Null (Validation Trigger karne k liye)
+            updateState {
+                it.copy(
+                    date = purchaseDateLocal,
+                    paymentDate = null
+                )
+            }
         }
     }
 
@@ -95,7 +88,6 @@ class PurchaseFormViewModel @Inject constructor(
             val purchase = repository.getPurchaseById(id)
 
             if (purchase != null) {
-                // Supplier dhoondein
                 val allSuppliers = repository.getSuppliers().firstOrNull() ?: emptyList()
                 val supplier = allSuppliers.find { it.accountId == purchase.supplierId }
 
@@ -105,11 +97,14 @@ class PurchaseFormViewModel @Inject constructor(
                         isEditMode = true,
                         selectedSupplier = supplier,
                         date = purchase.dateMillis.toLocalDate(),
-                        paymentDate = purchase.paymentDateMillis?.toLocalDate()
-                            ?: purchase.dateMillis.toLocalDate(),
+
+                        // 🔥 CHANGE: Har haal mein NULL set karein.
+                        // Is se Edit Mode me bhi "Select Date" ka button Red hoga.
+                        // User Update par click karega to validation error ayega jab tak wo date select na kar le.
+                        paymentDate = null,
 
                         volume = purchase.volume.toString(),
-                        fat = if (purchase.fat > 0) purchase.fat.toString() else "", // 0 ko empty dikhayen
+                        fat = if (purchase.fat > 0) purchase.fat.toString() else "",
                         lr = if (purchase.lr > 0) purchase.lr.toString() else "",
                         rate = purchase.rate.toString(),
 
@@ -117,7 +112,7 @@ class PurchaseFormViewModel @Inject constructor(
                         note = purchase.note ?: ""
                     )
                 }
-                // Balance load aur calculation refresh
+
                 if (supplier != null) fetchBalance(supplier.accountId)
                 calculateLiveValues()
             } else {
@@ -129,7 +124,6 @@ class PurchaseFormViewModel @Inject constructor(
 
     override fun onEvent(event: PurchaseFormUiEvent) {
         when (event) {
-            // --- Inputs ---
             is PurchaseFormUiEvent.OnSupplierSelected -> {
                 updateState {
                     it.copy(
@@ -140,40 +134,32 @@ class PurchaseFormViewModel @Inject constructor(
                 fetchBalance(event.supplier.accountId)
                 calculateLiveValues()
             }
-
             is PurchaseFormUiEvent.OnVolumeChanged -> {
                 updateState { it.copy(volume = event.value) }
                 calculateLiveValues()
             }
-
             is PurchaseFormUiEvent.OnFatChanged -> {
                 updateState { it.copy(fat = event.value) }
                 calculateLiveValues()
             }
-
             is PurchaseFormUiEvent.OnLrChanged -> {
                 updateState { it.copy(lr = event.value) }
                 calculateLiveValues()
             }
-
             is PurchaseFormUiEvent.OnRateChanged -> {
                 updateState { it.copy(rate = event.value) }
                 calculateLiveValues()
             }
-
             is PurchaseFormUiEvent.OnAmountPaidChanged -> {
                 updateState { it.copy(amountPaid = event.value) }
             }
-
             is PurchaseFormUiEvent.OnNoteChanged -> updateState { it.copy(note = event.value) }
 
-            // --- Dates ---
             is PurchaseFormUiEvent.OnDateSelected -> updateState { it.copy(date = event.date) }
             is PurchaseFormUiEvent.OnPaymentDateSelected -> updateState { it.copy(paymentDate = event.date) }
             PurchaseFormUiEvent.OnDateClick -> emitEffect(PurchaseFormUiEffect.OpenDatePicker)
             PurchaseFormUiEvent.OnPaymentDateClick -> emitEffect(PurchaseFormUiEffect.OpenPaymentDatePicker)
 
-            // --- Actions ---
             PurchaseFormUiEvent.OnSaveClicked -> savePurchase(exitAfterSave = true)
             PurchaseFormUiEvent.OnSaveAndNewClicked -> savePurchase(exitAfterSave = false)
             PurchaseFormUiEvent.OnBackClicked -> emitEffect(PurchaseFormUiEffect.NavigateBack)
@@ -192,7 +178,6 @@ class PurchaseFormViewModel @Inject constructor(
         }
     }
 
-    // 🔥 LIVE CALCULATION LOGIC
     private fun calculateLiveValues() {
         val s = currentState
         val vol = s.volume.toDoubleOrNull() ?: 0.0
@@ -200,10 +185,7 @@ class PurchaseFormViewModel @Inject constructor(
         val lr = s.lr.toDoubleOrNull() ?: 0.0
         val rate = s.rate.toDoubleOrNull() ?: 0.0
 
-        // 1. Calculate TS (UI par dikhane k liye)
         val ts = MilkCalculationUtils.calculateTS(fat, lr, vol)
-
-        // 2. Calculate Price (Apke Utils ki logic use hogi: Agar fat/lr 0 hain to flat, warna TS base)
         val total = MilkCalculationUtils.calculatePrice(vol, fat, lr, rate)
 
         updateState {
@@ -215,7 +197,7 @@ class PurchaseFormViewModel @Inject constructor(
     }
 
     private fun fetchBalance(accountId: String) {
-        balanceJob?.cancel() // Purana listener band karein
+        balanceJob?.cancel()
         balanceJob = viewModelScope.launch {
             repository.getAccountBalance(accountId).collect { balance ->
                 updateState { it.copy(currentBalance = balance) }
@@ -228,19 +210,31 @@ class PurchaseFormViewModel @Inject constructor(
             updateState { it.copy(isSaving = true) }
             val s = currentState
 
-            // Validation (Optional: UseCase wese bhi handle krta hy)
             if (s.selectedSupplier == null) {
                 emitEffect(PurchaseFormUiEffect.ShowSnackbar("Select Supplier"))
                 updateState { it.copy(isSaving = false) }
                 return@launch
             }
 
+            // Validation: Force User to Select Date if Amount > 0
+            val amount = s.amountPaid.toDoubleOrNull() ?: 0.0
+            if (amount > 0) {
+                if (s.paymentDate == null) {
+                    emitEffect(PurchaseFormUiEffect.ShowSnackbar("⚠️ Payment Date select karna zaroori hai!"))
+                    updateState { it.copy(isSaving = false) }
+                    return@launch
+                }
+            }
+
+            // Fallback (Safe side)
+            val finalPaymentDate = s.paymentDate ?: s.date
+
             val result = savePurchaseUseCase(
                 isEditMode = purchaseId != null,
                 purchaseId = purchaseId,
                 supplier = s.selectedSupplier,
                 date = s.date,
-                paymentDate = s.paymentDate,
+                paymentDate = finalPaymentDate,
                 volumeStr = s.volume,
                 fatStr = s.fat,
                 lrStr = s.lr,
@@ -251,12 +245,9 @@ class PurchaseFormViewModel @Inject constructor(
 
             result.onSuccess { msg ->
                 emitEffect(PurchaseFormUiEffect.ShowSnackbar(msg))
-
                 if (purchaseId != null) {
-                    // Edit Mode: Hamesha Exit karein
                     emitEffect(PurchaseFormUiEffect.NavigateBack)
                 } else {
-                    // New Entry Mode
                     if (exitAfterSave) {
                         emitEffect(PurchaseFormUiEffect.NavigateBack)
                     } else {
@@ -272,25 +263,21 @@ class PurchaseFormViewModel @Inject constructor(
     }
 
     private fun resetFormForNewEntry() {
-        // Balance sunna band karein taake 0 overwrite na ho
         balanceJob?.cancel()
-
         updateState {
             it.copy(
-                selectedSupplier = null, // Supplier Clear
+                selectedSupplier = null,
                 volume = "",
                 fat = "",
                 lr = "",
                 amountPaid = "",
                 note = "",
                 rate = "",
-
-                currentBalance = 0L,     // Balance Reset
+                currentBalance = 0L,
                 calculatedTs = 0.0,
                 calculatedTotal = 0L,
-
-                isEditMode = false
-                // Date aur PaymentDate same rahengi (User flow k liye behtar hai)
+                isEditMode = false,
+                paymentDate = null // ✅ Reset to Null
             )
         }
     }

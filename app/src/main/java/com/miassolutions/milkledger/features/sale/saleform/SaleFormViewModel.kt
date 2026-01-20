@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
 import com.miassolutions.milkledger.features.sale.model.UpdateSaleRequest
-import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEffect.ShowSnackbar
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
@@ -34,20 +33,24 @@ class SaleFormViewModel @Inject constructor(
     private val saleId: String? = savedStateHandle["saleId"]
     val passedDate = savedStateHandle["saleDate"] ?: -1L
 
-    // 🔥 For Bottom Sheet List (StateFlow)
     private val _customersDropDown = MutableStateFlow<List<CustomerDropDownUiModel>>(emptyList())
     val customersDropDown = _customersDropDown.asStateFlow()
 
     init {
-        // 1. Monitor Customers & Daily Status
         monitorCustomersStatus()
 
-        // 2. Load Data
         if (saleId != null) {
             loadSaleForEdit(saleId)
         } else {
             val initialDate = if (passedDate != -1L) passedDate.toLocalDate() else LocalDate.now()
-            updateState { it.copy(date = initialDate, paymentDate = initialDate) }
+
+            // 🔥 NEW ENTRY: Payment Date NULL (User must select)
+            updateState {
+                it.copy(
+                    date = initialDate,
+                    paymentDate = null
+                )
+            }
         }
     }
 
@@ -55,28 +58,18 @@ class SaleFormViewModel @Inject constructor(
     private fun monitorCustomersStatus() {
         viewModelScope.launch {
             combine(
-                repository.getCustomers(), // Stream 1: All Customers
-
-                uiState
-                    .map { it.date }            // Stream 2: Selected Date
-                    .distinctUntilChanged()
-                    .flatMapLatest { date ->
-                        // Us date ki sales layen taake check kar saken kiski entry ho gyi
-                        repository.getSalesByDate(date.toMillis())
-                    }
+                repository.getCustomers(),
+                uiState.map { it.date }.distinctUntilChanged().flatMapLatest { date ->
+                    repository.getSalesByDate(date.toMillis())
+                }
             ) { customers, salesOnDate ->
-
-                // IDs nikalein jinki sale aaj ho chuki hai
                 val customersWithEntry = salesOnDate.map { it.customerId }.toSet()
-
-                // Map to UI Model (Green Tick Logic)
                 customers.map { customer ->
                     CustomerDropDownUiModel(
                         account = customer,
                         isEntryDoneToday = customersWithEntry.contains(customer.accountId)
                     )
                 }
-
             }.collect { mappedList ->
                 _customersDropDown.value = mappedList
             }
@@ -92,17 +85,19 @@ class SaleFormViewModel @Inject constructor(
             if (sale != null) {
                 val allCustomers = repository.getCustomers().firstOrNull() ?: emptyList()
                 val customer = allCustomers.find { it.accountId == sale.customerId }
-
-                val savedPaymentDate =
-                    sale.paymentDateMillis?.toLocalDate() ?: sale.dateMillis.toLocalDate()
+                val saleDateLocal = sale.dateMillis.toLocalDate()
 
                 updateState {
                     it.copy(
                         isLoading = false,
                         isEditMode = true,
                         selectedCustomer = customer,
-                        date = sale.dateMillis.toLocalDate(),
-                        paymentDate = savedPaymentDate,
+                        date = saleDateLocal,
+
+                        // 🔥 STRICT CHANGE: Edit Mode mein bhi Payment Date NULL rahegi.
+                        // User ko har dafa "Select Date" par click kar ke date set karni hogi.
+                        paymentDate = null,
+
                         volume = sale.quantity.toString(),
                         deduction = sale.deduction.toString(),
                         rate = sale.rate.toString(),
@@ -191,9 +186,7 @@ class SaleFormViewModel @Inject constructor(
     }
 
     private fun fetchBalance(accountId: String) {
-        // Purana listener cancel karein taake overlapping na ho
         balanceJob?.cancel()
-
         balanceJob = viewModelScope.launch {
             repository.getAccountBalance(accountId).collect { balance ->
                 updateState { it.copy(currentBalance = balance) }
@@ -213,7 +206,6 @@ class SaleFormViewModel @Inject constructor(
     private fun saveSale(exitAfterSave: Boolean) {
         val state = currentState
 
-        // --- Validation Logic (Same as before) ---
         if (state.selectedCustomer == null) {
             emitEffect(SaleFormUiEffect.ShowSnackbar("Please select a customer"))
             return
@@ -227,6 +219,17 @@ class SaleFormViewModel @Inject constructor(
             return
         }
 
+        // ✅ VALIDATION: Payment hai tu Date LAZMI hai
+        if (payment > 0) {
+            if (state.paymentDate == null) {
+                emitEffect(SaleFormUiEffect.ShowSnackbar("⚠️ Payment Date select karna zaroori hai!"))
+                return
+            }
+        }
+
+        // Safe Fallback (Wese upar check ki waja se null nahi hoga agar payment > 0)
+        val finalPaymentDate = state.paymentDate ?: state.date
+
         val rawRate = state.rate.toDoubleOrNull() ?: 0.0
         val finalRate = if (rawRate.isNaN() || rawRate.isInfinite()) 0.0 else rawRate
         val ded = state.deduction.toDoubleOrNull() ?: 0.0
@@ -235,7 +238,6 @@ class SaleFormViewModel @Inject constructor(
             emitEffect(SaleFormUiEffect.ShowSnackbar("Deduction cannot be greater than Volume"))
             return
         }
-        // ----------------------------------------
 
         viewModelScope.launch {
             updateState { it.copy(isSaving = true) }
@@ -246,7 +248,9 @@ class SaleFormViewModel @Inject constructor(
                         saleId = saleId,
                         accountId = state.selectedCustomer!!.accountId,
                         date = state.date,
-                        paymentDate = state.paymentDate,
+
+                        paymentDate = finalPaymentDate, // ✅ User Selected Date
+
                         volume = vol,
                         deduction = ded,
                         rate = finalRate,
@@ -255,8 +259,6 @@ class SaleFormViewModel @Inject constructor(
                     )
                     repository.updateMilkSale(updateRequest)
                     emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Updated Successfully"))
-
-                    // Edit hamesha screen close karega
                     emitEffect(SaleFormUiEffect.NavigateBack)
 
                 } else {
@@ -269,20 +271,17 @@ class SaleFormViewModel @Inject constructor(
                         amountPaid = (payment * 100).toLong(),
                         note = state.note,
                         saleDate = state.date,
-                        paymentDate = state.paymentDate
+
+                        paymentDate = finalPaymentDate // ✅ User Selected Date
                     )
                     emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Saved Successfully"))
 
                     if (exitAfterSave) {
-                        // 🚪 Agar 'OK' dabaya to wapis jao
                         emitEffect(SaleFormUiEffect.NavigateBack)
                     } else {
-                        // 🔄 Agar 'OK & New' dabaya to Form Reset kro (Screen close nahi hogi)
                         resetFormForNewEntry()
                     }
                 }
-
-                // ❌ YAHAN SE NAVIGATE BACK REMOVE KAR DIYA HAI
 
             } catch (e: Exception) {
                 Log.e("SaleFormViewModel", "Error saving sale", e)
@@ -294,15 +293,10 @@ class SaleFormViewModel @Inject constructor(
     }
 
     private fun resetFormForNewEntry() {
-        // 🔥 ZAROORI STEP: Balance sunna band karein
         balanceJob?.cancel()
         updateState {
             it.copy(
-
-                // Note: Date aur PaymentDate hum CHANGE NAHI kr rahay,
-                // kyun ke user aksar ek hi date ki entries lagatar karta hai.
-
-                selectedCustomer = null, // Customer clear karein
+                selectedCustomer = null,
                 volume = "",
                 deduction = "",
                 amountPaid = "",
@@ -311,8 +305,10 @@ class SaleFormViewModel @Inject constructor(
                 currentBalance = 0L,
                 calculatedTotal = 0.0,
 
-                // Edit mode khatam, kyunke ab ye nayi entry hai
-                isEditMode = false
+                isEditMode = false,
+
+                // ✅ RESET: Agli entry k liye phir se NULL
+                paymentDate = null
             )
         }
     }

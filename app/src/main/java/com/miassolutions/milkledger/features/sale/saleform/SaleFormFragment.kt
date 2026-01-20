@@ -1,10 +1,12 @@
 package com.miassolutions.milkledger.features.sale.saleform
 
 import android.text.InputType
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.*
@@ -114,8 +116,14 @@ class SaleFormFragment :
         }
 
         // --- Dates ---
-        btnDate.text = state.date.toCompleteDateFormat()
-        btnPaymentDate.text = state.paymentDate.toCompleteDateFormat()
+        btnDate.text = "Dated: ${state.date.toCompleteDateFormat()}"
+        if (state.paymentDate != null) {
+            btnPaymentDate.text = state.paymentDate.toDisplayDate() // "18 Jan 2024"
+            btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        } else {
+            btnPaymentDate.text = "Select Date 📅" // "Abhi select nahi hoi"
+            btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red)) // Red color for attention
+        }
 
         // --- Inputs (Update only if different to avoid cursor jumps) ---
         etMilkVolume.setTextIfDifferent(state.volume)

@@ -1,10 +1,12 @@
 package com.miassolutions.milkledger.features.purchase.ui.form
 
 import android.text.InputType
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchaseFormBinding
 import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
@@ -129,7 +131,13 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
     private fun renderState(state: PurchaseFormUiState) = with(binding) {
         // Date Buttons
         btnDate.text = "Dated: ${state.date.toCompleteDateFormat()}"
-        btnPaymentDate.text = state.paymentDate.toDisplayDate()
+        if (state.paymentDate != null) {
+            btnPaymentDate.text = state.paymentDate.toDisplayDate() // "18 Jan 2024"
+            btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        } else {
+            btnPaymentDate.text = "Select Date 📅" // "Abhi select nahi hoi"
+            btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red)) // Red color for attention
+        }
 
         // Calculations
         tvTs.text = String.format("%.2f", state.calculatedTs)

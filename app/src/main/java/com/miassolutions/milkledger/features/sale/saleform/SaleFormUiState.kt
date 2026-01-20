@@ -19,7 +19,7 @@ data class SaleFormUiState(
     val deduction: String = "",
     val rate: String = "",
 
-    val paymentDate: LocalDate = LocalDate.now(),
+    val paymentDate: LocalDate? = null,
     val amountPaid: String = "", // Payment (Optional)
     val note: String = "",
 

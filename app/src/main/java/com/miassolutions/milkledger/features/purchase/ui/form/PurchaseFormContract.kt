@@ -15,7 +15,7 @@ data class PurchaseFormUiState(
     // Fields
     val selectedSupplier: Account? = null,
     val date: LocalDate = LocalDate.now(),
-    val paymentDate: LocalDate = LocalDate.now(),
+    val paymentDate: LocalDate? = null,
 
     val volume: String = "",
     val fat: String = "",
