@@ -112,7 +112,7 @@ class MilkSaleRepository @Inject constructor(
                 debit = totalPricePaisa,
                 credit = 0,
                 profitImpact = totalPricePaisa,
-                note = "Milk Sale to $customerName: $volume - $deduction = $netQuantity Ltr"
+                note = "Sale: $customerName: $volume - $deduction = $netQuantity L"
             )
             ledgerDao.insert(saleLedger)
 
@@ -126,7 +126,7 @@ class MilkSaleRepository @Inject constructor(
                     append("$customerName Paid") // Default Note
                     if (isDateDifferent) {
                         // Agar payment date alag hai to note me likh den
-                        append(" (Date: ${paymentDate.format(dateFormatter)})")
+                        append(" (${paymentDate.format(dateFormatter)})")
                     }
                 }
 
@@ -183,7 +183,7 @@ class MilkSaleRepository @Inject constructor(
                     dateMillis = request.date.toMillis(),
                     debit = totalPricePaisa,
                     profitImpact = totalPricePaisa,
-                    note = "Milk Sale to $customerName: ${request.volume} - ${request.deduction} = $netQuantity Ltr",
+                    note = "Sale: $customerName: ${request.volume} - ${request.deduction} = $netQuantity L",
                     updatedAtMillis = System.currentTimeMillis()
                 )
                 ledgerDao.update(updatedLedger)
@@ -200,11 +200,11 @@ class MilkSaleRepository @Inject constructor(
                 if (!userCustomNote.isNullOrEmpty()) {
                     append(userCustomNote)
                 } else {
-                    append("Received from $customerName")
+                    append("Get from $customerName")
                 }
 
                 if (isDateDifferent) {
-                    append(" (Date: ${request.paymentDate.format(dateFormatter)})")
+                    append(" (${request.paymentDate.format(dateFormatter)})")
                 }
             }
 

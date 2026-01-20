@@ -197,9 +197,7 @@
                         style="@style/Text.MilkLedger.Label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableEnd="@drawable/ic_info"
                         android:drawablePadding="6dp"
-                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         android:text="Paid" />
 
                     <TextView
@@ -246,13 +244,12 @@
 
             <TextView
                 android:id="@+id/tvNotes"
-                style="@style/Text.MilkLedger.Label"
+                style="@style/Text.Normal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:alpha="0.8"
-                android:textStyle="italic"
-                tools:text="Note: Milk was slightly thin." />
+                tools:text="Note: Milk note." />
 
         </LinearLayout>
 

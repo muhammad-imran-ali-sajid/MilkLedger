@@ -409,7 +409,7 @@ interface MilkDao {
         
         m.rateUsed as rate,
         m.totalAmount,
-        m.notes as note,
+        l_pay.note as note,
         
         -- Fix: Explicitly naming the alias to match Data Class field
         COALESCE(l_pay.debit, 0) as paymentMade,
