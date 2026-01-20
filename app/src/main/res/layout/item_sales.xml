@@ -74,7 +74,7 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Vol." />
@@ -95,7 +95,7 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Deduc." />
@@ -116,7 +116,7 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Net Milk" />
@@ -151,7 +151,7 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Price" />
@@ -173,8 +173,10 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:drawablePadding="6dp"
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
+                        android:drawableEnd="@drawable/ic_info"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Receive" />
@@ -203,7 +205,7 @@ android:layout_margin="4dp"
                         android:drawableEnd="@drawable/ic_info"
                         android:drawablePadding="4dp"
                         android:drawableTint="?attr/colorOnSecondaryContainer"
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Bal." />

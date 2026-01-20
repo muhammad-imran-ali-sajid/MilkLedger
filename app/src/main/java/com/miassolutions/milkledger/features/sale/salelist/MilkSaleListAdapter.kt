@@ -58,7 +58,7 @@ class MilkSaleListAdapter(
                         val inflater = LayoutInflater.from(context)
                         val binding = DialogPaymentInfoBinding.inflate(inflater)
 
-                        binding.tvMessage.text = item.note
+                        binding.tvMessage.text = "Rcv Date: ${item.paymentDate?.toDisplayDate()}"
 
                         MaterialAlertDialogBuilder(context)
                             .setView(binding.root)

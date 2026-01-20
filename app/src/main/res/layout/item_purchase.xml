@@ -73,7 +73,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Vol." />
@@ -94,7 +94,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fat" />
@@ -115,7 +115,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="LR" />
@@ -136,7 +136,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
 
                         android:layout_height="wrap_content"
@@ -172,7 +172,8 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Price" />
@@ -194,10 +195,12 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="6dp"
+                        android:drawableEnd="@drawable/ic_info"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         android:text="Paid" />
 
                     <TextView
@@ -219,7 +222,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/ic_info"
