@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
@@ -86,10 +87,10 @@ class SupplierHistoryAdapter(
 
             // Note
             if (!item.note.isNullOrBlank()) {
-                tvNotes.text = "Note: ${item.note}"
+                tvNotes.text = "Note: ${item.note} (${item.paymentDate?.toDisplayDate()})"
                 tvNotes.isVisible = true
             } else {
-                tvNotes.isVisible = false
+                tvNotes.isVisible = true
             }
         }
     }

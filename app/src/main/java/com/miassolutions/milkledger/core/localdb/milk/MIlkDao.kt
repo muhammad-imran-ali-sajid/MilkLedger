@@ -146,47 +146,52 @@ interface MilkDao {
     // Yeh wohi query hai jo List k liye thi, bas WHERE condition change ki hai (ID match)
     @Query(
         """
-        SELECT 
-            m.milkTransId as id,
-            m.dateMillis,
-            m.accountId as customerId,
-            a.name as customerName,
-            m.volume as quantity, 
-            m.deduction as deduction,
-            m.quantity as netQuantity,
-            m.totalAmount,
-            m.notes as note,
-            
-            -- 🔥 YE LINE MISSING THI 👇
-            m.rateUsed as rate,
-            
-            
-            COALESCE(l_pay.credit, 0) as paymentReceived, 
-            
-            (
-                SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
-                FROM financial_ledger_table sub_l
-                WHERE sub_l.accountId = m.accountId 
-                AND sub_l.deletedAtMillis IS NULL
-                AND (
-                    sub_l.dateMillis < m.dateMillis
-                    OR
-                    (sub_l.dateMillis = m.dateMillis)
-                )
-            ) as currentBalance
-            
-        FROM milk_transactions_table m
+    SELECT 
+        m.milkTransId as id,
+        m.dateMillis,
+        m.accountId as customerId,
+        a.name as customerName,
         
-        INNER JOIN accounts_table a ON m.accountId = a.accountId
+        m.volume as quantity,               -- Maps to 'volume' in UiModel
+        m.deduction,
+        m.quantity as netQuantity, -- Maps to 'netQuantity' in UiModel
+        m.totalAmount,
+        m.notes as note,
+        m.rateUsed as rate,
         
-        LEFT JOIN financial_ledger_table l_pay 
-            ON l_pay.referenceId = m.milkTransId 
-            AND l_pay.type = 'CASH_RECEIVED' 
-            AND l_pay.deletedAtMillis IS NULL
+        -- Payment Detail
+        COALESCE(l_pay.credit, 0) as paymentReceived, -- Sale me Paisa ata hy (Credit)
+        
+        -- 🔥 FIX: Ab hum Ledger ki date nahi, Milk Table ki date utha rahay hain
+        m.paymentDateMillis as paymentDateMillis, 
+        
+        
+        -- Running Balance Logic
+        (
+            SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
+            FROM financial_ledger_table sub_l
+            WHERE sub_l.accountId = m.accountId 
+            AND sub_l.deletedAtMillis IS NULL
+            AND (
+                sub_l.dateMillis < m.dateMillis
+                OR
+                (sub_l.dateMillis = m.dateMillis)
+            )
+        ) as currentBalance
+        
+    FROM milk_transactions_table m
+    
+    INNER JOIN accounts_table a ON m.accountId = a.accountId
+    
+    -- Join for Payment (CASH_RECEIVED for Sale)
+    LEFT JOIN financial_ledger_table l_pay 
+        ON l_pay.referenceId = m.milkTransId 
+        AND l_pay.type = 'CASH_RECEIVED' 
+        AND l_pay.deletedAtMillis IS NULL
 
-        WHERE m.milkTransId = :id
-        LIMIT 1
-    """
+    WHERE m.milkTransId = :id
+    LIMIT 1
+"""
     )
     suspend fun getSaleDetailById(id: String): MilkSaleUiModel?
 
@@ -236,8 +241,7 @@ interface MilkDao {
           
         COALESCE(l_pay.credit, 0) as paymentReceived, 
         
-        -- 🔥 NEW ADDITION: Payment ki Date uthao
-        l_pay.dateMillis as paymentDateMillis,
+        m.paymentDateMillis as paymentDateMillis,
         
         -- 🔥 ACCUMULATED BALANCE (Same logic)
         (
@@ -302,7 +306,7 @@ interface MilkDao {
             
             -- Payment Data
             COALESCE(l_pay.credit, 0) as paymentReceived, 
-            l_pay.dateMillis as paymentDateMillis,
+            m.paymentDateMillis as paymentDateMillis,
             
             -- Running Balance Calculation
             (
@@ -483,7 +487,7 @@ interface MilkDao {
             
             -- Payment (Purchase me Payment = Debit)
             COALESCE(l_pay.debit, 0) as paymentMade,
-            l_pay.dateMillis as paymentDateMillis,
+            m.paymentDateMillis as paymentDateMillis, 
             
             -- Running Balance Calculation (Specific for Supplier)
             (
