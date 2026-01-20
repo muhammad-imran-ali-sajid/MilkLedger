@@ -133,7 +133,7 @@ class MilkSaleRepository @Inject constructor(
                 val paymentLedger = FinancialLedgerEntity(
                     // 🔥 CRITICAL: Yahan ab hum 'System.currentTimeMillis()' use kar rahe hain
                     // Taake Cashflow Report me ye paisa AAJ (Current Date) me show ho.
-                    dateMillis = System.currentTimeMillis(),
+                    dateMillis = paymentDate.toMillis(),
 
                     accountId = accountId,
                     type = LedgerEntryType.CASH_RECEIVED,
@@ -217,7 +217,7 @@ class MilkSaleRepository @Inject constructor(
                         // Lekin agar aap chahty hen k edit krny pr bhi AAJ ki date ho jaye,
                         // to yahan System.currentTimeMillis() laga den.
                         // Filhal hum Existing Date rakh rahy hen aur sirf Amount/Note update kr rahy hen.
-                        dateMillis = paymentLedgerEntry.dateMillis,
+                        dateMillis = request.paymentDate.toMillis(),
 
                         credit = request.amountPaid,
                         note = finalNote,
@@ -225,13 +225,10 @@ class MilkSaleRepository @Inject constructor(
                     )
                     ledgerDao.update(updatedPayment)
                 } else {
-                    // --- Insert NEW Payment (Recovery) ---
-                    // Ye wo case hai jahan pehle payment 0 thi, ab user ne paise add kiye hain.
                     // Yahan hum Lazmi AAJ KI DATE lagayenge.
                     val newPaymentLedger = FinancialLedgerEntity(
 
-                        // 🔥 CRITICAL: New Payment = Aaj ka Cashflow
-                        dateMillis = System.currentTimeMillis(),
+                        dateMillis = request.paymentDate.toMillis(),
 
                         accountId = request.accountId,
                         type = LedgerEntryType.CASH_RECEIVED,

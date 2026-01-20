@@ -152,7 +152,7 @@ class MilkPurchaseRepository @Inject constructor(
 
                 val paymentLedger = FinancialLedgerEntity(
                     // 🔥 CRITICAL: Cashflow ko accurate rakhne k liye AAJ ki date
-                    dateMillis = System.currentTimeMillis(),
+                    dateMillis = paymentDate.toMillis(),
 
                     accountId = supplierId,
                     type = LedgerEntryType.CASH_PAID,
@@ -230,9 +230,10 @@ class MilkPurchaseRepository @Inject constructor(
             if (request.amountPaid > 0) {
                 if (paymentLedger != null) {
                     // --- Update Existing Payment ---
-                    // Cashflow Date change nahi kar rahay taake history disturb na ho
                     val updatedPayment = paymentLedger.copy(
-                        dateMillis = paymentLedger.dateMillis, // Purani date hi rakhen
+                        // 🔥 FIX: Purani date nahi, User ki selected date update karen
+                        dateMillis = request.paymentDate.toMillis(),
+
                         debit = request.amountPaid,
                         note = finalNote,
                         updatedAtMillis = System.currentTimeMillis()
@@ -240,11 +241,10 @@ class MilkPurchaseRepository @Inject constructor(
                     ledgerDao.update(updatedPayment)
                 } else {
                     // --- Insert NEW Payment ---
-                    // Ye recovery ka case hai, is liye AAJ ki date lagegi
                     ledgerDao.insert(
                         FinancialLedgerEntity(
-                            // 🔥 New Payment = Aaj ka Cashflow
-                            dateMillis = System.currentTimeMillis(),
+                            // 🔥 FIX: User ki selected date
+                            dateMillis = request.paymentDate.toMillis(),
 
                             accountId = request.supplierId,
                             type = LedgerEntryType.CASH_PAID,
