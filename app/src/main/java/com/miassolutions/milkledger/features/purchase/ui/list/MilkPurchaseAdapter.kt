@@ -43,7 +43,7 @@ class MilkPurchaseAdapter(
             tvVolume.text = item.volume.toFormattedMilk()
             tvFat.text = item.fat.toFormattedMilk()
             tvLr.text = item.lr.toFormattedMilk()
-            tvTs.text =  item.ts.toFormattedMilk()
+            tvTs.text = item.ts.toFormattedMilk()
 
             // Financials
             tvPrice.text = item.totalAmount.toPrice()
@@ -61,8 +61,7 @@ class MilkPurchaseAdapter(
                     val inflater = LayoutInflater.from(context)
                     val binding = DialogPaymentInfoBinding.inflate(inflater)
 
-                    binding.tvMessage.text =
-                        "Payment Date: ${item.paymentDate?.toDisplayDate() ?: "Not available"}"
+                    binding.tvMessage.text = item.note
 
                     MaterialAlertDialogBuilder(context)
                         .setView(binding.root)

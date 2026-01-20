@@ -22,6 +22,7 @@ import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class MilkSaleRepository @Inject constructor(
@@ -67,6 +68,10 @@ class MilkSaleRepository @Inject constructor(
         ledgerDao.softDeleteLedgerByReference(saleId, currentTime)
     }
 
+    // Helper to format Date for Note (e.g., "18 Jan")
+    private val dateFormatter = DateTimeFormatter.ofPattern("dd MMM")
+
+    // ✅ SAVE SALE FUNCTION
     suspend fun saveMilkSale(
         saleDate: LocalDate,
         paymentDate: LocalDate,
@@ -78,15 +83,13 @@ class MilkSaleRepository @Inject constructor(
         note: String?
     ) {
         db.withTransaction {
-            // ✅ 1. Customer ka naam fetch karein
             val customerName = accountDao.getAccountById(accountId)?.name ?: "Unknown Customer"
 
             val netQuantity = volume - deduction
-            val totalPriceDouble =
-                MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate)
+            val totalPriceDouble = MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate)
             val totalPricePaisa = totalPriceDouble.toLongPaisa()
 
-            // 2. Save Milk (Use SALE DATE)
+            // 1. Save Milk (Sale Date par hi rahega - Ye Doodh ka hisaab hy)
             val milkEntity = MilkTransactionEntity(
                 accountId = accountId,
                 dateMillis = saleDate.toMillis(),
@@ -100,7 +103,7 @@ class MilkSaleRepository @Inject constructor(
             )
             milkDao.insert(milkEntity)
 
-            // 3. Save Ledger Debit (Use SALE DATE)
+            // 2. Save Ledger Debit (Sale Date par hi rahega - Ye Bill hy)
             val saleLedger = FinancialLedgerEntity(
                 dateMillis = saleDate.toMillis(),
                 accountId = accountId,
@@ -109,48 +112,58 @@ class MilkSaleRepository @Inject constructor(
                 debit = totalPricePaisa,
                 credit = 0,
                 profitImpact = totalPricePaisa,
-                // ✅ Note mein bhi Customer ka naam add kar sakte hain agar chahein
                 note = "Milk Sale to $customerName: $volume - $deduction = $netQuantity Ltr"
             )
             ledgerDao.insert(saleLedger)
 
-            // 4. Save Payment (Use PAYMENT DATE)
+            // 3. Save Payment (Cash Received)
             if (amountPaid > 0) {
+
+                // 🔥 LOGIC: Payment Date sirf Note me dikhana hai
+                val isDateDifferent = !saleDate.isEqual(paymentDate)
+
+                val finalNote = buildString {
+                    append("$customerName Paid") // Default Note
+                    if (isDateDifferent) {
+                        // Agar payment date alag hai to note me likh den
+                        append(" (Date: ${paymentDate.format(dateFormatter)})")
+                    }
+                }
+
                 val paymentLedger = FinancialLedgerEntity(
-                    dateMillis = paymentDate.toMillis(),
+                    // 🔥 CRITICAL: Yahan ab hum 'System.currentTimeMillis()' use kar rahe hain
+                    // Taake Cashflow Report me ye paisa AAJ (Current Date) me show ho.
+                    dateMillis = System.currentTimeMillis(),
+
                     accountId = accountId,
                     type = LedgerEntryType.CASH_RECEIVED,
                     referenceId = milkEntity.milkTransId,
                     debit = 0,
                     credit = amountPaid,
                     profitImpact = 0,
-                    // ✅ Yahan specifically "Received from Name" ayega
-                    note = "$customerName Paid"
+
+                    // ✅ Note me date save ho gayi user ki yaad-dehani k liye
+                    note = finalNote
                 )
                 ledgerDao.insert(paymentLedger)
             }
         }
     }
 
+    // ✅ UPDATE SALE FUNCTION
     suspend fun updateMilkSale(request: UpdateSaleRequest) {
         db.withTransaction {
-            // Calculations
             val netQuantity = request.volume - request.deduction
             val totalPriceDouble = MilkCalculationUtils.calculateCustomerPrice(
-                request.volume,
-                request.deduction,
-                request.rate
+                request.volume, request.deduction, request.rate
             )
             val totalPricePaisa = totalPriceDouble.toLongPaisa()
 
             val oldSale = milkDao.getMilkTransactionById(request.saleId)
                 ?: throw Exception("Sale not found")
+            val customerName = accountDao.getAccountById(oldSale.accountId)?.name ?: "Unknown Customer"
 
-            // ✅ Customer ka naam fetch karein (Old sale se accountId le kar)
-            val customerName =
-                accountDao.getAccountById(oldSale.accountId)?.name ?: "Unknown Customer"
-
-            // 1. Update Milk Entity
+            // 1. Update Milk Entity (Sale Date)
             val updatedMilkEntity = oldSale.copy(
                 dateMillis = request.date.toMillis(),
                 volume = request.volume,
@@ -163,52 +176,78 @@ class MilkSaleRepository @Inject constructor(
             )
             milkDao.update(updatedMilkEntity)
 
-            // 2. Update Ledger Debit
-            val saleLedgerEntry =
-                ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.MILK_SALE)
+            // 2. Update Ledger Debit (Sale Date)
+            val saleLedgerEntry = ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.MILK_SALE)
             saleLedgerEntry?.let { entry ->
                 val updatedLedger = entry.copy(
                     dateMillis = request.date.toMillis(),
                     debit = totalPricePaisa,
                     profitImpact = totalPricePaisa,
-                    // ✅ Note Update
                     note = "Milk Sale to $customerName: ${request.volume} - ${request.deduction} = $netQuantity Ltr",
                     updatedAtMillis = System.currentTimeMillis()
                 )
                 ledgerDao.update(updatedLedger)
             }
 
-            // 3. Update Payment
-            val paymentLedgerEntry =
-                ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.CASH_RECEIVED)
+            // 3. Update Payment (Cash Flow Logic)
+            val paymentLedgerEntry = ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.CASH_RECEIVED)
 
-            if (paymentLedgerEntry != null) {
-                if (request.amountPaid > 0) {
+            // 🔥 Note Generation Logic
+            val userCustomNote = request.note?.trim() // Agar user ne form me koi khaas note likha ho
+            val isDateDifferent = !request.date.isEqual(request.paymentDate)
+
+            val finalNote = buildString {
+                if (!userCustomNote.isNullOrEmpty()) {
+                    append(userCustomNote)
+                } else {
+                    append("Received from $customerName")
+                }
+
+                if (isDateDifferent) {
+                    append(" (Date: ${request.paymentDate.format(dateFormatter)})")
+                }
+            }
+
+            if (request.amountPaid > 0) {
+                if (paymentLedgerEntry != null) {
+                    // --- Update Existing Payment ---
                     val updatedPayment = paymentLedgerEntry.copy(
-                        dateMillis = request.paymentDate.toMillis(),
+                        // Agar purani payment edit ho rahi hai, to hum date change NAHI karte
+                        // taake purana cashflow disturb na ho.
+                        // Lekin agar aap chahty hen k edit krny pr bhi AAJ ki date ho jaye,
+                        // to yahan System.currentTimeMillis() laga den.
+                        // Filhal hum Existing Date rakh rahy hen aur sirf Amount/Note update kr rahy hen.
+                        dateMillis = paymentLedgerEntry.dateMillis,
+
                         credit = request.amountPaid,
-                        // ✅ Note Update
-                        note = "Received from $customerName",
+                        note = finalNote,
                         updatedAtMillis = System.currentTimeMillis()
                     )
                     ledgerDao.update(updatedPayment)
                 } else {
+                    // --- Insert NEW Payment (Recovery) ---
+                    // Ye wo case hai jahan pehle payment 0 thi, ab user ne paise add kiye hain.
+                    // Yahan hum Lazmi AAJ KI DATE lagayenge.
+                    val newPaymentLedger = FinancialLedgerEntity(
+
+                        // 🔥 CRITICAL: New Payment = Aaj ka Cashflow
+                        dateMillis = System.currentTimeMillis(),
+
+                        accountId = request.accountId,
+                        type = LedgerEntryType.CASH_RECEIVED,
+                        referenceId = request.saleId,
+                        debit = 0,
+                        credit = request.amountPaid,
+                        profitImpact = 0,
+                        note = finalNote
+                    )
+                    ledgerDao.insert(newPaymentLedger)
+                }
+            } else {
+                // Delete Payment
+                if (paymentLedgerEntry != null) {
                     ledgerDao.delete(paymentLedgerEntry)
                 }
-            } else if (request.amountPaid > 0) {
-                // Insert new payment (if user added payment during edit)
-                val newPaymentLedger = FinancialLedgerEntity(
-                    dateMillis = request.paymentDate.toMillis(),
-                    accountId = request.accountId, // Make sure request has accountId, or use oldSale.accountId
-                    type = LedgerEntryType.CASH_RECEIVED,
-                    referenceId = request.saleId,
-                    debit = 0,
-                    credit = request.amountPaid,
-                    profitImpact = 0,
-                    // ✅ Note for new payment
-                    note = "Received from $customerName"
-                )
-                ledgerDao.insert(newPaymentLedger)
             }
         }
     }
