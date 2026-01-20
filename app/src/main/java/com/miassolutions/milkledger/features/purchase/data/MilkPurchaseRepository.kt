@@ -17,6 +17,7 @@ import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import com.miassolutions.milkledger.features.purchase.model.UpdatePurchaseRequest
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
@@ -82,7 +83,6 @@ class MilkPurchaseRepository @Inject constructor(
         ledgerDao.softDeleteLedgerByReference(purchaseId, currentTime)
     }
 
-    private val dateFormatter = DateTimeFormatter.ofPattern("dd MMM")
 
     // ✅ SAVE PURCHASE
     suspend fun saveMilkPurchase(
@@ -133,7 +133,7 @@ class MilkPurchaseRepository @Inject constructor(
             if (amountPaid > 0) {
                 // UI Note Logic
                 val finalNote = if (paymentDate != null && !date.isEqual(paymentDate)) {
-                    "Paid to $supplierName (${paymentDate.format(dateFormatter)})"
+                    "Paid to $supplierName\n(Dated: ${paymentDate.toDisplayDate()})"
                 } else {
                     "Paid to $supplierName"
                 }
@@ -211,7 +211,7 @@ class MilkPurchaseRepository @Inject constructor(
             if (request.amountPaid > 0) {
                 val finalNote =
                     if (!request.date.isEqual(request.paymentDate)) {
-                        "Paid to $supplierName (${request.paymentDate?.format(dateFormatter)})"
+                        "Paid to $supplierName\n(Dated: ${request.paymentDate?.toDisplayDate()})"
                     } else {
                         "Paid to $supplierName"
                     }

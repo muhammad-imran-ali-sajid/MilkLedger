@@ -236,7 +236,7 @@ interface MilkDao {
         m.deduction as deduction,
         m.quantity as netQuantity,
         m.totalAmount,
-        l_pay.note as note,
+        m.notes as note,
         m.rateUsed as rate,
           
         COALESCE(l_pay.credit, 0) as paymentReceived, 
@@ -288,7 +288,7 @@ interface MilkDao {
             m.deduction as deduction,
             m.quantity as netQuantity,
             m.totalAmount,
-            l_pay.note as note,
+            m.notes as note,
             m.rateUsed as rate,
 
             -- 🔥 NEW: Previous Rate Logic (Subquery for Sale)
