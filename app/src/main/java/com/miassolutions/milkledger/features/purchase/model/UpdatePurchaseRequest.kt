@@ -6,7 +6,7 @@ data class UpdatePurchaseRequest(
     val purchaseId: String,
     val supplierId: String,
     val date: LocalDate,
-    val paymentDate: LocalDate,
+    val paymentDate: LocalDate?,
     val volume: Double,
     val fat: Double,
     val lr: Double,

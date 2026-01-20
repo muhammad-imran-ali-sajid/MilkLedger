@@ -14,7 +14,7 @@ class SavePurchaseUseCase @Inject constructor(
         purchaseId: String?,
         supplier: Account?,
         date: LocalDate,
-        paymentDate: LocalDate,
+        paymentDate: LocalDate?,
         volumeStr: String,
         fatStr: String,
         lrStr: String,

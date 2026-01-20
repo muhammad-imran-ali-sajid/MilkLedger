@@ -346,50 +346,52 @@ interface MilkDao {
     // 🔥 PURCHASE DETAIL QUERY
     @Query(
         """
-        SELECT 
-            m.milkTransId as id,
-            m.dateMillis,
-            m.accountId as supplierId,
-            a.name as supplierName,
-            
-            -- Measurements
-            m.volume,
-            COALESCE(m.fat, 0.0) as fat,
-            COALESCE(m.lr, 0.0) as lr,
-            COALESCE(m.ts, 0.0) as ts,
-            
-            m.rateUsed as rate,
-            m.totalAmount,
-            m.notes as note,
-            
-            -- Payment Detail
-            COALESCE(l_pay.debit, 0) as paymentMade, -- 🔥 Note: Payment is Debit in Purchase
-            l_pay.dateMillis as paymentDateMillis,
-            
-            -- Running Balance (Supplier ka hisaab)
-            (
-                SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
-                FROM financial_ledger_table sub_l
-                WHERE sub_l.accountId = m.accountId 
-                AND sub_l.deletedAtMillis IS NULL
-                AND (
-                    sub_l.dateMillis < m.dateMillis
-                    OR (sub_l.dateMillis = m.dateMillis)
-                )
-            ) as currentBalance
-            
-        FROM milk_transactions_table m
-        INNER JOIN accounts_table a ON m.accountId = a.accountId
+    SELECT 
+        m.milkTransId as id,
+        m.dateMillis,
+        m.accountId as supplierId,
+        a.name as supplierName,
         
-        -- Join for Payment (CASH_PAID)
-        LEFT JOIN financial_ledger_table l_pay 
-            ON l_pay.referenceId = m.milkTransId 
-            AND l_pay.type = 'CASH_PAID' 
-            AND l_pay.deletedAtMillis IS NULL
+        -- Measurements
+        m.volume,
+        COALESCE(m.fat, 0.0) as fat,
+        COALESCE(m.lr, 0.0) as lr,
+        COALESCE(m.ts, 0.0) as ts,
+        
+        m.rateUsed as rate,
+        m.totalAmount,
+        m.notes as note,
+        
+        -- Payment Detail
+        COALESCE(l_pay.debit, 0) as paymentMade,
+        
+        -- 🔥 FIX: Ledger ki date (l_pay) nahi, Milk Table ki date (m) uthayen
+        m.paymentDateMillis as paymentDateMillis, 
+        
+        -- Running Balance
+        (
+            SELECT (TOTAL(sub_l.debit) - TOTAL(sub_l.credit))
+            FROM financial_ledger_table sub_l
+            WHERE sub_l.accountId = m.accountId 
+            AND sub_l.deletedAtMillis IS NULL
+            AND (
+                sub_l.dateMillis < m.dateMillis
+                OR (sub_l.dateMillis = m.dateMillis)
+            )
+        ) as currentBalance
+        
+    FROM milk_transactions_table m
+    INNER JOIN accounts_table a ON m.accountId = a.accountId
+    
+    -- Join for Payment (CASH_PAID)
+    LEFT JOIN financial_ledger_table l_pay 
+        ON l_pay.referenceId = m.milkTransId 
+        AND l_pay.type = 'CASH_PAID' 
+        AND l_pay.deletedAtMillis IS NULL
 
-        WHERE m.milkTransId = :id
-        LIMIT 1
-    """
+    WHERE m.milkTransId = :id
+    LIMIT 1
+"""
     )
     suspend fun getPurchaseDetailById(id: String): MilkPurchaseUiModel?
 
@@ -409,11 +411,12 @@ interface MilkDao {
         
         m.rateUsed as rate,
         m.totalAmount,
-        l_pay.note as note,
+        m.notes as note,
         
         -- Fix: Explicitly naming the alias to match Data Class field
         COALESCE(l_pay.debit, 0) as paymentMade,
-        l_pay.dateMillis as paymentDateMillis, 
+        m.paymentDateMillis as paymentDateMillis, 
+        
         
         -- Running Balance Logic
         (

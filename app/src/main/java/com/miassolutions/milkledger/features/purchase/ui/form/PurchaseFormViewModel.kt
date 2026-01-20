@@ -91,6 +91,11 @@ class PurchaseFormViewModel @Inject constructor(
                 val allSuppliers = repository.getSuppliers().firstOrNull() ?: emptyList()
                 val supplier = allSuppliers.find { it.accountId == purchase.supplierId }
 
+                // 🔥 REPOSITORY ALIGNMENT:
+                // Ab hum DB se 'paymentDateMillis' direct utha rahay hain.
+                // Agar record me date hai to wo load hogi, warna null.
+                val savedPaymentDate = purchase.paymentDateMillis?.toLocalDate()
+
                 updateState {
                     it.copy(
                         isLoading = false,
@@ -98,10 +103,8 @@ class PurchaseFormViewModel @Inject constructor(
                         selectedSupplier = supplier,
                         date = purchase.dateMillis.toLocalDate(),
 
-                        // 🔥 CHANGE: Har haal mein NULL set karein.
-                        // Is se Edit Mode me bhi "Select Date" ka button Red hoga.
-                        // User Update par click karega to validation error ayega jab tak wo date select na kar le.
-                        paymentDate = null,
+                        // ✅ DB se Load ki hui date set karen
+                        paymentDate = savedPaymentDate,
 
                         volume = purchase.volume.toString(),
                         fat = if (purchase.fat > 0) purchase.fat.toString() else "",
@@ -226,15 +229,15 @@ class PurchaseFormViewModel @Inject constructor(
                 }
             }
 
-            // Fallback (Safe side)
-            val finalPaymentDate = s.paymentDate ?: s.date
+            // Fallback (Safe side: Agar date null hai (amount 0 k case me) tu Purchase Date use kr lo)
+            val finalPaymentDate = s.paymentDate
 
             val result = savePurchaseUseCase(
                 isEditMode = purchaseId != null,
                 purchaseId = purchaseId,
                 supplier = s.selectedSupplier,
                 date = s.date,
-                paymentDate = finalPaymentDate,
+                paymentDate = finalPaymentDate, // ✅ Correct Date Passed
                 volumeStr = s.volume,
                 fatStr = s.fat,
                 lrStr = s.lr,

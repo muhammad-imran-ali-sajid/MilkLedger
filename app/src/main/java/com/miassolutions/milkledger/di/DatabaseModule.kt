@@ -29,9 +29,8 @@ object DatabaseModule {
         @ApplicationContext appContext: Context,
     ): AppDatabase =
         Room.databaseBuilder(appContext, AppDatabase::class.java, DB_NAME)
-            // 🔥 YEH LINE ADD KAREIN - MAGIC FIX
             .setJournalMode(RoomDatabase.JournalMode.TRUNCATE)
-            .fallbackToDestructiveMigration(true) // todo()
+            .addMigrations(AppDatabase.MIGRATION_1_2)
             .build()
 
 

@@ -35,6 +35,8 @@ data class MilkTransactionEntity(
 
     val notes: String?,
 
+    val paymentDateMillis: Long? = null,
+
     // --- System Fields (For Sync & History) ---
     val createdAtMillis: Long = System.currentTimeMillis(),
     val updatedAtMillis: Long = System.currentTimeMillis(), // ✅ Added for Edit Tracking

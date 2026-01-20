@@ -82,14 +82,13 @@ class MilkPurchaseRepository @Inject constructor(
         ledgerDao.softDeleteLedgerByReference(purchaseId, currentTime)
     }
 
-    // Helper formatter (Class level par hona chahiye)
     private val dateFormatter = DateTimeFormatter.ofPattern("dd MMM")
 
     // ✅ SAVE PURCHASE
     suspend fun saveMilkPurchase(
         supplierId: String,
-        date: LocalDate,
-        paymentDate: LocalDate,
+        date: LocalDate,        // Accounting Date
+        paymentDate: LocalDate?,// UI Reference Date (Nullable)
         volume: Double,
         fat: Double,
         lr: Double,
@@ -98,73 +97,60 @@ class MilkPurchaseRepository @Inject constructor(
         note: String?
     ) {
         db.withTransaction {
-            // 1. Calculations
+            // Calculations
             val ts = MilkCalculationUtils.calculateTS(fat, lr, volume)
-            val totalPriceDouble = MilkCalculationUtils.calculatePrice(volume, fat, lr, rate)
-            val totalPricePaisa = totalPriceDouble.toLongPaisa()
+            val totalPricePaisa =
+                MilkCalculationUtils.calculatePrice(volume, fat, lr, rate).toLongPaisa()
+            val supplierName = accountDao.getAccountById(supplierId)?.name ?: "Supplier"
 
-            // Fetch Supplier Name
-            val supplierAccount = accountDao.getAccountById(supplierId)
-            val supplierName = supplierAccount?.name ?: "Supplier"
-
-            // 2. Save Milk Entity (Purchase Date par hi rahega)
+            // 1. Save Milk Entity
             val milkEntity = MilkTransactionEntity(
                 accountId = supplierId,
                 dateMillis = date.toMillis(),
+
+                // 🔥 NEW: Save User Selected Date here (Reference k liye)
+                paymentDateMillis = paymentDate?.toMillis(),
+
                 type = TransactionType.PURCHASE,
-                volume = volume,
-                fat = fat,
-                lr = lr,
-                ts = ts,
-                quantity = volume,
-                deduction = 0.0,
-                rateUsed = rate,
-                totalAmount = totalPricePaisa,
-                notes = note
+                volume = volume, fat = fat, lr = lr, ts = ts, quantity = volume, deduction = 0.0,
+                rateUsed = rate, totalAmount = totalPricePaisa, notes = note
             )
             milkDao.insert(milkEntity)
 
-            // 3. Ledger Entry: MILK_PURCHASE (Credit - Liability Barhi)
-            val purchaseLedger = FinancialLedgerEntity(
-                dateMillis = date.toMillis(), // Purchase Date
-                accountId = supplierId,
-                referenceId = milkEntity.milkTransId,
-                type = LedgerEntryType.MILK_PURCHASE,
-                debit = 0,
-                credit = totalPricePaisa,
-                profitImpact = -totalPricePaisa, // Expense (Negative Profit)
-                note = "Purchase: $volume Ltr (F:$fat, L:$lr)"
+            // 2. Ledger Entry: MILK_PURCHASE
+            ledgerDao.insert(
+                FinancialLedgerEntity(
+                    dateMillis = date.toMillis(), // Purchase Date
+                    accountId = supplierId,
+                    referenceId = milkEntity.milkTransId,
+                    type = LedgerEntryType.MILK_PURCHASE,
+                    debit = 0, credit = totalPricePaisa, profitImpact = -totalPricePaisa,
+                    note = "Purchase: $volume Ltr (F:$fat, L:$lr)"
+                )
             )
-            ledgerDao.insert(purchaseLedger)
 
-            // 4. Ledger Entry: CASH_PAID (Debit - Liability Kam hui)
+            // 3. Ledger Entry: CASH_PAID
             if (amountPaid > 0) {
-
-                // 🔥 LOGIC: Payment Date sirf Note me dikhayen
-                val isDateDifferent = !date.isEqual(paymentDate)
-
-                val finalNote = buildString {
-                    append("Paid to $supplierName")
-                    if (isDateDifferent) {
-                        append(" (Date: ${paymentDate.format(dateFormatter)})")
-                    }
+                // UI Note Logic
+                val finalNote = if (paymentDate != null && !date.isEqual(paymentDate)) {
+                    "Paid to $supplierName (${paymentDate.format(dateFormatter)})"
+                } else {
+                    "Paid to $supplierName"
                 }
 
-                val paymentLedger = FinancialLedgerEntity(
-                    // 🔥 CRITICAL: Cashflow ko accurate rakhne k liye AAJ ki date
-                    dateMillis = paymentDate.toMillis(),
+                ledgerDao.insert(
+                    FinancialLedgerEntity(
+                        // 🟢 LEDGER: Purchase Date par hi rahega (Accounting Rule)
+                        dateMillis = date.toMillis(),
 
-                    accountId = supplierId,
-                    type = LedgerEntryType.CASH_PAID,
-                    referenceId = milkEntity.milkTransId,
-                    debit = amountPaid,
-                    credit = 0,
-                    profitImpact = 0,
-
-                    // ✅ Note me date save ho gayi
-                    note = finalNote
-                )
-                ledgerDao.insert(paymentLedger)
+                        accountId = supplierId,
+                        type = LedgerEntryType.CASH_PAID,
+                        referenceId = milkEntity.milkTransId,
+                        debit = amountPaid,
+                        credit = 0,
+                        profitImpact = 0,
+                        note = finalNote
+                    ))
             }
         }
     }
@@ -172,23 +158,26 @@ class MilkPurchaseRepository @Inject constructor(
     // ✅ UPDATE PURCHASE
     suspend fun updateMilkPurchase(request: UpdatePurchaseRequest) {
         db.withTransaction {
-            // 1. Re-Calculate
             val ts = MilkCalculationUtils.calculateTS(request.fat, request.lr, request.volume)
-            val totalPriceDouble = MilkCalculationUtils.calculatePrice(
-                request.volume, request.fat, request.lr, request.rate
+            val totalPricePaisa = MilkCalculationUtils.calculatePrice(
+                request.volume,
+                request.fat,
+                request.lr,
+                request.rate
+            ).toLongPaisa()
+            val supplierName = accountDao.getAccountById(request.supplierId)?.name ?: "Supplier"
+
+            val oldPurchase = milkDao.getMilkTransactionById(request.purchaseId) ?: throw Exception(
+                "Purchase not found"
             )
-            val totalPricePaisa = totalPriceDouble.toLongPaisa()
 
-            // Fetch Name
-            val supplierAccount = accountDao.getAccountById(request.supplierId)
-            val supplierName = supplierAccount?.name ?: "Supplier"
-
-            val oldPurchase = milkDao.getMilkTransactionById(request.purchaseId)
-                ?: throw Exception("Purchase not found")
-
-            // 2. Update Milk Table (Purchase Date)
+            // 1. Update Milk Entity
             val updatedMilk = oldPurchase.copy(
                 dateMillis = request.date.toMillis(),
+
+                // 🔥 NEW: Update User Selected Date
+                paymentDateMillis = request.paymentDate?.toMillis(),
+
                 volume = request.volume,
                 fat = request.fat,
                 lr = request.lr,
@@ -201,69 +190,61 @@ class MilkPurchaseRepository @Inject constructor(
             )
             milkDao.update(updatedMilk)
 
-            // 3. Update Ledger (Purchase Entry)
-            val purchaseLedger = ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.MILK_PURCHASE)
+            // 2. Update Ledger (Purchase Entry)
+            val purchaseLedger =
+                ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.MILK_PURCHASE)
             purchaseLedger?.let {
-                val updated = it.copy(
-                    dateMillis = request.date.toMillis(),
-                    credit = totalPricePaisa,
-                    profitImpact = -totalPricePaisa,
-                    note = "Purchase: ${request.volume} Ltr (F:${request.fat}, L:${request.lr})",
-                    updatedAtMillis = System.currentTimeMillis()
-                )
-                ledgerDao.update(updated)
-            }
-
-            // 4. Update Payment (Cash Flow Logic)
-            val paymentLedger = ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.CASH_PAID)
-
-            // 🔥 Note Generation Logic
-            val isDateDifferent = !request.date.isEqual(request.paymentDate)
-
-            val finalNote = buildString {
-                append("Paid to $supplierName")
-                if (isDateDifferent) {
-                    append(" (Date: ${request.paymentDate.format(dateFormatter)})")
-                }
-            }
-
-            if (request.amountPaid > 0) {
-                if (paymentLedger != null) {
-                    // --- Update Existing Payment ---
-                    val updatedPayment = paymentLedger.copy(
-                        // 🔥 FIX: Purani date nahi, User ki selected date update karen
-                        dateMillis = request.paymentDate.toMillis(),
-
-                        debit = request.amountPaid,
-                        note = finalNote,
+                ledgerDao.update(
+                    it.copy(
+                        dateMillis = request.date.toMillis(),
+                        credit = totalPricePaisa, profitImpact = -totalPricePaisa,
+                        note = "Purchase: ${request.volume} Ltr (F:${request.fat}, L:${request.lr})",
                         updatedAtMillis = System.currentTimeMillis()
                     )
-                    ledgerDao.update(updatedPayment)
+                )
+            }
+
+            // 3. Update Payment Ledger
+            val paymentLedger =
+                ledgerDao.getLedgerByReferenceId(request.purchaseId, LedgerEntryType.CASH_PAID)
+
+            if (request.amountPaid > 0) {
+                val finalNote =
+                    if (!request.date.isEqual(request.paymentDate)) {
+                        "Paid to $supplierName (${request.paymentDate?.format(dateFormatter)})"
+                    } else {
+                        "Paid to $supplierName"
+                    }
+
+                if (paymentLedger != null) {
+                    // Update Existing
+                    ledgerDao.update(
+                        paymentLedger.copy(
+                            // 🟢 LEDGER: Purchase Date par hi lock rahega
+                            dateMillis = request.date.toMillis(),
+                            debit = request.amountPaid,
+                            note = finalNote,
+                            updatedAtMillis = System.currentTimeMillis()
+                        )
+                    )
                 } else {
-                    // --- Insert NEW Payment ---
+                    // Insert New
                     ledgerDao.insert(
                         FinancialLedgerEntity(
-                            // 🔥 FIX: User ki selected date
-                            dateMillis = request.paymentDate.toMillis(),
-
+                            // 🟢 LEDGER: Purchase Date
+                            dateMillis = request.date.toMillis(),
                             accountId = request.supplierId,
                             type = LedgerEntryType.CASH_PAID,
                             referenceId = request.purchaseId,
-                            debit = request.amountPaid,
-                            credit = 0,
-                            profitImpact = 0,
+                            debit = request.amountPaid, credit = 0, profitImpact = 0,
                             note = finalNote
                         )
                     )
                 }
             } else {
-                // Delete Payment if amount is 0
-                if (paymentLedger != null) {
-                    ledgerDao.delete(paymentLedger)
-                }
+                if (paymentLedger != null) ledgerDao.delete(paymentLedger)
             }
         }
     }
-
 
 }

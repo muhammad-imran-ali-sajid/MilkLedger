@@ -135,7 +135,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
             btnPaymentDate.text = state.paymentDate.toDisplayDate() // "18 Jan 2024"
             btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         } else {
-            btnPaymentDate.text = "Select Date 📅" // "Abhi select nahi hoi"
+            btnPaymentDate.text = "Select Date" // "Abhi select nahi hoi"
             btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red)) // Red color for attention
         }
 

@@ -3,6 +3,8 @@ package com.miassolutions.milkledger.core.localdb
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
 import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
 import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
@@ -23,7 +25,7 @@ import com.miassolutions.milkledger.features.note.data.local.NoteEntity
         ExpenseEntity::class,
         NoteEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(TransactionTypeConverter::class)
@@ -38,10 +40,16 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun dashboardDao(): DashboardDao
 
-
-
-
-
-
+    companion object {
+        // 🔥 STEP 2: Migration Logic define karen
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // SQL query to add new column safely
+                db.execSQL(
+                    "ALTER TABLE milk_transactions_table ADD COLUMN paymentDateMillis INTEGER DEFAULT NULL"
+                )
+            }
+        }
+    }
 
 }
