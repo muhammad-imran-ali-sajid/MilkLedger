@@ -11,6 +11,7 @@ import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.databinding.ItemAccountBinding
 import com.miassolutions.milkledger.features.account.model.AccountUi
 import com.miassolutions.milkledger.utils.extensions.setBalanceColorWithRoundRupee
+import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 
 
@@ -57,7 +58,7 @@ class AccountListAdapter(
             // 3. Color Logic (Customer vs Supplier)
             val isCustomer = item.type == AccountType.CUSTOMER
 
-            tvSubtitle.text = "Since: ${item.openingDate.toCompleteDateFormat()}"
+            tvSince.text = item.openingDate.toCompleteDateFormat()
 
             if (isCustomer) {
                 viewIndicator.setBackgroundResource(R.color.teal_700)
@@ -95,8 +96,9 @@ class AccountListAdapter(
                 rawBalance
             }
 
-            tvBalance.setBalanceColorWithRoundRupee(displayBalance)
+            tvOpeningBalance.setBalanceColorWithRoundRupee(displayBalance)
 
+            tvCurrentBalance.setBalanceColorWithRoundRupee(item.currentBalance ?: 0L)
             tvRate.text = item.defaultRate.toString()
 
             root.setOnClickListener {

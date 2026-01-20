@@ -19,6 +19,7 @@ fun AccountEntity.toDomain(): Account {
         defaultRate = this.defaultRate,
         advanceAmount = this.advanceAmount,
         initialBalance = this.initialBalance,
+        currentBalance = null
     )
 }
 

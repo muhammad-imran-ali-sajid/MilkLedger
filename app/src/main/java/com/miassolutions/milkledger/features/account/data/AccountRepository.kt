@@ -2,8 +2,14 @@ package com.miassolutions.milkledger.features.account.data
 
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.core.localdb.AppDatabase
-import com.miassolutions.milkledger.core.localdb.account.local.*
-import com.miassolutions.milkledger.core.localdb.ledger.*
+import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
+import com.miassolutions.milkledger.core.localdb.account.local.AccountWithStats
+import com.miassolutions.milkledger.core.localdb.account.local.toDomain
+import com.miassolutions.milkledger.core.localdb.account.local.toEntity
+import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
+import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
+import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
 import com.miassolutions.milkledger.features.account.domain.Account
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toMillis
@@ -20,6 +26,7 @@ class AccountRepository @Inject constructor(
 
     /* ---------------- READ ---------------- */
 
+    // 1. Purana function (Simple List)
     fun getAccountsByType(type: AccountType): Flow<List<Account>> {
         return accountDao.getAccountsByType(type)
             .map { entities ->
@@ -27,10 +34,11 @@ class AccountRepository @Inject constructor(
             }
     }
 
-
-//    fun getAccountsByType(type: AccountType): Flow<List<Account>> =
-//        accountDao.getAccountsByType(type)
-//            .map { list -> list.filter { it.isActive }.map { it.toDomain() } }
+    // 🔥 2. Naya OPTIMIZED Function (List + Balance + Date)
+    // Ye ViewModel me use hoga taake N+1 query problem khatam ho jaye
+    fun getAccountsWithStats(type: AccountType): Flow<List<AccountWithStats>> {
+        return accountDao.getAccountsWithStats(type)
+    }
 
     suspend fun getAccountById(accountId: String): Account? =
         accountDao.getAccountById(accountId)?.toDomain()

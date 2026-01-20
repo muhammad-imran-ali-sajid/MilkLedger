@@ -25,23 +25,15 @@ fun Account.toUi(): AccountUi =
         openingDate = createdDate?: LocalDate.now(),
         defaultRate = defaultRate,
         advanceAmount = advanceAmount,
+        currentBalance =currentBalance
 
     )
 
 fun List<Account>.toUiList(): List<AccountUi> = this.map { it.toUi() }
 
-fun Flow<List<Account>>.toUiListFlow(): Flow<List<AccountUi>> = this.map { it.toUiList() }
 
 
-fun Account.toFormUiState(): AccountFormUiState =
-    AccountFormUiState(
-        sortOrder = sortOrder.toString(),
-        personName = name,
-        selectAccountType = type,
-        rate = defaultRate.toString(),
-        initialBalance = initialBalance.toString().orEmpty(),
-        advanceAmount = advanceAmount.toString().orEmpty(),
-    )
+
 
 
 fun AccountFormUiState.toDomain(
@@ -57,6 +49,7 @@ fun AccountFormUiState.toDomain(
         advanceAmount = advanceAmount.toPaisa(),
         initialBalance = initialBalance.toPaisa(),
         isActive = isActive,
+        currentBalance = null,
         createdDate = openingDate,
     )
 

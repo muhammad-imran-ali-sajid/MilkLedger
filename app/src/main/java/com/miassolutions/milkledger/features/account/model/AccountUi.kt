@@ -9,6 +9,7 @@ data class AccountUi(
     val type: AccountType,
     val sortOrder: Int,
     val initialBalance: Long?,
+    val currentBalance: Long?,
     val openingDate: LocalDate,
     val defaultRate: Double,
     val advanceAmount: Long?,

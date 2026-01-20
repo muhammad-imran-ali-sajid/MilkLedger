@@ -5,11 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.features.account.data.AccountRepository
-import com.miassolutions.milkledger.features.account.mapper.toUiListFlow
 import com.miassolutions.milkledger.features.account.model.AccountUi
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -71,16 +72,39 @@ class AccountViewModel @Inject constructor(
         combine(selectedTab, visibility) { type, visibility ->
             type to visibility
         }.flatMapLatest { (type, visibility) ->
-            repository.getAccountsByType(type)
+
+            // 🔥 AB HUM "One-Shot Query" USE KAR RAHAY HAIN
+            repository.getAccountsWithStats(type)
                 .map { list ->
-                    when (visibility) {
-                        AccountVisibility.ACTIVE_ONLY ->
-                            list.filter { it.isActive }
-                        AccountVisibility.ALL ->
-                            list
+
+                    // 1. Filtering (Active/All)
+                    val filteredList = when (visibility) {
+                        AccountVisibility.ACTIVE_ONLY -> list.filter { it.account.isActive }
+                        AccountVisibility.ALL -> list
+                    }
+
+                    // 2. Simple Mapping (Data already majood hai!)
+                    filteredList.map { item ->
+                        val entity = item.account
+
+                        AccountUi(
+                            id = entity.accountId,
+                            name = entity.name,
+                            type = entity.accountType,
+                            sortOrder = entity.sortOrder,
+                            initialBalance = entity.initialBalance,
+
+                            // ✅ Direct Assignment (No DB Call)
+                            currentBalance = item.currentBalance ?: 0L,
+
+                            // ✅ Date Conversion
+                            openingDate = item.openingDateMillis?.toLocalDate() ?: LocalDate.now(),
+
+                            defaultRate = entity.defaultRate,
+                            advanceAmount = entity.advanceAmount
+                        )
                     }
                 }
-                .toUiListFlow()
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
