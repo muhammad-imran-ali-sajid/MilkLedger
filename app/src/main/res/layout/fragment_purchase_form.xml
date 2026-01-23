@@ -37,7 +37,6 @@
     </LinearLayout>
 
 
-
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
@@ -45,26 +44,39 @@
         android:layout_weight="1">
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_supplier_name"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MilkLedger.Input"
-                android:hint="Supplier Name">
+                android:hint="Supplier Name"
+
+                app:boxBackgroundColor="?attr/colorPrimaryContainer"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:boxStrokeWidth="2dp"
+
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_arrow_pick">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/actv_supplier_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    />
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:inputType="none"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:textAppearance="?attr/textAppearanceHeadline5"
+                    android:textStyle="bold"/>
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -85,28 +97,28 @@
                         android:id="@+id/etMilkVolume"
                         style="@style/Theme.MilkLedger.InputTextSize"
                         android:layout_width="match_parent"
-                        android:imeOptions="actionNext"
-                        android:nextFocusForward="@id/etFat"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:nextFocusForward="@id/etFat" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MilkLedger.Input"
                     android:layout_width="0dp"
-                    android:nextFocusForward="@id/etLr"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    android:hint="Fat">
+                    android:hint="Fat"
+                    android:nextFocusForward="@id/etLr">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etFat"
-                        android:layout_width="match_parent"
-                        android:imeOptions="actionNext"
-                        android:nextFocusForward="@id/etLr"
                         style="@style/TextInputMinimalStyle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:nextFocusForward="@id/etLr" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -117,12 +129,12 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etLr"
-                        android:layout_width="match_parent"
-                        android:imeOptions="actionNext"
-                        android:nextFocusForward="@id/etPayment"
                         style="@style/TextInputMinimalStyle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:nextFocusForward="@id/etPayment" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
@@ -233,12 +245,12 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPayment"
-                        android:layout_width="match_parent"
-                        android:imeOptions="actionNext"
-                        android:nextFocusForward="@id/etMilkVolume"
                         style="@style/TextInputMinimalStyle"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:nextFocusForward="@id/etMilkVolume" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
