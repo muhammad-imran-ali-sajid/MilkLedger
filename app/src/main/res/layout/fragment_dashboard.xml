@@ -102,7 +102,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
-                        android:focusable="true">
+                        android:focusable="true"
+                        app:cardBackgroundColor="?attr/colorPurchase">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -115,21 +116,23 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:drawableEnd="@drawable/ic_arrow_forward"
-                                android:drawableTint="?attr/colorOnPrimaryContainer"
-                                android:text="Purchases" />
+                                android:drawableTint="?attr/colorOnPrimary"
+                                android:text="Purchases"
+                                android:textColor="?attr/colorOnPrimary" />
 
                             <TextView
                                 android:id="@+id/tvTotalPurchases"
                                 style="@style/Text.MilkLedger.DashboardValue"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="?attr/colorPurchase"
+                                android:textColor="?attr/colorOnPrimary"
                                 tools:text="7.5 M" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/btnExpense"
+                        android:backgroundTint="?attr/colorExpense"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -147,15 +150,17 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:drawableEnd="@drawable/ic_arrow_forward"
-                                android:drawableTint="?attr/colorOnPrimaryContainer"
+                                android:drawableTint="?attr/colorOnPrimary"
+                                android:textColor="?attr/colorOnPrimary"
                                 android:text="Expenses" />
 
                             <TextView
                                 android:id="@+id/tvTotalExpense"
                                 style="@style/Text.MilkLedger.DashboardValue"
                                 android:layout_width="wrap_content"
+
                                 android:layout_height="wrap_content"
-                                android:textColor="?attr/colorExpense"
+                                android:textColor="?attr/colorOnPrimary"
                                 tools:text="4,500" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
@@ -176,7 +181,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clickable="true"
-                        android:focusable="true">
+                        android:focusable="true"
+                        app:cardBackgroundColor="?attr/colorSale">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -189,15 +195,17 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
                                 android:drawableEnd="@drawable/ic_arrow_forward"
-                                android:drawableTint="?attr/colorOnPrimaryContainer"
-                                android:text="Sales" />
+                                android:drawableTint="?attr/colorOnPrimary"
+                                android:text="Sales"
+                                android:textColor="?attr/colorOnPrimary" />
 
                             <TextView
                                 android:id="@+id/tvTotalSales"
                                 style="@style/Text.MilkLedger.DashboardValue"
                                 android:layout_width="wrap_content"
+
                                 android:layout_height="wrap_content"
-                                android:textColor="?attr/colorSale"
+                                android:textColor="?attr/colorOnPrimary"
                                 tools:text="12K" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>

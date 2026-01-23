@@ -235,19 +235,23 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
+            style="@style/Text.Normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save" />
+            android:gravity="center"
+            android:text="Save"
+            android:textColor="?attr/colorOnPrimary" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
-            style="@style/Widget.Material3.Button.TextButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:text="Delete Account"
-            android:textColor="@color/red" />
+            android:textColor="?attr/colorError"
+            app:strokeColor="?attr/colorError" />
     </LinearLayout>
 
 </LinearLayout>

@@ -12,12 +12,17 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountFormBinding
-import com.miassolutions.milkledger.features.account.form.AccountFormEvent.*
+import com.miassolutions.milkledger.features.account.form.AccountFormEvent.DeleteClicked
+import com.miassolutions.milkledger.features.account.form.AccountFormEvent.OnActiveStatusChanged
+import com.miassolutions.milkledger.features.account.form.AccountFormEvent.OnOpeningDateClicked
+import com.miassolutions.milkledger.features.account.form.AccountFormEvent.OnOpeningDateSelected
+import com.miassolutions.milkledger.features.account.form.AccountFormEvent.SaveClicked
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.setBalanceColorWithRoundRupee
 import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
-import com.miassolutions.milkledger.utils.extensions.openDatePicker
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toPaisa
 import com.miassolutions.milkledger.utils.extensions.toRupees
@@ -52,7 +57,10 @@ class AccountFormFragment :
         }
 
         btnDelete.setOnClickListener {
-            viewModel.onEvent(DeleteClicked)
+            showDeleteActionDialog {
+
+                viewModel.onEvent(DeleteClicked)
+            }
         }
     }
 
