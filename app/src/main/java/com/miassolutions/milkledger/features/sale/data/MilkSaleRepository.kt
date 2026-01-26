@@ -101,9 +101,9 @@ class MilkSaleRepository @Inject constructor(
             if (amountPaid > 0) {
                 // 🔥 Fix: Null Safe check
                 val finalNote = if (paymentDate != null && !saleDate.isEqual(paymentDate)) {
-                    "Rcv frm $customerName\n(Dated: ${paymentDate.toDisplayDate()})"
+                    "$customerName\n(Dated: ${paymentDate.toDisplayDate()})"
                 } else {
-                    "Rcv frm $customerName"
+                    "$customerName"
                 }
 
                 ledgerDao.insert(FinancialLedgerEntity(
@@ -159,9 +159,9 @@ class MilkSaleRepository @Inject constructor(
             if (request.amountPaid > 0) {
                 // 🔥 Fix: Null Safe check
                 val finalNote = if (request.paymentDate != null && !request.date.isEqual(request.paymentDate)) {
-                    "Rcv frm $customerName\n(Dated: ${request.paymentDate.toDisplayDate()})"
+                    "$customerName\n(Dated: ${request.paymentDate.toDisplayDate()})"
                 } else {
-                    "Rcv frm $customerName"
+                    "$customerName"
                 }
 
                 if (paymentLedgerEntry != null) {

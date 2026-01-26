@@ -179,7 +179,7 @@ android:layout_margin="4dp"
                         android:drawableTint="?attr/colorOnSecondaryContainer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Receive" />
+                        android:text="Rcv" />
 
                     <TextView
                         android:id="@+id/tvPayment"

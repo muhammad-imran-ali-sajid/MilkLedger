@@ -110,11 +110,10 @@
             <TextView
                 style="@style/Text.Normal"
                 android:layout_width="0dp"
-                android:textColor="?attr/colorProfit"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Net Cash Flow:"
-                android:textStyle="bold" />
+                />
 
             <TextView
                 android:id="@+id/tvNetCash"
@@ -122,7 +121,6 @@
                 android:textColor="?attr/colorProfit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textStyle="bold"
                 tools:text="+ 30,000" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

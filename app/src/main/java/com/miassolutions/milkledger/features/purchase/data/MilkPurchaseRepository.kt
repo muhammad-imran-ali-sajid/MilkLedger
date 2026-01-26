@@ -133,9 +133,9 @@ class MilkPurchaseRepository @Inject constructor(
             if (amountPaid > 0) {
                 // UI Note Logic
                 val finalNote = if (paymentDate != null && !date.isEqual(paymentDate)) {
-                    "Paid to $supplierName\n(Dated: ${paymentDate.toDisplayDate()})"
+                    "$supplierName\n(Dated: ${paymentDate.toDisplayDate()})"
                 } else {
-                    "Paid to $supplierName"
+                    "$supplierName"
                 }
 
                 ledgerDao.insert(
@@ -211,9 +211,9 @@ class MilkPurchaseRepository @Inject constructor(
             if (request.amountPaid > 0) {
                 val finalNote =
                     if (!request.date.isEqual(request.paymentDate)) {
-                        "Paid to $supplierName\n(Dated: ${request.paymentDate?.toDisplayDate()})"
+                        "$supplierName\n(Dated: ${request.paymentDate?.toDisplayDate()})"
                     } else {
-                        "Paid to $supplierName"
+                        "$supplierName"
                     }
 
                 if (paymentLedger != null) {
