@@ -13,8 +13,11 @@ import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiMo
 import com.miassolutions.milkledger.features.purchase.purchaseform.PurchaseFormViewModel
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.format
+import com.miassolutions.milkledger.utils.extensions.hide
 import com.miassolutions.milkledger.utils.extensions.openDatePicker
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
@@ -136,11 +139,23 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
             btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         } else {
             btnPaymentDate.text = "Select Date" // "Abhi select nahi hoi"
-            btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red)) // Red color for attention
+            btnPaymentDate.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.red
+                )
+            ) // Red color for attention
+        }
+
+        if (state.advance != null) {
+            tilAdvance.show()
+            tvAdvance.text = state.advance
+        } else {
+            tilAdvance.hide()
         }
 
         // Calculations
-        tvTs.text = String.format("%.2f", state.calculatedTs)
+        tvTs.text = state.calculatedTs.format(2)
         tvMilkPrice.text = state.calculatedTotal.toPrice()
         tvRate.text = state.rate
         tvBalance.setBalanceWithColor(state.currentBalance)

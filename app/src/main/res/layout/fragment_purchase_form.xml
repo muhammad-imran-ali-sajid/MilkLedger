@@ -79,6 +79,47 @@
                     android:textStyle="bold"/>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tilAdvance"
+                tools:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?attr/colorSecondary"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <TextView
+                        style="@style/Text.Normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Advance:"
+                        android:textColor="?attr/colorOnSecondary" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:id="@+id/tvAdvance"
+                        style="@style/Text.Normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="12,300"
+                        android:textColor="?attr/colorOnSecondary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -284,7 +325,7 @@
                     android:padding="16dp">
 
                     <TextView
-                        style="@style/Text.MilkLedger.Label"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Current Balance:"
@@ -297,7 +338,7 @@
 
                     <TextView
                         android:id="@+id/tvBalance"
-                        style="@style/Text.MilkLedger.Title"
+                        style="@style/Text.Normal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12,300"

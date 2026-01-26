@@ -22,6 +22,8 @@ data class PurchaseFormUiState(
     val lr: String = "",
     val rate: String = "",
 
+    val advance:String? = null,
+
     // Payment
     val amountPaid: String = "",
     val note: String = "",

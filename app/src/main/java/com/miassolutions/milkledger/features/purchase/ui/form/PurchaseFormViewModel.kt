@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiStat
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.milkcalculations.MilkCalculationUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -103,6 +104,8 @@ class PurchaseFormViewModel @Inject constructor(
                         selectedSupplier = supplier,
                         date = purchase.dateMillis.toLocalDate(),
 
+                        advance = supplier?.advanceAmount?.toPrice(),
+
                         // ✅ DB se Load ki hui date set karen
                         paymentDate = savedPaymentDate,
 
@@ -131,31 +134,38 @@ class PurchaseFormViewModel @Inject constructor(
                 updateState {
                     it.copy(
                         selectedSupplier = event.supplier,
-                        rate = event.supplier.defaultRate.toString()
+                        rate = event.supplier.defaultRate.toString(),
+                        advance = event.supplier.advanceAmount?.toPrice()
                     )
                 }
                 fetchBalance(event.supplier.accountId)
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnVolumeChanged -> {
                 updateState { it.copy(volume = event.value) }
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnFatChanged -> {
                 updateState { it.copy(fat = event.value) }
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnLrChanged -> {
                 updateState { it.copy(lr = event.value) }
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnRateChanged -> {
                 updateState { it.copy(rate = event.value) }
                 calculateLiveValues()
             }
+
             is PurchaseFormUiEvent.OnAmountPaidChanged -> {
                 updateState { it.copy(amountPaid = event.value) }
             }
+
             is PurchaseFormUiEvent.OnNoteChanged -> updateState { it.copy(note = event.value) }
 
             is PurchaseFormUiEvent.OnDateSelected -> updateState { it.copy(date = event.date) }
@@ -207,6 +217,7 @@ class PurchaseFormViewModel @Inject constructor(
             }
         }
     }
+
 
     private fun savePurchase(exitAfterSave: Boolean) {
         viewModelScope.launch {
