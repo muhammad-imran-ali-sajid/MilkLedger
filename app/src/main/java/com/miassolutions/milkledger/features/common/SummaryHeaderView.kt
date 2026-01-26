@@ -53,13 +53,13 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.tvMainAmount.text = totalAmount.toPrice()
 
         binding.lbl1.text = "Avg Fat"
-        binding.tvVal1.text = "%.2f".format(avgFat)
+        binding.tvVal1.text = avgFat.format(2)
 
         binding.lbl2.text = "Avg LR"
-        binding.tvVal2.text = "%.2f".format(avgLr)
+        binding.tvVal2.text = avgLr.format(2)
 
         binding.lbl3.text = "Total TS"
-        binding.tvVal3.text = "%.2f".format(avgTs)
+        binding.tvVal3.text = avgFat.format(2)
 
         binding.lbl4.text = "Total Paid"
         binding.tvVal4.text = totalPaid.toPrice()

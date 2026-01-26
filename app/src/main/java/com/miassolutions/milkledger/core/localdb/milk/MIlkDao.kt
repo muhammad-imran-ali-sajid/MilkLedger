@@ -16,44 +16,59 @@ interface MilkDao {
 
     // 1️⃣ ALL PURCHASES (Weighted Stats)
     @Query("""
-    SELECT 
-        -- 1. Totals
-        COALESCE(SUM(mt.totalAmount), 0)      AS totalAmount,
-        COALESCE(SUM(mt.volume), 0.0)         AS totalVolume,
+SELECT 
+    -- 1. Totals
+    COALESCE(SUM(mt.totalAmount), 0) AS totalAmount,
+    COALESCE(SUM(mt.volume), 0.0) AS totalVolume,
 
-        -- 2. Simple Average FAT (sirf jahan quality di gai)
-        COALESCE(AVG(CASE WHEN mt.fat > 0 THEN mt.fat END), 0.0) AS avgFat,
+    -- 2. Weighted Average FAT
+    COALESCE(
+        SUM(CASE WHEN mt.fat > 0 THEN mt.fat * mt.volume ELSE 0 END) /
+        NULLIF(SUM(CASE WHEN mt.fat > 0 THEN mt.volume ELSE 0 END), 0),
+        0.0
+    ) AS avgFat,
 
-        -- 3. Simple Average LR (sirf jahan quality di gai)
-        COALESCE(AVG(CASE WHEN mt.fat > 0 THEN mt.lr END), 0.0)  AS avgLr,
+    -- 3. Weighted Average LR
+    COALESCE(
+        SUM(CASE WHEN mt.fat > 0 THEN mt.lr * mt.volume ELSE 0 END) /
+        NULLIF(SUM(CASE WHEN mt.fat > 0 THEN mt.volume ELSE 0 END), 0),
+        0.0
+    ) AS avgLr,
 
-        -- 4. TOTAL TS (sum, NOT average)
-        COALESCE(SUM(CASE WHEN mt.ts > 0 THEN mt.ts ELSE 0 END), 0.0) AS totalTs,
+    -- 4. TOTAL TS (sum only)
+    COALESCE(SUM(CASE WHEN mt.ts > 0 THEN mt.ts ELSE 0 END), 0.0) AS totalTs,
 
-        -- 5. Quality Coverage Volume (fat + lr dono diye gaye)
-        COALESCE(SUM(CASE WHEN mt.fat > 0 THEN mt.volume ELSE 0 END), 0.0) AS qualityVolume,
+    -- 5. Quality Coverage Volume
+    COALESCE(
+        SUM(CASE WHEN mt.fat > 0 THEN mt.volume ELSE 0 END),
+        0.0
+    ) AS qualityVolume,
 
-        -- 6. Avg Rate (volume weighted — correct)
-        COALESCE(SUM(mt.totalAmount) / NULLIF(SUM(mt.volume), 0), 0.0) AS avgRate,
+    -- 6. Avg Rate (already correct, keep as-is)
+    COALESCE(
+        SUM(mt.totalAmount) / NULLIF(SUM(mt.volume), 0),
+        0.0
+    ) AS avgRate,
 
-        -- 7. Total Paid (Ledger)
-        (
-            SELECT COALESCE(SUM(fl.debit), 0)
-            FROM financial_ledger_table fl
-            WHERE fl.type = 'CASH_PAID'
-              AND fl.dateMillis BETWEEN :start AND :end
-              AND fl.deletedAtMillis IS NULL
-        ) AS totalPaid
+    -- 7. Total Paid
+    (
+        SELECT COALESCE(SUM(fl.debit), 0)
+        FROM financial_ledger_table fl
+        WHERE fl.type = 'CASH_PAID'
+          AND fl.dateMillis BETWEEN :start AND :end
+          AND fl.deletedAtMillis IS NULL
+    ) AS totalPaid
 
-    FROM milk_transactions_table mt
-    WHERE mt.dateMillis BETWEEN :start AND :end
-      AND mt.type = 'PURCHASE'
-      AND mt.deletedAtMillis IS NULL
+FROM milk_transactions_table mt
+WHERE mt.dateMillis BETWEEN :start AND :end
+  AND mt.type = 'PURCHASE'
+  AND mt.deletedAtMillis IS NULL
 """)
     fun getGlobalPurchaseStats(
         start: Long,
         end: Long
     ): Flow<PurchaseSummary>
+
 
 
     // 2️⃣ SUPPLIER SPECIFIC (Weighted Stats)

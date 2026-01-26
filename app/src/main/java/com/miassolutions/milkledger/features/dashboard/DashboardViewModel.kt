@@ -16,7 +16,6 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val repository: DashboardRepository,
-    private val savedStateHandle: SavedStateHandle
 ) : BaseViewModel<
         DashboardUiState,
         DashboardUiEvent,
