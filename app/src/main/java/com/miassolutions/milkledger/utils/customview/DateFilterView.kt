@@ -32,15 +32,12 @@ class DateFilterView @JvmOverloads constructor(
     private var onDateRangeSelected: ((Long, Long, String) -> Unit)? = null
     private var fragmentManager: FragmentManager? = null
 
-    // State Management
-    // 1. Change: Default Mode DAY kar diya
     var currentMode = FilterMode.DAY
         private set
 
     var selectedDate: LocalDate = LocalDate.now()
         private set
 
-    // Custom Range ka data save rakhna zaroori hai state restore k liye
     private var customStartMillis: Long = 0L
     private var customEndMillis: Long = 0L
     private var customRangeLabel: String = ""
@@ -48,11 +45,10 @@ class DateFilterView @JvmOverloads constructor(
     enum class FilterMode { ALL, DAY, MONTH, YEAR, CUSTOM }
 
     init {
-        orientation = VERTICAL // Ensure correct orientation
+        orientation = VERTICAL
         setupChipListeners()
         setupNavListeners()
 
-        // Click Listener for Date/Range Text
         binding.tvCurrentRange.setOnClickListener {
             when (currentMode) {
                 FilterMode.DAY -> openSingleDatePicker(isMonthMode = false)
@@ -62,7 +58,6 @@ class DateFilterView @JvmOverloads constructor(
             }
         }
 
-        // 2. Change: Initial UI Setup for DAY
         binding.chipDay.isChecked = true
         refreshUI()
     }
@@ -70,18 +65,14 @@ class DateFilterView @JvmOverloads constructor(
     fun setup(fm: FragmentManager, listener: (Long, Long, String) -> Unit) {
         this.fragmentManager = fm
         this.onDateRangeSelected = listener
-
-        // Initial Emit (Taake screen khulte hi aaj ka data load ho)
         emitCurrentState()
     }
 
-    // 3. New Feature: Fragment/ViewModel se state wapis set karne k liye
     fun restoreFilterState(mode: FilterMode, date: LocalDate, customLabel: String = "") {
         this.currentMode = mode
         this.selectedDate = date
         this.customRangeLabel = customLabel
 
-        // Chip selection update karein
         when(mode) {
             FilterMode.ALL -> binding.chipAll.isChecked = true
             FilterMode.DAY -> binding.chipDay.isChecked = true
@@ -91,14 +82,11 @@ class DateFilterView @JvmOverloads constructor(
         }
 
         refreshUI()
-        // Note: Yahan emitCurrentState call nahi karte taake double loading na ho,
-        // kyunke ViewModel ke paas already data hoga.
     }
 
     private fun setupChipListeners() = with(binding) {
         chipAll.setOnClickListener { switchMode(FilterMode.ALL) }
         chipDay.setOnClickListener {
-            // Agar Day pehle se selected hai to date reset na karein
             if (currentMode != FilterMode.DAY) selectedDate = LocalDate.now()
             switchMode(FilterMode.DAY)
         }
@@ -150,7 +138,7 @@ class DateFilterView @JvmOverloads constructor(
 
         picker.addOnPositiveButtonClickListener { selectionMillis ->
             selectedDate = Instant.ofEpochMilli(selectionMillis)
-                .atZone(ZoneId.of("UTC"))
+                .atZone(ZoneId.of("UTC")) // Perfectly handles UTC mismatch
                 .toLocalDate()
 
             refreshUI()
@@ -172,21 +160,22 @@ class DateFilterView @JvmOverloads constructor(
             .build()
 
         picker.addOnPositiveButtonClickListener { selection ->
-            customStartMillis = selection.first
-            customEndMillis = selection.second
+            // 🔥 FIX 1: MaterialDatePicker ke raw UTC selection ko Local Date me parse karen
+            val startLocal = Instant.ofEpochMilli(selection.first).atZone(ZoneId.of("UTC")).toLocalDate()
+            val endLocal = Instant.ofEpochMilli(selection.second).atZone(ZoneId.of("UTC")).toLocalDate()
 
-            val startLocal = Instant.ofEpochMilli(customStartMillis).atZone(ZoneId.systemDefault()).toLocalDate()
-            val endLocal = Instant.ofEpochMilli(customEndMillis).atZone(ZoneId.systemDefault()).toLocalDate()
+            // 🔥 FIX 2: DB k saath align karne k liye wahi `toMillis()` extension use karen.
+            // (endLocal me 1 din plus kr k minus 1 is liye kiya ta k raat 23:59:59 tak ka data cover ho sakay)
+            customStartMillis = startLocal.toMillis()
+            customEndMillis = endLocal.plusDays(1).toMillis() - 1
 
             customRangeLabel = "${startLocal.toCompleteDateFormat()} to ${endLocal.toCompleteDateFormat()}"
 
             refreshUI()
-            // Custom mode me direct emit, kyunke emitCurrentState ab values use karega
             onDateRangeSelected?.invoke(customStartMillis, customEndMillis, customRangeLabel)
         }
 
         picker.addOnNegativeButtonClickListener {
-            // Cancel pr wapis Day mode (ya previous mode) pr chale jao
             binding.chipDay.isChecked = true
             switchMode(FilterMode.DAY)
         }
@@ -220,23 +209,26 @@ class DateFilterView @JvmOverloads constructor(
         var end = Long.MAX_VALUE
         var label = "All History"
 
+        // 🔥 FIX 3: .atStartOfDay() ko hata dia gaya hai.
+        // Ab hum direct `selectedDate.toMillis()` use kar rahe hain taake filter wahi
+        // timestamp banaye jo hum Database mein record save krty wqt banaty hain.
         when (currentMode) {
             FilterMode.ALL -> {}
             FilterMode.DAY -> {
-                start = selectedDate.atStartOfDay().toMillis()
-                end = selectedDate.plusDays(1).atStartOfDay().toMillis() - 1
+                start = selectedDate.toMillis()
+                end = selectedDate.plusDays(1).toMillis() - 1
                 label = selectedDate.toDisplayDate()
             }
             FilterMode.MONTH -> {
                 val yearMonth = YearMonth.from(selectedDate)
-                start = yearMonth.atDay(1).atStartOfDay().toMillis()
-                end = yearMonth.atEndOfMonth().plusDays(1).atStartOfDay().toMillis() - 1
+                start = yearMonth.atDay(1).toMillis()
+                end = yearMonth.atEndOfMonth().plusDays(1).toMillis() - 1
                 label = selectedDate.format(DateTimeFormatter.ofPattern("MMM yyyy"))
             }
             FilterMode.YEAR -> {
                 val year = selectedDate.year
-                start = LocalDate.of(year, 1, 1).atStartOfDay().toMillis()
-                end = LocalDate.of(year + 1, 1, 1).atStartOfDay().toMillis() - 1
+                start = LocalDate.of(year, 1, 1).toMillis()
+                end = LocalDate.of(year + 1, 1, 1).toMillis() - 1
                 label = year.toString()
             }
             FilterMode.CUSTOM -> {
@@ -272,7 +264,6 @@ class DateFilterView @JvmOverloads constructor(
             customStartMillis = state.customStart
             customEndMillis = state.customEnd
 
-            // Chip UI update
             when (currentMode) {
                 FilterMode.ALL -> binding.chipAll.isChecked = true
                 FilterMode.DAY -> binding.chipDay.isChecked = true
@@ -281,7 +272,6 @@ class DateFilterView @JvmOverloads constructor(
                 FilterMode.CUSTOM -> binding.chipCustom.isChecked = true
             }
             refreshUI()
-            // Note: Listener fire nahi karte yahan, taake redundant calls na hon
         } else {
             super.onRestoreInstanceState(state)
         }
