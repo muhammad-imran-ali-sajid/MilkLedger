@@ -150,7 +150,7 @@ class MilkPurchaseListFragment : BaseFragment<FragmentMilkPurchaseListBinding>(
 
                 avgFat = state.summary.avgFat,
                 avgLr = state.summary.avgLr,
-                avgRate = state.summary.avgRate,
+                avgRate = state.summary.avgRate/100.0,
                 avgTs = state.summary.totalTs,
 
                 totalPaid = state.summary.totalPaid

@@ -52,6 +52,9 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.tvMainVol.text = "${"%.0f".format(totalVol)} L"
         binding.tvMainAmount.text = totalAmount.toPrice()
 
+        binding.lbl0.text = "Avg Rate"
+        binding.tvVal0.text = avgRate.format(2)
+
         binding.lbl1.text = "Avg Fat"
         binding.tvVal1.text = avgFat.format(2)
 
@@ -86,6 +89,8 @@ class SummaryHeaderView @JvmOverloads constructor(
         binding.tvMainAmount.text = totalAmount.toPrice()
 
         // Details Mapping
+        binding.lbl0.text = "Avg Rate"
+        binding.tvVal0.text = avgRate.format(2)
 
         binding.lbl1.text = "Gross Vol."
         binding.tvVal1.text = grossVol.format(1)

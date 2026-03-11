@@ -96,6 +96,28 @@
             android:visibility="gone"
             tools:visibility="visible">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lbl0"
+                    style="@style/Text.Normal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Avg Fat"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
+
+                <TextView
+                    android:id="@+id/tvVal0"
+                    style="@style/Text.Normal"
+                    android:text="5.2"
+                    android:textColor="?attr/colorOnSurface" />
+            </LinearLayout>
+
             <!-- Avg Fat -->
             <LinearLayout
                 android:layout_width="match_parent"

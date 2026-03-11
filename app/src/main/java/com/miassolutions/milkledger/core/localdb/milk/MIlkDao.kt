@@ -118,23 +118,42 @@ WHERE mt.dateMillis BETWEEN :start AND :end
 
 
     // 3️⃣ ALL SALES (Stats)
-    @Query(
-        """
-    SELECT
-        COALESCE(SUM(totalAmount), 0) as totalAmount,
-        COALESCE(SUM(volume), 0.0) as grossVolume,
-        COALESCE(SUM(deduction), 0.0) as totalDeduction,
-        COALESCE(SUM(quantity), 0.0) as netVolume,
-        -- Rate Weighted by Net Volume
-        COALESCE(SUM(totalAmount) / NULLIF(SUM(quantity), 0), 0.0) as avgRate,
+// 3️⃣ ALL SALES (Stats)
+    @Query("""
+        SELECT
+            COALESCE(SUM(totalAmount), 0) as totalAmount,
+            COALESCE(SUM(volume), 0.0) as grossVolume,
+            COALESCE(SUM(deduction), 0.0) as totalDeduction,
+            COALESCE(SUM(quantity), 0.0) as netVolume,
+            
+            -- 🔥 Avg Rate based on PURCHASE Quantity
+            -- Formula: (Total Sale Amount) / (Total Purchase Volume in that date range)
+            COALESCE(
+                SUM(totalAmount) / NULLIF(
+                    (
+                        SELECT SUM(volume) 
+                        FROM milk_transactions_table 
+                        WHERE type = 'PURCHASE' 
+                          AND dateMillis BETWEEN :start AND :end 
+                          AND deletedAtMillis IS NULL
+                    ), 0
+                ), 
+            0.0) as avgRate,
 
-        -- Total Received
-        (SELECT COALESCE(SUM(credit), 0) FROM financial_ledger_table WHERE type='CASH_RECEIVED' AND dateMillis BETWEEN :start AND :end AND deletedAtMillis IS NULL) as totalReceived
+            -- Total Received
+            (
+                SELECT COALESCE(SUM(credit), 0) 
+                FROM financial_ledger_table 
+                WHERE type = 'CASH_RECEIVED' 
+                  AND dateMillis BETWEEN :start AND :end 
+                  AND deletedAtMillis IS NULL
+            ) as totalReceived
 
-    FROM milk_transactions_table
-    WHERE dateMillis BETWEEN :start AND :end AND type = 'SALE' AND deletedAtMillis IS NULL
-"""
-    )
+        FROM milk_transactions_table
+        WHERE dateMillis BETWEEN :start AND :end 
+          AND type = 'SALE' 
+          AND deletedAtMillis IS NULL
+    """)
     fun getGlobalSaleStats(start: Long, end: Long): Flow<SaleSummary>
 
 

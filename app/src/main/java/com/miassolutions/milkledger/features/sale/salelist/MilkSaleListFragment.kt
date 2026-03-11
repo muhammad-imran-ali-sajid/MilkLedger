@@ -217,7 +217,7 @@ class MilkSaleListFragment :
             deduction = summary.totalDeduction,
             netVol = summary.netVolume,
             totalAmount = summary.totalAmount,
-            avgRate = summary.avgRate,
+            avgRate = summary.avgRate/100.0,
             totalReceived = summary.totalReceived
         )
 
