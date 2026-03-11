@@ -44,19 +44,22 @@ class OwnerRepository @Inject constructor(
     // Hum Profit, Drawing, aur List ko aik hi Flow me combine kar k denge
     // Taake ViewModel me 3 alag alag collectors na lagane paren.
 
+    // ------------------------------------------------
+    // 1️⃣ DASHBOARD DATA (Combined Flow)
+    // ------------------------------------------------
     fun getDashboardData(start: Long, end: Long): Flow<OwnerDashboardData> {
         return combine(
             ledgerDao.getNetProfitInRange(start, end),
             ledgerDao.getTotalDrawingsInRange(start, end),
+
+            // 🔥 NAYA: Retained Profit hamesha 'end' date tak nikalein
+            ledgerDao.getRetainedProfitUntil(end),
+
             ledgerDao.getOwnerTransactionsInRange(start, end)
-        ) { profit, drawings, transactions ->
+        ) { profit, drawings, retained, transactions ->
 
             val uiTransactions = transactions.map { entity ->
-
-                // 🔥 LOGIC:
-                // Sirf check karen k ye Expense hai ya nahi?
                 val isExpense = entity.referenceId?.startsWith(Constants.PREFIX_EXPENSE)
-
                 val displayTitle = entity.note ?: "Cash Withdrawal"
 
                 OwnerTransactionUiModel(
@@ -64,8 +67,6 @@ class OwnerRepository @Inject constructor(
                     dateMillis = entity.dateMillis,
                     amount = entity.debit,
                     note = displayTitle,
-
-                    // ✅ Agar 'exp_' hai to TRUE, warna FALSE (matlab Cash Withdrawal)
                     isPersonalExpense = isExpense == true
                 )
             }
@@ -73,9 +74,17 @@ class OwnerRepository @Inject constructor(
             OwnerDashboardData(
                 netProfit = profit,
                 totalDrawings = drawings,
+
+                // ✅ NAYA: State mein bhej diya
+                retainedEarnings = retained,
+
                 transactions = uiTransactions
             )
         }
+    }
+
+    fun getRetainedProfitUntil(endDate: Long): Flow<Long> {
+        return ledgerDao.getRetainedProfitUntil(endDate)
     }
 
     // ------------------------------------------------
@@ -100,7 +109,12 @@ class OwnerRepository @Inject constructor(
         }
     }
 
-    suspend fun updateCashWithdrawal(ledgerId: String, amount: Long, date: LocalDate, note: String?) {
+    suspend fun updateCashWithdrawal(
+        ledgerId: String,
+        amount: Long,
+        date: LocalDate,
+        note: String?
+    ) {
         db.withTransaction {
             val oldEntry = ledgerDao.getLedgerById(ledgerId) // DAO me getById hona chahiye
 
@@ -124,7 +138,6 @@ class OwnerRepository @Inject constructor(
             ledgerDao.softDeleteLedgerById(ledgerId, System.currentTimeMillis())
         }
     }
-
 
 
 }

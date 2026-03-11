@@ -86,7 +86,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         }
 
         // Dates
-        btnDate.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnDateClick) }
+//        btnDate.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnDateClick) }
         btnPaymentDate.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnPaymentDateClick) }
 
         // Actions

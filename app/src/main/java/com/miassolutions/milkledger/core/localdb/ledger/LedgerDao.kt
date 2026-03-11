@@ -239,4 +239,31 @@ interface LedgerDao {
     fun getLedgerEntriesInRange(start: Long, end: Long): Flow<List<FinancialLedgerEntity>>
 
 
+    // 🔥 Calculate Retained Profit up to a specific date
+    // Formula: (Total Net Profit up to date) - (Total Drawings up to date)
+    @Query("""
+        SELECT 
+            -- 1. Total Net Profit Calculate Karein
+            COALESCE(SUM(
+                CASE 
+                    WHEN type NOT IN ('OWNER_DRAWING', 'OWNER_WITHDRAWAL') THEN profitImpact 
+                    ELSE 0 
+                END
+            ), 0) 
+            - 
+            -- 2. Usme se Total Drawings Minus Karein
+            COALESCE(SUM(
+                CASE 
+                    WHEN type IN ('OWNER_DRAWING', 'OWNER_WITHDRAWAL') THEN debit 
+                    ELSE 0 
+                END
+            ), 0) as retainedProfit
+            
+        FROM financial_ledger_table
+        WHERE dateMillis <= :dateLimit
+        AND deletedAtMillis IS NULL
+    """)
+    fun getRetainedProfitUntil(dateLimit: Long): Flow<Long>
+
+
 }

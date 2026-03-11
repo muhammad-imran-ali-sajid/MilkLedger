@@ -8,6 +8,7 @@ import com.miassolutions.milkledger.features.owner.dasboard.OwnerUiEffect.*
 import com.miassolutions.milkledger.features.owner.data.OwnerRepository
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -19,6 +20,8 @@ class OwnerViewModel @Inject constructor(
     private val repository: OwnerRepository,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<OwnerUiState, OwnerUiEvent, OwnerUiEffect>(OwnerUiState()) {
+
+    private var dashboardJob : Job? = null
 
     init {
 // 🟢 1. Handle Incoming Date Argument
@@ -35,6 +38,7 @@ class OwnerViewModel @Inject constructor(
     }
 
     private fun loadDashboardData() {
+        dashboardJob?.cancel()
         // ViewModel state se start/end date lein (Jo filter se set hogi)
         val start = currentState.startDate
         val end = currentState.endDate

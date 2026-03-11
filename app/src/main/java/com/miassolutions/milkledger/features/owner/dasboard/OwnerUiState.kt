@@ -21,7 +21,7 @@ data class OwnerUiState(
 
     // Main Data
     // Default empty object
-    val dashboardData: OwnerDashboardData = OwnerDashboardData(0, 0, emptyList())
+    val dashboardData: OwnerDashboardData = OwnerDashboardData(0, 0, 0, emptyList())
 )
 
 sealed class OwnerUiEvent {

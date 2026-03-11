@@ -59,7 +59,7 @@ class SaleFormFragment :
             }
         }
         // --- Dates & Save ---
-        btnDate.setOnClickListener { viewModel.onEvent(OnDateClick) }
+//        btnDate.setOnClickListener { viewModel.onEvent(OnDateClick) }
         btnPaymentDate.setOnClickListener { viewModel.onEvent(OnPaymentDateClick) }
         btnSave.setOnClickListener { viewModel.onEvent(OnSaveClicked) }
         btnSaveNew.setOnClickListener { viewModel.onEvent(OnSaveAndNewClicked) }
