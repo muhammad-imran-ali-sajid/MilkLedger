@@ -16,8 +16,8 @@ android {
         applicationId = "com.miassolutions.milkledger"
         minSdk = 27
         targetSdk = 36
-        versionCode = 4
-        versionName = "2.4"
+        versionCode = 5
+        versionName = "2.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
