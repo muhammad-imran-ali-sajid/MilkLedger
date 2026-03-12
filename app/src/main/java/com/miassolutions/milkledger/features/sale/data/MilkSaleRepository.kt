@@ -35,8 +35,12 @@ class MilkSaleRepository @Inject constructor(
 
     // ... (Getters bilkul theek hain) ...
 
-    fun getCustomerSummary(accountId: String, start: Long, end: Long) = milkDao.getCustomerSummary(accountId, start, end)
-    fun getCustomerHistory(accountId: String, start: Long, end: Long) = milkDao.getCustomerSalesHistory(accountId, start, end)
+    fun getCustomerSummary(accountId: String, start: Long, end: Long) =
+        milkDao.getCustomerSummary(accountId, start, end)
+
+    fun getCustomerHistory(accountId: String, start: Long, end: Long) =
+        milkDao.getCustomerSalesHistory(accountId, start, end)
+
     fun getSalesByDate(date: Long) = milkDao.getMilkSalesByDate(date)
     fun getAccountBalance(accountId: String) = ledgerDao.getAccountBalance(accountId)
     fun getGlobalSaleStats(start: Long, end: Long) = milkDao.getGlobalSaleStats(start, end)
@@ -51,8 +55,12 @@ class MilkSaleRepository @Inject constructor(
     @Transaction
     suspend fun deleteSale(saleId: String) {
         val currentTime = System.currentTimeMillis()
-        milkDao.softDeleteMilkTransaction(saleId, currentTime)
-        ledgerDao.softDeleteLedgerByReference(saleId, currentTime)
+
+        db.withTransaction {
+            milkDao.softDeleteMilkTransaction(saleId, currentTime)
+            ledgerDao.softDeleteLedgerByReference(saleId, currentTime)
+        }
+
     }
 
 
@@ -71,7 +79,8 @@ class MilkSaleRepository @Inject constructor(
             val customerName = accountDao.getAccountById(accountId)?.name ?: "Unknown Customer"
 
             val netQuantity = volume - deduction
-            val totalPricePaisa = MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate).toLongPaisa()
+            val totalPricePaisa =
+                MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate).toLongPaisa()
 
             // 1. Save Milk (Use Sale Date for Ledger, PaymentDate for UI)
             val milkEntity = MilkTransactionEntity(
@@ -88,14 +97,16 @@ class MilkSaleRepository @Inject constructor(
             milkDao.insert(milkEntity)
 
             // 2. Save Ledger Debit (Bill)
-            ledgerDao.insert(FinancialLedgerEntity(
-                dateMillis = saleDate.toMillis(),
-                accountId = accountId,
-                referenceId = milkEntity.milkTransId,
-                type = LedgerEntryType.MILK_SALE,
-                debit = totalPricePaisa, credit = 0, profitImpact = totalPricePaisa,
-                note = "Sale: $volume - $deduction = $netQuantity L"
-            ))
+            ledgerDao.insert(
+                FinancialLedgerEntity(
+                    dateMillis = saleDate.toMillis(),
+                    accountId = accountId,
+                    referenceId = milkEntity.milkTransId,
+                    type = LedgerEntryType.MILK_SALE,
+                    debit = totalPricePaisa, credit = 0, profitImpact = totalPricePaisa,
+                    note = "Sale: $volume - $deduction = $netQuantity L"
+                )
+            )
 
             // 3. Save Payment (Cash Received)
             if (amountPaid > 0) {
@@ -106,16 +117,18 @@ class MilkSaleRepository @Inject constructor(
                     "$customerName"
                 }
 
-                ledgerDao.insert(FinancialLedgerEntity(
-                    // 🟢 LEDGER: Sale Date par hi rahega
-                    dateMillis = saleDate.toMillis(),
+                ledgerDao.insert(
+                    FinancialLedgerEntity(
+                        // 🟢 LEDGER: Sale Date par hi rahega
+                        dateMillis = saleDate.toMillis(),
 
-                    accountId = accountId,
-                    type = LedgerEntryType.CASH_RECEIVED,
-                    referenceId = milkEntity.milkTransId,
-                    debit = 0, credit = amountPaid, profitImpact = 0,
-                    note = finalNote
-                ))
+                        accountId = accountId,
+                        type = LedgerEntryType.CASH_RECEIVED,
+                        referenceId = milkEntity.milkTransId,
+                        debit = 0, credit = amountPaid, profitImpact = 0,
+                        note = finalNote
+                    )
+                )
             }
         }
     }
@@ -124,10 +137,16 @@ class MilkSaleRepository @Inject constructor(
     suspend fun updateMilkSale(request: UpdateSaleRequest) {
         db.withTransaction {
             val netQuantity = request.volume - request.deduction
-            val totalPricePaisa = MilkCalculationUtils.calculateCustomerPrice(request.volume, request.deduction, request.rate).toLongPaisa()
+            val totalPricePaisa = MilkCalculationUtils.calculateCustomerPrice(
+                request.volume,
+                request.deduction,
+                request.rate
+            ).toLongPaisa()
 
-            val oldSale = milkDao.getMilkTransactionById(request.saleId) ?: throw Exception("Sale not found")
-            val customerName = accountDao.getAccountById(oldSale.accountId)?.name ?: "Unknown Customer"
+            val oldSale =
+                milkDao.getMilkTransactionById(request.saleId) ?: throw Exception("Sale not found")
+            val customerName =
+                accountDao.getAccountById(oldSale.accountId)?.name ?: "Unknown Customer"
 
             // 1. Update Milk Entity
             val updatedMilkEntity = oldSale.copy(
@@ -143,46 +162,55 @@ class MilkSaleRepository @Inject constructor(
             milkDao.update(updatedMilkEntity)
 
             // 2. Update Ledger Debit
-            val saleLedgerEntry = ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.MILK_SALE)
+            val saleLedgerEntry =
+                ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.MILK_SALE)
             saleLedgerEntry?.let { entry ->
-                ledgerDao.update(entry.copy(
-                    dateMillis = request.date.toMillis(),
-                    debit = totalPricePaisa, profitImpact = totalPricePaisa,
-                    note = "Sale: ${request.volume} - ${request.deduction} = $netQuantity L",
-                    updatedAtMillis = System.currentTimeMillis()
-                ))
+                ledgerDao.update(
+                    entry.copy(
+                        dateMillis = request.date.toMillis(),
+                        debit = totalPricePaisa, profitImpact = totalPricePaisa,
+                        note = "Sale: ${request.volume} - ${request.deduction} = $netQuantity L",
+                        updatedAtMillis = System.currentTimeMillis()
+                    )
+                )
             }
 
             // 3. Update Payment (Cash Received)
-            val paymentLedgerEntry = ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.CASH_RECEIVED)
+            val paymentLedgerEntry =
+                ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.CASH_RECEIVED)
 
             if (request.amountPaid > 0) {
                 // 🔥 Fix: Null Safe check
-                val finalNote = if (request.paymentDate != null && !request.date.isEqual(request.paymentDate)) {
-                    "$customerName\n(Dated: ${request.paymentDate.toDisplayDate()})"
-                } else {
-                    "$customerName"
-                }
+                val finalNote =
+                    if (request.paymentDate != null && !request.date.isEqual(request.paymentDate)) {
+                        "$customerName\n(Dated: ${request.paymentDate.toDisplayDate()})"
+                    } else {
+                        "$customerName"
+                    }
 
                 if (paymentLedgerEntry != null) {
                     // Update Existing
-                    ledgerDao.update(paymentLedgerEntry.copy(
-                        // 🟢 LEDGER: Sale Date par hi lock rahega
-                        dateMillis = request.date.toMillis(),
-                        credit = request.amountPaid,
-                        note = finalNote,
-                        updatedAtMillis = System.currentTimeMillis()
-                    ))
+                    ledgerDao.update(
+                        paymentLedgerEntry.copy(
+                            // 🟢 LEDGER: Sale Date par hi lock rahega
+                            dateMillis = request.date.toMillis(),
+                            credit = request.amountPaid,
+                            note = finalNote,
+                            updatedAtMillis = System.currentTimeMillis()
+                        )
+                    )
                 } else {
                     // Insert New (Use Sale Date)
-                    ledgerDao.insert(FinancialLedgerEntity(
-                        dateMillis = request.date.toMillis(), // Ledger Date
-                        accountId = request.accountId,
-                        type = LedgerEntryType.CASH_RECEIVED,
-                        referenceId = request.saleId,
-                        debit = 0, credit = request.amountPaid, profitImpact = 0,
-                        note = finalNote
-                    ))
+                    ledgerDao.insert(
+                        FinancialLedgerEntity(
+                            dateMillis = request.date.toMillis(), // Ledger Date
+                            accountId = request.accountId,
+                            type = LedgerEntryType.CASH_RECEIVED,
+                            referenceId = request.saleId,
+                            debit = 0, credit = request.amountPaid, profitImpact = 0,
+                            note = finalNote
+                        )
+                    )
                 }
             } else {
                 if (paymentLedgerEntry != null) ledgerDao.delete(paymentLedgerEntry)

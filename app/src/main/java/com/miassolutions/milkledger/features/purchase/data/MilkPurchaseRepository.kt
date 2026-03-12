@@ -79,8 +79,11 @@ class MilkPurchaseRepository @Inject constructor(
     @Transaction
     suspend fun deletePurchase(purchaseId: String) {
         val currentTime = System.currentTimeMillis()
-        milkDao.softDeleteMilkTransaction(purchaseId, currentTime)
-        ledgerDao.softDeleteLedgerByReference(purchaseId, currentTime)
+        db.withTransaction {
+
+            milkDao.softDeleteMilkTransaction(purchaseId, currentTime)
+            ledgerDao.softDeleteLedgerByReference(purchaseId, currentTime)
+        }
     }
 
 
