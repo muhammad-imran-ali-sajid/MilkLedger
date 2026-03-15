@@ -4,6 +4,7 @@ package com.miassolutions.milkledger.features.owner.dasboard
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
+import com.miassolutions.milkledger.di.RemoteConfigManager
 import com.miassolutions.milkledger.features.owner.dasboard.OwnerUiEffect.*
 import com.miassolutions.milkledger.features.owner.data.OwnerRepository
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class OwnerViewModel @Inject constructor(
     private val repository: OwnerRepository,
+    private val rcManager: RemoteConfigManager,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<OwnerUiState, OwnerUiEvent, OwnerUiEffect>(OwnerUiState()) {
 
@@ -39,6 +41,12 @@ class OwnerViewModel @Inject constructor(
     }
 
     private fun generatePdfData() {
+
+        if (!rcManager.isPdfFeatureEnabled()){
+            emitEffect(OwnerUiEffect.ShowSnackbar("PDF limit reached. Contact vendor."))
+            return
+        }
+
         val start = currentState.startDate
         val end = currentState.endDate
 

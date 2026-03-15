@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.activities.AppStartViewModel
 import com.miassolutions.milkledger.core.ui.BaseActivity
+import com.miassolutions.milkledger.di.RemoteConfigManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
