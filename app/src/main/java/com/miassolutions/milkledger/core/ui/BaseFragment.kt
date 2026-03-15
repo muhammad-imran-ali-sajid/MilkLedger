@@ -197,9 +197,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     }
 
 
-    protected fun setToolbarTitle(title: String) {
-        (requireActivity() as? ToolbarOwner)?.setToolbarTitle(title)
-    }
+
 
     protected fun showDialog(
         title: String,

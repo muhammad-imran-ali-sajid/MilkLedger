@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
-import com.miassolutions.milkledger.core.ui.ToolbarOwner
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
 import com.miassolutions.milkledger.features.settings.ThemeManager
@@ -30,7 +29,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), ToolbarOwner {
+class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var remote: RemoteConfigManager
@@ -68,7 +67,6 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
                             putExtra("url", remote.getApkUrl())
                         }
                     )
-                    Log.d("FeatureFlags", "$minVersion\n${remote.getApkUrl()}\n${remote.getApkUrl()}")
                     finish()
                 }
             } catch (e: Exception) {
@@ -117,9 +115,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         setupDrawerNavigation()
     }
 
-    // ------------------------------------------------------------------------
-    // Drawer header
-    // ------------------------------------------------------------------------
+
     private fun setupDrawerHeader() {
         val role = SharedPrefsHelper.getUserRole(this)
         val email = SharedPrefsHelper.getUserMail(this)
@@ -131,9 +127,6 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         headerBinding.tvEmail.text = email
     }
 
-    // ------------------------------------------------------------------------
-    // Drawer menu handling (logout handled manually)
-    // ------------------------------------------------------------------------
     private fun setupDrawerNavigation() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -154,16 +147,11 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         }
     }
 
-    // ------------------------------------------------------------------------
-    // Up navigation
-    // ------------------------------------------------------------------------
+
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
     }
 
-    // ------------------------------------------------------------------------
-    // Logout
-    // ------------------------------------------------------------------------
     private fun logoutUser() {
         MaterialAlertDialogBuilder(this)
             .setTitle("Logout")
@@ -182,9 +170,7 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
             .show()
     }
 
-    // ------------------------------------------------------------------------
-    // Insets / helpers
-    // ------------------------------------------------------------------------
+
     private fun applyWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -193,14 +179,11 @@ class MainActivity : AppCompatActivity(), ToolbarOwner {
         }
     }
 
-    override fun setToolbarTitle(title: String) {
-        supportActionBar?.title = title
-    }
 
-    override fun attachBaseContext(newBase: Context) {
-        val config = newBase.resources.configuration
-        config.fontScale = 1.0f
-        super.attachBaseContext(newBase.createConfigurationContext(config))
-    }
+//    override fun attachBaseContext(newBase: Context) {
+//        val config = newBase.resources.configuration
+//        config.fontScale = 1.0f
+//        super.attachBaseContext(newBase.createConfigurationContext(config))
+//    }
 
 }

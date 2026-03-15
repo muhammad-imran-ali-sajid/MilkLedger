@@ -18,7 +18,6 @@ class SettingsFragment :
 
 
     override fun setupViews() {
-        setToolbarTitle(getString(R.string.settings))
 
         val rg = binding.rgTheme
 
