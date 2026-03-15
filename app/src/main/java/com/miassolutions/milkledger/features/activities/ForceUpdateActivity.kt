@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -14,12 +15,11 @@ import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.ui.BaseActivity
 import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.databinding.ActivityForceUpdateBinding
 import java.io.File
 
-class ForceUpdateActivity : BaseActivity() {
+class ForceUpdateActivity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivityForceUpdateBinding.inflate(layoutInflater)

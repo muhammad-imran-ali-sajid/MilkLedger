@@ -4,10 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
-import com.miassolutions.milkledger.core.ui.BaseActivity
 import com.miassolutions.milkledger.databinding.ActivityLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
  * Email/Username and Password, and a Forgot Password recovery link.
  */
 @AndroidEntryPoint
-class LoginActivity : BaseActivity() {
+class LoginActivity : AppCompatActivity() {
 
 
     // Tag for logging purposes
@@ -32,15 +33,8 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Initialize View Binding and set the content view for the Activity
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // If a user is already signed in, navigate away immediately (optional check)
-        // if (auth.currentUser != null) {
-        //     navigateToHomeScreen()
-        //     return
-        // }
 
         setupLoginButton()
         setupForgotPassword()
@@ -148,8 +142,6 @@ class LoginActivity : BaseActivity() {
 
                 val role = doc.getString("role") ?: "user" // default to "user" if missing
                 SharedPrefsHelper.saveUserRole(this, role)
-
-
 
 
                 val intent = Intent(this, MainActivity::class.java)

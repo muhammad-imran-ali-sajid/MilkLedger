@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
-import com.miassolutions.milkledger.core.ui.BaseActivity
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
@@ -29,7 +30,7 @@ import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity(), ToolbarOwner {
+class MainActivity : AppCompatActivity(), ToolbarOwner {
 
     @Inject
     lateinit var remote: RemoteConfigManager
