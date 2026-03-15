@@ -46,13 +46,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Developed by"
+            android:layout_marginBottom="16dp"
             android:textAppearance="@style/Text.MilkLedger.Title"
             android:textColor="?attr/colorOnSecondary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="miassolutions"
+            android:text="MIAS Solutions"
             android:textAppearance="@style/Text.MilkLedger.TitleSmall"
             android:textColor="?attr/colorOnSecondary" />
 

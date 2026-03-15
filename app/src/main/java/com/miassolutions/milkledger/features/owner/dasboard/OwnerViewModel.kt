@@ -4,10 +4,10 @@ package com.miassolutions.milkledger.features.owner.dasboard
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
-import com.miassolutions.milkledger.di.RemoteConfigManager
 import com.miassolutions.milkledger.features.owner.dasboard.OwnerUiEffect.*
 import com.miassolutions.milkledger.features.owner.data.OwnerRepository
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
+import com.miassolutions.milkledger.utils.premiumfeatures.RemoteConfigManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.firstOrNull
