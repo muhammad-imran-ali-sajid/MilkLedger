@@ -80,6 +80,7 @@ class MainActivity : BaseActivity(), ToolbarOwner {
                             putExtra("url", remote.getApkUrl())
                         }
                     )
+                    Log.d("FeatureFlags", "$minVersion\n${remote.getApkUrl()}\n${remote.getApkUrl()}")
                     finish()
                 }
             } catch (e: Exception) {

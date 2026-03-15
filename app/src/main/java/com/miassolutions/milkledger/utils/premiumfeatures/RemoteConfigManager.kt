@@ -1,12 +1,13 @@
 package com.miassolutions.milkledger.utils.premiumfeatures
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.remoteConfigSettings
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RemoteConfigManager @Inject constructor(){
+class RemoteConfigManager @Inject constructor() {
 
     companion object {
         private const val IS_PREMIUM_ENABLED = "is_premium_enabled"
@@ -19,6 +20,9 @@ class RemoteConfigManager @Inject constructor(){
     private val rc = FirebaseRemoteConfig.getInstance()
 
     init {
+        rc.setConfigSettingsAsync(
+            remoteConfigSettings { minimumFetchIntervalInSeconds = 0 }
+        )
         rc.setDefaultsAsync(
             mapOf(
                 IS_PREMIUM_ENABLED to false,
@@ -42,6 +46,6 @@ class RemoteConfigManager @Inject constructor(){
     fun getUpdateMessage(): String = rc.getString(UPDATE_MESSAGE)
 
     fun isPdfFeatureEnabled(): Boolean {
-        return  rc.getBoolean(IS_PDF_FEATURE_ENABLED)
+        return rc.getBoolean(IS_PDF_FEATURE_ENABLED)
     }
 }
