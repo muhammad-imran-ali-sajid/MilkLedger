@@ -2,23 +2,16 @@ package com.miassolutions.milkledger.core.activities
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.BuildConfig
@@ -31,7 +24,6 @@ import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
 import com.miassolutions.milkledger.features.settings.ThemeManager
 import com.miassolutions.milkledger.features.settings.ThemePreferences
-import com.miassolutions.milkledger.utils.premiumfeatures.FeatureManager
 import com.miassolutions.milkledger.utils.premiumfeatures.RemoteConfigManager
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
@@ -40,8 +32,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : BaseActivity(), ToolbarOwner {
 
-    @Inject
-    lateinit var featureManager: FeatureManager
     @Inject
     lateinit var remote: RemoteConfigManager
     @Inject
@@ -71,7 +61,7 @@ class MainActivity : BaseActivity(), ToolbarOwner {
         // -------------------- Remote config / force update --------------------
         lifecycleScope.launch {
             try {
-                featureManager.refreshFlags()
+                remote.fetch()
                 val minVersion = remote.getMinSupportedVersion()
                 if (BuildConfig.VERSION_CODE < minVersion) {
                     startActivity(

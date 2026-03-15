@@ -25,7 +25,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.databinding.LayoutLoadingDialogBinding
 import com.miassolutions.milkledger.utils.extensions.collectFlow
-import com.miassolutions.milkledger.utils.premiumfeatures.FeatureManager
 import jakarta.inject.Inject
 
 
@@ -33,10 +32,7 @@ abstract class BaseFragment<VB : ViewBinding>(
     private val bindingInflater: (LayoutInflater, ViewGroup?, Boolean) -> VB
 ) : Fragment() {
 
-    @Inject
-    lateinit var featureManager: FeatureManager
 
-    protected var isPremiumEnabled: Boolean = false
 
     private var progressDialog: AlertDialog? = null
     private var loadingBinding: LayoutLoadingDialogBinding? = null
@@ -134,15 +130,10 @@ abstract class BaseFragment<VB : ViewBinding>(
         return binding.root
     }
 
-    private fun observePremiumFlag() {
-        collectFlow(featureManager.isPremiumEnabled()) { enabled ->
-            isPremiumEnabled = enabled
-        }
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observePremiumFlag()
         setupViews()
         setupObservers()
         setupListeners()
