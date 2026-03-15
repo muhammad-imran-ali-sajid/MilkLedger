@@ -34,7 +34,9 @@ class PdfGenerator @Inject constructor(@ApplicationContext private val context: 
         try {
             outputStream = context.contentResolver.openOutputStream(uri)
             val document = Document(PageSize.A4)
-            PdfWriter.getInstance(document, outputStream)
+            val writer = PdfWriter.getInstance(document, outputStream)
+            writer.pageEvent = PdfFooter()
+
             document.open()
 
             addHeader(document, model)
@@ -113,7 +115,8 @@ class PdfGenerator @Inject constructor(@ApplicationContext private val context: 
                     }
 
                     // Alignment
-                    cell.horizontalAlignment = if (colIndex == 0) Element.ALIGN_LEFT else Element.ALIGN_CENTER
+                    cell.horizontalAlignment =
+                        if (colIndex == 0) Element.ALIGN_LEFT else Element.ALIGN_CENTER
                     table.addCell(cell)
                 }
             }

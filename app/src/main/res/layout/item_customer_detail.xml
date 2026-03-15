@@ -39,7 +39,7 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:text="Volume" />
+                    android:text="Vol." />
 
                 <TextView
                     android:id="@+id/tvMilk"

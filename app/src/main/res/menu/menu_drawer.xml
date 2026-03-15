@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
     <!-- Tools / Settings -->
     <group android:id="@+id/menu_group_tools">
         <item
@@ -28,6 +27,23 @@
             android:id="@+id/action_logout"
             android:orderInCategory="300"
             android:title="@string/logout"
+            app:showAsAction="never" />
+    </group>
+
+    <!-- Info -->
+    <group
+        android:id="@+id/menu_group_info"
+        android:orderInCategory="400">
+        <item
+            android:id="@+id/menu_copyright"
+            android:enabled="false"
+            android:title="© 2026 MilkLedger"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/menu_developer"
+            android:enabled="false"
+            android:title="Dev. by M. Imran Ali Sajid"
             app:showAsAction="never" />
     </group>
 
