@@ -1,18 +1,28 @@
 package com.miassolutions.milkledger.features.owner.dasboard
 
 
+import android.net.Uri
+import android.view.MenuItem
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.R
+import com.miassolutions.milkledger.core.pdf.PdfGenerator
+import com.miassolutions.milkledger.core.pdf.PdfMapper
+import com.miassolutions.milkledger.core.pdf.PdfReportModel
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentOwnerDashboardBinding
+import com.miassolutions.milkledger.features.owner.domain.ProfitUiModel
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
 import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
@@ -20,6 +30,10 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
 ) {
 
     private val viewModel: OwnerViewModel by viewModels()
+
+    @Inject
+    lateinit var pdfGenerator: PdfGenerator
+    private var currentPdfModel: PdfReportModel? = null
     private val adapter by lazy {
         OwnerTransactionAdapter { item ->
             if (item.isPersonalExpense) {
@@ -43,9 +57,49 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
         }
     }
 
+
+
+    override fun onPdfUriCreated(uri: Uri) {
+        val model = currentPdfModel ?: return
+        lifecycleScope.launch {
+            pdfGenerator.generatePdf(uri, model)
+            showSnackbar(
+                message = "Pdf Saved",
+                actionText = "OPEN",
+                duration = Snackbar.LENGTH_LONG
+            ) {
+                openPdf(uri)
+            }
+        }
+    }
+
+    private fun setupMenu() {
+        setupMenuWithCustomView(R.menu.menu_my_wallet) { menu ->
+            val item = menu.findItem(R.id.action_pdf) ?: return@setupMenuWithCustomView
+            item.setOnMenuItemClickListener {
+                viewModel.onEvent(OwnerUiEvent.OnGeneratePdfClicked)
+                true
+            }
+        }
+    }
+
+    private fun generatePdfReport(initialRetained: Long, reportList: List<ProfitUiModel>) {
+        val state = viewModel.currentState
+
+        currentPdfModel = PdfMapper.mapProfitSheetPdf(
+            dateRange = state.dateLabel,
+            totalNetProfit = state.dashboardData.netProfit.toPrice(),
+            totalWithDrawn = state.dashboardData.totalDrawings.toPrice(),
+            list = reportList,           // ViewModel se aayi hui list
+            initialRetained = initialRetained // ViewModel se aaya hua opening balance
+        )
+
+        createPdfLauncher.launch(currentPdfModel?.fileName ?: "Owner_Report.pdf")
+    }
+
     override fun setupViews() {
         super.setupViews()
-
+        setupMenu()
         // Setup RecyclerView
         binding.rvTransactions.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -146,6 +200,11 @@ class OwnerDashboardFragment : BaseFragment<FragmentOwnerDashboardBinding>(
                 is OwnerUiEffect.OpenProfitDetailsSheet -> {
                     val sheet = ProfitDetailsBottomSheet(effect.data)
                     sheet.show(childFragmentManager, ProfitDetailsBottomSheet.TAG)
+                }
+
+                is OwnerUiEffect.GeneratePdf -> {
+                    // Yahan hum PDF banayenge
+                    generatePdfReport(effect.initialRetained, effect.reportList)
                 }
             }
         }

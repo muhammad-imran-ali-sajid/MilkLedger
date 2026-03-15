@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.miassolutions.milkledger.features.cashflow.CashflowSummary
 import com.miassolutions.milkledger.features.owner.domain.DailyProfitTuple
+import com.miassolutions.milkledger.features.owner.domain.ProfitUiModel
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -237,6 +238,21 @@ interface LedgerDao {
         ORDER BY dateMillis DESC, createdAtMillis DESC
     """)
     fun getLedgerEntriesInRange(start: Long, end: Long): Flow<List<FinancialLedgerEntity>>
+
+    @Query("""
+        SELECT dateMillis,
+         COALESCE(SUM(CASE WHEN type NOT IN ('OWNER_DRAWING', 'OWNER_WITHDRAWAL') THEN profitImpact ELSE 0 END),0) AS netProfit,
+         
+         COALESCE(SUM(CASE WHEN type IN ('OWNER_DRAWING', 'OWNER_WITHDRAWAL') THEN debit ELSE 0 END),0) AS totalDrawings
+        
+            
+        FROM financial_ledger_table
+        WHERE dateMillis BETWEEN :start AND :end
+        AND deletedAtMillis IS NULL
+        GROUP BY dateMillis
+        ORDER BY dateMillis ASC
+    """)
+    suspend fun getProfitReportList(start: Long, end: Long) : List<ProfitUiModel>
 
 
     // 🔥 Calculate Retained Profit up to a specific date

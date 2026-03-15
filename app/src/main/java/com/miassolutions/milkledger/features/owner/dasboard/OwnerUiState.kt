@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.owner.dasboard
 
 import com.miassolutions.milkledger.features.owner.domain.DailyProfitTuple
 import com.miassolutions.milkledger.features.owner.domain.OwnerDashboardData
+import com.miassolutions.milkledger.features.owner.domain.ProfitUiModel
 import com.miassolutions.milkledger.utils.customview.DateFilterView
 import java.time.LocalDate
 
@@ -38,6 +39,7 @@ sealed class OwnerUiEvent {
     object OnWithdrawClicked : OwnerUiEvent()
     object OnAddExpenseClicked : OwnerUiEvent()
 
+    object OnGeneratePdfClicked : OwnerUiEvent()
     object OnNetProfitClicked : OwnerUiEvent()
     data class OnDeleteWithdrawal(val id: String) : OwnerUiEvent()
 
@@ -53,6 +55,11 @@ sealed class OwnerUiEvent {
 sealed class OwnerUiEffect {
     data class ShowSnackbar(val message: String) : OwnerUiEffect()
     object NavigateToAddExpense : OwnerUiEffect()
+
+    data class GeneratePdf(
+        val initialRetained: Long,
+        val reportList: List<ProfitUiModel>
+    ) : OwnerUiEffect()
 
 
     data class OpenProfitDetailsSheet(val data: List<DailyProfitTuple>) : OwnerUiEffect()

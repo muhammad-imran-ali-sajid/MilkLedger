@@ -15,3 +15,9 @@ data class OwnerTransactionUiModel(
     val note: String,
     val isPersonalExpense: Boolean // True = 🛍️, False = 💵
 )
+
+data class ProfitUiModel(
+    val dateMillis: Long,
+    val netProfit: Long,
+    val totalDrawings: Long,
+)

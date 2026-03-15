@@ -9,6 +9,7 @@ import com.miassolutions.milkledger.features.owner.data.OwnerRepository
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -35,6 +36,23 @@ class OwnerViewModel @Inject constructor(
         }
 
 
+    }
+
+    private fun generatePdfData() {
+        val start = currentState.startDate
+        val end = currentState.endDate
+
+        viewModelScope.launch {
+            // 1. Get Initial Retained (Start date se exactly pehle tak ka)
+            // flow() se first() lenge taake sirf ek dafa value aaye
+            val initialRetained = repository.getRetainedProfitUntil(start - 1).firstOrNull() ?: 0L
+
+            // 2. Get the actual list for the date range
+            val reportList = repository.getProfitReportList(start, end)
+
+            // 3. Emit effect to Fragment to generate PDF
+            emitEffect(OwnerUiEffect.GeneratePdf(initialRetained, reportList))
+        }
     }
 
     private fun loadDashboardData() {
@@ -94,6 +112,10 @@ class OwnerViewModel @Inject constructor(
             OwnerUiEvent.OnNetProfitClicked -> {
                 loadProfitBreakdown()
             }
+
+            OwnerUiEvent.OnGeneratePdfClicked -> {
+                generatePdfData()
+            }
         }
     }
 
@@ -145,6 +167,8 @@ class OwnerViewModel @Inject constructor(
             }
         }
     }
+
+
 
 
     private fun performDelete(id: String) {

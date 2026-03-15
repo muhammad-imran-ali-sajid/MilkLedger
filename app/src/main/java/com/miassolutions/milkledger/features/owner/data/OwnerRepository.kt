@@ -13,6 +13,7 @@ import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
 import com.miassolutions.milkledger.features.owner.domain.DailyProfitTuple
 import com.miassolutions.milkledger.features.owner.domain.OwnerDashboardData
 import com.miassolutions.milkledger.features.owner.domain.OwnerTransactionUiModel
+import com.miassolutions.milkledger.features.owner.domain.ProfitUiModel
 import com.miassolutions.milkledger.utils.extensions.toMillis
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
@@ -31,6 +32,10 @@ class OwnerRepository @Inject constructor(
 
     suspend fun saveOwner(owner: AccountEntity) {
         accountDao.upsert(owner)
+    }
+
+    suspend fun getProfitReportList(start: Long, end: Long): List<ProfitUiModel> {
+        return ledgerDao.getProfitReportList(start, end)
     }
 
 

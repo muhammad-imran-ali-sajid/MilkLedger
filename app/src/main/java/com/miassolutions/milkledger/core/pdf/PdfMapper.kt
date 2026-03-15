@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.core.pdf
 
 import com.miassolutions.milkledger.features.dashboard.DashboardUiState
+import com.miassolutions.milkledger.features.owner.domain.ProfitUiModel
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.utils.extensions.format
@@ -12,6 +13,58 @@ import com.miassolutions.milkledger.utils.extensions.toPrice
 import com.miassolutions.milkledger.utils.extensions.toSignedBalance
 
 object PdfMapper {
+
+    fun mapProfitSheetPdf(
+        dateRange: String,
+        totalNetProfit: String,
+        totalWithDrawn: String,
+        list: List<ProfitUiModel>,
+        initialRetained: Long = 0L // 🔥 Is date range se pehle ka bacha hua profit
+    ): PdfReportModel {
+
+        val headers = listOf("Date", "Net Profit", "Withdraw", "Retained")
+        // Date ko thori zyada space di hai
+        val weights = floatArrayOf(1.4f, 1.2f, 1.2f, 1.2f)
+
+        var runningRetained = initialRetained
+
+        val sortedList = list.sortedBy { it.dateMillis }
+
+        // 1. Rows Processing & Balance Calculation
+        val rows = sortedList.map { item ->
+
+            // 🔥 Logic: Naya Retained = Purana Retained + Aaj ka Profit - Aaj ka Withdraw
+            runningRetained += item.netProfit
+            runningRetained -= item.totalDrawings
+
+            listOf(
+                item.dateMillis.toLocalDate().toCompleteDateFormat(),
+                item.netProfit.toPrice(),
+                item.totalDrawings.toPrice(),
+                runningRetained.toPrice() // Running Balance
+            )
+        }
+
+        // 2. Summary Labels
+        val summaryLabels = listOf(
+            "OPENING RETAINED" to initialRetained.toPrice(),
+            "TOTAL NET PROFIT" to totalNetProfit,
+            "TOTAL WITHDRAWN" to totalWithDrawn,
+            "CLOSING RETAINED" to runningRetained.toPrice()
+        )
+
+        return PdfReportModel(
+            fileName = "Profit_Statement.pdf",
+            shopName = "GMC Milk Collection",
+            reportTitle = "Profit & Withdrawal Statement",
+            dateRange = dateRange,
+            columnHeaders = headers,
+            columnWeights = weights,
+            rows = rows,
+            summaryRow = null,
+            summaryLabels = summaryLabels
+        )
+    }
 
     fun mapSupplierHistoryToPdf(
         supplierName: String,
@@ -129,7 +182,6 @@ object PdfMapper {
     }
 
 
-
     fun mapCustomerHistoryToPdf(
         customerName: String,
         dateRang: String,
@@ -138,7 +190,7 @@ object PdfMapper {
     ): PdfReportModel {
         val headers = listOf("Date", "Vol", "Ded.", "Net", "Rate", "Price", "Rec.", "Bal")
         //total sum 10~11 me ho ta ke page pr fit aa skay
-        val weights = floatArrayOf(1.0f, 0.9f, 0.9f, 0.9f,0.9f, 1.2f, 1.2f, 1.2f)
+        val weights = floatArrayOf(1.0f, 0.9f, 0.9f, 0.9f, 0.9f, 1.2f, 1.2f, 1.2f)
 
         var runningBalance = initialBalance
 
