@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.activities
+package com.miassolutions.milkledger.features.activities
 
 import android.app.DownloadManager
 import android.content.Intent

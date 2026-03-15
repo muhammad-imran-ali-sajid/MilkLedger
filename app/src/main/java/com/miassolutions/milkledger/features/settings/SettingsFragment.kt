@@ -3,11 +3,9 @@ package com.miassolutions.milkledger.features.settings
 
 import androidx.lifecycle.lifecycleScope
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSettingsBinding
 import dagger.hilt.android.AndroidEntryPoint
-import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -18,8 +16,6 @@ class SettingsFragment :
         ThemePreferences(requireContext())
     }
 
-    @Inject
-    lateinit var appPreferences: AppPreferencesManager
 
     override fun setupViews() {
         setToolbarTitle(getString(R.string.settings))

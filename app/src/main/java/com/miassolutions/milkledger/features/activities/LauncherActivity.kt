@@ -1,19 +1,13 @@
-package com.miassolutions.milkledger.core.activities
+package com.miassolutions.milkledger.features.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.activities.AppStartViewModel
 import com.miassolutions.milkledger.core.ui.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 

@@ -34,16 +34,16 @@
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.MilkLedger">
         <activity
-            android:name=".core.activities.ForceUpdateActivity"
+            android:name=".features.activities.ForceUpdateActivity"
             android:exported="false" />
         <activity
-            android:name=".core.activities.LoginActivity"
+            android:name=".features.activities.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.Auth">
 
         </activity>
         <activity
-            android:name=".core.activities.LauncherActivity"
+            android:name=".features.activities.LauncherActivity"
             android:exported="true"
             android:theme="@style/Theme.Launcher">
             <intent-filter>
@@ -53,7 +53,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".core.activities.MainActivity"
+            android:name=".features.activities.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="DiscouragedApi,LockedOrientationActivity">

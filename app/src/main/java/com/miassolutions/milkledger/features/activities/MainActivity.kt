@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.core.activities
+package com.miassolutions.milkledger.features.activities
 
 import android.content.Context
 import android.content.Intent
@@ -16,7 +16,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.core.prefs.AppPreferencesManager
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.core.ui.BaseActivity
 import com.miassolutions.milkledger.core.ui.ToolbarOwner
@@ -34,8 +33,6 @@ class MainActivity : BaseActivity(), ToolbarOwner {
 
     @Inject
     lateinit var remote: RemoteConfigManager
-    @Inject
-    lateinit var appPreferences: AppPreferencesManager
 
     private val themePreferences by lazy {
         ThemePreferences(this)
@@ -78,21 +75,8 @@ class MainActivity : BaseActivity(), ToolbarOwner {
             }
         }
 
-        applySavedBackground()
-
-
         setContentView(binding.root)
-
-
-
-
-
-
         applyWindowInsets()
-
-
-
-
         setupDrawerHeader()
 
         // -------------------- Toolbar --------------------
@@ -218,8 +202,4 @@ class MainActivity : BaseActivity(), ToolbarOwner {
         super.attachBaseContext(newBase.createConfigurationContext(config))
     }
 
-    private fun applySavedBackground() {
-        val colorId = appPreferences.loadBackgroundColor()
-        window.decorView.setBackgroundColor(getColor(colorId))
-    }
 }

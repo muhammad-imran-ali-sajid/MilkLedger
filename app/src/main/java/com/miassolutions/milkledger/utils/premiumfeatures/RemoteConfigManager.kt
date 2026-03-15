@@ -12,7 +12,6 @@ class RemoteConfigManager @Inject constructor() {
 
     companion object {
         private const val TAG = "RemoteConfig"
-
         private const val IS_PREMIUM_ENABLED = "is_premium_enabled"
         private const val MIN_SUPPORTED_VERSION = "min_supported_version"
         private const val APK_URL = "apk_url"

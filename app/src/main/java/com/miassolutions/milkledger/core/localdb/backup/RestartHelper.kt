@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.core.localdb.backup
 
 import android.content.Context
 import android.content.Intent
-import com.miassolutions.milkledger.core.activities.LauncherActivity
+import com.miassolutions.milkledger.features.activities.LauncherActivity
 
 object RestartHelper {
 
