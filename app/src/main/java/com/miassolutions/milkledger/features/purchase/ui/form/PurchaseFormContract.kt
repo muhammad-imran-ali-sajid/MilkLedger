@@ -15,7 +15,7 @@ data class PurchaseFormUiState(
     // Fields
     val selectedSupplier: Account? = null,
     val date: LocalDate = LocalDate.now(),
-    val paymentDate: LocalDate? = null,
+    val paymentDate: LocalDate = date,
 
     val volume: String = "",
     val fat: String = "",
@@ -49,9 +49,9 @@ sealed class PurchaseFormUiEvent {
 
     // Date Pickers
     data class OnDateSelected(val date: LocalDate) : PurchaseFormUiEvent()
-    data class OnPaymentDateSelected(val date: LocalDate) : PurchaseFormUiEvent()
+//    data class OnPaymentDateSelected(val date: LocalDate) : PurchaseFormUiEvent()
     object OnDateClick : PurchaseFormUiEvent()
-    object OnPaymentDateClick : PurchaseFormUiEvent()
+//    object OnPaymentDateClick : PurchaseFormUiEvent()
 
     // Actions
     object OnSaveClicked : PurchaseFormUiEvent()
@@ -69,5 +69,5 @@ sealed class PurchaseFormUiEffect {
     object NavigateBack : PurchaseFormUiEffect()
     object OpenDatePicker : PurchaseFormUiEffect()
 
-    object OpenPaymentDatePicker : PurchaseFormUiEffect()
+//    object OpenPaymentDatePicker : PurchaseFormUiEffect()
 }

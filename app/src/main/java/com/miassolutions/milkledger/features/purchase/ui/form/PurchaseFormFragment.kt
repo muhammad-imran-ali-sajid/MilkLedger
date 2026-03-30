@@ -10,7 +10,6 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchaseFormBinding
 import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
-import com.miassolutions.milkledger.features.purchase.purchaseform.PurchaseFormViewModel
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.format
@@ -87,7 +86,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
         // Dates
 //        btnDate.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnDateClick) }
-        btnPaymentDate.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnPaymentDateClick) }
+//        btnPaymentDate.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnPaymentDateClick) }
 
         // Actions
         btnSave.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked) }
@@ -197,15 +196,15 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
                 openDatePicker { date -> viewModel.onEvent(PurchaseFormUiEvent.OnDateSelected(date)) }
             }
 
-            PurchaseFormUiEffect.OpenPaymentDatePicker -> {
-                openDatePicker { date ->
-                    viewModel.onEvent(
-                        PurchaseFormUiEvent.OnPaymentDateSelected(
-                            date
-                        )
-                    )
-                }
-            }
+//            PurchaseFormUiEffect.OpenPaymentDatePicker -> {
+//                openDatePicker { date ->
+//                    viewModel.onEvent(
+//                        PurchaseFormUiEvent.OnPaymentDateSelected(
+//                            date
+//                        )
+//                    )
+//                }
+//            }
         }
     }
 }

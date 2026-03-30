@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.purchase.purchaseform
+package com.miassolutions.milkledger.features.purchase.ui.form
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
@@ -6,9 +6,6 @@ import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.purchase.data.MilkPurchaseRepository
 import com.miassolutions.milkledger.features.purchase.domain.SavePurchaseUseCase
 import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
-import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiEffect
-import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiEvent
-import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiState
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toLongPaisa
 import com.miassolutions.milkledger.utils.extensions.toMillis
@@ -77,7 +74,7 @@ class PurchaseFormViewModel @Inject constructor(
             updateState {
                 it.copy(
                     date = purchaseDateLocal,
-                    paymentDate = null
+                    paymentDate = purchaseDateLocal
                 )
             }
         }
@@ -95,7 +92,7 @@ class PurchaseFormViewModel @Inject constructor(
                 // 🔥 REPOSITORY ALIGNMENT:
                 // Ab hum DB se 'paymentDateMillis' direct utha rahay hain.
                 // Agar record me date hai to wo load hogi, warna null.
-                val savedPaymentDate = purchase.paymentDateMillis?.toLocalDate()
+                val savedPaymentDate = purchase.dateMillis.toLocalDate()
 
                 updateState {
                     it.copy(
@@ -169,9 +166,9 @@ class PurchaseFormViewModel @Inject constructor(
             is PurchaseFormUiEvent.OnNoteChanged -> updateState { it.copy(note = event.value) }
 
             is PurchaseFormUiEvent.OnDateSelected -> updateState { it.copy(date = event.date) }
-            is PurchaseFormUiEvent.OnPaymentDateSelected -> updateState { it.copy(paymentDate = event.date) }
+//            is PurchaseFormUiEvent.OnPaymentDateSelected -> updateState { it.copy(paymentDate = event.date) }
             PurchaseFormUiEvent.OnDateClick -> emitEffect(PurchaseFormUiEffect.OpenDatePicker)
-            PurchaseFormUiEvent.OnPaymentDateClick -> emitEffect(PurchaseFormUiEffect.OpenPaymentDatePicker)
+//            PurchaseFormUiEvent.OnPaymentDateClick -> emitEffect(PurchaseFormUiEffect.OpenPaymentDatePicker)
 
             PurchaseFormUiEvent.OnSaveClicked -> savePurchase(exitAfterSave = true)
             PurchaseFormUiEvent.OnSaveAndNewClicked -> savePurchase(exitAfterSave = false)
@@ -291,7 +288,7 @@ class PurchaseFormViewModel @Inject constructor(
                 calculatedTs = 0.0,
                 calculatedTotal = 0L,
                 isEditMode = false,
-                paymentDate = null // ✅ Reset to Null
+//                paymentDate = null // ✅ Reset to Null
             )
         }
     }
