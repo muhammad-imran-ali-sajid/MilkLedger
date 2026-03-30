@@ -14,8 +14,6 @@ import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnDat
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnDeductionChanged
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnDeleteClicked
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnNoteChanged
-import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnPaymentDateClick
-import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnPaymentDateSelected
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnRateChanged
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnSaveAndNewClicked
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnSaveClicked
@@ -62,7 +60,7 @@ class SaleFormViewModel @Inject constructor(
             updateState {
                 it.copy(
                     date = initialDate,
-                    paymentDate = null
+                    paymentDate = initialDate
                 )
             }
         }
@@ -102,7 +100,7 @@ class SaleFormViewModel @Inject constructor(
 
                 // 🔥 REPOSITORY ALIGNMENT:
                 // Ab hum DB se 'paymentDateMillis' direct utha rahay hain.
-                val savedPaymentDate = sale.paymentDateMillis?.toLocalDate()
+                val savedPaymentDate = sale.dateMillis.toLocalDate()
 
                 updateState {
                     it.copy(
@@ -135,7 +133,7 @@ class SaleFormViewModel @Inject constructor(
     override fun onEvent(event: SaleFormUiEvent) {
         when (event) {
             is OnDateSelected -> updateState { it.copy(date = event.date) }
-            is OnPaymentDateSelected -> updateState { it.copy(paymentDate = event.paymentDate) }
+//            is OnPaymentDateSelected -> updateState { it.copy(paymentDate = event.paymentDate) }
 
             is OnCustomerSelected -> {
                 updateState {
@@ -171,7 +169,7 @@ class SaleFormViewModel @Inject constructor(
             is OnSaveClicked -> saveSale(true)
 
             OnDateClick -> emitEffect(SaleFormUiEffect.OpenDatePicker)
-            OnPaymentDateClick -> emitEffect(SaleFormUiEffect.OpenPaymentDatePicker)
+//            OnPaymentDateClick -> emitEffect(SaleFormUiEffect.OpenPaymentDatePicker)
             is LoadSaleForEdit -> loadSaleForEdit(event.saleId)
             OnSaveAndNewClicked -> {
                 saveSale(false)
@@ -236,14 +234,13 @@ class SaleFormViewModel @Inject constructor(
         }
 
         // ✅ VALIDATION: Payment hai tu Date LAZMI hai
-        if (payment > 0) {
-            if (state.paymentDate == null) {
-                emitEffect(SaleFormUiEffect.ShowSnackbar("⚠️ Payment Date select karna zaroori hai!"))
-                return
-            }
-        }
+//        if (payment > 0) {
+//            if (state.paymentDate == null) {
+//                emitEffect(SaleFormUiEffect.ShowSnackbar("⚠️ Payment Date select karna zaroori hai!"))
+//                return
+//            }
+//        }
 
-        // 🔥 FIX: Fallback hata diya.
         // Agar date select nahi ki (amount 0 k case me), to NULL hi pass hoga.
         val finalPaymentDate = state.paymentDate
 
@@ -325,7 +322,7 @@ class SaleFormViewModel @Inject constructor(
                 isEditMode = false,
 
                 // ✅ RESET: Agli entry k liye phir se NULL
-                paymentDate = null
+//                paymentDate = null
             )
         }
     }

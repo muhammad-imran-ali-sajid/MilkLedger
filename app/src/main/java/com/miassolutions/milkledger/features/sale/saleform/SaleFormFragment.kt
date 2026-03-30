@@ -60,7 +60,7 @@ class SaleFormFragment :
         }
         // --- Dates & Save ---
 //        btnDate.setOnClickListener { viewModel.onEvent(OnDateClick) }
-        btnPaymentDate.setOnClickListener { viewModel.onEvent(OnPaymentDateClick) }
+//        btnPaymentDate.setOnClickListener { viewModel.onEvent(OnPaymentDateClick) }
         btnSave.setOnClickListener { viewModel.onEvent(OnSaveClicked) }
         btnSaveNew.setOnClickListener { viewModel.onEvent(OnSaveAndNewClicked) }
     }
@@ -151,13 +151,13 @@ class SaleFormFragment :
                 openDatePicker { date -> viewModel.onEvent(OnDateSelected(date)) }
             }
 
-            SaleFormUiEffect.OpenPaymentDatePicker -> {
-                openDatePicker { date -> viewModel.onEvent(OnPaymentDateSelected(date)) }
-            }
+//            SaleFormUiEffect.OpenPaymentDatePicker -> {
+//                openDatePicker { date -> viewModel.onEvent(OnPaymentDateSelected(date)) }
+//            }
 
             is SaleFormUiEffect.ShowSnackbar -> showSnackbar(effect.message)
-            is SaleFormUiEffect.OpenPaymentDatePicker -> { /* Handled in VM */
-            }
+//            is SaleFormUiEffect.OpenPaymentDatePicker -> { /* Handled in VM */
+//            }
         }
     }
 }

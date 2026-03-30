@@ -230,6 +230,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
+                    android:visibility="gone"
                     android:id="@+id/btnPaymentDate"
                     style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
