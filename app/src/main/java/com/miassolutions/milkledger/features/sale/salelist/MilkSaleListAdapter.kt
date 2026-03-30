@@ -50,26 +50,26 @@ class MilkSaleListAdapter(
 
 
                 // Payment info
-                if (item.paymentReceived > 0) {
-                    tvPayment.text = item.paymentReceived.toPrice()
-
-                    tilPayment.setOnClickListener {
-                        val context = it.context
-                        val inflater = LayoutInflater.from(context)
-                        val binding = DialogPaymentInfoBinding.inflate(inflater)
-
-                        binding.tvMessage.text = "Rcv Date: ${item.paymentDate?.toDisplayDate()}"
-
-                        MaterialAlertDialogBuilder(context)
-                            .setView(binding.root)
-                            .setPositiveButton("OK", null)
-                            .show()
-                    }
-
-                } else {
-                    tvPayment.text = "-"
-                    tvPayment.setOnClickListener(null)
-                }
+//                if (item.paymentReceived > 0) {
+//                    tvPayment.text = item.paymentReceived.toPrice()
+//
+//                    tilPayment.setOnClickListener {
+//                        val context = it.context
+//                        val inflater = LayoutInflater.from(context)
+//                        val binding = DialogPaymentInfoBinding.inflate(inflater)
+//
+//                        binding.tvMessage.text = "Rcv Date: ${item.paymentDate?.toDisplayDate()}"
+//
+//                        MaterialAlertDialogBuilder(context)
+//                            .setView(binding.root)
+//                            .setPositiveButton("OK", null)
+//                            .show()
+//                    }
+//
+//                } else {
+//                    tvPayment.text = "-"
+//                    tvPayment.setOnClickListener(null)
+//                }
 
 
 

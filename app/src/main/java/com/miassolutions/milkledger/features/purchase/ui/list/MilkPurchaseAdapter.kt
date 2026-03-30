@@ -53,26 +53,26 @@ class MilkPurchaseAdapter(
             tvBalance.setBalanceWithColor(item.currentBalance)
 
             // Payment info
-            if (item.paymentMade > 0) {
-                tvPayment.text = item.paymentMade.toPrice()
-
-                tilPayment.setOnClickListener {
-                    val context = it.context
-                    val inflater = LayoutInflater.from(context)
-                    val binding = DialogPaymentInfoBinding.inflate(inflater)
-
-                    binding.tvMessage.text = item.paymentDate?.toDisplayDate()
-
-                    MaterialAlertDialogBuilder(context)
-                        .setView(binding.root)
-                        .setPositiveButton("OK", null)
-                        .show()
-                }
-
-            } else {
-                tvPayment.text = "-"
-                tvPayment.setOnClickListener(null)
-            }
+//            if (item.paymentMade > 0) {
+//                tvPayment.text = item.paymentMade.toPrice()
+//
+//                tilPayment.setOnClickListener {
+//                    val context = it.context
+//                    val inflater = LayoutInflater.from(context)
+//                    val binding = DialogPaymentInfoBinding.inflate(inflater)
+//
+//                    binding.tvMessage.text = item.paymentDate?.toDisplayDate()
+//
+//                    MaterialAlertDialogBuilder(context)
+//                        .setView(binding.root)
+//                        .setPositiveButton("OK", null)
+//                        .show()
+//                }
+//
+//            } else {
+//                tvPayment.text = "-"
+//                tvPayment.setOnClickListener(null)
+//            }
 
 
             // Note

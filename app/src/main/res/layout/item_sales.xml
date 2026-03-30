@@ -174,7 +174,6 @@ android:layout_margin="4dp"
 
                     <TextView
                         style="@style/Text.Normal"
-                        android:drawableEnd="@drawable/ic_info"
                         android:drawablePadding="4dp"
                         android:drawableTint="?attr/colorOnSecondaryContainer"
                         android:layout_width="wrap_content"
