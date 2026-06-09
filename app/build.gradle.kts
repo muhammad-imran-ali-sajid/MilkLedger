@@ -4,6 +4,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.dagger.hilt.android") //hilt
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.gms.google-services")
     id("kotlin-parcelize")
 }
@@ -75,8 +76,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-
+    
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
     implementation("com.itextpdf:itextg:5.5.10")
 

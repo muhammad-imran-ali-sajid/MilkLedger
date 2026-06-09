@@ -29,6 +29,7 @@ class BackupRestoreViewModel @Inject constructor(
     fun testCreateBackup() {
         viewModelScope.launch {
             try {
+                
                 val backup = backupRepository.createBackupObject()
                 
                 Log.d("MilkBackup", "Backup created")
@@ -39,6 +40,20 @@ class BackupRestoreViewModel @Inject constructor(
                 Log.d("MilkBackup", "Notes: ${backup.counts.notes}")
             } catch (e: Exception) {
                 Log.e("MilkBackup", "Backup creation failed", e)
+            }
+        }
+    }
+    
+    fun testCreateLocalBackupFile() {
+        viewModelScope.launch {
+            try {
+                val file = backupRepository.createLocalBackupFile()
+                
+                Log.d("MilkBackup", "Local backup file created")
+                Log.d("MilkBackup", "Path: ${file.absolutePath}")
+                Log.d("MilkBackup", "Size: ${file.length()} bytes")
+            } catch (e: Exception) {
+                Log.e("MilkBackup", "Local backup file failed", e)
             }
         }
     }

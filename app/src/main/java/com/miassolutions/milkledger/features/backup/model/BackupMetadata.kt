@@ -1,5 +1,8 @@
 package com.miassolutions.milkledger.features.backup.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class BackupMetadata(
     val backupId: String,
     val appName: String = "Milk Ledger",

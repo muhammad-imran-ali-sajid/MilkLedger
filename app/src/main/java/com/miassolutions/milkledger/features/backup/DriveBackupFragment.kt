@@ -89,7 +89,7 @@ class DriveBackupFragment :
         }
         
         btnTest.setOnClickListener {
-            viewModel.testCreateBackup()
+            viewModel.testCreateLocalBackupFile()
         }
 
 
