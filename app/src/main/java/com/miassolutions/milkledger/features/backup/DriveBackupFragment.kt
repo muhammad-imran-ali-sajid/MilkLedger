@@ -1,5 +1,7 @@
 package com.miassolutions.milkledger.features.backup
 
+import android.app.Activity
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -8,15 +10,29 @@ import com.miassolutions.milkledger.core.localdb.backup.BackupResult
 import com.miassolutions.milkledger.core.localdb.backup.RestartHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentDriveBackupBinding
+import com.miassolutions.milkledger.features.backup.drive.GoogleDriveAuthManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class DriveBackupFragment :
     BaseFragment<FragmentDriveBackupBinding>(FragmentDriveBackupBinding::inflate) {
 
     private val viewModel: BackupRestoreViewModel by viewModels()
+    
+    @Inject
+    lateinit var googleDriveAuthManager: GoogleDriveAuthManager
+    
+    private val googleSignInLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                viewModel.uploadBackupToDrive()
+            } else {
+                showToast("Google sign-in cancelled")
+            }
+        }
 
 
     private val createBackupLauncher = registerForActivityResult(
@@ -90,6 +106,16 @@ class DriveBackupFragment :
         
         btnTest.setOnClickListener {
             viewModel.testRestoreLatestLocalBackup()
+        }
+        
+        btnBackupToDrive.setOnClickListener {
+            if (googleDriveAuthManager.hasDrivePermission(requireActivity())) {
+                viewModel.uploadBackupToDrive()
+            } else {
+                googleSignInLauncher.launch(
+                    googleDriveAuthManager.getSignInIntent(requireActivity())
+                )
+            }
         }
 
 

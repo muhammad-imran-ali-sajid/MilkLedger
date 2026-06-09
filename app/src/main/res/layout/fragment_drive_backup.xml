@@ -6,7 +6,12 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="24dp">
-
+    <Button
+        android:id="@+id/btnBackupToDrive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Test Db backup" />
 
     <Button
         android:id="@+id/btnTest"

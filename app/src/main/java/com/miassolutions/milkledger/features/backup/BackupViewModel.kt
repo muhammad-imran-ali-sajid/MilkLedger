@@ -99,6 +99,24 @@ class BackupRestoreViewModel @Inject constructor(
             }
         }
     }
+    
+    fun uploadBackupToDrive() {
+        viewModelScope.launch {
+            try {
+                Log.d("MilkBackup", "Creating and uploading backup to Drive...")
+                
+                val result = backupRepository.createAndUploadBackupToDrive()
+                
+                Log.d("MilkBackup", "Drive backup uploaded")
+                Log.d("MilkBackup", "File ID: ${result.fileId}")
+                Log.d("MilkBackup", "File Name: ${result.fileName}")
+                Log.d("MilkBackup", "Link: ${result.webViewLink}")
+                
+            } catch (e: Exception) {
+                Log.e("MilkBackup", "Drive backup upload failed", e)
+            }
+        }
+    }
 
     suspend fun backup(uri: Uri): BackupResult {
 

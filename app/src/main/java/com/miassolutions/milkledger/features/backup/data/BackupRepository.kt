@@ -4,11 +4,15 @@ import android.os.Build
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.features.backup.drive.DriveBackupResult
+import com.miassolutions.milkledger.features.backup.drive.GoogleDriveBackupDataSource
 import com.miassolutions.milkledger.features.backup.mapper.toBackupDto
 import com.miassolutions.milkledger.features.backup.mapper.toEntity
 import com.miassolutions.milkledger.features.backup.model.BackupCounts
 import com.miassolutions.milkledger.features.backup.model.BackupMetadata
 import com.miassolutions.milkledger.features.backup.model.MilkLedgerBackup
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.builtins.serializer
 import java.io.File
 import java.util.UUID
@@ -19,8 +23,17 @@ import javax.inject.Singleton
 class BackupRepository @Inject constructor(
     private val database: AppDatabase,
     private val backupFileManager: BackupFileManager,
-    private val backupValidator: BackupValidator
+    private val backupValidator: BackupValidator,
+    private val googleDriveBackupDataSource: GoogleDriveBackupDataSource
 ) {
+    
+    suspend fun createAndUploadBackupToDrive(): DriveBackupResult {
+        val localBackupFile = createLocalBackupFile()
+        
+        return withContext(Dispatchers.IO) {
+            googleDriveBackupDataSource.uploadBackupFile(localBackupFile)
+        }
+    }
     
     suspend fun createBackupObject(): MilkLedgerBackup {
         val accounts = database.accountDao().getAllAccountsForBackup().map { it.toBackupDto() }
