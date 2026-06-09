@@ -87,6 +87,10 @@ class DriveBackupFragment :
         btnRestore.setOnClickListener {
             showRestoreConfirmation()
         }
+        
+        btnTest.setOnClickListener {
+            viewModel.testCreateBackup()
+        }
 
 
     }

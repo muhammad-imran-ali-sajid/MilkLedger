@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LedgerDao {
+    
+    @Query("SELECT * FROM financial_ledger_table")
+    suspend fun getAllLedgerEntriesForBackup(): List<FinancialLedgerEntity>
 
     @Query("""    
         SELECT (COALESCE(SUM(debit), 0) - COALESCE(SUM(credit), 0)) 

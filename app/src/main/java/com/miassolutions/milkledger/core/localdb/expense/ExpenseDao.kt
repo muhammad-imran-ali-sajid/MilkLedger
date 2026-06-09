@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ExpenseDao {
+    
+    @Query("SELECT * FROM expense_table")
+    suspend fun getAllExpensesForBackup(): List<ExpenseEntity>
 
     // ------------------------------------------------
     // 1️⃣ WRITE

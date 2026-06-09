@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
+    
+    @Query("SELECT * FROM accounts_table")
+    suspend fun getAllAccountsForBackup(): List<AccountEntity>
 
     // 🔥🔥 NEW OPTIMIZED QUERY (The Magic) 🔥🔥
     // Account List + Live Balance + Opening Date (Aik sath)

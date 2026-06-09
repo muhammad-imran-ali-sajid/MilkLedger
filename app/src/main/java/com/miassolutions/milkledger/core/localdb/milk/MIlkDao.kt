@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MilkDao {
+    
+    @Query("SELECT * FROM milk_transactions_table")
+    suspend fun getAllMilkTransactionsForBackup(): List<MilkTransactionEntity>
 
     // 1️⃣ ALL PURCHASES (Weighted Stats)
     @Query("""
