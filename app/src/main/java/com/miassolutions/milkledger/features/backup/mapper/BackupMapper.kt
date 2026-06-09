@@ -1,9 +1,12 @@
 package com.miassolutions.milkledger.features.backup.mapper
 
 import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
+import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.expense.ExpenseEntity
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
+import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
+import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.backup.model.dto.AccountBackupDto
 import com.miassolutions.milkledger.features.backup.model.dto.ExpenseBackupDto
 import com.miassolutions.milkledger.features.backup.model.dto.LedgerBackupDto
@@ -17,6 +20,29 @@ fun MilkTransactionEntity.toBackupDto(): MilkTransactionBackupDto {
         accountId = accountId,
         dateMillis = dateMillis,
         type = type.name,
+        volume = volume,
+        deduction = deduction,
+        quantity = quantity,
+        fat = fat,
+        lr = lr,
+        ts = ts,
+        rateUsed = rateUsed,
+        totalAmount = totalAmount,
+        notes = notes,
+        paymentDateMillis = paymentDateMillis,
+        createdAtMillis = createdAtMillis,
+        updatedAtMillis = updatedAtMillis,
+        isSynced = isSynced,
+        deletedAtMillis = deletedAtMillis
+    )
+}
+
+fun MilkTransactionBackupDto.toEntity(): MilkTransactionEntity {
+    return MilkTransactionEntity(
+        milkTransId = milkTransId,
+        accountId = accountId,
+        dateMillis = dateMillis,
+        type = TransactionType.valueOf(type),
         volume = volume,
         deduction = deduction,
         quantity = quantity,
@@ -52,8 +78,42 @@ fun AccountEntity.toBackupDto(): AccountBackupDto {
     )
 }
 
+fun AccountBackupDto.toEntity(): AccountEntity {
+    return AccountEntity(
+        accountId = accountId,
+        name = name,
+        phone = phone,
+        accountType = AccountType.valueOf(accountType),
+        isActive = isActive,
+        sortOrder = sortOrder,
+        advanceAmount = advanceAmount,
+        defaultRate = defaultRate,
+        initialBalance = initialBalance,
+        createdAtMillis = createdAtMillis,
+        updatedAtMillis = updatedAtMillis,
+        isSynced = isSynced,
+        deletedAtMillis = deletedAtMillis
+    )
+}
+
 fun ExpenseEntity.toBackupDto(): ExpenseBackupDto {
     return ExpenseBackupDto(
+        expenseId = expenseId,
+        dateMillis = dateMillis,
+        title = title,
+        amount = amount,
+        category = category,
+        isPersonal = isPersonal,
+        note = note,
+        createdAtMillis = createdAtMillis,
+        updatedAtMillis = updatedAtMillis,
+        isSynced = isSynced,
+        deletedAtMillis = deletedAtMillis
+    )
+}
+
+fun ExpenseBackupDto.toEntity(): ExpenseEntity {
+    return ExpenseEntity(
         expenseId = expenseId,
         dateMillis = dateMillis,
         title = title,
@@ -86,8 +146,41 @@ fun FinancialLedgerEntity.toBackupDto(): LedgerBackupDto {
     )
 }
 
+
+fun LedgerBackupDto.toEntity(): FinancialLedgerEntity {
+    return FinancialLedgerEntity(
+        ledgerId = ledgerId,
+        dateMillis = dateMillis,
+        accountId = accountId,
+        referenceId = referenceId,
+        type = LedgerEntryType.valueOf(type),
+        debit = debit,
+        credit = credit,
+        profitImpact = profitImpact,
+        note = note,
+        createdAtMillis = createdAtMillis,
+        updatedAtMillis = updatedAtMillis,
+        isSynced = isSynced,
+        deletedAtMillis = deletedAtMillis
+    )
+}
+
+
 fun NoteEntity.toBackupDto(): NoteBackupDto {
     return NoteBackupDto(
+        noteId = noteId,
+        title = title,
+        content = content,
+        alarmAtMillis = alarmAtMillis,
+        createdAtMillis = createdAtMillis,
+        updatedAtMillis = updatedAtMillis,
+        isSynced = isSynced,
+        deletedAtMillis = deletedAtMillis
+    )
+}
+
+fun NoteBackupDto.toEntity(): NoteEntity {
+    return NoteEntity(
         noteId = noteId,
         title = title,
         content = content,

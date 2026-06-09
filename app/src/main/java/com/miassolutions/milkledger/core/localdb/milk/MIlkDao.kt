@@ -14,6 +14,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MilkDao {
     
+    @Query("DELETE FROM milk_transactions_table")
+    suspend fun clearMilkTransactionsForRestore()
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertMilkTransactionsFromBackup(items: List<MilkTransactionEntity>)
+    
     @Query("SELECT * FROM milk_transactions_table")
     suspend fun getAllMilkTransactionsForBackup(): List<MilkTransactionEntity>
 

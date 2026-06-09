@@ -33,4 +33,13 @@ class BackupFileManager @Inject constructor(
         
         return file
     }
+    
+    fun getLatestLocalBackupFile(): File? {
+        val backupDir = File(context.filesDir, "milk_ledger_backups")
+        
+        return backupDir
+            .listFiles()
+            ?.filter { it.extension == "mlbackup" }
+            ?.maxByOrNull { it.lastModified() }
+    }
 }

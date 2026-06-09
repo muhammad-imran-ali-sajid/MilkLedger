@@ -1,9 +1,11 @@
 package com.miassolutions.milkledger.features.backup.data
 
 import android.os.Build
+import androidx.room.withTransaction
 import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.features.backup.mapper.toBackupDto
+import com.miassolutions.milkledger.features.backup.mapper.toEntity
 import com.miassolutions.milkledger.features.backup.model.BackupCounts
 import com.miassolutions.milkledger.features.backup.model.BackupMetadata
 import com.miassolutions.milkledger.features.backup.model.MilkLedgerBackup
@@ -16,7 +18,8 @@ import javax.inject.Singleton
 @Singleton
 class BackupRepository @Inject constructor(
     private val database: AppDatabase,
-    private val backupFileManager: BackupFileManager
+    private val backupFileManager: BackupFileManager,
+    private val backupValidator: BackupValidator
 ) {
     
     suspend fun createBackupObject(): MilkLedgerBackup {
@@ -83,6 +86,77 @@ class BackupRepository @Inject constructor(
             createdAtMillis = backupWithChecksum.metadata.createdAtMillis
         )
     }
+    
+    fun readBackupFromFile(file: File): MilkLedgerBackup {
+        val compressedBytes = file.readBytes()
+        val json = BackupCompressor.ungzip(compressedBytes)
+        
+        return BackupJson.json.decodeFromString(
+            MilkLedgerBackup.serializer(),
+            json
+        )
+    }
+    
+    suspend fun restoreFromLocalBackupFile(file: File) {
+        val backup = readBackupFromFile(file)
+        
+        backupValidator.validateBeforeRestore(backup)
+        
+        val accounts = backup.accounts.map { it.toEntity() }
+        val milkTransactions = backup.milkTransactions.map { it.toEntity() }
+        val ledgerEntries = backup.ledgerEntries.map { it.toEntity() }
+        val expenses = backup.expenses.map { it.toEntity() }
+        val notes = backup.notes.map { it.toEntity() }
+        
+        database.withTransaction {
+            // Clear child/dependent tables first
+            database.noteDao().clearNotesForRestore()
+            database.ledgerDao().clearLedgerEntriesForRestore()
+            database.milkDao().clearMilkTransactionsForRestore()
+            database.expenseDao().clearExpensesForRestore()
+            database.accountDao().clearAccountsForRestore()
+            
+            // Restore parent/base tables first
+            database.accountDao().insertAccountsFromBackup(accounts)
+            database.milkDao().insertMilkTransactionsFromBackup(milkTransactions)
+            database.ledgerDao().insertLedgerEntriesFromBackup(ledgerEntries)
+            database.expenseDao().insertExpensesFromBackup(expenses)
+            database.noteDao().insertNotesFromBackup(notes)
+        }
+        
+        validateAfterRestore(backup)
+    }
+    
+    private suspend fun validateAfterRestore(backup: MilkLedgerBackup) {
+        val restoredAccounts = database.accountDao().getAllAccountsForBackup().size
+        val restoredMilk = database.milkDao().getAllMilkTransactionsForBackup().size
+        val restoredLedger = database.ledgerDao().getAllLedgerEntriesForBackup().size
+        val restoredExpenses = database.expenseDao().getAllExpensesForBackup().size
+        val restoredNotes = database.noteDao().getAllNotesForBackup().size
+        
+        require(restoredAccounts == backup.counts.accounts) {
+            "Restore failed: accounts count mismatch"
+        }
+        
+        require(restoredMilk == backup.counts.milkTransactions) {
+            "Restore failed: milk transactions count mismatch"
+        }
+        
+        require(restoredLedger == backup.counts.ledgerEntries) {
+            "Restore failed: ledger entries count mismatch"
+        }
+        
+        require(restoredExpenses == backup.counts.expenses) {
+            "Restore failed: expenses count mismatch"
+        }
+        
+        require(restoredNotes == backup.counts.notes) {
+            "Restore failed: notes count mismatch"
+        }
+    }
+    
+    
+
     
     private fun getDeviceName(): String {
         val manufacturer = Build.MANUFACTURER.orEmpty()

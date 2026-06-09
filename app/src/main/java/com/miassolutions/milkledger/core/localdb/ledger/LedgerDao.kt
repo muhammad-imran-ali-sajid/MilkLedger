@@ -14,6 +14,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LedgerDao {
     
+    @Query("DELETE FROM financial_ledger_table")
+    suspend fun clearLedgerEntriesForRestore()
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertLedgerEntriesFromBackup(items: List<FinancialLedgerEntity>)
+    
     @Query("SELECT * FROM financial_ledger_table")
     suspend fun getAllLedgerEntriesForBackup(): List<FinancialLedgerEntity>
 

@@ -14,6 +14,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AccountDao {
     
+    @Query("DELETE FROM accounts_table")
+    suspend fun clearAccountsForRestore()
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAccountsFromBackup(accounts: List<AccountEntity>)
+    
     @Query("SELECT * FROM accounts_table")
     suspend fun getAllAccountsForBackup(): List<AccountEntity>
 

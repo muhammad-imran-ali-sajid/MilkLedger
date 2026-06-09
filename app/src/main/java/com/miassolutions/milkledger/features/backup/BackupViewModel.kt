@@ -7,24 +7,32 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.localdb.AppDatabase
 import com.miassolutions.milkledger.core.localdb.backup.BackupManager
 import com.miassolutions.milkledger.core.localdb.backup.BackupResult
+import com.miassolutions.milkledger.features.backup.data.BackupFileManager
 import com.miassolutions.milkledger.features.backup.data.BackupRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class BackupRestoreViewModel @Inject constructor(
     private val backupManager: BackupManager,
     private val backupRepository: BackupRepository,
+    private val backupFileManager: BackupFileManager,
     private val db: AppDatabase
 ) : ViewModel() {
 
     private val _status = MutableSharedFlow<String>(replay = 1) // SharedFlow for status/progress
     val status = _status.asSharedFlow()
+    
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
     
     fun testCreateBackup() {
         viewModelScope.launch {
@@ -54,6 +62,40 @@ class BackupRestoreViewModel @Inject constructor(
                 Log.d("MilkBackup", "Size: ${file.length()} bytes")
             } catch (e: Exception) {
                 Log.e("MilkBackup", "Local backup file failed", e)
+            }
+        }
+    }
+    
+    // CORRECTED VERSION - Option A: Use BackupFileManager directly
+    fun testRestoreLatestLocalBackup() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Get the latest backup file using BackupFileManager
+                val latestBackup = backupFileManager.getLatestLocalBackupFile()
+                
+                if (latestBackup == null) {
+                    val msg = "No backup files found in milk_ledger_backups directory"
+                    Log.e("MilkBackup", msg)
+                    _status.emit(msg)
+                    return@launch
+                }
+                
+                Log.d("MilkBackup", "Restoring from: ${latestBackup.absolutePath}")
+                Log.d("MilkBackup", "File size: ${latestBackup.length()} bytes")
+                Log.d("MilkBackup", "Last modified: ${java.util.Date(latestBackup.lastModified())}")
+                
+                // Perform the restore
+                backupRepository.restoreFromLocalBackupFile(latestBackup)
+                
+                Log.d("MilkBackup", "Restore completed successfully")
+                _status.emit("Restore completed successfully!")
+                
+            } catch (e: Exception) {
+                Log.e("MilkBackup", "Restore failed", e)
+                _status.emit("Restore failed: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }

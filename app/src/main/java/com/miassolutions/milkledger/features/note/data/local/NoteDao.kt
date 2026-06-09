@@ -11,6 +11,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NoteDao {
     
+    @Query("DELETE FROM note_table")
+    suspend fun clearNotesForRestore()
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNotesFromBackup(items: List<NoteEntity>)
+    
     @Query("SELECT * FROM note_table")
     suspend fun getAllNotesForBackup(): List<NoteEntity>
 

@@ -10,6 +10,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ExpenseDao {
     
+    @Query("DELETE FROM expense_table")
+    suspend fun clearExpensesForRestore()
+    
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertExpensesFromBackup(items: List<ExpenseEntity>)
+    
     @Query("SELECT * FROM expense_table")
     suspend fun getAllExpensesForBackup(): List<ExpenseEntity>
 
