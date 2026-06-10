@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.note.data.local
+package com.miassolutions.milkledger.core.localdb.note
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

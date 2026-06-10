@@ -6,7 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 

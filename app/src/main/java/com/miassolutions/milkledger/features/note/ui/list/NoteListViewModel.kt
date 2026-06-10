@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.features.note.ui.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 import com.miassolutions.milkledger.features.note.data.repository.NoteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

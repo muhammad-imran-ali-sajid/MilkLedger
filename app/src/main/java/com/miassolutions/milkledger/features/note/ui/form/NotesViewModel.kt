@@ -5,7 +5,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.note.alarm.AlarmScheduler
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 import com.miassolutions.milkledger.features.note.data.repository.NoteRepository
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormatWithTime
 import dagger.hilt.android.lifecycle.HiltViewModel

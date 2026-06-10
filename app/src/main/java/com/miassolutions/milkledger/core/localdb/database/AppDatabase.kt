@@ -1,10 +1,11 @@
-package com.miassolutions.milkledger.core.localdb
+package com.miassolutions.milkledger.core.localdb.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.miassolutions.milkledger.core.localdb.TransactionTypeConverter
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
 import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
 import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
@@ -13,9 +14,9 @@ import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
+import com.miassolutions.milkledger.core.localdb.note.NoteDao
+import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 import com.miassolutions.milkledger.features.dashboard.data.DashboardDao
-import com.miassolutions.milkledger.features.note.data.local.NoteDao
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
 
 @Database(
     entities = [

@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.databinding.ItemNoteBinding
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 

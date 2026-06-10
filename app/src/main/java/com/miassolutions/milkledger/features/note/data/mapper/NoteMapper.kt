@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.features.note.data.mapper
 
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 import com.miassolutions.milkledger.features.note.domain.Note
 import com.miassolutions.milkledger.utils.extensions.toLocalDateTime
 import com.miassolutions.milkledger.utils.extensions.toMillis

@@ -1,8 +1,8 @@
 package com.miassolutions.milkledger.features.note.data.repository
 
 import com.miassolutions.milkledger.features.backup.data.BackupRepository
-import com.miassolutions.milkledger.features.note.data.local.NoteDao
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.core.localdb.note.NoteDao
+import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

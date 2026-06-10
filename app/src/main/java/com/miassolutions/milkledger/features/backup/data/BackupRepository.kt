@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.features.backup.data
 import android.os.Build
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.BuildConfig
-import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.core.localdb.database.AppDatabase
 import com.miassolutions.milkledger.features.backup.drive.DriveBackupFile
 import com.miassolutions.milkledger.features.backup.drive.DriveBackupResult
 import com.miassolutions.milkledger.features.backup.drive.GoogleDriveBackupDataSource

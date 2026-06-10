@@ -3,7 +3,7 @@ package com.miassolutions.milkledger.core.localdb.backup
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.net.Uri
-import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.core.localdb.database.AppDatabase
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

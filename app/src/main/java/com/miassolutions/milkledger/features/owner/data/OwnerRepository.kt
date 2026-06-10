@@ -4,7 +4,7 @@ package com.miassolutions.milkledger.features.owner.data
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.core.contstants.Constants
 import com.miassolutions.milkledger.core.contstants.Constants.OWNER_ACCOUNT_ID
-import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.core.localdb.database.AppDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
 import com.miassolutions.milkledger.core.localdb.account.local.AccountEntity
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity

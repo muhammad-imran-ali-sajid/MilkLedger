@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
-import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.core.localdb.database.AppDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
 import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.features.dashboard.data.DashboardDao
-import com.miassolutions.milkledger.features.note.data.local.NoteDao
+import com.miassolutions.milkledger.core.localdb.note.NoteDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

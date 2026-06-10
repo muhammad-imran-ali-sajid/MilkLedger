@@ -1,6 +1,6 @@
 package com.miassolutions.milkledger.core.localdb.backup
 
-import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.core.localdb.database.AppDatabase
 import javax.inject.Inject
 import javax.inject.Singleton
 

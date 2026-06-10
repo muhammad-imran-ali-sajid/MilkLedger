@@ -12,7 +12,7 @@ import com.miassolutions.milkledger.features.backup.model.dto.ExpenseBackupDto
 import com.miassolutions.milkledger.features.backup.model.dto.LedgerBackupDto
 import com.miassolutions.milkledger.features.backup.model.dto.MilkTransactionBackupDto
 import com.miassolutions.milkledger.features.backup.model.dto.NoteBackupDto
-import com.miassolutions.milkledger.features.note.data.local.NoteEntity
+import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 
 fun MilkTransactionEntity.toBackupDto(): MilkTransactionBackupDto {
     return MilkTransactionBackupDto(

@@ -2,7 +2,7 @@ package com.miassolutions.milkledger.features.sale.data
 
 import androidx.room.Transaction
 import androidx.room.withTransaction
-import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.core.localdb.database.AppDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.localdb.account.local.toDomain
