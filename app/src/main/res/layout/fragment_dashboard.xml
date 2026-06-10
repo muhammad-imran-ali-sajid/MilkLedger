@@ -30,43 +30,43 @@
             android:paddingHorizontal="8dp"
             android:paddingTop="8dp">
 
-            <HorizontalScrollView
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:orientation="horizontal"
-                android:scrollbars="none">
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAccount"
                         style="@style/Widget.MilkLedger.Button.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
                         android:text="Accounts"
                         app:iconPadding="8dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCashFlow"
                         style="@style/Widget.MilkLedger.Button.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
                         android:text="Cash Flow"
                         app:iconGravity="top"
                         app:iconPadding="8dp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnWallet"
                         style="@style/Widget.MilkLedger.Button.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
                         android:text="My Wallet"
                         app:iconGravity="top"
                         app:iconPadding="8dp" />
@@ -74,14 +74,22 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnNote"
                         style="@style/Widget.MilkLedger.Button.Icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:text="My Notes"
                         app:iconGravity="top"
                         app:iconPadding="8dp" />
 
                 </LinearLayout>
-            </HorizontalScrollView>
+
+
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="42dp"
+                app:dividerColor="?attr/colorPrimary"
+                android:layout_height="2dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -132,10 +140,10 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/btnExpense"
-                        android:backgroundTint="?attr/colorExpense"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/colorExpense"
                         android:clickable="true"
                         android:focusable="true">
 
@@ -151,8 +159,8 @@
                                 android:layout_marginBottom="8dp"
                                 android:drawableEnd="@drawable/ic_arrow_forward"
                                 android:drawableTint="?attr/colorOnPrimary"
-                                android:textColor="?attr/colorOnPrimary"
-                                android:text="Expenses" />
+                                android:text="Expenses"
+                                android:textColor="?attr/colorOnPrimary" />
 
                             <TextView
                                 android:id="@+id/tvTotalExpense"
@@ -167,6 +175,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardPersonalExpense"
+                        android:backgroundTint="@color/dashboard_prsnl_exp"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -241,10 +250,10 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardProfit"
+                        android:backgroundTint="@color/dashboard_net_profit"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        >
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
 
@@ -273,6 +282,7 @@
                         android:id="@+id/cardRemaining"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
+                        app:cardBackgroundColor="@color/dashboard_my_profit"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="12dp">
 
@@ -302,11 +312,17 @@
 
             </LinearLayout>
 
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="42dp"
+                app:dividerColor="?attr/colorPrimary"
+                android:layout_height="2dp" />
+
             <TextView
                 style="@style/Text.MilkLedger.SectionHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:text="Milk Overview" />
 

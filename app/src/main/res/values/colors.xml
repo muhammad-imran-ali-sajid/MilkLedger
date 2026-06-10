@@ -36,6 +36,12 @@
     <color name="milk_profit_color">#006E1C</color>
     <color name="milk_date_color">#FF9800</color>
 
+    <color name="dashboard_net_profit">#2B2E7D32</color>
+    <color name="dashboard_prsnl_exp">#2BF57C00</color>
+    <color name="dashboard_my_profit">#2B1565C0</color>
+
+
+
 
     <!-- End -->
 
