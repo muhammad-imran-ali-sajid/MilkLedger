@@ -42,4 +42,19 @@ class BackupFileManager @Inject constructor(
             ?.filter { it.extension == "mlbackup" }
             ?.maxByOrNull { it.lastModified() }
     }
+    
+    fun createDownloadedBackupFile(fileName: String): File {
+        val backupDir = File(context.filesDir, "milk_ledger_downloaded_backups")
+        if (!backupDir.exists()) backupDir.mkdirs()
+        
+        val safeFileName = fileName
+            .replace("/", "_")
+            .replace("\\", "_")
+        
+        return File(backupDir, safeFileName)
+    }
+    
+    fun getBackupFileByPath(path: String): File {
+        return File(path)
+    }
 }

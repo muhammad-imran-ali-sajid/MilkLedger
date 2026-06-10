@@ -117,6 +117,73 @@ class BackupRestoreViewModel @Inject constructor(
             }
         }
     }
+    
+    
+    fun testListDriveBackups() {
+        viewModelScope.launch {
+            try {
+                val backups = backupRepository.listDriveBackups()
+                
+                Log.d("MilkBackup", "Drive backups found: ${backups.size}")
+                
+                backups.forEach { backup ->
+                    Log.d(
+                        "MilkBackup",
+                        "Backup: ${backup.name}, size=${backup.sizeBytes}, id=${backup.fileId}"
+                    )
+                }
+            } catch (e: Exception) {
+                Log.e("MilkBackup", "List Drive backups failed", e)
+            }
+        }
+    }
+    
+    fun testDownloadLatestDriveBackup() {
+        viewModelScope.launch {
+            try {
+                val backups = backupRepository.listDriveBackups()
+                
+                val latest = backups.firstOrNull()
+                if (latest == null) {
+                    Log.e("MilkBackup", "No Drive backup found")
+                    return@launch
+                }
+                
+                val downloadedFile = backupRepository.downloadBackupFromDrive(latest)
+                
+                Log.d("MilkBackup", "Drive backup downloaded")
+                Log.d("MilkBackup", "Name: ${latest.name}")
+                Log.d("MilkBackup", "Path: ${downloadedFile.absolutePath}")
+                Log.d("MilkBackup", "Size: ${downloadedFile.length()} bytes")
+                
+            } catch (e: Exception) {
+                Log.e("MilkBackup", "Download Drive backup failed", e)
+            }
+        }
+    }
+    
+    fun testRestoreLatestDriveBackup() {
+        viewModelScope.launch {
+            try {
+                val backups = backupRepository.listDriveBackups()
+                
+                val latest = backups.firstOrNull()
+                if (latest == null) {
+                    Log.e("MilkBackup", "No Drive backup found")
+                    return@launch
+                }
+                
+                Log.d("MilkBackup", "Restoring Drive backup: ${latest.name}")
+                
+                backupRepository.restoreFromDriveBackup(latest)
+                
+                Log.d("MilkBackup", "Drive restore completed successfully")
+                
+            } catch (e: Exception) {
+                Log.e("MilkBackup", "Drive restore failed", e)
+            }
+        }
+    }
 
     suspend fun backup(uri: Uri): BackupResult {
 

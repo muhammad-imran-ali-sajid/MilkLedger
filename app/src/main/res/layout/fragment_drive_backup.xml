@@ -6,12 +6,21 @@
     android:gravity="center"
     android:orientation="vertical"
     android:padding="24dp">
+
+    <Button
+        android:id="@+id/btnRestoreFromDrive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Test Restore From Drive" />
+
+
     <Button
         android:id="@+id/btnBackupToDrive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Test Db backup" />
+        android:text="Test Backup drive" />
 
     <Button
         android:id="@+id/btnTest"

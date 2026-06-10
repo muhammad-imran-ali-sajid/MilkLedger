@@ -117,6 +117,10 @@ class DriveBackupFragment :
                 )
             }
         }
+        
+        btnRestoreFromDrive.setOnClickListener {
+            viewModel.testRestoreLatestDriveBackup()
+        }
 
 
     }

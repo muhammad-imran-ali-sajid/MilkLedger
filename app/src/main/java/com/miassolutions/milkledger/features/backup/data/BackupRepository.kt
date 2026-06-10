@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.room.withTransaction
 import com.miassolutions.milkledger.BuildConfig
 import com.miassolutions.milkledger.core.localdb.AppDatabase
+import com.miassolutions.milkledger.features.backup.drive.DriveBackupFile
 import com.miassolutions.milkledger.features.backup.drive.DriveBackupResult
 import com.miassolutions.milkledger.features.backup.drive.GoogleDriveBackupDataSource
 import com.miassolutions.milkledger.features.backup.mapper.toBackupDto
@@ -26,6 +27,29 @@ class BackupRepository @Inject constructor(
     private val backupValidator: BackupValidator,
     private val googleDriveBackupDataSource: GoogleDriveBackupDataSource
 ) {
+    
+    suspend fun restoreFromDriveBackup(file: DriveBackupFile) {
+        val downloadedFile = downloadBackupFromDrive(file)
+        
+        restoreFromLocalBackupFile(downloadedFile)
+    }
+    
+    suspend fun listDriveBackups(): List<DriveBackupFile> {
+        return withContext(Dispatchers.IO) {
+            googleDriveBackupDataSource.listBackupFiles()
+        }
+    }
+    
+    suspend fun downloadBackupFromDrive(file: DriveBackupFile): File {
+        return withContext(Dispatchers.IO) {
+            val destination = backupFileManager.createDownloadedBackupFile(file.name)
+            
+            googleDriveBackupDataSource.downloadBackupFile(
+                fileId = file.fileId,
+                destinationFile = destination
+            )
+        }
+    }
     
     suspend fun createAndUploadBackupToDrive(): DriveBackupResult {
         val localBackupFile = createLocalBackupFile()

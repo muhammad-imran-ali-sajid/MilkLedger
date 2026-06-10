@@ -73,4 +73,54 @@ class GoogleDriveBackupDataSource @Inject constructor(
         
         return folder.id
     }
+    
+    fun listBackupFiles(): List<DriveBackupFile> {
+        val drive = driveServiceFactory.createDriveService()
+        
+        val folderId = findOrCreateBackupFolder(drive)
+        
+        val query = """
+        '$folderId' in parents
+        and trashed = false
+        and name contains '.mlbackup'
+    """.trimIndent()
+        
+        val result = drive.files()
+            .list()
+            .setQ(query)
+            .setSpaces("drive")
+            .setOrderBy("modifiedTime desc")
+            .setFields("files(id, name, size, createdTime, modifiedTime, webViewLink)")
+            .execute()
+        
+        return result.files.map { file ->
+            DriveBackupFile(
+                fileId = file.id,
+                name = file.name,
+                sizeBytes = file.size.toLong(),
+                createdTimeMillis = file.createdTime?.value,
+                modifiedTimeMillis = file.modifiedTime?.value,
+                webViewLink = file.webViewLink
+            )
+        }
+    }
+    
+    fun downloadBackupFile(
+        fileId: String,
+        destinationFile: java.io.File
+    ): java.io.File {
+        val drive = driveServiceFactory.createDriveService()
+        
+        destinationFile.outputStream().use { outputStream ->
+            drive.files()
+                .get(fileId)
+                .executeMediaAndDownloadTo(outputStream)
+        }
+        
+        return destinationFile
+    }
+    
+    
+    
+    
 }
