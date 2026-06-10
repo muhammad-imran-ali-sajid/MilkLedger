@@ -39,7 +39,7 @@ class DailyBackupWorker @AssistedInject constructor(
             
             Result.success()
         } catch (e: Exception) {
-            Log.e("MilkBackup", "Auto backup failed", e)
+            Log.e("MilkBackup", "Auto backup failed. attempt=$runAttemptCount", e)
             
             backupPrefs.markBackupFailed(
                 e.message ?: "Unknown backup error"

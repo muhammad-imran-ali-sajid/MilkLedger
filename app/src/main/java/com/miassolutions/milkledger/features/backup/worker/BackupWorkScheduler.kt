@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.features.backup.worker
 
 import android.content.Context
 import android.util.Log
+import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -29,6 +30,11 @@ class BackupWorkScheduler @Inject constructor(
             TimeUnit.HOURS
         )
             .setConstraints(constraints)
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                30,
+                TimeUnit.SECONDS
+            )
             .addTag(TAG_DAILY_BACKUP)
             .build()
         
@@ -44,6 +50,11 @@ class BackupWorkScheduler @Inject constructor(
         Log.d("MilkBackup", "Enqueuing test backup worker...")
         
         val request = OneTimeWorkRequestBuilder<DailyBackupWorker>()
+            .setBackoffCriteria(
+                BackoffPolicy.EXPONENTIAL,
+                30,
+                TimeUnit.SECONDS
+            )
             .addTag("milk_ledger_backup_test")
             .build()
         
