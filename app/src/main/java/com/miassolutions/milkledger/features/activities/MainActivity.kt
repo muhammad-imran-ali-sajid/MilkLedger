@@ -20,6 +20,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
+import com.miassolutions.milkledger.features.backup.worker.BackupWorkScheduler
 import com.miassolutions.milkledger.features.settings.ThemeManager
 import com.miassolutions.milkledger.features.settings.ThemePreferences
 import com.miassolutions.milkledger.utils.premiumfeatures.RemoteConfigManager
@@ -29,31 +30,36 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
+    
     @Inject
     lateinit var remote: RemoteConfigManager
-
+    
+    @Inject
+    lateinit var backupWorkScheduler: BackupWorkScheduler
+    
     private val themePreferences by lazy {
         ThemePreferences(this)
     }
-
+    
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-
+    
     private lateinit var navController: NavController
     private val viewModel: AppStartViewModel by viewModels()
     private lateinit var appBarConfiguration: AppBarConfiguration
-
-
+    
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        
+        backupWorkScheduler.scheduleDailyBackup()
+        
         lifecycleScope.launch {
             themePreferences.themeFlow.collect { theme ->
                 ThemeManager.apply(theme)
             }
         }
-
-
+        
+        
         // -------------------- Remote config / force update --------------------
         lifecycleScope.launch {
             try {
@@ -72,28 +78,28 @@ class MainActivity : AppCompatActivity() {
                 Log.e("FeatureFlags", "Failed to refresh flags", e)
             }
         }
-
+        
         setContentView(binding.root)
         applyWindowInsets()
         setupDrawerHeader()
-
+        
         // -------------------- Toolbar --------------------
         setSupportActionBar(binding.toolbar)
-
+        
         // -------------------- NavController --------------------
         val navHost =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHost.navController
-
+        
         val navGraph = navController.navInflater.inflate(R.navigation.main_nav_graph)
-
+        
         lifecycleScope.launch {
             viewModel.startDestination.collect { destination ->
                 navGraph.setStartDestination(destination)
                 navController.graph = navGraph
             }
         }
-
+        
         // -------------------- AppBarConfiguration --------------------
         appBarConfiguration = AppBarConfiguration(
             setOf(
@@ -103,39 +109,39 @@ class MainActivity : AppCompatActivity() {
             ),
             binding.drawerLayout
         )
-
+        
         // Toolbar + Drawer + NavController
         NavigationUI.setupActionBarWithNavController(
             this,
             navController,
             appBarConfiguration
         )
-
+        
         setupDrawerNavigation()
     }
-
-
+    
+    
     private fun setupDrawerHeader() {
         val role = SharedPrefsHelper.getUserRole(this)
         val email = SharedPrefsHelper.getUserMail(this)
-
+        
         val headerBinding =
             DrawerHeaderBinding.bind(binding.navigationView.getHeaderView(0))
-
+        
         headerBinding.tvVersion.text = "${role.uppercase()} Version"
         headerBinding.tvEmail.text = email
     }
-
+    
     private fun setupDrawerNavigation() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-
+                
                 R.id.action_logout -> {
                     binding.drawerLayout.closeDrawers()
                     logoutUser()
                     true
                 }
-
+                
                 else -> {
                     val handled =
                         NavigationUI.onNavDestinationSelected(menuItem, navController)
@@ -145,12 +151,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
+    
+    
     override fun onSupportNavigateUp(): Boolean {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
     }
-
+    
     private fun logoutUser() {
         MaterialAlertDialogBuilder(this)
             .setTitle("Logout")
@@ -158,7 +164,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Yes") { _, _ ->
                 FirebaseAuth.getInstance().signOut()
                 SharedPrefsHelper.clearUserRole(this)
-
+                
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.flags =
                     Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -168,8 +174,8 @@ class MainActivity : AppCompatActivity() {
             .setNegativeButton("Cancel", null)
             .show()
     }
-
-
+    
+    
     private fun applyWindowInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -177,12 +183,12 @@ class MainActivity : AppCompatActivity() {
             insets
         }
     }
-
-
+    
+    
     override fun attachBaseContext(newBase: Context) {
         val config = newBase.resources.configuration
         config.fontScale = 1.0f
         super.attachBaseContext(newBase.createConfigurationContext(config))
     }
-
+    
 }

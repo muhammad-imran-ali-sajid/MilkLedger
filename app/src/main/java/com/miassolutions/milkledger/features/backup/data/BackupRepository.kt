@@ -25,7 +25,8 @@ class BackupRepository @Inject constructor(
     private val database: AppDatabase,
     private val backupFileManager: BackupFileManager,
     private val backupValidator: BackupValidator,
-    private val googleDriveBackupDataSource: GoogleDriveBackupDataSource
+    private val googleDriveBackupDataSource: GoogleDriveBackupDataSource,
+    private val backupPrefs: BackupPrefs
 ) {
     
     suspend fun restoreFromDriveBackup(file: DriveBackupFile) {
@@ -51,12 +52,25 @@ class BackupRepository @Inject constructor(
         }
     }
     
+  
+    
     suspend fun createAndUploadBackupToDrive(): DriveBackupResult {
         val localBackupFile = createLocalBackupFile()
         
         return withContext(Dispatchers.IO) {
-            googleDriveBackupDataSource.uploadBackupFile(localBackupFile)
+            val result = googleDriveBackupDataSource.uploadBackupFile(localBackupFile)
+            
+            backupPrefs.markBackupSuccess(
+                timeMillis = System.currentTimeMillis(),
+                fileName = result.fileName
+            )
+            
+            result
         }
+    }
+    
+    fun markDataChanged() {
+        backupPrefs.markDataChanged()
     }
     
     suspend fun createBackupObject(): MilkLedgerBackup {

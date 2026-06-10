@@ -8,6 +8,13 @@
     android:padding="24dp">
 
     <Button
+        android:id="@+id/btnWorker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Test Worker" />
+
+    <Button
         android:id="@+id/btnRestoreFromDrive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,16 +1,19 @@
 package com.miassolutions.milkledger.features.backup
 
 import android.app.Activity
-import android.widget.Toast
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import com.miassolutions.milkledger.core.localdb.backup.BackupConfig
 import com.miassolutions.milkledger.core.localdb.backup.BackupResult
 import com.miassolutions.milkledger.core.localdb.backup.RestartHelper
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentDriveBackupBinding
 import com.miassolutions.milkledger.features.backup.drive.GoogleDriveAuthManager
+import com.miassolutions.milkledger.features.backup.worker.BackupWorkScheduler
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -21,6 +24,9 @@ class DriveBackupFragment :
     BaseFragment<FragmentDriveBackupBinding>(FragmentDriveBackupBinding::inflate) {
 
     private val viewModel: BackupRestoreViewModel by viewModels()
+    
+    @Inject
+    lateinit var backupWorkScheduler: BackupWorkScheduler
     
     @Inject
     lateinit var googleDriveAuthManager: GoogleDriveAuthManager
@@ -94,6 +100,11 @@ class DriveBackupFragment :
 
     override fun setupListeners() = with(binding) {
         super.setupListeners()
+        
+        btnWorker.setOnClickListener {
+        
+            backupWorkScheduler.runBackupNowForTest()
+        }
 
         btnBackup.setOnClickListener {
             val fileName = "${BackupConfig.BACKUP_PREFIX}${System.currentTimeMillis()}.db"

@@ -14,6 +14,7 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
+import com.miassolutions.milkledger.features.backup.data.BackupRepository
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import com.miassolutions.milkledger.features.purchase.model.UpdatePurchaseRequest
@@ -31,6 +32,7 @@ class MilkPurchaseRepository @Inject constructor(
     private val accountDao: AccountDao,
     private val milkDao: MilkDao,
     private val ledgerDao: LedgerDao,
+    private val backupRepository: BackupRepository,
     private val db: AppDatabase
 ) {
 
@@ -84,6 +86,7 @@ class MilkPurchaseRepository @Inject constructor(
             milkDao.softDeleteMilkTransaction(purchaseId, currentTime)
             ledgerDao.softDeleteLedgerByReference(purchaseId, currentTime)
         }
+        backupRepository.markDataChanged()
     }
 
 
@@ -156,6 +159,7 @@ class MilkPurchaseRepository @Inject constructor(
                     ))
             }
         }
+        backupRepository.markDataChanged()
     }
 
     // ✅ UPDATE PURCHASE
@@ -248,6 +252,8 @@ class MilkPurchaseRepository @Inject constructor(
                 if (paymentLedger != null) ledgerDao.delete(paymentLedger)
             }
         }
+        
+        backupRepository.markDataChanged()
     }
 
 }

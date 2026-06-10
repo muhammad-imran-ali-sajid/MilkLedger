@@ -5,12 +5,16 @@ import androidx.lifecycle.lifecycleScope
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentSettingsBinding
+import com.miassolutions.milkledger.features.backup.worker.BackupWorkScheduler
 import dagger.hilt.android.AndroidEntryPoint
+import jakarta.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingsFragment :
     BaseFragment<FragmentSettingsBinding>(FragmentSettingsBinding::inflate) {
+    
+   
 
     private val themePreferences by lazy {
         ThemePreferences(requireContext())

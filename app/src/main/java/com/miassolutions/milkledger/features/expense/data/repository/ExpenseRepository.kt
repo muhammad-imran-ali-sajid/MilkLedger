@@ -12,6 +12,7 @@ import com.miassolutions.milkledger.core.localdb.expense.ExpenseDao
 import com.miassolutions.milkledger.core.localdb.ledger.FinancialLedgerEntity
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.ledger.LedgerEntryType
+import com.miassolutions.milkledger.features.backup.data.BackupRepository
 import com.miassolutions.milkledger.features.expense.data.mapper.toDomain
 import com.miassolutions.milkledger.features.expense.data.mapper.toEntity
 import com.miassolutions.milkledger.features.expense.domain.Expense
@@ -24,6 +25,7 @@ class ExpenseRepository @Inject constructor(
     private val expenseDao: ExpenseDao,
     private val ledgerDao: LedgerDao,
     private val accountDao: AccountDao,
+    private val backupRepository: BackupRepository,
     private val db: AppDatabase
 ) {
 
@@ -104,6 +106,7 @@ class ExpenseRepository @Inject constructor(
             }
             ledgerDao.insertAll(ledgerEntries)
         }
+        backupRepository.markDataChanged()
     }
 
     // ------------------------------------------------
@@ -145,6 +148,7 @@ class ExpenseRepository @Inject constructor(
             )
             ledgerDao.insert(ledgerEntry)
         }
+        backupRepository.markDataChanged()
     }
 
     // ------------------------------------------------
@@ -192,6 +196,7 @@ class ExpenseRepository @Inject constructor(
                 ledgerDao.update(newLedgerEntry)
             }
         }
+        backupRepository.markDataChanged()
     }
 
     // ... (Baki functions same rahenge Delete aur Read walay) ...
@@ -204,6 +209,7 @@ class ExpenseRepository @Inject constructor(
             expenseDao.softDeleteExpense(expenseId, currentTime)
             ledgerDao.softDeleteByReference(expenseId, currentTime)
         }
+        backupRepository.markDataChanged()
     }
 
     // ------------------------------------------------

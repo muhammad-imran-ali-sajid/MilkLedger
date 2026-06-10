@@ -13,6 +13,7 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.milk.TransactionType
 import com.miassolutions.milkledger.features.account.domain.Account
+import com.miassolutions.milkledger.features.backup.data.BackupRepository
 import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import com.miassolutions.milkledger.features.sale.model.UpdateSaleRequest
@@ -30,40 +31,42 @@ class MilkSaleRepository @Inject constructor(
     private val milkDao: MilkDao,
     private val ledgerDao: LedgerDao,
     private val accountDao: AccountDao,
+    private val backupRepository: BackupRepository,
     private val db: AppDatabase
 ) {
-
+    
     // ... (Getters bilkul theek hain) ...
-
+    
     fun getCustomerSummary(accountId: String, start: Long, end: Long) =
         milkDao.getCustomerSummary(accountId, start, end)
-
+    
     fun getCustomerHistory(accountId: String, start: Long, end: Long) =
         milkDao.getCustomerSalesHistory(accountId, start, end)
-
+    
     fun getSalesByDate(date: Long) = milkDao.getMilkSalesByDate(date)
     fun getAccountBalance(accountId: String) = ledgerDao.getAccountBalance(accountId)
     fun getGlobalSaleStats(start: Long, end: Long) = milkDao.getGlobalSaleStats(start, end)
     suspend fun getSaleById(id: String) = milkDao.getSaleDetailById(id)
-
+    
     fun getCustomers(): Flow<List<Account>> {
         return accountDao.getAccountsByType(AccountType.CUSTOMER).map { list ->
             list.filter { it.isActive }.map { it.toDomain() }
         }
     }
-
+    
     @Transaction
     suspend fun deleteSale(saleId: String) {
         val currentTime = System.currentTimeMillis()
-
+        
         db.withTransaction {
             milkDao.softDeleteMilkTransaction(saleId, currentTime)
             ledgerDao.softDeleteLedgerByReference(saleId, currentTime)
         }
-
+        backupRepository.markDataChanged()
+        
     }
-
-
+    
+    
     // ✅ SAVE SALE
     suspend fun saveMilkSale(
         saleDate: LocalDate,
@@ -77,25 +80,25 @@ class MilkSaleRepository @Inject constructor(
     ) {
         db.withTransaction {
             val customerName = accountDao.getAccountById(accountId)?.name ?: "Unknown Customer"
-
+            
             val netQuantity = volume - deduction
             val totalPricePaisa =
                 MilkCalculationUtils.calculateCustomerPrice(volume, deduction, rate).toLongPaisa()
-
+            
             // 1. Save Milk (Use Sale Date for Ledger, PaymentDate for UI)
             val milkEntity = MilkTransactionEntity(
                 accountId = accountId,
                 dateMillis = saleDate.toMillis(),
-
+                
                 // 🔥 NEW: Save User Selected Date
                 paymentDateMillis = paymentDate?.toMillis(),
-
+                
                 type = TransactionType.SALE,
                 volume = volume, deduction = deduction, quantity = netQuantity,
                 rateUsed = rate, totalAmount = totalPricePaisa, notes = note
             )
             milkDao.insert(milkEntity)
-
+            
             // 2. Save Ledger Debit (Bill)
             ledgerDao.insert(
                 FinancialLedgerEntity(
@@ -107,7 +110,7 @@ class MilkSaleRepository @Inject constructor(
                     note = "Sale: $volume - $deduction = $netQuantity L"
                 )
             )
-
+            
             // 3. Save Payment (Cash Received)
             if (amountPaid > 0) {
                 // 🔥 Fix: Null Safe check
@@ -116,12 +119,12 @@ class MilkSaleRepository @Inject constructor(
                 } else {
                     "$customerName"
                 }
-
+                
                 ledgerDao.insert(
                     FinancialLedgerEntity(
                         // 🟢 LEDGER: Sale Date par hi rahega
                         dateMillis = saleDate.toMillis(),
-
+                        
                         accountId = accountId,
                         type = LedgerEntryType.CASH_RECEIVED,
                         referenceId = milkEntity.milkTransId,
@@ -131,8 +134,9 @@ class MilkSaleRepository @Inject constructor(
                 )
             }
         }
+        backupRepository.markDataChanged()
     }
-
+    
     // ✅ UPDATE SALE
     suspend fun updateMilkSale(request: UpdateSaleRequest) {
         db.withTransaction {
@@ -142,25 +146,25 @@ class MilkSaleRepository @Inject constructor(
                 request.deduction,
                 request.rate
             ).toLongPaisa()
-
+            
             val oldSale =
                 milkDao.getMilkTransactionById(request.saleId) ?: throw Exception("Sale not found")
             val customerName =
                 accountDao.getAccountById(oldSale.accountId)?.name ?: "Unknown Customer"
-
+            
             // 1. Update Milk Entity
             val updatedMilkEntity = oldSale.copy(
                 dateMillis = request.date.toMillis(),
-
+                
                 // 🔥 NEW: Update User Selected Date
                 paymentDateMillis = request.paymentDate?.toMillis(),
-
+                
                 volume = request.volume, deduction = request.deduction, quantity = netQuantity,
                 rateUsed = request.rate, totalAmount = totalPricePaisa, notes = request.note,
                 updatedAtMillis = System.currentTimeMillis()
             )
             milkDao.update(updatedMilkEntity)
-
+            
             // 2. Update Ledger Debit
             val saleLedgerEntry =
                 ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.MILK_SALE)
@@ -174,11 +178,11 @@ class MilkSaleRepository @Inject constructor(
                     )
                 )
             }
-
+            
             // 3. Update Payment (Cash Received)
             val paymentLedgerEntry =
                 ledgerDao.getLedgerByReferenceId(request.saleId, LedgerEntryType.CASH_RECEIVED)
-
+            
             if (request.amountPaid > 0) {
                 // 🔥 Fix: Null Safe check
                 val finalNote =
@@ -187,7 +191,7 @@ class MilkSaleRepository @Inject constructor(
                     } else {
                         "$customerName"
                     }
-
+                
                 if (paymentLedgerEntry != null) {
                     // Update Existing
                     ledgerDao.update(
@@ -216,5 +220,6 @@ class MilkSaleRepository @Inject constructor(
                 if (paymentLedgerEntry != null) ledgerDao.delete(paymentLedgerEntry)
             }
         }
+        backupRepository.markDataChanged()
     }
 }
