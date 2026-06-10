@@ -19,6 +19,77 @@ class BackupRestoreViewModel @Inject constructor(
     private val backupPrefs: BackupPrefs
 ) : ViewModel() {
     
+    private var pendingLocalBackupBytes: ByteArray? = null
+    
+    suspend fun createLocalBackupBytesForExport(): ByteArray {
+        return backupRepository.createLocalBackupBytes()
+    }
+    
+    fun restoreLocalBackupFromUri(
+        uri: android.net.Uri,
+        contentResolver: android.content.ContentResolver,
+        cacheDir: java.io.File
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isRestoreRunning = true,
+                message = null,
+                error = null
+            )
+            
+            try {
+                val restoredFile = backupRepository.copyUriToTempBackupFile(
+                    uri = uri,
+                    contentResolver = contentResolver,
+                    cacheDir = cacheDir
+                )
+                
+                backupRepository.restoreFromLocalBackupFile(restoredFile)
+                
+                _uiState.value = _uiState.value.copy(
+                    isRestoreRunning = false,
+                    message = "Local backup restored successfully"
+                )
+                
+                loadBackupStatus()
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isRestoreRunning = false,
+                    error = e.message ?: "Local restore failed"
+                )
+            }
+        }
+    }
+    
+    fun createLocalBackupForExport(
+        onReady: (fileName: String, bytes: ByteArray) -> Unit
+    ) {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isBackupRunning = true,
+                message = null,
+                error = null
+            )
+            
+            try {
+                val bytes = backupRepository.createLocalBackupBytes()
+                val fileName = backupRepository.generateBackupFileNameForExport()
+                
+                _uiState.value = _uiState.value.copy(
+                    isBackupRunning = false,
+                    message = "Local backup created"
+                )
+                
+                onReady(fileName, bytes)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(
+                    isBackupRunning = false,
+                    error = e.message ?: "Failed to create local backup"
+                )
+            }
+        }
+    }
+    
     private val _uiState = MutableStateFlow(BackupStatusUiState())
     val uiState: StateFlow<BackupStatusUiState> = _uiState.asStateFlow()
     

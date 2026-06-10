@@ -54,6 +54,15 @@ class BackupFileManager @Inject constructor(
         return File(backupDir, safeFileName)
     }
     
+    fun generateBackupFileName(timeMillis: Long = System.currentTimeMillis()): String {
+        val timestamp = SimpleDateFormat(
+            "yyyy_MM_dd_HH_mm_ss",
+            Locale.US
+        ).format(Date(timeMillis))
+        
+        return "milk_ledger_backup_$timestamp.mlbackup"
+    }
+    
     fun getBackupFileByPath(path: String): File {
         return File(path)
     }

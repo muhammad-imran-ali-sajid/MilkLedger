@@ -29,6 +29,61 @@ class BackupRepository @Inject constructor(
     private val backupPrefs: BackupPrefs
 ) {
     
+    suspend fun createLocalBackupBytes(): ByteArray {
+        val backupWithoutChecksum = createBackupObject()
+        
+        val jsonWithoutChecksum = BackupJson.json.encodeToString(
+            MilkLedgerBackup.serializer(),
+            backupWithoutChecksum.copy(checksum = "")
+        )
+        
+        val checksum = BackupChecksum.sha256(jsonWithoutChecksum)
+        
+        val backupWithChecksum = backupWithoutChecksum.copy(
+            checksum = checksum
+        )
+        
+        val finalJson = BackupJson.json.encodeToString(
+            MilkLedgerBackup.serializer(),
+            backupWithChecksum
+        )
+        
+        return BackupCompressor.gzip(finalJson)
+    }
+    
+    suspend fun createLocalBackupFile(): File {
+        val backupBytes = createLocalBackupBytes()
+        val now = System.currentTimeMillis()
+        
+        return backupFileManager.saveLocalBackupFile(
+            bytes = backupBytes,
+            createdAtMillis = now
+        )
+    }
+    
+    fun generateBackupFileNameForExport(): String {
+        return backupFileManager.generateBackupFileName()
+    }
+    
+    fun copyUriToTempBackupFile(
+        uri: android.net.Uri,
+        contentResolver: android.content.ContentResolver,
+        cacheDir: File
+    ): File {
+        val tempFile = File(
+            cacheDir,
+            "restore_temp_${System.currentTimeMillis()}.mlbackup"
+        )
+        
+        contentResolver.openInputStream(uri)?.use { input ->
+            tempFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        } ?: error("Unable to open selected backup file")
+        
+        return tempFile
+    }
+    
     suspend fun restoreFromDriveBackup(file: DriveBackupFile) {
         val downloadedFile = downloadBackupFromDrive(file)
         
@@ -53,21 +108,7 @@ class BackupRepository @Inject constructor(
     }
     
   
-//
-//    suspend fun createAndUploadBackupToDrive(): DriveBackupResult {
-//        val localBackupFile = createLocalBackupFile()
-//
-//        return withContext(Dispatchers.IO) {
-//            val result = googleDriveBackupDataSource.uploadBackupFile(localBackupFile)
-//
-//            backupPrefs.markBackupSuccess(
-//                timeMillis = System.currentTimeMillis(),
-//                fileName = result.fileName
-//            )
-//
-//            result
-//        }
-//    }
+
     
     fun markDataChanged() {
         backupPrefs.markDataChanged()
@@ -111,32 +152,7 @@ class BackupRepository @Inject constructor(
         )
     }
     
-    suspend fun createLocalBackupFile(): File {
-        val backupWithoutChecksum = createBackupObject()
-        
-        val jsonWithoutChecksum = BackupJson.json.encodeToString(
-            MilkLedgerBackup.serializer(),
-            backupWithoutChecksum.copy(checksum = "")
-        )
-        
-        val checksum = BackupChecksum.sha256(jsonWithoutChecksum)
-        
-        val backupWithChecksum = backupWithoutChecksum.copy(
-            checksum = checksum
-        )
-        
-        val finalJson = BackupJson.json.encodeToString(
-            MilkLedgerBackup.serializer(),
-            backupWithChecksum
-        )
-        
-        val compressedBytes = BackupCompressor.gzip(finalJson)
-        
-        return backupFileManager.saveLocalBackupFile(
-            bytes = compressedBytes,
-            createdAtMillis = backupWithChecksum.metadata.createdAtMillis
-        )
-    }
+   
     
     fun readBackupFromFile(file: File): MilkLedgerBackup {
         val compressedBytes = file.readBytes()
@@ -153,6 +169,9 @@ class BackupRepository @Inject constructor(
         
         backupValidator.validateBeforeRestore(backup)
         
+        // Emergency local backup before replacing current DB
+        createLocalBackupFile()
+        
         val accounts = backup.accounts.map { it.toEntity() }
         val milkTransactions = backup.milkTransactions.map { it.toEntity() }
         val ledgerEntries = backup.ledgerEntries.map { it.toEntity() }
@@ -160,14 +179,12 @@ class BackupRepository @Inject constructor(
         val notes = backup.notes.map { it.toEntity() }
         
         database.withTransaction {
-            // Clear child/dependent tables first
             database.noteDao().clearNotesForRestore()
             database.ledgerDao().clearLedgerEntriesForRestore()
             database.milkDao().clearMilkTransactionsForRestore()
             database.expenseDao().clearExpensesForRestore()
             database.accountDao().clearAccountsForRestore()
             
-            // Restore parent/base tables first
             database.accountDao().insertAccountsFromBackup(accounts)
             database.milkDao().insertMilkTransactionsFromBackup(milkTransactions)
             database.ledgerDao().insertLedgerEntriesFromBackup(ledgerEntries)

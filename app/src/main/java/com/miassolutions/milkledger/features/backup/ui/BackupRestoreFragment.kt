@@ -38,6 +38,45 @@ class BackupRestoreFragment :
     
     private var pendingDriveAction: PendingDriveAction? = null
     
+    private var pendingExportBytes: ByteArray? = null
+    
+    private val createLocalBackupLauncher =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
+            if (uri == null) {
+                Toast.makeText(requireContext(), "Local backup cancelled", Toast.LENGTH_SHORT).show()
+                pendingExportBytes = null
+                return@registerForActivityResult
+            }
+            
+            val bytes = pendingExportBytes
+            if (bytes == null) {
+                Toast.makeText(requireContext(), "Backup data not available", Toast.LENGTH_SHORT).show()
+                return@registerForActivityResult
+            }
+            
+            try {
+                requireContext().contentResolver.openOutputStream(uri)?.use { output ->
+                    output.write(bytes)
+                }
+                
+                pendingExportBytes = null
+                
+                Snackbar.make(
+                    binding.root,
+                    "Local backup file saved successfully",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            } catch (e: Exception) {
+                pendingExportBytes = null
+                
+                Snackbar.make(
+                    binding.root,
+                    e.message ?: "Failed to save local backup",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+    
     private val googleSignInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -55,6 +94,16 @@ class BackupRestoreFragment :
             }
             
             pendingDriveAction = null
+        }
+    
+    private val restoreLocalBackupLauncher =
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+            if (uri == null) {
+                Toast.makeText(requireContext(), "Restore cancelled", Toast.LENGTH_SHORT).show()
+                return@registerForActivityResult
+            }
+            
+            showLocalRestoreConfirmation(uri)
         }
     
     
@@ -89,6 +138,23 @@ class BackupRestoreFragment :
         binding.btnRefresh.setOnClickListener {
             ensureDrivePermissionThen(PendingDriveAction.LOAD_STATUS)
         }
+        
+        binding.btnCreateLocalBackup.setOnClickListener {
+            viewModel.createLocalBackupForExport { fileName, bytes ->
+                pendingExportBytes = bytes
+                createLocalBackupLauncher.launch(fileName)
+            }
+        }
+        
+        binding.btnRestoreLocalBackup.setOnClickListener {
+            restoreLocalBackupLauncher.launch(
+                arrayOf(
+                    "application/octet-stream",
+                    "application/gzip",
+                    "*/*"
+                )
+            )
+        }
     }
     
     private fun observeState() {
@@ -103,7 +169,8 @@ class BackupRestoreFragment :
     
     private fun renderState(state: BackupStatusUiState) {
         val busy = state.isBusy
-        
+        binding.btnCreateLocalBackup.isEnabled = !busy
+        binding.btnRestoreLocalBackup.isEnabled = !busy
         binding.progressBar.isVisible = busy
         binding.btnBackupNow.isEnabled = !busy
         binding.btnRefresh.isEnabled = !busy
@@ -217,6 +284,27 @@ class BackupRestoreFragment :
         } else {
             String.format(Locale.getDefault(), "%.0f KB", kb)
         }
+    }
+    
+    private fun showLocalRestoreConfirmation(uri: android.net.Uri) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Restore local backup?")
+            .setMessage(
+                """
+            This will replace the current local data with the selected backup file.
+            
+            Continue only if this backup file is trusted and belongs to this app.
+            """.trimIndent()
+            )
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Restore") { _, _ ->
+                viewModel.restoreLocalBackupFromUri(
+                    uri = uri,
+                    contentResolver = requireContext().contentResolver,
+                    cacheDir = requireContext().cacheDir
+                )
+            }
+            .show()
     }
     
     
