@@ -86,7 +86,7 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/actionContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -96,28 +96,40 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnBackupNow"
                 android:layout_width="0dp"
-                android:textAppearance="?attr/textAppearanceLabelSmall"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:text="Backup Now"
+                android:textSize="18sp"
+                app:cornerRadius="12dp"
                 app:icon="@drawable/ic_backup"
-                app:iconGravity="textStart" />
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="@+id/btnRefresh"
+                app:layout_constraintEnd_toStartOf="@+id/btnRefresh"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/btnRefresh" />
 
-            <Space
-                android:layout_width="12dp"
-                android:layout_height="1dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRefresh"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="70dp"
+                android:layout_marginStart="4dp"
                 android:layout_weight="1"
                 android:text="Refresh"
+                android:textSize="18sp"
+                app:cornerRadius="12dp"
                 app:icon="@drawable/baseline_refresh_24"
-                app:iconGravity="textStart" />
+                app:iconGravity="textStart"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/btnBackupNow"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -178,7 +190,8 @@
             app:cardCornerRadius="18dp"
             app:cardElevation="0dp"
             app:strokeWidth="1dp"
-            app:strokeColor="?attr/colorOutlineVariant">
+            app:cardBackgroundColor="#2B64FFDA"
+            app:strokeColor="#F664FFDA">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -201,7 +214,7 @@
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
@@ -211,9 +224,15 @@
                         android:id="@+id/btnCreateLocalBackup"
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginEnd="4dp"
                         android:layout_weight="1"
-                        android:text="Create File" />
+                        android:text="Create File"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/btnRestoreLocalBackup"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/btnRestoreLocalBackup" />
 
                     <Space
                         android:layout_width="12dp"
@@ -224,10 +243,16 @@
                         style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
                         android:layout_weight="1"
-                        android:text="Restore File" />
+                        android:text="Restore File"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toEndOf="@+id/btnCreateLocalBackup"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
 
