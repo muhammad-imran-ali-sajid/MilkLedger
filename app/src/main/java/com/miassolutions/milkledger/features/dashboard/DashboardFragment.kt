@@ -149,6 +149,7 @@ class DashboardFragment :
                 tvTotalExpense.text = state.totalExpenses.toPrice()
                 tvNetProfit.text = state.grossProfit.toPrice()
                 tvPersonalExpense.text = state.totalPersonalExpense.toPrice()
+                tvRemainingBalance.text = state.remainingBalance.toPrice()
 
                 val profitColor = if (state.grossProfit >= 0) R.color.md_theme_primary else R.color.md_theme_error
                 tvNetProfit.setTextColor(ContextCompat.getColor(requireContext(), profitColor))

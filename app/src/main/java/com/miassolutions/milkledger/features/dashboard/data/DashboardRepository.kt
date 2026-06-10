@@ -32,6 +32,9 @@ class DashboardRepository @Inject constructor(
 
 
             val grossProfit = sale.totalAmount - (purchase.totalAmount + expenseTotal)
+            
+            // 🔥 NAYA: Remaining Balance (Pocket Cash)
+            val calculatedRemaining = grossProfit - personalExp
 
             // 2. Map to UI State
             DashboardUiState(
@@ -43,6 +46,7 @@ class DashboardRepository @Inject constructor(
                 totalExpenses = expenseTotal,
                 grossProfit = grossProfit,
                 totalPersonalExpense = personalExp,
+                remainingBalance = calculatedRemaining,
                 // Quantities
                 milkPurchasedQty = purchase.totalVolume,
                 milkSoldQty = sale.totalVolume,

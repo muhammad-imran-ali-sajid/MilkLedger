@@ -22,6 +22,7 @@ data class DashboardUiState(
     val totalExpenses: Long = 0,
     val grossProfit: Long = 0,
     val totalPersonalExpense: Long = 0,
+    val remainingBalance: Long = 0,
 
     // Milk Quantities
     val milkPurchasedQty: Double = 0.0,
