@@ -1,5 +1,7 @@
 package com.miassolutions.milkledger.features.dashboard.data
 
+import com.miassolutions.milkledger.core.contstants.Constants
+import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.features.dashboard.DashboardUiState
 import com.miassolutions.milkledger.utils.extensions.toRupees
 import kotlinx.coroutines.flow.Flow
@@ -7,15 +9,17 @@ import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 class DashboardRepository @Inject constructor(
-    private val dashboardDao: DashboardDao
+    private val dashboardDao: DashboardDao,
+    private val ledgerDao: LedgerDao
 ) {
 
     fun getDashboardData(start: Long, end: Long): Flow<DashboardUiState> {
         return combine(
             dashboardDao.getPurchaseStats(start, end),
             dashboardDao.getSaleStats(start, end),
-            dashboardDao.getBusinessExpenseTotal(start, end)
-        ) { purchase, sale, expenseTotal ->
+            dashboardDao.getBusinessExpenseTotal(start, end),
+            ledgerDao.getPersonalExpenseSum(start, end, Constants.PREFIX_EXPENSE)
+        ) { purchase, sale, expenseTotal,personalExp ->
 
             // 1. Calculations
             val avgPP = if (purchase.totalVolume > 0)
@@ -38,7 +42,7 @@ class DashboardRepository @Inject constructor(
                 totalSales = sale.totalAmount,
                 totalExpenses = expenseTotal,
                 grossProfit = grossProfit,
-
+                totalPersonalExpense = personalExp,
                 // Quantities
                 milkPurchasedQty = purchase.totalVolume,
                 milkSoldQty = sale.totalVolume,

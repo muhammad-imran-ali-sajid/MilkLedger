@@ -165,6 +165,35 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardPersonalExpense"
+                        style="@style/Widget.MilkLedger.DashboardCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/Text.MilkLedger.DashboardLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:text="Personal Exp." />
+
+                            <TextView
+                                android:id="@+id/tvPersonalExpense"
+                                style="@style/Text.MilkLedger.DashboardValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="?attr/colorExpense"
+                                tools:text="3,500" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
                 </LinearLayout>
 
 

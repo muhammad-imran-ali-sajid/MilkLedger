@@ -144,11 +144,11 @@ class DashboardFragment :
                         customLabel = ""
                     )
                 }
-
                 tvTotalPurchases.text = state.totalPurchases.toPrice()
                 tvTotalSales.text = state.totalSales.toPrice()
                 tvTotalExpense.text = state.totalExpenses.toPrice()
                 tvNetProfit.text = state.grossProfit.toPrice()
+                tvPersonalExpense.text = state.totalPersonalExpense.toPrice()
 
                 val profitColor = if (state.grossProfit >= 0) R.color.md_theme_primary else R.color.md_theme_error
                 tvNetProfit.setTextColor(ContextCompat.getColor(requireContext(), profitColor))

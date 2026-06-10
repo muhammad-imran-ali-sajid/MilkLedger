@@ -14,6 +14,17 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface LedgerDao {
     
+    // 🔥 Dashboard ke liye Personal Expense ka Sum
+    @Query("""
+        SELECT COALESCE(SUM(debit), 0)
+        FROM financial_ledger_table
+        WHERE dateMillis BETWEEN :start AND :end
+        AND deletedAtMillis IS NULL
+        AND type = 'OWNER_DRAWING'
+        AND referenceId LIKE :prefix || '%' -- 'exp_%' match karega
+    """)
+    fun getPersonalExpenseSum(start: Long, end: Long, prefix: String): Flow<Long>
+    
     @Query("DELETE FROM financial_ledger_table")
     suspend fun clearLedgerEntriesForRestore()
     
