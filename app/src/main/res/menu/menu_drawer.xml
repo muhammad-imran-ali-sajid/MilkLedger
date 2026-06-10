@@ -6,7 +6,7 @@
     <!-- Tools / Settings -->
     <group android:id="@+id/menu_group_tools">
         <item
-            android:id="@+id/driveBackupFragment"
+            android:id="@+id/backupRestoreFragment"
             android:icon="@drawable/ic_backup"
             android:orderInCategory="200"
             android:title="@string/backup_restore"

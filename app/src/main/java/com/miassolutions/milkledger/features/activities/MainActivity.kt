@@ -102,11 +102,7 @@ class MainActivity : AppCompatActivity() {
         
         // -------------------- AppBarConfiguration --------------------
         appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.dashboardFragment,
-                R.id.settingsFragment,
-                R.id.driveBackupFragment,
-            ),
+            setOf(R.id.dashboardFragment),
             binding.drawerLayout
         )
         

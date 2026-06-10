@@ -59,6 +59,15 @@ class BackupPrefs @Inject constructor(
         return getLastDataChangedAt() > getLastSuccessfulBackupAt()
     }
     
+    fun getBackupStatusSnapshot(): BackupStatusSnapshot {
+        return BackupStatusSnapshot(
+            lastDataChangedAt = getLastDataChangedAt(),
+            lastSuccessfulBackupAt = getLastSuccessfulBackupAt(),
+            lastBackupFileName = getLastBackupFileName(),
+            lastBackupError = getLastBackupError()
+        )
+    }
+    
     companion object {
         private const val KEY_LAST_DATA_CHANGED_AT = "last_data_changed_at"
         private const val KEY_LAST_SUCCESSFUL_BACKUP_AT = "last_successful_backup_at"

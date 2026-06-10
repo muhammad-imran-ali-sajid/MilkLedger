@@ -53,21 +53,21 @@ class BackupRepository @Inject constructor(
     }
     
   
-    
-    suspend fun createAndUploadBackupToDrive(): DriveBackupResult {
-        val localBackupFile = createLocalBackupFile()
-        
-        return withContext(Dispatchers.IO) {
-            val result = googleDriveBackupDataSource.uploadBackupFile(localBackupFile)
-            
-            backupPrefs.markBackupSuccess(
-                timeMillis = System.currentTimeMillis(),
-                fileName = result.fileName
-            )
-            
-            result
-        }
-    }
+//
+//    suspend fun createAndUploadBackupToDrive(): DriveBackupResult {
+//        val localBackupFile = createLocalBackupFile()
+//
+//        return withContext(Dispatchers.IO) {
+//            val result = googleDriveBackupDataSource.uploadBackupFile(localBackupFile)
+//
+//            backupPrefs.markBackupSuccess(
+//                timeMillis = System.currentTimeMillis(),
+//                fileName = result.fileName
+//            )
+//
+//            result
+//        }
+//    }
     
     fun markDataChanged() {
         backupPrefs.markDataChanged()
@@ -206,7 +206,27 @@ class BackupRepository @Inject constructor(
         }
     }
     
-    
+    suspend fun createAndUploadBackupToDrive(): DriveBackupResult {
+        val localBackupFile = createLocalBackupFile()
+        
+        return withContext(Dispatchers.IO) {
+            val result = googleDriveBackupDataSource.uploadBackupFile(localBackupFile)
+            
+            backupPrefs.markBackupSuccess(
+                timeMillis = System.currentTimeMillis(),
+                fileName = result.fileName
+            )
+            
+            // Cleanup should happen only after successful upload.
+            try {
+                googleDriveBackupDataSource.deleteOldBackupsKeepingLatest(maxToKeep = 10)
+            } catch (e: Exception) {
+                android.util.Log.e("MilkBackup", "Drive retention cleanup failed", e)
+            }
+            
+            result
+        }
+    }
 
     
     private fun getDeviceName(): String {

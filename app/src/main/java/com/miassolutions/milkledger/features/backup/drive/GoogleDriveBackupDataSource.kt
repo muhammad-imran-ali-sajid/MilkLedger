@@ -1,5 +1,6 @@
 package com.miassolutions.milkledger.features.backup.drive
 
+import android.util.Log
 import com.google.api.client.http.FileContent
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.model.File
@@ -94,10 +95,17 @@ class GoogleDriveBackupDataSource @Inject constructor(
             .execute()
         
         return result.files.map { file ->
+            val actualSize = file.getSize()
+            
+            Log.d(
+                "MilkBackup",
+                "Drive file: ${file.name}, sizeBytes=$actualSize"
+            )
+            
             DriveBackupFile(
                 fileId = file.id,
                 name = file.name,
-                sizeBytes = file.size.toLong(),
+                sizeBytes = actualSize,
                 createdTimeMillis = file.createdTime?.value,
                 modifiedTimeMillis = file.modifiedTime?.value,
                 webViewLink = file.webViewLink
@@ -107,8 +115,8 @@ class GoogleDriveBackupDataSource @Inject constructor(
     
     fun downloadBackupFile(
         fileId: String,
-        destinationFile: java.io.File
-    ): java.io.File {
+        destinationFile: JavaFile
+    ): JavaFile {
         val drive = driveServiceFactory.createDriveService()
         
         destinationFile.outputStream().use { outputStream ->
@@ -118,6 +126,36 @@ class GoogleDriveBackupDataSource @Inject constructor(
         }
         
         return destinationFile
+    }
+    
+    
+    fun deleteOldBackupsKeepingLatest(maxToKeep: Int = 10) {
+        val drive = driveServiceFactory.createDriveService()
+        
+        val backups = listBackupFiles()
+        
+        val oldBackups = backups
+            .sortedByDescending { it.modifiedTimeMillis ?: 0L }
+            .drop(maxToKeep)
+        
+        oldBackups.forEach { backup ->
+            try {
+                drive.files()
+                    .delete(backup.fileId)
+                    .execute()
+                
+                Log.d(
+                    "MilkBackup",
+                    "Deleted old Drive backup: ${backup.name}"
+                )
+            } catch (e: Exception) {
+                Log.e(
+                    "MilkBackup",
+                    "Failed to delete old backup: ${backup.name}",
+                    e
+                )
+            }
+        }
     }
     
     
