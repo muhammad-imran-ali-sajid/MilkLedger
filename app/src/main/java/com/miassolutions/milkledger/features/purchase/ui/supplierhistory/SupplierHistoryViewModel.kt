@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.purchase.data.MilkPurchaseRepository
+import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -49,8 +50,9 @@ class SupplierHistoryViewModel @Inject constructor(
             .onEach { list ->
                 updateState {
                     it.copy(
-                        isLoading = false, // List aa gayi to loading khatam
-                        transactions = list
+                        isLoading = false,
+                        transactions = list, // 🔥 Save original list
+                        displayedTransactions = filterTransactions(list, it.searchQuery) // 🔥 Apply filter
                     )
                 }
             }
@@ -77,8 +79,34 @@ class SupplierHistoryViewModel @Inject constructor(
                 // Date change hone par dono data reload honge
                 loadData(event.start, event.end)
             }
+            
+            is SupplierHistoryUiEvent.OnSearchQueryChanged -> {
+                val query = event.query
+                updateState { state ->
+                    state.copy(
+                        searchQuery = query,
+                        displayedTransactions = filterTransactions(state.transactions, query)
+                    )
+                }
+            }
 
             SupplierHistoryUiEvent.OnBackClick -> emitEffect(SupplierHistoryUiEffect.NavigateBack)
+        }
+    }
+    
+    // 🔥 Filter Logic Function
+    private fun filterTransactions(list: List<MilkPurchaseUiModel>, query: String): List<MilkPurchaseUiModel> {
+        if (query.isBlank()) return list
+        
+        return list.filter { item ->
+            // Note: In variables ko apne MilkPurchaseUiModel ki properties k hisaab se theek kar lein
+            val volumeStr = item.volume.toString()
+            val totalAmountStr = item.totalAmount.toString()
+            val paymentStr = item.paymentMade?.toString() ?: "" // Agar amountPaid ki property hy
+            
+            volumeStr.contains(query, ignoreCase = true) ||
+                    totalAmountStr.contains(query, ignoreCase = true) ||
+                    paymentStr.contains(query, ignoreCase = true)
         }
     }
 }

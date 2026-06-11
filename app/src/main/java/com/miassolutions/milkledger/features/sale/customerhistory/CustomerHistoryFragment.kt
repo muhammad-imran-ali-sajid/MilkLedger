@@ -93,7 +93,7 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
         currentPdfModel = PdfMapper.mapCustomerHistoryToPdf(
             customerName = state.customerName,
             dateRang = state.dateRangeText,
-            list = state.transactions,
+            list = state.displayedTransactions,
             initialBalance = 0L
         )
         

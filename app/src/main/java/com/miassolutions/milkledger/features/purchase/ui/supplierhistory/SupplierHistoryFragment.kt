@@ -59,6 +59,23 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
                 generatePdfReport()
                 true
             }
+            
+            // 🔥 2. NAYA: Search View Logic
+            val searchItem = menu.findItem(R.id.action_search)
+            val searchView = searchItem?.actionView as? androidx.appcompat.widget.SearchView
+            
+            searchView?.apply {
+                queryHint = "Search Amount, Vol..."
+                
+                setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean = false
+                    
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        viewModel.onEvent(SupplierHistoryUiEvent.OnSearchQueryChanged(newText ?: ""))
+                        return true
+                    }
+                })
+            }
         }
     }
     private val viewModel: SupplierHistoryViewModel by viewModels()
@@ -89,7 +106,7 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
         currentPdfModel = PdfMapper.mapSupplierHistoryToPdf(
             supplierName = state.supplierName,
             dateRange = state.dateRangeText,
-            list = state.transactions,
+            list = state.displayedTransactions,
             initialBalance = 0L
         )
 
@@ -101,13 +118,14 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
         super.setupObservers()
 
         collectFlow(viewModel.uiState) { state ->
-
-            adapter.submitList(state.transactions)
-
-            val isEmpty = !state.isLoading && state.transactions.isEmpty()
+            
+            // 🔥 Yahan displayedTransactions use karni hai
+            adapter.submitList(state.displayedTransactions)
+            
+            val isEmpty = !state.isLoading && state.displayedTransactions.isEmpty()
             binding.tvEmptyState.isVisible = isEmpty
             binding.rvSupplierHistory.isVisible = !isEmpty
-
+            
             updateSummary(state.dateRangeText, state.summary)
 
         }
