@@ -56,4 +56,12 @@
 
     <style name="Theme.Auth" parent="Theme.MilkLedger" />
 
+    <style name="Theme.MilkLedger.Alarm" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:showWhenLocked">true</item>
+        <item name="android:turnScreenOn">true</item>
+    </style>
+
 </resources>

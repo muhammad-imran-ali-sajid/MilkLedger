@@ -85,11 +85,21 @@
             </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginVertical="8dp"
-                android:layout_marginHorizontal="42dp"
-                app:dividerColor="?attr/colorPrimary"
+                app:dividerColor="?attr/colorSurfaceVariant"
                 android:layout_height="2dp" />
+
+            <TextView
+                android:textSize="20sp"
+                android:textColor="?attr/colorOnSurface"
+                android:alpha="0.7"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Money Overview" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -179,7 +189,7 @@
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp">
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -284,7 +294,7 @@
                         android:layout_width="match_parent"
                         app:cardBackgroundColor="@color/dashboard_my_profit"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp">
+                        >
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -312,16 +322,20 @@
 
             </LinearLayout>
 
+
             <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginVertical="8dp"
-                android:layout_marginHorizontal="42dp"
-                app:dividerColor="?attr/colorPrimary"
+                app:dividerColor="?attr/colorSurfaceVariant"
                 android:layout_height="2dp" />
 
             <TextView
-                style="@style/Text.MilkLedger.SectionHeader"
-                android:layout_width="match_parent"
+                android:textSize="20sp"
+                android:textColor="?attr/colorOnSurface"
+                android:alpha="0.7"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="Milk Overview" />

@@ -2,8 +2,14 @@ package com.miassolutions.milkledger.features.note.ui.form
 
 
 import android.Manifest
+import android.R.attr.data
+import android.app.AlarmManager
+import android.app.NotificationManager
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.text.format.DateFormat.is24HourFormat
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -22,12 +28,39 @@ import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import java.util.TimeZone
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class AddEditNoteFragment : BaseFragment<FragmentAddEditNoteBinding>(
     FragmentAddEditNoteBinding::inflate
 ) {
-
+    
+    private fun openExactAlarmSettingsIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val alarmManager = requireContext().getSystemService(AlarmManager::class.java)
+            
+            if (!alarmManager.canScheduleExactAlarms()) {
+                val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM).apply {
+                    data = "package:${requireContext().packageName}".toUri()
+                }
+                startActivity(intent)
+            }
+        }
+    }
+    
+    private fun openFullScreenIntentSettingsIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val notificationManager =
+                requireContext().getSystemService(NotificationManager::class.java)
+            
+            if (!notificationManager.canUseFullScreenIntent()) {
+                val intent = Intent(Settings.ACTION_MANAGE_APP_USE_FULL_SCREEN_INTENT).apply {
+                    data = Uri.parse("package:${requireContext().packageName}")
+                }
+                startActivity(intent)
+            }
+        }
+    }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -46,26 +79,26 @@ class AddEditNoteFragment : BaseFragment<FragmentAddEditNoteBinding>(
         super.setupViews()
         // Initial setup agar kuch ho
     }
-
     private fun checkPermissionAndOpenAlarm() {
-        // Android 13 (Tiramisu) se upar Notification permission chahiye
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                // Permission hai -> Dialog kholo
-                viewModel.onEvent(AddEditNoteUiEvent.OnAlarmLayoutClick)
-            } else {
-                // Permission nahi hai -> Request kro
+            val hasNotificationPermission = ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+            
+            if (!hasNotificationPermission) {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                return
             }
-        } else {
-            // Android 12 ya neeche -> Direct Dialog kholo
-            viewModel.onEvent(AddEditNoteUiEvent.OnAlarmLayoutClick)
         }
+        
+        openExactAlarmSettingsIfNeeded()
+        openFullScreenIntentSettingsIfNeeded()
+        
+        viewModel.onEvent(AddEditNoteUiEvent.OnAlarmLayoutClick)
     }
+
+
 
     override fun setupListeners() = with(binding) {
         super.setupListeners()
@@ -165,45 +198,50 @@ class AddEditNoteFragment : BaseFragment<FragmentAddEditNoteBinding>(
 
         datePicker.show(childFragmentManager, "DatePicker")
     }
-
+    
     private fun openTimePicker(dateMillis: Long) {
         val isSystem24Hour = is24HourFormat(requireContext())
         val clockFormat = if (isSystem24Hour) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
-
+        
+        // Get current time
+        val now = Calendar.getInstance()
+        val currentHour = now.get(Calendar.HOUR_OF_DAY)
+        val currentMinute = now.get(Calendar.MINUTE)
+        
         val timePicker = MaterialTimePicker.Builder()
             .setTimeFormat(clockFormat)
-            .setHour(9)
-            .setMinute(0)
+            .setHour(currentHour)      // ← current hour
+            .setMinute(currentMinute)  // ← current minute
             .setTitleText("Select Time")
+            .setInputMode(MaterialTimePicker.INPUT_MODE_KEYBOARD)
             .build()
-
+        
         timePicker.addOnPositiveButtonClickListener {
-            // 1. Local Calendar ka instance lein
+            // 1. Local Calendar instance
             val finalCalendar = Calendar.getInstance()
-
-            // 2. Date set karein (UTC se Local conversion)
+            
+            // 2. Convert the dateMillis (UTC) to local date components
             val utcCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
             utcCalendar.timeInMillis = dateMillis
-
+            
             finalCalendar.set(Calendar.YEAR, utcCalendar.get(Calendar.YEAR))
             finalCalendar.set(Calendar.MONTH, utcCalendar.get(Calendar.MONTH))
             finalCalendar.set(Calendar.DAY_OF_MONTH, utcCalendar.get(Calendar.DAY_OF_MONTH))
-
-            // 3. Time set karein (Jo user ne select kia)
+            
+            // 3. Set the user‑selected time
             finalCalendar.set(Calendar.HOUR_OF_DAY, timePicker.hour)
             finalCalendar.set(Calendar.MINUTE, timePicker.minute)
             finalCalendar.set(Calendar.SECOND, 0)
             finalCalendar.set(Calendar.MILLISECOND, 0)
-
-            // 4. Check karein k waqt guzar to nahi gaya?
+            
+            // 4. Validate future time
             if (finalCalendar.timeInMillis <= System.currentTimeMillis()) {
                 showSnackbar("Please select a future time")
             } else {
-                // ViewModel ko bhejen
                 viewModel.onEvent(AddEditNoteUiEvent.OnAlarmSet(finalCalendar.timeInMillis))
             }
         }
-
+        
         timePicker.show(childFragmentManager, "TimePicker")
     }
 }
