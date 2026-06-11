@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.sale.customerhistory
 import android.content.Intent
 import android.net.Uri
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -89,6 +90,10 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
         binding.dateFilterView.setup(childFragmentManager) { start, end, label ->
             viewModel.onEvent(CustomerHistoryUiEvent.OnDateFilterChanged(start, end, label))
         }
+        
+        binding.etSearch.doAfterTextChanged { text ->
+            viewModel.onEvent(CustomerHistoryUiEvent.OnSearchQueryChanged(text.toString()))
+        }
     }
 
     override fun setupObservers() {
@@ -107,13 +112,12 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
 
     private fun renderState(state: CustomerHistoryUiState) = with(binding) {
         // 1. List Update
-        adapter.submitList(state.transactions)
-
-        // 2. Empty State
-        val isEmpty = !state.isLoading && state.transactions.isEmpty()
+        adapter.submitList(state.displayedTransactions)
+        
+        val isEmpty = !state.isLoading && state.displayedTransactions.isEmpty()
         tvEmptyState.isVisible = isEmpty
         rvCustomerDetail.isVisible = !isEmpty
-
+        
         updateSummary(state.dateRangeText, state.summary)
 
 

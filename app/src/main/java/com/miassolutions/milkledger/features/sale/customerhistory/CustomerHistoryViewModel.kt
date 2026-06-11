@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
+import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
@@ -44,7 +45,13 @@ class CustomerHistoryViewModel @Inject constructor(
 
         historyJob = repository.getCustomerHistory(customerId, start, end)
             .onEach { list ->
-                updateState { it.copy(isLoading = false, transactions = list) }
+                updateState { state ->
+                    state.copy(
+                        isLoading = false,
+                        transactions = list,
+                        displayedTransactions = filterTransactions(list, state.searchQuery)
+                    )
+                }
             }
             .launchIn(viewModelScope)
 
@@ -67,13 +74,38 @@ class CustomerHistoryViewModel @Inject constructor(
                 updateState { it.copy(dateRangeText = event.label) }
                 loadData(event.start, event.end)
             }
-
+            is CustomerHistoryUiEvent.OnSearchQueryChanged -> {
+                val query = event.query
+                updateState { state ->
+                    state.copy(
+                        searchQuery = query,
+                        displayedTransactions = filterTransactions(state.transactions, query)
+                    )
+                }
+            }
 
             // 3. Back Press
             CustomerHistoryUiEvent.OnBackClick -> {
                 emitEffect(CustomerHistoryUiEffect.NavigateBack)
             }
 
+        }
+    }
+    
+    private fun filterTransactions(list: List<MilkSaleUiModel>, query: String): List<MilkSaleUiModel> {
+        if (query.isBlank()) return list
+        
+        return list.filter { item ->
+            // Apne model ki properties ke hisaab se condition lagayen.
+            // .toString() isliye takay numbers bhi text ki tarah match ho jayen (e.g. "140" type karne pe mil jaye)
+            val volumeStr = item.quantity.toString()
+            val totalAmountStr = item.totalAmount.toString()
+            val paymentStr = item.paymentReceived?.toString() ?: ""
+            
+            // Agar query inme se kisi bhi cheez me match hoti hai to item list me rahega
+            volumeStr.contains(query, ignoreCase = true) ||
+                    totalAmountStr.contains(query, ignoreCase = true) ||
+                    paymentStr.contains(query, ignoreCase = true)
         }
     }
 }

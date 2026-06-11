@@ -16,14 +16,19 @@ data class CustomerHistoryUiState(
 
     // Data List
     val transactions: List<MilkSaleUiModel> = emptyList(),
+    
+    // 🔥 Search hone ke baad wala data yahan aayega (Adapter ko ye list deni hai)
+    val displayedTransactions: List<MilkSaleUiModel> = emptyList(),
+    
+    val searchQuery: String = "", // Current search text
 
     val summary: SaleSummary = SaleSummary(),
 
     // Header Info (e.g. "All History" or "01 Jan - 31 Jan")
     // XML mein 'tv_selected_date' k liye
     val dateRangeText: String = "All Time History",
-
-)
+    
+    )
 
 
 // ==========================================
@@ -33,7 +38,7 @@ sealed class CustomerHistoryUiEvent {
 
     data class OnDateFilterChanged(val start: Long, val end: Long, val label: String):
         CustomerHistoryUiEvent()
-
+    data class OnSearchQueryChanged(val query: String) : CustomerHistoryUiEvent()
     object OnBackClick : CustomerHistoryUiEvent()
 }
 
