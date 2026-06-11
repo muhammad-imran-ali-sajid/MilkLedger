@@ -15,26 +15,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/searchInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        app:startIconDrawable="@drawable/ic_search"
-        app:endIconMode="clear_text"
-        android:hint="Search by Volume, Price, or Payment"
-        app:layout_constraintTop_toBottomOf="@id/dateFilterView">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal|text"
-            android:maxLines="1" />
-    </com.google.android.material.textfield.TextInputLayout>
-
 
 
     <TextView
@@ -52,7 +32,6 @@
         tools:visibility="visible" />
 
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCustomerDetail"
         style="@style/RecyclerViewStyle"
@@ -63,7 +42,7 @@
         android:clipToPadding="false"
         android:paddingBottom="90dp"
         android:scrollbars="none"
-        app:layout_constraintTop_toBottomOf="@id/searchInputLayout"
+        app:layout_constraintTop_toBottomOf="@id/dateFilterView"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@id/summaryView"
         app:layout_constraintEnd_toEndOf="parent"
