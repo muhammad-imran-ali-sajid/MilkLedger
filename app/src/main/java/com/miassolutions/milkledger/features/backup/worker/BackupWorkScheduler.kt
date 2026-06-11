@@ -22,7 +22,7 @@ class BackupWorkScheduler @Inject constructor(
     fun scheduleDailyBackup() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
-            .setRequiresBatteryNotLow(false)
+            .setRequiresBatteryNotLow(true)
             .build()
         
         val request = PeriodicWorkRequestBuilder<DailyBackupWorker>(

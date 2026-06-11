@@ -40,6 +40,17 @@ class BackupRestoreFragment :
     
     private var pendingExportBytes: ByteArray? = null
     
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+            if (!granted) {
+                Snackbar.make(
+                    binding.root,
+                    "Backup works, but notifications are disabled.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+    
     private val createLocalBackupLauncher =
         registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
             if (uri == null) {
@@ -115,6 +126,16 @@ class BackupRestoreFragment :
         observeState()
         
         ensureDrivePermissionThen(PendingDriveAction.LOAD_STATUS)
+        
+        requestNotificationPermissionIfNeeded()
+    }
+    
+    private fun requestNotificationPermissionIfNeeded() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            notificationPermissionLauncher.launch(
+                android.Manifest.permission.POST_NOTIFICATIONS
+            )
+        }
     }
     
     private fun setupRecyclerView() {
