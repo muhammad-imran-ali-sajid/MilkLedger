@@ -21,7 +21,7 @@
         app:cardBackgroundColor="?attr/colorSurface"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Large"
         app:strokeWidth="0dp">
 
         <ImageView
@@ -29,9 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
-            android:padding="12dp"
             android:scaleType="centerInside"
-            android:src="@drawable/gmslogo02" />
+            android:src="@drawable/milk_ledger_logo" />
 
     </com.google.android.material.card.MaterialCardView>
 
