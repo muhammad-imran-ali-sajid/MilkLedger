@@ -180,7 +180,7 @@ class MilkSaleRepositoryTest {
         assertEquals(0L, paymentLedger.debit)
         assertEquals(20_000L, paymentLedger.credit)
         assertEquals(0L, paymentLedger.profitImpact)
-        assertEquals("$CUSTOMER_NAME\n(Dated: 17 Jan 2026)", paymentLedger.note)
+        assertEquals("$CUSTOMER_NAME\n(Dated: 17/01)", paymentLedger.note)
     }
 
     @Test

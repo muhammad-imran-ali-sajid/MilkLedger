@@ -36,7 +36,7 @@ Recommended Android Studio AVD:
 ```text
 Device definition: Pixel 4a or Pixel 5
 System image: Google APIs x86_64
-API level: 35 preferred, API 36 acceptable if stable
+API level: 35 preferred
 RAM: 2048 MB
 VM heap: 256 MB
 Internal storage: 4 GB to 8 GB
@@ -52,6 +52,8 @@ Use `Google APIs` for normal testing. Use `Google Play` only when testing flows 
 
 Avoid heavy tablet/foldable devices for routine development. Avoid very high-resolution devices unless UI testing specifically needs them.
 
+Avoid experimental/canary images for routine refactoring safety checks. In particular, avoid `sdk_gphone16k_x86_64` / 16 KB page-size images unless you are specifically testing Android 15+ 16 KB compatibility. They are useful compatibility targets, but they are not the best daily safety-net emulator.
+
 ## Android Studio Steps
 
 1. Open Device Manager.
@@ -66,6 +68,38 @@ Avoid heavy tablet/foldable devices for routine development. Avoid very high-res
 10. Keep graphics as `Hardware` or `Auto`.
 11. Start the emulator.
 12. Run `:app:connectedDebugAndroidTest`.
+
+If Gradle's connected test task reports `0 tests`, verify whether the test APK actually installed:
+
+```powershell
+adb -s emulator-5554 shell pm list instrumentation
+```
+
+You can run the sale safety tests directly with:
+
+```powershell
+adb -s emulator-5554 shell am instrument -w -r -e class com.miassolutions.milkledger.features.sale.data.MilkSaleRepositoryTest com.miassolutions.milkledger.test/androidx.test.runner.AndroidJUnitRunner
+```
+
+Direct instrumentation is a useful diagnostic fallback, but the long-term goal is still to make the normal Gradle/Android Studio test runner work on a stable emulator image.
+
+## Current Emulator Finding
+
+The first emulator created for this refactor session was:
+
+```text
+Model: sdk_gphone16k_x86_64
+API: 37
+Page size: 16384
+```
+
+On that image, Gradle/UTP still produced a connected test report with `0 tests`, but manual APK install and direct instrumentation worked. The sale repository safety tests passed with:
+
+```text
+OK (3 tests)
+```
+
+Recommendation: keep this emulator if you want to test future Android compatibility, but create a second daily-development emulator using API 35 Google APIs x86_64.
 
 ## Developer Mental Model
 
@@ -89,4 +123,3 @@ Clean emulator:
 ```
 
 This distinction keeps professional discipline: we protect client data and still move fast.
-

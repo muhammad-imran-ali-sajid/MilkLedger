@@ -337,3 +337,6 @@ This first slice will teach the pattern we can reuse across the rest of the app.
 - Device diagnostics showed a Vivo `V2424` on Android 16/API 36 with primary user `0`, Private Space user `10`, and App Clone user `999`. The test instrumentation package `com.miassolutions.milkledger.test` was not installed after the failed Gradle run, so the failure happened before test execution.
 - Treat the connected-test failure as an Android Gradle Plugin/UTP/device setup issue, not as a sale repository assertion failure.
 - Do not run connected tests on a phone that contains important real MilkLedger data until the debug build has a separate `applicationIdSuffix` or the tests are run on a clean emulator/fresh test device.
+- Created a clean emulator and verified the sale repository tests through direct instrumentation. The emulator image was API 37 / 16 KB page size, so Gradle/UTP still produced a `0 tests` report, but manual install plus `adb shell am instrument` executed the tests.
+- Sale repository safety tests passed directly on the emulator: `OK (3 tests)`.
+- Adjusted the update-sale test expectation to match current app behavior: `toDisplayDate()` formats payment notes as `dd/MM`, for example `(Dated: 17/01)`.
