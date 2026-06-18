@@ -344,3 +344,5 @@ This first slice will teach the pattern we can reuse across the rest of the app.
 - Added purchase repository safety tests for save, update, and delete behavior.
 - Purchase repository safety tests pass on `MilkLedger_Pixel5_API36` through direct instrumentation: `OK (3 tests)`.
 - Captured current purchase money behavior: quality purchase totals can truncate by one paisa because the app calculates with `Double` and then calls `toLong()`. This is now documented by the test before any rounding refactor.
+- Added account repository/use case safety tests for opening balance signs, opening balance updates, and delete blocking.
+- Account safety tests pass on `MilkLedger_Pixel5_API36` through direct instrumentation: `OK (5 tests)`.
