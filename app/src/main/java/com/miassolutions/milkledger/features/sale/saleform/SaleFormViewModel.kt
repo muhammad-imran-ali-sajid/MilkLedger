@@ -5,6 +5,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
 import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
+import com.miassolutions.milkledger.features.sale.domain.usecase.DeleteSaleUseCase
+import com.miassolutions.milkledger.features.sale.domain.usecase.SaveSaleUseCase
+import com.miassolutions.milkledger.features.sale.domain.usecase.UpdateSaleUseCase
 import com.miassolutions.milkledger.features.sale.model.UpdateSaleRequest
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.LoadSaleForEdit
 import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnAmountPaidChanged
@@ -38,6 +41,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SaleFormViewModel @Inject constructor(
     private val repository: MilkSaleRepository,
+    private val saveSaleUseCase: SaveSaleUseCase,
+    private val updateSaleUseCase: UpdateSaleUseCase,
+    private val deleteSaleUseCase: DeleteSaleUseCase,
     savedStateHandle: SavedStateHandle
 ) : BaseViewModel<SaleFormUiState, SaleFormUiEvent, SaleFormUiEffect>(SaleFormUiState()) {
 
@@ -189,7 +195,7 @@ class SaleFormViewModel @Inject constructor(
         viewModelScope.launch {
             updateState { it.copy(isLoading = true) }
             try {
-                repository.deleteSale(saleId)
+                deleteSaleUseCase(saleId)
 
             } catch (e: Exception) {
                 emitEffect(SaleFormUiEffect.ShowSnackbar("Error: ${e.message}"))
@@ -271,13 +277,13 @@ class SaleFormViewModel @Inject constructor(
                         amountPaid = (payment * 100).toLong(),
                         note = state.note
                     )
-                    repository.updateMilkSale(updateRequest)
+                    updateSaleUseCase(updateRequest)
                     emitEffect(SaleFormUiEffect.ShowSnackbar("Sale Updated Successfully"))
                     emitEffect(SaleFormUiEffect.NavigateBack)
 
                 } else {
                     // === NEW ENTRY MODE ===
-                    repository.saveMilkSale(
+                    saveSaleUseCase(
                         accountId = state.selectedCustomer!!.accountId,
                         volume = vol,
                         deduction = ded,
