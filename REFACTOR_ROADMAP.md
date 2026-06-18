@@ -348,3 +348,4 @@ This first slice will teach the pattern we can reuse across the rest of the app.
 - Account safety tests pass on `MilkLedger_Pixel5_API36` through direct instrumentation: `OK (5 tests)`.
 - Added expense repository safety tests for business expenses, personal expenses, batch saves, type-switching updates, and soft deletes.
 - Expense safety tests pass on `MilkLedger_Pixel5_API36` through direct instrumentation: `OK (5 tests)`.
+- Added `LEDGER_RULES.md` to document debit, credit, balance, profit impact, opening balance, sale, purchase, expense, and soft-delete rules before starting structural refactors.
