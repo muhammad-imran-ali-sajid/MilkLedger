@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.purchase.purchaseform
+package com.miassolutions.milkledger.features.purchase.ui.form
 
 import android.content.Context
 import android.graphics.Color

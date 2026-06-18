@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.purchase.list
+package com.miassolutions.milkledger.features.purchase.ui.list
 
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels

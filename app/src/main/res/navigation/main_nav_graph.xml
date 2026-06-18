@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/purchaseListFragment"
-        android:name="com.miassolutions.milkledger.features.purchase.list.MilkPurchaseListFragment"
+        android:name="com.miassolutions.milkledger.features.purchase.ui.list.MilkPurchaseListFragment"
         android:label="Purchases"
         tools:layout="@layout/fragment_milk_purchase_list">
         <action
