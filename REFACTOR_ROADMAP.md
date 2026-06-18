@@ -341,3 +341,6 @@ This first slice will teach the pattern we can reuse across the rest of the app.
 - Sale repository safety tests passed directly on the emulator: `OK (3 tests)`.
 - Adjusted the update-sale test expectation to match current app behavior: `toDisplayDate()` formats payment notes as `dd/MM`, for example `(Dated: 17/01)`.
 - Created a second stable AVD named `MilkLedger_Pixel5_API36` using Android 36 Google APIs x86_64, 2 GB RAM, and 2 CPU cores. It boots as `emulator-5556`, and the sale repository safety tests pass there through direct instrumentation: `OK (3 tests)`.
+- Added purchase repository safety tests for save, update, and delete behavior.
+- Purchase repository safety tests pass on `MilkLedger_Pixel5_API36` through direct instrumentation: `OK (3 tests)`.
+- Captured current purchase money behavior: quality purchase totals can truncate by one paisa because the app calculates with `Double` and then calls `toLong()`. This is now documented by the test before any rounding refactor.
