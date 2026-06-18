@@ -3,9 +3,9 @@ package com.miassolutions.milkledger.features.sale.customerhistory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
-import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.features.sale.data.MilkSaleRepository
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.sale.model.SaleSummary
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn

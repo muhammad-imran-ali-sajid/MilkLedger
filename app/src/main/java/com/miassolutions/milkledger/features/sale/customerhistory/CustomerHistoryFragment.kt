@@ -14,7 +14,7 @@ import com.miassolutions.milkledger.core.pdf.PdfMapper
 import com.miassolutions.milkledger.core.pdf.PdfReportModel
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentCustomerHistoryBinding
-import com.miassolutions.milkledger.features.purchase.model.SaleSummary
+import com.miassolutions.milkledger.features.sale.model.SaleSummary
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint

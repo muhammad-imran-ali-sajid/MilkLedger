@@ -1,9 +1,7 @@
 package com.miassolutions.milkledger.features.sale.salelist
 
-import com.miassolutions.milkledger.features.purchase.model.SaleSummary
-import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEffect
-import com.miassolutions.milkledger.features.purchase.ui.list.PurchaseListUiEvent
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.sale.model.SaleSummary
 
 
 import java.time.LocalDate

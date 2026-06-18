@@ -7,7 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
 import com.miassolutions.milkledger.features.purchase.model.PurchaseSummary
-import com.miassolutions.milkledger.features.purchase.model.SaleSummary
+import com.miassolutions.milkledger.features.sale.model.SaleSummary
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
 import kotlinx.coroutines.flow.Flow
 

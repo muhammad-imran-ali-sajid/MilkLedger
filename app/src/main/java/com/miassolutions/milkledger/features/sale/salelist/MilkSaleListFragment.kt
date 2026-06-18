@@ -13,7 +13,7 @@ import com.miassolutions.milkledger.core.pdf.PdfReportModel
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentMilkSaleListBinding
 import com.miassolutions.milkledger.features.common.BalanceHistoryBottomSheet
-import com.miassolutions.milkledger.features.purchase.model.SaleSummary
+import com.miassolutions.milkledger.features.sale.model.SaleSummary
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnAddSaleClicked
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnBalanceClick
 import com.miassolutions.milkledger.features.sale.salelist.MilkSaleListUiEvent.OnCustomerDetailClicked

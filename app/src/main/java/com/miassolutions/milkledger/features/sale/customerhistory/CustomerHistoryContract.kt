@@ -1,7 +1,7 @@
 package com.miassolutions.milkledger.features.sale.customerhistory
 
-import com.miassolutions.milkledger.features.purchase.model.SaleSummary
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
+import com.miassolutions.milkledger.features.sale.model.SaleSummary
 
 // ==========================================
 // 1️⃣ UI STATE (Screen par kya dikhana hai)

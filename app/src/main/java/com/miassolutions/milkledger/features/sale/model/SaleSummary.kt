@@ -1,4 +1,4 @@
-package com.miassolutions.milkledger.features.purchase.model
+package com.miassolutions.milkledger.features.sale.model
 
 data class SaleSummary(
     val totalAmount: Long = 0,
