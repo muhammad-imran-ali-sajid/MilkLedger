@@ -340,3 +340,4 @@ This first slice will teach the pattern we can reuse across the rest of the app.
 - Created a clean emulator and verified the sale repository tests through direct instrumentation. The emulator image was API 37 / 16 KB page size, so Gradle/UTP still produced a `0 tests` report, but manual install plus `adb shell am instrument` executed the tests.
 - Sale repository safety tests passed directly on the emulator: `OK (3 tests)`.
 - Adjusted the update-sale test expectation to match current app behavior: `toDisplayDate()` formats payment notes as `dd/MM`, for example `(Dated: 17/01)`.
+- Created a second stable AVD named `MilkLedger_Pixel5_API36` using Android 36 Google APIs x86_64, 2 GB RAM, and 2 CPU cores. It boots as `emulator-5556`, and the sale repository safety tests pass there through direct instrumentation: `OK (3 tests)`.

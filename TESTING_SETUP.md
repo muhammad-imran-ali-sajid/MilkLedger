@@ -36,7 +36,7 @@ Recommended Android Studio AVD:
 ```text
 Device definition: Pixel 4a or Pixel 5
 System image: Google APIs x86_64
-API level: 35 preferred
+API level: 35 preferred, API 36 acceptable when already installed
 RAM: 2048 MB
 VM heap: 256 MB
 Internal storage: 4 GB to 8 GB
@@ -100,6 +100,32 @@ OK (3 tests)
 ```
 
 Recommendation: keep this emulator if you want to test future Android compatibility, but create a second daily-development emulator using API 35 Google APIs x86_64.
+
+## Created Stable AVD
+
+Created manually because `avdmanager` was not installed in this SDK:
+
+```text
+Name: MilkLedger_Pixel5_API36
+Device profile: Pixel 5
+System image: Android 36 Google APIs x86_64
+RAM: 2048 MB
+CPU cores: 2
+VM heap: 256 MB
+Storage: 8 GB
+Cameras: disabled
+Runtime serial during verification: emulator-5556
+```
+
+Verification:
+
+```text
+emulator-5556 booted
+Direct instrumentation sale tests: OK (3 tests)
+Gradle/UTP connectedDebugAndroidTest: still reports 0 tests before execution
+```
+
+Until the Gradle/UTP issue is resolved, direct instrumentation is the reliable test path for repository safety tests.
 
 ## Developer Mental Model
 
