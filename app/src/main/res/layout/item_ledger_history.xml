@@ -5,17 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="4dp"
-    android:paddingVertical="12dp"
+    android:paddingHorizontal="@dimen/space_8"
+    android:paddingVertical="@dimen/space_12"
     android:weightSum="5">
 
 
     <TextView
         android:id="@+id/tvDate"
-        style="@style/Text.Normal"
+        android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="start"
-        android:textColor="?attr/colorDate"
+        android:textColor="?attr/colorOnSurfaceVariant"
         tools:text="12 Oct" />
 
 
@@ -25,7 +26,7 @@
 
         <TextView
             android:id="@+id/tvType"
-            style="@style/Text.Normal"
+            android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
@@ -35,22 +36,22 @@
 
         <TextView
             android:id="@+id/tvDebit"
-            style="@style/Text.Normal"
+            android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:textColor="?attr/colorSale"
+            android:textColor="?attr/colorLedgerExpense"
             tools:text="5000" />
 
         <TextView
             android:id="@+id/tvCredit"
-            style="@style/Text.Normal"
+            android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:textColor="?attr/colorPurchase"
+            android:textColor="?attr/colorLedgerIncome"
             tools:text="0" />
 
 

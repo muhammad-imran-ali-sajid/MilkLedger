@@ -7,11 +7,12 @@
     android:orientation="vertical">
 
     <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.MilkLedger.MaterialCard.Standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:cardBackgroundColor="?attr/colorErrorContainer"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.MilkLedger.Medium"
         app:strokeWidth="0dp">
 
         <LinearLayout
@@ -22,11 +23,11 @@
             android:padding="16dp">
 
             <TextView
-                style="@style/Text.MilkLedger.Label"
+                android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total Expenses:"
-                android:textColor="?attr/colorOnErrorContainer" />
+                android:textColor="?attr/colorOnSurface" />
 
             <View
                 android:layout_width="0dp"
@@ -35,10 +36,10 @@
 
             <TextView
                 android:id="@+id/tvTotalExpense"
-                style="@style/Text.MilkLedger.Title"
+                android:textAppearance="@style/TextAppearance.MilkLedger.AmountLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorOnErrorContainer"
+                android:textColor="?attr/colorLedgerExpense"
                 tools:text="Rs. 1,000" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -58,7 +59,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dateLayout"
-                style="@style/Widget.MilkLedger.Input"
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
                 android:hint="Expense Date">
 
@@ -74,13 +75,12 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                style="@style/Text.MilkLedger.Title"
+                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="12dp"
-                android:text="Business Expenses"
-                android:textSize="20sp" />
+                android:text="Business Expenses" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -90,7 +90,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/fuelLayout"
-                    style="@style/Widget.MilkLedger.Input"
+                    style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                     android:layout_width="0dp"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
@@ -107,7 +107,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/vehicleLayout"
-                    style="@style/Widget.MilkLedger.Input"
+                    style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                     android:layout_width="0dp"
 
                     android:layout_marginStart="4dp"
@@ -132,7 +132,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/refreshLayout"
-                    style="@style/Widget.MilkLedger.Input"
+                    style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                     android:layout_width="0dp"
                     android:layout_marginEnd="4dp"
                     android:layout_weight="1"
@@ -149,7 +149,7 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilOtherLayout"
-                    style="@style/Widget.MilkLedger.Input"
+                    style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                     android:layout_width="0dp"
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
@@ -189,16 +189,15 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    style="@style/Text.MilkLedger.Title"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Personal Expenses"
-                    android:textSize="20sp" />
+                    android:text="Personal Expenses" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddPersonal"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                    style="@style/Widget.MilkLedger.MaterialButton.Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add New"
@@ -209,7 +208,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/notesLayout"
-                style="@style/Widget.MilkLedger.Input"
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
                 android:layout_marginTop="16dp"
                 android:hint="Notes">
@@ -234,9 +233,9 @@
         android:elevation="8dp"
         android:padding="16dp">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
-            style="@style/Widget.MilkLedger.Button.Primary"
+            style="@style/Widget.MilkLedger.MaterialButton.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Save Expense" />

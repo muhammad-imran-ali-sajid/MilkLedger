@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/tvDate"
-        style="@style/Text.Normal"
+        android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -17,11 +17,10 @@
 
     <TextView
         android:id="@+id/tvAmount"
-        style="@style/Text.Normal"
+        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/blue"
-        android:textStyle="bold"
+        android:textColor="?attr/colorLedgerIncome"
         tools:text="+ 5,000" />
 
 </LinearLayout>

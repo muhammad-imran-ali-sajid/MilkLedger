@@ -9,7 +9,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/personalTitleLayout"
         android:layout_width="0dp"
-        style="@style/Widget.MilkLedger.Input"
+        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:hint="Title">
@@ -26,7 +26,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/personalAmountLayout"
         android:layout_width="0dp"
-        style="@style/Widget.MilkLedger.Input"
+        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_weight="1"
@@ -43,11 +43,11 @@
 
     <ImageView
         android:id="@+id/btnRemove"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:padding="8dp"
 
         android:src="@drawable/ic_delete"
-        app:tint="@color/red" />
+        app:tint="?attr/colorError" />
 
 </LinearLayout>

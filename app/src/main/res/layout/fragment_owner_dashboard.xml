@@ -16,18 +16,18 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardSummary"
+        style="@style/Widget.MilkLedger.MaterialCard.Standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="@dimen/space_12"
+        android:layout_marginTop="@dimen/space_4"
         app:cardBackgroundColor="?attr/colorSurface"
-        app:cardElevation="4dp"
         app:layout_constraintTop_toBottomOf="@id/dateFilterView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="@dimen/space_12">
 
 
             <LinearLayout
@@ -45,35 +45,33 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    style="@style/Text.Normal"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Net Profit"
-                    android:textSize="18sp" />
+                    android:text="Net Profit" />
 
                 <TextView
                     android:id="@+id/tvTotalProfit"
-                    style="@style/Text.Normal"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.AmountLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="100,000"
-                    android:textColor="#388E3C"
-                    android:textStyle="bold"
+                    android:textColor="?attr/colorLedgerIncome"
                     tools:text="100,000" />
 
                 <TextView
-                    style="@style/Text.MilkLedger.TitleMedium"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:alpha="0.7"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:text="(Tap for details)"
-                    android:textSize="10sp" />
+                    />
             </LinearLayout>
 
             <View
                 android:layout_width="1dp"
-                android:layout_height="40dp"
-                android:background="#E0E0E0"
+                android:layout_height="0dp"
+                android:background="?attr/colorOutline"
                 app:layout_constraintBottom_toBottomOf="@id/layoutProfit"
                 app:layout_constraintEnd_toStartOf="@id/layoutDrawing"
                 app:layout_constraintStart_toEndOf="@id/layoutProfit"
@@ -91,30 +89,28 @@
                 app:layout_constraintTop_toTopOf="@id/layoutProfit">
 
                 <TextView
-                    style="@style/Text.Normal"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Withdrawn"
-                    android:textSize="18sp" />
+                    android:text="Total Withdrawn" />
 
                 <TextView
                     android:id="@+id/tvTotalDrawings"
-                    style="@style/Text.Normal"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.AmountLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="40,000"
-                    android:textColor="#D32F2F"
-                    android:textStyle="bold"
+                    android:textColor="?attr/colorLedgerExpense"
                     tools:text="40,000" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.MilkLedger.MaterialCard.Standard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 app:cardBackgroundColor="?attr/colorPrimaryContainer"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="0dp"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.MilkLedger.Medium"
                 app:layout_constraintTop_toBottomOf="@id/layoutProfit">
 
                 <LinearLayout
@@ -125,20 +121,18 @@
                     android:padding="6dp">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="Retained:"
-                        android:textStyle="bold" />
+                        android:text="Retained:" />
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                         android:id="@+id/tvRetained"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="60,000"
-                        android:textStyle="bold" />
+                        android:text="60,000" />
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -162,7 +156,7 @@
 
     <TextView
         android:id="@+id/tvHistoryHeader"
-        style="@style/Text.Normal"
+        android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -189,6 +183,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnWithdraw"
+        style="@style/Widget.MilkLedger.MaterialButton.Primary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
@@ -200,6 +195,7 @@
 
     <TextView
         android:id="@+id/tvEmpty"
+        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="No withdrawals yet"

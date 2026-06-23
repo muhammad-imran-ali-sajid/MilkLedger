@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.MilkLedger.Card"
+    style="@style/Widget.MilkLedger.MaterialCard.Standard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPurchase"
+            android:background="?attr/colorSecondaryContainer"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
@@ -29,17 +29,17 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Edit"
                 android:src="@drawable/ic_edit_form"
-                app:tint="?attr/colorOnPrimary" />
+                app:tint="?attr/colorOnSecondaryContainer" />
 
             <TextView
                 android:id="@+id/tvName"
-                style="@style/Text.MilkLedger.Title"
+                android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_weight="1"
                 android:text="Ali"
-                android:textColor="?attr/colorOnPrimary" />
+                android:textColor="?attr/colorOnSecondaryContainer" />
 
             <ImageButton
                 android:id="@+id/btnSupplierHistory"
@@ -49,7 +49,7 @@
                 android:contentDescription="History"
                 android:rotation="180"
                 android:src="@drawable/ic_arrow"
-                app:tint="?attr/colorOnPrimary" />
+                app:tint="?attr/colorOnSecondaryContainer" />
         </LinearLayout>
 
         <LinearLayout
@@ -73,14 +73,14 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Vol." />
 
                     <TextView
                         android:id="@+id/tvVolume"
-                        style="@style/Text.MilkLedger.Title"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="3.5" />
@@ -94,14 +94,14 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fat" />
 
                     <TextView
                         android:id="@+id/tvFat"
-                        style="@style/Text.MilkLedger.Title"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="4.5" />
@@ -115,14 +115,14 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="LR" />
 
                     <TextView
                         android:id="@+id/tvLr"
-                        style="@style/Text.MilkLedger.Title"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="28.1" />
@@ -136,7 +136,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
 
                         android:layout_height="wrap_content"
@@ -144,7 +144,7 @@
 
                     <TextView
                         android:id="@+id/tvTs"
-                        style="@style/Text.MilkLedger.Title"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="8.4" />
@@ -172,7 +172,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -180,7 +180,7 @@
 
                     <TextView
                         android:id="@+id/tvPrice"
-                        style="@style/Text.MilkLedger.Title"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="000,000" />
@@ -195,7 +195,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawablePadding="4dp"
@@ -204,7 +204,8 @@
 
                     <TextView
                         android:id="@+id/tvPayment"
-                        style="@style/Text.MilkLedger.Title"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
+                        android:textColor="?attr/colorLedgerExpense"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         tools:text="000,000" />
@@ -221,7 +222,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/ic_info"
@@ -231,26 +232,21 @@
 
                     <TextView
                         android:id="@+id/tvBalance"
-                        style="@style/Text.MilkLedger.Title"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:lines="1"
-                        android:textColor="?attr/colorError"
-                        app:autoSizeMaxTextSize="24sp"
-                        app:autoSizeMinTextSize="14sp"
-                        app:autoSizeTextType="uniform"
+                        android:textColor="?attr/colorLedgerPending"
                         tools:text="000,000" />
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tvNotes"
-                style="@style/Text.Normal"
+                android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:alpha="0.8"
                 tools:text="Note: Milk note." />
 
         </LinearLayout>

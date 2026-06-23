@@ -14,15 +14,15 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        style="@style/Text.Normal"
+        android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
         tools:text="Ali Hassan" />
 
     <ImageView
         android:id="@+id/ivStatus"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/ic_check_circle"
         android:visibility="gone"
         tools:visibility="visible"
-        app:tint="@color/green"/>
+        app:tint="?attr/colorPrimary"/>
 </LinearLayout>

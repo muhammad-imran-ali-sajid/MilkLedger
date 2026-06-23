@@ -4,28 +4,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardRoot"
-    style="@style/Widget.MilkLedger.DashboardCard"
+    style="@style/Widget.MilkLedger.MaterialCard.Standard"
     android:layout_width="match_parent"
-    app:contentPadding="16dp"
+    app:contentPadding="@dimen/space_16"
     android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center_vertical">
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/Text.MilkLedger.DashboardLabel"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             tools:text="Milk Sales" />
 
         <TextView
             android:id="@+id/tvValue"
-            style="@style/Text.MilkLedger.DashboardValue"
-            android:layout_width="wrap_content"
+            android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="150 Ltr" />
 
