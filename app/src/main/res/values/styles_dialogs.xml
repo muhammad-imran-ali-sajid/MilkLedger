@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.MilkLedger.MaterialAlertDialog" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearance">@style/ShapeAppearance.MilkLedger.ExtraLarge</item>
+    </style>
+
+    <style name="ThemeOverlay.MilkLedger.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="alertDialogStyle">@style/Widget.MilkLedger.MaterialAlertDialog</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/TextAppearance.MilkLedger.SectionTitle</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/TextAppearance.MilkLedger.BodyLarge</item>
+    </style>
+</resources>

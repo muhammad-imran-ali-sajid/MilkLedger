@@ -1,92 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
-
-    <!-- ========= PRIMARY ========= -->
+    <!-- Material 3 light color roles -->
     <color name="md_theme_primary">#006C4C</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
     <color name="md_theme_primaryContainer">#89F8C7</color>
     <color name="md_theme_onPrimaryContainer">#002114</color>
 
-    <!-- ========= SECONDARY ========= -->
     <color name="md_theme_secondary">#4D6357</color>
     <color name="md_theme_onSecondary">#FFFFFF</color>
     <color name="md_theme_secondaryContainer">#CFE9D9</color>
     <color name="md_theme_onSecondaryContainer">#092016</color>
 
-    <!-- ========= ERROR ========= -->
-    <color name="md_theme_error">#BA1A1A</color>
-    <color name="md_theme_onError">#FFFFFF</color>
-
-    <!-- ========= BACKGROUND ========= -->
-    <color name="md_theme_background">#FAFAFA</color>
-
-    <!-- ========= SURFACE ========= -->
-    <color name="md_theme_surface">#FAFAFA</color>
+    <color name="md_theme_background">#FAFDF9</color>
+    <color name="md_theme_surface">#FAFDF9</color>
+    <color name="md_theme_surfaceContainer">#EEF2ED</color>
+    <color name="md_theme_surfaceContainerHigh">#E8ECE7</color>
     <color name="md_theme_onSurface">#191C1A</color>
     <color name="md_theme_surfaceVariant">#DBE5DE</color>
-<!--    <color name="md_theme_surfaceVariant">#EEF3F1</color>-->
     <color name="md_theme_onSurfaceVariant">#404944</color>
+    <color name="md_theme_outline">#707973</color>
 
+    <color name="md_theme_error">#BA1A1A</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_errorContainer">#FFDAD6</color>
+    <color name="md_theme_onErrorContainer">#410002</color>
 
-    <color name="milk_sale_color">#006E1C</color>
-    <color name="milk_purchase_color">#005FB0</color>
-    <color name="milk_expense_color">#E64A19</color>
-    <color name="milk_profit_color">#006E1C</color>
-    <color name="milk_date_color">#FF9800</color>
+    <!-- MilkLedger semantic roles -->
+    <color name="ledger_income">#146C2E</color>
+    <color name="ledger_expense">#B3261E</color>
+    <color name="ledger_pending">#315DA8</color>
+    <color name="ledger_warning">#8A4F00</color>
 
+    <!-- Existing custom color names retained as compatibility aliases. -->
+    <color name="milk_sale_color">@color/ledger_income</color>
+    <color name="milk_purchase_color">@color/ledger_pending</color>
+    <color name="milk_expense_color">@color/ledger_expense</color>
+    <color name="milk_profit_color">@color/ledger_income</color>
+    <color name="milk_date_color">@color/ledger_warning</color>
+
+    <!-- Existing screen-specific resources retained until their layouts migrate. -->
     <color name="dashboard_net_profit">#2B2E7D32</color>
     <color name="dashboard_prsnl_exp">#2BF57C00</color>
     <color name="dashboard_my_profit">#2B1565C0</color>
 
-
-
-
-    <!-- End -->
-
-
+    <!-- Legacy direct-use palette. Do not use these names in new visual styles. -->
     <color name="deep_forest_green">#2C3E50</color>
-
-    <!-- Primary Brand Color (A strong, accessible blue) -->
-    <!--    <color name="primary">#00796B</color>-->
     <color name="primary">#45B39D</color>
-    <!-- Text/Icons ON Primary (Should always be white for contrast) -->
-
-
-    <!-- Secondary Accent Color (A neutral green for secondary actions or completion status) -->
-    <!--    <color name="secondary">#4D8B31</color>-->
-    <!-- Text/Icons ON Secondary -->
-
-    <!-- UI Background Surfaces (Near-white for light theme) -->
-    <!-- Text/Icons ON Surfaces (Near-black for contrast) -->
-
     <color name="teal_700">#00796B</color>
     <color name="orange_700">#E65100</color>
-    <color name="orange_200">#eecD90</color>
-
-
+    <color name="orange_200">#EECD90</color>
     <color name="blue_700">#1236DD</color>
     <color name="green_700">#2E7D32</color>
-    <color name="green">#2faD32</color>
-
-
-    <!--    App specific colors-->
-
+    <color name="green">#2FAD32</color>
     <color name="purchase_color">#103766</color>
-
-
-    <color name="white">#fff</color>
-    <color name="black">#000</color>
-    <color name="grey">#eeeeee</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey">#EEEEEE</color>
     <color name="red">#F44336</color>
     <color name="blue">#2196F3</color>
     <color name="blue_100">#B3E5FC</color>
-
-
-    <!-- EditText white -->
-    <!-- Light orange-ish for TextViews -->
-
-
-    <!-- Divider -->
 </resources>

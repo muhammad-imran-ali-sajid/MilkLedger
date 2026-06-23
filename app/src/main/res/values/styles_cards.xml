@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Canonical Material 3 card styles for gradual layout adoption. -->
+    <style name="Widget.MilkLedger.MaterialCard.Standard" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.Medium</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.MilkLedger.MaterialCard.Outlined" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.Medium</item>
+        <item name="strokeColor">?attr/colorOutline</item>
+        <item name="strokeWidth">@dimen/component_stroke_width</item>
+    </style>
+
+    <!-- Referenced legacy card styles retained until layout migration. -->
+    <style name="Widget.MilkLedger.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
+        <item name="contentPadding">10dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Medium</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.MilkLedger.DashboardCard" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">?attr/colorSurfaceVariant</item>
+        <item name="contentPadding">8dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Large</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
+</resources>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Canonical Material 3 button styles for gradual layout adoption. -->
+    <style name="Widget.MilkLedger.MaterialButton.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textAppearance">@style/TextAppearance.MilkLedger.LabelLarge</item>
+        <item name="android:minHeight">@dimen/component_min_height</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.Medium</item>
+    </style>
+
+    <style name="Widget.MilkLedger.MaterialButton.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textAppearance">@style/TextAppearance.MilkLedger.LabelLarge</item>
+        <item name="android:minHeight">@dimen/component_min_height</item>
+        <item name="strokeColor">?attr/colorOutline</item>
+        <item name="strokeWidth">@dimen/component_stroke_width</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.Medium</item>
+    </style>
+
+    <style name="Widget.MilkLedger.MaterialButton.Text" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textAppearance">@style/TextAppearance.MilkLedger.LabelLarge</item>
+        <item name="android:minHeight">@dimen/component_min_height</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.Medium</item>
+    </style>
+
+    <!-- Referenced legacy button styles retained until layout migration. -->
+    <style name="Widget.MilkLedger.Button.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.MilkLedger.Button.Icon" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:layout_marginHorizontal">1dp</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.MilkLedger.Button.Outline" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:layout_marginHorizontal">1dp</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">12dp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

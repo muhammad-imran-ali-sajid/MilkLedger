@@ -1,112 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-
-    <!-- ================================================= -->
-    <!-- DISPLAY (Rare use – very large text) -->
-    <!-- ================================================= -->
-
-    <style name="Text.MilkLedger.DisplayLarge"
-        parent="TextAppearance.Material3.DisplayLarge">
-        <item name="android:textSize">34sp</item>
+<resources>
+    <!-- Canonical MilkLedger typography scale -->
+    <style name="TextAppearance.MilkLedger.ScreenTitle" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">26sp</item>
+        <item name="lineHeight">34sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">42sp</item>
     </style>
 
+    <style name="TextAppearance.MilkLedger.SectionTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">22sp</item>
+        <item name="lineHeight">30sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 
-    <!-- ================================================= -->
-    <!-- HEADLINE (Screen titles) -->
-    <!-- ================================================= -->
+    <style name="TextAppearance.MilkLedger.CardTitle" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">20sp</item>
+        <item name="lineHeight">28sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
 
-    <style name="Text.MilkLedger.HeadlineLarge"
-        parent="TextAppearance.Material3.HeadlineLarge">
+    <style name="TextAppearance.MilkLedger.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:textSize">18sp</item>
+        <item name="lineHeight">28sp</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textSize">17sp</item>
+        <item name="lineHeight">26sp</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">17sp</item>
+        <item name="lineHeight">24sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:textSize">16sp</item>
+        <item name="lineHeight">22sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.AmountLarge" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">30sp</item>
+        <item name="lineHeight">38sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.AmountMedium" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textSize">24sp</item>
+        <item name="lineHeight">32sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.AmountSmall" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textSize">18sp</item>
+        <item name="lineHeight">26sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- Semantic ledger amount appearances -->
+    <style name="TextAppearance.MilkLedger.Amount.Income" parent="TextAppearance.MilkLedger.AmountMedium">
+        <item name="android:textColor">?attr/colorLedgerIncome</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.Amount.Expense" parent="TextAppearance.MilkLedger.AmountMedium">
+        <item name="android:textColor">?attr/colorLedgerExpense</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.Amount.Pending" parent="TextAppearance.MilkLedger.AmountMedium">
+        <item name="android:textColor">?attr/colorLedgerPending</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.Amount.Warning" parent="TextAppearance.MilkLedger.AmountMedium">
+        <item name="android:textColor">?attr/colorLedgerWarning</item>
+    </style>
+
+    <!-- Legacy text appearances retained unchanged for existing layouts. -->
+    <style name="Text.MilkLedger.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:textSize">34sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="lineHeight">42sp</item>
+    </style>
+
+    <style name="Text.MilkLedger.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
         <item name="android:textSize">26sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Text.MilkLedger.HeadlineSmall"
-        parent="TextAppearance.Material3.HeadlineSmall">
+    <style name="Text.MilkLedger.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
         <item name="android:textSize">24sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">30sp</item>
+        <item name="lineHeight">30sp</item>
     </style>
 
-
-    <!-- ================================================= -->
-    <!-- TITLE (Card titles, drawer header name) -->
-    <!-- ================================================= -->
-
-    <style name="Text.MilkLedger.TitleLarge"
-        parent="TextAppearance.Material3.TitleLarge">
+    <style name="Text.MilkLedger.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">30sp</item>
+        <item name="lineHeight">30sp</item>
     </style>
 
-    <style name="Text.MilkLedger.TitleMedium"
-        parent="TextAppearance.Material3.TitleMedium">
+    <style name="Text.MilkLedger.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:textSize">21sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">28sp</item>
+        <item name="lineHeight">28sp</item>
     </style>
 
-    <style name="Text.MilkLedger.TitleSmall"
-        parent="TextAppearance.Material3.TitleSmall">
+    <style name="Text.MilkLedger.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">28sp</item>
+        <item name="lineHeight">28sp</item>
     </style>
 
-
-    <!-- ================================================= -->
-    <!-- BODY (MOST IMPORTANT – main content) -->
-    <!-- ================================================= -->
-
-    <style name="Text.MilkLedger.BodyLarge"
-        parent="TextAppearance.Material3.BodyLarge">
+    <style name="Text.MilkLedger.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">30sp</item>
+        <item name="lineHeight">30sp</item>
     </style>
 
-    <style name="Text.MilkLedger.BodyMedium"
-        parent="TextAppearance.Material3.BodyMedium">
+    <style name="Text.MilkLedger.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
         <item name="android:textSize">19sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">28sp</item>
+        <item name="lineHeight">28sp</item>
     </style>
 
-    <style name="Text.MilkLedger.BodySmall"
-        parent="TextAppearance.Material3.BodySmall">
+    <style name="Text.MilkLedger.BodySmall" parent="TextAppearance.Material3.BodySmall">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">26sp</item>
+        <item name="lineHeight">26sp</item>
     </style>
 
-
-    <!-- ================================================= -->
-    <!-- LABEL (Buttons, small UI – still readable) -->
-    <!-- ================================================= -->
-
-    <style name="Text.MilkLedger.LabelLarge"
-        parent="TextAppearance.Material3.LabelLarge">
+    <style name="Text.MilkLedger.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:lineHeight">24sp</item>
+        <item name="lineHeight">24sp</item>
     </style>
 
-    <style name="Text.MilkLedger.LabelMedium"
-        parent="TextAppearance.Material3.LabelMedium">
+    <style name="Text.MilkLedger.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
         <item name="android:textSize">17sp</item>
-        <item name="android:lineHeight">22sp</item>
+        <item name="lineHeight">22sp</item>
     </style>
 
-    <style name="Text.MilkLedger.LabelSmall"
-        parent="TextAppearance.Material3.LabelSmall">
+    <style name="Text.MilkLedger.LabelSmall" parent="TextAppearance.Material3.LabelSmall">
         <item name="android:textSize">16sp</item>
-        <item name="android:lineHeight" tools:ignore="NewApi">22sp</item>
+        <item name="lineHeight">22sp</item>
     </style>
-
-
-
-
 </resources>

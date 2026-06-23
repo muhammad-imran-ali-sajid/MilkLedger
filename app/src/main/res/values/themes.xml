@@ -1,67 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="Base.Theme.MilkLedger" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Preserve existing system-bar behavior. -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
 
-                <item name="android:statusBarColor">@android:color/transparent</item>
-        <!-- false means white  aur true means dark-->
-                <item name="android:windowLightStatusBar">true</item>
-
-
+        <!-- Material 3 color roles -->
         <item name="colorPrimary">@color/md_theme_primary</item>
         <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
-
-
         <item name="colorSecondary">@color/md_theme_secondary</item>
         <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
         <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
         <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
-
-        <item name="colorError">@color/md_theme_error</item>
-        <item name="colorOnError">@color/md_theme_onError</item>
-
         <item name="android:colorBackground">@color/md_theme_background</item>
         <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorSurfaceContainer">@color/md_theme_surfaceContainer</item>
+        <item name="colorSurfaceContainerHigh">@color/md_theme_surfaceContainerHigh</item>
         <item name="colorOnSurface">@color/md_theme_onSurface</item>
         <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
         <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_theme_outline</item>
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
+        <item name="colorErrorContainer">@color/md_theme_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_theme_onErrorContainer</item>
 
-        <!-- Ledger semantic colors -->
-        <item name="colorPurchase">@color/milk_purchase_color</item>
-        <item name="colorSale">@color/milk_sale_color</item>
-        <item name="colorProfit">@color/milk_profit_color</item>
-        <item name="colorExpense">@color/milk_expense_color</item>
-        <item name="colorDate">@color/milk_date_color</item>
+        <!-- Canonical ledger semantic roles -->
+        <item name="colorLedgerIncome">@color/ledger_income</item>
+        <item name="colorLedgerExpense">@color/ledger_expense</item>
+        <item name="colorLedgerPending">@color/ledger_pending</item>
+        <item name="colorLedgerWarning">@color/ledger_warning</item>
 
+        <!-- Legacy ledger semantic compatibility -->
+        <item name="colorPurchase">@color/ledger_pending</item>
+        <item name="colorSale">@color/ledger_income</item>
+        <item name="colorProfit">@color/ledger_income</item>
+        <item name="colorExpense">@color/ledger_expense</item>
+        <item name="colorDate">@color/ledger_warning</item>
 
-        <!--texts -->
-        <item name="textAppearanceBodyLarge">@style/Text.MilkLedger.BodyLarge</item>
-        <item name="textAppearanceBodyMedium">@style/Text.MilkLedger.BodyMedium</item>
-        <item name="textAppearanceBodySmall">@style/Text.MilkLedger.BodySmall</item>
+        <!-- High-legibility Material 3 typography roles -->
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.MilkLedger.ScreenTitle</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.MilkLedger.ScreenTitle</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.MilkLedger.ScreenTitle</item>
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.MilkLedger.ScreenTitle</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.MilkLedger.ScreenTitle</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.MilkLedger.SectionTitle</item>
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.MilkLedger.SectionTitle</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.MilkLedger.CardTitle</item>
+        <item name="textAppearanceTitleSmall">@style/TextAppearance.MilkLedger.CardTitle</item>
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.MilkLedger.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.MilkLedger.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.MilkLedger.BodyMedium</item>
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.MilkLedger.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.MilkLedger.LabelMedium</item>
+        <item name="textAppearanceLabelSmall">@style/TextAppearance.MilkLedger.LabelMedium</item>
 
-        <item name="textAppearanceLabelLarge">@style/Text.MilkLedger.LabelLarge</item>
-        <item name="textAppearanceLabelMedium">@style/Text.MilkLedger.LabelMedium</item>
-        <item name="textAppearanceLabelSmall">@style/Text.MilkLedger.LabelSmall</item>
-
-        <item name="textAppearanceTitleLarge">@style/Text.MilkLedger.TitleLarge</item>
-        <item name="textAppearanceTitleMedium">@style/Text.MilkLedger.TitleMedium</item>
-        <item name="textAppearanceTitleSmall">@style/Text.MilkLedger.TitleSmall</item>
-
+        <item name="toolbarStyle">@style/Widget.MilkLedger.MaterialToolbar</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MilkLedger.MaterialAlertDialog</item>
     </style>
 
     <style name="Theme.MilkLedger" parent="Base.Theme.MilkLedger" />
-
     <style name="Theme.Launcher" parent="Theme.MilkLedger" />
-
     <style name="Theme.Auth" parent="Theme.MilkLedger" />
 
-    <style name="Theme.MilkLedger.Alarm" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.MilkLedger.Alarm" parent="Theme.MilkLedger">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:showWhenLocked">true</item>
         <item name="android:turnScreenOn">true</item>
     </style>
-
 </resources>

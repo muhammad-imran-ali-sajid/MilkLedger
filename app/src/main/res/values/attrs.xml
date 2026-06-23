@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Ledger specific colors -->
+    <!-- Canonical ledger semantic colors -->
+    <attr name="colorLedgerIncome" format="color" />
+    <attr name="colorLedgerExpense" format="color" />
+    <attr name="colorLedgerPending" format="color" />
+    <attr name="colorLedgerWarning" format="color" />
+
+    <!-- Legacy compatibility attributes. Prefer the colorLedger* API above. -->
     <attr name="colorPurchase" format="color" />
     <attr name="colorSale" format="color" />
     <attr name="colorProfit" format="color" />

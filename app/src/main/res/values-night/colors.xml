@@ -1,83 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
-
-    <!-- ========= PRIMARY ========= -->
+    <!-- Material 3 dark color roles -->
     <color name="md_theme_primary">#6ADDB0</color>
     <color name="md_theme_onPrimary">#003828</color>
     <color name="md_theme_primaryContainer">#00513C</color>
     <color name="md_theme_onPrimaryContainer">#89F8C7</color>
 
-    <!-- ========= SECONDARY ========= -->
     <color name="md_theme_secondary">#B3CCBD</color>
     <color name="md_theme_onSecondary">#1F3529</color>
     <color name="md_theme_secondaryContainer">#354B3E</color>
     <color name="md_theme_onSecondaryContainer">#CFE9D9</color>
 
-    <!-- ========= ERROR ========= -->
-    <color name="md_theme_error">#FFB4AB</color>
-    <color name="md_theme_onError">#690005</color>
-
-    <!-- ========= BACKGROUND ========= -->
     <color name="md_theme_background">#0F1512</color>
-
-    <!-- ========= SURFACE ========= -->
     <color name="md_theme_surface">#0F1512</color>
+    <color name="md_theme_surfaceContainer">#1B211E</color>
+    <color name="md_theme_surfaceContainerHigh">#252B28</color>
     <color name="md_theme_onSurface">#E0E3DF</color>
     <color name="md_theme_surfaceVariant">#404944</color>
     <color name="md_theme_onSurfaceVariant">#C0C9C2</color>
+    <color name="md_theme_outline">#89938D</color>
 
+    <color name="md_theme_error">#FFB4AB</color>
+    <color name="md_theme_onError">#690005</color>
+    <color name="md_theme_errorContainer">#93000A</color>
+    <color name="md_theme_onErrorContainer">#FFDAD6</color>
 
+    <!-- MilkLedger semantic roles -->
+    <color name="ledger_income">#76DF8F</color>
+    <color name="ledger_expense">#FFB4AB</color>
+    <color name="ledger_pending">#ADC6FF</color>
+    <color name="ledger_warning">#FFB95C</color>
 
-    <!--    App specific colors-->
-    <color name="milk_sale_color">#76DF8F</color>
-    <color name="milk_purchase_color">#A2C9FF</color>
-    <color name="milk_expense_color">#F2B8B5</color>
-    <color name="milk_profit_color">#76DF8F</color>
-    <color name="milk_date_color">#FFEB3B</color>
+    <!-- Existing custom color names retained as compatibility aliases. -->
+    <color name="milk_sale_color">@color/ledger_income</color>
+    <color name="milk_purchase_color">@color/ledger_pending</color>
+    <color name="milk_expense_color">@color/ledger_expense</color>
+    <color name="milk_profit_color">@color/ledger_income</color>
+    <color name="milk_date_color">@color/ledger_warning</color>
 
-
-
-    <!-- End -->
-
-
+    <!-- Legacy direct-use palette retained until existing layouts migrate. -->
     <color name="deep_forest_green">#2C3E50</color>
-
-    <!-- Primary Brand Color (A strong, accessible blue) -->
-    <!--    <color name="primary">#00796B</color>-->
     <color name="primary">#45B39D</color>
-    <!-- Text/Icons ON Primary (Should always be white for contrast) -->
-
-
-    <!-- Secondary Accent Color (A neutral green for secondary actions or completion status) -->
-    <!--    <color name="secondary">#4D8B31</color>-->
-    <!-- Text/Icons ON Secondary -->
-
-    <!-- UI Background Surfaces (Near-white for light theme) -->
-    <!-- Text/Icons ON Surfaces (Near-black for contrast) -->
-
     <color name="teal_700">#00796B</color>
     <color name="orange_700">#E65100</color>
-    <color name="orange_200">#eecD90</color>
-
-
+    <color name="orange_200">#EECD90</color>
     <color name="blue_700">#1236DD</color>
     <color name="green_700">#2E7D32</color>
-    <color name="green">#2faD32</color>
-
-
-    <color name="white">#fff</color>
-    <color name="black">#000</color>
-    <color name="grey">#eeeeee</color>
+    <color name="green">#2FAD32</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="grey">#EEEEEE</color>
     <color name="red">#F44336</color>
     <color name="blue">#2196F3</color>
     <color name="blue_100">#B3E5FC</color>
-
-
-    <!-- EditText white -->
-    <!-- Light orange-ish for TextViews -->
-
-
-    <!-- Divider -->
 </resources>
