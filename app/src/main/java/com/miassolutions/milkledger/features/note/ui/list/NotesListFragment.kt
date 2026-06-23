@@ -36,7 +36,6 @@ class NoteListFragment : BaseFragment<FragmentNotesListBinding>(
 
         // Setup RecyclerView with Staggered Layout (Google Keep Style)
         binding.rvNotes.apply {
-            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             adapter = this@NoteListFragment.adapter
         }
 
