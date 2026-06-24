@@ -38,11 +38,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Vol." />
 
                 <TextView
                     android:id="@+id/tvMilk"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="40.0" />
             </LinearLayout>
@@ -56,11 +58,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Deduc." />
 
                 <TextView
                     android:id="@+id/tv_deduction"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="2.0" />
             </LinearLayout>
@@ -74,11 +78,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Net Milk" />
 
                 <TextView
                     android:id="@+id/tvNetMilk"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="38.0" />
             </LinearLayout>
@@ -101,11 +107,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Price" />
 
                 <TextView
                     android:id="@+id/tvPrice"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="10000" />
             </LinearLayout>
@@ -118,6 +126,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Receive" />
 
@@ -129,12 +138,14 @@
 
                     <TextView
                         android:id="@+id/tvPayment"
+                        style="@style/Text.Normal"
                         android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:textColor="?attr/colorLedgerIncome"
                         tools:text="10,000" />
 
                     <TextView
                         android:id="@+id/tvPaymentDate"
+                        style="@style/Text.Normal"
                         android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:paddingStart="4dp"
                         android:text="(20/11)"
@@ -151,11 +162,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Bal." />
 
                 <TextView
                     android:id="@+id/tvBalance"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     android:textColor="?attr/colorLedgerPending"
                     tools:text="10000" />
@@ -177,6 +190,7 @@
         <!-- Notes -->
         <TextView
             android:id="@+id/tvNotes"
+            style="@style/Text.Normal"
             android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
             tools:text="Note: no note" />
     </LinearLayout>

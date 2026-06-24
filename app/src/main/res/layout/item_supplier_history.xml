@@ -41,11 +41,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Vol." />
 
                 <TextView
                     android:id="@+id/tvMilk"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="40.0" />
             </LinearLayout>
@@ -59,11 +61,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Fat" />
 
                 <TextView
                     android:id="@+id/tv_fat"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="2.0" />
             </LinearLayout>
@@ -77,11 +81,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="LR" />
 
                 <TextView
                     android:id="@+id/tv_lr"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="2.0" />
             </LinearLayout>
@@ -95,11 +101,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="TS" />
 
                 <TextView
                     android:id="@+id/tv_ts"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="38.0" />
             </LinearLayout>
@@ -121,11 +129,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Price" />
 
                 <TextView
                     android:id="@+id/tvPrice"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     tools:text="10000" />
             </LinearLayout>
@@ -138,6 +148,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Paid" />
 
@@ -149,12 +160,14 @@
 
                     <TextView
                         android:id="@+id/tvPayment"
+                        style="@style/Text.Normal"
                         android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:textColor="?attr/colorLedgerExpense"
                         tools:text="10,000" />
 
                     <TextView
                         android:id="@+id/tvPaymentDate"
+                        style="@style/Text.Normal"
                         android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:paddingStart="4dp"
                         android:text="(20/11)"
@@ -171,11 +184,13 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Bal." />
 
                 <TextView
                     android:id="@+id/tvBalance"
+                    style="@style/Text.Normal"
                     android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                     android:textColor="?attr/colorLedgerPending"
                     tools:text="1000000" />
@@ -197,6 +212,7 @@
         <!-- Notes -->
         <TextView
             android:id="@+id/tvNotes"
+            style="@style/Text.Normal"
             android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
             app:paddingStart="16dp"
             tools:text="Not: no note" />

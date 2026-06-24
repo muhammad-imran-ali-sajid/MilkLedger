@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     style="@style/Widget.MilkLedger.MaterialCard.Outlined"
     app:contentPadding="8dp"
-    app:strokeColor="?attr/colorOutlineVariant"
-    app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.None">
+    app:strokeColor="?attr/colorOutlineVariant">
 
     <LinearLayout
         android:layout_width="match_parent"
