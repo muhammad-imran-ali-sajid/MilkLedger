@@ -10,14 +10,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="© 2026 MilkLedger"
-        android:textColor="@color/md_theme_onPrimaryContainer"
-        android:textSize="12sp"/>
+        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
+        android:textColor="?attr/colorOnPrimaryContainer"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Developed by\nM. Imran Ali Sajid"
-        android:textColor="@color/milk_sale_color"
-        android:textSize="12sp"
+        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
+        android:textColor="?attr/colorPrimary"
         android:gravity="center"/>
 </LinearLayout>

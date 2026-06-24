@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:text="Select Theme"
         android:layout_marginBottom="16dp"
-        android:textAppearance="@style/Text.Normal"/>
+        android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+        android:textColor="?attr/colorOnSurface"/>
 
 
     <RadioGroup
@@ -24,6 +25,7 @@
 
         <RadioButton
             android:id="@+id/rbSystem"
+            android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
             android:textColor="?attr/colorOnSurface"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,6 +33,7 @@
 
         <RadioButton
             android:id="@+id/rbLight"
+            android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
             android:textColor="?attr/colorOnSurface"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,6 +41,7 @@
 
         <RadioButton
             android:id="@+id/rbDark"
+            android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
             android:textColor="?attr/colorOnSurface"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

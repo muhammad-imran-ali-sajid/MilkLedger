@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface">
 
     <com.miassolutions.milkledger.utils.customview.DateFilterView
         android:id="@+id/dateFilterView"
@@ -22,7 +23,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="0dp"
-            style="@style/Widget.MilkLedger.DashboardCard"
+            style="@style/Widget.MilkLedger.MaterialCard.Standard"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="6dp"
@@ -37,7 +38,7 @@
                 >
 
                 <TextView
-                    style="@style/Text.Normal"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cash In"
@@ -45,7 +46,7 @@
 
                 <TextView
                     android:id="@+id/tvTotalIn"
-                    style="@style/Text.Normal"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -59,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            style="@style/Widget.MilkLedger.DashboardCard"
+            style="@style/Widget.MilkLedger.MaterialCard.Standard"
             android:layout_marginStart="6dp"
             app:strokeWidth="0dp"
             >
@@ -72,7 +73,7 @@
                 >
 
                 <TextView
-                    style="@style/Text.Normal"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cash Out"
@@ -80,7 +81,7 @@
 
                 <TextView
                     android:id="@+id/tvTotalOut"
-                    style="@style/Text.Normal"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
@@ -96,7 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="12dp"
-        style="@style/Widget.MilkLedger.Card"
+        style="@style/Widget.MilkLedger.MaterialCard.Standard"
         app:cardBackgroundColor="?attr/colorSurfaceVariant"
         app:layout_constraintTop_toBottomOf="@id/layoutSummary">
 
@@ -108,7 +109,7 @@
             android:gravity="center_vertical">
 
             <TextView
-                style="@style/Text.Normal"
+                android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -117,7 +118,7 @@
 
             <TextView
                 android:id="@+id/tvNetCash"
-                style="@style/Text.Normal"
+                android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                 android:textColor="?attr/colorProfit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -127,13 +128,13 @@
 
     <TextView
         android:id="@+id/tvHeader"
-        style="@style/Text.Normal"
+        android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Transactions Log"
-        android:textStyle="bold"
+        android:textColor="?attr/colorOnSurface"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cardNet" />
 

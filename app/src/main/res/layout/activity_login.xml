@@ -16,9 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Welcome"
-        android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+        android:textAppearance="@style/TextAppearance.MilkLedger.ScreenTitle"
         android:textColor="?attr/colorPrimary"
-        android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -29,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:text="User Login"
-        android:textAppearance="@style/TextAppearance.Material3.DisplaySmall"
+        android:textAppearance="@style/TextAppearance.MilkLedger.ScreenTitle"
         android:textColor="?attr/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/til_email"
         app:layout_constraintEnd_toEndOf="@+id/tvWelcome"
@@ -47,7 +46,7 @@
     <!-- Email/Username Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_email"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Email or Username"
@@ -66,7 +65,7 @@
     <!-- Password Input -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_password"
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:hint="Password"
@@ -87,12 +86,11 @@
     <!-- Login Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_login"
+        style="@style/Widget.MilkLedger.MaterialButton.Primary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Login"
         android:paddingVertical="12dp"
-        android:textSize="16sp"
-        app:cornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/til_password"
@@ -100,12 +98,12 @@
 
     <!-- Forgot Password Link/Button -->
     <com.google.android.material.button.MaterialButton
-        style="@style/Widget.Material3.Button.TextButton"
+        style="@style/Widget.MilkLedger.MaterialButton.Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/btnForgotPassword"
         android:text="Forgot Password?"
-        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+        android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge"
         android:textColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_login"

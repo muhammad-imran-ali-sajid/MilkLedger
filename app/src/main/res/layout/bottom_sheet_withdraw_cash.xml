@@ -35,7 +35,7 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_delete"
             android:visibility="gone"
-            app:tint="@color/red" />
+            app:tint="?attr/colorError" />
 
     </LinearLayout>
 

@@ -16,6 +16,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Processing..."
-        android:textSize="16sp"
-        android:textColor="@android:color/black" />
+        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
+        android:textColor="?attr/colorOnSurface" />
 </LinearLayout>

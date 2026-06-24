@@ -12,9 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="milk_ledger_backup_2026_06_10_12_38_42.mlbackup"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textSize="14sp" />
+        android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
+        android:textColor="?attr/colorOnSurface" />
 
     <ImageButton
         android:id="@+id/btnRestoreFromHistory"

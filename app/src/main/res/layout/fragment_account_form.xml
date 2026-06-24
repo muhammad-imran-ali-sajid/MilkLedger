@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
     android:orientation="vertical">
 
     <!-- ========================= -->
     <!-- HEADER : ACCOUNT STATUS  -->
     <!-- ========================= -->
     <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.MilkLedger.MaterialCard.Standard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -43,7 +45,7 @@
 
             <!-- ===== BASIC INFO ===== -->
             <TextView
-                style="@style/DashboardMilkValue"
+                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
@@ -53,6 +55,7 @@
             <!-- Sort Order -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/sortOrderLayout"
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Sort Order">
@@ -69,6 +72,7 @@
             <!-- Person Name -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/nameLayout"
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
 
                 android:layout_height="wrap_content"
@@ -86,6 +90,7 @@
 
             <!-- Account Type -->
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -100,6 +105,7 @@
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/rbSupplier"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -107,6 +113,7 @@
 
                     <com.google.android.material.radiobutton.MaterialRadioButton
                         android:id="@+id/rbCustomer"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
@@ -119,6 +126,7 @@
             <!-- Rate -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/rateLayout"
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -135,6 +143,7 @@
 
             <!-- ===== FINANCIAL INFO ===== -->
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.MilkLedger.MaterialCard.Standard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -147,7 +156,8 @@
                     android:padding="16dp">
 
                     <TextView
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
+                        android:textColor="?attr/colorOnSurface"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Balance Preview" />
@@ -155,7 +165,7 @@
 
                     <TextView
                         android:id="@+id/tvBalancePreview"
-                        style="@style/Text.Normal"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
@@ -165,6 +175,7 @@
                     <!-- Initial Balance -->
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/initialBalanceLayout"
+                        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -186,6 +197,7 @@
             <!-- Opening Date -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/openingDateLayout"
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -207,6 +219,7 @@
             <!-- Advance Amount -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/advanceAmountLayout"
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -235,7 +248,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSave"
-            style="@style/Text.Normal"
+            style="@style/Widget.MilkLedger.MaterialButton.Primary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -244,7 +257,7 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDelete"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+            style="@style/Widget.MilkLedger.MaterialButton.Outlined"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

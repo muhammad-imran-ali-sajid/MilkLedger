@@ -16,12 +16,11 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/statusCard"
+            style="@style/Widget.MilkLedger.MaterialCard.Outlined"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="18dp"
             app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="?attr/colorOutlineVariant">
+            app:strokeColor="?attr/colorOutline">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -34,8 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Backup &amp; Restore"
-                    android:textAppearance="?attr/textAppearanceTitleLarge"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.MilkLedger.ScreenTitle" />
 
                 <TextView
                     android:id="@+id/tvSubtitle"
@@ -43,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Protect your milk ledger data using Google Drive backup."
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                     android:textColor="?attr/colorOnSurfaceVariant" />
 
                 <View
@@ -51,14 +49,13 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:background="?attr/colorOutlineVariant" />
+                    android:background="?attr/colorOutline" />
 
                 <TextView
                     android:id="@+id/tvBackupStatus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?attr/textAppearanceTitleMedium"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
                     tools:text="Last backup: Today, 12:38 PM" />
 
                 <TextView
@@ -66,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
                     android:textColor="?attr/colorOnSurfaceVariant"
                     tools:text="milk_ledger_backup_2026_06_10_12_38_42.mlbackup" />
 
@@ -77,7 +74,7 @@
                     android:layout_marginTop="10dp"
                     android:padding="10dp"
                     android:text="Backup is older than 48 hours. Please backup now."
-                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge"
                     android:textColor="?attr/colorError"
                     android:visibility="gone"
                     tools:visibility="visible" />
@@ -95,13 +92,12 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnBackupNow"
+                style="@style/Widget.MilkLedger.MaterialButton.Primary"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:text="Backup Now"
-                android:textSize="18sp"
-                app:cornerRadius="12dp"
                 app:icon="@drawable/ic_backup"
                 app:iconGravity="textStart"
                 app:layout_constraintBottom_toBottomOf="@+id/btnRefresh"
@@ -113,14 +109,12 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRefresh"
-                style="@style/Widget.Material3.Button.OutlinedButton"
+                style="@style/Widget.MilkLedger.MaterialButton.Outlined"
                 android:layout_width="0dp"
-                android:layout_height="70dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_weight="1"
                 android:text="Refresh"
-                android:textSize="18sp"
-                app:cornerRadius="12dp"
                 app:icon="@drawable/baseline_refresh_24"
                 app:iconGravity="textStart"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -147,8 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
             android:text="Backup History"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle" />
 
         <TextView
             android:id="@+id/tvHistorySubtitle"
@@ -156,7 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="Choose a backup only when you need to restore data."
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -176,7 +169,7 @@
             android:gravity="center"
             android:padding="24dp"
             android:text="No Google Drive backups found."
-            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone"
             tools:visibility="visible" />
@@ -184,14 +177,14 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/localBackupCard"
+            style="@style/Widget.MilkLedger.MaterialCard.Standard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
-            app:cardCornerRadius="18dp"
             app:cardElevation="0dp"
-            app:strokeWidth="1dp"
-            app:cardBackgroundColor="#2B64FFDA"
-            app:strokeColor="#F664FFDA">
+            app:cardBackgroundColor="?attr/colorPrimaryContainer"
+            app:strokeColor="?attr/colorPrimary"
+            app:strokeWidth="@dimen/component_stroke_width">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -203,16 +196,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Local Backup"
-                    android:textAppearance="?attr/textAppearanceTitleMedium"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
+                    android:textColor="?attr/colorOnPrimaryContainer" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Use this as an emergency backup file. You can save it to phone storage, USB, or share it manually."
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    android:textColor="?attr/colorOnSurfaceVariant" />
+                    android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
+                    android:textColor="?attr/colorOnPrimaryContainer" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -222,9 +215,9 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCreateLocalBackup"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="@style/Widget.MilkLedger.MaterialButton.Outlined"
                         android:layout_width="0dp"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
                         android:layout_weight="1"
                         android:text="Create File"
@@ -236,11 +229,14 @@
 
                     <Space
                         android:layout_width="12dp"
-                        android:layout_height="1dp" />
+                        android:layout_height="1dp"
+                        app:layout_constraintEnd_toStartOf="@id/btnRestoreLocalBackup"
+                        app:layout_constraintStart_toEndOf="@id/btnCreateLocalBackup"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnRestoreLocalBackup"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        style="@style/Widget.MilkLedger.MaterialButton.Outlined"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"

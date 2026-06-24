@@ -32,7 +32,7 @@
 
         android:drawableEnd="@drawable/ic_arrow_pick"
         android:text="12-10-2025"
-        android:textSize="20sp"
+        android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
         app:drawableStartCompat="@drawable/ic_calendar" />
 
     <ImageButton

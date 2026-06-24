@@ -18,23 +18,23 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:text="Edit Expense"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
+            android:textColor="?attr/colorOnSurface" />
 
         <ImageView
             android:id="@+id/btnDelete"
-            style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_marginStart="16dp"
             android:padding="12dp"
             android:src="@drawable/ic_delete"
-            app:tint="@color/red" />
+            app:tint="?attr/colorError" />
 
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilTitle"
+        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Expense Title">
@@ -47,6 +47,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -60,6 +61,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -74,8 +76,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnUpdate"
+        style="@style/Widget.MilkLedger.MaterialButton.Primary"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Update Expense" />
 

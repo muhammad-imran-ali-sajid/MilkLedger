@@ -92,10 +92,8 @@
                 android:layout_height="2dp" />
 
             <TextView
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
                 android:textColor="?attr/colorOnSurface"
-                android:alpha="0.7"
-                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -185,7 +183,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardPersonalExpense"
-                        android:backgroundTint="@color/dashboard_prsnl_exp"
+                        app:cardBackgroundColor="?attr/colorErrorContainer"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -260,7 +258,7 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardProfit"
-                        android:backgroundTint="@color/dashboard_net_profit"
+                        app:cardBackgroundColor="?attr/colorSecondaryContainer"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
@@ -292,7 +290,7 @@
                         android:id="@+id/cardRemaining"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
-                        app:cardBackgroundColor="@color/dashboard_my_profit"
+                        app:cardBackgroundColor="?attr/colorPrimaryContainer"
                         android:layout_height="wrap_content"
                         >
 
@@ -331,10 +329,8 @@
                 android:layout_height="2dp" />
 
             <TextView
-                android:textSize="20sp"
+                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
                 android:textColor="?attr/colorOnSurface"
-                android:alpha="0.7"
-                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"

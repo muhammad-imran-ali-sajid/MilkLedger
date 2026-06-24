@@ -5,9 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="16dp"
+    style="@style/Widget.MilkLedger.MaterialCard.Outlined"
     app:cardElevation="0dp"
-    app:strokeColor="?attr/colorOutlineVariant"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -27,9 +26,7 @@
                 android:id="@+id/tvFileName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="middle"
-                android:maxLines="1"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                 android:textStyle="bold"
                 tools:text="milk_ledger_backup_2026_06_10_12_38_42.mlbackup" />
 
@@ -38,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
-                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
                 tools:text="10 Jun 2026, 12:38 PM • 84 KB" />
 

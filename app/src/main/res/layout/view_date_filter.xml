@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:text="Day"
                 android:textAppearance="@style/Text.MilkLedger.Label"
-                app:chipStrokeColor="@color/primary"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:text="Month"
                 android:textAppearance="@style/Text.MilkLedger.Label"
-                app:chipStrokeColor="@color/primary"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:text="Year"
                 android:textAppearance="@style/Text.MilkLedger.Label"
-                app:chipStrokeColor="@color/primary"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
@@ -60,7 +60,7 @@
                 android:checked="true"
                 android:text="All"
                 android:textAppearance="@style/Text.MilkLedger.Label"
-                app:chipStrokeColor="@color/primary"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:text="Custom"
                 android:textAppearance="@style/Text.MilkLedger.Label"
-                app:chipStrokeColor="@color/primary"
+                app:chipStrokeColor="?attr/colorPrimary"
                 app:chipStrokeWidth="1dp" />
 
         </com.google.android.material.chip.ChipGroup>
