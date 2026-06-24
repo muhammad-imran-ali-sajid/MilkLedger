@@ -24,8 +24,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
-                app:titleTextAppearance="@style/Text.Normal"
-                android:background="?attr/colorSurface"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

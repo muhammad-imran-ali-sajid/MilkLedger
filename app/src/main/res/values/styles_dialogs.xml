@@ -1,12 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Widget.MilkLedger.MaterialAlertDialog" parent="MaterialAlertDialog.Material3">
+
+    <style
+        name="Widget.MilkLedger.MaterialAlertDialog"
+        parent="MaterialAlertDialog.Material3">
+
         <item name="shapeAppearance">@style/ShapeAppearance.MilkLedger.ExtraLarge</item>
     </style>
 
-    <style name="ThemeOverlay.MilkLedger.MaterialAlertDialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
-        <item name="alertDialogStyle">@style/Widget.MilkLedger.MaterialAlertDialog</item>
-        <item name="materialAlertDialogTitleTextStyle">@style/TextAppearance.MilkLedger.SectionTitle</item>
-        <item name="materialAlertDialogBodyTextStyle">@style/TextAppearance.MilkLedger.BodyLarge</item>
+    <!-- Keep Material dialog layout properties, only replace typography. -->
+    <style
+        name="Widget.MilkLedger.MaterialAlertDialog.Title"
+        parent="MaterialAlertDialog.Material3.Title.Text">
+
+        <item name="android:textAppearance">
+            @style/TextAppearance.MilkLedger.SectionTitle
+        </item>
     </style>
+
+    <!-- Keep Material dialog body behavior, only replace typography. -->
+    <style
+        name="Widget.MilkLedger.MaterialAlertDialog.Body"
+        parent="MaterialAlertDialog.Material3.Body.Text">
+
+        <item name="android:textAppearance">
+            @style/TextAppearance.MilkLedger.BodyLarge
+        </item>
+    </style>
+
+    <style
+        name="ThemeOverlay.MilkLedger.MaterialAlertDialog"
+        parent="ThemeOverlay.Material3.MaterialAlertDialog">
+
+        <item name="alertDialogStyle">
+            @style/Widget.MilkLedger.MaterialAlertDialog
+        </item>
+
+        <item name="materialAlertDialogTitleTextStyle">
+            @style/Widget.MilkLedger.MaterialAlertDialog.Title
+        </item>
+
+        <item name="materialAlertDialogBodyTextStyle">
+            @style/Widget.MilkLedger.MaterialAlertDialog.Body
+        </item>
+    </style>
+
 </resources>

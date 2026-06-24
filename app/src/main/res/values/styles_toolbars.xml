@@ -2,8 +2,7 @@
 <resources>
     <style name="Widget.MilkLedger.MaterialToolbar" parent="Widget.Material3.Toolbar">
         <item name="android:background">?attr/colorSurface</item>
-        <item name="titleTextAppearance">@style/TextAppearance.MilkLedger.CardTitle</item>
-        <item name="subtitleTextAppearance">@style/TextAppearance.MilkLedger.BodyMedium</item>
+        <item name="titleTextAppearance">@style/TextAppearance.MilkLedger.SectionTitle</item>
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="subtitleTextColor">?attr/colorOnSurfaceVariant</item>
         <item name="navigationIconTint">?attr/colorOnSurface</item>

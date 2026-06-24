@@ -15,7 +15,7 @@
         <item name="cornerSize">16dp</item>
     </style>
 
-    <style name="ShapeAppearance.MilkLedger.ExtraLarge" parent="ShapeAppearance.Material3.Corner.ExtraLarge">
+    <style name="ShapeAppearance.MilkLedger.ExtraLarge" parent="ShapeAppearance.Material3.Corner.ExtraExtraLarge">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">28dp</item>
     </style>
