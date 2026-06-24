@@ -58,6 +58,7 @@
                     android:id="@+id/tvName"
                     android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
                     android:layout_width="0dp"
+                    android:drawableEnd="@drawable/ic_arrow_forward"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     tools:text="Ali General" />
