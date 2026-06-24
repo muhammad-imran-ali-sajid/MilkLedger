@@ -22,7 +22,7 @@ class BackupNotificationHelper @Inject constructor(
         val channel = NotificationChannel(
             CHANNEL_ID,
             "Backup notifications",
-            NotificationManager.IMPORTANCE_LOW
+            NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = "Shows Milk Ledger backup progress and result"
         }
@@ -30,19 +30,7 @@ class BackupNotificationHelper @Inject constructor(
         notificationManager.createNotificationChannel(channel)
     }
     
-    fun buildRunningNotification(): Notification {
-        createChannelIfNeeded()
-        
-        return NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_backup)
-            .setContentTitle("Backup is running")
-            .setContentText("Uploading Milk Ledger backup to Google Drive...")
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
-            .setOnlyAlertOnce(true)
-            .setProgress(0, 0, true)
-            .build()
-    }
+
     
     fun showSuccessNotification(fileName: String?) {
         createChannelIfNeeded()
@@ -75,7 +63,6 @@ class BackupNotificationHelper @Inject constructor(
     companion object {
         const val CHANNEL_ID = "milk_ledger_backup_channel"
         
-        const val FOREGROUND_NOTIFICATION_ID = 6001
         const val NOTIFICATION_SUCCESS_ID = 6002
         const val NOTIFICATION_FAILURE_ID = 6003
     }

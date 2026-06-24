@@ -68,6 +68,7 @@ class ExpenseFormFragment :
 
             tvTotalExpense.text = state.totalExpense.toString()
 
+            tvDate.text ="Dated: ${state.date.toCompleteDateFormat()}"
             etDate.setTextIfDifferent(state.date.toCompleteDateFormat())
             dateLayout.error = state.dateError
 

@@ -39,6 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="16dp"
+            android:gravity="center"
             android:text="No expenses yet"
             android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
             android:textColor="?attr/colorOnSurface" />

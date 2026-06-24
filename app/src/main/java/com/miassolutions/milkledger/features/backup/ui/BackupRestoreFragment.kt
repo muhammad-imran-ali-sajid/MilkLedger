@@ -200,10 +200,7 @@ class BackupRestoreFragment :
         
         backupAdapter.submitList(state.driveBackups)
         
-//            state.driveBackups.forEach {
-//            Log.d("MilkBackup", "Drive file: ${it.name}, size=${it.sizeBytes}")
-//        }
-        
+
         binding.rvBackups.isVisible = state.driveBackups.isNotEmpty()
         binding.tvEmptyBackups.isVisible = !state.isLoading && state.driveBackups.isEmpty()
         

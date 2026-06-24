@@ -8,10 +8,9 @@
     <item
         android:id="@+id/action_dashboard_pdf"
         android:icon="@drawable/ic_pdf"
-        android:iconTint="?attr/colorPrimary"
         android:orderInCategory="200"
         android:title="Pdf Report"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
 
 </menu>
