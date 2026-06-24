@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.purchase.ui.form
 
 import android.text.InputType
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -10,6 +11,7 @@ import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchaseFormBinding
 import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
+import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiEvent.*
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.format
@@ -84,9 +86,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
             openSupplierBottomSheet()
         }
 
-        // Dates
-//        btnDate.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnDateClick) }
-//        btnPaymentDate.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnPaymentDateClick) }
+
 
         // Actions
         btnSave.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked) }
@@ -98,13 +98,10 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
     override fun setupObservers() {
         super.setupObservers()
 
-        // 1. Observe Suppliers List (Store locally for Bottom Sheet)
         collectFlow(viewModel.suppliersDropDown) { list ->
             currentSupplierList = list
-            // Ab hum adapter set nahi kar rahe
         }
 
-        // 2. Observe UI State
         collectFlow(viewModel.uiState) { state ->
             renderState(state)
         }
@@ -193,18 +190,29 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
             is PurchaseFormUiEffect.ShowSnackbar -> showSnackbar(effect.message)
             PurchaseFormUiEffect.NavigateBack -> findNavController().navigateUp()
             PurchaseFormUiEffect.OpenDatePicker -> {
-                openDatePicker { date -> viewModel.onEvent(PurchaseFormUiEvent.OnDateSelected(date)) }
+                openDatePicker { date -> viewModel.onEvent(OnDateSelected(date)) }
             }
 
-//            PurchaseFormUiEffect.OpenPaymentDatePicker -> {
-//                openDatePicker { date ->
-//                    viewModel.onEvent(
-//                        PurchaseFormUiEvent.OnPaymentDateSelected(
-//                            date
-//                        )
-//                    )
-//                }
-//            }
+            PurchaseFormUiEffect.FocusMilkVolumeInput -> {
+                focusMilkVolumeInput()
+            }
+        }
+    }
+
+    private fun focusMilkVolumeInput() {
+        binding.etMilkVolume.post {
+            binding.etMilkVolume.requestFocus()
+            binding.etMilkVolume.setSelection(binding.etMilkVolume.text?.length ?: 0)
+
+            val imm = ContextCompat.getSystemService(
+                requireContext(),
+                InputMethodManager::class.java
+            )
+
+            imm?.showSoftInput(
+                binding.etMilkVolume,
+                InputMethodManager.SHOW_IMPLICIT
+            )
         }
     }
 }

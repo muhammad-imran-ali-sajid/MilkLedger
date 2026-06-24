@@ -7,30 +7,14 @@
     android:background="?attr/colorSurface"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <TextView
+        android:id="@+id/btn_date"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_date"
-            style="@style/Widget.MilkLedger.MaterialButton.Outlined"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="03 Dec 2025"
-            android:textColor="?attr/colorPrimary" />
-
-        <ImageView
-            android:id="@+id/btnDelete"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_delete"
-            app:tint="?attr/colorError" />
-
-    </LinearLayout>
+        android:text="03 Dec 2025"
+        android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle" />
 
 
     <ScrollView
@@ -44,47 +28,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-
             android:paddingHorizontal="16dp"
-            android:paddingBottom="16dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_supplier_name"
-                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Supplier Name"
-
-                app:boxBackgroundColor="?attr/colorPrimaryContainer"
-                app:boxStrokeColor="?attr/colorPrimary"
-                app:boxStrokeWidth="2dp"
-
-                app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_arrow_pick">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/actv_supplier_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:inputType="none"
-                    android:textColor="?attr/colorOnPrimaryContainer"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
-                    android:textStyle="bold"/>
-            </com.google.android.material.textfield.TextInputLayout>
+            >
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/tilAdvance"
                 style="@style/Widget.MilkLedger.MaterialCard.Standard"
-                tools:visibility="visible"
                 android:layout_width="match_parent"
-                android:layout_marginTop="8dp"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="?attr/colorSecondaryContainer"
                 app:shapeAppearanceOverlay="@style/ShapeAppearance.MilkLedger.Medium"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+                tools:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,10 +49,10 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Advance:"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                         android:textColor="?attr/colorOnSecondaryContainer" />
 
                     <View
@@ -107,13 +62,41 @@
 
                     <TextView
                         android:id="@+id/tvAdvance"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        tools:text="12,300"
-                        android:textColor="?attr/colorOnSecondaryContainer" />
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
+                        android:textColor="?attr/colorOnSecondaryContainer"
+                        tools:text="12,300" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_supplier_name"
+                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_8"
+                android:hint="Supplier Name"
+
+                app:boxBackgroundColor="?attr/colorPrimaryContainer"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:boxStrokeWidth="2dp"
+
+                app:endIconDrawable="@drawable/ic_arrow_pick"
+                app:endIconMode="custom">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/actv_supplier_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:inputType="none"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+                    android:textColor="?attr/colorOnPrimaryContainer"
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
 
 
 
@@ -122,17 +105,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:hint="Vol.">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etMilkVolume"
-                        style="@style/Theme.MilkLedger.InputTextSize"
+                        style="@style/TextInputMinimalStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
@@ -142,8 +126,10 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/space_4"
+                    android:layout_weight="1"
                     android:hint="Fat"
                     android:nextFocusForward="@id/etLr">
 
@@ -159,8 +145,9 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:hint="LR">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -191,10 +178,10 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Total Solids (TS): " />
+                            android:text="Total Solids (TS): "
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge" />
 
                         <View
                             android:layout_width="0dp"
@@ -203,10 +190,10 @@
 
                         <TextView
                             android:id="@+id/tvTs"
-                            android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="12.0" />
+                            android:text="12.0"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium" />
                     </LinearLayout>
 
                     <View
@@ -228,17 +215,17 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rate" />
+                                android:text="Rate"
+                                android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                             <TextView
                                 android:id="@+id/tv_rate"
-                                android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="160" />
+                                android:text="160"
+                                android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -249,17 +236,17 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Total Price" />
+                                android:text="Total Price"
+                                android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                             <TextView
                                 android:id="@+id/tvMilkPrice"
-                                android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Rs 10,000"
+                                android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                                 android:textColor="?attr/colorOnSurface" />
                         </LinearLayout>
                     </LinearLayout>
@@ -275,9 +262,9 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/paymentLayout"
                     style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.4"
+                    android:layout_marginBottom="@dimen/space_4"
                     android:hint="Payment Paid">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -292,7 +279,6 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPaymentDate"
-                    android:visibility="gone"
                     style="@style/Widget.MilkLedger.MaterialButton.Outlined"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -300,7 +286,8 @@
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:text="Set Date"
-                    android:textColor="?attr/colorSecondary" />
+                    android:textColor="?attr/colorSecondary"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
@@ -320,10 +307,10 @@
                     android:padding="16dp">
 
                     <TextView
-                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Current Balance:"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
                         android:textColor="?attr/colorOnSecondaryContainer" />
 
                     <View
@@ -333,10 +320,10 @@
 
                     <TextView
                         android:id="@+id/tvBalance"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="12,300"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountMedium"
                         android:textColor="?attr/colorOnSecondaryContainer" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -358,13 +345,28 @@
         </LinearLayout>
     </ScrollView>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDelete"
+        android:visibility="gone"
+        style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/component_min_height"
+        android:text="Delete Record"
+        android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+        android:textColor="?attr/colorError"
+        app:icon="@drawable/ic_delete"
+        app:iconGravity="textEnd"
+        app:iconSize="32dp"
+        android:layout_marginHorizontal="@dimen/space_16"
+        app:iconTint="?attr/colorError"
+        app:strokeColor="?attr/colorError" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorSurface"
-        android:elevation="8dp"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:paddingHorizontal="@dimen/space_16">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_save"

@@ -23,8 +23,8 @@ class SupplierSelectionAdapter(
 
 
             if (item.isEntryDoneToday) {
-                binding.tvSupplierName.alpha = 0.5f // Text dhundla (dim) karein
-                binding.root.isEnabled = true // Clickable rakhen taake Toast dikha saken
+                binding.tvSupplierName.alpha = 0.5f
+                binding.root.isEnabled = true
             } else {
                 binding.tvSupplierName.alpha = 1.0f // Normal Text
                 binding.root.isEnabled = true

@@ -262,7 +262,8 @@ class PurchaseFormViewModel @Inject constructor(
                     if (exitAfterSave) {
                         emitEffect(PurchaseFormUiEffect.NavigateBack)
                     } else {
-                        resetFormForNewEntry()
+                        resetFormForNewEntry(savedSupplierId = s.selectedSupplier.accountId)
+                        emitEffect(PurchaseFormUiEffect.FocusMilkVolumeInput)
                     }
                 }
             }.onFailure { e ->
@@ -273,23 +274,50 @@ class PurchaseFormViewModel @Inject constructor(
         }
     }
 
-    private fun resetFormForNewEntry() {
+    private fun resetFormForNewEntry(savedSupplierId: String) {
         balanceJob?.cancel()
+
+        val suppliers = _suppliersDropDown.value
+
+        val currentIndex = suppliers.indexOfFirst {
+            it.account.accountId == savedSupplierId
+        }
+
+        val nextSupplier = when {
+            suppliers.isEmpty() -> null
+
+            currentIndex == -1 -> suppliers.firstOrNull()?.account
+
+            currentIndex < suppliers.lastIndex -> suppliers[currentIndex + 1].account
+
+            else -> null // last supplier reached
+        }
+
         updateState {
             it.copy(
-                selectedSupplier = null,
+                selectedSupplier = nextSupplier,
+
                 volume = "",
                 fat = "",
                 lr = "",
                 amountPaid = "",
                 note = "",
-                rate = "",
+
+                rate = nextSupplier?.defaultRate?.toString().orEmpty(),
+                advance = nextSupplier?.advanceAmount?.toPrice(),
+
                 currentBalance = 0L,
                 calculatedTs = 0.0,
                 calculatedTotal = 0L,
-                isEditMode = false,
-//                paymentDate = null // ✅ Reset to Null
+
+                isEditMode = false
             )
         }
+
+        nextSupplier?.let { supplier ->
+            fetchBalance(supplier.accountId)
+        }
+
+        calculateLiveValues()
     }
 }

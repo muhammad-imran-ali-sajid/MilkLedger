@@ -68,6 +68,7 @@ sealed class PurchaseFormUiEffect {
     data class ShowSnackbar(val message: String) : PurchaseFormUiEffect()
     object NavigateBack : PurchaseFormUiEffect()
     object OpenDatePicker : PurchaseFormUiEffect()
+    object FocusMilkVolumeInput : PurchaseFormUiEffect()
 
 //    object OpenPaymentDatePicker : PurchaseFormUiEffect()
 }

@@ -3,9 +3,10 @@
     <!-- Canonical Material 3 input style for gradual layout adoption. -->
     <style name="Widget.MilkLedger.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="android:minHeight">@dimen/component_min_height</item>
+        <item name="android:layout_height">60dp</item>
         <item name="android:theme">@style/ThemeOverlay.MilkLedger.TextInput</item>
         <item name="boxBackgroundColor">?attr/colorSurface</item>
-        <item name="boxStrokeColor">?attr/colorOutline</item>
+        <item name="boxStrokeColor">?attr/colorPrimary</item>
         <item name="boxStrokeWidth">@dimen/component_stroke_width</item>
         <item name="hintTextColor">?attr/colorOnSurfaceVariant</item>
         <item name="hintTextAppearance">@style/TextAppearance.MilkLedger.LabelMedium</item>
@@ -21,7 +22,6 @@
         <item name="boxStrokeColor">?attr/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">8dp</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.Material3.Corner.Small</item>
         <item name="android:theme">@style/Theme.MilkLedger.InputTextSize</item>
     </style>
@@ -35,6 +35,5 @@
         <item name="android:minHeight">@dimen/component_min_height</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:paddingTop">16dp</item>
     </style>
 </resources>
