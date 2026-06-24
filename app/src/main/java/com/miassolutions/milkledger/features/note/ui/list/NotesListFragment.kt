@@ -15,6 +15,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentNotesListBinding
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.graphics.drawable.toDrawable
 
 @AndroidEntryPoint
 class NoteListFragment : BaseFragment<FragmentNotesListBinding>(
@@ -105,7 +106,7 @@ class NoteListFragment : BaseFragment<FragmentNotesListBinding>(
                 dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean
             ) {
                 val itemView = vh.itemView
-                val background = ColorDrawable(Color.RED)
+                val background = Color.RED.toDrawable()
 
                 // Draw Red background
                 if (dX > 0) { // Swiping Right

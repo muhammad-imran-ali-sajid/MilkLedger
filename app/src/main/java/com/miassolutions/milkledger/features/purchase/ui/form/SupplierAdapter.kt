@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
+import androidx.core.graphics.toColorInt
 
 class SupplierAdapter(
     context: Context,
@@ -36,7 +37,7 @@ class SupplierAdapter(
         if (item != null) {
             if (item.isEntryDoneToday) {
                 textView.text = "${item.account.name} (Done)"
-                textView.setTextColor(Color.parseColor("#388E3C"))
+                textView.setTextColor("#388E3C".toColorInt())
             } else {
                 textView.text = item.account.name
                 textView.setTextColor(Color.BLACK)

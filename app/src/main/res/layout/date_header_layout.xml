@@ -26,11 +26,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="6"
+        app:drawableEndCompat="@drawable/ic_arrow_pick"
         app:drawableTint="?attr/colorOnSurface"
         android:gravity="center"
         android:padding="8dp"
 
-        android:drawableEnd="@drawable/ic_arrow_pick"
         android:text="12-10-2025"
         android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
         app:drawableStartCompat="@drawable/ic_calendar" />

@@ -7,7 +7,6 @@
     style="@style/Widget.MilkLedger.MaterialCard.Standard"
     android:layout_width="match_parent"
     app:contentPadding="@dimen/space_16"
-    android:layout_marginVertical="@dimen/space_4"
     android:layout_height="wrap_content">
 
     <LinearLayout

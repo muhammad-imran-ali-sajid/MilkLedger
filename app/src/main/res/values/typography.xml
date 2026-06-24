@@ -13,13 +13,13 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.MilkLedger.CardTitle" parent="TextAppearance.Material3.TitleMedium">
-        <item name="android:textSize">20sp</item>
+    <style name="TextAppearance.MilkLedger.CardTitle" parent="TextAppearance.Material3.TitleMedium.Emphasized">
+        <item name="android:textSize">22sp</item>
         <item name="lineHeight">28sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="TextAppearance.MilkLedger.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+    <style name="TextAppearance.MilkLedger.BodyLarge" parent="TextAppearance.Material3.BodyLarge.Emphasized">
         <item name="android:textSize">18sp</item>
         <item name="lineHeight">28sp</item>
     </style>
@@ -30,15 +30,15 @@
     </style>
 
     <style name="TextAppearance.MilkLedger.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">19sp</item>
         <item name="lineHeight">24sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
 
-    <style name="TextAppearance.MilkLedger.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
-        <item name="android:textSize">16sp</item>
+    <style name="TextAppearance.MilkLedger.LabelMedium" parent="TextAppearance.Material3.LabelMedium.Emphasized">
+        <item name="android:textSize">19sp</item>
         <item name="lineHeight">22sp</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 
     <style name="TextAppearance.MilkLedger.AmountLarge" parent="TextAppearance.Material3.HeadlineMedium">
@@ -53,8 +53,8 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.MilkLedger.AmountSmall" parent="TextAppearance.Material3.TitleMedium">
-        <item name="android:textSize">18sp</item>
+    <style name="TextAppearance.MilkLedger.AmountSmall" parent="TextAppearance.Material3.TitleMedium.Emphasized">
+        <item name="android:textSize">20sp</item>
         <item name="lineHeight">26sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>

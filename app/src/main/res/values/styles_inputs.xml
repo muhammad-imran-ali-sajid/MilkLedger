@@ -28,11 +28,13 @@
 
     <style name="Theme.MilkLedger.InputTextSize" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:textSize">22sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="TextInputMinimalStyle">
         <item name="android:minHeight">@dimen/component_min_height</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:paddingTop">16dp</item>
     </style>
 </resources>
