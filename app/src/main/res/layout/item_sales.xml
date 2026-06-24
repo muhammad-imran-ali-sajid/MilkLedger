@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MilkLedger.MaterialCard.Standard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-android:layout_margin="4dp"
+    android:layout_margin="4dp"
     app:contentPadding="0dp">
 
     <LinearLayout
@@ -17,7 +16,7 @@ android:layout_margin="4dp"
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimaryContainer"
+            android:background="?attr/colorSale"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
@@ -30,17 +29,17 @@ android:layout_margin="4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Edit"
                 android:src="@drawable/ic_edit_form"
-                app:tint="?attr/colorOnPrimaryContainer" />
+                app:tint="?attr/colorOnPrimary" />
 
             <TextView
                 android:id="@+id/tvName"
-                android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_weight="1"
                 android:text="Ali"
-                android:textColor="?attr/colorOnPrimaryContainer" />
+                android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
+                android:textColor="?attr/colorOnPrimary" />
 
             <ImageButton
                 android:id="@+id/btn_customer_detail"
@@ -50,15 +49,14 @@ android:layout_margin="4dp"
                 android:contentDescription="Detail"
                 android:rotation="180"
                 android:src="@drawable/ic_arrow"
-                app:tint="?attr/colorOnPrimaryContainer" />
+                app:tint="?attr/colorOnPrimary" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp"
-            >
+            android:padding="8dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,16 +72,16 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Vol." />
+                        android:text="Vol."
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                     <TextView
                         android:id="@+id/tvMilk"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         tools:text="40.0" />
                 </LinearLayout>
 
@@ -95,16 +93,16 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Deduc." />
+                        android:text="Deduc."
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                     <TextView
                         android:id="@+id/tv_deduction"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         tools:text="2.0" />
                 </LinearLayout>
 
@@ -116,16 +114,16 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Net Milk" />
+                        android:text="Net Milk"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                     <TextView
                         android:id="@+id/tvNetMilk"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         tools:text="38.0" />
                 </LinearLayout>
             </LinearLayout>
@@ -151,16 +149,16 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Price" />
+                        android:text="Price"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                     <TextView
                         android:id="@+id/tvPrice"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         tools:text="10000" />
                 </LinearLayout>
 
@@ -173,22 +171,20 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
-                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
-                        android:drawablePadding="4dp"
-                        android:drawableTint="?attr/colorOnSecondaryContainer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rcv" />
+                        android:drawablePadding="4dp"
+                        android:drawableTint="?attr/colorOnSecondaryContainer"
+                        android:text="Rcv"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                     <TextView
                         android:id="@+id/tvPayment"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
-                        android:textColor="?attr/colorLedgerIncome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
+                        android:textColor="?attr/colorLedgerIncome"
                         tools:text="10,000" />
-
-
 
 
                 </LinearLayout>
@@ -202,33 +198,33 @@ android:layout_margin="4dp"
                     android:orientation="vertical">
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:drawableEnd="@drawable/ic_info"
                         android:drawablePadding="4dp"
                         android:drawableTint="?attr/colorOnSecondaryContainer"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Bal." />
+                        android:text="Bal."
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                     <TextView
                         android:id="@+id/tvBalance"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
                         android:textColor="?attr/colorLedgerPending"
                         tools:text="1,000" />
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
-                android:padding="8dp"
-                android:layout_marginStart="8dp"
                 android:id="@+id/tvNotes"
-                android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="12dp"
+                android:padding="8dp"
+                android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
                 tools:text="Note: no note" />
 
         </LinearLayout>
