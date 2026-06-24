@@ -3,7 +3,6 @@
     <!-- Canonical Material 3 card styles for gradual layout adoption. -->
     <style name="Widget.MilkLedger.MaterialCard.Standard" parent="Widget.Material3.CardView.Filled">
         <item name="cardBackgroundColor">?attr/colorSurfaceContainer</item>
-        <item name="android:layout_marginVertical">4dp</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.Medium</item>
         <item name="strokeWidth">0dp</item>
     </style>
@@ -12,7 +11,6 @@
         <item name="cardBackgroundColor">?attr/colorSurface</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.Medium</item>
         <item name="strokeColor">?attr/colorOutline</item>
-        <item name="android:layout_margin">@dimen/space_4</item>
         <item name="strokeWidth">@dimen/component_stroke_width</item>
     </style>
 

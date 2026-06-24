@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="8dp"
-            android:paddingTop="8dp">
+            >
 
 
             <LinearLayout

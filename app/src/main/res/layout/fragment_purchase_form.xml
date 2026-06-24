@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="16dp"
+            android:paddingBottom="@dimen/space_4"
             >
 
             <com.google.android.material.card.MaterialCardView
@@ -81,7 +82,6 @@
                 app:boxBackgroundColor="?attr/colorPrimaryContainer"
                 app:boxStrokeColor="?attr/colorPrimary"
                 app:boxStrokeWidth="2dp"
-
                 app:endIconDrawable="@drawable/ic_arrow_pick"
                 app:endIconMode="custom">
 
@@ -164,6 +164,7 @@
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.MilkLedger.MaterialCard.Standard"
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/space_4"
                 android:layout_height="wrap_content"
                 app:contentPadding="12dp">
 

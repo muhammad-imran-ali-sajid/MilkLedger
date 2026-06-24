@@ -2,8 +2,6 @@
 <resources>
     <!-- Canonical Material 3 input style for gradual layout adoption. -->
     <style name="Widget.MilkLedger.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
-        <item name="android:minHeight">@dimen/component_min_height</item>
-        <item name="android:layout_height">60dp</item>
         <item name="android:theme">@style/ThemeOverlay.MilkLedger.TextInput</item>
         <item name="boxBackgroundColor">?attr/colorSurface</item>
         <item name="boxStrokeColor">?attr/colorPrimary</item>
@@ -32,7 +30,6 @@
     </style>
 
     <style name="TextInputMinimalStyle">
-        <item name="android:minHeight">@dimen/component_min_height</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
