@@ -79,7 +79,7 @@
 
                 <TextView
                     android:id="@+id/tvRate"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.CardTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

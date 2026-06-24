@@ -54,7 +54,7 @@
     </style>
 
     <style name="TextAppearance.MilkLedger.AmountSmall" parent="TextAppearance.Material3.TitleMedium.Emphasized">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">22sp</item>
         <item name="lineHeight">26sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
