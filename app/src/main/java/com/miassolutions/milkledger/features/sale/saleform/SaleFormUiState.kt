@@ -74,5 +74,6 @@ sealed interface SaleFormUiEffect {
     data object OpenDatePicker : SaleFormUiEffect
     data object NavigateBack : SaleFormUiEffect
     data class ShowSnackbar(val message: String) : SaleFormUiEffect
+    object FocusMilkVolumeInput : SaleFormUiEffect
 }
 

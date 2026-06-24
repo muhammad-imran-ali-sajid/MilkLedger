@@ -299,7 +299,8 @@ class SaleFormViewModel @Inject constructor(
                     if (exitAfterSave) {
                         emitEffect(SaleFormUiEffect.NavigateBack)
                     } else {
-                        resetFormForNewEntry()
+                        resetFormForNewEntry(savedCustomerId = state.selectedCustomer.accountId)
+                        emitEffect(SaleFormUiEffect.FocusMilkVolumeInput)
                     }
                 }
 
@@ -312,24 +313,47 @@ class SaleFormViewModel @Inject constructor(
         }
     }
 
-    private fun resetFormForNewEntry() {
+    private fun resetFormForNewEntry(savedCustomerId: String) {
         balanceJob?.cancel()
+
+        val customers = _customersDropDown.value
+
+        val currentIndex = customers.indexOfFirst {
+            it.account.accountId == savedCustomerId
+        }
+
+        val nextCustomer = when {
+            customers.isEmpty() -> null
+
+            currentIndex == -1 -> customers.firstOrNull()?.account
+
+            currentIndex < customers.lastIndex -> customers[currentIndex + 1].account
+
+            else -> null // last customer reached
+        }
+
         updateState {
             it.copy(
-                selectedCustomer = null,
+                selectedCustomer = nextCustomer,
+
                 volume = "",
                 deduction = "",
                 amountPaid = "",
                 note = "",
-                rate = "",
+
+                rate = nextCustomer?.defaultRate?.toString().orEmpty(),
+
                 currentBalance = 0L,
                 calculatedTotal = 0.0,
 
-                isEditMode = false,
-
-                // ✅ RESET: Agli entry k liye phir se NULL
-//                paymentDate = null
+                isEditMode = false
             )
         }
+
+        nextCustomer?.let { customer ->
+            fetchBalance(customer.accountId)
+        }
+
+        calculateTotal()
     }
 }
