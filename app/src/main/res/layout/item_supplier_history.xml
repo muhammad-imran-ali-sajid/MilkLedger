@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.MilkLedger.MaterialCard.Standard"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
-    android:layout_height="wrap_content">
+    app:contentPadding="@dimen/space_8">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingVertical="4dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="4dp">
 
 
-        <TextView
-            android:id="@+id/tv_date"
-            android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:text="18 Oct 2025" />
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:text="18 Oct 2025"
+                android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
+            <TextView
+                android:id="@+id/rateAlert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:drawablePadding="8dp"
+                android:drawableTint="?attr/colorError"
+                android:text="New Rate Applied"
+                android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge"
+                android:textColor="?attr/colorError" />
+
+        </LinearLayout>
 
 
         <!-- Row 1: Labels and Values -->
@@ -42,7 +60,6 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                     android:text="Vol." />
 
                 <TextView
@@ -62,8 +79,8 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
-                    android:text="Fat" />
+                    android:text="Fat"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                 <TextView
                     android:id="@+id/tv_fat"
@@ -82,8 +99,8 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
-                    android:text="LR" />
+                    android:text="LR"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                 <TextView
                     android:id="@+id/tv_lr"
@@ -102,8 +119,8 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
-                    android:text="TS" />
+                    android:text="TS"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                 <TextView
                     android:id="@+id/tv_ts"
@@ -130,8 +147,8 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
-                    android:text="Price" />
+                    android:text="Price"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                 <TextView
                     android:id="@+id/tvPrice"
@@ -149,8 +166,8 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
-                    android:text="Paid" />
+                    android:text="Paid"
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -168,9 +185,9 @@
                     <TextView
                         android:id="@+id/tvPaymentDate"
                         style="@style/Text.Normal"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:paddingStart="4dp"
                         android:text="(20/11)"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:visibility="gone" />
                 </LinearLayout>
             </LinearLayout>
@@ -185,8 +202,8 @@
 
                 <TextView
                     style="@style/Text.Normal"
-                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
-                    android:text="Bal." />
+                    android:text="Bal."
+                    android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                 <TextView
                     android:id="@+id/tvBalance"
@@ -197,23 +214,13 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/rateAlert"
-            android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:drawableStart="@drawable/ic_info"
-            android:drawablePadding="8dp"
-            android:drawableTint="?attr/colorLedgerWarning"
-            android:text="New Rate Applied"
-            android:textColor="?attr/colorLedgerWarning" />
 
         <!-- Notes -->
         <TextView
             android:id="@+id/tvNotes"
             style="@style/Text.Normal"
             android:textAppearance="@style/TextAppearance.MilkLedger.BodyMedium"
+            android:visibility="gone"
             app:paddingStart="16dp"
             tools:text="Not: no note" />
     </LinearLayout>

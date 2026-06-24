@@ -24,8 +24,8 @@
         <item name="lineHeight">28sp</item>
     </style>
 
-    <style name="TextAppearance.MilkLedger.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
-        <item name="android:textSize">17sp</item>
+    <style name="TextAppearance.MilkLedger.BodyMedium" parent="TextAppearance.Material3.BodyMedium.Emphasized">
+        <item name="android:textSize">20sp</item>
         <item name="lineHeight">26sp</item>
     </style>
 

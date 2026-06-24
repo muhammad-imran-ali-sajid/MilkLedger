@@ -57,9 +57,13 @@ class SupplierHistoryAdapter(
             if (isRateChanged) {
                 rateAlert.show()
                 rateAlert.text =
-                    "Rate: ${item.previousRate} -> ${item.rate}"  //Show Alert: Rate Changed from
+                    "Rate Alert: ${item.previousRate} -> ${item.rate}"  //Show Alert: Rate Changed from
                 root.setCardBackgroundColor(
-                    ContextCompat.getColor(root.context, R.color.orange_200)
+                    ContextCompat.getColor(root.context, R.color.md_theme_primaryContainer)
+                )
+            } else {
+                root.setCardBackgroundColor(
+                    ContextCompat.getColor(root.context, R.color.md_theme_surfaceVariant)
                 )
             }
 
@@ -90,7 +94,7 @@ class SupplierHistoryAdapter(
                 tvNotes.text = "Note: ${item.note} (${item.paymentDate?.toDisplayDate()})"
                 tvNotes.isVisible = true
             } else {
-                tvNotes.isVisible = true
+                tvNotes.isVisible = false
             }
         }
     }
