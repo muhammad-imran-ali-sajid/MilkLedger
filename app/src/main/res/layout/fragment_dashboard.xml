@@ -42,7 +42,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAccount"
-                        style="@style/Widget.MilkLedger.Button.Icon"
+                        style="@style/Widget.MilkLedger.Button.Outline"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:text="Accounts"
@@ -50,7 +50,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCashFlow"
-                        style="@style/Widget.MilkLedger.Button.Icon"
+                        style="@style/Widget.MilkLedger.Button.Outline"
                         android:layout_weight="1"
                         android:text="Cash Flow"
                         app:iconGravity="top"
@@ -64,7 +64,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnWallet"
-                        style="@style/Widget.MilkLedger.Button.Icon"
+                        style="@style/Widget.MilkLedger.Button.Outline"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:text="My Wallet"
@@ -73,7 +73,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnNote"
-                        style="@style/Widget.MilkLedger.Button.Icon"
+                        style="@style/Widget.MilkLedger.Button.Outline"
                         android:layout_weight="1"
                         android:text="My Notes"
                         app:iconGravity="top"
