@@ -55,6 +55,7 @@
         <activity
             android:name=".features.activities.LauncherActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

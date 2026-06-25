@@ -2,6 +2,9 @@ package com.miassolutions.milkledger.features.expense.ui.form
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -124,6 +127,7 @@ class ExpenseFormFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupPersonalExpenseRecycler()
+        setupKeyboardInsets()
     }
 
     // ---------------- LISTENERS ----------------
@@ -171,10 +175,33 @@ class ExpenseFormFragment :
             )
         }
 
+
+
         btnSave.setOnClickListener {
             viewModel.onEvent(
                 ExpenseFormUiEvent.OnSaveClicked
             )
+        }
+    }
+
+    private fun setupKeyboardInsets() {
+        val initialScrollPaddingBottom = binding.scrollView.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { view, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.saveContainer.isVisible = !imeVisible
+
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                initialScrollPaddingBottom + if (imeVisible) ime.bottom else systemBars.bottom
+            )
+
+            insets
         }
     }
 }
