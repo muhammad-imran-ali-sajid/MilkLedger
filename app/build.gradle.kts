@@ -17,15 +17,16 @@ android {
         applicationId = "com.miassolutions.milkledger"
         minSdk = 27
         targetSdk = 36
-        versionCode = 7
-        versionName = "2.7"
+        versionCode = 8
+        versionName = "3.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources =true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

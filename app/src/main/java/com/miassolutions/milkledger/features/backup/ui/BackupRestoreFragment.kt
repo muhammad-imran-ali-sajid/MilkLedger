@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.backup.ui
 
 import android.app.Activity
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -10,6 +11,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.core.ui.BaseFragment
@@ -87,24 +90,10 @@ class BackupRestoreFragment :
                 ).show()
             }
         }
-    
+
     private val googleSignInLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                when (pendingDriveAction) {
-                    PendingDriveAction.LOAD_STATUS -> viewModel.loadBackupStatus()
-                    PendingDriveAction.BACKUP_NOW -> viewModel.backupNow()
-                    null -> viewModel.loadBackupStatus()
-                }
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Google Drive sign-in cancelled",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            
-            pendingDriveAction = null
+            handleGoogleSignInResult(result.data)
         }
     
     private val restoreLocalBackupLauncher =
@@ -128,6 +117,58 @@ class BackupRestoreFragment :
         ensureDrivePermissionThen(PendingDriveAction.LOAD_STATUS)
         
         requestNotificationPermissionIfNeeded()
+    }
+
+    private fun handleGoogleSignInResult(data: Intent?) {
+        try {
+            val account = GoogleSignIn
+                .getSignedInAccountFromIntent(data)
+                .getResult(ApiException::class.java)
+
+            if (account == null) {
+                showDriveAuthError("Google account not selected.")
+                pendingDriveAction = null
+                return
+            }
+
+            if (!googleDriveAuthManager.hasDrivePermission(requireActivity())) {
+                showDriveAuthError("Google Drive permission was not granted.")
+                pendingDriveAction = null
+                return
+            }
+
+            when (pendingDriveAction) {
+                PendingDriveAction.LOAD_STATUS -> viewModel.loadBackupStatus()
+                PendingDriveAction.BACKUP_NOW -> viewModel.backupNow()
+                null -> viewModel.loadBackupStatus()
+            }
+
+        } catch (e: ApiException) {
+            Log.e("DriveAuth", "Google sign-in failed. statusCode=${e.statusCode}", e)
+
+            val message = when (e.statusCode) {
+                10 -> "Google Sign-In config error. Check SHA-1, package name, and OAuth client."
+                12501 -> "Google Drive sign-in cancelled."
+                12500 -> "Google Sign-In failed. Check Google Play services or OAuth setup."
+                else -> "Google Sign-In failed. Code: ${e.statusCode}"
+            }
+
+            showDriveAuthError(message)
+
+        } catch (e: Exception) {
+            Log.e("DriveAuth", "Unexpected Google sign-in error", e)
+            showDriveAuthError(e.message ?: "Google Sign-In failed.")
+        } finally {
+            pendingDriveAction = null
+        }
+    }
+
+    private fun showDriveAuthError(message: String) {
+        Snackbar.make(
+            binding.root,
+            message,
+            Snackbar.LENGTH_LONG
+        ).show()
     }
     
     private fun requestNotificationPermissionIfNeeded() {
