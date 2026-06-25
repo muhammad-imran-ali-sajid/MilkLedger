@@ -26,9 +26,9 @@
     <color name="md_theme_onErrorContainer">#410002</color>
 
     <!-- MilkLedger semantic roles -->
-    <color name="ledger_income">#0EA5E9</color>
-    <color name="ledger_expense">#F43F5E</color>
-    <color name="ledger_pending">#6366F1</color>
+    <color name="ledger_income">#146C2E</color>
+    <color name="ledger_expense">#B3261E</color>
+    <color name="ledger_pending">#315DA8</color>
     <color name="ledger_warning">#8A4F00</color>
 
     <!-- Existing custom color names retained as compatibility aliases. -->
@@ -39,7 +39,7 @@
     <color name="milk_date_color">@color/ledger_warning</color>
 
     <!-- Existing screen-specific resources retained until their layouts migrate. -->
-    <color name="dashboard_net_profit">#10B981</color>
+    <color name="dashboard_net_profit">#2B2E7D32</color>
     <color name="dashboard_prsnl_exp">#2BF57C00</color>
     <color name="dashboard_my_profit">#2B1565C0</color>
 
