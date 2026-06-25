@@ -24,8 +24,8 @@ import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
 import com.miassolutions.milkledger.features.backup.worker.BackupWorkScheduler
+import com.miassolutions.milkledger.features.settings.AppSettingsPreferences
 import com.miassolutions.milkledger.features.settings.ThemeManager
-import com.miassolutions.milkledger.features.settings.ThemePreferences
 import com.miassolutions.milkledger.utils.premiumfeatures.RemoteConfigManager
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
@@ -41,9 +41,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var backupWorkScheduler: BackupWorkScheduler
 
-    private val themePreferences by lazy {
-        ThemePreferences(this)
-    }
 
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
@@ -64,6 +61,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val settingsPreferences = AppSettingsPreferences(applicationContext)
+        val settings = settingsPreferences.readSettingsBlocking()
+
+        ThemeManager.applyTheme(settings.theme)
+        ThemeManager.applyDynamicColorsIfEnabled(
+            activity = this,
+            enabled = settings.dynamicColorsEnabled
+        )
+
+
         setContentView(binding.root)
         enableEdgeToEdge()
 
@@ -72,12 +79,6 @@ class MainActivity : AppCompatActivity() {
         applyWindowInsets()
         setupDrawerHeader()
         setupToolbar()
-
-        lifecycleScope.launch {
-            themePreferences.themeFlow.collect { theme ->
-                ThemeManager.apply(theme)
-            }
-        }
 
         lifecycleScope.launch {
             setupNavigation()
@@ -241,8 +242,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun attachBaseContext(newBase: Context) {
-        val config = newBase.resources.configuration
-        config.fontScale = 1.0f
-        super.attachBaseContext(newBase.createConfigurationContext(config))
+        val settingsPreferences = AppSettingsPreferences(newBase.applicationContext)
+        val settings = settingsPreferences.readSettingsBlocking()
+
+        val wrappedContext = ThemeManager.wrapFontScale(
+            baseContext = newBase,
+            fontScale = settings.fontScale.scale
+        )
+
+        super.attachBaseContext(wrappedContext)
     }
 }
