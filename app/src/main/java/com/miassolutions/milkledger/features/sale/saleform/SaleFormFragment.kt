@@ -3,6 +3,8 @@ package com.miassolutions.milkledger.features.sale.saleform
 import android.text.InputType
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
@@ -19,9 +21,8 @@ class SaleFormFragment :
     BaseFragment<FragmentAddSaleBinding>(FragmentAddSaleBinding::inflate) {
 
     private val viewModel: SaleFormViewModel by viewModels()
+    private var shouldShowDeleteButton = false
 
-    //
-    // Local variable to store list for Bottom Sheet
     private var currentCustomerList: List<CustomerDropDownUiModel> = emptyList()
 
     override fun setupViews() {
@@ -33,6 +34,29 @@ class SaleFormFragment :
             isFocusable = false             // Disable focus
             isClickable = true              // Enable Click
             isCursorVisible = false
+        }
+
+        setupKeyboardInsets()
+    }
+
+    private fun setupKeyboardInsets() {
+        val initialBottomPadding = binding.scrollView.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { view, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.btnDelete.isVisible = shouldShowDeleteButton && !imeVisible
+
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                initialBottomPadding + if (imeVisible) imeInsets.bottom else systemBars.bottom
+            )
+
+            insets
         }
     }
 
@@ -107,10 +131,8 @@ class SaleFormFragment :
         actvCustomerName.isEnabled = !state.isEditMode
         actvCustomerName.alpha = if (state.isEditMode) 0.7f else 1.0f
 
-        // --- Update Customer Name (FIXED) ---
-        // Pehle hum sirf null check kr rhy thy, ab hum empty string bhi handle karein gy
         val currentText = actvCustomerName.text.toString()
-        val newText = state.selectedCustomer?.name ?: "" // Agar null hai to Empty String
+        val newText = state.selectedCustomer?.name ?: ""
 
         if (currentText != newText) {
             actvCustomerName.setText(newText)
@@ -119,7 +141,7 @@ class SaleFormFragment :
         // --- Dates ---
         btnDate.text = "Dated: ${state.date.toCompleteDateFormat()}"
         if (state.paymentDate != null) {
-            btnPaymentDate.text = state.paymentDate.toDisplayDate() // "18 Jan 2024"
+            btnPaymentDate.text = state.paymentDate.toDisplayDate()
             btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         } else {
             btnPaymentDate.text = "Select Date" // "Abhi select nahi hoi"

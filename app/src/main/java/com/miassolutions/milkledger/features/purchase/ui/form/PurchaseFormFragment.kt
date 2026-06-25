@@ -3,6 +3,8 @@ package com.miassolutions.milkledger.features.purchase.ui.form
 import android.text.InputType
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
@@ -31,6 +33,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 ) {
 
     private val viewModel: PurchaseFormViewModel by viewModels()
+    private var shouldShowDeleteButton = false
 
     // Local list store karne k liye taake Bottom Sheet ko pass kar saken
     private var currentSupplierList: List<SupplierDropDownUiModel> = emptyList()
@@ -45,6 +48,8 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
             isClickable = true              // Enable click
             isCursorVisible = false
         }
+        setupKeyboardInsets()
+
     }
 
     override fun setupListeners() = with(binding) {
@@ -213,6 +218,29 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
                 binding.etMilkVolume,
                 InputMethodManager.SHOW_IMPLICIT
             )
+        }
+    }
+
+
+
+    private fun setupKeyboardInsets() {
+        val initialBottomPadding = binding.scrollView.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.scrollView) { view, insets ->
+            val imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            binding.btnDelete.isVisible = shouldShowDeleteButton && !imeVisible
+
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                initialBottomPadding + if (imeVisible) imeInsets.bottom else systemBars.bottom
+            )
+
+            insets
         }
     }
 }
