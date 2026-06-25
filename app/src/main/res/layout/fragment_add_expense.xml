@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvDate"
+        tools:text="Dated: 25/06/26"
+        android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+        android:layout_gravity="center"/>
+
     <com.google.android.material.card.MaterialCardView
         style="@style/Widget.MilkLedger.MaterialCard.Standard"
         android:layout_width="match_parent"
@@ -23,7 +31,7 @@
             android:padding="16dp">
 
             <TextView
-                android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
+                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total Expenses:"
@@ -60,12 +68,7 @@
             android:paddingHorizontal="16dp"
             android:paddingBottom="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvDate"
-                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
-                android:layout_gravity="center"/>
+
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/dateLayout"
