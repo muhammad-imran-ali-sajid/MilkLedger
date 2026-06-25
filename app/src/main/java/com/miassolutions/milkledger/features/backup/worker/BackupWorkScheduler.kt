@@ -26,8 +26,8 @@ class BackupWorkScheduler @Inject constructor(
             .build()
         
         val request = PeriodicWorkRequestBuilder<DailyBackupWorker>(
-            15,
-            TimeUnit.MINUTES
+            24,
+            TimeUnit.HOURS
         )
             .setConstraints(constraints)
             .setBackoffCriteria(
