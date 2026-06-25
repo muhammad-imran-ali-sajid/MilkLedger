@@ -14,13 +14,7 @@ class MilkLedgerApp : Application(), Configuration.Provider {
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
     
-    override fun onCreate() {
-        super.onCreate()
-        
-        DynamicColors.applyToActivitiesIfAvailable(this)
-        
-    }
-    
+
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(workerFactory)

@@ -18,7 +18,7 @@ enum class AppFontScale(
     ),
 
     LARGE(
-        scale = 1.15f,
+        scale = 1.10f,
         title = "Large",
         subtitle = "Easier to read"
     ),
