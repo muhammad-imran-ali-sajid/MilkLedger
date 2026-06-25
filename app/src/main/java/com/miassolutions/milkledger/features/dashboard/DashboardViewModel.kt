@@ -1,9 +1,10 @@
 package com.miassolutions.milkledger.features.dashboard
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
-import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.*
+import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.NavigateToExpense
+import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.NavigateToPurchase
+import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.NavigateToSale
 import com.miassolutions.milkledger.features.dashboard.data.DashboardRepository
 import com.miassolutions.milkledger.utils.customview.DateFilterView
 import com.miassolutions.milkledger.utils.extensions.toMillis
@@ -58,16 +59,6 @@ class DashboardViewModel @Inject constructor(
                 emitEffect(NavigateToExpense(getDateForNavigation()))
             }
 
-            DashboardUiEvent.OnWalletClicked -> {
-                emitEffect(NavigateToWallet(getDateForNavigation()))
-            }
-
-            DashboardUiEvent.OnCashFlowClicked -> {
-                emitEffect(NavigateToCashFlow(getDateForNavigation()))
-            }
-
-            DashboardUiEvent.OnNotesClicked -> emitEffect(NavigateToNotes)
-            DashboardUiEvent.OnAccountClicked -> emitEffect(NavigateToAccounts)
         }
     }
 

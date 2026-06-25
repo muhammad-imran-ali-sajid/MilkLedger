@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Canonical MilkLedger typography scale -->
+    <style name="TextAppearance.MilkLedger.BottomNavigation.Active"
+        parent="TextAppearance.MaterialComponents.Caption">
+
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-black</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.MilkLedger.BottomNavigation.Inactive"
+        parent="TextAppearance.MaterialComponents.Caption">
+
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <style name="TextAppearance.MilkLedger.ScreenTitle" parent="TextAppearance.Material3.HeadlineMedium">
         <item name="android:textSize">26sp</item>
         <item name="lineHeight">34sp</item>

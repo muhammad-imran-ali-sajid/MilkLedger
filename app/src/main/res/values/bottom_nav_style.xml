@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.MilkLedger.BottomNavigation"
+        parent="Widget.MaterialComponents.BottomNavigationView">
+
+        <item name="android:background">?attr/colorSurface</item>
+
+        <item name="itemIconSize">24dp</item>
+        <item name="itemIconTint">@color/bottom_nav_item_color</item>
+        <item name="itemTextColor">@color/bottom_nav_item_color</item>
+
+        <item name="labelVisibilityMode">labeled</item>
+
+        <item name="itemTextAppearanceActive">@style/TextAppearance.MilkLedger.BottomNavigation.Active</item>
+        <item name="itemTextAppearanceInactive">@style/TextAppearance.MilkLedger.BottomNavigation.Inactive</item>
+
+        <item name="itemActiveIndicatorStyle">@style/Widget.MilkLedger.BottomNavigation.ActiveIndicator</item>
+        <item name="itemRippleColor">@color/bottom_nav_ripple</item>
+
+        <item name="android:minHeight">60dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+
+        <item name="android:elevation">8dp</item>
+    </style>
+
+    <style name="Widget.MilkLedger.BottomNavigation.ActiveIndicator">
+
+        <item name="android:width">56dp</item>
+        <item name="android:height">32dp</item>
+        <item name="android:color">?attr/colorPrimaryContainer</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.MilkLedger.BottomNavigation.ActiveIndicator</item>
+    </style>
+
+    <style name="ShapeAppearance.MilkLedger.BottomNavigation.ActiveIndicator"
+        parent="ShapeAppearance.Material3.Corner.Full" />
+</resources>

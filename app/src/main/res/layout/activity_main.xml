@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:background="?attr/colorSurface"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -36,11 +36,30 @@
                 android:layout_height="0dp"
                 android:background="?attr/colorSurface"
                 app:defaultNavHost="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                app:layout_constraintBottom_toTopOf="@id/bottomNavDivider"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:navGraph="@navigation/main_nav_graph" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/bottomNavDivider"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                app:dividerColor="?attr/colorOutlineVariant"
+                app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MilkLedger.BottomNavigation"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:menu="@menu/menu_bottom_nav" />
 
 
 

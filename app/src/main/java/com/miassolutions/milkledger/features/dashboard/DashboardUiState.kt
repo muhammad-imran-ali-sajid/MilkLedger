@@ -55,11 +55,7 @@ sealed interface DashboardUiEvent {
     // Click actions
 
 
-    data object OnAccountClicked : DashboardUiEvent
-    object OnCashFlowClicked : DashboardUiEvent
-    object OnWalletClicked : DashboardUiEvent
     object OnPurchaseClicked : DashboardUiEvent
-    object OnNotesClicked : DashboardUiEvent
     object OnSaleClicked : DashboardUiEvent
     object OnExpenseClicked : DashboardUiEvent
 }
@@ -68,18 +64,6 @@ sealed interface DashboardUiEvent {
 // 3. EFFECTS (Navigation wagera)
 sealed interface DashboardUiEffect {
 
-    object NavigateToNotes : DashboardUiEffect
-    data object NavigateToAccounts : DashboardUiEffect
-
-
-
-    data class NavigateToCashFlow(
-        val date: LocalDate
-    ) : DashboardUiEffect
-
-    data class NavigateToWallet(
-        val date: LocalDate
-    ) : DashboardUiEffect
 
     data class NavigateToPurchase(
         val date: LocalDate

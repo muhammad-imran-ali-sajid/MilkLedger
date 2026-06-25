@@ -90,13 +90,10 @@ class DashboardFragment :
     override fun setupListeners() = with(binding) {
         super.setupListeners()
 
-        btnCashFlow.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnCashFlowClicked) }
-        btnNote.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnNotesClicked) }
         btnPurchase.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnPurchaseClicked) }
         btnSale.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnSaleClicked) }
         btnExpense.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnExpenseClicked) }
-        btnWallet.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnWalletClicked) }
-        btnAccount.setOnClickListener { viewModel.onEvent(DashboardUiEvent.OnAccountClicked) }
+
 
         setupToolbarMenu()
     }
@@ -151,7 +148,8 @@ class DashboardFragment :
                 tvPersonalExpense.text = state.totalPersonalExpense.toPrice()
                 tvRemainingBalance.text = state.remainingBalance.toPrice()
 
-                val profitColor = if (state.grossProfit >= 0) R.color.md_theme_primary else R.color.md_theme_error
+                val profitColor =
+                    if (state.grossProfit >= 0) R.color.md_theme_primary else R.color.md_theme_error
                 tvNetProfit.setTextColor(ContextCompat.getColor(requireContext(), profitColor))
 
                 statsAdapter.submitList(buildStatsList(state))
@@ -160,41 +158,29 @@ class DashboardFragment :
 
         collectEffect(viewModel.uiEffect) { effect ->
             when (effect) {
-                is DashboardUiEffect.NavigateToCashFlow -> {
-                    findNavController().navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToCashflowFragment(effect.date.toMillis())
-                    )
-                }
+
                 is DashboardUiEffect.NavigateToPurchase -> {
                     findNavController().navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToPurchaseListFragment(effect.date.toMillis())
+                        DashboardFragmentDirections.actionDashboardFragmentToPurchaseListFragment(
+                            effect.date.toMillis()
+                        )
                     )
                 }
+
                 is DashboardUiEffect.NavigateToSale -> {
                     findNavController().navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToMilkSaleListFragment(effect.date.toMillis())
+                        DashboardFragmentDirections.actionDashboardFragmentToMilkSaleListFragment(
+                            effect.date.toMillis()
+                        )
                     )
                 }
+
                 is DashboardUiEffect.NavigateToExpense -> {
                     findNavController().navigate(
                         DashboardFragmentDirections.actionDashboardFragmentToExpenseFragment(effect.date.toMillis())
                     )
                 }
-                is DashboardUiEffect.NavigateToWallet -> {
-                    findNavController().navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToOwnerDashboardFragment(effect.date.toMillis())
-                    )
-                }
-                DashboardUiEffect.NavigateToNotes -> {
-                    findNavController().navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToNoteListFragment()
-                    )
-                }
-                DashboardUiEffect.NavigateToAccounts -> {
-                    findNavController().navigate(
-                        DashboardFragmentDirections.actionDashboardFragmentToAccountListFragment()
-                    )
-                }
+
             }
         }
     }
@@ -206,10 +192,20 @@ class DashboardFragment :
             DashboardStat("Qty Diff", "${state.qtyDiff.format(0)} L", getDiffColor(state.qtyDiff)),
             DashboardStat("Avg S.P.", state.avgSalePrice.format(2)),
             DashboardStat("Avg P.P.", state.avgPurchasePrice.format(2)),
-            DashboardStat("Price Margin", state.avgPriceDiff.format(2), getDiffColor(state.avgPriceDiff)),
-            DashboardStat("Avg Fat", "${state.avgFat.format(2)} (${state.qualityVolume.format(1)})"),
+            DashboardStat(
+                "Price Margin",
+                state.avgPriceDiff.format(2),
+                getDiffColor(state.avgPriceDiff)
+            ),
+            DashboardStat(
+                "Avg Fat",
+                "${state.avgFat.format(2)} (${state.qualityVolume.format(1)})"
+            ),
             DashboardStat("Avg LR", "${state.avgLr.format(2)} (${state.qualityVolume.format(1)})"),
-            DashboardStat("Total TS", "${state.totalTs.format(2)} (${state.qualityVolume.format(1)})")
+            DashboardStat(
+                "Total TS",
+                "${state.totalTs.format(2)} (${state.qualityVolume.format(1)})"
+            )
         )
     }
 
