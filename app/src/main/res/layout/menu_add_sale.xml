@@ -8,11 +8,12 @@
         android:id="@+id/btnAddSale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="+ Add Sale"
-        android:paddingHorizontal="14dp"
-        style="@style/Widget.Material3.Button"
+        android:text="+ Add"
+        app:backgroundTint="?attr/colorSale"
         android:textColor="?attr/colorOnPrimary"
-        app:backgroundTint="?attr/colorSale" />
+        android:paddingHorizontal="14dp"
+        style="@style/Widget.Material3.Button.ElevatedButton"
+        />
 
 
 </FrameLayout>

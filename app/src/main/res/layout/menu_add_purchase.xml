@@ -8,11 +8,11 @@
         android:id="@+id/btnAddPurchase"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:text="+ Add Prch."
+        android:text="+ Add"
         android:textColor="?attr/colorOnPrimary"
         app:backgroundTint="?attr/colorPurchase"
         android:paddingHorizontal="14dp"
-        style="@style/Widget.Material3.Button"
+        style="@style/Widget.Material3.Button.ElevatedButton"
          />
 
 

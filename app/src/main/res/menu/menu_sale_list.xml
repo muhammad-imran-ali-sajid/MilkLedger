@@ -12,7 +12,8 @@
     <item
         android:id="@+id/actionShowSummary"
         android:title="Show Summary"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_notes_24"
+        app:showAsAction="always" />
 
 
 </menu>
