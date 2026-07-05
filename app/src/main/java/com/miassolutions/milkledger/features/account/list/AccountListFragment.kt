@@ -1,12 +1,8 @@
 package com.miassolutions.milkledger.features.account.list
 
-import android.view.Menu
-import android.view.MenuItem
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.gms.common.stats.StatsEvent
 import com.google.android.material.tabs.TabLayout
-import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.localdb.account.local.AccountType
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAccountListBinding
@@ -19,45 +15,42 @@ class AccountListFragment :
     BaseFragment<FragmentAccountListBinding>(FragmentAccountListBinding::inflate) {
 
     private val viewModel by viewModels<AccountViewModel>()
+
     private lateinit var adapter: AccountListAdapter
 
-    /** 🔑 SINGLE SOURCE OF TRUTH FOR TAB ORDER */
+    private var isRenderingArchivedChip = false
+
     private val tabTypes = listOf(
-        AccountType.SUPPLIER,   // ✅ FIRST TAB
+        AccountType.SUPPLIER,
         AccountType.CUSTOMER
     )
-
-    /* -------------------------------------------------- */
-    /* MENU (optional – still works if you keep it)       */
-    /* -------------------------------------------------- */
-
-    override fun getMenuResId(): Int = R.menu.menu_account_list
-
-    override fun onMenuCreated(menu: Menu) {
-        menu.findItem(R.id.menu_show_archived)?.isChecked =
-            viewModel.visibility.value ==
-                    AccountViewModel.AccountVisibility.ALL
-    }
-
-    override fun onMenuItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_show_archived -> {
-                viewModel.toggleVisibility()
-                true
-            }
-
-            else -> false
-        }
-    }
-
-    /* -------------------------------------------------- */
-    /* VIEWS                                             */
-    /* -------------------------------------------------- */
 
     override fun setupViews() = with(binding) {
         super.setupViews()
 
-        // Add Account
+        setupAddAccountButton()
+        setupRecyclerView()
+        setupTabs()
+        setupArchivedFilterChip()
+    }
+
+    override fun setupObservers() {
+        super.setupObservers()
+
+        collectFlow(viewModel.accounts) { accounts ->
+            adapter.submitList(accounts)
+        }
+
+        collectFlow(viewModel.selectedTab) { type ->
+            renderSelectedTab(type)
+        }
+
+        collectFlow(viewModel.visibility) { visibility ->
+            renderArchivedFilter(visibility)
+        }
+    }
+
+    private fun setupAddAccountButton() = with(binding) {
         btnAddAccount.setOnClickListener {
             val action =
                 AccountListFragmentDirections
@@ -65,75 +58,107 @@ class AccountListFragment :
                         accountId = null,
                         type = viewModel.selectedTab.value.name
                     )
+
             findNavController().navigate(action)
         }
+    }
 
-        // RecyclerView
-        adapter = AccountListAdapter(::onEditClick, ::onNavClick)
+    private fun setupRecyclerView() = with(binding) {
+        adapter = AccountListAdapter(
+            onEditClick = ::onEditClick,
+            onNavClick = ::onNavClick
+        )
+
         recyclerView.adapter = adapter
-
-        // Tabs
-        tabTypes.forEach { type ->
-            tabLayout.addTab(
-                tabLayout.newTab().setText(type.title(requireContext()))
-            )
-        }
-
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                tab ?: return
-                viewModel.onTabSelected(tabTypes[tab.position])
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
     }
 
-    /* -------------------------------------------------- */
-    /* OBSERVERS                                         */
-    /* -------------------------------------------------- */
-
-    override fun setupObservers() {
-
-        collectFlow(viewModel.accounts) {
-            adapter.submitList(it)
-        }
-
-        // Restore tab (process / rotation safe)
-        collectFlow(viewModel.selectedTab) { type ->
-            val index = tabTypes.indexOf(type)
-            if (index >= 0 && binding.tabLayout.selectedTabPosition != index) {
-                binding.tabLayout.getTabAt(index)?.select()
-            }
-        }
-    }
-
-    /* -------------------------------------------------- */
-    /* NAVIGATION                                        */
-    /* -------------------------------------------------- */
-
-    private fun onNavClick(id: String, name: String, type: String) {
-
-        val customer = type == AccountType.CUSTOMER.name
-
-        if (customer) {
-            val action =
-                AccountListFragmentDirections.actionAccountListFragmentToCustomerHistoryFragment(
-                    customerId = id,
-                    customerName = name
+    private fun setupTabs() = with(binding) {
+        if (tabLayout.tabCount == 0) {
+            tabTypes.forEach { type ->
+                tabLayout.addTab(
+                    tabLayout.newTab().setText(type.title(requireContext()))
                 )
+            }
+        }
+
+        tabLayout.addOnTabSelectedListener(
+            object : TabLayout.OnTabSelectedListener {
+
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    tab ?: return
+
+                    val selectedType = tabTypes.getOrNull(tab.position) ?: return
+                    viewModel.onTabSelected(selectedType)
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+
+                override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+            }
+        )
+    }
+
+    private fun setupArchivedFilterChip() = with(binding) {
+        chipArchivedFilter.setOnCheckedChangeListener { _, isChecked ->
+            if (isRenderingArchivedChip) return@setOnCheckedChangeListener
+
+            viewModel.setIncludeArchived(isChecked)
+        }
+    }
+
+    private fun renderSelectedTab(type: AccountType) {
+        val index = tabTypes.indexOf(type)
+
+        if (index >= 0 && binding.tabLayout.selectedTabPosition != index) {
+            binding.tabLayout.getTabAt(index)?.select()
+        }
+    }
+
+    private fun renderArchivedFilter(
+        visibility: AccountViewModel.AccountVisibility
+    ) = with(binding) {
+        val includeArchived =
+            visibility == AccountViewModel.AccountVisibility.ALL
+
+        isRenderingArchivedChip = true
+
+        chipArchivedFilter.isChecked = includeArchived
+        chipArchivedFilter.text =
+            if (includeArchived) {
+                "Including archived"
+            } else {
+                "Active only"
+            }
+
+        isRenderingArchivedChip = false
+    }
+
+    private fun onNavClick(
+        id: String,
+        name: String,
+        type: String
+    ) {
+        val isCustomer = type == AccountType.CUSTOMER.name
+
+        if (isCustomer) {
+            val action =
+                AccountListFragmentDirections
+                    .actionAccountListFragmentToCustomerHistoryFragment(
+                        customerId = id,
+                        customerName = name
+                    )
+
             findNavController().navigate(action)
         } else {
             val action =
-                AccountListFragmentDirections.actionAccountListFragmentToSupplierDetailFragment(
-                    supplierId = id,
-                    supplierName = name
-                )
+                AccountListFragmentDirections
+                    .actionAccountListFragmentToSupplierDetailFragment(
+                        supplierId = id,
+                        supplierName = name
+                    )
+
             findNavController().navigate(action)
         }
-
-
     }
 
     private fun onEditClick(id: String) {
@@ -143,6 +168,7 @@ class AccountListFragment :
                     accountId = id,
                     type = null
                 )
+
         findNavController().navigate(action)
     }
 }

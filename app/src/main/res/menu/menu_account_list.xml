@@ -6,6 +6,6 @@
         android:id="@+id/menu_show_archived"
         android:title="Show Archived"
         android:checkable="true"
-        app:showAsAction="never" />
+        app:showAsAction="always" />
 
 </menu>

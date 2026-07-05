@@ -9,7 +9,14 @@ import com.miassolutions.milkledger.features.account.model.AccountUi
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -24,90 +31,107 @@ class AccountViewModel @Inject constructor(
         private const val KEY_VISIBILITY = "visibility"
     }
 
-    /* -------------------------------------------------- */
-    /* PRIMARY FILTER: ACCOUNT TYPE (TAB)                 */
-    /* -------------------------------------------------- */
-
-    private val _selectedTab = MutableStateFlow(
-        savedStateHandle[KEY_SELECTED_TAB] ?: AccountType.SUPPLIER // ✅ DEFAULT
-    )
-    val selectedTab: StateFlow<AccountType> = _selectedTab.asStateFlow()
-
-    fun onTabSelected(type: AccountType) {
-        _selectedTab.value = type
-        savedStateHandle[KEY_SELECTED_TAB] = type
-    }
-
-    /* -------------------------------------------------- */
-    /* SECONDARY FILTER: VISIBILITY                       */
-    /* -------------------------------------------------- */
-
     enum class AccountVisibility {
         ACTIVE_ONLY,
         ALL
     }
 
-    private val _visibility = MutableStateFlow(
-        savedStateHandle[KEY_VISIBILITY] ?: AccountVisibility.ACTIVE_ONLY
-    )
+    private val _selectedTab = MutableStateFlow(readSavedAccountType())
+    val selectedTab: StateFlow<AccountType> = _selectedTab.asStateFlow()
+
+    private val _visibility = MutableStateFlow(readSavedVisibility())
     val visibility: StateFlow<AccountVisibility> = _visibility.asStateFlow()
-
-    fun toggleVisibility() {
-        val next =
-            if (_visibility.value == AccountVisibility.ACTIVE_ONLY)
-                AccountVisibility.ALL
-            else
-                AccountVisibility.ACTIVE_ONLY
-
-        _visibility.value = next
-        savedStateHandle[KEY_VISIBILITY] = next
-    }
-
-    /* -------------------------------------------------- */
-    /* FINAL LIST (TAB + FILTER COMBINED)                 */
-    /* -------------------------------------------------- */
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val accounts: StateFlow<List<AccountUi>> =
-        combine(selectedTab, visibility) { type, visibility ->
+        combine(
+            selectedTab,
+            visibility
+        ) { type, visibility ->
             type to visibility
         }.flatMapLatest { (type, visibility) ->
 
-            // 🔥 AB HUM "One-Shot Query" USE KAR RAHAY HAIN
             repository.getAccountsWithStats(type)
                 .map { list ->
 
-                    // 1. Filtering (Active/All)
-                    val filteredList = when (visibility) {
-                        AccountVisibility.ACTIVE_ONLY -> list.filter { it.account.isActive }
-                        AccountVisibility.ALL -> list
-                    }
-
-                    // 2. Simple Mapping (Data already majood hai!)
-                    filteredList.map { item ->
-                        val entity = item.account
-
-                        AccountUi(
-                            id = entity.accountId,
-                            name = entity.name,
-                            type = entity.accountType,
-                            sortOrder = entity.sortOrder,
-                            initialBalance = entity.initialBalance,
-
-                            // ✅ Direct Assignment (No DB Call)
-                            currentBalance = item.currentBalance ?: 0L,
-
-                            // ✅ Date Conversion
-                            openingDate = item.openingDateMillis?.toLocalDate() ?: LocalDate.now(),
-
-                            defaultRate = entity.defaultRate,
-                            advanceAmount = entity.advanceAmount
+                    list
+                        .asSequence()
+                        .filter { item ->
+                            when (visibility) {
+                                AccountVisibility.ACTIVE_ONLY -> item.account.isActive
+                                AccountVisibility.ALL -> true
+                            }
+                        }
+                        .sortedWith(
+                            compareBy(
+                                { it.account.sortOrder },
+                                { it.account.name.lowercase() }
+                            )
                         )
-                    }
+                        .map { item ->
+                            val entity = item.account
+
+                            AccountUi(
+                                id = entity.accountId,
+                                name = entity.name,
+                                type = entity.accountType,
+                                sortOrder = entity.sortOrder,
+                                initialBalance = entity.initialBalance,
+                                currentBalance = item.currentBalance ?: 0L,
+                                openingDate = item.openingDateMillis?.toLocalDate()
+                                    ?: LocalDate.now(),
+                                defaultRate = entity.defaultRate,
+                                advanceAmount = entity.advanceAmount
+                            )
+                        }
+                        .toList()
                 }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = emptyList()
         )
+
+    fun onTabSelected(type: AccountType) {
+        if (_selectedTab.value == type) return
+
+        _selectedTab.value = type
+        savedStateHandle[KEY_SELECTED_TAB] = type.name
+    }
+
+    fun setIncludeArchived(includeArchived: Boolean) {
+        val next =
+            if (includeArchived) {
+                AccountVisibility.ALL
+            } else {
+                AccountVisibility.ACTIVE_ONLY
+            }
+
+        if (_visibility.value == next) return
+
+        _visibility.value = next
+        savedStateHandle[KEY_VISIBILITY] = next.name
+    }
+
+    fun toggleVisibility() {
+        setIncludeArchived(
+            includeArchived = _visibility.value == AccountVisibility.ACTIVE_ONLY
+        )
+    }
+
+    private fun readSavedAccountType(): AccountType {
+        val saved = savedStateHandle.get<String>(KEY_SELECTED_TAB)
+
+        return runCatching {
+            saved?.let { AccountType.valueOf(it) }
+        }.getOrNull() ?: AccountType.SUPPLIER
+    }
+
+    private fun readSavedVisibility(): AccountVisibility {
+        val saved = savedStateHandle.get<String>(KEY_VISIBILITY)
+
+        return runCatching {
+            saved?.let { AccountVisibility.valueOf(it) }
+        }.getOrNull() ?: AccountVisibility.ACTIVE_ONLY
+    }
 }
