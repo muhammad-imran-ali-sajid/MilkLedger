@@ -147,7 +147,7 @@ class BackupRestoreViewModel @Inject constructor(
             _backupState.update {
                 it.copy(
                     isLoading = false,
-                    error = "Google Drive backup is disabled right now."
+                    error = "Google Drive backup feature is expired. Contact Developer."
                 )
             }
             return
@@ -192,7 +192,7 @@ class BackupRestoreViewModel @Inject constructor(
             _backupState.update {
                 it.copy(
                     isBackupRunning = false,
-                    error = "Google Drive backup is disabled right now."
+                    error = "Google Drive backup feature is expired. Contact Developer."
                 )
             }
             return

@@ -103,7 +103,7 @@ class BackupRestoreFragment :
             }
 
             if (!state.driveBackupFeatureEnabled) {
-                showSnackbar("Google Drive backup is disabled right now.")
+                showSnackbar("Google Drive backup feature is expired. Contact Developer.")
                 return@setOnClickListener
             }
 
@@ -123,7 +123,7 @@ class BackupRestoreFragment :
             }
 
             if (!state.driveBackupFeatureEnabled) {
-                showSnackbar("Google Drive backup is disabled right now.")
+                showSnackbar("Google Drive backup feature is expired. Contact Developer.")
                 return@setOnClickListener
             }
 
@@ -144,7 +144,7 @@ class BackupRestoreFragment :
             }
 
             if (!state.driveBackupFeatureEnabled) {
-                showSnackbar("Google Drive backup is disabled right now.")
+                showSnackbar("Google Drive backup feature is expired. Contact Developer.")
                 return@setOnClickListener
             }
 
