@@ -24,10 +24,8 @@ import com.miassolutions.milkledger.core.prefs.SharedPrefsHelper
 import com.miassolutions.milkledger.databinding.ActivityMainBinding
 import com.miassolutions.milkledger.databinding.DrawerHeaderBinding
 import com.miassolutions.milkledger.features.backup.worker.BackupWorkScheduler
-import com.miassolutions.milkledger.features.remoteconfig.domain.FeatureFlagsRepository
 import com.miassolutions.milkledger.features.settings.AppSettingsPreferences
 import com.miassolutions.milkledger.features.settings.ThemeManager
-import com.miassolutions.milkledger.utils.premiumfeatures.RemoteConfigManager
 import dagger.hilt.android.AndroidEntryPoint
 import jakarta.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -35,11 +33,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    @Inject
-    lateinit var remote: RemoteConfigManager
-
-
 
     @Inject
     lateinit var backupWorkScheduler: BackupWorkScheduler
@@ -88,9 +81,6 @@ class MainActivity : AppCompatActivity() {
             setupNavigation()
         }
 
-        lifecycleScope.launch {
-            checkForceUpdate()
-        }
     }
 
     private fun setupToolbar() {
@@ -131,25 +121,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun checkForceUpdate() {
-        try {
-            remote.fetch()
-
-            val minVersion = remote.getMinSupportedVersion()
-
-            if (BuildConfig.VERSION_CODE < minVersion) {
-                startActivity(
-                    Intent(this@MainActivity, ForceUpdateActivity::class.java).apply {
-                        putExtra("message", remote.getUpdateMessage())
-                        putExtra("url", remote.getApkUrl())
-                    }
-                )
-                finish()
-            }
-        } catch (e: Exception) {
-            Log.e("FeatureFlags", "Failed to refresh flags", e)
-        }
-    }
 
     private fun setupDrawerHeader() {
         val role = SharedPrefsHelper.getUserRole(this)
