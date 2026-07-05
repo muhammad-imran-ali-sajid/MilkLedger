@@ -42,6 +42,7 @@ class BackupRestoreFragment :
 
     private var pendingDriveAction: PendingDriveAction? = null
     private var pendingExportBytes: ByteArray? = null
+    private var hasLoadedDriveStatusOnce = false
 
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -76,15 +77,6 @@ class BackupRestoreFragment :
         setupRecyclerView()
         setupClickListeners()
         observeState()
-
-        renderDriveConnectionState()
-
-        // Safe auto-load: this does NOT open Google sign-in.
-        // It only loads Drive status if permission already exists.
-        if (isDriveConnected()) {
-            viewModel.loadBackupStatus()
-        }
-
         requestNotificationPermissionIfNeeded()
     }
 
@@ -101,43 +93,78 @@ class BackupRestoreFragment :
         }
     }
 
-    private fun setupClickListeners() {
+    private fun setupClickListeners() = with(binding) {
+        btnDriveLauncher.setOnClickListener {
+            val state = viewModel.uiState.value
 
-        binding.btnDisconnectDrive.setOnClickListener {
-            showDisconnectDriveConfirmation()
-        }
-        binding.btnDriveLauncher.setOnClickListener {
+            if (!state.featureFlagsLoaded) {
+                showSnackbar("Checking Google Drive availability. Please wait.")
+                return@setOnClickListener
+            }
+
+            if (!state.driveBackupFeatureEnabled) {
+                showSnackbar("Google Drive backup is disabled right now.")
+                return@setOnClickListener
+            }
+
             ensureDrivePermissionThen(PendingDriveAction.CONNECT_ONLY)
         }
 
-        binding.btnBackupNow.setOnClickListener {
+        btnDisconnectDrive.setOnClickListener {
+            showDisconnectDriveConfirmation()
+        }
+
+        btnBackupNow.setOnClickListener {
+            val state = viewModel.uiState.value
+
+            if (!state.featureFlagsLoaded) {
+                showSnackbar("Checking Google Drive availability. Please wait.")
+                return@setOnClickListener
+            }
+
+            if (!state.driveBackupFeatureEnabled) {
+                showSnackbar("Google Drive backup is disabled right now.")
+                return@setOnClickListener
+            }
+
             if (!isDriveConnected()) {
                 showSnackbar("Connect Google Drive first.")
-                renderDriveConnectionState()
                 return@setOnClickListener
             }
 
             viewModel.backupNow()
         }
 
-        binding.btnRefresh.setOnClickListener {
-            if (!isDriveConnected()) {
-                showSnackbar("Connect Google Drive first.")
-                renderDriveConnectionState()
+        btnRefresh.setOnClickListener {
+            val state = viewModel.uiState.value
+
+            if (!state.featureFlagsLoaded) {
+                showSnackbar("Checking Google Drive availability. Please wait.")
                 return@setOnClickListener
             }
 
+            if (!state.driveBackupFeatureEnabled) {
+                showSnackbar("Google Drive backup is disabled right now.")
+                return@setOnClickListener
+            }
+
+            if (!isDriveConnected()) {
+                showSnackbar("Connect Google Drive first.")
+                return@setOnClickListener
+            }
+
+            hasLoadedDriveStatusOnce = false
             viewModel.loadBackupStatus()
         }
 
-        binding.btnCreateLocalBackup.setOnClickListener {
+        btnCreateLocalBackup.setOnClickListener {
             viewModel.createLocalBackupForExport { fileName, bytes ->
                 pendingExportBytes = bytes
                 createLocalBackupLauncher.launch(fileName)
             }
         }
 
-        binding.btnRestoreLocalBackup.setOnClickListener {
+        btnRestoreLocalBackup.setOnClickListener {
             restoreLocalBackupLauncher.launch(
                 arrayOf(
                     "application/octet-stream",
@@ -154,38 +181,72 @@ class BackupRestoreFragment :
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collect { state ->
                     renderState(state)
+                    maybeLoadDriveStatus(state)
                 }
             }
         }
     }
 
+    private fun maybeLoadDriveStatus(state: BackupStatusUiState) {
+        if (hasLoadedDriveStatusOnce) return
+        if (!state.featureFlagsLoaded) return
+        if (!state.driveBackupFeatureEnabled) return
+        if (!isDriveConnected()) return
+        if (state.isBusy) return
+
+        hasLoadedDriveStatusOnce = true
+        viewModel.loadBackupStatus()
+    }
+
     private fun renderState(state: BackupStatusUiState) {
         val busy = state.isBusy
         val driveConnected = isDriveConnected()
+        val featureLoaded = state.featureFlagsLoaded
+        val driveFeatureEnabled = state.driveBackupFeatureEnabled
+        val canUseDrive = featureLoaded && driveFeatureEnabled
+
+        Log.d(
+            "BackupFlags",
+            "Fragment render: loaded=$featureLoaded enabled=$driveFeatureEnabled connected=$driveConnected"
+        )
 
         binding.progressBar.isVisible = busy
 
         binding.btnCreateLocalBackup.isEnabled = !busy
         binding.btnRestoreLocalBackup.isEnabled = !busy
 
-        binding.btnDriveLauncher.isEnabled = !busy && !driveConnected
-        binding.btnDriveLauncher.text =
-            if (driveConnected) {
-                "Drive Connected"
+        renderDriveFeatureArea(
+            busy = busy,
+            featureLoaded = featureLoaded,
+            driveFeatureEnabled = driveFeatureEnabled,
+            driveConnected = driveConnected
+        )
+
+        renderBackupStatus(
+            state = state,
+            featureLoaded = featureLoaded,
+            driveFeatureEnabled = driveFeatureEnabled,
+            driveConnected = driveConnected
+        )
+
+        val shouldShowDriveBackups =
+            canUseDrive && driveConnected && state.driveBackups.isNotEmpty()
+
+        backupAdapter.submitList(
+            if (canUseDrive && driveConnected) {
+                state.driveBackups
             } else {
-                "Connect Google Drive"
+                emptyList()
             }
+        )
 
-        binding.btnBackupNow.isEnabled = !busy && driveConnected
-        binding.btnRefresh.isEnabled = !busy && driveConnected
+        binding.rvBackups.isVisible = shouldShowDriveBackups
 
-        renderBackupStatus(state)
-
-        backupAdapter.submitList(state.driveBackups)
-
-        binding.rvBackups.isVisible = state.driveBackups.isNotEmpty()
         binding.tvEmptyBackups.isVisible =
-            !state.isLoading && state.driveBackups.isEmpty()
+            canUseDrive &&
+                    driveConnected &&
+                    !state.isLoading &&
+                    state.driveBackups.isEmpty()
 
         state.message?.let { message ->
             showSnackbar(message)
@@ -198,33 +259,109 @@ class BackupRestoreFragment :
         }
     }
 
-    private fun renderBackupStatus(state: BackupStatusUiState) {
-        if (state.hasSuccessfulBackup) {
-            binding.tvBackupStatus.text =
-                "Last backup: ${formatDateTime(state.lastSuccessfulBackupAt)}"
+    private fun renderDriveFeatureArea(
+        busy: Boolean,
+        featureLoaded: Boolean,
+        driveFeatureEnabled: Boolean,
+        driveConnected: Boolean
+    ) = with(binding) {
+        when {
+            !featureLoaded -> {
+                tvDriveDisabledMessage.isVisible = true
+                tvDriveDisabledMessage.text = "Checking Google Drive availability..."
 
-            binding.tvBackupFile.text =
-                state.lastBackupFileName ?: "Backup file name unavailable"
-        } else {
-            binding.tvBackupStatus.text = "No successful backup yet"
-            binding.tvBackupFile.text = "Create a Google Drive backup to protect data."
+                btnDriveLauncher.isVisible = false
+                btnDisconnectDrive.isVisible = false
+                btnBackupNow.isEnabled = false
+                btnRefresh.isEnabled = false
+            }
+
+            !driveFeatureEnabled -> {
+                tvDriveDisabledMessage.isVisible = true
+                tvDriveDisabledMessage.text =
+                    "Google Drive backup is temporarily disabled."
+
+                btnDriveLauncher.isVisible = false
+                btnDisconnectDrive.isVisible = false
+                btnBackupNow.isEnabled = false
+                btnRefresh.isEnabled = false
+            }
+
+            driveConnected -> {
+                tvDriveDisabledMessage.isVisible = false
+
+                btnDriveLauncher.isVisible = false
+
+                btnDisconnectDrive.isVisible = true
+                btnDisconnectDrive.isEnabled = !busy
+
+                btnBackupNow.isEnabled = !busy
+                btnRefresh.isEnabled = !busy
+            }
+
+            else -> {
+                tvDriveDisabledMessage.isVisible = false
+
+                btnDriveLauncher.isVisible = true
+                btnDriveLauncher.isEnabled = !busy
+
+                btnDisconnectDrive.isVisible = false
+
+                btnBackupNow.isEnabled = false
+                btnRefresh.isEnabled = false
+            }
         }
+    }
 
-        val shouldShowWarning =
-            !state.hasSuccessfulBackup || state.isBackupOld
-
-        binding.tvBackupWarning.isVisible = shouldShowWarning
-
-        binding.tvBackupWarning.text = when {
-            !state.hasSuccessfulBackup -> {
-                "No Google Drive backup found. Data is not protected from phone loss."
+    private fun renderBackupStatus(
+        state: BackupStatusUiState,
+        featureLoaded: Boolean,
+        driveFeatureEnabled: Boolean,
+        driveConnected: Boolean
+    ) = with(binding) {
+        when {
+            !featureLoaded -> {
+                tvBackupStatus.text = "Checking backup availability..."
+                tvBackupFile.text = ""
+                tvBackupWarning.isVisible = false
             }
 
-            state.isBackupOld -> {
-                "Backup is older than 48 hours. Please backup now."
+            !driveFeatureEnabled -> {
+                tvBackupStatus.text = "Google Drive backup disabled"
+                tvBackupFile.text = "Local backup is still available."
+                tvBackupWarning.isVisible = false
             }
 
-            else -> ""
+            !driveConnected -> {
+                tvBackupStatus.text = "Google Drive not connected"
+                tvBackupFile.text = "Connect Google Drive to enable cloud backup."
+                tvBackupWarning.isVisible = false
+            }
+
+            state.hasSuccessfulBackup -> {
+                tvBackupStatus.text =
+                    "Last backup: ${formatDateTime(state.lastSuccessfulBackupAt)}"
+
+                tvBackupFile.text =
+                    state.lastBackupFileName ?: "Backup file name unavailable"
+
+                tvBackupWarning.isVisible = state.isBackupOld
+                tvBackupWarning.text =
+                    if (state.isBackupOld) {
+                        "Backup is older than 48 hours. Please backup now."
+                    } else {
+                        ""
+                    }
+            }
+
+            else -> {
+                tvBackupStatus.text = "No successful backup yet"
+                tvBackupFile.text = "Create a Google Drive backup to protect data."
+
+                tvBackupWarning.isVisible = true
+                tvBackupWarning.text =
+                    "No Google Drive backup found. Data is not protected from phone loss."
+            }
         }
     }
 
@@ -276,16 +413,14 @@ class BackupRestoreFragment :
 
         } finally {
             pendingDriveAction = null
-            renderDriveConnectionState()
         }
     }
 
     private fun onDrivePermissionReady(action: PendingDriveAction) {
-        renderDriveConnectionState()
-
         when (action) {
             PendingDriveAction.CONNECT_ONLY -> {
                 showSnackbar("Google Drive connected successfully")
+                hasLoadedDriveStatusOnce = false
                 viewModel.loadBackupStatus()
             }
 
@@ -304,10 +439,10 @@ class BackupRestoreFragment :
             .setTitle("Disconnect Google Drive?")
             .setMessage(
                 """
-            Google Drive backup will stop working until you connect again.
-            
-            Your backup files will not be deleted from Google Drive.
-            """.trimIndent()
+                Google Drive backup will stop working until you connect again.
+                
+                Your backup files will not be deleted from Google Drive.
+                """.trimIndent()
             )
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Disconnect") { _, _ ->
@@ -321,32 +456,15 @@ class BackupRestoreFragment :
             activity = requireActivity(),
             onSuccess = {
                 showSnackbar("Google Drive disconnected")
-                renderDriveConnectionState()
 
-                backupAdapter.submitList(emptyList())
-                binding.rvBackups.isVisible = false
-                binding.tvEmptyBackups.isVisible = true
+                hasLoadedDriveStatusOnce = false
+                viewModel.clearDriveBackupsAfterDisconnect()
             },
             onError = { exception ->
                 Log.e("DriveAuth", "Failed to revoke Drive access", exception)
                 showSnackbar(exception?.message ?: "Failed to disconnect Google Drive")
-                renderDriveConnectionState()
             }
         )
-    }
-
-    private fun renderDriveConnectionState() {
-        val driveConnected = isDriveConnected()
-
-        binding.btnDriveLauncher.isVisible = !driveConnected
-        binding.btnDriveLauncher.isEnabled = !driveConnected
-        binding.btnDriveLauncher.text = "Connect Google Drive"
-
-        binding.btnDisconnectDrive.isVisible = driveConnected
-        binding.btnDisconnectDrive.isEnabled = driveConnected
-
-        binding.btnBackupNow.isEnabled = driveConnected
-        binding.btnRefresh.isEnabled = driveConnected
     }
 
     private fun isDriveConnected(): Boolean {

@@ -12,9 +12,12 @@ data class BackupStatusUiState(
     val lastBackupError: String? = null,
     
     val driveBackups: List<DriveBackupFile> = emptyList(),
-    
+
+
     val message: String? = null,
-    val error: String? = null
+    val error: String? = null,
+    val featureFlagsLoaded: Boolean = false,
+    val driveBackupFeatureEnabled: Boolean = false
 ) {
     val hasSuccessfulBackup: Boolean
         get() = lastSuccessfulBackupAt > 0L
