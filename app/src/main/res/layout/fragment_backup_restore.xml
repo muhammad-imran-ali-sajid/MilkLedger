@@ -89,6 +89,7 @@
             android:layout_height="wrap_content"
             android:padding="12dp"
             android:textSize="18sp"
+            android:textStyle="bold"
             android:text="Google Drive backup is temporarily disabled."
             android:textColor="?attr/colorOnSurfaceVariant"
             android:visibility="gone" />

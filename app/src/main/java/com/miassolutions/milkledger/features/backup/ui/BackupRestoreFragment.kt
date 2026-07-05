@@ -279,7 +279,7 @@ class BackupRestoreFragment :
             !driveFeatureEnabled -> {
                 tvDriveDisabledMessage.isVisible = true
                 tvDriveDisabledMessage.text =
-                    "Google Drive backup is temporarily disabled."
+                    "Google Drive backup feature is expired. Contact Developer."
 
                 btnDriveLauncher.isVisible = false
                 btnDisconnectDrive.isVisible = false
