@@ -31,4 +31,27 @@ class GoogleDriveAuthManager @Inject constructor() {
                     Scope(DriveScopes.DRIVE_FILE)
                 )
     }
+
+    fun revokeDriveAccess(
+        activity: Activity,
+        onSuccess: () -> Unit,
+        onError: (Exception?) -> Unit
+    ) {
+        val client = GoogleSignIn.getClient(activity, getGoogleSignInOptions())
+
+        client.revokeAccess()
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { exception ->
+                onError(exception)
+            }
+    }
+
+    private fun getGoogleSignInOptions(): GoogleSignInOptions {
+        return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()
+            .requestScopes(Scope(DriveScopes.DRIVE_FILE))
+            .build()
+    }
 }

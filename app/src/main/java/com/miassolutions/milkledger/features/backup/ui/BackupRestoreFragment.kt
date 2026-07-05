@@ -1,7 +1,9 @@
 package com.miassolutions.milkledger.features.backup.ui
 
-import android.app.Activity
+import android.Manifest
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,93 +32,211 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class BackupRestoreFragment :
     BaseFragment<FragmentBackupRestoreBinding>(FragmentBackupRestoreBinding::inflate) {
-    
-    
+
     private val viewModel: BackupRestoreViewModel by viewModels()
-    
+
     @Inject
     lateinit var googleDriveAuthManager: GoogleDriveAuthManager
-    
+
     private lateinit var backupAdapter: DriveBackupAdapter
-    
+
     private var pendingDriveAction: PendingDriveAction? = null
-    
     private var pendingExportBytes: ByteArray? = null
-    
+
     private val notificationPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (!granted) {
-                Snackbar.make(
-                    binding.root,
-                    "Backup works, but notifications are disabled.",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        }
-    
-    private val createLocalBackupLauncher =
-        registerForActivityResult(ActivityResultContracts.CreateDocument("application/octet-stream")) { uri ->
-            if (uri == null) {
-                Toast.makeText(requireContext(), "Local backup cancelled", Toast.LENGTH_SHORT).show()
-                pendingExportBytes = null
-                return@registerForActivityResult
-            }
-            
-            val bytes = pendingExportBytes
-            if (bytes == null) {
-                Toast.makeText(requireContext(), "Backup data not available", Toast.LENGTH_SHORT).show()
-                return@registerForActivityResult
-            }
-            
-            try {
-                requireContext().contentResolver.openOutputStream(uri)?.use { output ->
-                    output.write(bytes)
-                }
-                
-                pendingExportBytes = null
-                
-                Snackbar.make(
-                    binding.root,
-                    "Local backup file saved successfully",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            } catch (e: Exception) {
-                pendingExportBytes = null
-                
-                Snackbar.make(
-                    binding.root,
-                    e.message ?: "Failed to save local backup",
-                    Snackbar.LENGTH_LONG
-                ).show()
+                showSnackbar("Backup works, but notifications are disabled.")
             }
         }
 
-    private val googleSignInLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            handleGoogleSignInResult(result.data)
+    private val createLocalBackupLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.CreateDocument("application/octet-stream")
+        ) { uri ->
+            handleLocalBackupFileCreated(uri)
         }
-    
+
     private val restoreLocalBackupLauncher =
         registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
             if (uri == null) {
                 Toast.makeText(requireContext(), "Restore cancelled", Toast.LENGTH_SHORT).show()
                 return@registerForActivityResult
             }
-            
+
             showLocalRestoreConfirmation(uri)
         }
-    
-    
+
+    private val googleSignInLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            handleGoogleSignInResult(result.data)
+        }
+
     override fun setupViews() {
-        
-        
         setupRecyclerView()
         setupClickListeners()
         observeState()
-        
-        ensureDrivePermissionThen(PendingDriveAction.LOAD_STATUS)
-        
+
+        renderDriveConnectionState()
+
+        // Safe auto-load: this does NOT open Google sign-in.
+        // It only loads Drive status if permission already exists.
+        if (isDriveConnected()) {
+            viewModel.loadBackupStatus()
+        }
+
         requestNotificationPermissionIfNeeded()
+    }
+
+    private fun setupRecyclerView() {
+        backupAdapter = DriveBackupAdapter(
+            onRestoreClicked = { file ->
+                showRestoreConfirmation(file)
+            }
+        )
+
+        binding.rvBackups.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = backupAdapter
+        }
+    }
+
+    private fun setupClickListeners() {
+
+        binding.btnDisconnectDrive.setOnClickListener {
+            showDisconnectDriveConfirmation()
+        }
+        binding.btnDriveLauncher.setOnClickListener {
+            ensureDrivePermissionThen(PendingDriveAction.CONNECT_ONLY)
+        }
+
+        binding.btnBackupNow.setOnClickListener {
+            if (!isDriveConnected()) {
+                showSnackbar("Connect Google Drive first.")
+                renderDriveConnectionState()
+                return@setOnClickListener
+            }
+
+            viewModel.backupNow()
+        }
+
+        binding.btnRefresh.setOnClickListener {
+            if (!isDriveConnected()) {
+                showSnackbar("Connect Google Drive first.")
+                renderDriveConnectionState()
+                return@setOnClickListener
+            }
+
+            viewModel.loadBackupStatus()
+        }
+
+        binding.btnCreateLocalBackup.setOnClickListener {
+            viewModel.createLocalBackupForExport { fileName, bytes ->
+                pendingExportBytes = bytes
+                createLocalBackupLauncher.launch(fileName)
+            }
+        }
+
+        binding.btnRestoreLocalBackup.setOnClickListener {
+            restoreLocalBackupLauncher.launch(
+                arrayOf(
+                    "application/octet-stream",
+                    "application/gzip",
+                    "application/json",
+                    "*/*"
+                )
+            )
+        }
+    }
+
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collect { state ->
+                    renderState(state)
+                }
+            }
+        }
+    }
+
+    private fun renderState(state: BackupStatusUiState) {
+        val busy = state.isBusy
+        val driveConnected = isDriveConnected()
+
+        binding.progressBar.isVisible = busy
+
+        binding.btnCreateLocalBackup.isEnabled = !busy
+        binding.btnRestoreLocalBackup.isEnabled = !busy
+
+        binding.btnDriveLauncher.isEnabled = !busy && !driveConnected
+        binding.btnDriveLauncher.text =
+            if (driveConnected) {
+                "Drive Connected"
+            } else {
+                "Connect Google Drive"
+            }
+
+        binding.btnBackupNow.isEnabled = !busy && driveConnected
+        binding.btnRefresh.isEnabled = !busy && driveConnected
+
+        renderBackupStatus(state)
+
+        backupAdapter.submitList(state.driveBackups)
+
+        binding.rvBackups.isVisible = state.driveBackups.isNotEmpty()
+        binding.tvEmptyBackups.isVisible =
+            !state.isLoading && state.driveBackups.isEmpty()
+
+        state.message?.let { message ->
+            showSnackbar(message)
+            viewModel.clearMessages()
+        }
+
+        state.error?.let { error ->
+            showSnackbar(error)
+            viewModel.clearMessages()
+        }
+    }
+
+    private fun renderBackupStatus(state: BackupStatusUiState) {
+        if (state.hasSuccessfulBackup) {
+            binding.tvBackupStatus.text =
+                "Last backup: ${formatDateTime(state.lastSuccessfulBackupAt)}"
+
+            binding.tvBackupFile.text =
+                state.lastBackupFileName ?: "Backup file name unavailable"
+        } else {
+            binding.tvBackupStatus.text = "No successful backup yet"
+            binding.tvBackupFile.text = "Create a Google Drive backup to protect data."
+        }
+
+        val shouldShowWarning =
+            !state.hasSuccessfulBackup || state.isBackupOld
+
+        binding.tvBackupWarning.isVisible = shouldShowWarning
+
+        binding.tvBackupWarning.text = when {
+            !state.hasSuccessfulBackup -> {
+                "No Google Drive backup found. Data is not protected from phone loss."
+            }
+
+            state.isBackupOld -> {
+                "Backup is older than 48 hours. Please backup now."
+            }
+
+            else -> ""
+        }
+    }
+
+    private fun ensureDrivePermissionThen(action: PendingDriveAction) {
+        if (isDriveConnected()) {
+            onDrivePermissionReady(action)
+        } else {
+            pendingDriveAction = action
+            googleSignInLauncher.launch(
+                googleDriveAuthManager.getSignInIntent(requireActivity())
+            )
+        }
     }
 
     private fun handleGoogleSignInResult(data: Intent?) {
@@ -127,21 +247,16 @@ class BackupRestoreFragment :
 
             if (account == null) {
                 showDriveAuthError("Google account not selected.")
-                pendingDriveAction = null
                 return
             }
 
-            if (!googleDriveAuthManager.hasDrivePermission(requireActivity())) {
+            if (!isDriveConnected()) {
                 showDriveAuthError("Google Drive permission was not granted.")
-                pendingDriveAction = null
                 return
             }
 
-            when (pendingDriveAction) {
-                PendingDriveAction.LOAD_STATUS -> viewModel.loadBackupStatus()
-                PendingDriveAction.BACKUP_NOW -> viewModel.backupNow()
-                null -> viewModel.loadBackupStatus()
-            }
+            val action = pendingDriveAction ?: PendingDriveAction.CONNECT_ONLY
+            onDrivePermissionReady(action)
 
         } catch (e: ApiException) {
             Log.e("DriveAuth", "Google sign-in failed. statusCode=${e.statusCode}", e)
@@ -158,138 +273,127 @@ class BackupRestoreFragment :
         } catch (e: Exception) {
             Log.e("DriveAuth", "Unexpected Google sign-in error", e)
             showDriveAuthError(e.message ?: "Google Sign-In failed.")
+
         } finally {
             pendingDriveAction = null
+            renderDriveConnectionState()
         }
     }
 
-    private fun showDriveAuthError(message: String) {
-        Snackbar.make(
-            binding.root,
-            message,
-            Snackbar.LENGTH_LONG
-        ).show()
-    }
-    
-    private fun requestNotificationPermissionIfNeeded() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            notificationPermissionLauncher.launch(
-                android.Manifest.permission.POST_NOTIFICATIONS
-            )
+    private fun onDrivePermissionReady(action: PendingDriveAction) {
+        renderDriveConnectionState()
+
+        when (action) {
+            PendingDriveAction.CONNECT_ONLY -> {
+                showSnackbar("Google Drive connected successfully")
+                viewModel.loadBackupStatus()
+            }
+
+            PendingDriveAction.LOAD_STATUS -> {
+                viewModel.loadBackupStatus()
+            }
+
+            PendingDriveAction.BACKUP_NOW -> {
+                viewModel.backupNow()
+            }
         }
     }
-    
-    private fun setupRecyclerView() {
-        backupAdapter = DriveBackupAdapter(
-            onRestoreClicked = { file ->
-                showRestoreConfirmation(file)
+
+    private fun showDisconnectDriveConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Disconnect Google Drive?")
+            .setMessage(
+                """
+            Google Drive backup will stop working until you connect again.
+            
+            Your backup files will not be deleted from Google Drive.
+            """.trimIndent()
+            )
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Disconnect") { _, _ ->
+                revokeDrivePermission()
+            }
+            .show()
+    }
+
+    private fun revokeDrivePermission() {
+        googleDriveAuthManager.revokeDriveAccess(
+            activity = requireActivity(),
+            onSuccess = {
+                showSnackbar("Google Drive disconnected")
+                renderDriveConnectionState()
+
+                backupAdapter.submitList(emptyList())
+                binding.rvBackups.isVisible = false
+                binding.tvEmptyBackups.isVisible = true
+            },
+            onError = { exception ->
+                Log.e("DriveAuth", "Failed to revoke Drive access", exception)
+                showSnackbar(exception?.message ?: "Failed to disconnect Google Drive")
+                renderDriveConnectionState()
             }
         )
-        
-        binding.rvBackups.apply {
-            layoutManager = LinearLayoutManager(requireContext())
-            adapter = backupAdapter
-        }
     }
-    
-    private fun setupClickListeners() {
-        binding.btnBackupNow.setOnClickListener {
-            ensureDrivePermissionThen(PendingDriveAction.BACKUP_NOW)
-        }
-        
-        binding.btnRefresh.setOnClickListener {
-            ensureDrivePermissionThen(PendingDriveAction.LOAD_STATUS)
-        }
-        
-        binding.btnCreateLocalBackup.setOnClickListener {
-            viewModel.createLocalBackupForExport { fileName, bytes ->
-                pendingExportBytes = bytes
-                createLocalBackupLauncher.launch(fileName)
-            }
-        }
-        
-        binding.btnRestoreLocalBackup.setOnClickListener {
-            restoreLocalBackupLauncher.launch(
-                arrayOf(
-                    "application/octet-stream",
-                    "application/gzip",
-                    "*/*"
-                )
-            )
-        }
-    }
-    
-    private fun observeState() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    renderState(state)
-                }
-            }
-        }
-    }
-    
-    private fun renderState(state: BackupStatusUiState) {
-        val busy = state.isBusy
-        binding.btnCreateLocalBackup.isEnabled = !busy
-        binding.btnRestoreLocalBackup.isEnabled = !busy
-        binding.progressBar.isVisible = busy
-        binding.btnBackupNow.isEnabled = !busy
-        binding.btnRefresh.isEnabled = !busy
-        
-        renderBackupStatus(state)
-        
-        backupAdapter.submitList(state.driveBackups)
-        
 
-        binding.rvBackups.isVisible = state.driveBackups.isNotEmpty()
-        binding.tvEmptyBackups.isVisible = !state.isLoading && state.driveBackups.isEmpty()
-        
-        state.message?.let { message ->
-            Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG).show()
-            viewModel.clearMessages()
+    private fun renderDriveConnectionState() {
+        val driveConnected = isDriveConnected()
+
+        binding.btnDriveLauncher.isVisible = !driveConnected
+        binding.btnDriveLauncher.isEnabled = !driveConnected
+        binding.btnDriveLauncher.text = "Connect Google Drive"
+
+        binding.btnDisconnectDrive.isVisible = driveConnected
+        binding.btnDisconnectDrive.isEnabled = driveConnected
+
+        binding.btnBackupNow.isEnabled = driveConnected
+        binding.btnRefresh.isEnabled = driveConnected
+    }
+
+    private fun isDriveConnected(): Boolean {
+        return googleDriveAuthManager.hasDrivePermission(requireActivity())
+    }
+
+    private fun handleLocalBackupFileCreated(uri: Uri?) {
+        if (uri == null) {
+            Toast.makeText(requireContext(), "Local backup cancelled", Toast.LENGTH_SHORT).show()
+            pendingExportBytes = null
+            return
         }
-        
-        state.error?.let { error ->
-            Snackbar.make(binding.root, error, Snackbar.LENGTH_LONG).show()
-            viewModel.clearMessages()
+
+        val bytes = pendingExportBytes
+        if (bytes == null) {
+            Toast.makeText(requireContext(), "Backup data not available", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        try {
+            val outputStream = requireContext()
+                .contentResolver
+                .openOutputStream(uri)
+                ?: error("Unable to open selected file")
+
+            outputStream.use { output ->
+                output.write(bytes)
+            }
+
+            pendingExportBytes = null
+            showSnackbar("Local backup file saved successfully")
+
+        } catch (e: Exception) {
+            pendingExportBytes = null
+            showSnackbar(e.message ?: "Failed to save local backup")
         }
     }
-    
-    private fun renderBackupStatus(state: BackupStatusUiState) {
-        if (state.hasSuccessfulBackup) {
-            binding.tvBackupStatus.text =
-                "Last backup: ${formatDateTime(state.lastSuccessfulBackupAt)}"
-            binding.tvBackupFile.text = state.lastBackupFileName ?: "Backup file name unavailable"
-        } else {
-            binding.tvBackupStatus.text = "No successful backup yet"
-            binding.tvBackupFile.text = "Create a Google Drive backup to protect data."
-        }
-        
-        binding.tvBackupWarning.isVisible = state.isBackupOld
-        
-        binding.tvBackupWarning.text = when {
-            !state.hasSuccessfulBackup -> {
-                "No Google Drive backup found. Data is not protected from phone loss."
-            }
-            
-            state.isBackupOld -> {
-                "Backup is older than 48 hours. Please backup now."
-            }
-            
-            else -> ""
-        }
-    }
-    
+
     private fun showRestoreConfirmation(file: DriveBackupFile) {
         val dateText = file.modifiedTimeMillis?.let {
             formatDateTime(it)
         } ?: "Unknown date"
-        
+
         val sizeText = file.sizeBytes?.let {
             formatFileSize(it)
         } ?: "Unknown size"
-        
+
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Restore backup?")
             .setMessage(
@@ -314,46 +418,16 @@ class BackupRestoreFragment :
             }
             .show()
     }
-    
-    private fun ensureDrivePermissionThen(action: PendingDriveAction) {
-        if (googleDriveAuthManager.hasDrivePermission(requireActivity())) {
-            when (action) {
-                PendingDriveAction.LOAD_STATUS -> viewModel.loadBackupStatus()
-                PendingDriveAction.BACKUP_NOW -> viewModel.backupNow()
-            }
-        } else {
-            pendingDriveAction = action
-            googleSignInLauncher.launch(
-                googleDriveAuthManager.getSignInIntent(requireActivity())
-            )
-        }
-    }
-    
-    private fun formatDateTime(timeMillis: Long): String {
-        val formatter = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
-        return formatter.format(Date(timeMillis))
-    }
-    
-    private fun formatFileSize(bytes: Long): String {
-        val kb = bytes / 1024.0
-        val mb = kb / 1024.0
-        
-        return if (mb >= 1) {
-            String.format(Locale.getDefault(), "%.2f MB", mb)
-        } else {
-            String.format(Locale.getDefault(), "%.0f KB", kb)
-        }
-    }
-    
-    private fun showLocalRestoreConfirmation(uri: android.net.Uri) {
+
+    private fun showLocalRestoreConfirmation(uri: Uri) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Restore local backup?")
             .setMessage(
                 """
-            This will replace the current local data with the selected backup file.
-            
-            Continue only if this backup file is trusted and belongs to this app.
-            """.trimIndent()
+                This will replace the current local data with the selected backup file.
+                
+                Continue only if this backup file is trusted and belongs to this app.
+                """.trimIndent()
             )
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Restore") { _, _ ->
@@ -365,9 +439,49 @@ class BackupRestoreFragment :
             }
             .show()
     }
-    
-    
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            notificationPermissionLauncher.launch(
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+        }
+    }
+
+    private fun showDriveAuthError(message: String) {
+        showSnackbar(message)
+    }
+
+    private fun showSnackbar(message: String) {
+        Snackbar.make(
+            binding.root,
+            message,
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
+
+    private fun formatDateTime(timeMillis: Long): String {
+        val formatter = SimpleDateFormat(
+            "dd MMM yyyy, hh:mm a",
+            Locale.getDefault()
+        )
+
+        return formatter.format(Date(timeMillis))
+    }
+
+    private fun formatFileSize(bytes: Long): String {
+        val kb = bytes / 1024.0
+        val mb = kb / 1024.0
+
+        return if (mb >= 1) {
+            String.format(Locale.getDefault(), "%.2f MB", mb)
+        } else {
+            String.format(Locale.getDefault(), "%.0f KB", kb)
+        }
+    }
+
     private enum class PendingDriveAction {
+        CONNECT_ONLY,
         LOAD_STATUS,
         BACKUP_NOW
     }
