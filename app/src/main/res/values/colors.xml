@@ -38,6 +38,9 @@
     <color name="milk_profit_color">@color/ledger_income</color>
     <color name="milk_date_color">@color/ledger_warning</color>
 
+
+    <color name="highlight_yellow">#FFF59D</color>
+
     <!-- Existing screen-specific resources retained until their layouts migrate. -->
     <color name="dashboard_net_profit">#2B2E7D32</color>
     <color name="dashboard_prsnl_exp">#2BF57C00</color>

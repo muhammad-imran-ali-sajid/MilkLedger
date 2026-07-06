@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.sale.customerhistory
 
 import android.net.Uri
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.viewModels
@@ -60,14 +61,14 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
             
             // 🔥 2. NAYA: Search View Logic
             val searchItem = menu.findItem(R.id.action_search)
-            val searchView = searchItem?.actionView as? androidx.appcompat.widget.SearchView
+            val searchView = searchItem?.actionView as? SearchView
             
             searchView?.apply {
                 queryHint = "Search Amount, Vol..." // Chota hint rakhein
                 
                 // Jab user type karega toh ViewModel ko event bhejen
                 setOnQueryTextListener(object :
-                    androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                    SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean {
                         // Jab keyboard ka "Search/Enter" button press ho
                         return false
@@ -134,7 +135,11 @@ class CustomerHistoryFragment : BaseFragment<FragmentCustomerHistoryBinding>(
     
     private fun renderState(state: CustomerHistoryUiState) = with(binding) {
         // 1. List Update
-        adapter.submitList(state.displayedTransactions)
+//        adapter.submitList(state.displayedTransactions)
+        adapter.submitListWithSearch(
+            list = state.displayedTransactions,
+            query = state.searchQuery
+        )
         
         val isEmpty = !state.isLoading && state.displayedTransactions.isEmpty()
         tvEmptyState.isVisible = isEmpty

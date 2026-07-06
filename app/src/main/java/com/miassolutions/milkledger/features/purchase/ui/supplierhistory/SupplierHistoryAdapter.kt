@@ -1,6 +1,5 @@
 package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -11,88 +10,177 @@ import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.databinding.ItemSupplierHistoryBinding
 import com.miassolutions.milkledger.features.purchase.model.MilkPurchaseUiModel
+import com.miassolutions.milkledger.utils.extensions.highlightCurrentText
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.setHighlightedText
 import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
 import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
+import java.util.Locale
 
-class SupplierHistoryAdapter(
-) : ListAdapter<MilkPurchaseUiModel, SupplierHistoryAdapter.ViewHolder>(DiffCallback) {
+class SupplierHistoryAdapter :
+    ListAdapter<MilkPurchaseUiModel, SupplierHistoryAdapter.ViewHolder>(DiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding =
-            ItemSupplierHistoryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    private var searchQuery: String = ""
+
+    fun submitListWithSearch(
+        list: List<MilkPurchaseUiModel>,
+        query: String
+    ) {
+        val newQuery = query.trim()
+        val queryChanged = searchQuery != newQuery
+
+        searchQuery = newQuery
+        submitList(list)
+
+        if (queryChanged) {
+            notifyItemRangeChanged(0, itemCount)
+        }
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
+        val binding = ItemSupplierHistoryBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+
         return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int
+    ) {
+        holder.bind(getItem(position), searchQuery)
     }
 
-    inner class ViewHolder(private val binding: ItemSupplierHistoryBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class ViewHolder(
+        private val binding: ItemSupplierHistoryBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
+        fun bind(
+            item: MilkPurchaseUiModel,
+            query: String
+        ) = with(binding) {
 
+            val context = root.context
 
-        fun bind(item: MilkPurchaseUiModel) = with(binding) {
-            // Date
-            tvDate.text = item.dateMillis.toLocalDate().toCompleteDateFormat()
+            val dateText = item.dateMillis
+                .toLocalDate()
+                .toCompleteDateFormat()
 
-            // Rate Alert (Example Logic: Hide if standard)
+            tvDate.setHighlightedText(
+                value = dateText,
+                query = query,
+            )
+
             rateAlert.isVisible = false
+            tvPaymentDate.isVisible = false
 
-            // Measurements
-            tvMilk.text = String.format("%.1f", item.volume)
-            tvFat.text = String.format("%.1f", item.fat)
-            tvLr.text = String.format("%.1f", item.lr)
-            tvTs.text = String.format("%.2f", item.ts)
+            tvMilk.setHighlightedText(
+                value = String.format(Locale.getDefault(), "%.1f", item.volume),
+                query = query,
+            )
 
-            // Financials
-            tvPrice.text = item.totalAmount.toPrice()
+            tvFat.setHighlightedText(
+                value = String.format(Locale.getDefault(), "%.1f", item.fat),
+                query = query,
+            )
 
-            val isRateChanged = item.previousRate != null && item.previousRate != item.rate
+            tvLr.setHighlightedText(
+                value = String.format(Locale.getDefault(), "%.1f", item.lr),
+                query = query,
+            )
+
+            tvTs.setHighlightedText(
+                value = String.format(Locale.getDefault(), "%.2f", item.ts),
+                query = query,
+            )
+
+            tvPrice.setHighlightedText(
+                value = item.totalAmount.toPrice(),
+                query = query,
+            )
+
+            val isRateChanged =
+                item.previousRate != null && item.previousRate != item.rate
 
             if (isRateChanged) {
+                val rateText = "Rate Alert: ${item.previousRate} -> ${item.rate}"
+
                 rateAlert.show()
-                rateAlert.text =
-                    "Rate Alert: ${item.previousRate} -> ${item.rate}"  //Show Alert: Rate Changed from
+                rateAlert.setHighlightedText(
+                    value = rateText,
+                    query = query,
+                )
+
                 root.setCardBackgroundColor(
-                    ContextCompat.getColor(root.context, R.color.md_theme_primaryContainer)
+                    ContextCompat.getColor(
+                        context,
+                        R.color.md_theme_primaryContainer
+                    )
                 )
             } else {
                 root.setCardBackgroundColor(
-                    ContextCompat.getColor(root.context, R.color.md_theme_surfaceVariant)
+                    ContextCompat.getColor(
+                        context,
+                        R.color.md_theme_surfaceVariant
+                    )
                 )
             }
 
-            // Payment Logic
             if (item.paymentMade > 0) {
-                tvPayment.text = item.paymentMade.toPrice()
                 tvPayment.isVisible = true
+                tvPayment.setHighlightedText(
+                    value = item.paymentMade.toPrice(),
+                    query = query,
+                )
 
-                // Optional: Show Date if different
                 val payDate = item.paymentDate
-                val saleDate = item.dateMillis.toLocalDate()
-                if (payDate != null && !payDate.isEqual(saleDate)) {
+                val purchaseDate = item.dateMillis.toLocalDate()
+
+                if (payDate != null && !payDate.isEqual(purchaseDate)) {
                     tvPaymentDate.isVisible = true
-                    tvPaymentDate.text = "(${payDate.dayOfMonth}/${payDate.monthValue})"
+                    tvPaymentDate.setHighlightedText(
+                        value = "(${payDate.dayOfMonth}/${payDate.monthValue})",
+                        query = query,
+                    )
                 } else {
                     tvPaymentDate.isVisible = false
                 }
             } else {
-                tvPayment.text = "-"
+                tvPayment.isVisible = true
+                tvPayment.setHighlightedText(
+                    value = "-",
+                    query = query,
+                )
                 tvPaymentDate.isVisible = false
             }
 
-            // Running Balance
             tvBalance.setBalanceWithColor(item.currentBalance)
+            tvBalance.highlightCurrentText(
+                query = query,
+            )
 
-            // Note
             if (!item.note.isNullOrBlank()) {
-                tvNotes.text = "Note: ${item.note} (${item.paymentDate?.toDisplayDate()})"
+                val noteText =
+                    if (item.paymentDate != null) {
+                        "Note: ${item.note} (${item.paymentDate!!.toDisplayDate()})"
+                    } else {
+                        "Note: ${item.note}"
+                    }
+
                 tvNotes.isVisible = true
+                tvNotes.setHighlightedText(
+                    value = noteText,
+                    query = query,
+                )
             } else {
                 tvNotes.isVisible = false
             }
@@ -100,12 +188,19 @@ class SupplierHistoryAdapter(
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<MilkPurchaseUiModel>() {
-        override fun areItemsTheSame(oldItem: MilkPurchaseUiModel, newItem: MilkPurchaseUiModel) =
-            oldItem.id == newItem.id
+
+        override fun areItemsTheSame(
+            oldItem: MilkPurchaseUiModel,
+            newItem: MilkPurchaseUiModel
+        ): Boolean {
+            return oldItem.id == newItem.id
+        }
 
         override fun areContentsTheSame(
             oldItem: MilkPurchaseUiModel,
             newItem: MilkPurchaseUiModel
-        ) = oldItem == newItem
+        ): Boolean {
+            return oldItem == newItem
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.features.purchase.ui.supplierhistory
 
 import android.net.Uri
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -62,12 +63,12 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
             
             // 🔥 2. NAYA: Search View Logic
             val searchItem = menu.findItem(R.id.action_search)
-            val searchView = searchItem?.actionView as? androidx.appcompat.widget.SearchView
+            val searchView = searchItem?.actionView as? SearchView
             
             searchView?.apply {
                 queryHint = "Search Amount, Vol..."
                 
-                setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean = false
                     
                     override fun onQueryTextChange(newText: String?): Boolean {
@@ -119,8 +120,11 @@ class SupplierHistoryFragment : BaseFragment<FragmentSupplierHistoryBinding>(
 
         collectFlow(viewModel.uiState) { state ->
             
-            // 🔥 Yahan displayedTransactions use karni hai
-            adapter.submitList(state.displayedTransactions)
+
+            adapter.submitListWithSearch(
+                list =  state.displayedTransactions,
+                query = state.searchQuery
+            )
             
             val isEmpty = !state.isLoading && state.displayedTransactions.isEmpty()
             binding.tvEmptyState.isVisible = isEmpty

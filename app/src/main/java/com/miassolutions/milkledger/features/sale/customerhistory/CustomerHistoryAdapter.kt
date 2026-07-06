@@ -8,86 +8,160 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.miassolutions.milkledger.R
-import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding // CardView wala XML
+import com.miassolutions.milkledger.databinding.ItemCustomerDetailBinding
 import com.miassolutions.milkledger.features.sale.model.MilkSaleUiModel
+import com.miassolutions.milkledger.utils.extensions.highlightCurrentText
 import com.miassolutions.milkledger.utils.extensions.setBalanceWithColor
+import com.miassolutions.milkledger.utils.extensions.setHighlightedText
 import com.miassolutions.milkledger.utils.extensions.show
 import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
 import com.miassolutions.milkledger.utils.extensions.toDisplayDate
-import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
+import com.miassolutions.milkledger.utils.extensions.toLocalDate
 import com.miassolutions.milkledger.utils.extensions.toPrice
 
-class CustomerHistoryAdapter(
-) : ListAdapter<MilkSaleUiModel, CustomerHistoryAdapter.HistoryViewHolder>(DiffCallback) {
+class CustomerHistoryAdapter :
+    ListAdapter<MilkSaleUiModel, CustomerHistoryAdapter.HistoryViewHolder>(DiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryViewHolder {
+    private var searchQuery: String = ""
+
+    fun submitListWithSearch(
+        list: List<MilkSaleUiModel>,
+        query: String
+    ) {
+        val newQuery = query.trim()
+        val queryChanged = searchQuery != newQuery
+
+        searchQuery = newQuery
+        submitList(list)
+
+        if (queryChanged) {
+            notifyItemRangeChanged(0, itemCount)
+        }
+    }
+
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): HistoryViewHolder {
         val binding = ItemCustomerDetailBinding.inflate(
-            LayoutInflater.from(parent.context), parent, false
+            LayoutInflater.from(parent.context),
+            parent,
+            false
         )
+
         return HistoryViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun onBindViewHolder(
+        holder: HistoryViewHolder,
+        position: Int
+    ) {
+        holder.bind(getItem(position), searchQuery)
     }
 
-    inner class HistoryViewHolder(private val binding: ItemCustomerDetailBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class HistoryViewHolder(
+        private val binding: ItemCustomerDetailBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
+        fun bind(
+            item: MilkSaleUiModel,
+            query: String
+        ) = with(binding) {
 
+            val context = root.context
 
-        fun bind(item: MilkSaleUiModel) = with(binding) {
-            // 1. Date
-            tvDate.text = item.dateMillis.toLocalDate().toCompleteDateFormat()
+            tvDate.setHighlightedText(
+                value = item.dateMillis.toLocalDate().toCompleteDateFormat(),
+                query = query,
+            )
 
-            // 2. Milk Details
-            tvMilk.text = item.quantity.toFormattedMilk()
-            tvDeduction.text = item.deduction.toString()
-            tvNetMilk.text = item.netQuantity.toFormattedMilk()
+            tvMilk.setHighlightedText(
+                value = item.quantity.toFormattedMilk(),
+                query = query,
+            )
 
+            tvDeduction.setHighlightedText(
+                value = item.deduction.toString(),
+                query = query,
+            )
+
+            tvNetMilk.setHighlightedText(
+                value = item.netQuantity.toFormattedMilk(),
+                query = query,
+            )
+
+            tvPrice.setHighlightedText(
+                value = item.totalAmount.toPrice(),
+                query = query,
+            )
 
             rateAlert.isVisible = false
 
-            // 4. Financials
-            tvPrice.text = item.totalAmount.toPrice()
-
-            val isRateChanged = item.previousRate != null && item.previousRate != item.rate
+            val isRateChanged =
+                item.previousRate != null && item.previousRate != item.rate
 
             if (isRateChanged) {
+                val rateAlertText =
+                    "Rate Alert: ${item.previousRate} -> ${item.rate}"
+
                 rateAlert.show()
-                rateAlert.text =
-                    "Rate Alert: ${item.previousRate} -> ${item.rate}"  //Show Alert: Rate Changed from
+                rateAlert.setHighlightedText(
+                    value = rateAlertText,
+                    query = query,
+                )
+
                 root.setCardBackgroundColor(
-                    ContextCompat.getColor(root.context, R.color.md_theme_primaryContainer)
+                    ContextCompat.getColor(
+                        context,
+                        R.color.md_theme_primaryContainer
+                    )
                 )
             } else {
                 root.setCardBackgroundColor(
-                    ContextCompat.getColor(root.context, R.color.md_theme_surfaceVariant)
+                    ContextCompat.getColor(
+                        context,
+                        R.color.md_theme_surfaceVariant
+                    )
                 )
             }
 
-            // Payment Logic
+            tvPaymentDate.isVisible = false
+
             if (item.paymentReceived > 0) {
-                tvPayment.text = item.paymentReceived.toPrice()
-//                // Agar Payment Date sale date se mukhtalif hai to show karein
-                 val payDate = item.paymentDateMillis?.toLocalDate()
-                 if (payDate != null && payDate != item.dateMillis.toLocalDate()) {
-                     tvPaymentDate.show()
-                     tvPaymentDate.text = "(${payDate.toDisplayDate()})"
-                 }
+                tvPayment.setHighlightedText(
+                    value = item.paymentReceived.toPrice(),
+                    query = query,
+                )
+
+                val payDate = item.paymentDateMillis?.toLocalDate()
+                val saleDate = item.dateMillis.toLocalDate()
+
+                if (payDate != null && payDate != saleDate) {
+                    tvPaymentDate.show()
+                    tvPaymentDate.setHighlightedText(
+                        value = "(${payDate.toDisplayDate()})",
+                        query = query,
+                    )
+                }
             } else {
-                tvPayment.text = "-" // Ya 0
+                tvPayment.setHighlightedText(
+                    value = "-",
+                    query = query,
+                )
             }
 
-
-            // 5. Running Balance
             tvBalance.setBalanceWithColor(item.currentBalance)
+            tvBalance.highlightCurrentText(
+                query = query,
+            )
 
-            // 6. Note
             if (!item.note.isNullOrBlank()) {
-                tvNotes.text = "Note: ${item.note}"
                 tvNotes.isVisible = true
+                tvNotes.setHighlightedText(
+                    value = "Note: ${item.note}",
+                    query = query,
+                )
             } else {
                 tvNotes.isVisible = false
             }
@@ -95,12 +169,20 @@ class CustomerHistoryAdapter(
     }
 
     companion object DiffCallback : DiffUtil.ItemCallback<MilkSaleUiModel>() {
-        override fun areItemsTheSame(oldItem: MilkSaleUiModel, newItem: MilkSaleUiModel): Boolean {
+
+        override fun areItemsTheSame(
+            oldItem: MilkSaleUiModel,
+            newItem: MilkSaleUiModel
+        ): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: MilkSaleUiModel, newItem: MilkSaleUiModel): Boolean {
+        override fun areContentsTheSame(
+            oldItem: MilkSaleUiModel,
+            newItem: MilkSaleUiModel
+        ): Boolean {
             return oldItem == newItem
         }
     }
 }
+
