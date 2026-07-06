@@ -11,6 +11,9 @@
     <color name="md_theme_secondaryContainer">#354B3E</color>
     <color name="md_theme_onSecondaryContainer">#CFE9D9</color>
 
+    <color name="search_highlight">#5A4300</color>
+    <color name="on_search_highlight">#FFF8D6</color>
+
     <color name="md_theme_background">#0F1512</color>
     <color name="md_theme_surface">#0F1512</color>
     <color name="md_theme_surfaceContainer">#1B211E</color>

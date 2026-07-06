@@ -38,6 +38,8 @@
     <color name="milk_profit_color">@color/ledger_income</color>
     <color name="milk_date_color">@color/ledger_warning</color>
 
+    <color name="search_highlight">#FFF59D</color>
+    <color name="on_search_highlight">#1C1B1F</color>
 
     <color name="highlight_yellow">#FFF59D</color>
 

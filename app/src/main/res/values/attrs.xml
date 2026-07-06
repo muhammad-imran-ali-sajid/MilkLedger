@@ -7,6 +7,9 @@
     <attr name="colorLedgerPending" format="color" />
     <attr name="colorLedgerWarning" format="color" />
 
+    <attr name="colorSearchHighlight" format="color" />
+    <attr name="colorOnSearchHighlight" format="color" />
+
     <!-- Legacy compatibility attributes. Prefer the colorLedger* API above. -->
     <attr name="colorPurchase" format="color" />
     <attr name="colorSale" format="color" />
