@@ -19,3 +19,9 @@
 *.ap_
 *.aab
 local.properties
+
+# Signing files
+JKS/
+*.jks
+*.keystore
+keystore.properties
