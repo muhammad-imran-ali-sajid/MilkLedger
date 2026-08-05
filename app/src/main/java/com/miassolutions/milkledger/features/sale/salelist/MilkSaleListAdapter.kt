@@ -50,8 +50,8 @@ class MilkSaleListAdapter(
 
 
                 // Payment info
-//                if (item.paymentReceived > 0) {
-//                    tvPayment.text = item.paymentReceived.toPrice()
+                if (item.paymentReceived > 0) {
+                    tvPayment.text = item.paymentReceived.toPrice()
 //
 //                    tilPayment.setOnClickListener {
 //                        val context = it.context
@@ -65,11 +65,11 @@ class MilkSaleListAdapter(
 //                            .setPositiveButton("OK", null)
 //                            .show()
 //                    }
-//
-//                } else {
-//                    tvPayment.text = "-"
-//                    tvPayment.setOnClickListener(null)
-//                }
+
+                } else {
+                    tvPayment.text = "-"
+                    tvPayment.setOnClickListener(null)
+                }
 
 
 
