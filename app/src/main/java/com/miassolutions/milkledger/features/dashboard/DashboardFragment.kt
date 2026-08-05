@@ -92,10 +92,9 @@ class DashboardFragment :
 
 
         binding.tvBackupInfo.text = if (viewModel.uiState.value.isBackupOld) {
-            "❌ Backup is older than 48 hours"
+            "⚠️ Backup outdated (older than 48 hrs)"
         } else {
-
-            "✅ Data is secured with drive backup"
+            "✅ Google Drive backup up to date"
         }
 
 
