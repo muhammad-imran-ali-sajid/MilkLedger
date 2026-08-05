@@ -179,7 +179,7 @@
                         android:id="@+id/tvPayment"
                         style="@style/Text.Normal"
                         android:textAppearance="@style/TextAppearance.MilkLedger.AmountSmall"
-                        android:textColor="?attr/colorLedgerExpense"
+                        android:textColor="?attr/colorPurchase"
                         tools:text="10,000" />
 
                     <TextView

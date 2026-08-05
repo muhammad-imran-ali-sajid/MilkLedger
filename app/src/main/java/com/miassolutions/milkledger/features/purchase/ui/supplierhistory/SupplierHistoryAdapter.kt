@@ -60,7 +60,7 @@ class SupplierHistoryAdapter :
         holder.bind(getItem(position), searchQuery)
     }
 
-    inner class ViewHolder(
+    class ViewHolder(
         private val binding: ItemSupplierHistoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -71,9 +71,7 @@ class SupplierHistoryAdapter :
 
             val context = root.context
 
-            val dateText = item.dateMillis
-                .toLocalDate()
-                .toCompleteDateFormat()
+            val dateText = item.dateMillis.toLocalDate().toCompleteDateFormat()
 
             tvDate.setHighlightedText(
                 value = dateText,
