@@ -1,11 +1,13 @@
 package com.miassolutions.milkledger.features.dashboard
 
+import android.graphics.Color
 import android.net.Uri
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.snackbar.Snackbar
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.pdf.PdfGenerator
@@ -85,6 +87,18 @@ class DashboardFragment :
                 )
             )
         }
+
+
+
+
+        binding.tvBackupInfo.text = if (viewModel.uiState.value.isBackupOld) {
+            "❌ Backup is older than 48 hours"
+        } else {
+
+            "✅ Data is secured with drive backup"
+        }
+
+
     }
 
     override fun setupListeners() = with(binding) {

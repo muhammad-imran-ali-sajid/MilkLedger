@@ -2,6 +2,7 @@ package com.miassolutions.milkledger.features.dashboard
 
 import androidx.lifecycle.viewModelScope
 import com.miassolutions.milkledger.core.ui.BaseViewModel
+import com.miassolutions.milkledger.features.backup.data.BackupPrefs
 import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.NavigateToExpense
 import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.NavigateToPurchase
 import com.miassolutions.milkledger.features.dashboard.DashboardUiEffect.NavigateToSale
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
+   private val backupPrefs: BackupPrefs,
     private val repository: DashboardRepository,
 ) : BaseViewModel<
         DashboardUiState,
@@ -78,8 +80,15 @@ class DashboardViewModel @Inject constructor(
 
     // 🔵 Dashboard stats loader (report range only)
     private fun loadDashboardData(start: LocalDate, end: LocalDate) {
+        val status = backupPrefs.getBackupStatusSnapshot()
+        updateState { state ->
+            state.copy(lastSuccessfulBackupAt = status.lastSuccessfulBackupAt)
+        }
+
         repository.getDashboardData(start.toMillis(), end.toMillis())
             .onEach { dashboardState ->
+
+
                 updateState { currentState ->
                     dashboardState.copy(
                         reportStartDate = start,
@@ -90,8 +99,9 @@ class DashboardViewModel @Inject constructor(
                         selectedDate = currentState.selectedDate,
 
                         // ✅ FIX 2: Filter Mode bhi preserve karein (Warna ye default DAY ho jayega)
-                        filterMode = currentState.filterMode
-                    )
+                        filterMode = currentState.filterMode,
+
+                        )
                 }
             }
             .launchIn(viewModelScope)

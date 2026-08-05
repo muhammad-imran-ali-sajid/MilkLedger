@@ -19,7 +19,7 @@
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:paddingBottom="16dp"
+        android:paddingBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateFilterView">
 
@@ -27,22 +27,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="8dp"
-            >
-
-
-
-
+            android:paddingHorizontal="8dp">
 
 
             <TextView
-                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
-                android:textColor="?attr/colorOnSurface"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:alpha="0.7"
                 android:layout_marginBottom="12dp"
-                android:text="Money Overview" />
+                android:alpha="0.7"
+                android:text="Money Overview"
+                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+                android:textColor="?attr/colorOnSurface" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -128,11 +123,10 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardPersonalExpense"
-                        app:cardBackgroundColor="?attr/colorErrorContainer"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        >
+                        app:cardBackgroundColor="?attr/colorErrorContainer">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -203,10 +197,10 @@
 
                     <com.google.android.material.card.MaterialCardView
                         android:id="@+id/cardProfit"
-                        app:cardBackgroundColor="?attr/colorSecondaryContainer"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="?attr/colorSecondaryContainer">
 
                         <LinearLayout
 
@@ -235,9 +229,8 @@
                         android:id="@+id/cardRemaining"
                         style="@style/Widget.MilkLedger.DashboardCard"
                         android:layout_width="match_parent"
-                        app:cardBackgroundColor="?attr/colorPrimaryContainer"
                         android:layout_height="wrap_content"
-                        >
+                        app:cardBackgroundColor="?attr/colorPrimaryContainer">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -268,19 +261,19 @@
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="200dp"
+                android:layout_height="2dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginVertical="8dp"
-                app:dividerColor="?attr/colorSurfaceVariant"
-                android:layout_height="2dp" />
+                app:dividerColor="?attr/colorSurfaceVariant" />
 
             <TextView
-                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
-                android:textColor="?attr/colorOnSurface"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:alpha="0.7"
                 android:layout_marginBottom="12dp"
-                android:text="Milk Overview" />
+                android:alpha="0.7"
+                android:text="Milk Overview"
+                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+                android:textColor="?attr/colorOnSurface" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMilkStats"
@@ -290,7 +283,24 @@
                 tools:itemCount="3"
                 tools:listitem="@layout/item_dashboard_stat" />
 
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+
+    <TextView
+        android:id="@+id/tv_backup_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_text"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/space_8"
+        android:text="Backup is older than 48 hours"
+        android:textAppearance="@style/Text.MilkLedger.BodyXSmall"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

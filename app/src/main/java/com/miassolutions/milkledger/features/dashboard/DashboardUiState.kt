@@ -8,6 +8,8 @@ import java.time.LocalDate
 data class DashboardUiState(
     val isLoading: Boolean = false,
 
+    val lastSuccessfulBackupAt: Long = 0L,
+
     // 🔵 Report Range (Dashboard stats / charts)
     val reportStartDate: LocalDate = LocalDate.now(),
     val reportEndDate: LocalDate = LocalDate.now(),
@@ -39,7 +41,17 @@ data class DashboardUiState(
     val avgLr: Double = 0.0,
     val qualityVolume: Double = 0.0,
     val totalTs: Double = 0.0
-)
+){
+    val isBackupOld: Boolean
+        get() {
+            if (lastSuccessfulBackupAt <= 0L) return true
+
+            val now = System.currentTimeMillis()
+            val fortyEightHoursMillis = 48L * 60L * 60L * 1000L
+
+            return now - lastSuccessfulBackupAt > fortyEightHoursMillis
+        }
+}
 
 // 2. EVENTS (User ke actions)
 sealed interface DashboardUiEvent {
