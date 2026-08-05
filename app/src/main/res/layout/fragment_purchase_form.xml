@@ -29,10 +29,11 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/component_min_height"
             app:icon="@drawable/ic_delete"
-            app:iconSize="32dp"
             app:iconGravity="top"
+            app:iconSize="32dp"
+            app:strokeWidth="0dp"
             app:iconTint="?attr/colorError"
-            app:strokeColor="?attr/colorError" />
+             />
 
     </LinearLayout>
 
@@ -42,14 +43,14 @@
         style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/space_16"
-        android:layout_marginBottom="@dimen/space_8"
-        android:hint="Supplier Name"
-        app:boxBackgroundColor="?attr/colorPrimaryContainer"
+        android:layout_marginHorizontal="@dimen/space_16"
+        android:layout_marginVertical="@dimen/space_8"
+        android:padding="0dp"
+        app:boxBackgroundColor="?attr/colorSurfaceContainer"
         app:boxStrokeColor="?attr/colorPrimary"
-        app:boxStrokeWidth="2dp"
         app:endIconDrawable="@drawable/ic_arrow_pick"
-        app:endIconMode="custom">
+        app:endIconMode="custom"
+        app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/actv_supplier_name"
@@ -59,8 +60,14 @@
             android:cursorVisible="false"
             android:focusable="false"
             android:inputType="none"
-            android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
-            android:textColor="?attr/colorOnPrimaryContainer"
+            android:paddingTop="@dimen/space_12"
+            android:paddingBottom="@dimen/space_12"
+            android:paddingStart="@dimen/space_12"
+            android:paddingEnd="@dimen/space_12"
+            android:minHeight="0dp"
+            android:hint="Select Supplier"
+            android:textSize="20sp"
+            android:textColor="?attr/colorPurchase"
             android:textStyle="bold" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -103,7 +110,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Advance:"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:textColor="?attr/colorOnSecondaryContainer" />
 
                     <View
@@ -142,6 +149,11 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
+                        android:paddingTop="@dimen/space_20"
+                        android:paddingBottom="@dimen/space_8"
+                        android:paddingStart="@dimen/space_12"
+                        android:paddingEnd="@dimen/space_12"
+                        android:minHeight="0dp"
                         android:nextFocusForward="@id/etFat" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -160,6 +172,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
+                        android:paddingTop="@dimen/space_20"
+                        android:paddingBottom="@dimen/space_8"
+                        android:paddingStart="@dimen/space_12"
+                        android:paddingEnd="@dimen/space_12"
+                        android:minHeight="0dp"
                         android:inputType="numberDecimal"
                         android:nextFocusForward="@id/etLr" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -177,6 +194,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
+                        android:paddingTop="@dimen/space_20"
+                        android:paddingBottom="@dimen/space_8"
+                        android:paddingStart="@dimen/space_12"
+                        android:paddingEnd="@dimen/space_12"
+                        android:minHeight="0dp"
                         android:inputType="numberDecimal"
                         android:nextFocusForward="@id/etPayment" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -186,7 +208,7 @@
                 style="@style/Widget.MilkLedger.MaterialCard.Standard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_4"
+                android:layout_marginTop="@dimen/space_8"
                 app:contentPadding="12dp">
 
                 <LinearLayout
@@ -203,7 +225,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Total Solids (TS): "
-                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelLarge" />
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
                         <View
                             android:layout_width="0dp"
@@ -294,7 +316,12 @@
                         style="@style/TextInputMinimalStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
+                        android:imeOptions="actionDone"
+                        android:paddingTop="@dimen/space_20"
+                        android:paddingBottom="@dimen/space_8"
+                        android:paddingStart="@dimen/space_12"
+                        android:paddingEnd="@dimen/space_12"
+                        android:minHeight="0dp"
                         android:inputType="numberDecimal"
                         android:nextFocusForward="@id/etMilkVolume" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -332,7 +359,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Current Balance:"
-                        android:textAppearance="@style/TextAppearance.MilkLedger.BodyLarge"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
                         android:textColor="?attr/colorOnSecondaryContainer" />
 
                     <View
@@ -367,10 +394,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorSurface"
-                android:orientation="horizontal"
                 android:layout_marginTop="@dimen/space_8"
-                >
+                android:background="?attr/colorSurface"
+                android:orientation="horizontal">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_save"
@@ -388,6 +414,7 @@
                     android:id="@+id/btn_saveNew"
                     style="@style/Widget.MilkLedger.MaterialButton.Outlined"
                     android:layout_width="0dp"
+                    android:textSize="16sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Save &amp; New" />
@@ -396,8 +423,6 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-
 
 
 </LinearLayout>

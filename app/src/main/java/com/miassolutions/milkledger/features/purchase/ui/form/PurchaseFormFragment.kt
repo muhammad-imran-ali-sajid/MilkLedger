@@ -87,9 +87,9 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
             openSupplierBottomSheet()
         }
         // Layout click support (optional UX improvement)
-        tilSupplierName.setOnClickListener {
-            openSupplierBottomSheet()
-        }
+//        tilSupplierName.setOnClickListener {
+//            openSupplierBottomSheet()
+//        }
 
 
 
@@ -182,7 +182,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
         btnSave.text = if (state.isEditMode) "Update" else "Save"
         // Disable Supplier Change in Edit Mode
 
-        tilSupplierName.isEnabled = !state.isEditMode
+        actvSupplierName.isEnabled = !state.isEditMode
         // Agar edit mode hai to click bhi disable kar dein taake sheet na khule
         actvSupplierName.isEnabled = !state.isEditMode
 

@@ -4,15 +4,29 @@
     <style name="Widget.MilkLedger.TextInputLayout.Outlined" parent="Widget.Material3.TextInputLayout.OutlinedBox">
         <item name="android:theme">@style/ThemeOverlay.MilkLedger.TextInput</item>
         <item name="boxBackgroundColor">?attr/colorSurface</item>
-        <item name="boxStrokeColor">?attr/colorPrimary</item>
-        <item name="boxStrokeWidth">@dimen/component_stroke_width</item>
+        <item name="minHeight">@dimen/component_min_height</item>
         <item name="hintTextColor">?attr/colorOnSurfaceVariant</item>
         <item name="hintTextAppearance">@style/TextAppearance.MilkLedger.LabelMedium</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.MilkLedger.Medium</item>
+
     </style>
 
     <style name="ThemeOverlay.MilkLedger.TextInput" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:textSize">18sp</item>
+
+    </style>
+
+    <style name="ThemeOverlay.MilkLedger.TextInputEditText.Compact" parent="">
+        <item name="editTextStyle">@style/Widget.MilkLedger.TextInputEditText.Compact</item>
+    </style>
+
+    <!-- 3. The actual Child EditText style -->
+    <style name="Widget.MilkLedger.TextInputEditText.Compact" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:minHeight">0dp</item>
     </style>
 
     <!-- Referenced legacy input styles retained until layout migration. -->
