@@ -94,9 +94,33 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
 
         // Actions
-        btnSave.setOnClickListener { viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked) }
+        btnSave.setOnClickListener {
+            val selected = viewModel.uiState.value.selectedSupplier
+
+            val alreadyDone = currentSupplierList.any{
+                it.account.accountId == selected?.accountId && it.isEntryDoneToday
+            }
+
+            if (alreadyDone) {
+                showSnackbar("Entry already exists for this supplier on this date")
+                return@setOnClickListener
+            }
+
+            viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked)
+        }
         btnSaveNew.setOnClickListener {
-            viewModel.onEvent(PurchaseFormUiEvent.OnSaveAndNewClicked)
+            val selected = viewModel.uiState.value.selectedSupplier
+
+            val alreadyDone = currentSupplierList.any{
+                it.account.accountId == selected?.accountId && it.isEntryDoneToday
+            }
+
+            if (alreadyDone) {
+                showSnackbar("Entry already exists for this supplier on this date")
+                return@setOnClickListener
+            }
+
+            viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked)
         }
     }
 
