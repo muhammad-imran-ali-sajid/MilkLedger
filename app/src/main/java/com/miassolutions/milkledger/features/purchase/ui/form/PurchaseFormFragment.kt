@@ -105,6 +105,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
         collectFlow(viewModel.suppliersDropDown) { list ->
             currentSupplierList = list
+
         }
 
         collectFlow(viewModel.uiState) { state ->

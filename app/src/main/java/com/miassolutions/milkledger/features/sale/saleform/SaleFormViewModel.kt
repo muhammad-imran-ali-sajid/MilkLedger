@@ -90,6 +90,18 @@ class SaleFormViewModel @Inject constructor(
                 }
             }.collect { mappedList ->
                 _customersDropDown.value = mappedList
+
+                if (
+                    saleId == null &&
+                    currentState.selectedCustomer == null &&
+                    mappedList.isNotEmpty()
+                ) {
+                    onEvent(
+                        SaleFormUiEvent.OnCustomerSelected(
+                            mappedList.first().account
+                        )
+                    )
+                }
             }
         }
     }

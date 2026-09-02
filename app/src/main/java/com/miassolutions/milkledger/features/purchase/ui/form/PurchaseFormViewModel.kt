@@ -44,22 +44,43 @@ class PurchaseFormViewModel @Inject constructor(
     val suppliersDropDown = _suppliersDropDown.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
+   
     private fun monitorSuppliersStatus() {
         viewModelScope.launch {
             combine(
                 repository.getSuppliers(),
-                uiState.map { it.date }.distinctUntilChanged().flatMapLatest { date ->
-                    repository.getSuppliersWithPurchaseOnDate(date.toMillis())
-                }
+                uiState
+                    .map { it.date }
+                    .distinctUntilChanged()
+                    .flatMapLatest { date ->
+                        repository.getSuppliersWithPurchaseOnDate(date.toMillis())
+                    }
             ) { suppliers, completedIds ->
+
                 suppliers.map { account ->
                     SupplierDropDownUiModel(
                         account = account,
                         isEntryDoneToday = completedIds.contains(account.accountId)
                     )
                 }
+
             }.collect { mappedList ->
+
                 _suppliersDropDown.value = mappedList
+
+                // Automatically select first supplier
+                // ONLY for new purchase
+                if (
+                    purchaseId == null &&
+                    currentState.selectedSupplier == null &&
+                    mappedList.isNotEmpty()
+                ) {
+                    onEvent(
+                        PurchaseFormUiEvent.OnSupplierSelected(
+                            mappedList.first().account
+                        )
+                    )
+                }
             }
         }
     }
