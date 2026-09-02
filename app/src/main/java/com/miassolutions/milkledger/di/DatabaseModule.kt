@@ -3,6 +3,7 @@ package com.miassolutions.milkledger.di
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.google.api.services.drive.model.App
 import com.miassolutions.milkledger.core.contstants.Constants.DB_NAME
 import com.miassolutions.milkledger.core.localdb.database.AppDatabase
 import com.miassolutions.milkledger.core.localdb.account.local.AccountDao
@@ -11,6 +12,7 @@ import com.miassolutions.milkledger.core.localdb.ledger.LedgerDao
 import com.miassolutions.milkledger.core.localdb.milk.MilkDao
 import com.miassolutions.milkledger.features.dashboard.data.DashboardDao
 import com.miassolutions.milkledger.core.localdb.note.NoteDao
+import com.miassolutions.milkledger.features.insights.InsightsDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,6 +68,12 @@ object DatabaseModule {
     @Singleton
     fun provideDashboardDao(db: AppDatabase): DashboardDao {
         return db.dashboardDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideInsightsDao(db: AppDatabase): InsightsDao {
+        return db.insightsDao()
     }
 
 }

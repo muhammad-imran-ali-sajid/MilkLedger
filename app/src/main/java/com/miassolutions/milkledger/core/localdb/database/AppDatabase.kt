@@ -17,6 +17,7 @@ import com.miassolutions.milkledger.core.localdb.milk.MilkTransactionEntity
 import com.miassolutions.milkledger.core.localdb.note.NoteDao
 import com.miassolutions.milkledger.core.localdb.note.NoteEntity
 import com.miassolutions.milkledger.features.dashboard.data.DashboardDao
+import com.miassolutions.milkledger.features.insights.InsightsDao
 
 @Database(
     entities = [
@@ -36,7 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun milkDao(): MilkDao
     abstract fun ledgerDao(): LedgerDao
     abstract fun expenseDao(): ExpenseDao
-
+    abstract fun insightsDao(): InsightsDao
     abstract fun noteDao(): NoteDao
 
     abstract fun dashboardDao(): DashboardDao

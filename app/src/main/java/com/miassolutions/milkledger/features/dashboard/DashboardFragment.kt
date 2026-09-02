@@ -120,6 +120,14 @@ class DashboardFragment :
                 generatePdfReport()
                 true
             }
+
+            val insightsItem = menu.findItem(R.id.insightsFragment)
+            insightsItem?.setOnMenuItemClickListener {
+                findNavController().navigate(
+                    DashboardFragmentDirections.actionDashboardFragmentToInsightsFragment()
+                )
+                true
+            }
         }
     }
 
