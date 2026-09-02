@@ -95,32 +95,36 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
         // Actions
         btnSave.setOnClickListener {
-            val selected = viewModel.uiState.value.selectedSupplier
-
-            val alreadyDone = currentSupplierList.any{
-                it.account.accountId == selected?.accountId && it.isEntryDoneToday
-            }
-
-            if (alreadyDone) {
-                showSnackbar("Entry already exists for this supplier on this date")
+            if (
+                supplierEntryAlreadyExists() &&
+                !viewModel.uiState.value.isEditMode
+            ) {
+                showSnackbar("Supplier entry already exists for this date")
                 return@setOnClickListener
             }
 
-            viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked)
+            viewModel.onEvent(OnSaveClicked)
         }
         btnSaveNew.setOnClickListener {
-            val selected = viewModel.uiState.value.selectedSupplier
-
-            val alreadyDone = currentSupplierList.any{
-                it.account.accountId == selected?.accountId && it.isEntryDoneToday
-            }
-
-            if (alreadyDone) {
-                showSnackbar("Entry already exists for this supplier on this date")
+            if (
+                supplierEntryAlreadyExists() &&
+                !viewModel.uiState.value.isEditMode
+            ) {
+                showSnackbar("Supplier entry already exists for this date")
                 return@setOnClickListener
             }
 
-            viewModel.onEvent(PurchaseFormUiEvent.OnSaveClicked)
+            viewModel.onEvent(OnSaveAndNewClicked)
+        }
+    }
+
+    private fun supplierEntryAlreadyExists(): Boolean {
+        val supplierId = viewModel.uiState.value.selectedSupplier?.accountId
+            ?: return false
+
+        return currentSupplierList.any {
+            it.account.accountId == supplierId &&
+                    it.isEntryDoneToday
         }
     }
 

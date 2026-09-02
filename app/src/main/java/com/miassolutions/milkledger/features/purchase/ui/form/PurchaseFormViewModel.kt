@@ -44,7 +44,7 @@ class PurchaseFormViewModel @Inject constructor(
     val suppliersDropDown = _suppliersDropDown.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-   
+
     private fun monitorSuppliersStatus() {
         viewModelScope.launch {
             combine(
@@ -66,18 +66,22 @@ class PurchaseFormViewModel @Inject constructor(
 
             }.collect { mappedList ->
 
+                // IMPORTANT: send list to Fragment
                 _suppliersDropDown.value = mappedList
 
-                // Automatically select first supplier
-                // ONLY for new purchase
+                val firstAvailable = mappedList.firstOrNull {
+                    !it.isEntryDoneToday
+                }
+
+                // Auto-select first supplier with no entry
                 if (
                     purchaseId == null &&
                     currentState.selectedSupplier == null &&
-                    mappedList.isNotEmpty()
+                    firstAvailable != null
                 ) {
                     onEvent(
                         PurchaseFormUiEvent.OnSupplierSelected(
-                            mappedList.first().account
+                            firstAvailable.account
                         )
                     )
                 }

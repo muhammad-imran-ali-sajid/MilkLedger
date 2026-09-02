@@ -12,8 +12,22 @@ import androidx.navigation.fragment.findNavController
 import com.miassolutions.milkledger.R
 import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentAddSaleBinding
-import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.*
-import com.miassolutions.milkledger.utils.extensions.*
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnAmountPaidChanged
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnCustomerSelected
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnDateSelected
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnDeductionChanged
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnNoteChanged
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent.OnVolumeChanged
+import com.miassolutions.milkledger.utils.extensions.collectEffect
+import com.miassolutions.milkledger.utils.extensions.collectFlow
+import com.miassolutions.milkledger.utils.extensions.openDatePicker
+import com.miassolutions.milkledger.utils.extensions.setBalanceColorWithRoundRupee
+import com.miassolutions.milkledger.utils.extensions.setTextIfDifferent
+import com.miassolutions.milkledger.utils.extensions.showDeleteActionDialog
+import com.miassolutions.milkledger.utils.extensions.toCompleteDateFormat
+import com.miassolutions.milkledger.utils.extensions.toDisplayDate
+import com.miassolutions.milkledger.utils.extensions.toFormattedMilk
+import com.miassolutions.milkledger.utils.extensions.toPrice
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -86,8 +100,39 @@ class SaleFormFragment :
         // --- Dates & Save ---
 //        btnDate.setOnClickListener { viewModel.onEvent(OnDateClick) }
 //        btnPaymentDate.setOnClickListener { viewModel.onEvent(OnPaymentDateClick) }
-        btnSave.setOnClickListener { viewModel.onEvent(OnSaveClicked) }
-        btnSaveNew.setOnClickListener { viewModel.onEvent(OnSaveAndNewClicked) }
+        btnSave.setOnClickListener {
+            if (
+                customerEntryAlreadyExists() &&
+                !viewModel.uiState.value.isEditMode
+            ) {
+                showSnackbar("Supplier entry already exists for this date")
+                return@setOnClickListener
+            }
+
+            viewModel.onEvent(SaleFormUiEvent.OnSaveClicked)
+
+        }
+        btnSaveNew.setOnClickListener {
+            if (
+                customerEntryAlreadyExists() &&
+                !viewModel.uiState.value.isEditMode
+            ) {
+                showSnackbar("Supplier entry already exists for this date")
+                return@setOnClickListener
+            }
+
+            viewModel.onEvent(SaleFormUiEvent.OnSaveAndNewClicked)
+        }
+    }
+
+    private fun customerEntryAlreadyExists(): Boolean {
+        val supplierId = viewModel.uiState.value.selectedCustomer?.accountId
+            ?: return false
+
+        return currentCustomerList.any {
+            it.account.accountId == supplierId &&
+                    it.isEntryDoneToday
+        }
     }
 
     override fun setupObservers() {
@@ -145,7 +190,12 @@ class SaleFormFragment :
             btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
         } else {
             btnPaymentDate.text = "Select Date" // "Abhi select nahi hoi"
-            btnPaymentDate.setTextColor(ContextCompat.getColor(requireContext(), R.color.red)) // Red color for attention
+            btnPaymentDate.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.red
+                )
+            ) // Red color for attention
         }
 
         // --- Inputs (Update only if different to avoid cursor jumps) ---
@@ -175,13 +225,13 @@ class SaleFormFragment :
             }
 
 
-
             is SaleFormUiEffect.ShowSnackbar -> showSnackbar(effect.message)
             SaleFormUiEffect.FocusMilkVolumeInput -> {
                 focusMilkVolumeInput()
             }
         }
     }
+
     private fun focusMilkVolumeInput() {
         binding.etMilkVolume.post {
             binding.etMilkVolume.requestFocus()

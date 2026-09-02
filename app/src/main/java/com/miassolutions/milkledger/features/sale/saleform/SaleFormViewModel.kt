@@ -77,28 +77,44 @@ class SaleFormViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 repository.getCustomers(),
-                uiState.map { it.date }.distinctUntilChanged().flatMapLatest { date ->
-                    repository.getSalesByDate(date.toMillis())
-                }
+                uiState
+                    .map { it.date }
+                    .distinctUntilChanged()
+                    .flatMapLatest { date ->
+                        repository.getSalesByDate(date.toMillis())
+                    }
             ) { customers, salesOnDate ->
-                val customersWithEntry = salesOnDate.map { it.customerId }.toSet()
+
+                val customersWithEntry = salesOnDate
+                    .map { it.customerId }
+                    .toSet()
+
                 customers.map { customer ->
                     CustomerDropDownUiModel(
                         account = customer,
                         isEntryDoneToday = customersWithEntry.contains(customer.accountId)
                     )
                 }
+
             }.collect { mappedList ->
+
+                // IMPORTANT: send list to Fragment
                 _customersDropDown.value = mappedList
 
+                val firstAvailable = mappedList.firstOrNull {
+                    !it.isEntryDoneToday
+                }
+
+                // Auto-select first available customer
+                // only for NEW sale
                 if (
                     saleId == null &&
                     currentState.selectedCustomer == null &&
-                    mappedList.isNotEmpty()
+                    firstAvailable != null
                 ) {
                     onEvent(
                         SaleFormUiEvent.OnCustomerSelected(
-                            mappedList.first().account
+                            firstAvailable.account
                         )
                     )
                 }
