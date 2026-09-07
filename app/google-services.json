@@ -12,7 +12,24 @@
           "package_name": "com.miassolutions.milkledger"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "218670424677-d33de8j9nssl9qbp5300t18lg89pnlq2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miassolutions.milkledger",
+            "certificate_hash": "f0a3bcc17b42feadab53dd1a9402b3463214728f"
+          }
+        },
+        {
+          "client_id": "218670424677-fikaofn2ib1r6n9qvuc4v26vlvblnhci.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.miassolutions.milkledger",
+            "certificate_hash": "ee45364098f57c969664bcbf4813901409d3bb23"
+          }
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBlXEgFr8SzE2H4SWHPFIqBHiQcVnh_Sjs"
