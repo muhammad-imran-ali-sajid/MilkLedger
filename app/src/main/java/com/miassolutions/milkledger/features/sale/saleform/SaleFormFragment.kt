@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.sale.saleform
 
 import android.text.InputType
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -101,28 +102,39 @@ class SaleFormFragment :
 //        btnDate.setOnClickListener { viewModel.onEvent(OnDateClick) }
 //        btnPaymentDate.setOnClickListener { viewModel.onEvent(OnPaymentDateClick) }
         btnSave.setOnClickListener {
-            if (
-                customerEntryAlreadyExists() &&
-                !viewModel.uiState.value.isEditMode
-            ) {
-                showSnackbar("Supplier entry already exists for this date")
-                return@setOnClickListener
-            }
-
-            viewModel.onEvent(SaleFormUiEvent.OnSaveClicked)
-
+            submitSale(saveAndNew = false)
         }
+
         btnSaveNew.setOnClickListener {
-            if (
-                customerEntryAlreadyExists() &&
-                !viewModel.uiState.value.isEditMode
-            ) {
-                showSnackbar("Supplier entry already exists for this date")
-                return@setOnClickListener
-            }
-
-            viewModel.onEvent(SaleFormUiEvent.OnSaveAndNewClicked)
+            submitSale(saveAndNew = true)
         }
+
+        etPayment.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                submitSale(saveAndNew = true)
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun submitSale(saveAndNew: Boolean) {
+        if (
+            customerEntryAlreadyExists() &&
+            !viewModel.uiState.value.isEditMode
+        ) {
+            showSnackbar("Customer entry already exists for this date")
+            return
+        }
+
+        val event = if (saveAndNew) {
+            SaleFormUiEvent.OnSaveAndNewClicked
+        } else {
+            SaleFormUiEvent.OnSaveClicked
+        }
+
+        viewModel.onEvent(event)
     }
 
     private fun customerEntryAlreadyExists(): Boolean {
@@ -225,7 +237,7 @@ class SaleFormFragment :
             }
 
 
-            is SaleFormUiEffect.ShowSnackbar -> showSnackbar(effect.message)
+            is SaleFormUiEffect.ShowSnackbar -> showToast(effect.message)
             SaleFormUiEffect.FocusMilkVolumeInput -> {
                 focusMilkVolumeInput()
             }

@@ -1,6 +1,7 @@
 package com.miassolutions.milkledger.features.purchase.ui.form
 
 import android.text.InputType
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -14,6 +15,7 @@ import com.miassolutions.milkledger.core.ui.BaseFragment
 import com.miassolutions.milkledger.databinding.FragmentPurchaseFormBinding
 import com.miassolutions.milkledger.features.purchase.model.SupplierDropDownUiModel
 import com.miassolutions.milkledger.features.purchase.ui.form.PurchaseFormUiEvent.*
+import com.miassolutions.milkledger.features.sale.saleform.SaleFormUiEvent
 import com.miassolutions.milkledger.utils.extensions.collectEffect
 import com.miassolutions.milkledger.utils.extensions.collectFlow
 import com.miassolutions.milkledger.utils.extensions.format
@@ -95,27 +97,39 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
         // Actions
         btnSave.setOnClickListener {
-            if (
-                supplierEntryAlreadyExists() &&
-                !viewModel.uiState.value.isEditMode
-            ) {
-                showSnackbar("Supplier entry already exists for this date")
-                return@setOnClickListener
-            }
-
-            viewModel.onEvent(OnSaveClicked)
+            submitPurchase(false)
         }
         btnSaveNew.setOnClickListener {
-            if (
-                supplierEntryAlreadyExists() &&
-                !viewModel.uiState.value.isEditMode
-            ) {
-                showSnackbar("Supplier entry already exists for this date")
-                return@setOnClickListener
-            }
-
-            viewModel.onEvent(OnSaveAndNewClicked)
+            submitPurchase(true)
         }
+
+        etPayment.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                submitPurchase(true)
+                true
+            } else {
+                false
+            }
+        }
+
+    }
+
+    private fun submitPurchase(saveAndNew: Boolean) {
+        if (
+            supplierEntryAlreadyExists() &&
+            !viewModel.uiState.value.isEditMode
+        ) {
+            showSnackbar("Customer entry already exists for this date")
+            return
+        }
+
+        val event = if (saveAndNew) {
+            OnSaveAndNewClicked
+        } else {
+            OnSaveClicked
+        }
+
+        viewModel.onEvent(event)
     }
 
     private fun supplierEntryAlreadyExists(): Boolean {
@@ -221,7 +235,7 @@ class PurchaseFormFragment : BaseFragment<FragmentPurchaseFormBinding>(
 
     private fun handleEffect(effect: PurchaseFormUiEffect) {
         when (effect) {
-            is PurchaseFormUiEffect.ShowSnackbar -> showSnackbar(effect.message)
+            is PurchaseFormUiEffect.ShowSnackbar -> showToast(effect.message)
             PurchaseFormUiEffect.NavigateBack -> findNavController().navigateUp()
             PurchaseFormUiEffect.OpenDatePicker -> {
                 openDatePicker { date -> viewModel.onEvent(OnDateSelected(date)) }
