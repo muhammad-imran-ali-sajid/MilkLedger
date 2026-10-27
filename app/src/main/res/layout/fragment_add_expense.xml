@@ -7,50 +7,74 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tvDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvDate"
-        tools:text="Dated: 25/06/26"
-        android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
-        android:layout_gravity="center"/>
+        android:visibility="gone"
+        tools:text="Dated: 27/10/26" />
 
-    <com.google.android.material.card.MaterialCardView
-        style="@style/Widget.MilkLedger.MaterialCard.Standard"
+
+    <!-- ===================================================== -->
+    <!-- FIXED TOP SUMMARY + SAVE                              -->
+    <!-- ===================================================== -->
+
+    <LinearLayout
+        android:id="@+id/saveContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardBackgroundColor="?attr/colorSurfaceContainer"
-        app:shapeAppearanceOverlay="@style/ShapeAppearance.MilkLedger.Medium"
-        app:strokeWidth="0dp">
+        android:background="?attr/colorSurface"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
-                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Expenses:"
-                android:textColor="?attr/colorOnSurface" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:text="Total Expense"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tvTotalExpense"
-                android:textAppearance="@style/TextAppearance.MilkLedger.AmountLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textAppearance="@style/TextAppearance.MilkLedger.AmountLarge"
                 android:textColor="?attr/colorLedgerExpense"
-                tools:text="Rs. 1,000" />
+                tools:text="Rs. 4,250" />
+
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            style="@style/Widget.MilkLedger.MaterialButton.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Expenses" />
+
+    </LinearLayout>
+
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:dividerColor="?attr/colorOutlineVariant" />
+
+
+    <!-- ===================================================== -->
+    <!-- SCROLLABLE CONTENT                                    -->
+    <!-- ===================================================== -->
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
@@ -65,155 +89,343 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
+            android:paddingStart="16dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="16dp"
             android:paddingBottom="16dp">
 
 
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/dateLayout"
-                android:visibility="gone"
-                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Expense Date">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:drawableEnd="@drawable/ic_calendar"
-                    android:drawableTint="?attr/colorPrimary"
-                    android:focusable="false"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <!-- ===================================================== -->
+            <!-- DATE                                                  -->
+            <!-- ===================================================== -->
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Date"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="13sp" />
+
+            <EditText
+                android:id="@+id/etDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:drawableEnd="@drawable/ic_calendar"
+                android:drawableTint="?attr/colorPrimary"
+                android:focusable="false"
+                android:inputType="none"
+                android:paddingStart="12dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="12dp"
+                android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
+                tools:text="27 Oct 2026" />
+
+
+            <!-- ===================================================== -->
+            <!-- BUSINESS EXPENSES                                    -->
+            <!-- ===================================================== -->
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Business Expenses"
                 android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginBottom="12dp"
-                android:text="Business Expenses" />
+                android:text="Predefined business expense categories"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="13sp" />
+
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.MilkLedger.MaterialCard.Standard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="?attr/colorSurfaceContainer"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.MilkLedger.Medium"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+
+                    <!-- Column headings -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Title"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Amount"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+
+                    <!-- Fuel -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1"
+                            android:text="Fuel"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <EditText
+                            android:id="@+id/etFuelAmount"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="end|center_vertical"
+                            android:hint="0"
+                            android:imeOptions="actionNext"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
+
+                    </LinearLayout>
+
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="8dp"
+                        app:dividerColor="?attr/colorOutlineVariant" />
+
+
+                    <!-- Vehicle -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1"
+                            android:text="Vehicle"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <EditText
+                            android:id="@+id/etVehicleAmount"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="end|center_vertical"
+                            android:hint="0"
+                            android:imeOptions="actionNext"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
+
+                    </LinearLayout>
+
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="8dp"
+                        app:dividerColor="?attr/colorOutlineVariant" />
+
+
+                    <!-- Refreshment -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1"
+                            android:text="Refreshment"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <EditText
+                            android:id="@+id/etRefreshmentAmount"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="end|center_vertical"
+                            android:hint="0"
+                            android:imeOptions="actionNext"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
+
+                    </LinearLayout>
+
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="8dp"
+                        app:dividerColor="?attr/colorOutlineVariant" />
+
+
+                    <!-- Other -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1"
+                            android:text="Other"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
+                            android:textColor="?attr/colorOnSurface" />
+
+                        <EditText
+                            android:id="@+id/etOtherBusinessExpense"
+                            android:layout_width="120dp"
+                            android:layout_height="wrap_content"
+                            android:gravity="end|center_vertical"
+                            android:hint="0"
+                            android:imeOptions="actionNext"
+                            android:inputType="numberDecimal"
+                            android:maxLines="1"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+
+            <!-- ===================================================== -->
+            <!-- PERSONAL EXPENSES                                    -->
+            <!-- ===================================================== -->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/fuelLayout"
-                    style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:layout_weight="1"
-                    android:hint="Fuel">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etFuelAmount"
-                        android:imeOptions="actionNext"
-                        style="@style/TextInputMinimalStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/vehicleLayout"
-                    style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:hint="Vehicle">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etVehicleAmount"
-                        android:imeOptions="actionNext"
-                        style="@style/TextInputMinimalStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/refreshLayout"
-                    style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:layout_weight="1"
-                    android:hint="Refreshment">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etRefreshmentAmount"
-                        style="@style/TextInputMinimalStyle"
-                        android:imeOptions="actionNext"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilOtherLayout"
-                    style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:hint="Other Exp.">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etOtherBusinessExpense"
-                        style="@style/TextInputMinimalStyle"
-                        android:layout_width="match_parent"
-                        android:imeOptions="actionNext"
-                        android:layout_height="wrap_content"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginVertical="16dp"
-                app:dividerColor="?attr/colorOutlineVariant" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="24dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Personal Expenses" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Personal Expenses"
+                        android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+                        android:textColor="?attr/colorOnSurface" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Add title and amount as needed"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="13sp" />
+
+                </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddPersonal"
                     style="@style/Widget.MilkLedger.MaterialButton.Text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Add New"
+                    android:layout_marginStart="8dp"
+                    android:text="Add"
                     android:textColor="?attr/colorOnSecondaryContainer"
                     app:icon="@drawable/ic_add"
                     app:iconTint="?attr/colorOnSecondaryContainer" />
+
             </LinearLayout>
+
+
+            <!-- Personal column headings -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Title"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Amount"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="12sp" />
+
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="1dp" />
+
+            </LinearLayout>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPersonalExpense"
@@ -226,42 +438,33 @@
                 tools:listitem="@layout/item_personal_expense" />
 
 
+            <!-- ===================================================== -->
+            <!-- NOTES                                                -->
+            <!-- ===================================================== -->
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/notesLayout"
-                style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="Notes">
+                android:layout_marginTop="24dp"
+                android:text="Notes"
+                android:textAppearance="@style/TextAppearance.MilkLedger.SectionTitle"
+                android:textColor="?attr/colorOnSurface" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etNotes"
-                    android:imeOptions="actionDone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:minLines="2" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/etNotes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="top|start"
+                android:hint="Optional note"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="4"
+                android:minLines="2"
+                android:padding="12dp" />
 
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
-
-    <LinearLayout
-        android:id="@+id/saveContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorSurface"
-        android:elevation="8dp"
-        android:padding="16dp">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSave"
-            style="@style/Widget.MilkLedger.MaterialButton.Primary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save Expense" />
-    </LinearLayout>
 
 </LinearLayout>

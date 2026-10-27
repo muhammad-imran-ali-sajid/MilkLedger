@@ -4,49 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/personalTitleLayout"
+    <!-- Title -->
+    <EditText
+        android:id="@+id/etPersonalTitle"
         android:layout_width="0dp"
-        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:hint="Title">
+        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium"
+        android:hint="Expense title"
+        android:imeOptions="actionNext"
+        android:inputType="textCapWords"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+    />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPersonalTitle"
-            style="@style/TextInputMinimalStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textCapWords" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/personalAmountLayout"
-        android:layout_width="0dp"
-        style="@style/Widget.MilkLedger.TextInputLayout.Outlined"
+    <!-- Amount -->
+    <EditText
+        android:id="@+id/etPersonalAmount"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_weight="1"
-        android:hint="Amount">
+        android:gravity="end|center_vertical"
+        android:hint="0"
+        android:imeOptions="actionDone"
+        android:inputType="numberDecimal"
+        android:maxLines="1"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:textAppearance="@style/TextAppearance.MilkLedger.LabelMedium" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etPersonalAmount"
-            style="@style/TextInputMinimalStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
 
-    </com.google.android.material.textfield.TextInputLayout>
-
+    <!-- Delete -->
     <ImageView
         android:id="@+id/btnRemove"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        android:padding="8dp"
-
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:contentDescription="Remove expense"
+        android:padding="12dp"
         android:src="@drawable/ic_delete"
         app:tint="?attr/colorError" />
 
