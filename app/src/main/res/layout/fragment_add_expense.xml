@@ -105,7 +105,7 @@
                 android:layout_marginBottom="4dp"
                 android:text="Date"
                 android:textColor="?attr/colorOnSurfaceVariant"
-                android:textSize="13sp" />
+                android:textSize="17sp" />
 
             <EditText
                 android:id="@+id/etDate"
@@ -176,7 +176,7 @@
                             android:layout_weight="1"
                             android:text="Title"
                             android:textColor="?attr/colorOnSurfaceVariant"
-                            android:textSize="12sp" />
+                            android:textSize="17sp" />
 
                         <TextView
                             android:layout_width="120dp"
@@ -184,7 +184,7 @@
                             android:gravity="center"
                             android:text="Amount"
                             android:textColor="?attr/colorOnSurfaceVariant"
-                            android:textSize="12sp" />
+                            android:textSize="17sp" />
 
                     </LinearLayout>
 
@@ -382,7 +382,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnAddPersonal"
-                    style="@style/Widget.MilkLedger.MaterialButton.Text"
+                    style="@style/Widget.MilkLedger.MaterialButton.Outlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
