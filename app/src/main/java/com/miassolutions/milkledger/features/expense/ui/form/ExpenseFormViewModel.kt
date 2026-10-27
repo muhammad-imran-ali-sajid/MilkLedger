@@ -21,12 +21,6 @@ class ExpenseFormViewModel @Inject constructor(
     ExpenseFormUiState()
 ) {
 
-    /*
-     * Keeps the latest text entered in personal expense rows.
-     *
-     * Personal expense RecyclerView rows do not update the complete UiState
-     * on every keystroke, which helps avoid unnecessary row re-binding.
-     */
     private val draftCache = mutableMapOf<String, PersonalExpenseUi>()
 
     init {
@@ -59,7 +53,6 @@ class ExpenseFormViewModel @Inject constructor(
                     )
                 }
             }
-
 
             // Business expenses
             is ExpenseFormUiEvent.OnFuelChanged -> {
@@ -98,7 +91,6 @@ class ExpenseFormViewModel @Inject constructor(
                 }
             }
 
-
             // Personal expenses
             ExpenseFormUiEvent.OnAddPersonalExpense -> {
                 addPersonalExpense()
@@ -120,7 +112,6 @@ class ExpenseFormViewModel @Inject constructor(
                 commitPersonalExpense(event.id)
             }
 
-
             // Notes
             is ExpenseFormUiEvent.OnNotesChanged -> {
                 updateState {
@@ -128,14 +119,12 @@ class ExpenseFormViewModel @Inject constructor(
                 }
             }
 
-
             // Save
             ExpenseFormUiEvent.OnSaveClicked -> {
                 saveData()
             }
         }
     }
-
 
     private fun addPersonalExpense() {
         val newItem = PersonalExpenseUi()
@@ -156,7 +145,8 @@ class ExpenseFormViewModel @Inject constructor(
             state.copy(
                 personalExpenses = state.personalExpenses.filter {
                     it.id != id
-                }
+                },
+                personalExpenseTotal = calculatePersonalExpenseTotal()
             )
         }
     }
@@ -169,6 +159,7 @@ class ExpenseFormViewModel @Inject constructor(
         val current = draftCache[id] ?: return
 
         draftCache[id] = when (field) {
+
             DraftField.TITLE -> {
                 current.copy(
                     title = value,
@@ -180,6 +171,16 @@ class ExpenseFormViewModel @Inject constructor(
                 current.copy(
                     amount = value,
                     amountError = null
+                )
+            }
+        }
+
+        // Amount changes must update the total immediately,
+        // without forcing the RecyclerView row to rebind.
+        if (field == DraftField.AMOUNT) {
+            updateState {
+                it.copy(
+                    personalExpenseTotal = calculatePersonalExpenseTotal()
                 )
             }
         }
@@ -196,11 +197,17 @@ class ExpenseFormViewModel @Inject constructor(
                     } else {
                         item
                     }
-                }
+                },
+                personalExpenseTotal = calculatePersonalExpenseTotal()
             )
         }
     }
 
+    private fun calculatePersonalExpenseTotal(): Double {
+        return draftCache.values.sumOf { item ->
+            item.amount.toDoubleOrNull() ?: 0.0
+        }
+    }
 
     private fun saveData() {
         val state = currentState
@@ -214,7 +221,6 @@ class ExpenseFormViewModel @Inject constructor(
             }
 
             val expensesToSave = mutableListOf<Expense>()
-
 
             // Business expenses
             parseAndAdd(
@@ -253,11 +259,10 @@ class ExpenseFormViewModel @Inject constructor(
                 note = note
             )
 
-
             // Personal expenses
             //
-            // Use draftCache because it always contains the latest typed value,
-            // even when the EditText still has focus.
+            // draftCache contains the latest typing even when an EditText
+            // still has focus.
             val currentIds = state.personalExpenses
                 .map { it.id }
                 .toSet()
@@ -287,7 +292,6 @@ class ExpenseFormViewModel @Inject constructor(
                     }
                 }
 
-
             if (expensesToSave.isEmpty()) {
                 updateState {
                     it.copy(isSaving = false)
@@ -301,7 +305,6 @@ class ExpenseFormViewModel @Inject constructor(
 
                 return@launch
             }
-
 
             try {
                 withContext(NonCancellable) {
@@ -332,7 +335,6 @@ class ExpenseFormViewModel @Inject constructor(
             }
         }
     }
-
 
     private fun parseAndAdd(
         list: MutableList<Expense>,

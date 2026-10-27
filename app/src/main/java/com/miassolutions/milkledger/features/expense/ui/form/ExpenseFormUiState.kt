@@ -22,6 +22,7 @@ data class ExpenseFormUiState(
 
     // Personal expenses
     val personalExpenses: List<PersonalExpenseUi> = emptyList(),
+    val personalExpenseTotal: Double = 0.0,
 
     // Notes
     val notes: String = "",
@@ -33,7 +34,7 @@ data class ExpenseFormUiState(
     val refreshmentError: String? = null,
     val otherBusinessError: String? = null,
 
-    // Saving state
+    // Saving
     val isSaving: Boolean = false
 ) {
 
@@ -44,11 +45,11 @@ data class ExpenseFormUiState(
             val refreshment = refreshmentAmount.toDoubleOrNull() ?: 0.0
             val other = otherBusiness.toDoubleOrNull() ?: 0.0
 
-            val personal = personalExpenses.sumOf {
-                it.amount.toDoubleOrNull() ?: 0.0
-            }
-
-            return fuel + vehicle + refreshment + other + personal
+            return fuel +
+                    vehicle +
+                    refreshment +
+                    other +
+                    personalExpenseTotal
         }
 }
 

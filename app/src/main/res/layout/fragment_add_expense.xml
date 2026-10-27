@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="Total Expense"
                 android:textColor="?attr/colorOnSurfaceVariant"
-                android:textSize="12sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/tvTotalExpense"
